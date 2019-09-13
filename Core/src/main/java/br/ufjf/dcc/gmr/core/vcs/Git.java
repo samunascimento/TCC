@@ -5,6 +5,12 @@
  */
 package br.ufjf.dcc.gmr.core.vcs;
 
+import static br.ufjf.dcc.gmr.core.cli.CLIExecute.execute;
+import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Class created to implement Git commands 
  * @author gleiph
@@ -24,7 +30,27 @@ public class Git {
      * Inicio comandos do Beatriz 
     --------------------------------------------------------------------------*/
     
+    /// STATUS GIT
+    public void gitStatus(String repositoryPath) {
+        String command = "git status";
+        GitExample g = new GitExample();
+        try {
+            g.execute(command, repositoryPath);
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    ///GIT CLONE
+    public void gitClone(String url, String directory){
+        GitExample g = new GitExample();
+        String command = "git clone " + url;
+        try {
+            g.execute(command, directory);
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
     /*--------------------------------------------------------------------------
      * Fim comandos do Beatriz 
     --------------------------------------------------------------------------*/

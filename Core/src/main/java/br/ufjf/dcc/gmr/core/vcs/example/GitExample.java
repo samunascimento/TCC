@@ -1,6 +1,8 @@
 
 package br.ufjf.dcc.gmr.core.vcs.example;
 
+import static br.ufjf.dcc.gmr.core.cli.CLIExecute.execute;
+import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +15,17 @@ import java.util.logging.Logger;
  * @author gleiph
  */
 public class GitExample {
-
     public static void main(String[] args) throws IOException {
-
-        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/extensao/projeto-extensao-direito";
+        Git g = new Git();
+        String repositoryPath = "C:\\Users\\Beatr\\Documents\\GitHub\\UFJF";
         log(repositoryPath);
-        clone("https://github.com/gleiph/testeDCC099.git", "/Users/gleiph/Dropbox/UFJF/extensao");
-
+        g.gitStatus(repositoryPath);
+        g.gitClone("https://github.com/gleiph/UFJF", repositoryPath);
+        //g.show(repositoryPath);
     }
 
     public static void log(String repositoryPath) {
-        String command1 = "git log --merges --pretty=format:\"%H|%aN|%ae\"";
+        String command1 = "git log";
         try {
             execute(command1, repositoryPath);
         } catch (IOException ex) {
