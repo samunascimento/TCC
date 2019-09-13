@@ -21,7 +21,8 @@ public class GitExample {
         log(repositoryPath);
         g.gitStatus(repositoryPath);
         g.gitClone("https://github.com/gleiph/UFJF", repositoryPath);
-        //g.show(repositoryPath);
+        g.show(repositoryPath);
+    
     }
 
     public static void log(String repositoryPath) {

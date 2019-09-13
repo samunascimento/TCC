@@ -7,6 +7,8 @@ package br.ufjf.dcc.gmr.core.vcs;
 
 import static br.ufjf.dcc.gmr.core.cli.CLIExecute.execute;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
+import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
+import static br.ufjf.dcc.gmr.core.vcs.example.GitExample.execute;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,10 +23,34 @@ public class Git {
      * Inicio comandos do Antônio 
     --------------------------------------------------------------------------*/
     
+    public static void show(String repositoryPath) {
+        String command1 = "git show";
+        GitExample g = new GitExample();
+        try {
+            g.execute(command1, repositoryPath);
+        } catch (IOException ex) {
+            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public static void log(String repositoryPath) {
+        String command1 = "git log";
+        GitExample g = new GitExample();
+        try {
+            g.execute(command1, repositoryPath);
+        } catch (IOException ex) {
+            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     
     /*--------------------------------------------------------------------------
      * Fim comandos do Antônio 
     --------------------------------------------------------------------------*/
+    
+    
+    
     
     /*--------------------------------------------------------------------------
      * Inicio comandos do Beatriz 
