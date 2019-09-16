@@ -85,6 +85,41 @@ public class Git {
      * Inicio comandos do Felippe 
     --------------------------------------------------------------------------*/
     
+    //Git PULL. If you need to send options to be executed with pull, you must send a string with the options 
+    //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
+	public static void pull(String repositoryPath, String options, String repository, Boolean executeOptions){
+		
+		GitExample g = new GitExample();
+		
+		if(executeOptions)
+			String command = "git pull "+options+" "+repository;
+		else
+			String command = "git pull ";
+				 
+		try {
+			g.execute(command, repositoryPath);
+		} catch (IOException ex) {
+			Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+    //Git PUSH. If you need to send options to be executed with push, you must send a string with the options 
+    //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
+	public static void push(String repositoryPath,String options, String repository, Boolean executeOptions){
+		
+		GitExample g = new GitExample();
+		
+		if(executeOptions)
+			String command = "git push "+options+" "+repository;
+		else
+			String command = "git push ";
+		
+		try {
+			g.execute(command, localPath);
+		} catch (IOException ex) {
+			Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
     
     /*--------------------------------------------------------------------------
      * Fim comandos do Felippe 
