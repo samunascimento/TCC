@@ -115,7 +115,7 @@ public class Git {
 			String command = "git push ";
 		
 		try {
-			g.execute(command, localPath);
+			g.execute(command, repositoryPath);
 		} catch (IOException ex) {
 			Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
 		}
