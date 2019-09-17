@@ -57,5 +57,24 @@ public class CLIExecution {
     public void addError(String line){
         this.error.add(line);
     }
+
+    @Override
+    public String toString() {
+        String result = "";
+        
+        result += "==========================Output==============================\n";
+        for (String string : output) {
+            result += string+"\n";
+        }
+        
+        result += "==========================Error==============================\n";
+        for (String string : error) {
+            result += string+"\n";
+        }
+        
+        return result;
+                
+    }
+    
     
 }

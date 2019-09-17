@@ -5,24 +5,24 @@
  */
 package br.ufjf.dcc.gmr.core.vcs;
 
-import static br.ufjf.dcc.gmr.core.cli.CLIExecute.execute;
+import br.ufjf.dcc.gmr.core.cli.CLIExecute;
+import br.ufjf.dcc.gmr.core.cli.CLIExecution;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
-import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
-import static br.ufjf.dcc.gmr.core.vcs.example.GitExample.execute;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class created to implement Git commands 
+ * Class created to implement Git commands
+ *
  * @author gleiph
  */
 public class Git {
-    
+
     /*--------------------------------------------------------------------------
      * Inicio comandos do Antônio 
     --------------------------------------------------------------------------*/
-    
     public static void show(String repositoryPath) {
         String command1 = "git show";
         GitExample g = new GitExample();
@@ -33,7 +33,7 @@ public class Git {
         }
 
     }
-    
+
     public static void log(String repositoryPath) {
         String command1 = "git log";
         GitExample g = new GitExample();
@@ -44,18 +44,13 @@ public class Git {
         }
 
     }
-    
+
     /*--------------------------------------------------------------------------
      * Fim comandos do Antônio 
     --------------------------------------------------------------------------*/
-    
-    
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Beatriz 
     --------------------------------------------------------------------------*/
-    
     /// STATUS GIT
     public void gitStatus(String repositoryPath) {
         String command = "git status";
@@ -66,110 +61,122 @@ public class Git {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     ///GIT CLONE
-    public void gitClone(String url, String directory){
-        GitExample g = new GitExample();
+    /**
+     * description 
+     * @param url
+     * @param directory
+     * @throws RepositoryNotFound 
+     */
+    public static boolean gitClone(String url, String directory) throws RepositoryNotFound {
+        
         String command = "git clone " + url;
+        CLIExecution execution = null;
+        
         try {
-            g.execute(command, directory);
+            execution = CLIExecute.execute(command, directory);
+            System.out.println(execution);
+            
+            if(!execution.getError().isEmpty()){
+                for (String line : execution.getError()) {
+                    if(line.contains("does not exist"))
+                        throw new RepositoryNotFound();
+                    else if(line.contains("already exists and is not an empty directory"))
+                        System.out.println("Exception...");
+                }
+            }
+                
+            
+            System.out.println(execution);
+            
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+        
+        return true;
+    }
+
     /*--------------------------------------------------------------------------
      * Fim comandos do Beatriz 
     --------------------------------------------------------------------------*/
-    
-    /*--------------------------------------------------------------------------
+
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Felippe 
     --------------------------------------------------------------------------*/
-    
     //Git PULL. If you need to send options to be executed with pull, you must send a string with the options 
     //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
-	public static void pull(String repositoryPath, String options, String repository, Boolean executeOptions){
-		
-		GitExample g = new GitExample();
-		
-		if(executeOptions)
-			String command = "git pull "+options+" "+repository;
-		else
-			String command = "git pull ";
-				 
-		try {
-			g.execute(command, repositoryPath);
-		} catch (IOException ex) {
-			Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-	
+    public static void pull(String repositoryPath, String options, String repository, Boolean executeOptions) {
+
+        GitExample g = new GitExample();
+
+        String command = null;
+
+        if (executeOptions) {
+            command = "git pull " + options + " " + repository;
+        } else {
+            command = "git pull ";
+        }
+
+        try {
+            g.execute(command, repositoryPath);
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     //Git PUSH. If you need to send options to be executed with push, you must send a string with the options 
     //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
-	public static void push(String repositoryPath,String options, String repository, Boolean executeOptions){
-		
-		GitExample g = new GitExample();
-		
-		if(executeOptions)
-			String command = "git push "+options+" "+repository;
-		else
-			String command = "git push ";
-		
-		try {
-			g.execute(command, repositoryPath);
-		} catch (IOException ex) {
-			Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-    
+    public static void push(String repositoryPath, String options, String repository, Boolean executeOptions) {
+
+        GitExample g = new GitExample();
+
+        String command = null;
+
+        if (executeOptions) {
+            command = "git push " + options + " " + repository;
+        } else {
+            command = "git push ";
+        }
+
+        try {
+            g.execute(command, repositoryPath);
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /*--------------------------------------------------------------------------
      * Fim comandos do Felippe 
     --------------------------------------------------------------------------*/
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Fim comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Fim comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Fim comandos do Ian 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
-    
-    
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Fim comandos do Luan 
     --------------------------------------------------------------------------*/
 }

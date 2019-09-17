@@ -16,9 +16,11 @@ import java.io.InputStreamReader;
  */
 public class CLIExecute {
     
-    public static void execute(String command, String directory) throws IOException {
+    public static CLIExecution execute(String command, String directory) throws IOException {
         
         CLIExecution execution = new CLIExecution();
+        
+        
         Runtime runtime = Runtime.getRuntime();
         Process exec = runtime.exec(command, null,
                 new File(directory));
@@ -29,16 +31,16 @@ public class CLIExecute {
         BufferedReader stdError = new BufferedReader(new InputStreamReader(exec.getErrorStream()));
 
         // read the output from the command
-        System.out.println("==================Output============================");
         while ((s = stdInput.readLine()) != null) {
             execution.addOutput(s);
         }
 
         // read any errors from the attempted command
-        System.out.println("==================Erro============================");
         while ((s = stdError.readLine()) != null) {
             execution.addError(s);
         }
+        
+        return execution;
     }
     
 }
