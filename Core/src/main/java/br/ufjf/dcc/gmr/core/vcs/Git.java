@@ -7,6 +7,9 @@ package br.ufjf.dcc.gmr.core.vcs;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
+import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
+import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
@@ -170,6 +173,35 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
+    
+    public static void branch(String option, String branchName, String secundaryBranchName) throws Exception {
+        // List, create, delete, rename and copy branches 
+        String command = "git branch " + option + branchName + secundaryBranchName;
+        CLIExecution cliE = new CLIExecution();
+        try{
+            cliE = CLIExecute.execute(command,null);
+            if(!cliE.getError().isEmpty()){
+                if(cliE.getError().contains("unknown switch")){
+                    throw new OptionNotExist();
+                }
+                else if (cliE.getError().contains("already exists")){
+                    throw new BranchAlreadyExist();
+                }
+                    else if (cliE.getError().contains("not found")){
+                        throw new BranchNotFound();
+                    }
+            }
+            else{
+                System.out.println(cliE.getOutput());
+            }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    
  /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
