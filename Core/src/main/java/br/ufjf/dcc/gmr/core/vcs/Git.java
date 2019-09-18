@@ -12,6 +12,7 @@ import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -168,8 +169,16 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
-    public static boolean clean(String path, String option) throws UnknownSwitch {
-        //if there is no need to specify a path, just let it blanck
+    
+    ///clean
+    /*
+     * description 
+     * @param path
+     * @param option
+     * @throws UnknownSwitch, RefusingToClean
+    */
+    
+    public static boolean clean(String path, String option) throws UnknownSwitch, RefusingToClean {
         String command1 = "git clean " + option + " " + path;
         CLIExecution execution = null;
         try {
@@ -180,13 +189,24 @@ public class Git {
         }
         if(!execution.getError().isEmpty()){
                 for (String line : execution.getError()) {
-                    if(line.contains("unknown switch"))
+                    if(line.contains("unknown switch")){
                         throw new UnknownSwitch();
+                    } 
+                    else{
+                        if(line.contains("refusing to clean")){
+                            throw new RefusingToClean();
+                        }
+                    }
                 }
             }
         return true;
     }
-      
+    ///merge
+    /*
+     * description 
+     * @param directory
+     * @param filePath
+    */
     public static void merge(String directory, String filePath){
         String command1 = "git merge " + filePath;
         CLIExecution execution = null;
