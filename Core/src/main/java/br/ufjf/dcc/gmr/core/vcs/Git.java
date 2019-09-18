@@ -11,6 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -167,7 +168,7 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
-    public static void clean(String path, String option){
+    public static boolean clean(String path, String option) throws UnknownSwitch {
         //if there is no need to specify a path, just let it blanck
         String command1 = "git clean " + option + " " + path;
         CLIExecution execution = null;
@@ -177,6 +178,13 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(!execution.getError().isEmpty()){
+                for (String line : execution.getError()) {
+                    if(line.contains("unknown switch"))
+                        throw new UnknownSwitch();
+                }
+            }
+        return true;
     }
       
     public static void merge(String directory, String filePath){
