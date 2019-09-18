@@ -167,6 +167,29 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
+    public static void clean(String path, String option){
+        //if there is no need to specify a path, just let it blanck
+        String command1 = "git clean " + option + " " + path;
+        CLIExecution execution = null;
+        try {
+            execution = CLIExecute.execute(command1, null);
+            System.out.println(execution);
+        } catch (IOException ex) {
+            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      
+    public static void merge(String directory, String filePath){
+        String command1 = "git merge " + filePath;
+        CLIExecution execution = null;
+        try{
+            execution = CLIExecute.execute(command1, directory);
+            System.out.println(execution);
+        } catch (IOException ex){
+            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
  /*--------------------------------------------------------------------------
      * Fim comandos do Ian 
     --------------------------------------------------------------------------*/
