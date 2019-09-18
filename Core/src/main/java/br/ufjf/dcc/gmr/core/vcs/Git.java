@@ -178,11 +178,39 @@ public class Git {
      * @throws UnknownSwitch, RefusingToClean
     */
     
-    public static boolean clean(String path, String option) throws UnknownSwitch, RefusingToClean {
-        String command1 = "git clean " + option + " " + path;
+    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean {
+        String command = "git clean ";
+        if(interactiveCleaning == true){
+            if(dryRun == true){
+                if(force == true){
+                    command += "-i -d -f" + option;
+                }
+                else{
+                    command += "-i -d" + option;
+                }
+            }else{
+                if(force == true){
+                    command += "-i -f" + option;
+                }else{
+                    command += "-i" + option;
+                }
+            }
+        }else{
+            if(dryRun == true){
+                if(force == true){
+                    command += "-d -f" + option;
+                }else{
+                    command += "-d" + option;
+                }
+            }else{
+                if(force == true){
+                    command += "-f" + option;
+                }
+            }
+        }
         CLIExecution execution = null;
         try {
-            execution = CLIExecute.execute(command1, null);
+            execution = CLIExecute.execute(command, null);
             System.out.println(execution);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
@@ -193,6 +221,7 @@ public class Git {
                         throw new UnknownSwitch();
                     } 
                     else{
+                        //error: clean.requireForce defaults to true and neither -i, -n, nor -f given; refusing to clean
                         if(line.contains("refusing to clean")){
                             throw new RefusingToClean();
                         }
@@ -208,10 +237,10 @@ public class Git {
      * @param filePath
     */
     public static void merge(String directory, String filePath){
-        String command1 = "git merge " + filePath;
+        String command = "git merge " + filePath;
         CLIExecution execution = null;
         try{
-            execution = CLIExecute.execute(command1, directory);
+            execution = CLIExecute.execute(command, directory);
             System.out.println(execution);
         } catch (IOException ex){
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
