@@ -11,6 +11,8 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -179,23 +181,78 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
-    public static void clean(String path, String option){
-        //if there is no need to specify a path, just let it blanck
-        String command1 = "git clean " + option + " " + path;
+    
+    ///clean
+    /*
+     * description 
+     * @param path
+     * @param option
+     * @throws UnknownSwitch, RefusingToClean
+    */
+    
+    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean {
+        String command = "git clean ";
+        if(interactiveCleaning == true){
+            if(dryRun == true){
+                if(force == true){
+                    command += "-i -d -f" + option;
+                }
+                else{
+                    command += "-i -d" + option;
+                }
+            }else{
+                if(force == true){
+                    command += "-i -f" + option;
+                }else{
+                    command += "-i" + option;
+                }
+            }
+        }else{
+            if(dryRun == true){
+                if(force == true){
+                    command += "-d -f" + option;
+                }else{
+                    command += "-d" + option;
+                }
+            }else{
+                if(force == true){
+                    command += "-f" + option;
+                }
+            }
+        }
         CLIExecution execution = null;
         try {
-            execution = CLIExecute.execute(command1, null);
+            execution = CLIExecute.execute(command, null);
             System.out.println(execution);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(!execution.getError().isEmpty()){
+                for (String line : execution.getError()) {
+                    if(line.contains("unknown switch")){
+                        throw new UnknownSwitch();
+                    } 
+                    else{
+                        //error: clean.requireForce defaults to true and neither -i, -n, nor -f given; refusing to clean
+                        if(line.contains("refusing to clean")){
+                            throw new RefusingToClean();
+                        }
+                    }
+                }
+            }
+        return true;
     }
-      
+    ///merge
+    /*
+     * description 
+     * @param directory
+     * @param filePath
+    */
     public static void merge(String directory, String filePath){
-        String command1 = "git merge " + filePath;
+        String command = "git merge " + filePath;
         CLIExecution execution = null;
         try{
-            execution = CLIExecute.execute(command1, directory);
+            execution = CLIExecute.execute(command, directory);
             System.out.println(execution);
         } catch (IOException ex){
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
