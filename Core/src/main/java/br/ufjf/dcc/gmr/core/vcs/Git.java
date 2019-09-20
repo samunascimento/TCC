@@ -112,17 +112,29 @@ public class Git {
     public static void pull(String repositoryPath, String options, String repository, Boolean executeOptions) {
 
         GitExample g = new GitExample();
-
+        CLIExecution execution = null;
+        
         String command = null;
 
         if (executeOptions) {
             command = "git pull " + options + " " + repository;
-        } else {
-            command = "git pull ";
         }
 
         try {
-            g.execute(command, repositoryPath);
+            execution = CLIExecute.execute(command, repositoryPath);
+            System.out.println("execution");
+            
+            if(!execution.getError().isEmpty()) {
+            	for(String line: execution.getError()) {
+            		  if(line.contains("Couldn't find remote ref branch")) {
+            			  throw new RemoteRefBranchNotFound();
+            		  }else if (line.contains("not a git repository")) {
+            			  throw new LocalRepositoryNotAGitRepository();
+            		  }else if (line.contains(" is not a git command")) {
+            			  throw new OptionNotExist();
+            		  }
+            	}            	
+            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
