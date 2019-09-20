@@ -11,6 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -55,14 +56,19 @@ public class Git {
      * Inicio comandos do Beatriz 
     --------------------------------------------------------------------------*/
     /// STATUS GIT
-    public void gitStatus(String repositoryPath) {
+    public static boolean status (String repositoryPath) throws RepositoryNotFound, IOException {
         String command = "git status";
-        GitExample g = new GitExample();
+        
+        if(repositoryPath == null || repositoryPath.isEmpty()){
+            throw new RepositoryNotFound();
+        }
+        
         try {
-            g.execute(command, repositoryPath);
+            GitExample.execute(command, repositoryPath);
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return true;
     }
 
     ///GIT CLONE
@@ -70,27 +76,33 @@ public class Git {
      * description 
      * @param url
      * @param directory
+     * @param name
+     * @return 
      * @throws RepositoryNotFound 
      */
-    public static boolean gitClone(String url, String directory) throws RepositoryNotFound {
+    
+    public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound {
         
         String command = "git clone " + url;
-        CLIExecution execution = null;
+        if(name != null){
+            command = command.concat(" ").concat(name);
+        }
         
+        if(url == null || url.isEmpty()){
+            throw new UrlNotFound();
+        }
         try {
-            execution = CLIExecute.execute(command, directory);
-            System.out.println(execution);
+            
+            CLIExecution execution = CLIExecute.execute(command, directory);
             
             if(!execution.getError().isEmpty()){
                 for (String line : execution.getError()) {
                     if(line.contains("does not exist"))
                         throw new RepositoryNotFound();
                     else if(line.contains("already exists and is not an empty directory"))
-                        System.out.println("Exception...");
+                        System.out.println("Repository already exists.");      
                 }
-            }
-                
-            
+            } 
             System.out.println(execution);
             
         } catch (IOException ex) {
@@ -99,7 +111,14 @@ public class Git {
         
         return true;
     }
-
+    
+    public static boolean clone(String url, String directory, String name, String username, String password) throws RepositoryNotFound, UrlNotFound {
+        String[] split = url.split("//");
+        
+        String command = split[0].concat("//").concat(username).concat(":").concat(password).concat("@").concat(split[1]);
+        
+        return clone(command, directory, name);
+    }
     /*--------------------------------------------------------------------------
      * Fim comandos do Beatriz 
     --------------------------------------------------------------------------*/

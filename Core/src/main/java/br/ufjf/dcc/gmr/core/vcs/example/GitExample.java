@@ -1,11 +1,13 @@
 package br.ufjf.dcc.gmr.core.vcs.example;
 
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  *
@@ -13,16 +15,30 @@ import java.io.InputStreamReader;
  */
 public class GitExample {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound{
 
-        String url = "456578658767";
-        String directory = "/Users/gleiph/Dropbox/UFJF/repositorios/sandbox";
+        String url, directory, name;
+        Scanner input = new Scanner(System.in);
+        System.out.print("Url: ");
+        url = input.nextLine();
+        System.out.print("Directory: ");
+        directory = input.nextLine();
+        System.out.print("Name: ");
+        name = input.nextLine();
+        System.out.print("Deseja login e senha? (S ou N)");
+        String op = input.nextLine();
         
-        try {
-            Git.gitClone(url, directory);
-        } catch (RepositoryNotFound ex) {
-            System.out.println("Repositório definido não foi encontrado...");
+        if(op.equals("S") || op.equals("s")){
+            System.out.print("Login: ");
+            String login = input.nextLine();
+            System.out.print("Senha: ");
+            String senha = input.nextLine();
+            Git.clone(url, directory, name, login, senha);
+        }else{
+            Git.clone(url, directory, name);     
         }
+        System.out.println("Status: ");
+        Git.status(directory);
     }
 
     /**
