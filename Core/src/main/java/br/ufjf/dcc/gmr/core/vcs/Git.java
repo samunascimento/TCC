@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Model;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
@@ -367,7 +368,7 @@ public class Git {
     
     public static void branch(String option, String branchName, String secundaryBranchName) throws Exception {
         // List, create, delete, rename and copy branches 
-        String command = "git branch " + option + branchName + secundaryBranchName;
+        String command = "git branch " + option +" "+ branchName +" " + secundaryBranchName;
         CLIExecution cliE = new CLIExecution();
         try{
             cliE = CLIExecute.execute(command,null);
@@ -388,6 +389,35 @@ public class Git {
         }
         catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    
+        public static boolean checkout(String option, String entityName) throws Exception {
+        // Update files in working tree and switch between branches
+        /* The "entityName" is a variable that represents any entity
+        in the working tree such as branches, files, commits, paths
+        and pathspecs
+        */
+        String command = "git checkout " + option +" "+ entityName;
+        CLIExecution cliE = new CLIExecution();
+        try{
+            cliE = CLIExecute.execute(command,null);
+            if(!cliE.getError().isEmpty()){
+                for(String error: cliE.getError()){
+                    throw new CheckoutError(error);
+                }                
+                return false;
+            }
+            else{
+                System.out.println(cliE.getOutput());
+                return true;
+            }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
 
     }
