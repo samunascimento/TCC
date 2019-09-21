@@ -28,6 +28,13 @@ public class CLIExecution {
     public List<String> getOutput() {
         return output;
     }
+    
+    /**
+     * @return number of line output
+     */
+    public int getNumberLine(){
+        return output.size();
+    }
 
     /**
      * @param output the output to set

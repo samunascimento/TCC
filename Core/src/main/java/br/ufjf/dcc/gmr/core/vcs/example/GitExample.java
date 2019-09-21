@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.vcs.example;
 
+import br.ufjf.dcc.gmr.core.cli.Model;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -16,8 +17,9 @@ import java.util.Scanner;
 public class GitExample {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound{
+        String repositoryPath = "C:\\Users\\antonio henrique\\Documents\\simplegit-progit";
 
-        String url, directory, name;
+        /*String url, directory, name;
         Scanner input = new Scanner(System.in);
         System.out.print("Url: ");
         url = input.nextLine();
@@ -39,6 +41,13 @@ public class GitExample {
         }
         System.out.println("Status: ");
         Git.status(directory);
+        */
+        Model[] model = new Model[3];
+        model = Git.log(repositoryPath);
+        for(int i=0; i<3;i++){
+            System.out.println(model[i].getAuthorName());
+            System.out.println(model[i].getCommitHash());
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.vcs;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
+import br.ufjf.dcc.gmr.core.cli.Model;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -42,15 +43,32 @@ public class Git {
 
     }
 
-    public static void log(String repositoryPath) {
-        String command1 = "git log";
+    public static Model[] log(String repositoryPath) {
+        CLIExecution execution = null;
+        String command = "git log --pretty=format:\"%an,%H\"";
         GitExample g = new GitExample();
+        Model model[] = null;
         try {
-            g.execute(command1, repositoryPath);
+            execution = CLIExecute.execute(command, repositoryPath);
+            model = new Model[execution.getNumberLine()];
+            //System.out.println(execution.getNumberLine());
+            //tamanho = numero de parametros do Model
+            String array[] = new String[2];
+            int i = 0;
+            for(String line : execution.getOutput()){
+                System.out.println("");
+                array = line.split(",");
+                model[i] = new Model(array[0], array[1]);
+                //System.out.println(model[i].getAuthorName());
+                //System.out.println(model[i].getCommitHash());
+                i++;
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
+        return model;
     }
 
     /*--------------------------------------------------------------------------
