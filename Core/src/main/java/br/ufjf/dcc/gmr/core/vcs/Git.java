@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Model;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
+import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
@@ -148,17 +149,28 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Felippe 
     --------------------------------------------------------------------------*/
-    //Git PULL. If you need to send options to be executed with pull, you must send a string with the options 
-    //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
-    public static void pull (String repositoryPath, String options, String repository, Boolean executeOptions) throws RemoteRefBranchNotFound,LocalRepositoryNotAGitRepository, OptionNotExist {
+    //Git PULL
+    /**
+     * 
+     * @param repositoryPath
+     * @param options
+     * @param repository
+     * @param executeOptions
+     * @return
+     * @throws RemoteRefBranchNotFound
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws OptionNotExist
+     */
+    public static boolean pull (String repositoryPath, String options, String repository, Boolean executeOptions) throws RemoteRefBranchNotFound,LocalRepositoryNotAGitRepository, OptionNotExist {
 
-        GitExample g = new GitExample();
-        CLIExecution execution = null;
-        
+     
+        CLIExecution execution = null;        
         String command = null;
 
         if (executeOptions) {
             command = "git pull " + options + " " + repository;
+        }else{
+        	command = "git pull ";
         }
 
         try {
@@ -179,27 +191,58 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return true;
     }
+    
+    /**
+     * 
+     * @param repositoryPath
+     * @param remote
+     * @param branch
+     * @param executeOnlyOptions
+     * @return
+     * @throws HasNoUpstreamBranch
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws OptionNotExist 
+     */
+    //Git PUSH
+    public static boolean push(String repositoryPath, String options, String branch, Boolean executeOnlyOptions) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist {
 
-    //Git PUSH. If you need to send options to be executed with push, you must send a string with the options 
-    //and the final parameter as true. Otherwise just send an empty string in the options and false in the last parameter.
-    public static void push(String repositoryPath, String options, String repository, Boolean executeOptions) {
-
-        GitExample g = new GitExample();
-
+    	CLIExecution execution = null;
         String command = null;
 
-        if (executeOptions) {
-            command = "git push " + options + " " + repository;
-        } else {
-            command = "git push ";
+        if (options != null && branch != null && executeOnlyOptions == false) {
+            command = "git push " + options + " " + branch;
+        } else if(options != null && executeOnlyOptions == true) {
+            command = "git push " + options;
+        }else if (options == null) {
+        	command = "git push ";
         }
-
+        
         try {
-            g.execute(command, repositoryPath);
-        } catch (IOException ex) {
+            execution = CLIExecute.execute(command, repositoryPath);
+            System.out.println("execution");
+            
+            if(!execution.getError().isEmpty()) {
+            	for(String line: execution.getError()) {
+            		if(line.contains("The current branch master has no upstream branch.")) {
+            			throw new HasNoUpstreamBranch();
+            		}else if (line.contains("not a git repository")) {
+            			throw new LocalRepositoryNotAGitRepository();
+            		}else if (line.contains(" is not a git command")) {
+          			  throw new OptionNotExist();
+          		  }
+            		
+            		
+            	}
+            }
+        }            
+        catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return true;
     }
 
     /*--------------------------------------------------------------------------
