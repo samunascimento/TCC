@@ -251,6 +251,23 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
+    public void tag(String repositoryPath,String options,Boolean executeOptions){
+        String command = "git tag";
+        CLIExecution execution = new CLIExecution();
+        if (executeOptions) {
+            command = "git tag " + options;
+        } else {
+            command = "git tag";
+        }
+        try {
+            execution = CLIExecute.execute(command,repositoryPath);
+            System.out.println(execution);
+
+        }
+        catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
  /*--------------------------------------------------------------------------
      * Fim comandos do Guilherme 
     --------------------------------------------------------------------------*/
