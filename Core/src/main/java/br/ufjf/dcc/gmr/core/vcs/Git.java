@@ -252,20 +252,55 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    public void tag(String repositoryPath,String options,Boolean executeOptions){
+    public void tag(String repositoryPath, String options, Boolean executeOptions) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
-        CLIExecution execution = new CLIExecution();
+        CLIExecution execution = null;
         if (executeOptions) {
             command = "git tag " + options;
         } else {
             command = "git tag";
         }
         try {
-            execution = CLIExecute.execute(command,repositoryPath);
+            execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
-
+            if (!execution.getError().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.contains("not a git repository")) {
+                        throw new LocalRepositoryNotAGitRepository();
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (IOException ex) {
+    }
+
+    public void parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
+        String command = "git log --pretty=%P -n 1 ";
+        CLIExecution execution = null;
+        command = command + commit;
+        try {
+            execution = CLIExecute.execute(command, repositoryPath);
+            System.out.println(execution);
+            //verifica se há comandos no Output ou no Error
+            if (execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.isEmpty()) {
+                        System.out.println("não há pais");
+                    }
+
+                }
+                //verifica se há comandos apenas em erro
+            } else if (!execution.getError().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.contains("not a git repository")) {
+                        throw new LocalRepositoryNotAGitRepository();
+                    } else if (line.contains("fatal: ambiguous argument")) {
+                        throw new OptionNotExist();
+                    }
+                }
+            }
+        } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
