@@ -429,7 +429,44 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
+    public static void reset(String type) {
+
+        CLIExecution cliE = new CLIExecution();
+
+        if ("hard".equals(type) && !"mixed".equals(type) && !"soft".equals(type) || !"hard".equals(type) && "mixed".equals(type) && !"soft".equals(type) || !"hard".equals(type) && !"mixed".equals(type) && "soft".equals(type)) {
+        
+         String command = "git reset -- " + type;
+        
+        }
+
+    }
+    
+    public static void diff(boolean modificado,boolean head, boolean cached){
+    
+    // Existe o diff sem modificadores e com, se o booleano for falso modificação tem que ser null
+        String command = "git diff "+" " ;
+        
+     if(modificado){
+         
+         if(head && !cached){
+         
+         command+= "HEAD";
+         
+        }else if(cached && !head){
+        
+          command +="-cached";
+        }
+         
+     }
+    
+    
+    
+    
+    
+    }
+
+    /*--------------------------------------------------------------------------
      * Fim comandos do Luan 
     --------------------------------------------------------------------------*/
+
 }
