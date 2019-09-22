@@ -12,6 +12,7 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
@@ -19,6 +20,7 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
+import br.ufjf.dcc.gmr.core.exception.RequiresAValue;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -308,30 +310,28 @@ public class Git {
      * Fim comandos do Guilherme 
     --------------------------------------------------------------------------*/
  /*--------------------------------------------------------------------------
-     * Inicio comandos do Guilherme 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Fim comandos do Guilherme 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
 
     ///clean
-    /*
+    /**
      * description 
-     * @param path
+     * @param interactiveCleaning
+     * @param dryRun
+     * @param force
      * @param option
-     * @throws UnknownSwitch, RefusingToClean
+     * @param path
+     * @throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue
      */
-    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean {
+    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue {
         String command = "git clean ";
-        if (interactiveCleaning == true) {
-            if (dryRun == true) {
-                if (force == true) {
-                    command += "-i -d -f" + option;
-                } else {
-                    command += "-i -d" + option;
+        if(interactiveCleaning == true){
+            if(dryRun == true){
+                if(force == true){
+                    command += "-i -d -f" + option + path;
+                }
+                else{
+                    command += "-i -d" + option + path;
                 }
             } else {
                 if (force == true) {
@@ -340,19 +340,20 @@ public class Git {
                     command += "-i" + option;
                 }
             }
-        } else {
+        }else{
             if (dryRun == true) {
                 if (force == true) {
                     command += "-d -f" + option;
-                } else {
-                    command += "-d" + option;
                 }
-            } else {
-                if (force == true) {
-                    command += "-f" + option;
-                }
+            }else{
+            command += "-d" + option;
             }
         }
+        if(force == true){
+            command += "-f" + option + path;
+        }
+        
+        
         CLIExecution execution = null;
         try {
             execution = CLIExecute.execute(command, null);
@@ -360,23 +361,31 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("unknown switch")) {
-                    throw new UnknownSwitch();
-                } else {
-                    //error: clean.requireForce defaults to true and neither -i, -n, nor -f given; refusing to clean
-                    if (line.contains("refusing to clean")) {
-                        throw new RefusingToClean();
+        if(!execution.getError().isEmpty()){
+                for (String line : execution.getError()) {
+                    if(line.contains("unknown switch")){
+                        throw new UnknownSwitch(line);
+                    } 
+                    else{                        
+                        if(line.contains("refusing to clean")){
+                            throw new RefusingToClean(line);
+                        }
+                        else{
+                            if(line.contains("is outside repository")){
+                                throw new IsOutsideRepository(line);
+                            }
+                            else 
+                                if(line.contains("requires a value")){
+                                    throw new RequiresAValue(line);
+                            }
+                        }
                     }
                 }
             }
-        }
         return true;
     }
-
     ///merge
-    /*
+    /**
      * description 
      * @param directory
      * @param filePath

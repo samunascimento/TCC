@@ -10,7 +10,7 @@ package br.ufjf.dcc.gmr.core.exception;
  * @author icout
  */
 public class RefusingToClean extends Exception{
-    public void RefusinToClean(){
-        System.out.println("Refusing to clean");
+    public RefusingToClean(String message){
+        super(message);
     }
 }
