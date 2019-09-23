@@ -24,6 +24,9 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.RequiresAValue;
+import br.ufjf.dcc.gmr.core.exception.RequiresAValue_Merge;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
@@ -392,12 +395,13 @@ public class Git {
     /**
      * description 
      * @param directory
-     * @param 
+     * @param filePath
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
+     * @exception ThereIsNoMergeInProgress
      */
-    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption  {
+    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge  {
         String command = "git merge " + filePath;
         CLIExecution execution = null;
         try {
@@ -416,7 +420,15 @@ public class Git {
                     }else 
                         if(line.contains("unknown option")){
                             throw new UnknownOption(line);
-                        }
+                        }else 
+                            if(line.contains("There is no merge in progress")){
+                                throw new ThereIsNoMergeInProgress(line);
+                            }else if(line.contains("There is no merge to abort")){
+                                throw new ThereIsNoMergeToAbort(line);
+                            }else 
+                                if(line.contains("requires a value")){
+                                    throw new RequiresAValue_Merge(line);
+                                }
             }
         }
         return true;
