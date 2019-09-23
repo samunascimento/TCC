@@ -6,14 +6,10 @@
 package br.ufjf.dcc.gmr.core.vcs;
 
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
-import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Model;
-import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
-import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
 import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Clean;
 import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Merge;
