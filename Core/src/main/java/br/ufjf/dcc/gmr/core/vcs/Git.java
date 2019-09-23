@@ -389,10 +389,10 @@ public class Git {
         }
         if(!execution.getError().isEmpty()){
             for (String line : execution.getError()){
-                if(line.contains("if(!execution.getError().isEmpty()){")){
+                if(line.contains("can not merge")){
                     throw new CanNotMerge(line);
                 }else
-                    if(line.contains(" No remote for the current branch.")){
+                    if(line.contains("No remote for the current branch.")){
                         throw new NoRemoteForTheCurrentBranch(line);
                     }else 
                         if(line.contains("unknown option")){
