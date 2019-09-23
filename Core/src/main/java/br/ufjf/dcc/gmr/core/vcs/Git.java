@@ -461,53 +461,80 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
-    public static void branch(String option, String branchName, String secundaryBranchName) throws Exception {
+    public static void branch(String option, String complement, String directory) throws Exception {
         // List, create, delete, rename and copy branches 
-        String command = "git branch " + option + " " + branchName + " " + secundaryBranchName;
-        CLIExecution cliE = new CLIExecution();
-        try {
-            cliE = CLIExecute.execute(command, null);
-            if (!cliE.getError().isEmpty()) {
-                if (cliE.getError().contains("unknown switch")) {
-                    throw new OptionNotExist();
-                } else if (cliE.getError().contains("already exists")) {
-                    throw new BranchAlreadyExist();
-                } else if (cliE.getError().contains("not found")) {
-                    throw new BranchNotFound();
+        String command = "git branch";
+        if(option != null){
+            command += " " + option;
+        }
+        if(complement != null){
+            command += " " + complement;
+        }
+        try{
+            CLIExecution cliE = CLIExecute.execute(command,directory);
+            System.out.println("========== Running " + command + " ==========");
+            if(!cliE.getOutput().isEmpty()){
+                for(String string : cliE.getOutput()){
+                    System.out.println(string);
                 }
-            } else {
-                System.out.println(cliE.getOutput());
             }
-        } catch (IOException ex) {
+            else{
+                if(cliE.getError().contains("usage: git branch [<options>] [-r | -a] [--merged | --no-merged]")){
+                    System.out.println(cliE.getError().get(0));
+                }
+                else{
+                    for(String string : cliE.getError()){
+                        System.out.println(string);
+                    }
+                }
+            }     
+                System.out.println("========== End of " + command + " ==========\n");
+        } 
+        catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
-    public static boolean checkout(String option, String entityName) throws Exception {
+    public static boolean checkout(String option, String entityName, String directory) throws Exception {
         // Update files in working tree and switch between branches
         /* The "entityName" is a variable that represents any entity
         in the working tree such as branches, files, commits, paths
         and pathspecs
          */
-        String command = "git checkout " + option + " " + entityName;
-        CLIExecution cliE = new CLIExecution();
+        String command = "git checkout";
+        if(option != null){
+            command += " " + option;
+        }
+        if(entityName != null){
+            command += " " + entityName;
+        }
         try {
-            cliE = CLIExecute.execute(command, null);
-            if (!cliE.getError().isEmpty()) {
-                for (String error : cliE.getError()) {
-                    throw new CheckoutError(error);
+            CLIExecution cliE = CLIExecute.execute(command, directory);
+            System.out.println("========== Running " + command + " ==========");
+            if(!cliE.getOutput().isEmpty()){
+                for(String string : cliE.getOutput()){
+                    System.out.println(string);
                 }
-                return false;
-            } else {
-                System.out.println(cliE.getOutput());
+                System.out.println("========== End of " + command + " ==========\n");
                 return true;
             }
+            else{
+                if(cliE.getError().contains("usage: git checkout [<options>] <branch>")){
+                    System.out.println(cliE.getError().get(0));
+                }
+                else {
+                    for(String string : cliE.getError()){
+                        System.out.println(string);
+                    }
+                }
+                System.out.println("========== End of " + command + " ==========\n");
+                return false;
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-
     }
 
     /*--------------------------------------------------------------------------
