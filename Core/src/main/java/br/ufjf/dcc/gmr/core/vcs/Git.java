@@ -327,47 +327,15 @@ public class Git {
     ///clean
     /**
      * description 
-     * @param interactiveCleaning
-     * @param dryRun
-     * @param force
      * @param option
-     * @param path
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
      * @exception RequiresAValue
      * @exception ExceptionNotTreated_Clean
      */
-    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
-        String command = "git clean ";
-        if(interactiveCleaning == true){
-            if(dryRun == true){
-                if(force == true){
-                    command += "-i -d -f" + option + path;
-                }
-                else{
-                    command += "-i -d" + option + path;
-                }
-            } else {
-                if (force == true) {
-                    command += "-i -f" + option;
-                } else {
-                    command += "-i" + option;
-                }
-            }
-        }else{
-            if (dryRun == true) {
-                if (force == true) {
-                    command += "-d -f" + option;
-                }
-            }else{
-            command += "-d" + option;
-            }
-        }
-        if(force == true){
-            command += "-f" + option + path;
-        }
-        
+    public static boolean clean(String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
+        String command = "git clean " + option;
         
         CLIExecution execution = null;
         try {
