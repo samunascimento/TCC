@@ -14,6 +14,9 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
+import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Clean;
+import br.ufjf.dcc.gmr.core.exception.ExpectsnoArguments;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -328,9 +331,13 @@ public class Git {
      * @param force
      * @param option
      * @param path
-     * @throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue
+     * @exception UnknownSwitch
+     * @exception RefusingToClean
+     * @exception IsOutsideRepository
+     * @exception RequiresAValue
+     * @exception ExceptionNotTreated_Clean
      */
-    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue {
+    public static boolean clean(String path, boolean interactiveCleaning, boolean dryRun, boolean force, String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
         String command = "git clean ";
         if(interactiveCleaning == true){
             if(dryRun == true){
@@ -373,20 +380,21 @@ public class Git {
                     if(line.contains("unknown switch")){
                         throw new UnknownSwitch(line);
                     } 
-                    else{                        
+                    else                        
                         if(line.contains("refusing to clean")){
                             throw new RefusingToClean(line);
                         }
-                        else{
+                        else
                             if(line.contains("is outside repository")){
                                 throw new IsOutsideRepository(line);
                             }
                             else 
                                 if(line.contains("requires a value")){
                                     throw new RequiresAValue(line);
-                            }
-                        }
-                    }
+                                }else 
+                                    if(!line.isEmpty()){
+                                        throw new ExceptionNotTreated_Clean();
+                                    }
                 }
             }
         return true;
@@ -400,8 +408,12 @@ public class Git {
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
      * @exception ThereIsNoMergeInProgress
+     * @exception ThereIsNoMergeToAbort
+     * @exception RequiresAValue_Merge
+     * @exception CouldNotReadFile
+     * @exception ExpectsnoArguments
      */
-    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge  {
+    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments  {
         String command = "git merge " + filePath;
         CLIExecution execution = null;
         try {
@@ -428,7 +440,15 @@ public class Git {
                             }else 
                                 if(line.contains("requires a value")){
                                     throw new RequiresAValue_Merge(line);
-                                }
+                                }else 
+                                    if(line.contains("could not read file")){
+                                        throw new CouldNotReadFile(line);
+                                    }else
+                                        if(line.contains("expects no arguments")){
+                                        throw new ExpectsnoArguments(line);
+                                    }else if(!line.isEmpty()){
+                                        throw new
+                                    }
             }
         }
         return true;
