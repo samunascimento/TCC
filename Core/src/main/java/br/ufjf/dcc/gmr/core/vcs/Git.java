@@ -16,6 +16,7 @@ import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
 import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Clean;
+import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Merge;
 import br.ufjf.dcc.gmr.core.exception.ExpectsnoArguments;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -402,8 +403,7 @@ public class Git {
     ///merge
     /**
      * description 
-     * @param directory
-     * @param filePath
+     * @param options
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
@@ -412,12 +412,13 @@ public class Git {
      * @exception RequiresAValue_Merge
      * @exception CouldNotReadFile
      * @exception ExpectsnoArguments
+     * @exception ExceptionNotTreated_Merge
      */
-    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments  {
-        String command = "git merge " + filePath;
+    public static boolean merge(String options) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge  {
+        String command = "git merge " + options;
         CLIExecution execution = null;
         try {
-            execution = CLIExecute.execute(command, directory);
+            execution = CLIExecute.execute(command, null);
             System.out.println(execution);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
@@ -447,7 +448,7 @@ public class Git {
                                         if(line.contains("expects no arguments")){
                                         throw new ExpectsnoArguments(line);
                                     }else if(!line.isEmpty()){
-                                        throw new
+                                        throw new ExceptionNotTreated_Merge();
                                     }
             }
         }
