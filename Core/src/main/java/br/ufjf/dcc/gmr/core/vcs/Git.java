@@ -5,11 +5,14 @@
  */
 package br.ufjf.dcc.gmr.core.vcs;
 
+import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
+import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Model;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
+import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -21,6 +24,7 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.RequiresAValue;
+import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -388,9 +392,12 @@ public class Git {
     /**
      * description 
      * @param directory
-     * @param filePath
+     * @param 
+     * @exception CanNotMerge
+     * @exception NoRemoteForTheCurrentBranch
+     * @exception UnknownOption
      */
-    public static void merge(String directory, String filePath) {
+    public static boolean merge(String directory, String filePath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption  {
         String command = "git merge " + filePath;
         CLIExecution execution = null;
         try {
@@ -399,6 +406,20 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(!execution.getError().isEmpty()){
+            for (String line : execution.getError()){
+                if(line.contains("if(!execution.getError().isEmpty()){")){
+                    throw new CanNotMerge(line);
+                }else
+                    if(line.contains(" No remote for the current branch.")){
+                        throw new NoRemoteForTheCurrentBranch(line);
+                    }else 
+                        if(line.contains("unknown option")){
+                            throw new UnknownOption(line);
+                        }
+            }
+        }
+        return true;
     }
 
     /*--------------------------------------------------------------------------
