@@ -41,14 +41,5 @@ public class Model {
         return commitHash;
     }
 
-    /*public String getAbbreviatedCommitHash() {
-        return abbreviatedCommitHash;
-    }
-
-    public String getAuthorDate() {
-        return authorDate;
-    }
-*/
-    
    
 }
