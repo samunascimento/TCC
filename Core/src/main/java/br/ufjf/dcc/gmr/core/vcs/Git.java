@@ -262,14 +262,45 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    public void tag(String repositoryPath, String options, Boolean executeOptions) throws LocalRepositoryNotAGitRepository {
+    ppublic void listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
-        if (executeOptions) {
-            command = "git tag " + options;
-        } else {
-            command = "git tag";
+        try {
+            execution = CLIExecute.execute(command, repositoryPath);
+            System.out.println(execution);
+            if (!execution.getError().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.contains("not a git repository")) {
+                        throw new LocalRepositoryNotAGitRepository();
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public void createtag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository {
+        String command = "git tag";
+        CLIExecution execution = null;
+        command = command + " -a " + tag + " -m " + message;
+        try {
+            execution = CLIExecute.execute(command, repositoryPath);
+            System.out.println(execution);
+            if (!execution.getError().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.contains("not a git repository")) {
+                        throw new LocalRepositoryNotAGitRepository();
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void removetag(String repositoryPath, String tag) throws LocalRepositoryNotAGitRepository {
+        String command = "git tag --delete ";
+        CLIExecution execution = null;
+        command = command + tag;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
