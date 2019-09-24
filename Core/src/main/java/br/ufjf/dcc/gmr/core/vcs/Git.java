@@ -408,18 +408,19 @@ public class Git {
      * execute description
      *
      * @param option
+     * @param repositoryPath 
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
      * @exception RequiresAValue
      * @exception ExceptionNotTreated_Clean
      */
-    public static boolean clean(String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
+    public static boolean clean(String option, String repositoryPath) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
         String command = "git clean " + option;
 
         CLIExecution execution = null;
         try {
-            execution = CLIExecute.execute(command, null);
+            execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
@@ -448,6 +449,7 @@ public class Git {
      * execute
      *
      * @param options
+     * @param repositoryPath 
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
@@ -458,11 +460,11 @@ public class Git {
      * @exception ExpectsnoArguments
      * @exception ExceptionNotTreated_Merge
      */
-    public static boolean merge(String options) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge {
+    public static boolean merge(String options, String repositoryPath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge {
         String command = "git merge " + options;
         CLIExecution execution = null;
         try {
-            execution = CLIExecute.execute(command, null);
+            execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
