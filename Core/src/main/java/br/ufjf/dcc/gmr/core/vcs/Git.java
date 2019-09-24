@@ -8,7 +8,7 @@ package br.ufjf.dcc.gmr.core.vcs;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.Model;
+import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
@@ -32,6 +32,8 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,22 +58,23 @@ public class Git {
 
     }
 
-    public static Model[] log(String repositoryPath) {
+    public static List<Formats> log(String repositoryPath) {
         CLIExecution execution = null;
-        String command = "git log --pretty=format:\"%an,%H\"";
+        String command = "git log --pretty=format:\"%an,%h,%ai,%s\"";
         GitExample g = new GitExample();
-        Model model[] = null;
+        List<Formats>list = new ArrayList<>();
+        Formats model = null;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            model = new Model[execution.getNumberLine()];
-            //System.out.println(execution.getNumberLine());
-            //tamanho = numero de parametros do Model
-            String array[] = new String[2];
+            
+            //tamanho = numero de parametros do Formats
+            String array[] = new String[4];
             int i = 0;
             for (String line : execution.getOutput()) {
                 System.out.println("");
                 array = line.split(",");
-                model[i] = new Model(array[0], array[1]);
+                model = new Formats(array[0], array[1],array[2],array[3]);
+                list.add(model);
                 //System.out.println(model[i].getAuthorName());
                 //System.out.println(model[i].getCommitHash());
                 i++;
@@ -81,7 +84,7 @@ public class Git {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return model;
+        return list;
     }
 
     /*--------------------------------------------------------------------------
@@ -262,7 +265,7 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    ppublic void listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
+    public void listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
         try {

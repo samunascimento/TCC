@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.vcs.example;
 
-import br.ufjf.dcc.gmr.core.cli.Model;
+import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -41,11 +43,15 @@ public class GitExample {
         System.out.println("Status: ");
         Git.status(directory);
         */
-        Model[] model = new Model[3];
-        model = Git.log(repositoryPath);
-        for(int i=0; i<3;i++){
-            System.out.println(model[i].getAuthorName());
-            System.out.println(model[i].getCommitHash());
+        List<Formats> list = new ArrayList<>();
+        list = Git.log(repositoryPath);
+        for(int i=0;i<list.size(); i++){
+            System.out.println(
+                    list.get(i).getAuthorName()+ " " + 
+                    list.get(i).getCommitHash() + " " +
+                    list.get(i).getAuthorDate() + " " +
+                    list.get(i).getCommitDescription()
+            );
         }
     }
 

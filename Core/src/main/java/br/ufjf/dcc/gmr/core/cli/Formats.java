@@ -9,15 +9,15 @@ package br.ufjf.dcc.gmr.core.cli;
  *
  * @author antonio henrique
  */
-public class Model {
+public class Formats {
     //%an author name
     private final String authorName;
     //%H commit hash
     private final String commitHash;
-    //%h abbreviated commit hash
-    //private final String abbreviatedCommitHash;
     //%ai author date (format respects --date= option)
-    //private final String authorDate;
+    private final String authorDate;
+    //%s ref name given on the command line by which the commit was reached (like git log --source), only works with git log
+    private final String commitDescription;
 
     
     /**
@@ -26,11 +26,11 @@ public class Model {
      * @param abbreviatedCommitHash
      * @param authorDate 
      */
-    public Model(String authorName, String commitHash) {
+    public Formats(String authorName, String commitHash, String authorDate,String commitDescription) {
         this.authorName = authorName;
         this.commitHash = commitHash;
-        //this.abbreviatedCommitHash = abbreviatedCommitHash;
-        //this.authorDate = authorDate;
+        this.authorDate = authorDate;
+        this.commitDescription = commitDescription;
     }
 
     public String getAuthorName() {
@@ -41,5 +41,14 @@ public class Model {
         return commitHash;
     }
 
+    public String getAuthorDate() {
+        return authorDate;
+    }
+
+    public String getCommitDescription() {
+        return commitDescription;
+    }
+
+    
    
 }
