@@ -9,6 +9,8 @@ import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Model;
+import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
+import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
 import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Clean;
@@ -425,40 +427,75 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
-    public static void branch(String option, String complement, String directory) throws Exception {
-        // List, create, delete, rename and copy branches 
-        String command = "git branch";
-        if(option != null){
-            command += " " + option;
-        }
-        if(complement != null){
-            command += " " + complement;
-        }
+    public static void branchCreate(String branchName, boolean switchTo, String directory) throws Exception {
+        // Create a branch and switch to it if user wants
+        String command = "git branch " + branchName;
         try{
+            System.out.println("\nCreating " + branchName + "...");
             CLIExecution cliE = CLIExecute.execute(command,directory);
-            System.out.println("========== Running " + command + " ==========");
-            if(!cliE.getOutput().isEmpty()){
+            if(!cliE.getError().isEmpty()){
+                if(cliE.getError().contains("already exists")){
+                    throw new BranchAlreadyExist(branchName);
+                }            
+            }
+            else {
                 for(String string : cliE.getOutput()){
                     System.out.println(string);
                 }
-            }
-            else{
-                if(cliE.getError().contains("usage: git branch [<options>] [-r | -a] [--merged | --no-merged]")){
-                    System.out.println(cliE.getError().get(0));
-                }
-                else{
-                    for(String string : cliE.getError()){
+                if(switchTo){
+                    System.out.println("\nSwitching to " + branchName + "...");
+                    command = "git checkout " + branchName;
+                    cliE = CLIExecute.execute(command,directory);
+                    for(String string : cliE.getOutput()){
                         System.out.println(string);
                     }
-                }
-            }     
-                System.out.println("========== End of " + command + " ==========\n");
-        } 
+                }    
+            }   
+        }
         catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    public static void branchDelete(String branchName, String directory) throws Exception{
+        try{
+            CLIExecution cliE = CLIExecute.execute("git branch --all",directory);
+            if(cliE.getOutput().contains(branchName)){
+                if(cliE.getOutput().contains("* " + branchName)){
+                    //Need to switch to master
+                    System.out.println("Switching to master...");
+                    cliE = CLIExecute.execute("git checkout master",directory);
+                    System.out.println(cliE.getOutput().get(0));
+                    System.out.println("Deleting " + branchName + "..." );
+                    cliE = CLIExecute.execute("git branch -d " + branchName,directory);
+                    System.out.println(cliE.getOutput().get(0));
+                }
+                else{
+                    //Just delete
+                    System.out.println("Deleting " + branchName + "..." );
+                    cliE = CLIExecute.execute("git branch -d " + branchName,directory);
+                    System.out.println(cliE.getOutput().get(0));
+                }
+            }
+            else {
+                //Branch not exist
+                throw new BranchNotFound(branchName);
+            }            
+        }
+        catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public static String branchAll(boolean print,String directory) throws Exception{
+        CLIExecution cliE = CLIExecute.execute("git branch --all",directory);
+        String output = "";
+        for(String string : cliE.getOutput()){
+            if(print){
+                System.out.println(string);
+            }
+            output += string + "\n";
+        }
+        return output;   
+    }
     public static boolean checkout(String option, String entityName, String directory) throws Exception {
         // Update files in working tree and switch between branches
         /* The "entityName" is a variable that represents any entity
