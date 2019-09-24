@@ -282,9 +282,10 @@ public class Git {
      * @param repositoryPath
      * @throws LocalRepositoryNotAGitRepository
      */
-    public void listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
+    public boolean listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
+        boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
@@ -295,23 +296,26 @@ public class Git {
                     }
                 }
             }
+            else{
+            sucess = true;
+            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return sucess;
     }
-
     /**
      * @TODO: improve the output. How I know that a tag was created?
      * @param repositoryPath
      * @param tag
      * @param message
-     * @param commit
      * @throws LocalRepositoryNotAGitRepository
      */
-    public void createtag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository {
+    public boolean createtag(String repositoryPath, String tag, String message) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
         command = command + " -a " + tag + " -m " + message;
+        boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
@@ -322,9 +326,13 @@ public class Git {
                     }
                 }
             }
+            else{
+                sucess = true;
+            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return sucess;
     }
 
     /**
@@ -333,23 +341,28 @@ public class Git {
      * @param tag
      * @throws LocalRepositoryNotAGitRepository
      */
-    public void removetag(String repositoryPath, String tag) throws LocalRepositoryNotAGitRepository {
+    public boolean removetag(String repositoryPath, String tag) throws LocalRepositoryNotAGitRepository {
         String command = "git tag --delete ";
         CLIExecution execution = null;
         command = command + tag;
+        boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
+                        throw new LocalRepositoryNotAGitRepository();    
                     }
                 }
+            }
+            else{   
+            sucess=true;
             }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return sucess;
     }
 
     public List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
