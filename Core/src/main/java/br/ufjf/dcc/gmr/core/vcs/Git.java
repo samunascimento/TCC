@@ -316,14 +316,14 @@ public class Git {
         }
     }
 
-    public void parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
+    public List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution = null;
+        List<String>lista = new ArrayList<>();
         command = command + commit;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
-            //verifica se há comandos no Output ou no Error
             if (execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.isEmpty()) {
@@ -331,7 +331,6 @@ public class Git {
                     }
 
                 }
-                //verifica se há comandos apenas em erro
             } else if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
@@ -341,9 +340,11 @@ public class Git {
                     }
                 }
             }
+            lista=execution.getOutput();
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return lista;
     }
 
     /*--------------------------------------------------------------------------
