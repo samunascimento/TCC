@@ -47,10 +47,15 @@ public class Git {
     /*--------------------------------------------------------------------------
      * Inicio comandos do Antônio 
     --------------------------------------------------------------------------*/
+    /**
+     * @TODO: Please improve this command to extract information that git show
+     * presents
+     */
     public static void show(String repositoryPath) {
         String command1 = "git show";
         GitExample g = new GitExample();
         try {
+            //Stop using this method and use the one in the class CLIExecute
             g.execute(command1, repositoryPath);
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,19 +66,18 @@ public class Git {
     public static List<Formats> log(String repositoryPath) {
         CLIExecution execution = null;
         String command = "git log --pretty=format:\"%an,%h,%ai,%s\"";
-        GitExample g = new GitExample();
-        List<Formats>list = new ArrayList<>();
+        List<Formats> list = new ArrayList<>();
         Formats model = null;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            
+
             //tamanho = numero de parametros do Formats
             String array[] = new String[4];
             int i = 0;
             for (String line : execution.getOutput()) {
                 System.out.println("");
                 array = line.split(",");
-                model = new Formats(array[0], array[1],array[2],array[3]);
+                model = new Formats(array[0], array[1], array[2], array[3]);
                 list.add(model);
                 //System.out.println(model[i].getAuthorName());
                 //System.out.println(model[i].getCommitHash());
@@ -94,6 +98,10 @@ public class Git {
      * Inicio comandos do Beatriz 
     --------------------------------------------------------------------------*/
     /// STATUS GIT
+    /**
+     * @TODO:What is the meaning when this method returns true or false? Would
+     * you improve the output?
+     */
     public static boolean status(String repositoryPath) throws RepositoryNotFound, IOException {
         String command = "git status";
 
@@ -178,6 +186,9 @@ public class Git {
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
      */
+    /**
+     * @TODO:Please improve the options
+     */
     public static boolean pull(String repositoryPath, String options, String repository, Boolean executeOptions) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
 
         CLIExecution execution = null;
@@ -221,6 +232,7 @@ public class Git {
      * @throws HasNoUpstreamBranch
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
+     * @TODO:Please improve the options
      */
     //Git PUSH
     public static boolean push(String repositoryPath, String options, String branch, Boolean executeOnlyOptions) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist {
@@ -265,6 +277,11 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
+    /**
+     * @TODO: improve the output
+     * @param repositoryPath
+     * @throws LocalRepositoryNotAGitRepository
+     */
     public void listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
@@ -282,6 +299,15 @@ public class Git {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /**
+     * @TODO: improve the output. How I know that a tag was created?
+     * @param repositoryPath
+     * @param tag
+     * @param message
+     * @param commit
+     * @throws LocalRepositoryNotAGitRepository
+     */
     public void createtag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
@@ -300,6 +326,13 @@ public class Git {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /**
+     * @TODO: improve the output. How I know that a tag was deleted?
+     * @param repositoryPath
+     * @param tag
+     * @throws LocalRepositoryNotAGitRepository
+     */
     public void removetag(String repositoryPath, String tag) throws LocalRepositoryNotAGitRepository {
         String command = "git tag --delete ";
         CLIExecution execution = null;
@@ -322,7 +355,7 @@ public class Git {
     public List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution = null;
-        List<String>lista = new ArrayList<>();
+        List<String> lista = new ArrayList<>();
         command = command + commit;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
@@ -343,7 +376,7 @@ public class Git {
                     }
                 }
             }
-            lista=execution.getOutput();
+            lista = execution.getOutput();
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -356,10 +389,11 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Ian 
     --------------------------------------------------------------------------*/
-
     ///clean
     /**
-     * description 
+     * @TODO: Put the repository path as a parameter to use in the method
+     * execute description
+     *
      * @param option
      * @exception UnknownSwitch
      * @exception RefusingToClean
@@ -369,7 +403,7 @@ public class Git {
      */
     public static boolean clean(String option) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
         String command = "git clean " + option;
-        
+
         CLIExecution execution = null;
         try {
             execution = CLIExecute.execute(command, null);
@@ -377,33 +411,29 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(!execution.getError().isEmpty()){
-                for (String line : execution.getError()) {
-                    if(line.contains("unknown switch")){
-                        throw new UnknownSwitch(line);
-                    } 
-                    else                        
-                        if(line.contains("refusing to clean")){
-                            throw new RefusingToClean(line);
-                        }
-                        else
-                            if(line.contains("is outside repository")){
-                                throw new IsOutsideRepository(line);
-                            }
-                            else 
-                                if(line.contains("requires a value")){
-                                    throw new RequiresAValue(line);
-                                }else 
-                                    if(!line.isEmpty()){
-                                        throw new ExceptionNotTreated_Clean();
-                                    }
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("unknown switch")) {
+                    throw new UnknownSwitch(line);
+                } else if (line.contains("refusing to clean")) {
+                    throw new RefusingToClean(line);
+                } else if (line.contains("is outside repository")) {
+                    throw new IsOutsideRepository(line);
+                } else if (line.contains("requires a value")) {
+                    throw new RequiresAValue(line);
+                } else if (!line.isEmpty()) {
+                    throw new ExceptionNotTreated_Clean();
                 }
             }
+        }
         return true;
     }
+
     ///merge
     /**
-     * description 
+     * @TODO: Put the repository path as a parameter to use in the method
+     * execute
+     *
      * @param options
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
@@ -415,7 +445,7 @@ public class Git {
      * @exception ExpectsnoArguments
      * @exception ExceptionNotTreated_Merge
      */
-    public static boolean merge(String options) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge  {
+    public static boolean merge(String options) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge {
         String command = "git merge " + options;
         CLIExecution execution = null;
         try {
@@ -424,33 +454,27 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(!execution.getError().isEmpty()){
-            for (String line : execution.getError()){
-                if(line.contains("can not merge")){
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("can not merge")) {
                     throw new CanNotMerge(line);
-                }else
-                    if(line.contains("No remote for the current branch.")){
-                        throw new NoRemoteForTheCurrentBranch(line);
-                    }else 
-                        if(line.contains("unknown option")){
-                            throw new UnknownOption(line);
-                        }else 
-                            if(line.contains("There is no merge in progress")){
-                                throw new ThereIsNoMergeInProgress(line);
-                            }else if(line.contains("There is no merge to abort")){
-                                throw new ThereIsNoMergeToAbort(line);
-                            }else 
-                                if(line.contains("requires a value")){
-                                    throw new RequiresAValue_Merge(line);
-                                }else 
-                                    if(line.contains("could not read file")){
-                                        throw new CouldNotReadFile(line);
-                                    }else
-                                        if(line.contains("expects no arguments")){
-                                        throw new ExpectsnoArguments(line);
-                                    }else if(!line.isEmpty()){
-                                        throw new ExceptionNotTreated_Merge();
-                                    }
+                } else if (line.contains("No remote for the current branch.")) {
+                    throw new NoRemoteForTheCurrentBranch(line);
+                } else if (line.contains("unknown option")) {
+                    throw new UnknownOption(line);
+                } else if (line.contains("There is no merge in progress")) {
+                    throw new ThereIsNoMergeInProgress(line);
+                } else if (line.contains("There is no merge to abort")) {
+                    throw new ThereIsNoMergeToAbort(line);
+                } else if (line.contains("requires a value")) {
+                    throw new RequiresAValue_Merge(line);
+                } else if (line.contains("could not read file")) {
+                    throw new CouldNotReadFile(line);
+                } else if (line.contains("expects no arguments")) {
+                    throw new ExpectsnoArguments(line);
+                } else if (!line.isEmpty()) {
+                    throw new ExceptionNotTreated_Merge();
+                }
             }
         }
         return true;
@@ -462,75 +486,94 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
+    /**
+     * @TODO: return something to show that the branch was created...
+     * @param branchName
+     * @param switchTo
+     * @param directory
+     * @throws Exception
+     */
     public static void branchCreate(String branchName, boolean switchTo, String directory) throws Exception {
         // Create a branch and switch to it if user wants
         String command = "git branch " + branchName;
-        try{
+        try {
             System.out.println("\nCreating " + branchName + "...");
-            CLIExecution cliE = CLIExecute.execute(command,directory);
-            if(!cliE.getError().isEmpty()){
-                if(cliE.getError().contains("already exists")){
+            CLIExecution cliE = CLIExecute.execute(command, directory);
+            if (!cliE.getError().isEmpty()) {
+                if (cliE.getError().contains("already exists")) {
                     throw new BranchAlreadyExist(branchName);
-                }            
-            }
-            else {
-                for(String string : cliE.getOutput()){
+                }
+            } else {
+                for (String string : cliE.getOutput()) {
                     System.out.println(string);
                 }
-                if(switchTo){
+                if (switchTo) {
                     System.out.println("\nSwitching to " + branchName + "...");
                     command = "git checkout " + branchName;
-                    cliE = CLIExecute.execute(command,directory);
-                    for(String string : cliE.getOutput()){
+                    cliE = CLIExecute.execute(command, directory);
+                    for (String string : cliE.getOutput()) {
                         System.out.println(string);
                     }
-                }    
-            }   
-        }
-        catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    public static void branchDelete(String branchName, String directory) throws Exception{
-        try{
-            CLIExecution cliE = CLIExecute.execute("git branch --all",directory);
-            if(cliE.getOutput().contains(branchName)){
-                if(cliE.getOutput().contains("* " + branchName)){
-                    //Need to switch to master
-                    System.out.println("Switching to master...");
-                    cliE = CLIExecute.execute("git checkout master",directory);
-                    System.out.println(cliE.getOutput().get(0));
-                    System.out.println("Deleting " + branchName + "..." );
-                    cliE = CLIExecute.execute("git branch -d " + branchName,directory);
-                    System.out.println(cliE.getOutput().get(0));
-                }
-                else{
-                    //Just delete
-                    System.out.println("Deleting " + branchName + "..." );
-                    cliE = CLIExecute.execute("git branch -d " + branchName,directory);
-                    System.out.println(cliE.getOutput().get(0));
                 }
             }
-            else {
-                //Branch not exist
-                throw new BranchNotFound(branchName);
-            }            
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static String branchAll(boolean print,String directory) throws Exception{
-        CLIExecution cliE = CLIExecute.execute("git branch --all",directory);
+
+    
+    /**
+     * @TODO: return something to show that the branch was created...
+     * @param branchName
+     * @param directory
+     * @throws Exception 
+     */
+    public static void branchDelete(String branchName, String directory) throws Exception {
+        try {
+            CLIExecution cliE = CLIExecute.execute("git branch --all", directory);
+            if (cliE.getOutput().contains(branchName)) {
+                if (cliE.getOutput().contains("* " + branchName)) {
+                    //Need to switch to master
+                    System.out.println("Switching to master...");
+                    cliE = CLIExecute.execute("git checkout master", directory);
+                    System.out.println(cliE.getOutput().get(0));
+                    System.out.println("Deleting " + branchName + "...");
+                    cliE = CLIExecute.execute("git branch -d " + branchName, directory);
+                    System.out.println(cliE.getOutput().get(0));
+                } else {
+                    //Just delete
+                    System.out.println("Deleting " + branchName + "...");
+                    cliE = CLIExecute.execute("git branch -d " + branchName, directory);
+                    System.out.println(cliE.getOutput().get(0));
+                }
+            } else {
+                //Branch not exist
+                throw new BranchNotFound(branchName);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * @TODO: return something to list the branches (List<Strings>)
+     * @param print
+     * @param directory
+     * @return
+     * @throws Exception 
+     */
+    public static String branchAll(boolean print, String directory) throws Exception {
+        CLIExecution cliE = CLIExecute.execute("git branch --all", directory);
         String output = "";
-        for(String string : cliE.getOutput()){
-            if(print){
+        for (String string : cliE.getOutput()) {
+            if (print) {
                 System.out.println(string);
             }
             output += string + "\n";
         }
-        return output;   
+        return output;
     }
+
     public static boolean checkout(String option, String entityName, String directory) throws Exception {
         // Update files in working tree and switch between branches
         /* The "entityName" is a variable that represents any entity
@@ -538,35 +581,33 @@ public class Git {
         and pathspecs
          */
         String command = "git checkout";
-        if(option != null){
+        if (option != null) {
             command += " " + option;
         }
-        if(entityName != null){
+        if (entityName != null) {
             command += " " + entityName;
         }
         try {
             CLIExecution cliE = CLIExecute.execute(command, directory);
             System.out.println("========== Running " + command + " ==========");
-            if(!cliE.getOutput().isEmpty()){
-                for(String string : cliE.getOutput()){
+            if (!cliE.getOutput().isEmpty()) {
+                for (String string : cliE.getOutput()) {
                     System.out.println(string);
                 }
                 System.out.println("========== End of " + command + " ==========\n");
                 return true;
-            }
-            else{
-                if(cliE.getError().contains("usage: git checkout [<options>] <branch>")){
+            } else {
+                if (cliE.getError().contains("usage: git checkout [<options>] <branch>")) {
                     System.out.println(cliE.getError().get(0));
-                }
-                else {
-                    for(String string : cliE.getError()){
+                } else {
+                    for (String string : cliE.getError()) {
                         System.out.println(string);
                     }
                 }
                 System.out.println("========== End of " + command + " ==========\n");
                 return false;
             }
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -579,6 +620,12 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
+    
+    /**
+     * @TODO: insert the repository path to run the method (test the implementation) 
+     * @param type
+     * @throws OptionNotExist 
+     */
     public static void reset(String type) throws OptionNotExist {
 
         CLIExecution cliE = new CLIExecution();
@@ -599,6 +646,13 @@ public class Git {
 
     }
 
+    /**
+     * @TODO: insert the repository path to run the method (test the implementation) 
+     * @TODO: What is the output? 
+     * @param modificado
+     * @param head
+     * @param cached 
+     */
     public static void diff(boolean modificado, boolean head, boolean cached) {
 
         // Existe o diff sem modificadores e com, se o booleano for falso modificação tem que ser null
@@ -625,7 +679,7 @@ public class Git {
         }
     }
 
-/*--------------------------------------------------------------------------
+    /*--------------------------------------------------------------------------
      * Fim comandos do Luan 
     --------------------------------------------------------------------------*/
 }
