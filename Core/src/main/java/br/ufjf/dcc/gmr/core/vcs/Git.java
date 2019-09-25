@@ -102,7 +102,9 @@ public class Git {
             execution = CLIExecute.execute(command, repositoryPath);
             for(String line: execution.getOutput()){
                 if(line.contains("Merge")){
-                    merge.add(repositoryPath);
+                    int mergeIndex = line.indexOf("Merge");
+                    merge.add(line.substring(mergeIndex, line.length() ));
+                    System.out.println(merge);
                 }
             }
         } catch (IOException ex) {
