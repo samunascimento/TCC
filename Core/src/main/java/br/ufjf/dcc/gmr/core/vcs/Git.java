@@ -189,15 +189,19 @@ public class Git {
     /**
      * @TODO:Please improve the options
      */
-    public static boolean pull(String repositoryPath, String options, String repository, Boolean executeOptions) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
+    public static boolean pull(String repositoryPath, String branch, String remoteName, Boolean remotePull, Boolean quiet, Boolean verbose ) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
 
         CLIExecution execution = null;
         String command = null;
-
-        if (executeOptions) {
-            command = "git pull " + options + " " + repository;
-        } else {
-            command = "git pull ";
+        
+        if (quiet && !remotePull && !verbose) {
+            command = "git pull --quiet";
+        } else if(!quiet && !remotePull && verbose){
+            command = "git pull --verbose";
+        } else if(!quiet && remotePull && !verbose) {
+        	command = "git pull "+remoteName+" "+branch;
+        } else if(!quiet && !remotePull && !verbose) {
+        	command ="git pull";
         }
 
         try {
@@ -206,7 +210,7 @@ public class Git {
 
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
-                    if (line.contains("Couldn't find remote ref branch")) {
+                	 if (line.contains("Couldn't find remote ref branch")) {
                         throw new RemoteRefBranchNotFound();
                     } else if (line.contains("not a git repository")) {
                         throw new LocalRepositoryNotAGitRepository();
@@ -235,17 +239,19 @@ public class Git {
      * @TODO:Please improve the options
      */
     //Git PUSH
-    public static boolean push(String repositoryPath, String options, String branch, Boolean executeOnlyOptions) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist {
+    public static boolean push(String repositoryPath, String remoteName, String branch, Boolean remotePush, Boolean setUpstream, Boolean pushTags) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist {
 
         CLIExecution execution = null;
         String command = null;
 
-        if (options != null && branch != null && executeOnlyOptions == false) {
-            command = "git push " + options + " " + branch;
-        } else if (options != null && executeOnlyOptions == true) {
-            command = "git push " + options;
-        } else if (options == null) {
-            command = "git push ";
+        if (remotePush && !setUpstream && !pushTags) {
+            command = "git push " + remoteName + " " + branch;
+        } else if (!remotePush && !setUpstream && pushTags) {
+        	command = "git push " + remoteName + " --tags";
+        } else if(!remotePush && setUpstream && !pushTags){
+        	command = "git push --set-upstream origin" + branch;        	
+        } else if (!remotePush && !setUpstream && !pushTags) {
+            command = "git push";
         }
 
         try {
@@ -254,7 +260,7 @@ public class Git {
 
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
-                    if (line.contains("The current branch master has no upstream branch.")) {
+                    if (line.contains(" has no upstream branch.")) {
                         throw new HasNoUpstreamBranch();
                     } else if (line.contains("not a git repository")) {
                         throw new LocalRepositoryNotAGitRepository();
