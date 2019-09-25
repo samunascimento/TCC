@@ -31,6 +31,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,26 @@ public class Git {
         return list;
     }
 
+    public static List<String> logSimple(String repositoryPath) {
+        CLIExecution execution = null;
+        String command = "git log";
+        List <String> merge = new ArrayList<>();
+
+        
+        try {
+            execution = CLIExecute.execute(command, repositoryPath);
+            for(String line: execution.getOutput()){
+                if(line.contains("Merge")){
+                    merge.add(repositoryPath);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return merge;
+ 
+    }
     /*--------------------------------------------------------------------------
      * Fim comandos do Antônio 
     --------------------------------------------------------------------------*/

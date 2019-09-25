@@ -18,7 +18,7 @@ import java.util.List;
 public class GitExample {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound{
-        String repositoryPath = "C:\\Users\\antonio henrique\\Documents\\simplegit-progit";
+        String repositoryPath = "/ice/UFJF";
 
         /*String url, directory, name;
         Scanner input = new Scanner(System.in);
@@ -42,7 +42,7 @@ public class GitExample {
         }
         System.out.println("Status: ");
         Git.status(directory);
-        */
+       
         List<Formats> list = new ArrayList<>();
         list = Git.log(repositoryPath);
         for(int i=0;i<list.size(); i++){
@@ -53,6 +53,8 @@ public class GitExample {
                     list.get(i).getCommitDescription()
             );
         }
+        */
+        
     }
 
     /**
