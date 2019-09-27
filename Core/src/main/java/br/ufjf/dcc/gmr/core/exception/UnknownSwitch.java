@@ -13,6 +13,5 @@ public class UnknownSwitch extends Exception {
     
     public UnknownSwitch(String message){
         super(message);
-    }
-    
+    }    
 }
