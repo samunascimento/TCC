@@ -26,7 +26,6 @@ public class GitExample {
 
         
         //String repositoryPath = "/ice/UFJF";
-
         /*String url, directory, name;
         Scanner input = new Scanner(System.in);
         System.out.print("Url: ");
@@ -37,30 +36,35 @@ public class GitExample {
         name = input.nextLine();
         System.out.print("Deseja login e senha? (S ou N)");
         String op = input.nextLine();
-        
         if(op.equals("S") || op.equals("s")){
-            System.out.print("Login: ");
-            String login = input.nextLine();
-            System.out.print("Senha: ");
-            String senha = input.nextLine();
-            Git.clone(url, directory, name, login, senha);
+        System.out.print("Login: ");
+        String login = input.nextLine();
+        System.out.print("Senha: ");
+        String senha = input.nextLine();
+        Git.clone(url, directory, name, login, senha);
         }else{
-            Git.clone(url, directory, name);     
+        Git.clone(url, directory, name);     
         }
         System.out.println("Status: ");
         Git.status(directory);
-       
         List<Formats> list = new ArrayList<>();
         list = Git.log(repositoryPath);
         for(int i=0;i<list.size(); i++){
-            System.out.println(
-                    list.get(i).getAuthorName()+ " " + 
-                    list.get(i).getCommitHash() + " " +
-                    list.get(i).getAuthorDate() + " " +
-                    list.get(i).getCommitDescription()
-            );
+        System.out.println(
+        list.get(i).getAuthorName()+ " " +
+        list.get(i).getCommitHash() + " " +
+        list.get(i).getAuthorDate() + " " +
+        list.get(i).getCommitDescription()
+        );
         }
-        */
+         */
+        List<String> list = new ArrayList<>();
+        String repositoryString = "C:\\Users\\antonio henrique\\Documents\\simplegit-progit";
+        String hashCommit = "a11bef06a3f659402fe7563abf99ad00de2209e6";
+        list = Git.show(repositoryString, hashCommit);
+        for(int i=0;i<list.size();i++){
+            System.out.println("1" + list.get(i));
+        }
         
     }
 

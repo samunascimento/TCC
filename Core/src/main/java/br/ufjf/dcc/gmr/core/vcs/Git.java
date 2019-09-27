@@ -63,7 +63,31 @@ public class Git {
         }
 
     }
+    /**
+     * @param repositoryString
+     * @param hashCommit
+     * @return 
+     */
+    public static List<String> show(String repositoryString, String hashCommit){
+        CLIExecution execution = null;
+        String command = "git show" + " " + hashCommit + " --pretty=oneline";
+        List<String> list = new ArrayList<>();
+        try {
+            execution = CLIExecute.execute(command, repositoryString);
+            for(String line : execution.getOutput()){
+                list.add(line);
+        }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
+    /**
+     * 
+     * @param repositoryPath
+     * @return list of Formats
+     */
     public static List<Formats> log(String repositoryPath) {
         CLIExecution execution = null;
         String command = "git log --pretty=format:\"%an,%h,%ai,%s\"";
