@@ -668,46 +668,66 @@ public class Git {
         return cliE.getOutput();
     }
 
-    public static boolean checkout(String option, String entityName, String directory) throws Exception {
+    public static boolean checkoutSwitchBranches(String branch, String directory) throws Exception {
         // Update files in working tree and switch between branches
-        /* The "entityName" is a variable that represents any entity
-        in the working tree such as branches, files, commits, paths
-        and pathspecs
-         */
-        String command = "git checkout";
-        if (option != null) {
-            command += " " + option;
-        }
-        if (entityName != null) {
-            command += " " + entityName;
-        }
-        try {
-            CLIExecution cliE = CLIExecute.execute(command, directory);
-            System.out.println("========== Running " + command + " ==========");
-            if (!cliE.getOutput().isEmpty()) {
-                for (String string : cliE.getOutput()) {
-                    System.out.println(string);
-                }
-                System.out.println("========== End of " + command + " ==========\n");
-                return true;
-            } else {
-                if (cliE.getError().contains("usage: git checkout [<options>] <branch>")) {
-                    System.out.println(cliE.getError().get(0));
-                } else {
-                    for (String string : cliE.getError()) {
-                        System.out.println(string);
-                    }
-                }
-                System.out.println("========== End of " + command + " ==========\n");
-                return false;
+        CLIExecution cliE = null;
+        boolean check = true;
+        try{
+            System.out.println("Switching to " + branch + "...");
+            cliE = CLIExecute.execute("git checkout " + branch, directory);
+            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+                throw new LocalRepositoryNotAGitRepository();
+            } else if(!cliE.getError().isEmpty()){
+                System.out.println(cliE.getOutput().get(0));    
+            } else if (cliE.getError().contains("did not match any file(s) known to git")){
+                System.out.println(cliE.getError().get(0)); 
+                check = false;
+            } else if (cliE.getError().contains("Already on ")){
+                System.out.println(cliE.getError().get(0));
+                check = false;
             }
-
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            check = false;
         }
+        return check;
     }
-
+    
+    public static boolean checkoutRemovePathFromIndex(String indexPath, String directory) throws LocalRepositoryNotAGitRepository{
+        CLIExecution cliE = null;
+        boolean check = true;
+        try{
+            cliE = CLIExecute.execute("git checkout " + indexPath, directory); 
+            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+                throw new LocalRepositoryNotAGitRepository();
+            }
+            System.out.println(cliE.getOutput().get(0));
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            check = false;
+        }
+        return check;
+    }
+    
+    public static boolean checkoutRemoveAllFromIndex(String directory){
+        CLIExecution cliE = null;
+        boolean check = true;
+        try{
+            cliE = CLIExecute.execute("git checkout .", directory);
+            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+                throw new LocalRepositoryNotAGitRepository();
+            } else {
+                System.out.println(cliE.getOutput().get(0));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            check = false;
+        }
+        return check;
+    }
     /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
