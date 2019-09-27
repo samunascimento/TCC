@@ -1,5 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.example;
 
+import br.ufjf.dcc.gmr.core.cli.CLIExecute;
+import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
@@ -10,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,8 +21,19 @@ import java.util.List;
  */
 public class GitExample {
 
-    public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound{
-        String repositoryPath = "/ice/UFJF";
+    public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound, Exception{
+        try{
+        //x = Git.branchAll(true,"C:\\Users\\joaop\\Documents");
+        for(String s : Git.branchAll(true,"C:\\Users\\joaop\\Documents")){
+            System.out.println(s);
+        }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+        //String repositoryPath = "/ice/UFJF";
 
         /*String url, directory, name;
         Scanner input = new Scanner(System.in);
