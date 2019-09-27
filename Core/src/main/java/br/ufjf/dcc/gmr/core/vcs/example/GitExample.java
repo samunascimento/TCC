@@ -22,15 +22,7 @@ import java.util.logging.Logger;
 public class GitExample {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound, Exception{
-        try{
-        //x = Git.branchAll(true,"C:\\Users\\joaop\\Documents");
-        for(String s : Git.branchAll(true,"C:\\Users\\joaop\\Documents")){
-            System.out.println(s);
-        }
-        }
-        catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
 
         
         //String repositoryPath = "/ice/UFJF";
