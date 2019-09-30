@@ -18,7 +18,8 @@ public class Formats {
     private final String authorDate;
     //%s ref name given on the command line by which the commit was reached (like git log --source), only works with git log
     private final String commitDescription;
-
+    
+    private final String mergeParents;
     
     /**
      * @param authorName
@@ -26,7 +27,17 @@ public class Formats {
      * @param abbreviatedCommitHash
      * @param authorDate 
      */
+    
+    public Formats(String authorName, String commitHash, String authorDate,String commitDescription, String mergeParents) {
+        this.mergeParents = mergeParents;
+        this.authorName = authorName;
+        this.commitHash = commitHash;
+        this.authorDate = authorDate;
+        this.commitDescription = commitDescription;
+    }
+        
     public Formats(String authorName, String commitHash, String authorDate,String commitDescription) {
+        this.mergeParents = null;
         this.authorName = authorName;
         this.commitHash = commitHash;
         this.authorDate = authorDate;
@@ -49,6 +60,8 @@ public class Formats {
         return commitDescription;
     }
 
-    
+    public String getMergeParents() {
+        return mergeParents;
+    }
    
 }

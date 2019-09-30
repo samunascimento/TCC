@@ -116,26 +116,28 @@ public class Git {
         return list;
     }
 
-    public static List<String> logSimple(String repositoryPath) {
+    public static List<Formats> logMerge(String repositoryPath) {
         CLIExecution execution = null;
-        String command = "git log";
-        List <String> merge = new ArrayList<>();
-
+        String command = "git log --merges --pretty=format:\"%an,%h,%ai,%s,%p\"";
+        List<Formats> list = new ArrayList<>();
+        Formats model = null;
         
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            for(String line: execution.getOutput()){
-                if(line.contains("Merge")){
-                    int mergeIndex = line.indexOf("Merge");
-                    merge.add(line.substring(mergeIndex, line.length() ));
-                    System.out.println(merge);
-                }
-            }
-        } catch (IOException ex) {
+            
+            String array[] = new String[5];
+            int i=0;
+            for(String line: execution.getOutput()){                
+                System.out.println("");
+                array = line.split(",");
+                model = new Formats(array[0], array[1], array[2], array[3], array[4]);
+                list.add(model);            
+                i++;                }
+            } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return merge;
+        return list;
  
     }
     /*--------------------------------------------------------------------------
@@ -225,9 +227,11 @@ public class Git {
     /**
      *
      * @param repositoryPath
-     * @param options
-     * @param repository
-     * @param executeOptions
+     * @param branch
+     * @param remoteName
+     * @param remotePull
+     * @param quiet
+     * @param verbose
      * @return
      * @throws RemoteRefBranchNotFound
      * @throws LocalRepositoryNotAGitRepository
@@ -276,9 +280,11 @@ public class Git {
     /**
      *
      * @param repositoryPath
-     * @param remote
+     * @param remoteName
      * @param branch
-     * @param executeOnlyOptions
+     * @param remotePush
+     * @param setUpstream
+     * @param pushTags
      * @return
      * @throws HasNoUpstreamBranch
      * @throws LocalRepositoryNotAGitRepository

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF";
+        String repository = "";
         List<Formats> list = new ArrayList<>();
         list = Git.log(repository);
         //get the biggest author name for the formatation be correct
@@ -41,6 +41,7 @@ public class Merge {
             System.out.print(" || " );
             System.out.println(list.get(i).getCommitDescription());
         }
+        
         Conflits.getConflit(repository);
     }
 }
