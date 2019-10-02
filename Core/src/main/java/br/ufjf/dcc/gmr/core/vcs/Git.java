@@ -13,8 +13,7 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
-import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Clean;
-import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated_Merge;
+import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated;
 import br.ufjf.dcc.gmr.core.exception.ExpectsnoArguments;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -100,8 +99,8 @@ public class Git {
             String array[] = new String[4];
             int i = 0;
             for (String line : execution.getOutput()) {
-                System.out.println("");
-                array = line.split(",");
+                //System.out.println("");
+                array = line.split(",", 4);
                 model = new Formats(array[0], array[1], array[2], array[3]);
                 list.add(model);
                 //System.out.println(model[i].getAuthorName());
@@ -128,7 +127,7 @@ public class Git {
             String array[] = new String[5];
             int i=0;
             for(String line: execution.getOutput()){                
-                System.out.println("");
+                //System.out.println("");
                 array = line.split(",");
                 model = new Formats(array[0], array[1], array[2], array[3], array[4]);
                 list.add(model);            
@@ -472,9 +471,9 @@ public class Git {
      * @exception RefusingToClean
      * @exception IsOutsideRepository
      * @exception RequiresAValue
-     * @exception ExceptionNotTreated_Clean
+     * @throws ExceptionNotTreated
      */
-    public static boolean clean(String option, String repositoryPath) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated_Clean {
+    public static boolean clean(String option, String repositoryPath) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated {
         String command = "git clean " + option;
 
         CLIExecution execution = null;
@@ -495,7 +494,7 @@ public class Git {
                 } else if (line.contains("requires a value")) {
                     throw new RequiresAValue(line);
                 } else if (!line.isEmpty()) {
-                    throw new ExceptionNotTreated_Clean();
+                    throw new ExceptionNotTreated();
                 }
             }
         }
@@ -547,7 +546,7 @@ public class Git {
                 } else if (line.contains("expects no arguments")) {
                     throw new ExpectsnoArguments(line);
                 } else if (!line.isEmpty()) {
-                    throw new ExceptionNotTreated_Merge();
+                    throw new ExceptionNotTreated();
                 }
             }
         }

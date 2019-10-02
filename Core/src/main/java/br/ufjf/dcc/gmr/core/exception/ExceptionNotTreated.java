@@ -9,8 +9,8 @@ package br.ufjf.dcc.gmr.core.exception;
  *
  * @author icout
  */
-public class ExceptionNotTreated_Merge extends Exception{
-    public ExceptionNotTreated_Merge(){
+public class ExceptionNotTreated extends Exception{
+    public ExceptionNotTreated(){
         super("Sorry, this exception was not treated yet.");
     }
 }
