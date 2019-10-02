@@ -58,14 +58,14 @@ public class GitExample {
         );
         }
          */
-       /* List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         String repositoryString = "C:\\Users\\antonio henrique\\Documents\\simplegit-progit";
         String hashCommit = "a11bef06a3f659402fe7563abf99ad00de2209e6";
         list = Git.show(repositoryString, hashCommit);
         for(int i=0;i<list.size();i++){
             System.out.println("1" + list.get(i));
         }
-        */
+        
     }
 
     /**
