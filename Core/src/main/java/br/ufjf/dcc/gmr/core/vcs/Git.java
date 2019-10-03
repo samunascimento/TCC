@@ -518,7 +518,7 @@ public class Git {
      * @exception ExpectsnoArguments
      * @exception ExceptionNotTreated_Merge
      */
-    public static boolean merge(String options, String repositoryPath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated_Merge {
+    public static boolean merge(String options, String repositoryPath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated {
         String command = "git merge " + options;
         CLIExecution execution = null;
         try {
