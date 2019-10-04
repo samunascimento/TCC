@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//Ainda é um formato bruto, pois não utiliza o "Git.java"
+import br.ufjf.dcc.gmr.core.vcs.Git;
+//Passando tudo pra nossa biblioteca
 /**
  * 
  * @author joaop
+ * @author Luan
  */
 public class Job {
 
@@ -25,6 +27,7 @@ public class Job {
         CLIExecution exec = null;
         String parent1, parent2, children;
         List<String> allMerges;
+        // Chamar comando log do git.java
         try{
             exec = CLIExecute.execute("git log --max-parents=2 --min-parents=2 --pretty=format:%p,%h", directory);
         } catch (IOException ex) {
@@ -34,6 +37,7 @@ public class Job {
             System.out.println("Não há merges com apenas dois pais");
         }
         else {
+            //Se tiver dois pais fazer
             allMerges = exec.getOutput();
             for(String merge : allMerges){
                 parent1 = merge.substring(0, 7);
@@ -43,13 +47,16 @@ public class Job {
                 System.out.println("Parent 2: " + parent2);
                 System.out.println("Children: " + children);
                 try{
+                    //Chamar checkout do git.java
                     exec = CLIExecute.execute("git checkout " + parent1, directory);
+                    //chamar merge do pai 2 com 1 no git.java
                     exec = CLIExecute.execute("git merge " + parent2, directory);
                 } catch (IOException ex) {
                     Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }//Se tiver conflito
                 if(exec.getOutput().toString().contains("CONFLICT")){
                     try{
+                        //chamar diff
                         exec = CLIExecute.execute("git diff --exit-code",directory);
                     } catch (IOException ex) {
                         Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,6 +71,7 @@ public class Job {
                     } 
                 }
                 try{
+                    //chamar checkout
                     exec = CLIExecute.execute("git checkout master", directory);
                 } catch (IOException ex) {
                     Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
