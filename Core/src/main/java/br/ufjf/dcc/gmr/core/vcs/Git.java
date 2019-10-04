@@ -736,45 +736,60 @@ public class Git {
     /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
+    /*--------------------------------------------------------------------------
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
-    
+
     /**
      * @TODO: insert the repository path to run the method (test the implementation) 
-     * @param type
-     * @throws OptionNotExist 
+     * @param hard
+     * @param mixed
+     * @param soft
+     * @throws OptionNotExist
+     * 
+     * Esse metodo executa o comando reset, esse comando refaz o ultimo commit feito usando o formato "hard","mixed" ou "soft" 
      */
-    public static void reset(String type) throws OptionNotExist {
+    public static void reset(boolean hard,boolean mixed,boolean soft) throws OptionNotExist {
 
         CLIExecution cliE = new CLIExecution();
+        
+
         try {
-            if ("hard".equals(type) && !"mixed".equals(type) && !"soft".equals(type) || !"hard".equals(type) && "mixed".equals(type) && !"soft".equals(type) || !"hard".equals(type) && !"mixed".equals(type) && "soft".equals(type)) {
+        
+            String type;
+            if(hard){type="hard"}
+            else if(mixed){type= "mixed"}
+            else if(soft){type= "soft"}
+            else {
+                throw new OptionNotExist();
+            
 
                 String command = "git reset -- " + type;
                 CLIExecution execution = null;
 
                 execution = CLIExecute.execute(command, null);
                 System.out.println(execution);
-            } else {
-                throw new OptionNotExist();
             }
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }catch(IOException ex)
+    {
+        Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+    }
 
     }
 
     /**
-     * @TODO: insert the repository path to run the method (test the implementation) 
-     * @TODO: What is the output? 
+     * @TODO: insert the repository path to run the method (test the implementation)
+     * @TODO: What is the output?
      * @param modificado
      * @param head
-     * @param cached 
+     * @param cached
+     * 
+     * O comando diff mostra a difenreça entre o seu repositorio e o repositorio remoto
      */
     public static void diff(boolean modificado, boolean head, boolean cached) {
 
-        // Existe o diff sem modificadores e com, se o booleano for falso modificação tem que ser null
+        // Existe o diff sem modificadores e com, se o booleano for falso modificação
+        // tem que ser null
         String command = "git diff " + " ";
         try {
 
