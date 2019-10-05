@@ -423,7 +423,7 @@ public class Git {
         return sucess;
     }
 
-    public List<String> parent(String repositoryPath, String commit) throws IOException {
+    public List<String> parent(String repositoryPath, String commit) throws IOException  {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution = null;
         List<String> lista = new ArrayList<>();
