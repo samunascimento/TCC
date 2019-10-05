@@ -340,7 +340,7 @@ public class Git {
      * @param repositoryPath
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean listtag(String repositoryPath) throws LocalRepositoryNotAGitRepository {
+    public boolean listtag(String repositoryPath) throws IOException {
         String command = "git tag";
         CLIExecution execution = null;
         boolean sucess = false;
@@ -369,7 +369,7 @@ public class Git {
      * @param message
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean createtag(String repositoryPath, String tag, String message) throws LocalRepositoryNotAGitRepository {
+    public boolean createtag(String repositoryPath, String tag, String message) throws IOException {
         String command = "git tag";
         CLIExecution execution = null;
         command = command + " -a " + tag + " -m " + message;
@@ -399,7 +399,7 @@ public class Git {
      * @param tag
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean removetag(String repositoryPath, String tag) throws LocalRepositoryNotAGitRepository {
+    public boolean removetag(String repositoryPath, String tag) throws IOException {
         String command = "git tag --delete ";
         CLIExecution execution = null;
         command = command + tag;
@@ -423,7 +423,7 @@ public class Git {
         return sucess;
     }
 
-    public List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist {
+    public List<String> parent(String repositoryPath, String commit) throws IOException {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution = null;
         List<String> lista = new ArrayList<>();
