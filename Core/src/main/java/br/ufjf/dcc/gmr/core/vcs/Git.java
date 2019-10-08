@@ -340,7 +340,7 @@ public class Git {
      * @param repositoryPath
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean listtag(String repositoryPath) throws IOException {
+    public boolean listtag(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
         boolean sucess = false;
@@ -369,7 +369,7 @@ public class Git {
      * @param message
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean createtag(String repositoryPath, String tag, String message) throws IOException {
+    public boolean createtag(String repositoryPath, String tag, String message) throws IOException, LocalRepositoryNotAGitRepository {
         String command = "git tag";
         CLIExecution execution = null;
         command = command + " -a " + tag + " -m " + message;
@@ -399,7 +399,7 @@ public class Git {
      * @param tag
      * @throws LocalRepositoryNotAGitRepository
      */
-    public boolean removetag(String repositoryPath, String tag) throws IOException {
+    public boolean removetag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository {
         String command = "git tag --delete ";
         CLIExecution execution = null;
         command = command + tag;
@@ -423,7 +423,7 @@ public class Git {
         return sucess;
     }
 
-    public List<String> parent(String repositoryPath, String commit) throws IOException  {
+    public List<String> parent(String repositoryPath, String commit) throws IOException, LocalRepositoryNotAGitRepository, OptionNotExist  {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution = null;
         List<String> lista = new ArrayList<>();
@@ -757,9 +757,9 @@ public class Git {
         try {
         
             String type;
-            if(hard){type="hard"}
-            else if(mixed){type= "mixed"}
-            else if(soft){type= "soft"}
+            if(hard){type="hard";}
+            else if(mixed){type= "mixed";}
+            else if(soft){type= "soft";}
             else {
                 throw new OptionNotExist();
             
