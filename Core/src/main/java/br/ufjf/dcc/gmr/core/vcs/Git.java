@@ -754,26 +754,26 @@ public class Git {
         CLIExecution cliE = new CLIExecution();
         
 
-        try {
-        
-            String type;
-            if(hard){type="hard";}
-            else if(mixed){type= "mixed";}
-            else if(soft){type= "soft";}
-            else {
-                throw new OptionNotExist();
-            
-
-                String command = "git reset -- " + type;
-                CLIExecution execution = null;
-
-                execution = CLIExecute.execute(command, null);
-                System.out.println(execution);
-            }
-        }catch(IOException ex)
-    {
-        Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-    }
+//        try {
+//        
+//            String type;
+//            if(hard){type="hard";}
+//            else if(mixed){type= "mixed";}
+//            else if(soft){type= "soft";}
+//            else {
+//                throw new OptionNotExist();
+//            
+//
+//                String command = "git reset -- " + type;
+//                CLIExecution execution = null;
+//
+//                execution = CLIExecute.execute(command, null);
+//                System.out.println(execution);
+//            }
+//        }catch(IOException ex)
+//    {
+//        Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+//    }
 
     }
 
