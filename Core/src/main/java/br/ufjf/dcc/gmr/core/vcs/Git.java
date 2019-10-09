@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.vcs;
 
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
@@ -30,7 +31,6 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
-//import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,20 +62,21 @@ public class Git {
         }
 
     }
+
     /**
      * @param repositoryString
      * @param hashCommit
-     * @return 
+     * @return
      */
-    public static List<String> show(String repositoryString, String hashCommit){
+    public static List<String> show(String repositoryString, String hashCommit) {
         CLIExecution execution = null;
         String command = "git show" + " " + hashCommit + " --pretty=oneline";
         List<String> list = new ArrayList<>();
         try {
             execution = CLIExecute.execute(command, repositoryString);
-            for(String line : execution.getOutput()){
+            for (String line : execution.getOutput()) {
                 list.add(line);
-        }
+            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,7 +84,7 @@ public class Git {
     }
 
     /**
-     * 
+     *
      * @param repositoryPath
      * @return list of Formats
      */
@@ -120,25 +121,27 @@ public class Git {
         String command = "git log --merges --pretty=format:\"%an,%h,%ai,%s,%p\"";
         List<Formats> list = new ArrayList<>();
         Formats model = null;
-        
+
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            
+
             String array[] = new String[5];
-            int i=0;
-            for(String line: execution.getOutput()){                
+            int i = 0;
+            for (String line : execution.getOutput()) {
                 //System.out.println("");
                 array = line.split(",");
                 model = new Formats(array[0], array[1], array[2], array[3], array[4]);
-                list.add(model);            
-                i++;                }
-            } catch (IOException ex) {
+                list.add(model);
+                i++;
+            }
+        } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return list;
- 
+
     }
+
     /*--------------------------------------------------------------------------
      * Fim comandos do Antônio 
     --------------------------------------------------------------------------*/
@@ -239,19 +242,19 @@ public class Git {
     /**
      * @TODO:Please improve the options
      */
-    public static boolean pull(String repositoryPath, String branch, String remoteName, Boolean remotePull, Boolean quiet, Boolean verbose ) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
+    public static boolean pull(String repositoryPath, String branch, String remoteName, Boolean remotePull, Boolean quiet, Boolean verbose) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
 
         CLIExecution execution = null;
         String command = null;
-        
+
         if (quiet && !remotePull && !verbose) {
             command = "git pull --quiet";
-        } else if(!quiet && !remotePull && verbose){
+        } else if (!quiet && !remotePull && verbose) {
             command = "git pull --verbose";
-        } else if(!quiet && remotePull && !verbose) {
-        	command = "git pull "+remoteName+" "+branch;
-        } else if(!quiet && !remotePull && !verbose) {
-        	command ="git pull";
+        } else if (!quiet && remotePull && !verbose) {
+            command = "git pull " + remoteName + " " + branch;
+        } else if (!quiet && !remotePull && !verbose) {
+            command = "git pull";
         }
 
         try {
@@ -260,7 +263,7 @@ public class Git {
 
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
-                	 if (line.contains("Couldn't find remote ref branch")) {
+                    if (line.contains("Couldn't find remote ref branch")) {
                         throw new RemoteRefBranchNotFound();
                     } else if (line.contains("not a git repository")) {
                         throw new LocalRepositoryNotAGitRepository();
@@ -299,9 +302,9 @@ public class Git {
         if (remotePush && !setUpstream && !pushTags) {
             command = "git push " + remoteName + " " + branch;
         } else if (!remotePush && !setUpstream && pushTags) {
-        	command = "git push " + remoteName + " --tags";
-        } else if(!remotePush && setUpstream && !pushTags){
-        	command = "git push --set-upstream origin" + branch;        	
+            command = "git push " + remoteName + " --tags";
+        } else if (!remotePush && setUpstream && !pushTags) {
+            command = "git push --set-upstream origin" + branch;
         } else if (!remotePush && !setUpstream && !pushTags) {
             command = "git push";
         }
@@ -336,16 +339,16 @@ public class Git {
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
     /**
-     * 
+     *
      * @param repositoryPath repository
      * @return return a String List with tags
-     * @throws LocalRepositoryNotAGitRepository 
-     * @throws java.io.IOException 
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws java.io.IOException
      */
     public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException {
         String command = "git tag";
         CLIExecution execution = null;
-        List<String>lista = new ArrayList<>();
+        List<String> lista = new ArrayList<>();
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty()) {
@@ -359,9 +362,10 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return lista;
     }
+
     /**
      * @param repositoryPath
      * @param tag tag name to create
@@ -375,17 +379,14 @@ public class Git {
     public static boolean createTag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository, IOException, OptionNotExist {
         String command = "git tag";
         CLIExecution execution = null;
-        if(message == null && commit==null){
-        command = command +" "+ tag;
-        }
-        else if(message == null && commit!=null){
-        command = command + " " + tag + " " + commit;  
-        }
-        else if(message != null && commit==null){
-            command = command +" -a "+ tag + " -m " + message;
-        }
-        else{
-            command = command + " " + tag + " " + commit + " -m " + message ; 
+        if (message == null && commit == null) {
+            command = command + " " + tag;
+        } else if (message == null && commit != null) {
+            command = command + " " + tag + " " + commit;
+        } else if (message != null && commit == null) {
+            command = command + " -a " + tag + " -m " + message;
+        } else {
+            command = command + " " + tag + " " + commit + " -m " + message;
         }
         boolean sucess = false;
         try {
@@ -399,8 +400,8 @@ public class Git {
             }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-          
-    }
+
+        }
         return sucess;
     }
 
@@ -421,26 +422,26 @@ public class Git {
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();    
+                        throw new LocalRepositoryNotAGitRepository();
                     }
                 }
-            }
-            else{   
-            sucess=true;
+            } else {
+                sucess = true;
             }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sucess;
     }
+
     /**
-     * 
+     *
      * @param repositoryPath repository
      * @param commit version hash
      * @return return a String List with parents
      * @throws LocalRepositoryNotAGitRepository
-     * @throws OptionNotExist 
-     * @throws java.io.IOException 
+     * @throws OptionNotExist
+     * @throws java.io.IOException
      */
     public static List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
         String command = "git log --pretty=%P -n 1 ";
@@ -474,7 +475,7 @@ public class Git {
      * execute description
      *
      * @param option
-     * @param repositoryPath 
+     * @param repositoryPath
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
@@ -515,7 +516,7 @@ public class Git {
      * execute
      *
      * @param options
-     * @param repositoryPath 
+     * @param repositoryPath
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
@@ -582,7 +583,7 @@ public class Git {
         try {
             System.out.println("\nCreating " + branchName + "...");
             cliE = CLIExecute.execute(command, directory);
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 //Local directory not a git repository
                 throw new LocalRepositoryNotAGitRepository();
             } else if (!cliE.getError().isEmpty()) {
@@ -590,20 +591,20 @@ public class Git {
                     //Branch already exists
                     throw new BranchAlreadyExist(branchName);
                 }
-                } else {
+            } else {
+                for (String string : cliE.getOutput()) {
+                    System.out.println(string);
+                }
+                if (switchTo) {
+                    // User wants switch to branchName
+                    System.out.println("\nSwitching to " + branchName + "...");
+                    command = "git checkout " + branchName;
+                    cliE = CLIExecute.execute(command, directory);
                     for (String string : cliE.getOutput()) {
                         System.out.println(string);
                     }
-                    if (switchTo) {
-                        // User wants switch to branchName
-                        System.out.println("\nSwitching to " + branchName + "...");
-                        command = "git checkout " + branchName;
-                        cliE = CLIExecute.execute(command, directory);
-                        for (String string : cliE.getOutput()) {
-                            System.out.println(string);
-                        }
-                    }
                 }
+            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BranchAlreadyExist ex) {
@@ -614,29 +615,27 @@ public class Git {
         return check;
     }
 
-    
     /**
      * @TODO: return something to show that the branch was created...
      * @param branchName
      * @param directory
-     * @throws Exception 
+     * @throws Exception
      */
     public static boolean branchDelete(String branchName, String directory) throws Exception {
         CLIExecution cliE = null;
         boolean check = true;
         try {
             cliE = CLIExecute.execute("git branch --all", directory);
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 //Local directory not a git repository
                 throw new LocalRepositoryNotAGitRepository();
-            }
-            else if (cliE.getOutput().contains(branchName)) {
+            } else if (cliE.getOutput().contains(branchName)) {
                 if (cliE.getOutput().contains("* " + branchName)) {
                     //Need to switch to master
                     System.out.println("Switching to master...");
                     cliE = CLIExecute.execute("git checkout master", directory);
                     System.out.println(cliE.getOutput().get(0));
-                } 
+                }
                 //Just delete
                 System.out.println("Deleting " + branchName + "...");
                 cliE = CLIExecute.execute("git branch -d " + branchName, directory);
@@ -660,16 +659,16 @@ public class Git {
      * @param print
      * @param directory
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public static List<String> branchAll(boolean print, String directory) throws Exception {
         CLIExecution cliE = null;
-        try{
+        try {
             cliE = CLIExecute.execute("git branch --all", directory);
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 throw new LocalRepositoryNotAGitRepository();
-            } else if (print){
-                for(String s : cliE.getOutput()){
+            } else if (print) {
+                for (String s : cliE.getOutput()) {
                     System.out.println(s);
                 }
             }
@@ -685,17 +684,17 @@ public class Git {
         // Update files in working tree and switch between branches
         CLIExecution cliE = null;
         boolean check = true;
-        try{
+        try {
             System.out.println("Switching to " + branch + "...");
             cliE = CLIExecute.execute("git checkout " + branch, directory);
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 throw new LocalRepositoryNotAGitRepository();
-            } else if(!cliE.getError().isEmpty()){
-                System.out.println(cliE.getOutput().get(0));    
-            } else if (cliE.getError().contains("did not match any file(s) known to git")){
-                System.out.println(cliE.getError().get(0)); 
+            } else if (!cliE.getError().isEmpty()) {
+                System.out.println(cliE.getOutput().get(0));
+            } else if (cliE.getError().contains("did not match any file(s) known to git")) {
+                System.out.println(cliE.getError().get(0));
                 check = false;
-            } else if (cliE.getError().contains("Already on ")){
+            } else if (cliE.getError().contains("Already on ")) {
                 System.out.println(cliE.getError().get(0));
                 check = false;
             }
@@ -706,13 +705,13 @@ public class Git {
         }
         return check;
     }
-    
-    public static boolean checkoutRemovePathFromIndex(String indexPath, String directory) throws LocalRepositoryNotAGitRepository{
+
+    public static boolean checkoutRemovePathFromIndex(String indexPath, String directory) throws LocalRepositoryNotAGitRepository {
         CLIExecution cliE = null;
         boolean check = true;
-        try{
-            cliE = CLIExecute.execute("git checkout " + indexPath, directory); 
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+        try {
+            cliE = CLIExecute.execute("git checkout " + indexPath, directory);
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 throw new LocalRepositoryNotAGitRepository();
             }
             System.out.println(cliE.getOutput().get(0));
@@ -723,13 +722,13 @@ public class Git {
         }
         return check;
     }
-    
-    public static boolean checkoutRemoveAllFromIndex(String directory){
+
+    public static boolean checkoutRemoveAllFromIndex(String directory) {
         CLIExecution cliE = null;
         boolean check = true;
-        try{
+        try {
             cliE = CLIExecute.execute("git checkout .", directory);
-            if(cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")){
+            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
                 throw new LocalRepositoryNotAGitRepository();
             } else {
                 System.out.println(cliE.getOutput().get(0));
@@ -741,58 +740,62 @@ public class Git {
         }
         return check;
     }
+
     /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
-    /*--------------------------------------------------------------------------
+ /*--------------------------------------------------------------------------
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
-
     /**
-     * @TODO: insert the repository path to run the method (test the implementation) 
+     * Description
+     *
+     * @TODO Test implementation
+     * @param directory
      * @param hard
      * @param mixed
      * @param soft
-     * @throws OptionNotExist
-     * 
-     * Esse metodo executa o comando reset, esse comando refaz o ultimo commit feito usando o formato "hard","mixed" ou "soft" 
+     * @throws IOException
+     *
+     * Esse metodo executa o comando reset, esse comando refaz o ultimo commit
+     * feito usando o formato "hard","mixed" ou "soft"
      */
-    public static void reset(boolean hard,boolean mixed,boolean soft) throws OptionNotExist {
+    public static boolean reset(String directory, boolean hard, boolean mixed, boolean soft) throws IOException {
 
-        CLIExecution cliE = new CLIExecution();
-        
+        String command = "git reset ";
 
-//        try {
-//        
-//            String type;
-//            if(hard){type="hard";}
-//            else if(mixed){type= "mixed";}
-//            else if(soft){type= "soft";}
-//            else {
-//                throw new OptionNotExist();
-//            
-//
-//                String command = "git reset -- " + type;
-//                CLIExecution execution = null;
-//
-//                execution = CLIExecute.execute(command, null);
-//                System.out.println(execution);
-//            }
-//        }catch(IOException ex)
-//    {
-//        Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-//    }
+        if (hard) {
+            command = command.concat(" --hard");
+        } else if (mixed) {
+            command = command.concat(" --mixed");
+        } else if (soft) {
+            command = command.concat(" --soft");
+        }
+
+        CLIExecution execution = CLIExecute.execute(command, directory);
+
+        if (!execution.getError().isEmpty()) {
+            //Errors
+            System.out.println(execution);
+        } else {
+            return true;
+        }
+
+        return false;
 
     }
 
     /**
-     * @TODO: insert the repository path to run the method (test the implementation)
+     * @deprecated 
+     * @TODO: insert the repository path to run the method (test the
+     * implementation)
      * @TODO: What is the output?
      * @param modificado
      * @param head
      * @param cached
-     * 
-     * O comando diff mostra a difenreça entre o seu repositorio e o repositorio remoto
+     *
+     * O comando diff mostra a difenreça entre o seu repositorio e o repositorio
+     * remoto
      */
     public static void diff(boolean modificado, boolean head, boolean cached) {
 
@@ -821,6 +824,17 @@ public class Git {
         }
     }
 
+    
+    
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget){
+        
+        List<FileDiff> result = new ArrayList<>();
+        
+        //implementation
+        
+        return result;
+    }
+    
     /*--------------------------------------------------------------------------
      * Fim comandos do Luan 
     --------------------------------------------------------------------------*/
