@@ -335,13 +335,19 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
+    /**
+     * 
+     * @param repositoryPath repository
+     * @return return a String List with tags
+     * @throws LocalRepositoryNotAGitRepository 
+     * @throws java.io.IOException 
+     */
     public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException {
         String command = "git tag";
         CLIExecution execution = null;
         List<String>lista = new ArrayList<>();
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
@@ -384,7 +390,6 @@ public class Git {
         boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
@@ -413,7 +418,6 @@ public class Git {
         boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
             if (!execution.getError().isEmpty()) {
                 for (String line : execution.getError()) {
                     if (line.contains("not a git repository")) {
@@ -444,6 +448,7 @@ public class Git {
         execution = null;
         List<String> lista = new ArrayList<>();
         command = command + commit;
+        execution = CLIExecute.execute(command, repositoryPath);
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
