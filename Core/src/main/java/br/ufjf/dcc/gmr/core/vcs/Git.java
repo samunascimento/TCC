@@ -335,15 +335,10 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Guilherme 
     --------------------------------------------------------------------------*/
-    /**
-     * @TODO: improve the output
-     * @param repositoryPath
-     * @throws LocalRepositoryNotAGitRepository
-     */
-    public boolean listtag(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
+    public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException {
         String command = "git tag";
         CLIExecution execution = null;
-        boolean sucess = false;
+        List<String>lista = new ArrayList<>();
         try {
             execution = CLIExecute.execute(command, repositoryPath);
             System.out.println(execution);
@@ -354,25 +349,38 @@ public class Git {
                     }
                 }
             }
-            else{
-            sucess = true;
-            }
+            lista = execution.getOutput();
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return sucess;
+        
+        return lista;
     }
     /**
-     * @TODO: improve the output. How I know that a tag was created?
      * @param repositoryPath
-     * @param tag
-     * @param message
+     * @param tag tag name to create
+     * @param message tag message
+     * @param commit version hash
+     * @return return true if execution was successful and false if unsuccessful
      * @throws LocalRepositoryNotAGitRepository
+     * @throws java.io.IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.OptionNotExist
      */
-    public boolean createtag(String repositoryPath, String tag, String message) throws IOException, LocalRepositoryNotAGitRepository {
+    public static boolean createTag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository, IOException, OptionNotExist {
         String command = "git tag";
         CLIExecution execution = null;
-        command = command + " -a " + tag + " -m " + message;
+        if(message == null && commit==null){
+        command = command +" "+ tag;
+        }
+        else if(message == null && commit!=null){
+        command = command + " " + tag + " " + commit;  
+        }
+        else if(message != null && commit==null){
+            command = command +" -a "+ tag + " -m " + message;
+        }
+        else{
+            command = command + " " + tag + " " + commit + " -m " + message ; 
+        }
         boolean sucess = false;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
@@ -384,22 +392,21 @@ public class Git {
                     }
                 }
             }
-            else{
-                sucess = true;
-            }
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        }
+          
+    }
         return sucess;
     }
 
     /**
-     * @TODO: improve the output. How I know that a tag was deleted?
      * @param repositoryPath
-     * @param tag
+     * @param tag tag name to remove
+     * @return return true if execution was successful and false if unsuccessful
      * @throws LocalRepositoryNotAGitRepository
+     * @throws java.io.IOException
      */
-    public boolean removetag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository {
+    public static boolean removeTag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository {
         String command = "git tag --delete ";
         CLIExecution execution = null;
         command = command + tag;
@@ -422,35 +429,31 @@ public class Git {
         }
         return sucess;
     }
-
-    public List<String> parent(String repositoryPath, String commit) throws IOException, LocalRepositoryNotAGitRepository, OptionNotExist  {
+    /**
+     * 
+     * @param repositoryPath repository
+     * @param commit version hash
+     * @return return a String List with parents
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws OptionNotExist 
+     * @throws java.io.IOException 
+     */
+    public static List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
         String command = "git log --pretty=%P -n 1 ";
-        CLIExecution execution = null;
+        CLIExecution execution;
+        execution = null;
         List<String> lista = new ArrayList<>();
         command = command + commit;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
-            if (execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.isEmpty()) {
-                        System.out.println("não há pais");
-                    }
-
-                }
-            } else if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    } else if (line.contains("fatal: ambiguous argument")) {
-                        throw new OptionNotExist();
-                    }
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("fatal: ambiguous argument")) {
+                    throw new OptionNotExist();
                 }
             }
-            lista = execution.getOutput();
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
+        lista = execution.getOutput();
         return lista;
     }
 
