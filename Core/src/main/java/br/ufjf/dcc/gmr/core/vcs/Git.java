@@ -223,55 +223,56 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Felippe 
     --------------------------------------------------------------------------*/
-    //Git PULL
     /**
-     *
+     * Description 
+     * TODO: Test implementation 
      * @param repositoryPath
      * @param branch
-     * @param remoteName
-     * @param remotePull
      * @param quiet
-     * @param verbose
      * @return
      * @throws RemoteRefBranchNotFound
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
+     * @throws IOException 
      */
-    /**
-     * @TODO:Please improve the options
-     */
-    public static boolean pull(String repositoryPath, String branch, String remoteName, Boolean remotePull, Boolean quiet, Boolean verbose) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist {
+    public static boolean pull(String repositoryPath, String branch, Boolean quiet) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
 
         CLIExecution execution = null;
-        String command = null;
+        String command = "git pull ";
 
-        if (quiet && !remotePull && !verbose) {
-            command = "git pull --quiet";
-        } else if (!quiet && !remotePull && verbose) {
-            command = "git pull --verbose";
-        } else if (!quiet && remotePull && !verbose) {
-            command = "git pull " + remoteName + " " + branch;
-        } else if (!quiet && !remotePull && !verbose) {
-            command = "git pull";
+        if (quiet) {
+            command = command.concat(" --quiet ");
+        } else {
+            command = command.concat(" --verbose ");
         }
 
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println("execution");
+        if (branch != null) {
+            command = command.concat(" " + branch);
+        }
 
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("Couldn't find remote ref branch")) {
-                        throw new RemoteRefBranchNotFound();
-                    } else if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    } else if (line.contains(" is not a git command")) {
-                        throw new OptionNotExist();
-                    }
+//        if (quiet && !remotePull && !verbose) {
+//            command = "git pull --quiet";
+//        } else if (!quiet && !remotePull && verbose) {
+//            command = "git pull --verbose";
+//        } else if (!quiet && remotePull && !verbose) {
+//            command = "git pull " + remoteName + " " + branch;
+//        } else if (!quiet && !remotePull && !verbose) {
+//            command = "git pull";
+//        }
+
+        execution = CLIExecute.execute(command, repositoryPath);
+        System.out.println("execution");
+
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("Couldn't find remote ref branch")) {
+                    throw new RemoteRefBranchNotFound();
+                } else if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains(" is not a git command")) {
+                    throw new OptionNotExist();
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return true;
@@ -469,7 +470,7 @@ public class Git {
     --------------------------------------------------------------------------*/
     ///clean
     /**
-     * @param repositoryPath 
+     * @param repositoryPath
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
@@ -503,7 +504,7 @@ public class Git {
 
     ///merge
     /**
-     * @param repositoryPath 
+     * @param repositoryPath
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
@@ -513,7 +514,7 @@ public class Git {
      * @exception CouldNotReadFile
      * @exception ExpectsnoArguments
      */
-    public static boolean merge(String repositoryPath) throws Exception{
+    public static boolean merge(String repositoryPath) throws Exception {
         String command = "git merge";
         CLIExecution execution = null;
         try {
@@ -540,7 +541,7 @@ public class Git {
                     throw new CouldNotReadFile(line);
                 } else if (line.contains("expects no arguments")) {
                     throw new ExpectsnoArguments(line);
-                } 
+                }
             }
         }
         return true;
@@ -770,8 +771,7 @@ public class Git {
     }
 
     /**
-     * @deprecated 
-     * @TODO: insert the repository path to run the method (test the
+     * @deprecated @TODO: insert the repository path to run the method (test the
      * implementation)
      * @TODO: What is the output?
      * @param modificado
@@ -808,17 +808,14 @@ public class Git {
         }
     }
 
-    
-    
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget){
-        
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) {
+
         List<FileDiff> result = new ArrayList<>();
-        
+
         //implementation
-        
         return result;
     }
-    
+
     /*--------------------------------------------------------------------------
      * Fim comandos do Luan 
     --------------------------------------------------------------------------*/
