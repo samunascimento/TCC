@@ -13,7 +13,6 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
-import br.ufjf.dcc.gmr.core.exception.ExceptionNotTreated;
 import br.ufjf.dcc.gmr.core.exception.ExpectsnoArguments;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -25,7 +24,6 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.RequiresAValue;
-import br.ufjf.dcc.gmr.core.exception.RequiresAValue_Merge;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
@@ -470,19 +468,14 @@ public class Git {
     --------------------------------------------------------------------------*/
     ///clean
     /**
-     * @TODO: Put the repository path as a parameter to use in the method
-     * execute description
-     *
-     * @param option
      * @param repositoryPath 
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
      * @exception RequiresAValue
-     * @throws ExceptionNotTreated
      */
-    public static boolean clean(String option, String repositoryPath) throws UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue, ExceptionNotTreated {
-        String command = "git clean " + option;
+    public static boolean clean(String repositoryPath) throws Exception {
+        String command = "git clean ";
 
         CLIExecution execution = null;
         try {
@@ -501,8 +494,6 @@ public class Git {
                     throw new IsOutsideRepository(line);
                 } else if (line.contains("requires a value")) {
                     throw new RequiresAValue(line);
-                } else if (!line.isEmpty()) {
-                    throw new ExceptionNotTreated();
                 }
             }
         }
@@ -511,23 +502,18 @@ public class Git {
 
     ///merge
     /**
-     * @TODO: Put the repository path as a parameter to use in the method
-     * execute
-     *
-     * @param options
      * @param repositoryPath 
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
      * @exception ThereIsNoMergeInProgress
      * @exception ThereIsNoMergeToAbort
-     * @exception RequiresAValue_Merge
+     * @exception RequiresAValue
      * @exception CouldNotReadFile
      * @exception ExpectsnoArguments
-     * @exception ExceptionNotTreated_Merge
      */
-    public static boolean merge(String options, String repositoryPath) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue_Merge, CouldNotReadFile, ExpectsnoArguments, ExceptionNotTreated {
-        String command = "git merge " + options;
+    public static boolean merge(String repositoryPath) throws Exception{
+        String command = "git merge";
         CLIExecution execution = null;
         try {
             execution = CLIExecute.execute(command, repositoryPath);
@@ -548,14 +534,12 @@ public class Git {
                 } else if (line.contains("There is no merge to abort")) {
                     throw new ThereIsNoMergeToAbort(line);
                 } else if (line.contains("requires a value")) {
-                    throw new RequiresAValue_Merge(line);
+                    throw new RequiresAValue(line);
                 } else if (line.contains("could not read file")) {
                     throw new CouldNotReadFile(line);
                 } else if (line.contains("expects no arguments")) {
                     throw new ExpectsnoArguments(line);
-                } else if (!line.isEmpty()) {
-                    throw new ExceptionNotTreated();
-                }
+                } 
             }
         }
         return true;
