@@ -64,7 +64,7 @@ public class Conflits {
     		String commitP1 = array[0];
     		String commitP2 = array[1];
     		Git.checkoutSwitchBranches(commitP1, directory);
-    		Git.merge(commitP2, directory); 
+    		//Git.merge(commitP2, directory); 
     		Git.status(directory);
     		//git.clean
     		
