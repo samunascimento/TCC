@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class Conflits {
     
-    public static List <Formats> getMerges(String repository){
+    public static List <Formats> getMerges(String repository) throws IOException{
         List <Formats> merge = new ArrayList<>();
         merge = Git.logMerge(repository);
         //List <String> output = new ArrayList<>();

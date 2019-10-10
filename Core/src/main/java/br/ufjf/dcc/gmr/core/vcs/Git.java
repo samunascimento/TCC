@@ -46,38 +46,23 @@ public class Git {
      * Inicio comandos do Antônio 
     --------------------------------------------------------------------------*/
     /**
-     * @TODO: Please improve this command to extract information that git show
-     * presents
-     */
-    public static void show(String repositoryPath) {
-        String command1 = "git show";
-        GitExample g = new GitExample();
-        try {
-            //Stop using this method and use the one in the class CLIExecute
-            g.execute(command1, repositoryPath);
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    /**
      * @param repositoryString
      * @param hashCommit
      * @return
      */
-    public static List<String> show(String repositoryString, String hashCommit) {
+    public static List<String> show(String repositoryString, String hashCommit) throws IOException {
         CLIExecution execution = null;
         String command = "git show" + " " + hashCommit + " --pretty=oneline";
         List<String> list = new ArrayList<>();
-        try {
-            execution = CLIExecute.execute(command, repositoryString);
-            for (String line : execution.getOutput()) {
-                list.add(line);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+
+        execution = CLIExecute.execute(command, repositoryString);
+        
+        //Exceptions...
+        
+        for (String line : execution.getOutput()) {
+            list.add(line);
         }
+
         return list;
     }
 
@@ -86,64 +71,47 @@ public class Git {
      * @param repositoryPath
      * @return list of Formats
      */
-    public static List<Formats> log(String repositoryPath) {
+    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException {
         CLIExecution execution = null;
-        String command = "git log --pretty=format:\"%an,%h,%ai,%s\"";
+        String command = "git log ";
+        if (merge) {
+            command = command.concat(" --merges ");
+        }
+
+        command = command.concat("--pretty=format:\"%an,%h,%ai,%s\"");
         List<Formats> list = new ArrayList<>();
         Formats model = null;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
 
-            //tamanho = numero de parametros do Formats
-            String array[] = new String[4];
-            int i = 0;
-            for (String line : execution.getOutput()) {
-                //System.out.println("");
-                array = line.split(",", 4);
-                model = new Formats(array[0], array[1], array[2], array[3]);
-                list.add(model);
-                //System.out.println(model[i].getAuthorName());
-                //System.out.println(model[i].getCommitHash());
-                i++;
-            }
+        execution = CLIExecute.execute(command, repositoryPath);
 
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        if (!execution.getError().isEmpty()) {
+            //Exceptions.. 
+        }
+
+        //tamanho = numero de parametros do Formats
+        String array[] = new String[4];
+        int i = 0;
+        for (String line : execution.getOutput()) {
+            //System.out.println("");
+            array = line.split(",", 4);
+            String authorName = array[0];
+
+            model = new Formats(authorName, array[1], array[2], array[3]);
+            list.add(model);
+            //System.out.println(model[i].getAuthorName());
+            //System.out.println(model[i].getCommitHash());
+            i++;
         }
 
         return list;
     }
 
-    /**
-     * this function list only merge commits
-     *
-     * @param repositoryPath
-     * @return
-     */
-    public static List<Formats> logMerge(String repositoryPath) {
-        CLIExecution execution = null;
-        String command = "git log --merges --pretty=format:\"%an,%h,%ai,%s,%p\"";
-        List<Formats> list = new ArrayList<>();
-        Formats model = null;
+    public static List<Formats> log(String repositoryPath) throws IOException {
+        return Git.log(repositoryPath, false);
+    }
 
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-
-            String array[] = new String[5];
-            int i = 0;
-            for (String line : execution.getOutput()) {
-                //System.out.println("");
-                array = line.split(",");
-                model = new Formats(array[0], array[1], array[2], array[3], array[4]);
-                list.add(model);
-                i++;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return list;
-
+    public static List<Formats> logMerge(String repositoryPath) throws IOException {
+        return Git.log(repositoryPath, true);
     }
 
     /*--------------------------------------------------------------------------
