@@ -56,9 +56,8 @@ public class Git {
         List<String> list = new ArrayList<>();
 
         execution = CLIExecute.execute(command, repositoryString);
-        
+
         //Exceptions...
-        
         for (String line : execution.getOutput()) {
             list.add(line);
         }
@@ -533,43 +532,42 @@ public class Git {
      * @param directory
      * @throws Exception
      */
-    public static boolean branchCreate(String branchName, boolean switchTo, String directory) throws Exception {
+    public static boolean branchCreate(String branchName, boolean switchTo, String directory) throws IOException, LocalRepositoryNotAGitRepository, BranchAlreadyExist {
         // Create a branch and switch to it if user wants
         String command = "git branch " + branchName;
         boolean check = true;
         CLIExecution cliE = null;
-        try {
-            System.out.println("\nCreating " + branchName + "...");
-            cliE = CLIExecute.execute(command, directory);
-            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                //Local directory not a git repository
-                throw new LocalRepositoryNotAGitRepository();
-            } else if (!cliE.getError().isEmpty()) {
-                if (cliE.getError().contains("already exists")) {
+
+        System.out.println("\nCreating " + branchName + "...");
+        cliE = CLIExecute.execute(command, directory);
+
+        if (!cliE.getError().isEmpty()) {
+            for (String line : cliE.getError()) {
+                if (line.contains("fatal: not a git repository (or any of the parent directories): .git")) {
+                    //Local directory not a git repository
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("already exists")) {
                     //Branch already exists
                     throw new BranchAlreadyExist(branchName);
+                } else{
+                    check = false;
                 }
-            } else {
+            }
+        } else {
+            for (String string : cliE.getOutput()) {
+                System.out.println(string);
+            }
+            if (switchTo) {
+                // User wants switch to branchName
+                System.out.println("\nSwitching to " + branchName + "...");
+                command = "git checkout " + branchName;
+                cliE = CLIExecute.execute(command, directory);
                 for (String string : cliE.getOutput()) {
                     System.out.println(string);
                 }
-                if (switchTo) {
-                    // User wants switch to branchName
-                    System.out.println("\nSwitching to " + branchName + "...");
-                    command = "git checkout " + branchName;
-                    cliE = CLIExecute.execute(command, directory);
-                    for (String string : cliE.getOutput()) {
-                        System.out.println(string);
-                    }
-                }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BranchAlreadyExist ex) {
-            check = false;
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            check = false;
         }
+
         return check;
     }
 
@@ -613,7 +611,6 @@ public class Git {
     }
 
     /**
-     * @TODO: return something to list the branches (List<Strings>)
      * @param print
      * @param directory
      * @return
@@ -638,7 +635,14 @@ public class Git {
         return cliE.getOutput();
     }
 
-    public static boolean checkoutSwitchBranches(String branch, String directory) throws Exception {
+    /**
+     * 
+     * @param branch
+     * @param directory
+     * @return
+     * @throws Exception 
+     */
+    public static boolean checkout(String branch, String directory) throws Exception {
         // Update files in working tree and switch between branches
         CLIExecution cliE = null;
         boolean check = true;
@@ -664,6 +668,13 @@ public class Git {
         return check;
     }
 
+    /**
+     * description
+     * @param indexPath
+     * @param directory
+     * @return
+     * @throws LocalRepositoryNotAGitRepository 
+     */
     public static boolean checkoutRemovePathFromIndex(String indexPath, String directory) throws LocalRepositoryNotAGitRepository {
         CLIExecution cliE = null;
         boolean check = true;

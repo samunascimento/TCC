@@ -57,14 +57,14 @@ public class Conflits {
     	String array[] = new String[2];
     	String directory = "C:\\Users\\felip\\Desktop\\Laravel Projetos\\PetTop2\\PetTop";
     	
-		Git.checkoutSwitchBranches("master", directory);
+		Git.checkout("master", directory);
 		
     	for(int i=0; i< mergeList.size(); i++) {    		
     		
     		array = mergeList.get(i).getMergeParents().split(" ");    		
     		String commitP1 = array[0];
     		String commitP2 = array[1];
-    		Git.checkoutSwitchBranches(commitP1, directory);
+    		Git.checkout(commitP1, directory);
     		//Git.merge(commitP2, directory); 
     		Git.status(directory);
     		//git.clean
