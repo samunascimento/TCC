@@ -113,11 +113,13 @@ public class Git {
 
         return list;
     }
-/**
- * this function list only merge commits
- * @param repositoryPath
- * @return
- */
+
+    /**
+     * this function list only merge commits
+     *
+     * @param repositoryPath
+     * @return
+     */
     public static List<Formats> logMerge(String repositoryPath) {
         CLIExecution execution = null;
         String command = "git log --merges --pretty=format:\"%an,%h,%ai,%s,%p\"";
@@ -227,12 +229,9 @@ public class Git {
  /*--------------------------------------------------------------------------
      * Inicio comandos do Felippe 
     --------------------------------------------------------------------------*/
-    
-
-   
     /**
-     * Description 
-     * TODO: Test implementation 
+     * Description TODO: Test implementation
+     *
      * @author felip
      * @param repositoryPath: git repository path in your pc.
      * @param remoteBranch: remote branch name's, like "origin master".
@@ -241,27 +240,27 @@ public class Git {
      * @throws RemoteRefBranchNotFound
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
-     * @throws IOException 
+     * @throws IOException
      */
     /**
-     * @throws IOException 
+     * @throws IOException
      * @TODO:Please improve the options
      */
     public static boolean pull(String repositoryPath, String remoteBranch, Boolean quiet) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
 
         CLIExecution execution = null;
         String command = "git pull ";
-        
+
         if (remoteBranch != null) {
             command = command.concat(" " + remoteBranch);
         }
-        
+
         if (quiet) {
             command = command.concat(" --quiet ");
-        }         
-      
-        	execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println("execution");
+        }
+
+        execution = CLIExecute.execute(command, repositoryPath);
+        System.out.println("execution");
 
 //        if (quiet && !remotePull && !verbose) {
 //            command = "git pull --quiet";
@@ -272,7 +271,6 @@ public class Git {
 //        } else if (!quiet && !remotePull && !verbose) {
 //            command = "git pull";
 //        }
-
         execution = CLIExecute.execute(command, repositoryPath);
         System.out.println("execution");
 
@@ -287,55 +285,54 @@ public class Git {
                 }
             }
 
+        }
         return true;
-   }
+    }
 
     /**
-     * @author felip  
+     * @author felip
      * @param repositoryPath: git repository path in your pc.
      * @param remoteBranch: remote branch name's, like "origin master".
      * @param setUpstream: boolean param to set up stream your branch.
      * @param pushTags boolean param to push all tags.
-     * @return true 
+     * @return true
      * @throws HasNoUpstreamBranch
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
-     * @throws IOException 
-     * 
-     * @TODO:Please improve the options
+     * @throws IOException
+     *
      */
-   
     public static boolean push(String repositoryPath, String remoteBranch, Boolean setUpstream, Boolean pushTags) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
 
         CLIExecution execution = null;
         String command = "git push ";
-        
-        if( setUpstream && remoteBranch != null && !pushTags) {
-        	command = command.concat(" --set-upstream "+remoteBranch);
-        }
-        if( remoteBranch != null && !setUpstream && !pushTags ) {
-        	command = command.concat(" "+ remoteBranch);
-        }
-        if ( pushTags && !setUpstream) {
-        	command = command.concat(" origin --tags");
-        }
-        
-            execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println("execution");
 
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains(" has no upstream branch.")) {
-                        throw new HasNoUpstreamBranch();
-                    } else if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    } else if (line.contains(" is not a git command")) {
-                        throw new OptionNotExist();
-                    }
+        if (setUpstream && remoteBranch != null && !pushTags) {
+            command = command.concat(" --set-upstream " + remoteBranch);
+        }
+        if (remoteBranch != null && !setUpstream && !pushTags) {
+            command = command.concat(" " + remoteBranch);
+        }
+        if (pushTags && !setUpstream) {
+            command = command.concat(" origin --tags");
+        }
 
+        execution = CLIExecute.execute(command, repositoryPath);
+        System.out.println("execution");
+
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains(" has no upstream branch.")) {
+                    throw new HasNoUpstreamBranch();
+                } else if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains(" is not a git command")) {
+                    throw new OptionNotExist();
                 }
+
             }
-       
+        }
+
         return true;
     }
 
