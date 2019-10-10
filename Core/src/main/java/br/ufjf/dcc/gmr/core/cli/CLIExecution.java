@@ -74,11 +74,12 @@ public class CLIExecution {
             result += string+"\n";
         }
         
-        result += "==========================Error==============================\n";
-        for (String string : error) {
-            result += string+"\n";
+        if(!error.isEmpty()){
+            result += "==========================Error==============================\n";
+            for (String string : error ) {
+                result += string+"\n";
+            }
         }
-        
         return result;
                 
     }

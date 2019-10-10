@@ -23,7 +23,8 @@ public class GitExample {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound, Exception{
 
-        Git.merge("-c", "D:\\teste\\PetTop");
+        //Git.merge("-c", "D:\\teste\\PetTop");
+        
         
         //String repositoryPath = "/ice/UFJF";
         /*String url, directory, name;
@@ -58,13 +59,14 @@ public class GitExample {
         );
         }
          */
-        List<String> list = new ArrayList<>();
+        /*List<String> list = new ArrayList<>();
         String repositoryString = "C:\\Users\\antonio henrique\\Documents\\simplegit-progit";
         String hashCommit = "a11bef06a3f659402fe7563abf99ad00de2209e6";
         list = Git.show(repositoryString, hashCommit);
         for(int i=0;i<list.size();i++){
             System.out.println("1" + list.get(i));
-        }
+        }*/
+        
         
     }
 

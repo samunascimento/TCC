@@ -2,15 +2,8 @@ package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
-import br.ufjf.dcc.gmr.core.vcs.Git;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +22,7 @@ public class Job {
         List<String> allMerges;
         // Chamar comando log do git.java
         try{
+            //move to Git class
             exec = CLIExecute.execute("git log --max-parents=2 --min-parents=2 --pretty=format:%p,%h", directory);
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
