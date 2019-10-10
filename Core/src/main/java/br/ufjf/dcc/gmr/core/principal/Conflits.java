@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Conflits {
     
-    public static void getConflit(String repository){
+    public static List <Formats> getMerges(String repository){
         List <Formats> merge = new ArrayList<>();
         merge = Git.logMerge(repository);
         //List <String> output = new ArrayList<>();
@@ -47,7 +47,29 @@ public class Conflits {
             System.out.println(merge.get(i).getCommitDescription());
         }  
                   
-                  
+           return merge;       
+        
+    }
+    
+    public static void getConflits(List<Formats> mergeList) throws Exception{
+    	
+    	String array[] = new String[2];
+    	String directory = "C:\\Users\\felip\\Desktop\\Laravel Projetos\\PetTop2\\PetTop";
+    	
+		Git.checkoutSwitchBranches("master", directory);
+		
+    	for(int i=0; i< mergeList.size(); i++) {    		
+    		
+    		array = mergeList.get(i).getMergeParents().split(" ");    		
+    		String commitP1 = array[0];
+    		String commitP2 = array[1];
+    		Git.checkoutSwitchBranches(commitP1, directory);
+    		Git.merge(commitP2, directory); 
+    		Git.status(directory);
+    		//git.clean
+    		
+    	}
+        
         
     }
     

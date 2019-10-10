@@ -15,9 +15,10 @@ import java.util.List;
  * @author ice
  */
 public class Merge {
-    public static void main(String[] args) {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\ufjfMaster\\UFJF";
+    public static void main(String[] args) throws Exception {
+        String repository = "";
         List<Formats> list = new ArrayList<>();
+        List<Formats> mergeList = new ArrayList<>();
         list = Git.log(repository);
         //get the biggest author name for the formatting be correct
         String biggestAuthorName = list.get(0).getAuthorName();
@@ -42,6 +43,7 @@ public class Merge {
             System.out.println(list.get(i).getCommitDescription());
         }
         
-        Conflits.getConflit(repository);
+        mergeList = Conflits.getMerges(repository);
+        Conflits.getConflits(mergeList);
     }
 }
