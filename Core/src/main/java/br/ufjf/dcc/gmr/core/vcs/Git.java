@@ -443,21 +443,24 @@ public class Git {
     ///clean
     /**
      * @param repositoryPath
+     * @param force
      * @exception UnknownSwitch
      * @exception RefusingToClean
      * @exception IsOutsideRepository
      * @exception RequiresAValue
      */
-    public static boolean clean(String repositoryPath) throws Exception {
+    public static boolean clean(String repositoryPath, boolean force) throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository, RequiresAValue {
         String command = "git clean ";
 
-        CLIExecution execution = null;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
+        if (force) {
+            command = command.concat(" -f");
         }
+
+        CLIExecution execution = null;
+
+        execution = CLIExecute.execute(command, repositoryPath);
+        System.out.println(execution);
+
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("unknown switch")) {
@@ -471,12 +474,14 @@ public class Git {
                 }
             }
         }
+
         return true;
     }
 
     ///merge
     /**
      * @param repositoryPath
+     * @param version
      * @exception CanNotMerge
      * @exception NoRemoteForTheCurrentBranch
      * @exception UnknownOption
@@ -486,15 +491,13 @@ public class Git {
      * @exception CouldNotReadFile
      * @exception ExpectsnoArguments
      */
-    public static boolean merge(String repositoryPath) throws Exception {
-        String command = "git merge";
+    private static boolean mergeBase(String repositoryPath, String version) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue, CouldNotReadFile, ExpectsnoArguments, CanNotMerge, CanNotMerge, IOException {
+        String command = "git merge " + version;
         CLIExecution execution = null;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            System.out.println(execution);
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        execution = CLIExecute.execute(command, repositoryPath);
+        System.out.println(execution);
+
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("can not merge")) {
@@ -517,6 +520,14 @@ public class Git {
             }
         }
         return true;
+    }
+
+    public static boolean mergeRevisions(String repositoryPath, String revision) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue, CouldNotReadFile, ExpectsnoArguments, IOException {
+        return mergeBase(repositoryPath, revision);
+    }
+
+    public static boolean mergeBranches(String repositoryPath, String revision) throws CanNotMerge, NoRemoteForTheCurrentBranch, UnknownOption, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, RequiresAValue, CouldNotReadFile, ExpectsnoArguments, IOException {
+        return mergeBase(repositoryPath, revision);
     }
 
     /*--------------------------------------------------------------------------
@@ -549,7 +560,7 @@ public class Git {
                 } else if (line.contains("already exists")) {
                     //Branch already exists
                     throw new BranchAlreadyExist(branchName);
-                } else{
+                } else {
                     check = false;
                 }
             }
@@ -636,11 +647,11 @@ public class Git {
     }
 
     /**
-     * 
+     *
      * @param branch
      * @param directory
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public static boolean checkout(String branch, String directory) throws Exception {
         // Update files in working tree and switch between branches
@@ -670,10 +681,11 @@ public class Git {
 
     /**
      * description
+     *
      * @param indexPath
      * @param directory
      * @return
-     * @throws LocalRepositoryNotAGitRepository 
+     * @throws LocalRepositoryNotAGitRepository
      */
     public static boolean checkoutRemovePathFromIndex(String indexPath, String directory) throws LocalRepositoryNotAGitRepository {
         CLIExecution cliE = null;
