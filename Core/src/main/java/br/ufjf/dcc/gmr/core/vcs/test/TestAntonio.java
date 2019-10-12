@@ -5,8 +5,14 @@
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,13 +21,12 @@ import java.util.List;
  */
 public class TestAntonio {
     
-    public static void main(String[] args) throws IOException {
-        String repositoryPath = "/Users/gleiph/repositories/voldemort";
+    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
+        String repositoryPath = "C:\\Users\\antonio henrique\\Documents\\Bolsa TP\\UFJF";
         
-        List<String> show = Git.show(repositoryPath, "a41645d0d10a43547e732d5422c8cb93cb9b9c6a");
-        
-        for (String line : show) {
-            System.out.println(line);
+        List<Formats> log = Git.log(repositoryPath);
+        for (int i = 0; i < log.size(); i++) {
+            System.out.println("AuthorName : " + log.get(i).getAuthorName() + " authorDate : " + log.get(i).getAuthorDate());
         }
     }
     

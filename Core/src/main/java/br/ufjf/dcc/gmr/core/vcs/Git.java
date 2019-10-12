@@ -30,7 +30,10 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownOption;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,7 +94,7 @@ public class Git {
      * @return list of Formats
      * @throws IOException 
      */
-    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException, LocalRepositoryNotAGitRepository {
+    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
         CLIExecution execution = null;
         String command = "git log ";
         if (merge) {
@@ -120,7 +123,17 @@ public class Git {
                 String commitHash = array[1];
                 String authorDate = array[2];
                 String commitDescription = array[3];
-                model = new Formats(authorName, commitHash, authorDate, commitDescription);
+                
+                //Split Date
+                array = array[2].split(" ",3);
+                String dateForm = array[0];
+                String time = array[1];
+                String localization = array[2];
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+                Date dateFormat = format.parse(authorDate);
+                //end
+                
+                model = new Formats(authorName, commitHash, dateFormat, commitDescription);
                 list.add(model);
                 i++;
             }
@@ -134,18 +147,17 @@ public class Git {
      * @throws IOException 
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository 
      */
-    public static List<Formats> log(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository{
+    public static List<Formats> log(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException{
         return Git.log(repositoryPath, false);
     }
 
     /**
-     * 
      * @param repositoryPath
      * @return
      * @throws IOException 
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository 
      */
-    public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository {
+    public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
         return Git.log(repositoryPath, true);
     }
 

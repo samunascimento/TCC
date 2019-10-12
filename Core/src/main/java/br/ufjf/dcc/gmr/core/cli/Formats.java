@@ -5,6 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.cli;
 
+import java.util.Date;
+
 /**
  *
  * @author antonio
@@ -15,7 +17,7 @@ public class Formats {
     //%H commit hash
     private final String commitHash;
     //%ai author date (format respects --date= option)
-    private final String authorDate;
+    private final Date authorDate;
     //%s ref name given on the command line by which the commit was reached (like git log --source), only works with git log
     private final String commitDescription;
     
@@ -26,7 +28,7 @@ public class Formats {
      * @param authorDate 
      */
         
-    public Formats(String authorName, String commitHash, String authorDate,String commitDescription) {
+    public Formats(String authorName, String commitHash, Date authorDate,String commitDescription) {
         this.authorName = authorName;
         this.commitHash = commitHash;
         this.authorDate = authorDate;
@@ -41,7 +43,7 @@ public class Formats {
         return commitHash;
     }
 
-    public String getAuthorDate() {
+        public Date getAuthorDate() {
         return authorDate;
     }
 
