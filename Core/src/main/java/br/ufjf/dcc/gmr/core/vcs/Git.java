@@ -50,14 +50,15 @@ public class Git {
      * @param hashCommit
      * @return
      */
-    public static List<String> show(String repositoryString, String hashCommit) throws IOException {
+    public static List<String> show(String repositoryString, String hashCommit) throws IOException, LocalRepositoryNotAGitRepository {
         CLIExecution execution = null;
         String command = "git show" + " " + hashCommit + " --pretty=oneline";
         List<String> list = new ArrayList<>();
-
         execution = CLIExecute.execute(command, repositoryString);
-
-        //Exceptions...
+        for (String line : execution.getError()) {
+            if (line.contains("not a git repository"))
+                    throw new LocalRepositoryNotAGitRepository();
+        }
         for (String line : execution.getOutput()) {
             list.add(line);
         }
@@ -66,50 +67,85 @@ public class Git {
     }
 
     /**
-     *
-     * @param repositoryPath
-     * @return list of Formats
+     * 
+     * @param repositoryString
+     * @param hashCommit
+     * @return return command git show from hashCommit
+     * @throws IOException 
      */
-    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException {
+    public static List<String> showCommiterName(String repositoryString, String hashCommit) throws IOException{
+        CLIExecution execution = null;
+        List<String> list = new ArrayList<>();
+        String command = "git show" + " " + hashCommit + " --pretty=oneline";
+        execution = CLIExecute.execute(command, repositoryString);
+        for (String line : execution.getOutput()) {
+            list.add(line);
+        }
+        return list;
+    }
+    
+    /**
+     * @author antonio
+     * @param repositoryPath
+     * @param merge
+     * @return list of Formats
+     * @throws IOException 
+     */
+    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException, LocalRepositoryNotAGitRepository {
         CLIExecution execution = null;
         String command = "git log ";
         if (merge) {
             command = command.concat(" --merges ");
         }
 
-        command = command.concat("--pretty=format:\"%an,%h,%ai,%s\"");
+        //log method formatting
+        command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
         List<Formats> list = new ArrayList<>();
         Formats model = null;
 
         execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            //Exceptions.. 
-        }
-
-        //tamanho = numero de parametros do Formats
-        String array[] = new String[4];
-        int i = 0;
-        for (String line : execution.getOutput()) {
-            //System.out.println("");
-            array = line.split(",", 4);
-            String authorName = array[0];
-
-            model = new Formats(authorName, array[1], array[2], array[3]);
-            list.add(model);
-            //System.out.println(model[i].getAuthorName());
-            //System.out.println(model[i].getCommitHash());
-            i++;
-        }
-
+            execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+               for (String line : execution.getError()) {
+                    if (line.contains("not a git repository"))
+                        throw new LocalRepositoryNotAGitRepository();
+                }
+            }
+            //size: Number of Parameters
+            String array[];
+            int i = 0;
+            for (String line : execution.getOutput()) {
+                array = line.split(",", 4);
+                String authorName = array[0];
+                String commitHash = array[1];
+                String authorDate = array[2];
+                String commitDescription = array[3];
+                model = new Formats(authorName, commitHash, authorDate, commitDescription);
+                list.add(model);
+                i++;
+            }
+            
         return list;
     }
 
-    public static List<Formats> log(String repositoryPath) throws IOException {
+    /**
+     * @param repositoryPath
+     * @return list of Formats
+     * @throws IOException 
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository 
+     */
+    public static List<Formats> log(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository{
         return Git.log(repositoryPath, false);
     }
 
-    public static List<Formats> logMerge(String repositoryPath) throws IOException {
+    /**
+     * 
+     * @param repositoryPath
+     * @return
+     * @throws IOException 
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository 
+     */
+    public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository {
         return Git.log(repositoryPath, true);
     }
 
