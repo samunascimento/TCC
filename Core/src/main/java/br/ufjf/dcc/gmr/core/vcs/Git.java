@@ -364,25 +364,24 @@ public class Git {
      * @return return a String List with tags
      * @throws LocalRepositoryNotAGitRepository
      * @throws java.io.IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
      */
-    public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException {
+    public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException, RepositoryNotFound {
         String command = "git tag";
         CLIExecution execution = null;
         List<String> lista = new ArrayList<>();
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    }
+        execution = CLIExecute.execute(command, repositoryPath);
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+                else if (line.contains("Repository not found")) {
+                    throw new RepositoryNotFound();
                 }
             }
-            lista = execution.getOutput();
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        lista = execution.getOutput();
         return lista;
     }
 
@@ -395,8 +394,9 @@ public class Git {
      * @throws LocalRepositoryNotAGitRepository
      * @throws java.io.IOException
      * @throws br.ufjf.dcc.gmr.core.exception.OptionNotExist
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
      */
-    public static boolean createTag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository, IOException, OptionNotExist {
+    public static boolean createTag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository, IOException, OptionNotExist, RepositoryNotFound {
         String command = "git tag";
         CLIExecution execution = null;
         if (message == null && commit == null) {
@@ -408,21 +408,20 @@ public class Git {
         } else {
             command = command + " " + tag + " " + commit + " -m " + message;
         }
-        boolean sucess = false;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    }
+        boolean success = false;
+        execution = CLIExecute.execute(command, repositoryPath);
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("Repository not found")) {
+                    throw new RepositoryNotFound();
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-
+        } else {
+            success = true;
         }
-        return sucess;
+        return success;
     }
 
     /**
@@ -431,25 +430,24 @@ public class Git {
      * @return return true if execution was successful and false if unsuccessful
      * @throws LocalRepositoryNotAGitRepository
      * @throws java.io.IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
      */
-    public static boolean removeTag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository {
+    public static boolean removeTag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository, RepositoryNotFound {
         String command = "git tag --delete ";
         CLIExecution execution = null;
         command = command + tag;
         boolean sucess = false;
-        try {
-            execution = CLIExecute.execute(command, repositoryPath);
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("not a git repository")) {
-                        throw new LocalRepositoryNotAGitRepository();
-                    }
+        execution = CLIExecute.execute(command, repositoryPath);
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("Repository not found")) {
+                    throw new RepositoryNotFound();
                 }
-            } else {
-                sucess = true;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            sucess = true;
         }
         return sucess;
     }
@@ -462,8 +460,9 @@ public class Git {
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
      * @throws java.io.IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
      */
-    public static List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
+    public static List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound {
         String command = "git log --pretty=%P -n 1 ";
         CLIExecution execution;
         execution = null;
@@ -476,6 +475,8 @@ public class Git {
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (line.contains("fatal: ambiguous argument")) {
                     throw new OptionNotExist();
+                } else if (line.contains("Repository not found")) {
+                    throw new RepositoryNotFound();
                 }
             }
         }
