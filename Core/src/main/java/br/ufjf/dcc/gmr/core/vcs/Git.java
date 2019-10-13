@@ -13,6 +13,7 @@ import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CanNotMerge;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.CouldNotReadFile;
 import br.ufjf.dcc.gmr.core.exception.ExpectsnoArguments;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
@@ -585,28 +586,25 @@ public class Git {
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
     /**
-     * @TODO: return something to show that the branch was created...
+     *
      * @param branchName
      * @param switchTo
      * @param directory
-     * @throws Exception
+     * @return
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws BranchAlreadyExist
      */
-    public static boolean branchCreate(String branchName, boolean switchTo, String directory) throws IOException, LocalRepositoryNotAGitRepository, BranchAlreadyExist {
-        // Create a branch and switch to it if user wants
+    public static boolean createBranch(String branchName, boolean switchTo, String directory) throws IOException, LocalRepositoryNotAGitRepository, BranchAlreadyExist {
         String command = "git branch " + branchName;
         boolean check = true;
         CLIExecution cliE = null;
-
-        System.out.println("\nCreating " + branchName + "...");
         cliE = CLIExecute.execute(command, directory);
-
         if (!cliE.getError().isEmpty()) {
             for (String line : cliE.getError()) {
                 if (line.contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                    //Local directory not a git repository
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (line.contains("already exists")) {
-                    //Branch already exists
                     throw new BranchAlreadyExist(branchName);
                 } else {
                     check = false;
@@ -617,8 +615,6 @@ public class Git {
                 System.out.println(string);
             }
             if (switchTo) {
-                // User wants switch to branchName
-                System.out.println("\nSwitching to " + branchName + "...");
                 command = "git checkout " + branchName;
                 cliE = CLIExecute.execute(command, directory);
                 for (String string : cliE.getOutput()) {
@@ -626,110 +622,86 @@ public class Git {
                 }
             }
         }
-
         return check;
     }
 
     /**
-     * @TODO: return something to show that the branch was created...
      * @param branchName
      * @param directory
      * @throws Exception
      */
-    public static boolean branchDelete(String branchName, String directory) throws Exception {
+    public static boolean deleteBranch(String branchName, String directory) throws LocalRepositoryNotAGitRepository, BranchNotFound, IOException {
         CLIExecution cliE = null;
         boolean check = true;
-        try {
-            cliE = CLIExecute.execute("git branch --all", directory);
-            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                //Local directory not a git repository
-                throw new LocalRepositoryNotAGitRepository();
-            } else if (cliE.getOutput().contains(branchName)) {
-                if (cliE.getOutput().contains("* " + branchName)) {
-                    //Need to switch to master
-                    System.out.println("Switching to master...");
-                    cliE = CLIExecute.execute("git checkout master", directory);
-                    System.out.println(cliE.getOutput().get(0));
-                }
-                //Just delete
-                System.out.println("Deleting " + branchName + "...");
-                cliE = CLIExecute.execute("git branch -d " + branchName, directory);
-                System.out.println(cliE.getOutput().get(0));
-            } else {
-                //Branch not exist
-                throw new BranchNotFound(branchName);
+        cliE = CLIExecute.execute("git branch --all", directory);
+        if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
+            throw new LocalRepositoryNotAGitRepository();
+        } else if (cliE.getOutput().toString().contains(branchName)) {
+            if (cliE.getOutput().toString().contains("* " + branchName)) {
+                cliE = CLIExecute.execute("git checkout master", directory);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BranchNotFound ex) {
+            cliE = CLIExecute.execute("git branch -d " + branchName, directory);
+        } else {
             check = false;
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            check = false;
+            throw new BranchNotFound(branchName);
         }
         return check;
+
     }
 
     /**
+     *
      * @param print
      * @param directory
      * @return
      * @throws Exception
      */
-    public static List<String> branchAll(boolean print, String directory) throws Exception {
+    public static List<String> listBranches(boolean print, String directory) throws Exception {
         CLIExecution cliE = null;
-        try {
-            cliE = CLIExecute.execute("git branch --all", directory);
-            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                throw new LocalRepositoryNotAGitRepository();
-            } else if (print) {
-                for (String s : cliE.getOutput()) {
-                    System.out.println(s);
+        cliE = CLIExecute.execute("git branch --all", directory);
+        if (cliE.getError().toString().contains("fatal: not a git repository (or any of the parent directories): .git")) {
+            throw new LocalRepositoryNotAGitRepository();
+        } else {
+            cliE.getOutput().remove(0);
+            if (print) {
+                for (String line : cliE.getOutput()) {
+                    System.out.println(line);
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            return cliE.getError();
         }
         return cliE.getOutput();
     }
 
     /**
-     *
-     * @param branch
+     * 
+     * @param entity
      * @param directory
      * @return
-     * @throws Exception
+     * @throws Exception 
      */
-    public static boolean checkout(String branch, String directory) throws Exception {
-        // Update files in working tree and switch between branches
+    public static boolean checkout(String entity, String directory) throws Exception {
         CLIExecution cliE = null;
         boolean check = true;
-        try {
-            System.out.println("Switching to " + branch + "...");
-            cliE = CLIExecute.execute("git checkout " + branch, directory);
-            if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
+        cliE = CLIExecute.execute("git checkout " + entity, directory);
+        if (!cliE.getError().isEmpty()) {
+            if(cliE.getError().toString().contains("fatal: not a git repository (or any of the parent directories): .git")){
                 throw new LocalRepositoryNotAGitRepository();
-            } else if (!cliE.getError().isEmpty()) {
-                System.out.println(cliE.getOutput().get(0));
-            } else if (cliE.getError().contains("did not match any file(s) known to git")) {
-                System.out.println(cliE.getError().get(0));
-                check = false;
-            } else if (cliE.getError().contains("Already on ")) {
-                System.out.println(cliE.getError().get(0));
-                check = false;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            check = false;
+            for(String string : cliE.getError()){
+                if(string.contains("did not match any file(s) known to git")){
+                    check = false;
+                    throw new CheckoutError(string); 
+                }else if(string.contains("Already on")){
+                    check = false;
+                   throw new CheckoutError(string);
+                }
+            }
         }
         return check;
     }
 
     /**
      * description
-     *
      * @param indexPath
      * @param directory
      * @return
@@ -751,7 +723,11 @@ public class Git {
         }
         return check;
     }
-
+    /**
+     * 
+     * @param directory
+     * @return 
+     */
     public static boolean checkoutRemoveAllFromIndex(String directory) {
         CLIExecution cliE = null;
         boolean check = true;
@@ -769,7 +745,6 @@ public class Git {
         }
         return check;
     }
-
     /*--------------------------------------------------------------------------
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
