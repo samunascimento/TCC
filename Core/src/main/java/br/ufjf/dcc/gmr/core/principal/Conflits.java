@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
@@ -20,15 +21,11 @@ public class Conflits {
         //List <String> output = new ArrayList<>();
         //output = Git.logSimple(repository);
         //String pais[][] = new String[merge.size()][merge.size()];
-        
-       
-        
-        
         String biggestAuthorName = merge.get(0).getAuthorName();
         String spaceAux = new String();
         
         System.out.print("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||\n");
-       for(int i = 1; i < merge.size(); i++){
+        for(int i = 1; i < merge.size(); i++){
             if(biggestAuthorName.length() < merge.get(i).getAuthorName().length()){
                 biggestAuthorName = merge.get(i).getAuthorName();
             }
@@ -55,24 +52,31 @@ public class Conflits {
         
     }
     
-    public static void getConflits(List<Formats> mergeList) throws Exception{
+    public static void getConflits(List<Formats> mergeList) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, CheckoutError  {
     	
     	String array[] = new String[2];
     	String directory = "C:\\Users\\felip\\Desktop\\Laravel Projetos\\PetTop2\\PetTop";
-    	
-		Git.checkout("master", directory);
-		
-    	for(int i=0; i< mergeList.size(); i++) {    		
-    		
-                List<String> parents = Git.parent(directory, mergeList.get(i).getCommitHash());
-    		
-    		String commitP1 = parents.get(0);
-    		String commitP2 = parents.get(1);
-    		Git.checkout(commitP1, directory);
-    		//Git.merge(commitP2, directory); 
-    		Git.status(directory);
-    		//git.clean
-    		
+    	try {
+            Git.checkout("master", directory);
+        } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
+        }
+    	for(int i=0; i< mergeList.size(); i++) {
+            List<String> parents = Git.parent(directory, mergeList.get(i).getCommitHash());
+
+            String commitP1 = parents.get(0);
+            String commitP2 = parents.get(1);
+            try {
+                Git.checkout(commitP1, directory);
+            } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
+             }
+
+            //Git.merge(commitP2, directory); 
+            try {
+                Git.status(directory);
+            } catch (RepositoryNotFound | IOException e) {
+            }
+            
+            //git.clean
     	}
         
         

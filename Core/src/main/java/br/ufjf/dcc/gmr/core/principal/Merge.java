@@ -6,7 +6,13 @@
 package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +21,14 @@ import java.util.List;
  * @author ice
  */
 public class Merge {
-    public static void main(String[] args) throws Exception {
-        String repository = "";
+    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
+        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\ufjfMaster\\UFJF";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
-        list = Git.log(repository);
+        try {
+            list = Git.log(repository);
+        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException e) {
+        }
         //get the biggest author name for the formatting be correct
         String biggestAuthorName = list.get(0).getAuthorName();
         String spaceAux = new String();
@@ -46,6 +55,10 @@ public class Merge {
         }
         
         mergeList = Conflits.getMerges(repository);
-        Conflits.getConflits(mergeList);
+        try {
+            Conflits.getConflits(mergeList);
+        } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
+        }
+        
     }
 }
