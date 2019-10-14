@@ -7,10 +7,10 @@ package br.ufjf.dcc.gmr.core.exception;
 
 /**
  *
- * @author Ian Couto
+ * @author icout
  */
-public class RequiresAValue extends Exception {
-    public RequiresAValue(String message){
+public class NotSomethingWeCanMerge extends Exception{
+    public NotSomethingWeCanMerge(String message){
         super(message);
     }
 }
