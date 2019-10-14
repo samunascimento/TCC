@@ -1,9 +1,12 @@
 package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -12,9 +15,8 @@ import java.util.List;
  */
 public class Conflits {
     
-    public static List <Formats> getMerges(String repository) throws IOException{
-        List <Formats> merge = new ArrayList<>();
-        merge = Git.logMerge(repository);
+    public static List <Formats> getMerges(String repository) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist{
+        List <Formats> merge =  Git.logMerge(repository);
         //List <String> output = new ArrayList<>();
         //output = Git.logSimple(repository);
         //String pais[][] = new String[merge.size()][merge.size()];
@@ -41,7 +43,8 @@ public class Conflits {
             spaceAux = "";            
             System.out.print(merge.get(i).getCommitHash());
             System.out.print(" || " );
-            System.out.print(merge.get(i).getMergeParents());
+            List<String> parents = Git.parent(repository, merge.get(i).getCommitHash());
+            System.out.print(parents);
             System.out.print(" || " );
             System.out.print(merge.get(i).getAuthorDate());
             System.out.print(" || " );
@@ -61,9 +64,10 @@ public class Conflits {
 		
     	for(int i=0; i< mergeList.size(); i++) {    		
     		
-    		array = mergeList.get(i).getMergeParents().split(" ");    		
-    		String commitP1 = array[0];
-    		String commitP2 = array[1];
+                List<String> parents = Git.parent(directory, mergeList.get(i).getCommitHash());
+    		
+    		String commitP1 = parents.get(0);
+    		String commitP2 = parents.get(1);
     		Git.checkout(commitP1, directory);
     		//Git.merge(commitP2, directory); 
     		Git.status(directory);

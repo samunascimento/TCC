@@ -40,7 +40,7 @@ public class Merge {
             System.out.print(" || " );
             System.out.print(list.get(i).getAuthorDate());
             System.out.print(" || " );
-            System.out.print(list.get(i).getMergeParents());
+            System.out.print(Git.parent(repository, list.get(i).getCommitHash()));
             System.out.print(" || " );
             System.out.println(list.get(i).getCommitDescription());
         }

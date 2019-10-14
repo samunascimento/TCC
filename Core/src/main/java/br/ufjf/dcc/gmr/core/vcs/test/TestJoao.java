@@ -44,13 +44,13 @@ public class TestJoao {
 
 //            Git.branchAll(true, repositoryPath);
             System.out.println("Creanting branch");
-            Git.branchCreate(branch, false, repositoryPath);
+            Git.createBranch(branch, false, repositoryPath);
 //            Git.branchAll(true, repositoryPath);
         } catch (IOException ex) {
             System.out.println("Diretorio nao exite, digite um diretorio que contém um repositorio:");
             
             try {
-                Git.branchCreate(branch, false, teclado.nextLine());
+                Git.createBranch(branch, false, teclado.nextLine());
             } catch (IOException ex1) {
                 Logger.getLogger(TestJoao.class.getName()).log(Level.SEVERE, null, ex1);
             } catch (LocalRepositoryNotAGitRepository ex1) {
