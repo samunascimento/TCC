@@ -14,10 +14,44 @@ import java.util.List;
 
 public class FileDiff {
     
-    String filePathSource;
-    String filePathTarget;
-    List<String> added;
-    List<String> removed;
+    private String filePathSource;
+    private String filePathTarget;
+    private List<String> added;
+    private List<String> removed;
+
+    public String getFilePathSource() {
+        return filePathSource;
+    }
+
+    public void setFilePathSource(String filePathSource) {
+        this.filePathSource = filePathSource;
+    }
+
+    public String getFilePathTarget() {
+        return filePathTarget;
+    }
+
+    public void setFilePathTarget(String filePathTarget) {
+        this.filePathTarget = filePathTarget;
+    }
+
+    public List<String> getAdded() {
+        return added;
+    }
+
+    public void setAdded(List<String> added) {
+        this.added = added;
+    }
+
+    public List<String> getRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(List<String> removed) {
+        this.removed = removed;
+    }
+    
+    
 
     
 }

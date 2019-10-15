@@ -796,8 +796,12 @@ public class Git {
      * Inicio comandos do Luan 
     --------------------------------------------------------------------------*/
     /**
-     * Description
-     *
+     * 
+     ** Description This method executes the git command 'reset'. This command
+     * can be called withouth any modifier or with one of the three,
+     * 'hard','mixed' and 'soft' The command undo the last commit or merge you
+     * did;
+     
      * @TODO Test implementation
      * @param directory
      * @param hard
@@ -808,25 +812,31 @@ public class Git {
      * Esse metodo executa o comando reset, esse comando refaz o ultimo commit
      * feito usando o formato "hard","mixed" ou "soft"
      */
-    public static boolean reset(String directory, boolean hard, boolean mixed, boolean soft) throws IOException {
+    public static boolean reset(String directory, boolean hard, boolean mixed, boolean soft,String Document) throws IOException, LocalRepositoryNotAGitRepository {
 
         String command = "git reset ";
 
         if (hard) {
             command = command.concat(" --hard");
         } else if (mixed) {
-            command = command.concat(" --mixed");
+            command = command.concat(" --mixed --");
+            command=command.concat(Document);
         } else if (soft) {
             command = command.concat(" --soft");
         }
-
+try{
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
-            //Errors
-            System.out.println(execution);
+              if (execution.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
+                throw new LocalRepositoryNotAGitRepository();}
+                else
+                throw new IOException();
         } else {
             return true;
+        }
+}catch (LocalRepositoryNotAGitRepository ex) {
+            
         }
 
         return false;
@@ -843,7 +853,7 @@ public class Git {
      *
      * O comando diff mostra a difenreça entre o seu repositorio e o repositorio
      * remoto
-     */
+     *//*
     public static void diff(boolean modificado, boolean head, boolean cached) {
 
         // Existe o diff sem modificadores e com, se o booleano for falso modificação
@@ -869,14 +879,33 @@ public class Git {
         } catch (IOException ex) {
             Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) {
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) throws IOException,LocalRepositoryNotAGitRepository {
 
         List<FileDiff> result = new ArrayList<>();
-
-        //implementation
-        return result;
+       
+        String command = "diff " + commitSource +  " "+ commitTarget ;
+        try{
+        CLIExecution execution = CLIExecute.execute(command, directory);
+        
+         if (!execution.getError().isEmpty()) {
+            if (execution.getError().contains("not a git repository"))
+              throw new LocalRepositoryNotAGitRepository();
+        }
+        for (String line : execution.getOutput()) {
+            
+            
+            
+            
+        }
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            
+        }
+        
+        
+        
+     return result;  
     }
 
     /*--------------------------------------------------------------------------
