@@ -477,7 +477,13 @@ public class Git {
                 }
             }
         }
-        lista = execution.getOutput();
+        
+        String[] split = execution.getOutput().get(0).split(" ");
+        
+        for (String parent : split) {
+            lista.add(parent);
+        }
+        
         return lista;
     }
 
@@ -798,7 +804,7 @@ public class Git {
     /**
      * 
      ** Description This method executes the git command 'reset'. This command
-     * can be called withouth any modifier or with one of the three,
+     * can be called without any modifier or with one of the three,
      * 'hard','mixed' and 'soft' The command undo the last commit or merge you
      * did;
      

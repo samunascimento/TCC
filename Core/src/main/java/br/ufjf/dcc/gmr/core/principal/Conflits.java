@@ -72,18 +72,16 @@ public class Conflits {
     	for(int i=0; i< mergeList.size(); i++) {
             List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
             
-            array = parents.get(0).split(" ");
             
-            String commitP1 = array[0];
-            String commitP2 = array[1];
+            
             
             try {
-                Git.checkout(commitP1, repository);
+                Git.checkout(parents.get(0), repository);
             } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
              }
 
             try {
-            	Git.mergeBranch(repository, commitP1, commitP2, "Teste");
+            	Git.mergeBranch(repository, parents.get(0), parents.get(1), "Teste");
             } catch (NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | ThereIsNoMergeToAbort | IOException | AlreadyUpToDate | NotSomethingWeCanMerge e) {
     		}
             
