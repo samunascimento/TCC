@@ -1,10 +1,18 @@
 package br.ufjf.dcc.gmr.core.principal;
 
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
+import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.text.ParseException;
@@ -52,31 +60,48 @@ public class Conflits {
         
     }
     
-    public static void getConflits(List<Formats> mergeList) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, CheckoutError  {
+    public static void getConflits(List<Formats> mergeList, String repository) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, CheckoutError  {
     	
     	String array[] = new String[2];
-    	String directory = "C:\\Users\\felip\\Desktop\\Laravel Projetos\\PetTop2\\PetTop";
+    	
     	try {
-            Git.checkout("master", directory);
+            Git.checkout("master", repository);
         } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
         }
+    	
     	for(int i=0; i< mergeList.size(); i++) {
-            List<String> parents = Git.parent(directory, mergeList.get(i).getCommitHash());
-
-            String commitP1 = parents.get(0);
-            String commitP2 = parents.get(1);
+            List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
+            
+            array = parents.get(0).split(" ");
+            
+            String commitP1 = array[0];
+            String commitP2 = array[1];
+            
             try {
-                Git.checkout(commitP1, directory);
+                Git.checkout(commitP1, repository);
             } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
              }
 
-            //Git.merge(commitP2, directory); 
             try {
-                Git.status(directory);
+            	Git.mergeBranch(repository, commitP1, commitP2, "Teste");
+            } catch (NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | ThereIsNoMergeToAbort | IOException | AlreadyUpToDate | NotSomethingWeCanMerge e) {
+    		}
+            
+            try {
+                Git.status(repository);
             } catch (RepositoryNotFound | IOException e) {
             }
             
-            //git.clean
+            try {
+            	Git.mergeAbort(repository);
+            } catch (NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | ThereIsNoMergeToAbort | IOException | AlreadyUpToDate | NotSomethingWeCanMerge e) {
+            }
+            
+            try {
+            	Git.clean(repository, true, 0);
+            } catch (UnknownSwitch | IsOutsideRepository | RefusingToClean | IOException e) {           	
+            }
+            
     	}
         
         

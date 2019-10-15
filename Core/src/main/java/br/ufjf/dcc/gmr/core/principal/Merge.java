@@ -22,15 +22,17 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\ufjfMaster\\UFJF";
+        String repository = "   ";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
+        
         try {
             list = Git.log(repository);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException e) {
         }
+        
         //get the biggest author name for the formatting be correct
-        String biggestAuthorName = list.get(0).getAuthorName();
+        String biggestAuthorName = list.get(0).getAuthorName();   
         String spaceAux = new String();
         for(int i = 1; i < list.size(); i++){
             if(biggestAuthorName.length() < list.get(i).getAuthorName().length()){
@@ -56,7 +58,7 @@ public class Merge {
         
         mergeList = Conflits.getMerges(repository);
         try {
-            Conflits.getConflits(mergeList);
+            Conflits.getConflits(mergeList, repository);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
         }
         
