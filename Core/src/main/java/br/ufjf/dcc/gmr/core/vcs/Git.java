@@ -681,7 +681,7 @@ public class Git {
     --------------------------------------------------------------------------*/
     /**
      *
-     * @param branchName This parameter is a String that contains the name of branch that goes be created
+     * @param branchName This parameter is a String that contains the name of branch that goes be create
      * @param switchTo This parameter is a boolean that goes determinate if user wants to switch to the new branch 
      * @param directory This parameter is a String that contains the directory where the command that goes be executed
      * @return Returns a boolean that goes show if command worked or not 
@@ -720,9 +720,13 @@ public class Git {
     }
 
     /**
-     * @param branchName
-     * @param directory
-     * @throws Exception
+     * 
+     * @param branchName This parameter is a String that contains the name of branch that goes be create
+     * @param directory This parameter is a String that contains the directory where the command that goes be executed
+     * @return Returns a boolean that goes show if command worked or not 
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws BranchNotFound
+     * @throws IOException 
      */
     public static boolean deleteBranch(String branchName, String directory) throws LocalRepositoryNotAGitRepository, BranchNotFound, IOException {
         CLIExecution cliE = null;
@@ -740,15 +744,14 @@ public class Git {
             throw new BranchNotFound(branchName);
         }
         return check;
-
     }
 
     /**
-     *
-     * @param print
-     * @param directory
-     * @return
-     * @throws Exception
+     * 
+     * @param print This parameter is a boolean that goes determinate if user wants to print     
+     * @param directory This parameter is a String that contains the directory where the command that goes be executed
+     * @return Return a List<String> that contain all the branches of repository 
+     * @throws Exception 
      */
     public static List<String> listBranches(boolean print, String directory) throws Exception {
         CLIExecution cliE = null;
@@ -768,12 +771,12 @@ public class Git {
 
     /**
      * 
-     * @param entity
-     * @param directory
-     * @return 
-     * @throws java.io.IOException 
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository 
-     * @throws br.ufjf.dcc.gmr.core.exception.CheckoutError 
+     * @param entity This parameter that represents any path that can be checkout like branches and commits 
+     * @param directory This parameter is a String that contains the directory where the command that goes be executed
+     * @return Returns a boolean that goes show if command worked or not
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws CheckoutError 
      */
     public static boolean checkout(String entity, String directory) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError {
         CLIExecution cliE = null;
@@ -797,7 +800,7 @@ public class Git {
     }
 
     /**
-     * description
+     * description 
      * @param indexPath
      * @param directory
      * @return
