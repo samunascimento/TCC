@@ -4,19 +4,9 @@
  * and open the template in the editor.
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
-import br.ufjf.dcc.gmr.core.cli.Formats;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -31,8 +21,8 @@ public class TestLuan {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository {
-       // String repositoryPath = "/Users/gleiph/repositories/voldemort";
-        String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\BolsaUFJF";
+        String repositoryPath = "/Users/gleiph/repositories/voldemort";
+        //String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\BolsaUFJF";
        
             Git.reset(repositoryPath,true, false, false,"");
             /*
