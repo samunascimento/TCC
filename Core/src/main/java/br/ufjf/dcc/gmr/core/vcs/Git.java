@@ -169,6 +169,10 @@ public class Git {
     --------------------------------------------------------------------------*/
     /// STATUS GIT
     /**
+     * @param repositoryPath
+     * @return 
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
+     * @throws java.io.IOException
      * @TODO:What is the meaning when this method returns true or false? Would
      * you improve the output?
      */
@@ -182,47 +186,47 @@ public class Git {
         }
         
         execute = CLIExecute.execute(command, repositoryPath);
-        
+        String array[];
         for(String line: execute.getOutput()){
-            
+            array = line.split("core");
             if(line.contains("M")){
-                Status linha = Status.MODIFIED;
-                file.status.add(linha.toString());  
+                String linha = Status.MODIFIED.toString();
+                file.status.add(linha.concat(" ").concat(array[1]));  
             }
             if(line.contains("?")){
-                
-                Status linha = Status.UNTRACKED;
-                file.status.add(linha.toString());
+                String linha = Status.UNTRACKED.toString();
+                file.status.add(linha.concat(" ").concat(array[1]));  
             }
             
             if(line.contains("U")){
-                Status linha = Status.UNMERGED;
-                file.status.add(linha.toString());
+                String linha = Status.UNMERGED.toString();
+                file.status.add(linha.concat(" ").concat(array[1]));   
             }
             
             if(line.contains("")){
-                Status linha = Status.UNMODIFIED;
-                file.status.add(linha.toString());
+                String linha = Status.UNMODIFIED.toString();
+                file.status.add(linha.concat(" ").concat(array[1])); 
             }
             
             if(line.contains("A")){
-                Status linha = Status.ADDED;
-                file.status.add(linha.toString());
+                String linha = Status.ADDED.toString();
+                file.status.add(linha.concat(" ").concat(array[1])); 
             }
             
             if(line.contains("C")){
-                Status linha = Status.COPIED;
-                file.status.add(linha.toString());
+                String linha = Status.COPIED.toString();
+                file.status.add(linha.concat(" ").concat(array[1]));  
             }
             
             if(line.contains("D")){
-                Status linha = Status.DELETED;
-                file.status.add(linha.toString());
+                String linha = Status.DELETED.toString();
+                file.status.add(linha.concat(" ").concat(array[1]));  
+
             }
             
             if(line.contains("R")){
-                Status linha = Status.RENAMED;
-                file.status.add(linha.toString());
+                String linha = Status.RENAMED.toString();
+                file.status.add(linha.concat(" ").concat(array[1])); 
             }
             
         }

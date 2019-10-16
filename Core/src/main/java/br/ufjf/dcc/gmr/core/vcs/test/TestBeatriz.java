@@ -11,9 +11,10 @@ import java.util.List;
  */
 public class TestBeatriz {
     public static void main(String [] args) throws RepositoryNotFound, IOException{
-        String repository = "C:\\Users\\Beatr\\Documents\\GitHub\\ufjf";
+        String repository = "/ice/UFJF";
         List<String> status = new ArrayList<>();
         status = Git.status(repository);
-        System.out.println(status);
+        for(int i=0;i<status.size();i++)
+            System.out.println(status.get(i)+ "\n");
     }
 }
