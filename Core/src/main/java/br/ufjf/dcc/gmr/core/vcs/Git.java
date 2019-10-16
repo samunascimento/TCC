@@ -681,10 +681,10 @@ public class Git {
     --------------------------------------------------------------------------*/
     /**
      *
-     * @param branchName
-     * @param switchTo
-     * @param directory
-     * @return
+     * @param branchName This parameter is a String that contains the name of branch that goes be created
+     * @param switchTo This parameter is a boolean that goes determinate if user wants to switch to the new branch 
+     * @param directory This parameter is a String that contains the directory where the command that goes be executed
+     * @return Returns a boolean that goes show if command worked or not 
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository
      * @throws BranchAlreadyExist
