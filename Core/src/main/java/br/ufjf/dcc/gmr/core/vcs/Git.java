@@ -27,6 +27,8 @@ import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
+import br.ufjf.dcc.gmr.core.vcs.types.Files;
+import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -170,19 +172,63 @@ public class Git {
      * @TODO:What is the meaning when this method returns true or false? Would
      * you improve the output?
      */
-    public static boolean status(String repositoryPath) throws RepositoryNotFound, IOException {
-        String command = "git status";
-
+    public static List<String> status(String repositoryPath) throws RepositoryNotFound, IOException {
+        String command = "git status --short";
+        CLIExecution execute;
+        Files file = new Files();
+        
         if (repositoryPath == null || repositoryPath.isEmpty()) {
-            throw new RepositoryNotFound();
+            throw new RepositoryNotFound(); 
         }
-
-        try {
-            GitExample.execute(command, repositoryPath);
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        
+        execute = CLIExecute.execute(command, repositoryPath);
+        
+        for(String line: execute.getOutput()){
+            
+            if(line.contains("M")){
+                Status linha = Status.MODIFIED;
+                file.status.add(linha.toString());  
+            }
+            if(line.contains("?")){
+                
+                Status linha = Status.UNTRACKED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("U")){
+                Status linha = Status.UNMERGED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("")){
+                Status linha = Status.UNMODIFIED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("A")){
+                Status linha = Status.ADDED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("C")){
+                Status linha = Status.COPIED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("D")){
+                Status linha = Status.DELETED;
+                file.status.add(linha.toString());
+            }
+            
+            if(line.contains("R")){
+                Status linha = Status.RENAMED;
+                file.status.add(linha.toString());
+            }
+            
         }
-        return true;
+        
+        
+        return file.status;
     }
 
     ///GIT CLONE
