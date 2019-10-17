@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class GitExample {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, UrlNotFound, Exception{
+       
         //String repositoryPath = "/ice/UFJF";
         /*String url, directory, name;
         Scanner input = new Scanner(System.in);

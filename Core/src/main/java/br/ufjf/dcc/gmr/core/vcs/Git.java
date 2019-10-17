@@ -696,14 +696,14 @@ public class Git {
      * Inicio comandos do João 
     --------------------------------------------------------------------------*/
     /**
-     * Create a new branch and switch to it if requested
+     * Create a new branch and switch to it if requested.
      * @param branchName This parameter is a String that contains the name of
      * branch that goes be create
      * @param switchTo This parameter is a boolean that goes determinate if user
      * wants to switch to the new branch
      * @param repositoryPath
      * This parameter is a String that contains the directory
-     * where the command that goes be executed
+     * where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
@@ -740,11 +740,11 @@ public class Git {
     }
 
     /**
-     * Delete a branch
+     * Delete a branch.
      * @param branchName This parameter is a String that contains the name of
      * branch that goes be create
      * @param repositoryPath This parameter is a String that contains the directory
-     * where the command that goes be executed
+     * where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
      * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
      * @throws BranchNotFound if branchName is not another branch that already exist
@@ -753,70 +753,72 @@ public class Git {
     public static boolean deleteBranch(String branchName, String repositoryPath) throws LocalRepositoryNotAGitRepository, BranchNotFound, IOException {
         CLIExecution cliE = null;
         boolean check = true;
-        cliE = CLIExecute.execute("git branch --all", repositoryPath);
-        if (cliE.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-            throw new LocalRepositoryNotAGitRepository();
-        } else if (cliE.getOutput().toString().contains(branchName)) {
-            if (cliE.getOutput().toString().contains("* " + branchName)) {
-                cliE = CLIExecute.execute("git checkout master", repositoryPath);
+        cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
+        if(!cliE.getError().isEmpty()){
+            for (String line : cliE.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("not found")) {
+                    throw new BranchNotFound(branchName);
+                } else if (line.contains("Cannot delete branch")){
+                    cliE = CLIExecute.execute("git checkout master", repositoryPath);
+                    cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
+                    break;
+                }
             }
-            cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
-        } else {
-            check = false;
-            throw new BranchNotFound(branchName);
-        }
+        }   
         return check;
     }
-
     /**
-     * List all branches in repository and return a list of them
-     * @param print This parameter is a boolean that goes determinate if user
+     * List all branches in repository and return a list of them.
+     * @param print parameter is a boolean that goes determinate if user
      * wants to print
      * @param repositoryPath This parameter is a String that contains the directory
-     * where the command that goes be executed
+     * where the command will be executed
      * @return Return a List<String> that contain all the branches of repository
-     * @throws Exception
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
      */
-    public static List<String> listBranches(boolean print, String repositoryPath) throws Exception {
+    public static List<String> listBranches(boolean print, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
         CLIExecution cliE = null;
         cliE = CLIExecute.execute("git branch --all", repositoryPath);
-        if (cliE.getError().toString().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-            throw new LocalRepositoryNotAGitRepository();
-        } else {
-            cliE.getOutput().remove(0);
-            if (print) {
-                for (String line : cliE.getOutput()) {
-                    System.out.println(line);
+        if(!cliE.getError().isEmpty()){
+            for(String line : cliE.getError()){
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
                 }
+            }
+        }
+        if (print) {
+            for (String line : cliE.getOutput()) {
+                System.out.println(line);
             }
         }
         return cliE.getOutput();
     }
 
     /**
-     *
-     * @param entity This parameter that represents any path that can be
-     * checkout like branches and commits
+     * Switch to another branch, commit or tag.
+     * WARNING: if entity is a file that was added to staging area, checkout will be treated like reset.
+     * @param entity This parameter is a String that represents anything that can be checkouted like 
+     * branches and commits
      * @param repositoryPath This parameter is a String that contains the directory
-     * where the command that goes be executed
+     * where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws CheckoutError
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
+     * @throws CheckoutError if entity does not exist in repository 
      */
     public static boolean checkout(String entity, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError {
         CLIExecution cliE = null;
         boolean check = true;
         cliE = CLIExecute.execute("git checkout " + entity, repositoryPath);
         if (!cliE.getError().isEmpty()) {
-
             for (String string : cliE.getError()) {
-                if (string.contains("fatal: not a git repository (or any of the parent directories): .git")) {
+                if (string.contains("not a git repository")) {
+                    check = false;
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (string.contains("did not match any file(s) known to git")) {
-                    check = false;
-                    throw new CheckoutError(string);
-                } else if (string.contains("Already on")) {
                     check = false;
                     throw new CheckoutError(string);
                 }
