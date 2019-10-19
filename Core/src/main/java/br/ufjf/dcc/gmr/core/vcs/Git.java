@@ -30,6 +30,7 @@ import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import java.io.IOException;
+import static java.lang.String.format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,12 +128,14 @@ public class Git {
             String commitDescription = array[3];
 
             //Split Date
+            //System.out.println("autorDate: " + authorDate);
             array = array[2].split(" ", 3);
             String dateForm = array[0];
             String time = array[1];
+            String text = dateForm + " " + time;
             String localization = array[2];
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-            Date dateFormat = format.parse(authorDate);
+            String formato = "yyyy-MM-dd HH:mm:ss";
+            Date dateFormat = new SimpleDateFormat(formato).parse(text);
             //end
 
             model = new Formats(authorName, commitHash, dateFormat, commitDescription);
