@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF";
+        String repository = "";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
         
