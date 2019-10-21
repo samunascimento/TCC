@@ -638,7 +638,27 @@ public class Git {
 
     ///mergeBranch
     /**
-     * This method merge 2 branches.
+     * This method merge changes from one branch into the current branch.
+     *
+     * @param branch1 - String used to recive the name of the branch 1.
+     * @param commitMessage - String used to recive the commit message.
+     * @return boolean - True if no exception is thrown else false.
+     * @param repositoryPath - String used to recive the repository path.
+     * @exception NoRemoteForTheCurrentBranch
+     * @exception ThereIsNoMergeInProgress
+     * @exception ThereIsNoMergeToAbort
+     * @exception AlreadyUpToDate
+     * @exception NotSomethingWeCanMerge
+     * @throws java.io.IOException
+     */
+    public static boolean mergeBranch(String repositoryPath, String branch1, String commitMessage) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
+        String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
+        return mergeBase(repositoryPath, command);
+    }
+    
+    ///mergeBranch
+    /**
+     * This method merge changes from one branch into another.
      *
      * @param branch1 - String used to recive the name of the branch 1.
      * @param branch2 - String used to recive the name of the branch 2.
@@ -651,8 +671,8 @@ public class Git {
      * @exception AlreadyUpToDate
      * @exception NotSomethingWeCanMerge
      * @throws java.io.IOException
-     * @
      */
+    
     public static boolean mergeBranch(String repositoryPath, String branch1, String branch2, String commitMessage) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
         String command = branch1.concat(" ").concat(branch2).concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
