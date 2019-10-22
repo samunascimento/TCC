@@ -40,7 +40,7 @@ public class Conflits {
         }
         for(int i=0;i<merge.size(); i++){
             System.out.print(merge.get(i).getAuthorName());
-            //calculates how much blank spaces are needed for the formatation be correct 
+            //calculates how much blank spaces are needed for the formatting be correct 
             for(int j = 0; j < biggestAuthorName.length() - merge.get(i).getAuthorName().length(); j++){
                 spaceAux += " ";
             }
