@@ -889,8 +889,8 @@ public class Git {
 
         if (!execution.getError().isEmpty()) {
 
-          for (String string : cliE.getError()) {
-              if (string.contains("not a git repository")) {
+          for (String line : execution.getError()) {
+              if (line.contains("not a git repository")) {
 
                   throw new LocalRepositoryNotAGitRepository();
             }
@@ -922,23 +922,19 @@ public class Git {
         List<FileDiff> result = new ArrayList<>();
 
         String command = "diff " + commitSource + " " + commitTarget;
-        try {
-            CLIExecution execution = CLIExecute.execute(command, directory);
 
-            if (!execution.getError().isEmpty()) {
-              for (String string : cliE.getError()) {
-                  if (string.contains("not a git repository")) {
+        CLIExecution execution = CLIExecute.execute(command, directory);
 
-                      throw new LocalRepositoryNotAGitRepository();
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
                 }
             }
             for (String line : execution.getOutput()) {
-
             }
-        } catch (LocalRepositoryNotAGitRepository ex) {
 
         }
-
         return result;
     }
 
