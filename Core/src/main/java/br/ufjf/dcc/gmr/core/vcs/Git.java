@@ -854,7 +854,7 @@ public class Git {
      * Fim comandos do João 
     --------------------------------------------------------------------------*/
  /*--------------------------------------------------------------------------
-     * Inicio comandos do Luan 
+     * Inicio comandos do Luan
     --------------------------------------------------------------------------*/
     /**
      *
@@ -862,13 +862,13 @@ public class Git {
      * without any modifier or with one of the three, 'hard','mixed' and 'soft'
      * The command undo the last commit or merge;
      *
-     * @param repositoryPath
-     * @param hard
-     * @param mixed
-     * @param soft
-     * @param document
-     * @return
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * @param repositoryPath This parameter tells the command the path to the repository we are dealling with
+     * @param hard If this parameter is true the command will do a hard reset
+     * @param mixed If this parameter is true the command will do a mixed reset
+     * @param soft If this parameter is true the command will do a soft reset
+     * @param document this parameter is used in case of a mixed reset and is the "doccument" that the command will remove
+     * @return return true if the command was executed and false if not
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repositorypath is wrong
      * @throws IOException
      *
      */
@@ -889,10 +889,14 @@ public class Git {
 
         if (!execution.getError().isEmpty()) {
 
-            if (execution.getError().contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                throw new LocalRepositoryNotAGitRepository();
+          for (String string : cliE.getError()) {
+              if (string.contains("not a git repository")) {
+
+                  throw new LocalRepositoryNotAGitRepository();
             }
-        } else {
+
+        }
+      } else {
             return true;
         }
 
@@ -901,42 +905,17 @@ public class Git {
     }
 
     /**
-     * @TODO: insert the repository path to run the method (test the
-     * implementation)
-     * @TODO: What is the output?
-     * @param modificado
-     * @param head
-     * @param cached
+     * This method recieves two commitHash and returns the difference between them ussing an FileDiff list.
+
+     * @param directory This parameter tells the command the path to the repository we are dealling with
+     * @param commitSource This parameter is the commit we want to compare
+     * @param commitTarget  This parameter is the commit we want to compare to.
+     * @return return the FileDiff list
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repositorypath is wrong
+     * @throws IOException
      *
-     * O comando diff mostra a difenreça entre o seu repositorio e o repositorio
-     * remoto
-     *//*
-    public static void diff(boolean modificado, boolean head, boolean cached) {
+     */
 
-        // Existe o diff sem modificadores e com, se o booleano for falso modificação
-        // tem que ser null
-        String command = "git diff " + " ";
-        try {
-
-            if (modificado) {
-
-                if (head && !cached) {
-
-                    command += "HEAD";
-
-                } else if (cached && !head) {
-
-                    command += "-cached";
-                }
-
-                CLIExecution execution = new CLIExecution();
-                execution = CLIExecute.execute(command, null);
-                System.out.println(execution);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GitExample.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
 
     public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository {
 
@@ -947,8 +926,10 @@ public class Git {
             CLIExecution execution = CLIExecute.execute(command, directory);
 
             if (!execution.getError().isEmpty()) {
-                if (execution.getError().contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
+              for (String string : cliE.getError()) {
+                  if (string.contains("not a git repository")) {
+
+                      throw new LocalRepositoryNotAGitRepository();
                 }
             }
             for (String line : execution.getOutput()) {
@@ -962,6 +943,6 @@ public class Git {
     }
 
     /*--------------------------------------------------------------------------
-     * Fim comandos do Luan 
+     * Fim comandos do Luan
     --------------------------------------------------------------------------*/
 }
