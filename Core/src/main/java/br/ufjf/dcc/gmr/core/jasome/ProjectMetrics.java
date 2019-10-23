@@ -10,5 +10,15 @@ package br.ufjf.dcc.gmr.core.jasome;
  * @author antonio henrique
  */
 public class ProjectMetrics {
+    private int totalLineCode;
 
+    public int getTotalLineCode() {
+        return totalLineCode;
+    }
+
+    public void setTotalLineCode(int totalLineCode) {
+        this.totalLineCode = totalLineCode;
+    }
+    
+    
 }
