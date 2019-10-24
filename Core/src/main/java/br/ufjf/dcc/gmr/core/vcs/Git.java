@@ -193,7 +193,7 @@ public class Git {
         execute = CLIExecute.execute(command, repositoryPath);
         String array[];
         for (String line : execute.getOutput()) {
-            array = line.split("core");
+            array = line.split(" ");
             if (line.contains("M")) {
                 String linha = Status.MODIFIED.toString();
                 file.status.add(linha.concat(" ").concat(array[1]));
