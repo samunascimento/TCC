@@ -60,7 +60,6 @@ public class Merge {
         try {
             Conflits.getConflits(mergeList, repository);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
-        }
-        
+        }   
     }
 }
