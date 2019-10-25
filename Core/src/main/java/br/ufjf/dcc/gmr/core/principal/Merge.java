@@ -11,6 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
-        String repository = "";
+        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
         
@@ -60,6 +61,15 @@ public class Merge {
         try {
             Conflits.getConflits(mergeList, repository);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
-        }   
+        }
+        List status = new ArrayList();
+        try {
+            status = Git.status(repository);
+        } catch (RepositoryNotFound | IOException e) {
+        }
+        System.out.println("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||");
+        for (Object statu : status) {
+            System.out.println(statu);
+        }
     }
 }
