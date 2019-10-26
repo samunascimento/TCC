@@ -19,6 +19,10 @@ public class FileDiff {
     private List<String> added;
     private List<String> removed;
 
+    public FileDiff() {
+    }
+
+    
     public String getFilePathSource() {
         return filePathSource;
     }
@@ -39,16 +43,16 @@ public class FileDiff {
         return added;
     }
 
-    public void setAdded(List<String> added) {
-        this.added = added;
+    public void setAdded(String added) {
+        this.added.add(added);
     }
 
     public List<String> getRemoved() {
         return removed;
     }
 
-    public void setRemoved(List<String> removed) {
-        this.removed = removed;
+    public void setRemoved(String removed) {
+        this.removed.add(removed);
     }
     
     

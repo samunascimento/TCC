@@ -4,9 +4,13 @@
  * and open the template in the editor.
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
+import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,17 +24,22 @@ public class TestLuan {
      * @throws java.io.IOException
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
-    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository {
-        String repositoryPath = "/Users/gleiph/repositories/voldemort";
-        //String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\BolsaUFJF";
+    @SuppressWarnings("empty-statement")
+    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+        //String repositoryPath = "/Users/gleiph/repositories/voldemort";
+        String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
        
-            Git.reset(repositoryPath,true, false, false,"");
-            /*
+           // Git.reset(repositoryPath,true, false, false,"");
+            
             List<FileDiff> result = new ArrayList<>();
-            result=Git.diff(repositoryPath, "067615dc00feb6126f9e46115538c957a3523e2e", " 84e35cebfb5d58bd243ccab6bc7a09f5af02ed2a");
-            System.out.println("Chegou aaqui");
-            //System.out.println(result.getFilePathTarget);
-        */
+            try{
+            result=Git.diff(repositoryPath, "34e0d431369312a8a517f32c5f3f40019073d170", " 1281c161b6c49051f764c9ac7ad42c4d81699aa8");
+            }catch(IOException ex){
+            System.out.println("Erro");
+            };
+           
+           
+        
     }
     
 }

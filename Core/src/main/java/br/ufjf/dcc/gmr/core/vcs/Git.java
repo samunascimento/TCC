@@ -15,6 +15,8 @@ import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.HasNoUpstreamBranch;
+import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
+import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
@@ -655,7 +657,7 @@ public class Git {
         String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
     }
-    
+
     ///mergeBranch
     /**
      * This method merge changes from one branch into another.
@@ -672,7 +674,6 @@ public class Git {
      * @exception NotSomethingWeCanMerge
      * @throws java.io.IOException
      */
-    
     public static boolean mergeBranch(String repositoryPath, String branch1, String branch2, String commitMessage) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
         String command = branch1.concat(" ").concat(branch2).concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
@@ -720,17 +721,19 @@ public class Git {
     --------------------------------------------------------------------------*/
     /**
      * Create a new branch and switch to it if requested.
+     *
      * @param branchName This parameter is a String that contains the name of
      * branch that goes be create
      * @param switchTo This parameter is a boolean that goes determinate if user
      * wants to switch to the new branch
-     * @param repositoryPath
-     * This parameter is a String that contains the directory
-     * where the command will be executed
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
-     * @throws BranchAlreadyExist if branchName has the same name of other branch that already exist
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
+     * @throws BranchAlreadyExist if branchName has the same name of other
+     * branch that already exist
      */
     public static boolean createBranch(String branchName, boolean switchTo, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, BranchAlreadyExist {
         String command = "git branch " + branchName;
@@ -764,49 +767,55 @@ public class Git {
 
     /**
      * Delete a branch.
+     *
      * @param branchName This parameter is a String that contains the name of
      * branch that goes be create
-     * @param repositoryPath This parameter is a String that contains the directory
-     * where the command will be executed
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
-     * @throws BranchNotFound if branchName is not another branch that already exist
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
+     * @throws BranchNotFound if branchName is not another branch that already
+     * exist
      * @throws IOException
      */
     public static boolean deleteBranch(String branchName, String repositoryPath) throws LocalRepositoryNotAGitRepository, BranchNotFound, IOException {
         CLIExecution cliE = null;
         boolean check = true;
         cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
-        if(!cliE.getError().isEmpty()){
+        if (!cliE.getError().isEmpty()) {
             for (String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (line.contains("not found")) {
                     throw new BranchNotFound(branchName);
-                } else if (line.contains("Cannot delete branch")){
+                } else if (line.contains("Cannot delete branch")) {
                     cliE = CLIExecute.execute("git checkout master", repositoryPath);
                     cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
                     break;
                 }
             }
-        }   
+        }
         return check;
     }
+
     /**
      * List all branches in repository and return a list of them.
-     * @param print parameter is a boolean that goes determinate if user
-     * wants to print
-     * @param repositoryPath This parameter is a String that contains the directory
-     * where the command will be executed
+     *
+     * @param print parameter is a boolean that goes determinate if user wants
+     * to print
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
      * @return Return a List<String> that contain all the branches of repository
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
      */
     public static List<String> listBranches(boolean print, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
         CLIExecution cliE = null;
         cliE = CLIExecute.execute("git branch --all", repositoryPath);
-        if(!cliE.getError().isEmpty()){
-            for(String line : cliE.getError()){
+        if (!cliE.getError().isEmpty()) {
+            for (String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 }
@@ -821,16 +830,18 @@ public class Git {
     }
 
     /**
-     * Switch to another branch, commit or tag.
-     * WARNING: if entity is a file that was added to staging area, checkout will be treated like reset.
-     * @param entity This parameter is a String that represents anything that can be checkouted like 
-     * branches and commits
-     * @param repositoryPath This parameter is a String that contains the directory
-     * where the command will be executed
+     * Switch to another branch, commit or tag. WARNING: if entity is a file
+     * that was added to staging area, checkout will be treated like reset.
+     *
+     * @param entity This parameter is a String that represents anything that
+     * can be checkouted like branches and commits
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
      * @return Returns a boolean that goes show if command worked or not
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git repository
-     * @throws CheckoutError if entity does not exist in repository 
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
+     * @throws CheckoutError if entity does not exist in repository
      */
     public static boolean checkout(String entity, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError {
         CLIExecution cliE = null;
@@ -862,17 +873,21 @@ public class Git {
      * without any modifier or with one of the three, 'hard','mixed' and 'soft'
      * The command undo the last commit or merge;
      *
-     * @param repositoryPath This parameter tells the command the path to the repository we are dealling with
+     * @param repositoryPath This parameter tells the command the path to the
+     * repository we are dealling with
      * @param hard If this parameter is true the command will do a hard reset
      * @param mixed If this parameter is true the command will do a mixed reset
      * @param soft If this parameter is true the command will do a soft reset
-     * @param document this parameter is used in case of a mixed reset and is the "doccument" that the command will remove
+     * @param document this parameter is used in case of a mixed reset and is
+     * the "doccument" that the command will remove
      * @return return true if the command was executed and false if not
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repositorypath is wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repositorypath is wrong
      * @throws IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidDocument exception to Invalid document
      *
      */
-    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, LocalRepositoryNotAGitRepository {
+    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, LocalRepositoryNotAGitRepository,InvalidDocument {
 
         String command = "git reset ";
 
@@ -889,14 +904,18 @@ public class Git {
 
         if (!execution.getError().isEmpty()) {
 
-          for (String line : execution.getError()) {
-              if (line.contains("not a git repository")) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
 
-                  throw new LocalRepositoryNotAGitRepository();
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+                if(line.contains("fatal: ambiguous argument"))
+                {
+                    throw new InvalidDocument();
+                }
+
             }
-
-        }
-      } else {
+        } else {
             return true;
         }
 
@@ -905,22 +924,24 @@ public class Git {
     }
 
     /**
-     * This method recieves two commitHash and returns the difference between them ussing an FileDiff list.
-
-     * @param directory This parameter tells the command the path to the repository we are dealling with
+     * This method recieves two commitHash and returns the difference between
+     * them ussing an FileDiff list.
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealling with
      * @param commitSource This parameter is the commit we want to compare
-     * @param commitTarget  This parameter is the commit we want to compare to.
+     * @param commitTarget This parameter is the commit we want to compare to.
      * @return return the FileDiff list
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repositorypath is wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repositorypath is wrong
      * @throws IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to wrong commit hash
      *
      */
-
-
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository {
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<FileDiff> result = new ArrayList<>();
-
+        FileDiff aux = new FileDiff();
         String command = "diff " + commitSource + " " + commitTarget;
 
         CLIExecution execution = CLIExecute.execute(command, directory);
@@ -930,14 +951,35 @@ public class Git {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 }
+                if(line.contains("fatal: ambiguous argument"))
+                {
+                    throw new InvalidCommitHash();
+                }
             }
+        } else {
+
             for (String line : execution.getOutput()) {
+
+                if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                    aux.setFilePathSource(line);
+
+                } else {
+                    if (line.charAt(0) == '+') {
+                        aux.setAdded(line);
+                    } else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                        aux.setFilePathTarget(line);
+                    } else if (line.charAt(0) == '-') {
+                        aux.setRemoved(line);
+                    }
+
+                }
+
             }
 
         }
+        result.add(aux);
         return result;
     }
-
     /*--------------------------------------------------------------------------
      * Fim comandos do Luan
     --------------------------------------------------------------------------*/
