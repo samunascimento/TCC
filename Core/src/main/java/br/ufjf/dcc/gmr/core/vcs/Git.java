@@ -28,11 +28,10 @@ import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
-import br.ufjf.dcc.gmr.core.vcs.example.GitExample;
 import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
+import br.ufjf.dcc.gmr.core.vcs.types.Unmerged;
 import java.io.IOException;
-import static java.lang.String.format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -187,60 +186,185 @@ public class Git {
         String command = "git status --short";
         CLIExecution execute;
         Files file = new Files();
-
+        
+        
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
         String array[];
-        for (String line : execute.getOutput()) {
+        String array2[];
+        for(String line: execute.getOutput()){
             array = line.split(" ");
-            if (line.contains("M")) {
+            if (array[1].contains("M")) {
                 String linha = Status.MODIFIED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
+                if(array[2].contains("M")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.MODIFIED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else file.status.add(linha.concat(" ").concat(array[2]));
+                }                
             }
-            if (line.contains("?")) {
+            if (array[1].contains("?")) {
                 String linha = Status.UNTRACKED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
+                file.status.add(linha.concat(" ").concat(array[2]));                
             }
-
-            if (line.contains("U")) {
-                String linha = Status.UNMERGED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
-            }
-
-            if (line.contains("")) {
-                String linha = Status.UNMODIFIED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
-            }
-
-            if (line.contains("A")) {
+            if (array[1].contains("A")) {
                 String linha = Status.ADDED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
+                if(array[2].contains("M")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.MODIFIED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else{
+                        if(array[2].contains("U")){
+                            array2 = array[2].split(" ");
+                            String linha2 = Status.UNMERGED.toString();
+                            file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        }else{
+                            if(array[2].contains("A")){
+                                array2 = array[2].split(" ");
+                                String linha2 = Status.ADDED.toString();
+                                file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                            } else file.status.add(linha.concat(" ").concat(array[2]));
+                        } 
+                    }
+                }                   
             }
-
-            if (line.contains("C")) {
-                String linha = Status.COPIED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
-            }
-
-            if (line.contains("D")) {
-                String linha = Status.DELETED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
-
-            }
-
-            if (line.contains("R")) {
+            if (array[1].contains("R")) {
                 String linha = Status.RENAMED.toString();
-                file.status.add(linha.concat(" ").concat(array[1]));
+                if(array[2].contains("M")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.MODIFIED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else file.status.add(linha.concat(" ").concat(array[2]));
+                }                
             }
-
+            if (array[1].contains("D")) {
+                String linha = Status.DELETED.toString();
+                if(array[2].contains("R")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.RENAMED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("C")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.COPIED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else{
+                        if(array[2].contains("D")){
+                           array2 = array[2].split(" ");
+                           String linha2 = Status.DELETED.toString();
+                           file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        }else{
+                            if(array[2].contains("U")){
+                               array2 = array[2].split(" ");
+                               String linha2 = Status.UNMERGED.toString();
+                               file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                            }else file.status.add(linha.concat(" ").concat(array[2]));
+                        }
+                    }
+                }                
+            }
+            if (array[1].contains("C")) {
+                String linha = Status.COPIED.toString();
+                if(array[2].contains("M")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.MODIFIED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else file.status.add(linha.concat(" ").concat(array[2]));
+                }                
+            }
+            if (array[1].contains("U")) {
+                String linha = Status.UNMERGED.toString();
+                if(array[2].contains("A")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.ADDED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else{
+                        if(array[2].contains("U")){
+                            array2 = array[2].split(" ");
+                            String linha2 = Status.UNMERGED.toString();
+                            file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        }else file.status.add(linha.concat(" ").concat(array[2]));
+                    } 
+                }                
+            }
+            if (array[1].contains(" ")) {
+                String linha = Status.UNMODIFIED.toString();
+                if(array[2].contains("M")){
+                    array2 = array[2].split(" ");
+                    String linha2 = Status.MODIFIED.toString();
+                    file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                }else{
+                    if(array[2].contains("D")){
+                        array2 = array[2].split(" ");
+                        String linha2 = Status.DELETED.toString();
+                        file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                    }else{
+                        if(array[2].contains("A")){
+                           array2 = array[2].split(" ");
+                           String linha2 = Status.ADDED.toString();
+                           file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        }else file.status.add(linha.concat(" ").concat(array[2]));
+                    } 
+                }                
+            }
+            if (array[1].contains("!")) {
+                String linha = Status.IGNORED.toString();
+                file.status.add(linha.concat(" ").concat(array[2]));                
+            }
+        }
+    return file.status;
+}
+    
+    public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
+        String command = "git status --short";
+        CLIExecution execute;
+        List<String> lista = new ArrayList<>();
+        Unmerged u = new Unmerged();
+        
+        if (repositoryPath == null || repositoryPath.isEmpty()) {
+            throw new RepositoryNotFound();
         }
 
-        return file.status;
-    }
-
+        execute = CLIExecute.execute(command, repositoryPath);
+        lista = status(repositoryPath);
+        if(!lista.isEmpty()){
+            for(int i=0;i<lista.size();i++){
+                if(lista.get(i).contains("UNMERGED"))
+                    u.unmerged.add(lista.get(i));
+            }
+        }
+    return u.unmerged;
+}
+    
+    
     ///GIT CLONE
     /**
      * description
@@ -250,6 +374,16 @@ public class Git {
      * @param name
      * @return
      * @throws RepositoryNotFound
+     */
+    
+    /**
+     * description
+     * @param url
+     * @param directory
+     * @param name
+     * @return
+     * @throws RepositoryNotFound
+     * @throws br.ufjf.dcc.gmr.core.exception.UrlNotFound
      */
     public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound {
 

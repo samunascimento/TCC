@@ -5,7 +5,7 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  * @author Beatr
  */
 public enum Status {
-    MODIFIED("M"), UNTRACKED("?"), ADDED("A"), RENAMED("R"), DELETED("D"), COPIED("C"), UNMERGED("U"), UNMODIFIED("");
+    MODIFIED("M"), UNTRACKED("?"), ADDED("A"), RENAMED("R"), DELETED("D"), COPIED("C"), UNMERGED("U"), UNMODIFIED(""), IGNORED("!");
 
     private String status;
     Status(String valor){
@@ -15,4 +15,5 @@ public enum Status {
     public String getStatus(){
         return this.status;
     }
+    
 }
