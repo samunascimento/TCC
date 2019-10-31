@@ -12,24 +12,25 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
 /**
  *
  * @author antonio henrique
  */
 public class ReadXMLUsingSAX extends DefaultHandler {
- 
+
     private String tagAtual;
     private String siglaAtual;
- 
+
     public ReadXMLUsingSAX() {
         super();
     }
 
     public void fazerParsing(String pathArq) {
- 
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser;
- 
+
         try {
             saxParser = factory.newSAXParser();
             saxParser.parse(pathArq, this);
@@ -43,53 +44,44 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         }
     }
 
+    @Override
     public void startDocument() {
         System.out.println("\nIniciando o Parsing...\n");
     }
 
+    @Override
     public void endDocument() {
         System.out.println("\nFim do Parsing...");
     }
- 
+
+    @Override
     public void startElement(String uri, String localName, String qName,
             Attributes atts) {
- 
+
         // recupera o nome da tag atual
         tagAtual = qName;
- 
-        // se a tag for "<pais>", recupera o valor do atributo "sigla"
-        /*
-        if (qName.compareTo("Project") == 0) {
-            if (qName.compareTo("Metrics") == 0) {
-               if (qName.compareTo("Metric") == 0) {
-                //exemplos
-                   name = atts.getValue(1);
-                   value = atts.getValue(2);
-                   package.totalLineCode = value;
-                }
-             }
+        System.out.println(qName);
+        
+        for (int i = 0; i < atts.getLength(); i++) {
+            String qName1 = atts.getQName(i);
+            String value = atts.getValue(qName1);
+            System.out.println(qName1+"="+value);
         }
-        */
+
     }
- 
+
+    @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
- 
+
         tagAtual = "";
     }
- 
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
- 
-        String texto = new String(ch, start, length);
- 
-    }
- 
+
     public static void main(String[] args) throws Exception {
-        
+
         //vou deixar o método main aqui pra fazer testes com o SAX
         ReadXMLUsingSAX mySax = new ReadXMLUsingSAX();
         mySax.fazerParsing("");
     }
- 
+
 }
