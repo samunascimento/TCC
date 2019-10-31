@@ -30,6 +30,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
+import br.ufjf.dcc.gmr.core.vcs.types.Unmerged;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -341,7 +342,29 @@ public class Git {
         }
     return file.status;
 }
+    
+    public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
+        String command = "git status --short";
+        CLIExecution execute;
+        List<String> lista = new ArrayList<>();
+        Unmerged u = new Unmerged();
+        
+        if (repositoryPath == null || repositoryPath.isEmpty()) {
+            throw new RepositoryNotFound();
+        }
 
+        execute = CLIExecute.execute(command, repositoryPath);
+        lista = status(repositoryPath);
+        if(!lista.isEmpty()){
+            for(int i=0;i<lista.size();i++){
+                if(lista.get(i).contains("UNMERGED"))
+                    u.unmerged.add(lista.get(i));
+            }
+        }
+    return u.unmerged;
+}
+    
+    
     ///GIT CLONE
     /**
      * description
