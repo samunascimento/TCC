@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class TestBeatriz {
     public static void main(String [] args) throws RepositoryNotFound, IOException{
-        String repository = "C:\\Users\\Beatr\\Desktop\\UFJF";
+        String repository = "C:\\Users\\Beatr\\Documents\\GitHub\\TrabalhoOO";
         List<String> status = new ArrayList<>();
         status = Git.status(repository);
         for(int i=0;i<status.size();i++)
