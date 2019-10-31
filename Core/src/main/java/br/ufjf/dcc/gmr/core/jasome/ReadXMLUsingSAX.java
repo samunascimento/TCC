@@ -58,9 +58,18 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         tagAtual = qName;
  
         // se a tag for "<pais>", recupera o valor do atributo "sigla"
-        if (qName.compareTo("pais") == 0) {
-            siglaAtual = atts.getValue(0);
+        /*
+        if (qName.compareTo("Project") == 0) {
+            if (qName.compareTo("Metrics") == 0) {
+               if (qName.compareTo("Metric") == 0) {
+                //exemplos
+                   name = atts.getValue(1);
+                   value = atts.getValue(2);
+                   package.totalLineCode = value;
+                }
+             }
         }
+        */
     }
  
     public void endElement(String uri, String localName, String qName)
