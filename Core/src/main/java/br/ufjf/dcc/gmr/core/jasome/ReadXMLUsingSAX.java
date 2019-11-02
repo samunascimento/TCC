@@ -6,6 +6,8 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -21,6 +23,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     private String tagAtual;
     private String siglaAtual;
+    
+    public int numberPackage = 0;
+    public List<Metric> listMetric = new ArrayList<>();
 
     public ReadXMLUsingSAX() {
         super();
@@ -52,6 +57,15 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     @Override
     public void endDocument() {
         System.out.println("\nFim do Parsing...");
+        System.out.println(numberPackage);
+        /*
+        System.out.println("Imprimindo listMetric");
+        for(int i = 0; i<listMetric.size(); i++){
+            System.out.println(listMetric.get(i).getDescription());
+            System.out.println(listMetric.get(i).getName());
+            System.out.println(listMetric.get(i).getValue());
+        }
+        */
     }
 
     @Override
@@ -60,14 +74,23 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         // recupera o nome da tag atual
         tagAtual = qName;
-        System.out.println(qName);
-        
-        for (int i = 0; i < atts.getLength(); i++) {
-            String qName1 = atts.getQName(i);
-            String value = atts.getValue(qName1);
-            System.out.println(qName1+"="+value);
+        //Contagem MetricPackage,MetricClass,MetricMethod
+        if(tagAtual.equals("Package")){
+            numberPackage++;
         }
-
+        //Creating Metric (description,name and value)
+        if (tagAtual.equals("Metric")) {
+            Metric metric = new Metric();
+            
+            String value0 = atts.getValue(0);
+            String value1 = atts.getValue(1);
+            String value2 = atts.getValue(2);
+            
+            metric.setDescription(value0);
+            metric.setName(value1);
+            metric.setValue(value2);
+            listMetric.add(metric);
+        }
     }
 
     @Override
@@ -81,7 +104,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         //vou deixar o método main aqui pra fazer testes com o SAX
         ReadXMLUsingSAX mySax = new ReadXMLUsingSAX();
-        mySax.fazerParsing("");
+        mySax.fazerParsing("C:\\Users\\antonio henrique\\Desktop\\jasome\\build\\distributions\\jasome\\bin\\jasomeXML");
     }
 
 }
