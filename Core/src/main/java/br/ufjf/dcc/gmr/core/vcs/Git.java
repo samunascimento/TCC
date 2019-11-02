@@ -1076,7 +1076,7 @@ public class Git {
 
         List<FileDiff> result = new ArrayList<>();
         FileDiff aux = new FileDiff();
-        String command = "diff " + commitSource + " " + commitTarget;
+        String command = "git diff " + commitSource + " " + commitTarget;
 
         CLIExecution execution = CLIExecute.execute(command, directory);
 
