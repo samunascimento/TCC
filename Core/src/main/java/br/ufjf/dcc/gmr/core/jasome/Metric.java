@@ -12,7 +12,7 @@ package br.ufjf.dcc.gmr.core.jasome;
 public class Metric {
     String description;
     String name;
-    float value; 
+    String value;
 
     public String getDescription() {
         return description;
@@ -30,13 +30,14 @@ public class Metric {
         this.name = name;
     }
 
-    public float getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(String value) {
         this.value = value;
     }
+    
     
     
 }
