@@ -5,10 +5,23 @@
  */
 package br.ufjf.dcc.gmr.core.jasome;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author antonio henrique
  */
 public class MethodMetrics {
+    List<Metric> listMetrics = new ArrayList<>();
+
+    public List<Metric> getListMetrics() {
+        return listMetrics;
+    }
+
+    public void setListMetrics(List<Metric> listMetrics) {
+        this.listMetrics = listMetrics;
+    }
+    
     
 }

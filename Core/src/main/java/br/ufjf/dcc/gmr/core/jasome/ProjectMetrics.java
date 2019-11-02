@@ -5,19 +5,31 @@
  */
 package br.ufjf.dcc.gmr.core.jasome;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author antonio henrique
  */
 public class ProjectMetrics {
-    private int totalLineCode;
+    private Metric tloc;
+    private List<PackageMetrics> listPackageMetric = new ArrayList<>();
 
-    public int getTotalLineCode() {
-        return totalLineCode;
+    public Metric getTloc() {
+        return tloc;
     }
 
-    public void setTotalLineCode(int totalLineCode) {
-        this.totalLineCode = totalLineCode;
+    public void setTloc(Metric tloc) {
+        this.tloc = tloc;
+    }
+
+    public List<PackageMetrics> getListPackageMetric() {
+        return listPackageMetric;
+    }
+
+    public void setListPackageMetric(List<PackageMetrics> listPackageMetric) {
+        this.listPackageMetric = listPackageMetric;
     }
     
     
