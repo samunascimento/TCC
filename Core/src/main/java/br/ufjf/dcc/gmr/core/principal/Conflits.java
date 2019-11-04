@@ -38,7 +38,7 @@ public class Conflits {
                 biggestAuthorName = merge.get(i).getAuthorName();
             }
         }
-        for(int i=merge.size()-1; i >= 0 ; i--){
+        for(int i = merge.size()-1; i >= 0 ; i--){
             System.out.print(merge.get(i).getAuthorName());
             //calculates how much blank spaces are needed for the formatting be correct 
             for(int j = 0; j < biggestAuthorName.length() - merge.get(i).getAuthorName().length(); j++){
@@ -67,7 +67,7 @@ public class Conflits {
         } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
         }
     	
-    	for(int i = mergeList.size(); i >= 0; i--) {
+    	for(int i = mergeList.size()-1; i >= 0; i--) {
             List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
             
             try {

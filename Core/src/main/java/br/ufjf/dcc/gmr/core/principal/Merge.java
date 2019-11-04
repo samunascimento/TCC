@@ -40,7 +40,7 @@ public class Merge {
                 biggestAuthorName = list.get(i).getAuthorName();
             }
         }
-        for(int i=0;i<list.size(); i++){
+        for(int i = list.size()-1; i >= 0; i--){
             System.out.print(list.get(i).getAuthorName());
             //calculates how much blank spaces are needed for the formatting be correct 
             for(int j = 0; j < biggestAuthorName.length() - list.get(i).getAuthorName().length(); j++){
