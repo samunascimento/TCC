@@ -97,13 +97,17 @@ public class Git {
      * @return list of Formats
      * @throws IOException
      */
-    private static List<Formats> log(String repositoryPath, boolean merge) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
+    private static List<Formats> log(String repositoryPath, boolean merge, boolean all) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
         CLIExecution execution = null;
         String command = "git log ";
         if (merge) {
             command = command.concat(" --merges ");
         }
 
+        if(all){
+            command = command.concat(" --all ");
+        }
+        
         //log method formatting
         command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
         List<Formats> list = new ArrayList<>();
@@ -154,7 +158,7 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
     public static List<Formats> log(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, false);
+        return Git.log(repositoryPath, false, false);
     }
 
     /**
@@ -164,7 +168,25 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
     public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, true);
+        return Git.log(repositoryPath, true, false);
+    }
+    /**
+     * @param repositoryPath
+     * @return
+     * @throws IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     */
+    public static List<Formats> logAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
+        return Git.log(repositoryPath, false, true);
+    }
+    /**
+     * @param repositoryPath
+     * @return
+     * @throws IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     */
+    public static List<Formats> logMergeAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
+        return Git.log(repositoryPath, true, true);
     }
 
     /*--------------------------------------------------------------------------

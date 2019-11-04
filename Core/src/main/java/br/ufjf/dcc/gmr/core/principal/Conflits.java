@@ -25,7 +25,7 @@ import java.util.List;
 public class Conflits {
     
     public static List <Formats> getMerges(String repository) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist{
-        List <Formats> merge =  Git.logMerge(repository);
+        List <Formats> merge =  Git.logMergeAll(repository);
         //List <String> output = new ArrayList<>();
         //output = Git.logSimple(repository);
         //String pais[][] = new String[merge.size()][merge.size()];
@@ -38,7 +38,7 @@ public class Conflits {
                 biggestAuthorName = merge.get(i).getAuthorName();
             }
         }
-        for(int i=0;i<merge.size(); i++){
+        for(int i=merge.size()-1; i >= 0 ; i--){
             System.out.print(merge.get(i).getAuthorName());
             //calculates how much blank spaces are needed for the formatting be correct 
             for(int j = 0; j < biggestAuthorName.length() - merge.get(i).getAuthorName().length(); j++){
@@ -54,10 +54,8 @@ public class Conflits {
             System.out.print(merge.get(i).getAuthorDate());
             System.out.print(" || " );
             System.out.println(merge.get(i).getCommitDescription());
-        }  
-                  
-           return merge;       
-        
+        }
+           return merge;   
     }
     
     public static void getConflits(List<Formats> mergeList, String repository) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, CheckoutError  {
@@ -69,11 +67,8 @@ public class Conflits {
         } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
         }
     	
-    	for(int i=0; i< mergeList.size(); i++) {
+    	for(int i = mergeList.size(); i >= 0; i--) {
             List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
-            
-            
-            
             
             try {
                 Git.checkout(parents.get(0), repository);

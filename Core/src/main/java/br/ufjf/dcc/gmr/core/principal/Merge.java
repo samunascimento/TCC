@@ -23,12 +23,12 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF";
+        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\teste\\UFJF";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
         
         try {
-            list = Git.log(repository);
+            list = Git.logAll(repository);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException e) {
         }
         
