@@ -14,8 +14,8 @@ public class MergeEvent {
 	public List<String> getParents() {
 		return parents;
 	}
-	public void setParents(List<String> parents) {
-		this.parents = parents;
+	public void addParents(String parent) {
+		parents.add(parent);
 	}
 	public List<ConflictRegion> getConflictRegion() {
 		return conflictRegion;
