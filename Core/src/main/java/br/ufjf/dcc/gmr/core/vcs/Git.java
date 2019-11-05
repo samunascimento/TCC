@@ -1016,6 +1016,27 @@ public class Git {
         }
         return check;
     }
+    /**
+     * Give all commits that is merges and their parents
+     * 
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
+     * @return Return a List<String> that goes contains all commits that is merges
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
+     */
+    public static List<String> giveAllMerges(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
+    	CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%p,%h", repositoryPath);
+    	if (!cliE.getError().isEmpty()) {
+            for (String string : cliE.getError()) {
+                if (string.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+            }
+    	}
+    	return cliE.getOutput();
+    }
 
     /*--------------------------------------------------------------------------
      * Fim comandos do João 

@@ -1,5 +1,12 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
-public class MergesTest {
+import java.util.List;
 
+public class MergesTest {
+	
+	public static List<MergeEvent> SearchAllConflicts(String repositoryPath){
+		
+			
+	}
+	
 }
