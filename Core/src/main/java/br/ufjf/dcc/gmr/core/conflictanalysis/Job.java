@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.principal;
+package br.ufjf.dcc.gmr.core.conflictanalysis;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
