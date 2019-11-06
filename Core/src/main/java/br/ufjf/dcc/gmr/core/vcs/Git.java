@@ -1037,6 +1037,53 @@ public class Git {
     	}
     	return cliE.getOutput();
     }
+    
+    /**
+     * 
+     * @param entity
+     * @param repositoryPath
+     * @param abort
+     * @param returnToMaster
+     * @return 
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws NoRemoteForTheCurrentBranch
+     * @throws ThereIsNoMergeInProgress
+     * @throws ThereIsNoMergeToAbort
+     * @throws AlreadyUpToDate
+     * @throws NotSomethingWeCanMerge
+     * @throws IOException
+     */
+    public static boolean mergeIsConflicting (String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException {
+    	CLIExecution cliE = CLIExecute.execute("git merge " + entity , repositoryPath);
+    	boolean check = false;
+    	if(!cliE.getError().isEmpty()) {
+    		for(String line : cliE.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                } else if (line.contains("CONFLICT")) {
+                	check = true;
+                	if(abort) {
+                		Git.mergeAbort(repositoryPath);
+                	}
+                } else if (line.contains("No remote for the current branch.")) {
+                    throw new NoRemoteForTheCurrentBranch(line);
+                } else if (line.contains("There is no merge in progress")) {
+                	throw new ThereIsNoMergeInProgress(line);
+                } else if (line.contains("There is no merge to abort")) {
+                    throw new ThereIsNoMergeToAbort(line);
+                } else if (line.contains("Already up to date")) {
+                    throw new AlreadyUpToDate(line);
+                } else if (line.contains("not something we can merge")) {
+                    throw new NotSomethingWeCanMerge(line);
+                }
+    		}
+    	}
+    	if (returnToMaster) {
+    		Git.mergeBase(repositoryPath, "master");
+    	}
+    	return true;
+    }
+    
 
     /*--------------------------------------------------------------------------
      * Fim comandos do João 
