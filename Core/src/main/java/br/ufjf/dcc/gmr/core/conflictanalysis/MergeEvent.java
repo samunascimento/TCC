@@ -3,13 +3,17 @@ package br.ufjf.dcc.gmr.core.conflictanalysis;
 import java.util.List;
 
 public class MergeEvent {
-	private String children;
+	
+	private String hash;
 	private List<String> parents;
-	public String getChildren() {
-		return children;
+	private List<ConflictRegion> conflictRegion;
+	private List<String> files;
+	
+	public String getHash() {
+		return hash;
 	}
-	public void setChildren(String children) {
-		this.children = children;
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 	public List<String> getParents() {
 		return parents;
@@ -20,8 +24,19 @@ public class MergeEvent {
 	public List<ConflictRegion> getConflictRegion() {
 		return conflictRegion;
 	}
-	public void setConflictRegion(List<ConflictRegion> conflictRegion) {
-		this.conflictRegion = conflictRegion;
+	public void addConflictRegion(ConflictRegion conflictRegion) {
+		this.conflictRegion.add(conflictRegion);
 	}
-	private List<ConflictRegion> conflictRegion;
+	public List<String> getFiles() {
+		return files;
+	}
+	public void addFiles(String files) {
+		this.files.add(files);
+	}
+	void clearAllAttributes() {
+		this.hash = null;
+		this.files.clear();
+		this.conflictRegion.clear();
+		this.parents.clear();
+	}
 }

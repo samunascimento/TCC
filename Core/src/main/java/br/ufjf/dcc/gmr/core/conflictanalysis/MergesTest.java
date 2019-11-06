@@ -23,19 +23,21 @@ public class MergesTest {
 		ConflictRegion conflictRegion = null;
 		for (String merge : allMerges) {
 			family = merge.split(",",2);
-			mergeEvent.setChildren(family[1]);
+			mergeEvent.setHash(family[1]);
 			parents = family[0].split(" ");
 			for(String parent : parents) {
 				mergeEvent.addParents(parent);
 			}
 			Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
 			if(Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath,false,false)) {
+				//Git Diff para obter as informações do conflito e preencher o conflictRegion
 				
+				mergeEvent.addConflictRegion(conflictRegion);
+				conflictRegion.clearAllAttributes();
 			}
 			Git.mergeAbort(repositoryPath);
-			
 			list.add(mergeEvent);
-			
+			mergeEvent.clearAllAttributes();		
 		}
 		
 			
