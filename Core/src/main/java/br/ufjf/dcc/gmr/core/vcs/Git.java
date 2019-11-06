@@ -1039,12 +1039,16 @@ public class Git {
     }
     
     /**
-     * 
-     * @param entity
-     * @param repositoryPath
-     * @param abort
-     * @param returnToMaster
-     * @return 
+     * Do a merge and verify if is a conflict
+     * @param entity This parameter is a String that represents anything that
+     * can be merged like branches and commits
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
+     * @param abort This parameter is a boolean that indicates if user wants to abort
+     * the conflict if happend 
+     * @param returnToMaster This parameter is a boolean that indicates if user wants to
+     * return to master after merge
+     * @return Returns a boolean that indicates if the merge is confliting
      * @throws LocalRepositoryNotAGitRepository
      * @throws NoRemoteForTheCurrentBranch
      * @throws ThereIsNoMergeInProgress
@@ -1078,7 +1082,7 @@ public class Git {
                 }
     		}
     	}
-    	if (returnToMaster) {
+    	if ((returnToMaster && !check) || (returnToMaster && check && abort)) {
     		Git.mergeBase(repositoryPath, "master");
     	}
     	return true;
