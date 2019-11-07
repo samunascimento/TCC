@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
@@ -18,9 +19,10 @@ public class MergesTest {
 		List<String> allMerges = Git.giveAllMerges(repositoryPath);
 		String[] family = null;
 		String[] parents = null;
-		MergeEvent mergeEvent = null;
-		List<MergeEvent> list = null;
-		ConflictRegion conflictRegion = null;
+		MergeEvent mergeEvent = new MergeEvent();
+		List<MergeEvent> list = new ArrayList<>();
+		ConflictFile conflictFile = new ConflictFile();
+		ConflictRegion conflictRegion = new ConflictRegion();
 		for (String merge : allMerges) {
 			family = merge.split(",",2);
 			mergeEvent.setHash(family[1]);
@@ -28,16 +30,20 @@ public class MergesTest {
 			for(String parent : parents) {
 				mergeEvent.addParents(parent);
 			}
+			/*
 			Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
 			if(Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath,false,false)) {
 				//Git Diff para obter as informações do conflito e preencher o conflictRegion
 				
-				mergeEvent.addConflictRegion(conflictRegion);
-				conflictRegion.clearAllAttributes();
+
 			}
+			*/
 			Git.mergeAbort(repositoryPath);
 			list.add(mergeEvent);
-			mergeEvent.clearAllAttributes();		
+			mergeEvent = new MergeEvent();
+			conflictFile = new ConflictFile();
+			conflictRegion = new ConflictRegion();
+			
 		}
 		
 			

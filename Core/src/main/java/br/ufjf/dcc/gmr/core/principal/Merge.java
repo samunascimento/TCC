@@ -11,7 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
+//import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;

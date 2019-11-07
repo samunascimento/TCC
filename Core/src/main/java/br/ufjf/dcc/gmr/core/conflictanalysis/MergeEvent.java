@@ -6,8 +6,7 @@ public class MergeEvent {
 	
 	private String hash;
 	private List<String> parents;
-	private List<ConflictRegion> conflictRegion;
-	private List<String> files;
+	private List<ConflictFile> conflictFiles;
 	
 	public String getHash() {
 		return hash;
@@ -21,22 +20,14 @@ public class MergeEvent {
 	public void addParents(String parent) {
 		parents.add(parent);
 	}
-	public List<ConflictRegion> getConflictRegion() {
-		return conflictRegion;
+	public List<ConflictFile> getConflictFiles() {
+		return conflictFiles;
 	}
-	public void addConflictRegion(ConflictRegion conflictRegion) {
-		this.conflictRegion.add(conflictRegion);
+	public void setConflictFiles(List<ConflictFile> conflictFiles) {
+		this.conflictFiles = conflictFiles;
 	}
-	public List<String> getFiles() {
-		return files;
+	public void addConflictFiles(ConflictFile conflictFiles) {
+		this.conflictFiles.add(conflictFiles);
 	}
-	public void addFiles(String files) {
-		this.files.add(files);
-	}
-	void clearAllAttributes() {
-		this.hash = null;
-		this.files.clear();
-		this.conflictRegion.clear();
-		this.parents.clear();
-	}
+	
 }
