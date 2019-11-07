@@ -1160,54 +1160,67 @@ public class Git {
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @return return the FileDiff list
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repositorypath is wrong
-     * @throws IOException
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repository is not a git repository
+     
+     * @throws IOException exception that occurs when the repositorypath is wrong
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to wrong commit hash
      *
      */
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+   public static List<FileDiff> diff(String directory, String commitSource, String commitTarget)
+			throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        List<FileDiff> result = new ArrayList<>();
-        FileDiff aux = new FileDiff();
-        String command = "git diff " + commitSource + " " + commitTarget;
+		List<FileDiff> result = new ArrayList<>();
+		int i=0;
+		FileDiff aux=new FileDiff();
 
-        CLIExecution execution = CLIExecute.execute(command, directory);
+		String command = "git diff " + commitSource + " " + commitTarget;
 
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                }
-                if(line.contains("fatal: ambiguous argument"))
-                {
-                    throw new InvalidCommitHash();
-                }
-            }
-        } else {
+		CLIExecution execution = CLIExecute.execute(command, directory);
 
-            for (String line : execution.getOutput()) {
+		if (!execution.getError().isEmpty()) {
+			for (String line : execution.getError()) {
+				if (line.contains("not a git repository")) {
+					throw new LocalRepositoryNotAGitRepository();
+				}
+				if (line.contains("fatal: ambiguous argument")) {
+					throw new InvalidCommitHash();
+				}
+			}
+		} else {
 
-                if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                    aux.setFilePathSource(line);
+			for (String line : execution.getOutput()) {
+				
+				if(line.startsWith("diff --git a")) {	
+				 aux = new FileDiff();
+				if(i!=0) {
+				result.add(aux);
+				i++;
+				}
+				}
+					
+					if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+						aux.setFilePathTarget(line);
 
-                } else {
-                    if (line.charAt(0) == '+') {
-                        aux.setAdded(line);
-                    } else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                        aux.setFilePathTarget(line);
-                    } else if (line.charAt(0) == '-') {
-                        aux.setRemoved(line);
-                    }
+					} else {
+						if (line.charAt(0) == '+') {
+							aux.setAdded(line);
+						} else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+							aux.setFilePathSource(line);
+						} else if (line.charAt(0) == '-') {
+							aux.setRemoved(line);
+						}
 
-                }
+					}
 
-            }
+				
+				
+				
+			}
 
-        }
-        result.add(aux);
-        return result;
-    }
+		}
+
+		return result;
+	}
     /*--------------------------------------------------------------------------
      * Fim comandos do Luan
     --------------------------------------------------------------------------*/
