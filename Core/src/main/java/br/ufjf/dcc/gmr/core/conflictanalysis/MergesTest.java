@@ -31,15 +31,14 @@ public class MergesTest {
 				mergeEvent.addParents(parent);
 			}
 			mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
-			/*
-			Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
-			if(Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath,false,false)) {
+			Git.checkout(mergeEvent.getParents().get(1), repositoryPath);
+			if(Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath,true,true)) {
+				mergeEvent.setConflict(true);
 				//Git Diff para obter as informações do conflito e preencher o conflictRegion
 				
 				
 			}
-			Git.mergeAbort(repositoryPath);
-			*/
+			//Git.mergeAbort(repositoryPath);
 			mergeEvent.print();
 			list.add(mergeEvent);
 			mergeEvent = new MergeEvent();

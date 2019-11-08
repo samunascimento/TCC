@@ -1056,19 +1056,15 @@ public class Git {
      * @throws AlreadyUpToDate
      * @throws NotSomethingWeCanMerge
      * @throws IOException
+     * @throws CheckoutError 
      */
-    public static boolean mergeIsConflicting (String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException {
+    public static boolean mergeIsConflicting (String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException, CheckoutError {
     	CLIExecution cliE = CLIExecute.execute("git merge " + entity , repositoryPath);
     	boolean check = false;
     	if(!cliE.getError().isEmpty()) {
     		for(String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("CONFLICT")) {
-                	check = true;
-                	if(abort) {
-                		Git.mergeAbort(repositoryPath);
-                	}
                 } else if (line.contains("No remote for the current branch.")) {
                     throw new NoRemoteForTheCurrentBranch(line);
                 } else if (line.contains("There is no merge in progress")) {
@@ -1081,11 +1077,16 @@ public class Git {
                     throw new NotSomethingWeCanMerge(line);
                 }
     		}
+    	} else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
+    		check = true;
+    		if (abort) {
+    			mergeAbort(repositoryPath);
+    		}
     	}
     	if ((returnToMaster && !check) || (returnToMaster && check && abort)) {
-    		Git.mergeBase(repositoryPath, "master");
+    		Git.checkout("master",repositoryPath);
     	}
-    	return true;
+    	return check;
     }
     /**
      * Find a common ancestor of the parents

@@ -11,6 +11,7 @@ public class MergeEvent {
 	private List<String> parents;
 	private List<ConflictFile> conflictFiles;
 	private String commonAncestorOfParents;
+	private boolean isConflict = false;
 	
 	MergeEvent(){
 		this.parents = new ArrayList<>();
@@ -43,7 +44,12 @@ public class MergeEvent {
 			System.out.println("Parent " + (i+1) + ": " + parents.get(i));
 		}
 		
-		System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents + "\n*******************************\n");
+		System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents);
+		if(isConflict) {
+			System.out.println("Is Conflict\n*******************************\n");
+		} else {
+			System.out.println("Not is Conflict\n*******************************\n");
+		}
 	}
 	public String getCommonAncestorOfParents() {
 		return commonAncestorOfParents;
@@ -51,5 +57,12 @@ public class MergeEvent {
 	public void setCommonAncestorOfParents(String commonAncestorOfParents) {
 		this.commonAncestorOfParents = commonAncestorOfParents;
 	}
+	public boolean isConflict() {
+		return isConflict;
+	}
+	public void setConflict(boolean isConflict) {
+		this.isConflict = isConflict;
+	}
+	
 	
 }
