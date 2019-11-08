@@ -5,10 +5,16 @@
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.MergesTest;
+import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
+import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.Scanner;
@@ -21,7 +27,8 @@ import java.util.logging.Logger;
  */
 public class TestJoao {
 
-    public static void main(String[] args) throws IOException, BranchNotFound {
+    public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
+    	MergesTest.SearchAllConflicts("/home/joao/Git/UFJF");
         /*
         String repositoryPath = "C:\\Users\\joaop\\Git\\UFJF";
         try{

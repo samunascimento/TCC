@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MergeEvent {
@@ -8,6 +9,9 @@ public class MergeEvent {
 	private List<String> parents;
 	private List<ConflictFile> conflictFiles;
 	
+	MergeEvent(){
+		this.parents = new ArrayList<>();
+	}
 	public String getHash() {
 		return hash;
 	}
@@ -28,6 +32,14 @@ public class MergeEvent {
 	}
 	public void addConflictFiles(ConflictFile conflictFiles) {
 		this.conflictFiles.add(conflictFiles);
+	}
+	public void print() {
+		System.out.println("*************Merge*************");
+		System.out.println("Hash: " + hash );
+		for(int i = 0; i < parents.size(); i++) {
+			System.out.println("Parent " + i + ": " + parents.get(i));
+		}
+		System.out.println("*******************************\n");
 	}
 	
 }

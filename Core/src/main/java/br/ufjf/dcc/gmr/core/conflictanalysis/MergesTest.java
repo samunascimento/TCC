@@ -35,17 +35,17 @@ public class MergesTest {
 			if(Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath,false,false)) {
 				//Git Diff para obter as informações do conflito e preencher o conflictRegion
 				
-
+				
 			}
-			*/
 			Git.mergeAbort(repositoryPath);
+			*/
+			mergeEvent.print();
 			list.add(mergeEvent);
 			mergeEvent = new MergeEvent();
 			conflictFile = new ConflictFile();
 			conflictRegion = new ConflictRegion();
 			
 		}
-		
 			
 	}
 	
