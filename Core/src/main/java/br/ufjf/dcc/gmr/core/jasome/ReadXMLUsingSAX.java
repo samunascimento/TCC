@@ -30,6 +30,15 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     public int numberPackage = 0;
     public List<Metric> listMetric = new ArrayList<>();
+    public List<Metric> methodsMetrics = new ArrayList<>();
+    public List<Metric> classMetrics = new ArrayList<>();
+    public List<Metric> packagesMetrics = new ArrayList<>();
+    public Metric projectMetric;
+    
+    MethodMetrics a = new MethodMetrics();
+    ClassMetrics b = new ClassMetrics();
+    PackageMetrics c = new PackageMetrics();
+    ProjectMetrics d = new ProjectMetrics();
 
     public ReadXMLUsingSAX() {
         super();
@@ -61,13 +70,13 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     @Override
     public void endDocument() {
         System.out.println("Imprimindo listMetric");
-        for (int i = 0; i < listMetric.size(); i++) {
+        /*for (int i = 0; i < listMetric.size(); i++) {
             System.out.print(listMetric.get(i).getDescription() + " ");
             System.out.print(listMetric.get(i).getName() + " ");
             System.out.print(listMetric.get(i).getValue() + " ");
             System.out.println(" ");
-
-        }
+        }*/
+     
         System.out.println("\nFim do Parsing...");
 
     }
@@ -113,16 +122,17 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         }*/
         // separando as métricas
         if (project.equals("Project")) {
-            if (tagAtual.equals("Metric")) {
+            if (tagAtual.equals("Metric")){
                 Metric metric = new Metric();
                 String value0 = atts.getValue(0);
                 String value1 = atts.getValue(1);
                 String value2 = atts.getValue(2);
-
+                
                 metric.setDescription(value0);
                 metric.setName(value1);
                 metric.setValue(value2);
                 listMetric.add(metric);
+                d.setTloc(metric);
             }
         } else if (pacckage.equals("Package")) {
             if (tagAtual.equals("Metric")) {
@@ -135,7 +145,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 metric.setName(value1);
                 metric.setValue(value2);
                 listMetric.add(metric);
+                packagesMetrics.add(metric);
             }
+            c.setListMetrics(packagesMetrics);
         } else if (clazz.equals("Class")) {
             if (tagAtual.equals("Metric")) {
                 Metric metric = new Metric();
@@ -147,7 +159,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 metric.setName(value1);
                 metric.setValue(value2);
                 listMetric.add(metric);
+                classMetrics.add(metric);
             }
+            b.setMetrics(classMetrics);
         } else if (method.equals("Method")) {
             if (tagAtual.equals("Metric")) {
                 Metric metric = new Metric();
@@ -159,9 +173,11 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 metric.setName(value1);
                 metric.setValue(value2);
                 listMetric.add(metric);
-            }
+                methodsMetrics.add(metric);
         }
+        a.setListMetrics(listMetric);
     }
+}
 
     @Override
     public void endElement(String uri, String localName, String qName)
