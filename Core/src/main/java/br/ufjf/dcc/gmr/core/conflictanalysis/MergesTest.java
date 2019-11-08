@@ -30,6 +30,7 @@ public class MergesTest {
 			for(String parent : parents) {
 				mergeEvent.addParents(parent);
 			}
+			mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
 			/*
 			Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
 			if(Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath,false,false)) {

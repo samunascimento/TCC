@@ -1027,7 +1027,7 @@ public class Git {
      * repository
      */
     public static List<String> giveAllMerges(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
-    	CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%p,%h", repositoryPath);
+    	CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%P,%H", repositoryPath);
     	if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
@@ -1087,7 +1087,32 @@ public class Git {
     	}
     	return true;
     }
-    
+    /**
+     * Find a common ancestor of the parents
+     * 
+     * @param repositoryPath This parameter is a String that contains the
+     * directory where the command will be executed
+     * @param parents This parameter  is a List<String> that contains the hash of the parents
+     * @return Return a List<String> that goes contains all commits that is merges
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
+     * repository
+     */
+    public static String mergeBaseCommand(String repositoryPath, List<String> parents) throws IOException, LocalRepositoryNotAGitRepository {
+    	String command = "git merge-base ";
+    	for(String str : parents) {
+    		command = command + str + " ";
+    	}
+    	CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
+    	if (!cliE.getError().isEmpty()) {
+            for (String string : cliE.getError()) {
+                if (string.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+            }
+    	}
+    	return cliE.getOutput().toString().replace("[", "").replace("]", "");
+    }
 
     /*--------------------------------------------------------------------------
      * Fim comandos do João 

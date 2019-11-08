@@ -3,11 +3,14 @@ package br.ufjf.dcc.gmr.core.conflictanalysis;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufjf.dcc.gmr.core.vcs.Git;
+
 public class MergeEvent {
 	
 	private String hash;
 	private List<String> parents;
 	private List<ConflictFile> conflictFiles;
+	private String commonAncestorOfParents;
 	
 	MergeEvent(){
 		this.parents = new ArrayList<>();
@@ -39,7 +42,14 @@ public class MergeEvent {
 		for(int i = 0; i < parents.size(); i++) {
 			System.out.println("Parent " + i + ": " + parents.get(i));
 		}
-		System.out.println("*******************************\n");
+		
+		System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents + "\n*******************************\n");
+	}
+	public String getCommonAncestorOfParents() {
+		return commonAncestorOfParents;
+	}
+	public void setCommonAncestorOfParents(String commonAncestorOfParents) {
+		this.commonAncestorOfParents = commonAncestorOfParents;
 	}
 	
 }
