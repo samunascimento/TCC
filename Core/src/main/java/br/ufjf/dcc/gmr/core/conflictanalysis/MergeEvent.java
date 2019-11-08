@@ -40,7 +40,7 @@ public class MergeEvent {
 		System.out.println("*************Merge*************");
 		System.out.println("Hash: " + hash );
 		for(int i = 0; i < parents.size(); i++) {
-			System.out.println("Parent " + i + ": " + parents.get(i));
+			System.out.println("Parent " + (i+1) + ": " + parents.get(i));
 		}
 		
 		System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents + "\n*******************************\n");

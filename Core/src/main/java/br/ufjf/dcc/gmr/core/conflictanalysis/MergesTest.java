@@ -24,7 +24,7 @@ public class MergesTest {
 		ConflictFile conflictFile = new ConflictFile();
 		ConflictRegion conflictRegion = new ConflictRegion();
 		for (String merge : allMerges) {
-			family = merge.split(",",2);
+			family = merge.split(",");
 			mergeEvent.setHash(family[1]);
 			parents = family[0].split(" ");
 			for(String parent : parents) {

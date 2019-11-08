@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-    	MergesTest.SearchAllConflicts("/home/joao/Git/voldemort");
+    	//MergesTest.SearchAllConflicts("/home/joao/Git/voldemort");
         /*
         String repositoryPath = "C:\\Users\\joaop\\Git\\UFJF";
         try{
