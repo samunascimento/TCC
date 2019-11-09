@@ -104,10 +104,10 @@ public class Git {
             command = command.concat(" --merges ");
         }
 
-        if(all){
+        if (all) {
             command = command.concat(" --all ");
         }
-        
+
         //log method formatting
         command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
         List<Formats> list = new ArrayList<>();
@@ -170,6 +170,7 @@ public class Git {
     public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
         return Git.log(repositoryPath, true, false);
     }
+
     /**
      * @param repositoryPath
      * @return
@@ -179,6 +180,7 @@ public class Git {
     public static List<Formats> logAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
         return Git.log(repositoryPath, false, true);
     }
+
     /**
      * @param repositoryPath
      * @return
@@ -208,8 +210,7 @@ public class Git {
         String command = "git status --short";
         CLIExecution execute;
         Files file = new Files();
-        
-        
+
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
@@ -217,176 +218,190 @@ public class Git {
         execute = CLIExecute.execute(command, repositoryPath);
         String array[];
         String array2[];
-        for(String line: execute.getOutput()){
+        for (String line : execute.getOutput()) {
             array = line.split(" ");
             if (array[1].contains("M")) {
                 String linha = Status.MODIFIED.toString();
-                if(array[2].contains("M")){
+                if (array[2].contains("M")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.MODIFIED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else file.status.add(linha.concat(" ").concat(array[2]));
-                }                
+                    } else {
+                        file.status.add(linha.concat(" ").concat(array[2]));
+                    }
+                }
             }
             if (array[1].contains("?")) {
                 String linha = Status.UNTRACKED.toString();
-                file.status.add(linha.concat(" ").concat(array[2]));                
+                file.status.add(linha.concat(" ").concat(array[2]));
             }
             if (array[1].contains("A")) {
                 String linha = Status.ADDED.toString();
-                if(array[2].contains("M")){
+                if (array[2].contains("M")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.MODIFIED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else{
-                        if(array[2].contains("U")){
+                    } else {
+                        if (array[2].contains("U")) {
                             array2 = array[2].split(" ");
                             String linha2 = Status.UNMERGED.toString();
                             file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                        }else{
-                            if(array[2].contains("A")){
+                        } else {
+                            if (array[2].contains("A")) {
                                 array2 = array[2].split(" ");
                                 String linha2 = Status.ADDED.toString();
                                 file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                            } else file.status.add(linha.concat(" ").concat(array[2]));
-                        } 
+                            } else {
+                                file.status.add(linha.concat(" ").concat(array[2]));
+                            }
+                        }
                     }
-                }                   
+                }
             }
             if (array[1].contains("R")) {
                 String linha = Status.RENAMED.toString();
-                if(array[2].contains("M")){
+                if (array[2].contains("M")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.MODIFIED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else file.status.add(linha.concat(" ").concat(array[2]));
-                }                
+                    } else {
+                        file.status.add(linha.concat(" ").concat(array[2]));
+                    }
+                }
             }
             if (array[1].contains("D")) {
                 String linha = Status.DELETED.toString();
-                if(array[2].contains("R")){
+                if (array[2].contains("R")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.RENAMED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("C")){
+                } else {
+                    if (array[2].contains("C")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.COPIED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else{
-                        if(array[2].contains("D")){
-                           array2 = array[2].split(" ");
-                           String linha2 = Status.DELETED.toString();
-                           file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                        }else{
-                            if(array[2].contains("U")){
-                               array2 = array[2].split(" ");
-                               String linha2 = Status.UNMERGED.toString();
-                               file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                            }else file.status.add(linha.concat(" ").concat(array[2]));
+                    } else {
+                        if (array[2].contains("D")) {
+                            array2 = array[2].split(" ");
+                            String linha2 = Status.DELETED.toString();
+                            file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        } else {
+                            if (array[2].contains("U")) {
+                                array2 = array[2].split(" ");
+                                String linha2 = Status.UNMERGED.toString();
+                                file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                            } else {
+                                file.status.add(linha.concat(" ").concat(array[2]));
+                            }
                         }
                     }
-                }                
+                }
             }
             if (array[1].contains("C")) {
                 String linha = Status.COPIED.toString();
-                if(array[2].contains("M")){
+                if (array[2].contains("M")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.MODIFIED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else file.status.add(linha.concat(" ").concat(array[2]));
-                }                
+                    } else {
+                        file.status.add(linha.concat(" ").concat(array[2]));
+                    }
+                }
             }
             if (array[1].contains("U")) {
                 String linha = Status.UNMERGED.toString();
-                if(array[2].contains("A")){
+                if (array[2].contains("A")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.ADDED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else{
-                        if(array[2].contains("U")){
+                    } else {
+                        if (array[2].contains("U")) {
                             array2 = array[2].split(" ");
                             String linha2 = Status.UNMERGED.toString();
                             file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                        }else file.status.add(linha.concat(" ").concat(array[2]));
-                    } 
-                }                
+                        } else {
+                            file.status.add(linha.concat(" ").concat(array[2]));
+                        }
+                    }
+                }
             }
             if (array[1].contains(" ")) {
                 String linha = Status.UNMODIFIED.toString();
-                if(array[2].contains("M")){
+                if (array[2].contains("M")) {
                     array2 = array[2].split(" ");
                     String linha2 = Status.MODIFIED.toString();
                     file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                }else{
-                    if(array[2].contains("D")){
+                } else {
+                    if (array[2].contains("D")) {
                         array2 = array[2].split(" ");
                         String linha2 = Status.DELETED.toString();
                         file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                    }else{
-                        if(array[2].contains("A")){
-                           array2 = array[2].split(" ");
-                           String linha2 = Status.ADDED.toString();
-                           file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
-                        }else file.status.add(linha.concat(" ").concat(array[2]));
-                    } 
-                }                
+                    } else {
+                        if (array[2].contains("A")) {
+                            array2 = array[2].split(" ");
+                            String linha2 = Status.ADDED.toString();
+                            file.status.add(linha.concat(" ").concat(linha2).concat(array2[1]));
+                        } else {
+                            file.status.add(linha.concat(" ").concat(array[2]));
+                        }
+                    }
+                }
             }
             if (array[1].contains("!")) {
                 String linha = Status.IGNORED.toString();
-                file.status.add(linha.concat(" ").concat(array[2]));                
+                file.status.add(linha.concat(" ").concat(array[2]));
             }
         }
-    return file.status;
-}
-    
+        return file.status;
+    }
+
     public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
         String command = "git status --short";
         CLIExecution execute;
         List<String> lista = new ArrayList<>();
         Unmerged u = new Unmerged();
-        
+
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
         lista = status(repositoryPath);
-        if(!lista.isEmpty()){
-            for(int i=0;i<lista.size();i++){
-                if(lista.get(i).contains("UNMERGED"))
+        if (!lista.isEmpty()) {
+            for (int i = 0; i < lista.size(); i++) {
+                if (lista.get(i).contains("UNMERGED")) {
                     u.unmerged.add(lista.get(i));
+                }
             }
         }
-    return u.unmerged;
-}
-    
-    
+        return u.unmerged;
+    }
+
     ///GIT CLONE
     /**
      * description
@@ -397,9 +412,9 @@ public class Git {
      * @return
      * @throws RepositoryNotFound
      */
-    
     /**
      * description
+     *
      * @param url
      * @param directory
      * @param name
@@ -1016,38 +1031,41 @@ public class Git {
         }
         return check;
     }
+
     /**
      * Give all commits that is merges and their parents
-     * 
+     *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @return Return a List<String> that goes contains all commits that is merges
+     * @return Return a List<String> that goes contains all commits that is
+     * merges
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
      * repository
      */
     public static List<String> giveAllMerges(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
-    	CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%P,%H", repositoryPath);
-    	if (!cliE.getError().isEmpty()) {
+        CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%P,%H", repositoryPath);
+        if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 }
             }
-    	}
-    	return cliE.getOutput();
+        }
+        return cliE.getOutput();
     }
-    
+
     /**
      * Do a merge and verify if is a conflict
+     *
      * @param entity This parameter is a String that represents anything that
      * can be merged like branches and commits
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @param abort This parameter is a boolean that indicates if user wants to abort
-     * the conflict if happend 
-     * @param returnToMaster This parameter is a boolean that indicates if user wants to
-     * return to master after merge
+     * @param abort This parameter is a boolean that indicates if user wants to
+     * abort the conflict if happend
+     * @param returnToMaster This parameter is a boolean that indicates if user
+     * wants to return to master after merge
      * @return Returns a boolean that indicates if the merge is confliting
      * @throws LocalRepositoryNotAGitRepository
      * @throws NoRemoteForTheCurrentBranch
@@ -1056,19 +1074,19 @@ public class Git {
      * @throws AlreadyUpToDate
      * @throws NotSomethingWeCanMerge
      * @throws IOException
-     * @throws CheckoutError 
+     * @throws CheckoutError
      */
-    public static boolean mergeIsConflicting (String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException, CheckoutError {
-    	CLIExecution cliE = CLIExecute.execute("git merge " + entity , repositoryPath);
-    	boolean check = false;
-    	if(!cliE.getError().isEmpty()) {
-    		for(String line : cliE.getError()) {
+    public static boolean mergeIsConflicting(String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException, CheckoutError {
+        CLIExecution cliE = CLIExecute.execute("git merge " + entity, repositoryPath);
+        boolean check = false;
+        if (!cliE.getError().isEmpty()) {
+            for (String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (line.contains("No remote for the current branch.")) {
                     throw new NoRemoteForTheCurrentBranch(line);
                 } else if (line.contains("There is no merge in progress")) {
-                	throw new ThereIsNoMergeInProgress(line);
+                    throw new ThereIsNoMergeInProgress(line);
                 } else if (line.contains("There is no merge to abort")) {
                     throw new ThereIsNoMergeToAbort(line);
                 } else if (line.contains("Already up to date")) {
@@ -1076,43 +1094,46 @@ public class Git {
                 } else if (line.contains("not something we can merge")) {
                     throw new NotSomethingWeCanMerge(line);
                 }
-    		}
-    	} else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
-    		check = true;
-    		if (abort) {
-    			mergeAbort(repositoryPath);
-    		}
-    	}
-    	if ((returnToMaster && !check) || (returnToMaster && check && abort)) {
-    		Git.checkout("master",repositoryPath);
-    	}
-    	return check;
+            }
+        } else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
+            check = true;
+            if (abort) {
+                mergeAbort(repositoryPath);
+            }
+        }
+        if ((returnToMaster && !check) || (returnToMaster && check && abort)) {
+            Git.checkout("master", repositoryPath);
+        }
+        return check;
     }
+
     /**
      * Find a common ancestor of the parents
-     * 
+     *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @param parents This parameter  is a List<String> that contains the hash of the parents
-     * @return Return a List<String> that goes contains all commits that is merges
+     * @param parents This parameter is a List<String> that contains the hash of
+     * the parents
+     * @return Return a List<String> that goes contains all commits that is
+     * merges
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
      * repository
      */
     public static String mergeBaseCommand(String repositoryPath, List<String> parents) throws IOException, LocalRepositoryNotAGitRepository {
-    	String command = "git merge-base ";
-    	for(String str : parents) {
-    		command = command + str + " ";
-    	}
-    	CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
-    	if (!cliE.getError().isEmpty()) {
+        String command = "git merge-base ";
+        for (String str : parents) {
+            command = command + str + " ";
+        }
+        CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
+        if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
                 }
             }
-    	}
-    	return cliE.getOutput().toString().replace("[", "").replace("]", "");
+        }
+        return cliE.getOutput().toString().replace("[", "").replace("]", "");
     }
 
     /*--------------------------------------------------------------------------
@@ -1138,10 +1159,11 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      * exception that occurs when the repositorypath is wrong
      * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidDocument exception to Invalid document
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidDocument exception to
+     * Invalid document
      *
      */
-    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, LocalRepositoryNotAGitRepository,InvalidDocument {
+    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, LocalRepositoryNotAGitRepository, InvalidDocument {
 
         String command = "git reset ";
 
@@ -1163,8 +1185,7 @@ public class Git {
 
                     throw new LocalRepositoryNotAGitRepository();
                 }
-                if(line.contains("fatal: ambiguous argument"))
-                {
+                if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidDocument();
                 }
 
@@ -1186,67 +1207,68 @@ public class Git {
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @return return the FileDiff list
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository exception that occurs when the repository is not a git repository
-     
-     * @throws IOException exception that occurs when the repositorypath is wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to wrong commit hash
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repository is not a git repository
+     *
+     * @throws IOException exception that occurs when the repositorypath is
+     * wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
+     * wrong commit hash
      *
      */
-   public static List<FileDiff> diff(String directory, String commitSource, String commitTarget)
-			throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-		List<FileDiff> result = new ArrayList<>();
-		int i=0;
-		FileDiff aux=new FileDiff();
+        List<FileDiff> result = new ArrayList<>();
+        int i = 0;
+        FileDiff aux = new FileDiff();
 
-		String command = "git diff " + commitSource + " " + commitTarget;
+        String command = "git diff " + commitSource + " " + commitTarget;
 
-		CLIExecution execution = CLIExecute.execute(command, directory);
+        CLIExecution execution = CLIExecute.execute(command, directory);
 
-		if (!execution.getError().isEmpty()) {
-			for (String line : execution.getError()) {
-				if (line.contains("not a git repository")) {
-					throw new LocalRepositoryNotAGitRepository();
-				}
-				if (line.contains("fatal: ambiguous argument")) {
-					throw new InvalidCommitHash();
-				}
-			}
-		} else {
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+                if (line.contains("fatal: ambiguous argument")) {
+                    throw new InvalidCommitHash();
+                }
+            }
+        } else {
 
-			for (String line : execution.getOutput()) {
-				
-				if(line.startsWith("diff --git a")) {	
-				 aux = new FileDiff();
-				if(i!=0) {
-				result.add(aux);
-				i++;
-				}
-				}
-					
-					if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-						aux.setFilePathTarget(line);
+            for (String line : execution.getOutput()) {
 
-					} else {
-						if (line.charAt(0) == '+') {
-							aux.setAdded(line);
-						} else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-							aux.setFilePathSource(line);
-						} else if (line.charAt(0) == '-') {
-							aux.setRemoved(line);
-						}
+                if (line.startsWith("diff --git a")) {
 
-					}
+                    if (i != 0) {
+                        result.add(aux);
+                        i++;
+                    }
+                    aux = new FileDiff();
+                }
 
-				
-				
-				
-			}
+                if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                    aux.setFilePathTarget(line);
 
-		}
+                } else {
+                    if (line.charAt(0) == '+') {
+                        aux.setAdded(line);
+                    } else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                        aux.setFilePathSource(line);
+                    } else if (line.charAt(0) == '-') {
+                        aux.setRemoved(line);
+                    }
 
-		return result;
-	}
+                }
+
+            }
+
+        }
+
+        return result;
+    }
     /*--------------------------------------------------------------------------
      * Fim comandos do Luan
     --------------------------------------------------------------------------*/
