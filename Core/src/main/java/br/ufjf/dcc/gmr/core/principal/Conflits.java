@@ -14,8 +14,12 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,24 +71,38 @@ public class Conflits {
         } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
         }
     	
+    	System.out.println("***************STARTING MERGE LOOP***************");
+    	
     	for(int i = mergeList.size()-1; i >= 0; i--) {
+    		
+    		System.out.println("***************MERGE NUMBER "+i+"***************");
+    		
             List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
             
+            System.out.println("**************PREPARING MERGE BETWEEN:***************");
+            System.out.println("***************PARENT 1: "+parents.get(0) +"***************");
+            System.out.println("***************PARENT 2: "+parents.get(1) +"***************");
             try {
                 Git.checkout(parents.get(0), repository);
             } catch (IOException | LocalRepositoryNotAGitRepository | CheckoutError e) {
              }
-
+            
+            System.out.println("***************RUNNING MERGE***************");
             try {
             	Git.mergeBranch(repository, parents.get(0), parents.get(1), "Teste");
             } catch (NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | ThereIsNoMergeToAbort | IOException | AlreadyUpToDate | NotSomethingWeCanMerge e) {
-    		}
+            	System.out.println("***************ERROR IN MERGE EXECUTION***************");
+            }
             
+            System.out.println("***************STATUS MERGE***************");
             try {
                 Git.status(repository);
             } catch (RepositoryNotFound | IOException e) {
+            	 System.out.println("***************ERROR IN STATUS EXECUTION***************");
             }
             
+            
+            System.out.println("***************MERGE ABORT AND CLEAR***************");
             try {
             	Git.mergeAbort(repository);
             } catch (NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | ThereIsNoMergeToAbort | IOException | AlreadyUpToDate | NotSomethingWeCanMerge e) {
@@ -100,4 +118,50 @@ public class Conflits {
         
     }
     
-}
+    public static void getAreaConflits(String filePath) {
+    	
+    	 try{
+
+             FileReader fr = new FileReader(filePath);
+             BufferedReader br = new BufferedReader(fr);
+
+             String linha;
+             List <String> str = new ArrayList<>();
+             List <String> areaConflit = new ArrayList<>();
+             List <String> areaIncomeConflit = new ArrayList<>();
+             List <String> areaCurrentConflit = new ArrayList<>();
+             while( (linha = br.readLine()) != null ) {
+                 str.add(linha);
+             }
+
+
+             for(int i=0; i < str.size(); i++){
+                 if ( str.get(i).contains("<<<<<<<") ) {
+                     for(int j=i; !str.get(j).contains("======="); j++) {
+                         areaCurrentConflit.add(str.get(j));
+                         System.out.println(str.get(j) + "\n");
+                     }
+                 }
+                 if ( str.get(i).contains("=======") ) {
+
+                     for(int w=i; !str.get(w).contains(">>>>>>>"); w++) {
+                         areaIncomeConflit.add(str.get(w));
+                         System.out.println(str.get(w) + "\n");
+                     }
+                 }
+
+                 if ( str.get(i).contains(">>>>>>>") )
+                     System.out.println(str.get(i) + "\n");
+             }
+
+         }
+         catch(IOException e){
+             System.out.println("Arquivo não encontrado!");
+         }
+     }
+    	
+    	
+    	
+    }
+    
+
