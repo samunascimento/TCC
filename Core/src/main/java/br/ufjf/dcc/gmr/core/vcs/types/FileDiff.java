@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.vcs.types;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,10 +17,10 @@ public class FileDiff {
     
     private String filePathSource;
     private String filePathTarget;
-    private List<String> added;
-    private List<String> removed;
+    private List<LineInformation> lines;
 
     public FileDiff() {
+        this.lines = new ArrayList<>();
     }
 
     
@@ -39,23 +40,12 @@ public class FileDiff {
         this.filePathTarget = filePathTarget;
     }
 
-    public List<String> getAdded() {
-        return added;
+    public List<LineInformation> getLines() {
+        return lines;
     }
 
-    public void setAdded(String added) {
-        this.added.add(added);
+    public void setLines(List<LineInformation> lines) {
+        this.lines = lines;
     }
 
-    public List<String> getRemoved() {
-        return removed;
-    }
-
-    public void setRemoved(String removed) {
-        this.removed.add(removed);
-    }
-    
-    
-
-    
 }

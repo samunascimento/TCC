@@ -29,6 +29,8 @@ import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.types.Files;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
+import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import br.ufjf.dcc.gmr.core.vcs.types.Unmerged;
 import java.io.IOException;
@@ -1244,26 +1246,23 @@ public class Git {
 
                     if (i != 0) {
                         result.add(aux);
-                        i++;
                     }
+                    i++;
                     aux = new FileDiff();
                 }
 
-                if (line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
                     aux.setFilePathTarget(line);
-
-                } else {
-                    if (line.charAt(0) == '+') {
-                        aux.setAdded(line);
-                    } else if (line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                        aux.setFilePathSource(line);
-                    } else if (line.charAt(0) == '-') {
-                        aux.setRemoved(line);
-                    }
-
+                } else if (line.charAt(0) == '+') {
+                    aux.getLines().add(new LineInformation(line, LineType.ADDED));
+                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                    aux.setFilePathSource(line);
+                } else if (line.charAt(0) == '-') {
+                    aux.getLines().add(new LineInformation(line, LineType.REMOVED));
                 }
 
             }
+            result.add(aux);
 
         }
 

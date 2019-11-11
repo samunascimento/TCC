@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class TestLuan {
      */
     @SuppressWarnings("empty-statement")
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-        //String repositoryPath = "/Users/gleiph/repositories/voldemort";
+//        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF";
         String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         // Git.reset(repositoryPath,true, false, false,"");
@@ -38,14 +39,9 @@ public class TestLuan {
                 System.out.println("=======================================");
                 System.out.println(file.getFilePathSource());
                 System.out.println(file.getFilePathTarget());
-                System.out.println("Added");
-                for (String string : file.getAdded()) {
-                    System.out.println("\t" + string);
-
-                }
-                System.out.println("Removed");
-                for (String string : file.getRemoved()) {
-                    System.out.println("\t" + string);
+                System.out.println("Lines");
+                for (LineInformation line : file.getLines()) {
+                    System.out.println(line);
                 }
             }
 
