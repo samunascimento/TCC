@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.vcs.types;
 
 /**
+ *Type used in diff to control the lines
  *
  * @author gleiph
  */

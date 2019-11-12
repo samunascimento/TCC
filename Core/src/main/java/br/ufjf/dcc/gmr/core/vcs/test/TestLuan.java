@@ -25,10 +25,10 @@ public class TestLuan {
      * @throws java.io.IOException
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
-    @SuppressWarnings("empty-statement")
+    
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 //        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF";
-        String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
+          String repositoryPath="/home/luan/UFJF";
 
         // Git.reset(repositoryPath,true, false, false,"");
         List<FileDiff> result = new ArrayList<>();

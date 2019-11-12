@@ -1252,13 +1252,17 @@ public class Git {
                 }
 
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                    aux.setFilePathTarget(line);
+                	String c=line.substring(5);
+                	aux.setFilePathTarget(c);
                 } else if (line.charAt(0) == '+') {
-                    aux.getLines().add(new LineInformation(line, LineType.ADDED));
+                	String c=line.substring(1);
+                    aux.getLines().add(new LineInformation(c, LineType.ADDED));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                    aux.setFilePathSource(line);
+                	String c=line.substring(5);
+                	aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-') {
-                    aux.getLines().add(new LineInformation(line, LineType.REMOVED));
+                	String c=line.substring(1);
+                    aux.getLines().add(new LineInformation(c, LineType.REMOVED));
                 }
 
             }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Type used in the command diff
  *
  * @author gleiph
  */
