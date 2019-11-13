@@ -35,12 +35,12 @@ public class TestJoao {
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
     	String repositoryPath = "/home/joao/Git/Teste";
     	List<FileDiff> fileDiff = Git.diff(repositoryPath,"","");
-    	for(FileDiff diff : fileDiff) {
-    		System.out.println("*******************");
+    	for(FileDiff diff : fileDiff) {	
+    		System.out.println(diff.getFilePathSource() + " -------- " + diff.getFilePathTarget());
     		for(LineInformation line : diff.getLines()){
     			System.out.println(line);
     		}
-    		System.out.println("*******************\n");
+    		//System.out.println("*******************\n");
     	}
     	//MergesTest.SearchAllConflicts("/home/joao/Git/Teste");
         /*

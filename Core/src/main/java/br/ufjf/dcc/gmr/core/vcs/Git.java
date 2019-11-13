@@ -1242,7 +1242,7 @@ public class Git {
 
             for (String line : execution.getOutput()) {
 
-                if (line.startsWith("diff --git a")) {
+                if (line.startsWith("diff --")) {
 
                     if (i != 0) {
                         result.add(aux);
