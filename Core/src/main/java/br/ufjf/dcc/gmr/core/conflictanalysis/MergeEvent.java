@@ -15,6 +15,7 @@ public class MergeEvent {
 	
 	MergeEvent(){
 		this.parents = new ArrayList<>();
+		conflictFiles = new ArrayList<>();
 	}
 	public String getHash() {
 		return hash;
@@ -46,10 +47,25 @@ public class MergeEvent {
 		
 		System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents);
 		if(isConflict) {
-			System.out.println("Is Conflict\n*******************************\n");
+			System.out.println("Is Conflict\nConflicts:\n");
+			for(ConflictFile file : this.conflictFiles) {
+				System.out.println("File Name: " + file.getFileName());
+				for(int i = 0; i < file.getConflictRegion().size(); i++) {
+					System.out.println("Conflitct " + (i+1) + "\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+					for(String v : file.getConflictRegion().get(i).getV1()) {
+						System.out.println(v);
+					}
+					System.out.println("==================================================");
+					for(String v : file.getConflictRegion().get(i).getV2()) {
+						System.out.println(v);
+					}
+					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+				}
+			}
 		} else {
-			System.out.println("Not is Conflict\n*******************************\n");
+			System.out.println("Not is Conflict");
 		}
+		
 	}
 	public String getCommonAncestorOfParents() {
 		return commonAncestorOfParents;

@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConflictRegion {
@@ -10,6 +11,11 @@ public class ConflictRegion {
 	private int v1FinalLine;
 	private int v2StartLine;
 	private int v2FinalLine;
+	
+	public ConflictRegion(){
+		this.v1 = new ArrayList<>();
+		this.v2 = new ArrayList<>();
+	}
 	
 	public List<String> getV1() {
 		return v1;
@@ -53,9 +59,5 @@ public class ConflictRegion {
 	public void setV2FinalLine(int v2FinalLine) {
 		this.v2FinalLine = v2FinalLine;
 	}
-	void clearAllAttributes() {
-		this.file = null;
-		this.v1.clear();
-		this.v2.clear();
-	}
+
 }

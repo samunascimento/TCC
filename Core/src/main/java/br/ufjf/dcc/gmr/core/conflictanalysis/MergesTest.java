@@ -14,6 +14,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 
 public class MergesTest {
 	
@@ -25,6 +26,7 @@ public class MergesTest {
 		List<MergeEvent> list = new ArrayList<>();
 		ConflictFile conflictFile = new ConflictFile();
 		ConflictRegion conflictRegion = new ConflictRegion();
+		List<String> conflict = new ArrayList<>();
 		for (String merge : allMerges) {
 			family = merge.split(",");
 			mergeEvent.setHash(family[1]);
@@ -34,15 +36,35 @@ public class MergesTest {
 			}
 			mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
 			Git.checkout(mergeEvent.getParents().get(1), repositoryPath);
-			if(Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath,true,true)) {
+			if(Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath,false,false)) {
 				mergeEvent.setConflict(true);
-				//Git Diff para obter as informações do conflito e preencher o conflictRegion
 				for(FileDiff fileDiff : Git.diff(repositoryPath,"","")) {
-					
+					conflictFile.setFileName(fileDiff.getFilePathSource());
+					for(LineInformation line : fileDiff.getLines()) {
+						conflict.add(line.toString());
+					}
+					for(int i = 0; i<conflict.size(); i++) {
+						if(conflict.get(i).contains("+<<<<<<<")) {
+							i++;
+							while(!conflict.get(i).contains("+=======")) {
+								conflictRegion.getV1().add(conflict.get(i));
+								i++;
+							}
+							i++;
+							while(!conflict.get(i).contains("+>>>>>>>")){
+								conflictRegion.getV2().add(conflict.get(i));
+								i++;
+							}
+							conflictFile.addConflictRegion(conflictRegion);
+							conflictRegion = new ConflictRegion();
+						}
+					}
+					mergeEvent.addConflictFiles(conflictFile);
+					conflictFile = new ConflictFile();
 				}
-				
 			}
-			//Git.mergeAbort(repositoryPath);
+			Git.mergeAbort(repositoryPath);
+			Git.checkout("master", repositoryPath);
 			mergeEvent.print();
 			list.add(mergeEvent);
 			mergeEvent = new MergeEvent();
@@ -54,3 +76,4 @@ public class MergesTest {
 	}
 	
 }
+

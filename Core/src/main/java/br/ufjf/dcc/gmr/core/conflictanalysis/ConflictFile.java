@@ -1,11 +1,16 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConflictFile {
 	
 	private String fileName;
 	private List<ConflictRegion> conflictRegion;
+	
+	public ConflictFile() {
+		this.conflictRegion = new ArrayList<>();
+	}
 	
 	public String getFileName() {
 		return fileName;
