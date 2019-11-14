@@ -1,10 +1,12 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
 import java.io.IOException;
+import java.io.StringReader;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -45,14 +47,14 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         projectMetrics = new ProjectMetrics();
     }
 
-    public void fazerParsing(String pathArq) {
+    public void fazerParsing(String xml) {
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser;
-
         try {
             saxParser = factory.newSAXParser();
-            saxParser.parse(pathArq, this);
+//            saxParser.parse(pathArq, this);
+            saxParser.parse(new InputSource(new StringReader(xml)), this);
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
             StringBuffer msg = new StringBuffer();
@@ -322,8 +324,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         }
 
     }
-@Override
-        public void endElement(String uri, String localName, String qName)
+
+    @Override
+    public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
         tagAtual = qName;

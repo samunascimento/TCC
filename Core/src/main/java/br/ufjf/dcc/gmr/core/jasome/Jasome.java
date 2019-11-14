@@ -7,28 +7,82 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import java.io.File;
+import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.jasome.ReadXMLUsingSAX;
+import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
- * @author antonio henrique
+ * @author gleiph
  */
 public class Jasome {
-    public static void main(String[] args) throws IOException {
-        
-        String command = "C:\\Users\\antonio henrique\\Desktop\\hello-world-java";
-        String directory = "C:\\Users\\antonio henrique\\Desktop\\jasome-master\\build\\distributions\\jasome-master\\bin\\jasome-master.bat";
-        
-        String[] cmd = {directory,command};
-        
-        CLIExecution execution = null;
-        //execution = CLIExecute.execute(cmd);
-        //problemas quando vou utilizar o execute com dois parametros
-        execution = CLIExecute.execute(cmd);
-        for (String line : execution.getOutput()) {
-            System.out.println(line);
-        }
+
+    private static final String FILE_PATH = "./thirdparty/jasome/build/distributions/jasome/bin/jasome";
+
+    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument {
+
+        try {
+                    String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
+        String projectPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy/Core/src";
+//            String repositoryPath = "/Users/gleiph/repositories/voldemort";
+//            String projectPath = "/Users/gleiph/repositories/voldemort/src";
+
+            List<Formats> log = Git.log(repositoryPath);
+
+            System.out.println("=================REVs=======================");
+            for (Formats revision : log) {
+
+                System.out.println("======================" + revision.getCommitHash() + "==================");
+                Git.clean(repositoryPath, true, 3);
+                Git.reset(repositoryPath, true, false, false, null);
+                Git.checkout(revision.getCommitHash(), repositoryPath);
+
+                System.out.println(new Date());
+                
+                        String extractMetrics = extractMetrics(repositoryPath);
+                        
+                        System.out.println("==============================================");
+                        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
+                        readXml.fazerParsing(extractMetrics);
+                        System.out.println(readXml.getProjectMetrics().getTloc().getValue());
+                        
+                System.out.println(new Date());
+
+            }
+        } catch (IOException ex) {
+            System.out.println("Diretorio não existe");
+        } catch (UnknownSwitch ex) {
+            System.out.println("UnknownSwitch");
+        } catch (RefusingToClean ex) {
+            System.out.println(ex.getMessage());
+        } catch (IsOutsideRepository ex) {
+            System.out.println(ex.getMessage());
+        } 
+
     }
+
+    public static String extractMetrics(String path) throws IOException {
+
+        CLIExecution execute = CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
+        List<String> output = execute.getOutput();
+
+        StringBuilder sb = new StringBuilder();
+        for (String line : output) {
+            sb.append(line).append("\n");
+        }
+        
+        return sb.toString();
+    }
+        
 
 }
