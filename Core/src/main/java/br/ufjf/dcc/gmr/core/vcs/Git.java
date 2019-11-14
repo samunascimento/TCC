@@ -1046,7 +1046,7 @@ public class Git {
      * repository
      */
     public static List<String> giveAllMerges(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
-        CLIExecution cliE = CLIExecute.execute("git log --min-parents=2 --pretty=format:%P,%H", repositoryPath);
+        CLIExecution cliE = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%P,%H", repositoryPath);
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
@@ -1254,7 +1254,7 @@ public class Git {
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
                 	String c=line.substring(5);
                 	aux.setFilePathTarget(c);
-                } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
+                } else if (line.charAt(0) == '+') {
                 	String c=line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.ADDED));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
