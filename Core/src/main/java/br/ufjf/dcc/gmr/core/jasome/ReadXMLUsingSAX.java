@@ -288,42 +288,41 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 }
                 if (metric.getName().equals("Fout")) {
                     methodMetrics.setCi(metric);
-                    if (metric.getName().equals("IOVars")) {
-                        methodMetrics.setIovars(metric);
-                    }
-                    if (metric.getName().equals("MCLC")) {
-                        methodMetrics.setMclc(metric);;
-                    }
-                    if (metric.getName().equals("NBD")) {
-                        methodMetrics.setNbd(metric);
-                    }
-                    if (metric.getName().equals("NCOMP")) {
-                        methodMetrics.setNcomp(metric);
-                    }
-                    if (metric.getName().equals("NOP")) {
-                        methodMetrics.setNop(metric);
-                    }
-                    if (metric.getName().equals("NVAR")) {
-                        methodMetrics.setNvar(metric);
-                    }
-                    if (metric.getName().equals("Si")) {
-                        methodMetrics.setSi(metric);
-                    }
-                    if (metric.getName().equals("TLOC")) {
-                        methodMetrics.setTloc(metric);
-                    }
-                    if (metric.getName().equals("VG")) {
-                        methodMetrics.setVg(metric);
-                    }
-
                 }
+                if (metric.getName().equals("IOVars")) {
+                    methodMetrics.setIovars(metric);
+                }
+                if (metric.getName().equals("MCLC")) {
+                    methodMetrics.setMclc(metric);;
+                }
+                if (metric.getName().equals("NBD")) {
+                    methodMetrics.setNbd(metric);
+                }
+                if (metric.getName().equals("NCOMP")) {
+                    methodMetrics.setNcomp(metric);
+                }
+                if (metric.getName().equals("NOP")) {
+                    methodMetrics.setNop(metric);
+                }
+                if (metric.getName().equals("NVAR")) {
+                    methodMetrics.setNvar(metric);
+                }
+                if (metric.getName().equals("Si")) {
+                    methodMetrics.setSi(metric);
+                }
+                if (metric.getName().equals("TLOC")) {
+                    methodMetrics.setTloc(metric);
+                }
+                if (metric.getName().equals("VG")) {
+                    methodMetrics.setVg(metric);
+                }
+
             }
-
         }
-    }
 
-    @Override
-    public void endElement(String uri, String localName, String qName)
+    }
+@Override
+        public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
         tagAtual = qName;
