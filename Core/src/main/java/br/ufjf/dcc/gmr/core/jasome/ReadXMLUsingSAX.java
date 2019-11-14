@@ -1,9 +1,6 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
-import com.sun.scenario.effect.impl.prism.PrCropPeer;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -36,6 +33,10 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private ClassMetrics classMetrics;
     private PackageMetrics packageMetrics;
     private ProjectMetrics projectMetrics;
+
+    public ProjectMetrics getProjectMetrics() {
+        return projectMetrics;
+    }
 
     Metric metric = new Metric();
 
@@ -287,7 +288,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                     methodMetrics.setFin(metric);
                 }
                 if (metric.getName().equals("Fout")) {
-                    methodMetrics.setCi(metric);
+                    methodMetrics.setFout(metric);
                 }
                 if (metric.getName().equals("IOVars")) {
                     methodMetrics.setIovars(metric);
@@ -335,17 +336,16 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         if (tagAtual.equals("Package")) {
             System.out.println("Packages");
             projectMetrics.getListPackageMetric().add(packageMetrics);
-            packageMetrics = new PackageMetrics();
             pacckage = false;
         }
         if (tagAtual.equals("Class")) {
             System.out.println("class");
             packageMetrics.getListClassMetrics().add(classMetrics);
-            packageMetrics = new PackageMetrics();
             clazz = false;
         }
         if (tagAtual.equals("Method")) {
             System.out.println("method");
+            classMetrics.getListMethodsMetrics().add(methodMetrics);
             method = false;
         }
 
@@ -355,6 +355,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         //vou deixar o método main aqui pra fazer testes com o SAX
         ReadXMLUsingSAX mySax = new ReadXMLUsingSAX();
-        mySax.fazerParsing("C:\\Users\\Principal\\Desktop\\UFJF\\sample.xml");
+        mySax.fazerParsing("/Users/gleiph/Desktop/output.xml");
+        System.out.println("Quantidade de pacotes: " + mySax.getProjectMetrics().getListPackageMetric().size());
     }
 }
