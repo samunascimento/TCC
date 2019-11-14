@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" tests="10" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:28" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.566">
+  <properties/>
+  <testcase name="calculate simple metric" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.04"/>
+  <testcase name="calculate counts lines" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.054"/>
+  <testcase name="calculate class length when only two lines (open and close)" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.046"/>
+  <testcase name="calculate counts for complex file" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.096"/>
+  <testcase name="calculate counts lines in a synchronized block, but not for a synchronized variable or method" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.056"/>
+  <testcase name="calculate counts lines and can handle an empty declaration" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.047"/>
+  <testcase name="calculate counts lines handles interfaces properly" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.041"/>
+  <testcase name="calculate counts try/catch/finally blocks properly" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.049"/>
+  <testcase name="calculate counts complex if blocks properly" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.086"/>
+  <testcase name="calculate counts for methods" classname="org.jasome.metrics.calculators.TotalLinesOfCodeCalculatorSpec" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769668936-0/Testquysl
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769668976-0/Testvrkgo
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669029-0/Testzopwv
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669082-0/Testjwdsv
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669172-0/Testdnkre
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669230-0/Testykyyq
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669276-0/Testmedyl
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669318-0/Testssdfk
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669368-0/Testbcyuh
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669409-0/Testnrjnx
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669454-0/Testvzdka
+]]></system-err>
+</testsuite>

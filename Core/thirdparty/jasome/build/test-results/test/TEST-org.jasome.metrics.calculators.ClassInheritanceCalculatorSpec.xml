@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" tests="7" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:29" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.41">
+  <properties/>
+  <testcase name="correctly calculates number of children and parents" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.05"/>
+  <testcase name="correctly calculates number of descendants" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.044"/>
+  <testcase name="correctly calculates number of ancestors" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.045"/>
+  <testcase name="properly resolves class name conflicts" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.092"/>
+  <testcase name="completely ignores classes it doesn't know about" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.045"/>
+  <testcase name="properly handles inner classes" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.067"/>
+  <testcase name="properly handles inner classes even when statically imported" classname="org.jasome.metrics.calculators.ClassInheritanceCalculatorSpec" time="0.067"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669505-0/Testbzabg
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669556-0/Testmzxzr
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669599-0/Testqdgsi
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669644-0/Testidrjl
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669737-0/Testlqnwe
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669782-0/Testhppcn
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769669849-0/Testhywvh
+]]></system-err>
+</testsuite>

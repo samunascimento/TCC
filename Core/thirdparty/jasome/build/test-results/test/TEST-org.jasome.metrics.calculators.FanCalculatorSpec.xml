@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.FanCalculatorSpec" tests="8" skipped="2" failures="0" errors="0" timestamp="2019-11-14T22:14:31" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.352">
+  <properties/>
+  <testcase name="properly counts fan-out" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.066"/>
+  <testcase name="properly counts fan-out in lambda" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="properly counts fan-out in method expression" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="properly counts fan-in within a class" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.054"/>
+  <testcase name="properly counts fan-in outside of class" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.062"/>
+  <testcase name="properly figures out correct types" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.061"/>
+  <testcase name="properly calculates chained method calls" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.054"/>
+  <testcase name="properly calculates data complexity" classname="org.jasome.metrics.calculators.FanCalculatorSpec" time="0.055"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671336-0/Testrftdg
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671403-0/Testqbznk
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671456-0/Testfggdm
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671519-0/Testhszpb
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671580-0/Testubfup
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671633-0/Testapsmx
+]]></system-err>
+</testsuite>

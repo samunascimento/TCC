@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.MethodAndAttributeInheritanceCalculatorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:28" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.241">
+  <properties/>
+  <testcase name="calculates inheritance factor" classname="org.jasome.metrics.calculators.MethodAndAttributeInheritanceCalculatorTest" time="0.128"/>
+  <testcase name="calculates method hiding factor and public methods ratio" classname="org.jasome.metrics.calculators.MethodAndAttributeInheritanceCalculatorTest" time="0.057"/>
+  <testcase name="calculates attribute factors" classname="org.jasome.metrics.calculators.MethodAndAttributeInheritanceCalculatorTest" time="0.055"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769668690-0/Testdahnk
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769668819-0/Testjswqe
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769668876-0/Testuuvjz
+]]></system-err>
+</testsuite>

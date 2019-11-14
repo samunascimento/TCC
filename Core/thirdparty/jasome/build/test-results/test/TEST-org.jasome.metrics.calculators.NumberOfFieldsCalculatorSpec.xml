@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.NumberOfFieldsCalculatorSpec" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:31" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.12">
+  <properties/>
+  <testcase name="calculate simple metric" classname="org.jasome.metrics.calculators.NumberOfFieldsCalculatorSpec" time="0.042"/>
+  <testcase name="calculate simple metric with nested class" classname="org.jasome.metrics.calculators.NumberOfFieldsCalculatorSpec" time="0.037"/>
+  <testcase name="calculate simple metric with anonymous class" classname="org.jasome.metrics.calculators.NumberOfFieldsCalculatorSpec" time="0.041"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671210-0/Testrsvdp
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671250-0/Testwglaq
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769671287-0/Testvywsu
+]]></system-err>
+</testsuite>

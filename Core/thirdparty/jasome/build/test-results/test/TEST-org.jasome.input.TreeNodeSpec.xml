@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.input.TreeNodeSpec" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:32" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.156">
+  <properties/>
+  <testcase name="correctly computes equals and hashcodes for objects using their parents" classname="org.jasome.input.TreeNodeSpec" time="0.1"/>
+  <testcase name="correctly names classes and methods" classname="org.jasome.input.TreeNodeSpec" time="0.056"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769672472-0/Testftivl
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769672573-0/Testywwdr
+]]></system-err>
+</testsuite>

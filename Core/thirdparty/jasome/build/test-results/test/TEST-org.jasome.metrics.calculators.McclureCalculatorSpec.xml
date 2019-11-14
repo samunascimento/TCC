@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.McclureCalculatorSpec" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:32" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.053">
+  <properties/>
+  <testcase name="properly calculates mcclure complexity" classname="org.jasome.metrics.calculators.McclureCalculatorSpec" time="0.053"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769672391-0/Testiekch
+]]></system-err>
+</testsuite>

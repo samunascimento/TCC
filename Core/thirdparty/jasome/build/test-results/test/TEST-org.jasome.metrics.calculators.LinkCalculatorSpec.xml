@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.LinkCalculatorSpec" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:30" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.149">
+  <properties/>
+  <testcase name="properly calculates link count" classname="org.jasome.metrics.calculators.LinkCalculatorSpec" time="0.092"/>
+  <testcase name="properly calculates link count in default package" classname="org.jasome.metrics.calculators.LinkCalculatorSpec" time="0.057"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670005-0/Testtsmar
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670097-0/Testtbnpc
+]]></system-err>
+</testsuite>

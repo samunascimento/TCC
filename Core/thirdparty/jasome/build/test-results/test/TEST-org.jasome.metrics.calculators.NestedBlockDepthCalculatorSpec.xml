@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" tests="11" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:30" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.481">
+  <properties/>
+  <testcase name="calculate simple metric when empty" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.045"/>
+  <testcase name="calculate complex metric" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.045"/>
+  <testcase name="calculate simple if metric" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.047"/>
+  <testcase name="calculate simple try metric" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.039"/>
+  <testcase name="calculate complex try" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.041"/>
+  <testcase name="calculate complex metric again" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.039"/>
+  <testcase name="calculate blocks in lambdas" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.047"/>
+  <testcase name="calculate blocks in lambdas with no braces (so no nesting)" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.04"/>
+  <testcase name="calculate blocks in deeply nested lambdas" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.048"/>
+  <testcase name="calculate handles differently formatted if else statements identically" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.043"/>
+  <testcase name="calculate anoynmous classes properly" classname="org.jasome.metrics.calculators.NestedBlockDepthCalculatorSpec" time="0.046"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670332-0/Testgfaik
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670378-0/Testnmvls
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670423-0/Testcvzkf
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670469-0/Testhveuk
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670509-0/Testubyju
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670549-0/Testpjuxd
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670589-0/Testxbdnn
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670636-0/Testeutyt
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670676-0/Testnbvwj
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670725-0/Testwmfld
+Running tests using source dir /var/folders/29/n42nfjds1kjfr7zfnxl863s40000gn/T/1573769670767-0/Testdytwq
+]]></system-err>
+</testsuite>
