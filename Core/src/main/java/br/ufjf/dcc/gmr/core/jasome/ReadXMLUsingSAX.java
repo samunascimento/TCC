@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.jasome;
 
+import com.sun.scenario.effect.impl.prism.PrCropPeer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,26 +23,32 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ReadXMLUsingSAX extends DefaultHandler {
 
     private String tagAtual;
-    private String project;
-    private String pacckage;
-    private String clazz;
-    private String method;
     private String siglaAtual;
+    
+    private boolean project = false;
+    private boolean pacckage = false;
+    private boolean clazz = false;
+    private boolean method = false;
 
-    public int numberPackage = 0;
+    /*
     public List<Metric> listMetric = new ArrayList<>();
     public List<Metric> methodsMetrics = new ArrayList<>();
     public List<Metric> classMetrics = new ArrayList<>();
     public List<Metric> packagesMetrics = new ArrayList<>();
     public Metric projectMetric;
+    */
     
-    MethodMetrics a = new MethodMetrics();
-    ClassMetrics b = new ClassMetrics();
-    PackageMetrics c = new PackageMetrics();
-    ProjectMetrics d = new ProjectMetrics();
+    private MethodMetrics methodMetrics;
+    private ClassMetrics classMetrics;
+    private PackageMetrics packageMetrics;
+    private ProjectMetrics projectMetrics;
+     
+    
+    Metric metric = new Metric();
 
     public ReadXMLUsingSAX() {
         super();
+        projectMetrics = new ProjectMetrics();
     }
 
     public void fazerParsing(String pathArq) {
@@ -69,14 +76,6 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        System.out.println("Imprimindo listMetric");
-        /*for (int i = 0; i < listMetric.size(); i++) {
-            System.out.print(listMetric.get(i).getDescription() + " ");
-            System.out.print(listMetric.get(i).getName() + " ");
-            System.out.print(listMetric.get(i).getValue() + " ");
-            System.out.println(" ");
-        }*/
-     
         System.out.println("\nFim do Parsing...");
 
     }
@@ -94,6 +93,53 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         // recupera o nome da tag atual
         tagAtual = qName;
+        
+        if(tagAtual.equals("Project")){
+            project = true;
+            projectMetrics = new ProjectMetrics();
+        }
+        
+        if(tagAtual.equals("Package")){
+            pacckage = true;
+            packageMetrics = new PackageMetrics();
+            
+        }
+        if(tagAtual.equals("Class")){
+            clazz = true;
+            classMetrics = new ClassMetrics();
+        }
+        if(tagAtual.equals("Method")){
+            method = true;
+            methodMetrics = new MethodMetrics();
+        }
+        
+        if (tagAtual.equals("Metric")) {
+            metric = new Metric();
+            
+            String value0 = atts.getValue(0);
+            String value1 = atts.getValue(1);
+            String value2 = atts.getValue(2);
+            
+            metric.setDescription(value0);
+            metric.setName(value1);
+            metric.setValue(value2);
+            
+            if(project && !pacckage && !clazz && !method){
+                projectMetrics.setTloc(metric);
+            }
+            if(project && pacckage && !clazz && !method){
+               if(metric.getName().equals("A")){
+                   packageMetrics.setA(metric);
+               } 
+               
+            }
+            
+            //System.out.println(metric.getDescription());
+            //System.out.println(metric.getName());
+            //System.out.println(metric.getValue());
+        }
+        
+        /*
         if (tagAtual.equals("Project")) {
             project = tagAtual;
             pacckage = "";
@@ -116,11 +162,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             project = "";
             pacckage = "";
         }
-        /*Contagem MetricPackage,MetricClass,MetricMethod
-        if (tagAtual.equals("Package")) {
-            numberPackage++;
-        }*/
+        */
         // separando as métricas
+        /*
         if (project.equals("Project")) {
             if (tagAtual.equals("Metric")){
                 Metric metric = new Metric();
@@ -177,19 +221,42 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         }
         a.setListMetrics(listMetric);
     }
+*/
+        
 }
 
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
-        tagAtual = "";
+        tagAtual = qName;
+        
+       if(tagAtual.equals("Project")){
+            project = false;
+        }
+        
+        if(tagAtual.equals("Package")){
+            projectMetrics.getListPackageMetric().add(packageMetrics);
+            packageMetrics = new PackageMetrics();
+            pacckage = false;
+        }
+        if(tagAtual.equals("Class")){
+            System.out.println("class");
+            packageMetrics.getListClassMetrics().add(classMetrics);
+            packageMetrics = new PackageMetrics();
+            clazz = false;
+        }
+        if(tagAtual.equals("Method")){
+            System.out.println("method");
+            method = false;
+        }
+        
     }
 
     public static void main(String[] args) throws Exception {
 
         //vou deixar o método main aqui pra fazer testes com o SAX
         ReadXMLUsingSAX mySax = new ReadXMLUsingSAX();
-        mySax.fazerParsing("C:\\Users\\Principal\\Desktop\\UFJF\\sample.xml");
+        mySax.fazerParsing("C:\\Users\\antonio henrique\\Desktop\\testexml");
     }
 }
