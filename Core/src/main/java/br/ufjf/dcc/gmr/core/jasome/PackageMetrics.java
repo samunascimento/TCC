@@ -13,17 +13,23 @@ import java.util.List;
  * @author antonio henrique
  */
 public class PackageMetrics {
-    List<Metric> listMetrics = new ArrayList<>();
-    List<ClassMetrics> listClassMetrics = new ArrayList<>();
+    Metric a;
+    Metric ccrc;
+    Metric ca;
+    Metric ce;
+    Metric dms;
+    Metric i;
+    Metric noc;
+    Metric noi;
+    Metric pkgRCi;
+    Metric pkgTCi;
+    Metric tloc;
+    List<ClassMetrics> listClassMetrics;
 
-    public List<Metric> getListMetrics() {
-        return listMetrics;
+    public PackageMetrics() {
+        this.listClassMetrics = new ArrayList<>();
     }
-
-    public void setListMetrics(List<Metric> listMetrics) {
-        this.listMetrics = listMetrics;
-    }
-
+    
     public List<ClassMetrics> getListClassMetrics() {
         return listClassMetrics;
     }
@@ -31,4 +37,94 @@ public class PackageMetrics {
     public void setListClassMetrics(List<ClassMetrics> listClassMetrics) {
         this.listClassMetrics = listClassMetrics;
     }
+
+    public Metric getA() {
+        return a;
+    }
+
+    public void setA(Metric a) {
+        this.a = a;
+    }
+
+    public Metric getCcrc() {
+        return ccrc;
+    }
+
+    public void setCcrc(Metric ccrc) {
+        this.ccrc = ccrc;
+    }
+
+    public Metric getCa() {
+        return ca;
+    }
+
+    public void setCa(Metric ca) {
+        this.ca = ca;
+    }
+
+    public Metric getCe() {
+        return ce;
+    }
+
+    public void setCe(Metric ce) {
+        this.ce = ce;
+    }
+
+    public Metric getDms() {
+        return dms;
+    }
+
+    public void setDms(Metric dms) {
+        this.dms = dms;
+    }
+
+    public Metric getI() {
+        return i;
+    }
+
+    public void setI(Metric i) {
+        this.i = i;
+    }
+
+    public Metric getNoc() {
+        return noc;
+    }
+
+    public void setNoc(Metric noc) {
+        this.noc = noc;
+    }
+
+    public Metric getNoi() {
+        return noi;
+    }
+
+    public void setNoi(Metric noi) {
+        this.noi = noi;
+    }
+
+    public Metric getPkgRCi() {
+        return pkgRCi;
+    }
+
+    public void setPkgRCi(Metric pkgRCi) {
+        this.pkgRCi = pkgRCi;
+    }
+
+    public Metric getPkgTCi() {
+        return pkgTCi;
+    }
+
+    public void setPkgTCi(Metric pkgTCi) {
+        this.pkgTCi = pkgTCi;
+    }
+
+    public Metric getTloc() {
+        return tloc;
+    }
+
+    public void setTloc(Metric tloc) {
+        this.tloc = tloc;
+    }
+    
+    
 }
