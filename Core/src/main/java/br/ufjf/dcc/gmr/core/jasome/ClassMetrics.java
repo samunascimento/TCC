@@ -54,6 +54,11 @@ public class ClassMetrics {
     Metric wmc;
 
     List<MethodMetrics> listMethodsMetrics = new ArrayList<>();
+    
+    private String lineEnd;
+    private String lineStart;
+    private String name;
+    private String sourceFile;
 
     public ClassMetrics() {
         this.listMethodsMetrics = new ArrayList<>();
@@ -379,12 +384,35 @@ public class ClassMetrics {
         this.wmc = wmc;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+    public String getLineEnd() {
+        return lineEnd;
+    }
+
+    public void setLineEnd(String lineEnd) {
+        this.lineEnd = lineEnd;
+    }
+
+    public String getLineStart() {
+        return lineStart;
+    }
+
+    public void setLineStart(String lineStart) {
+        this.lineStart = lineStart;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(String sourceFile) {
+        this.sourceFile = sourceFile;
+    } 
 }

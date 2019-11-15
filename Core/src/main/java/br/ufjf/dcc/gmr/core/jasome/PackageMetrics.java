@@ -24,8 +24,11 @@ public class PackageMetrics {
     Metric pkgRCi;
     Metric pkgTCi;
     Metric tloc;
+    
     List<ClassMetrics> listClassMetrics;
-
+    
+    private String name;
+    
     public PackageMetrics() {
         this.listClassMetrics = new ArrayList<>();
     }
@@ -124,6 +127,14 @@ public class PackageMetrics {
 
     public void setTloc(Metric tloc) {
         this.tloc = tloc;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
     

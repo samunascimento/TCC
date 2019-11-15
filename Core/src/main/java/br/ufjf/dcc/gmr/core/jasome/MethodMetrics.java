@@ -26,6 +26,11 @@ public class MethodMetrics {
     Metric si;
     Metric tloc;
     Metric vg;
+    
+    private String constructor;
+    private String lineEnd;
+    private String lineStart;
+    private String name; 
 
     public Metric getCi() {
         return ci;
@@ -130,6 +135,39 @@ public class MethodMetrics {
     public void setVg(Metric vg) {
         this.vg = vg;
     }
+    
+        
+    public String getLineEnd() {
+        return lineEnd;
+    }
+
+    public void setLineEnd(String lineEnd) {
+        this.lineEnd = lineEnd;
+    }
+
+    public String getLineStart() {
+        return lineStart;
+    }
+
+    public void setLineStart(String lineStart) {
+        this.lineStart = lineStart;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getConstructor() {
+        return constructor;
+    }
+
+    public void setConstructor(String constructor) {
+        this.constructor = constructor;
+    } 
     
     
 }

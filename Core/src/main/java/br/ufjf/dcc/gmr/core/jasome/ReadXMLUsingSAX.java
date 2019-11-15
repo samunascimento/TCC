@@ -93,23 +93,32 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         if (tagAtual.equals("Project")) {
             project = true;
             projectMetrics = new ProjectMetrics();
+            projectMetrics.setSourceDir(atts.getValue(0));
         }
 
-        if (tagAtual.equals("Package")) {
+        else if (tagAtual.equals("Package")) {
             pacckage = true;
             packageMetrics = new PackageMetrics();
-
+            packageMetrics.setName(atts.getValue(0));
         }
-        if (tagAtual.equals("Class")) {
+        else if (tagAtual.equals("Class")) {
             clazz = true;
             classMetrics = new ClassMetrics();
+            classMetrics.setLineEnd(atts.getValue(0));
+            classMetrics.setLineStart(atts.getValue(1));
+            classMetrics.setName(atts.getValue(2));
+            classMetrics.setSourceFile(atts.getValue(3));
         }
-        if (tagAtual.equals("Method")) {
+        else if (tagAtual.equals("Method")) {
             method = true;
             methodMetrics = new MethodMetrics();
+            methodMetrics.setConstructor(atts.getValue(0));
+            methodMetrics.setLineEnd(atts.getValue(1));
+            methodMetrics.setLineStart(atts.getValue(2));
+            methodMetrics.setName(atts.getValue(3));
         }
 
-        if (tagAtual.equals("Metric")) {
+        else if (tagAtual.equals("Metric")) {
             metric = new Metric();
 
             String value0 = atts.getValue(0);
@@ -123,200 +132,200 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             if (project && !pacckage && !clazz && !method) {
                 projectMetrics.setTloc(metric);
             }
-            if (project && pacckage && !clazz && !method) {
+            else if (project && pacckage && !clazz && !method) {
                 if (metric.getName().equals("A")) {
                     packageMetrics.setA(metric);
                 }
-                if (metric.getName().equals("CCRC")) {
+                else if (metric.getName().equals("CCRC")) {
                     packageMetrics.setCcrc(metric);
                 }
-                if (metric.getName().equals("Ca")) {
+                else if (metric.getName().equals("Ca")) {
                     packageMetrics.setCa(metric);
                 }
-                if (metric.getName().equals("Ce")) {
+                else if (metric.getName().equals("Ce")) {
                     packageMetrics.setCe(metric);
                 }
-                if (metric.getName().equals("DMS")) {
+                else if (metric.getName().equals("DMS")) {
                     packageMetrics.setDms(metric);
                 }
-                if (metric.getName().equals("I")) {
+                else if (metric.getName().equals("I")) {
                     packageMetrics.setI(metric);
                 }
-                if (metric.getName().equals("NOC")) {
+                else if (metric.getName().equals("NOC")) {
                     packageMetrics.setNoc(metric);
                 }
-                if (metric.getName().equals("NOI")) {
+                else if (metric.getName().equals("NOI")) {
                     packageMetrics.setNoi(metric);
                 }
-                if (metric.getName().equals("PkgRCi")) {
+                else if (metric.getName().equals("PkgRCi")) {
                     packageMetrics.setPkgRCi(metric);
                 }
-                if (metric.getName().equals("PkgTCi")) {
+                else if (metric.getName().equals("PkgTCi")) {
                     packageMetrics.setPkgTCi(metric);
                 }
-                if (metric.getName().equals("TLOC")) {
+                else if (metric.getName().equals("TLOC")) {
                     packageMetrics.setTloc(metric);
                 }
 
             }
-            if (project && pacckage && clazz && !method) {
+            else if (project && pacckage && clazz && !method) {
                 if (metric.getName().equals("Aa")) {
                     classMetrics.setAa(metric);
                 }
-                if (metric.getName().equals("Ad")) {
+                else if (metric.getName().equals("Ad")) {
                     classMetrics.setAd(metric);
                 }
-                if (metric.getName().equals("Ai")) {
+                else if (metric.getName().equals("Ai")) {
                     classMetrics.setAi(metric);
                 }
-                if (metric.getName().equals("Ait")) {
+                else if (metric.getName().equals("Ait")) {
                     classMetrics.setAit(metric);
                 }
-                if (metric.getName().equals("Ao")) {
+                else if (metric.getName().equals("Ao")) {
                     classMetrics.setAo(metric);
                 }
-                if (metric.getName().equals("Av")) {
+                else if (metric.getName().equals("Av")) {
                     classMetrics.setAv(metric);
                 }
-                if (metric.getName().equals("ClRCi")) {
+                else if (metric.getName().equals("ClRCi")) {
                     classMetrics.setClrci(metric);
                 }
-                if (metric.getName().equals("ClTCi")) {
+                else if (metric.getName().equals("ClTCi")) {
                     classMetrics.setCltci(metric);
                 }
-                if (metric.getName().equals("DIT")) {
+                else if (metric.getName().equals("DIT")) {
                     classMetrics.setDit(metric);
                 }
-                if (metric.getName().equals("HMd")) {
+                else if (metric.getName().equals("HMd")) {
                     classMetrics.setHmd(metric);
                 }
-                if (metric.getName().equals("HMi")) {
+                else if (metric.getName().equals("HMi")) {
                     classMetrics.setHmi(metric);
                 }
-                if (metric.getName().equals("MHF")) {
+                else if (metric.getName().equals("MHF")) {
                     classMetrics.setMhf(metric);
                 }
-                if (metric.getName().equals("MIF")) {
+                else if (metric.getName().equals("MIF")) {
                     classMetrics.setMif(metric);
                 }
-                if (metric.getName().equals("Ma")) {
+                else if (metric.getName().equals("Ma")) {
                     classMetrics.setMa(metric);
                 }
-                if (metric.getName().equals("Md")) {
+                else if (metric.getName().equals("Md")) {
                     classMetrics.setMd(metric);
                 }
-                if (metric.getName().equals("Mi")) {
+                else if (metric.getName().equals("Mi")) {
                     classMetrics.setMi(metric);
                 }
-                if (metric.getName().equals("Mit")) {
+                else if (metric.getName().equals("Mit")) {
                     classMetrics.setMit(metric);
                 }
-                if (metric.getName().equals("Mo")) {
+                else if (metric.getName().equals("Mo")) {
                     classMetrics.setMo(metric);
                 }
-                if (metric.getName().equals("NF")) {
+                else if (metric.getName().equals("NF")) {
                     classMetrics.setNf(metric);
                 }
-                if (metric.getName().equals("NM")) {
+                else if (metric.getName().equals("NM")) {
                     classMetrics.setNm(metric);
                 }
-                if (metric.getName().equals("NMA")) {
+                else if (metric.getName().equals("NMA")) {
                     classMetrics.setNma(metric);
                 }
-                if (metric.getName().equals("NMI")) {
+                else if (metric.getName().equals("NMI")) {
                     classMetrics.setNmi(metric);
                 }
-                if (metric.getName().equals("NOA")) {
+                else if (metric.getName().equals("NOA")) {
                     classMetrics.setNoa(metric);
                 }
-                if (metric.getName().equals("NOCh")) {
+                else if (metric.getName().equals("NOCh")) {
                     classMetrics.setNoch(metric);
                 }
-                if (metric.getName().equals("NOD")) {
+                else if (metric.getName().equals("NOD")) {
                     classMetrics.setNod(metric);
                 }
-                if (metric.getName().equals("NOL")) {
+                else if (metric.getName().equals("NOL")) {
                     classMetrics.setNol(metric);
                 }
-                if (metric.getName().equals("NOPa")) {
+                else if (metric.getName().equals("NOPa")) {
                     classMetrics.setNopa(metric);
                 }
-                if (metric.getName().equals("NORM")) {
+                else if (metric.getName().equals("NORM")) {
                     classMetrics.setNorm(metric);
                 }
-                if (metric.getName().equals("NPF")) {
+                else if (metric.getName().equals("NPF")) {
                     classMetrics.setNpf(metric);
                 }
-                if (metric.getName().equals("NPM")) {
+                else if (metric.getName().equals("NPM")) {
                     classMetrics.setNpm(metric);
                 }
-                if (metric.getName().equals("NSF")) {
+                else if (metric.getName().equals("NSF")) {
                     classMetrics.setNsf(metric);
                 }
-                if (metric.getName().equals("NSM")) {
+                else if (metric.getName().equals("NSM")) {
                     classMetrics.setNsm(metric);
                 }
-                if (metric.getName().equals("PMR")) {
+                else if (metric.getName().equals("PMR")) {
                     classMetrics.setPmr(metric);
                 }
-                if (metric.getName().equals("PMd")) {
+                else if (metric.getName().equals("PMd")) {
                     classMetrics.setPmd(metric);
                 }
-                if (metric.getName().equals("PMi")) {
+                else if (metric.getName().equals("PMi")) {
                     classMetrics.setPmi(metric);
                 }
-                if (metric.getName().equals("RTLOC")) {
+                else if (metric.getName().equals("RTLOC")) {
                     classMetrics.setRtloc(metric);
                 }
-                if (metric.getName().equals("SIX")) {
+                else if (metric.getName().equals("SIX")) {
                     classMetrics.setSix(metric);
                 }
-                if (metric.getName().equals("TLOC")) {
+                else if (metric.getName().equals("TLOC")) {
                     classMetrics.setTloc(metric);
                 }
-                if (metric.getName().equals("WMC")) {
+                else if (metric.getName().equals("WMC")) {
                     classMetrics.setWmc(metric);
                 }
 
             }
-            if (project && pacckage && clazz && method) {
+            else if (project && pacckage && clazz && method) {
                 if (metric.getName().equals("Ci")) {
                     methodMetrics.setCi(metric);
                 }
-                if (metric.getName().equals("Di")) {
+                else if (metric.getName().equals("Di")) {
                     methodMetrics.setDi(metric);
                 }
-                if (metric.getName().equals("Fin")) {
+                else if (metric.getName().equals("Fin")) {
                     methodMetrics.setFin(metric);
                 }
-                if (metric.getName().equals("Fout")) {
+                else if (metric.getName().equals("Fout")) {
                     methodMetrics.setFout(metric);
                 }
-                if (metric.getName().equals("IOVars")) {
+                else if (metric.getName().equals("IOVars")) {
                     methodMetrics.setIovars(metric);
                 }
-                if (metric.getName().equals("MCLC")) {
+                else if (metric.getName().equals("MCLC")) {
                     methodMetrics.setMclc(metric);;
                 }
-                if (metric.getName().equals("NBD")) {
+                else if (metric.getName().equals("NBD")) {
                     methodMetrics.setNbd(metric);
                 }
-                if (metric.getName().equals("NCOMP")) {
+                else if (metric.getName().equals("NCOMP")) {
                     methodMetrics.setNcomp(metric);
                 }
-                if (metric.getName().equals("NOP")) {
+                else if (metric.getName().equals("NOP")) {
                     methodMetrics.setNop(metric);
                 }
-                if (metric.getName().equals("NVAR")) {
+                else if (metric.getName().equals("NVAR")) {
                     methodMetrics.setNvar(metric);
                 }
-                if (metric.getName().equals("Si")) {
+                else if (metric.getName().equals("Si")) {
                     methodMetrics.setSi(metric);
                 }
-                if (metric.getName().equals("TLOC")) {
+                else if (metric.getName().equals("TLOC")) {
                     methodMetrics.setTloc(metric);
                 }
-                if (metric.getName().equals("VG")) {
+                else if (metric.getName().equals("VG")) {
                     methodMetrics.setVg(metric);
                 }
 
@@ -336,17 +345,17 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             project = false;
         }
 
-        if (tagAtual.equals("Package")) {
+        else if (tagAtual.equals("Package")) {
             System.out.println("Packages");
             projectMetrics.getListPackageMetric().add(packageMetrics);
             pacckage = false;
         }
-        if (tagAtual.equals("Class")) {
+        else if (tagAtual.equals("Class")) {
             System.out.println("class");
             packageMetrics.getListClassMetrics().add(classMetrics);
             clazz = false;
         }
-        if (tagAtual.equals("Method")) {
+        else if (tagAtual.equals("Method")) {
             System.out.println("method");
             classMetrics.getListMethodsMetrics().add(methodMetrics);
             method = false;

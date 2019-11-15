@@ -13,7 +13,10 @@ import java.util.List;
  * @author antonio henrique
  */
 public class ProjectMetrics {
+    private String sourceDir;
+    
     private Metric tloc;
+    
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
 
     public Metric getTloc() {
@@ -30,6 +33,16 @@ public class ProjectMetrics {
 
     public void setListPackageMetric(List<PackageMetrics> listPackageMetric) {
         this.listPackageMetric = listPackageMetric;
+    }
+    public String getSourceDir() {
+        return sourceDir;
+    }
+
+    /**
+     * @param sourceDir the sourceDir to set
+     */
+    public void setSourceDir(String sourceDir) {
+        this.sourceDir = sourceDir;
     }
     
     
