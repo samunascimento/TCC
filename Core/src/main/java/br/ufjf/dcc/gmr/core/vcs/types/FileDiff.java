@@ -13,21 +13,18 @@ import java.util.List;
  *
  * @author gleiph
  */
-
 public class FileDiff {
-    
+
     private String filePathSource;
     private String filePathTarget;
     private List<LineInformation> lines;
     private List<String> arroba;
 
-
     public FileDiff() {
         this.lines = new ArrayList<>();
-        this.arroba=new ArrayList<>();
+        this.arroba = new ArrayList<>();
     }
 
-    
     public String getFilePathSource() {
         return filePathSource;
     }
@@ -51,14 +48,13 @@ public class FileDiff {
     public void setLines(List<LineInformation> lines) {
         this.lines = lines;
     }
-    
-        public List<String> getArroba() {
+
+    public List<String> getArroba() {
         return arroba;
     }
 
     public void setArroba(String arroba) {
-      this.arroba.add(arroba);
+        this.arroba.add(arroba);
     }
-
 
 }
