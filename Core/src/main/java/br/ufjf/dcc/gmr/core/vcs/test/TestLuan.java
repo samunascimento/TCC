@@ -28,12 +28,12 @@ public class TestLuan {
     
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 //        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF";
-          String repositoryPath="/home/luan/UFJF";
+          String repositoryPath="C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         // Git.reset(repositoryPath,true, false, false,"");
         List<FileDiff> result = new ArrayList<>();
         try {
-            result = Git.diff(repositoryPath, "4790a3a", " 25fedab");
+            result = Git.diff(repositoryPath, "4790a3a", " 25fedab",false);
 
             for (FileDiff file : result) {
                 System.out.println("=======================================");
@@ -48,7 +48,7 @@ public class TestLuan {
         } catch (IOException ex) {
             System.out.println("Erro");
         };
-
+        
     }
 
 }

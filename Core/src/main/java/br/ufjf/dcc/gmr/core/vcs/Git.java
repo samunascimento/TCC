@@ -1208,6 +1208,7 @@ public class Git {
      * repository we are dealling with
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
+     * @param unified
      * @return return the FileDiff list
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      * exception that occurs when the repository is not a git repository
@@ -1218,15 +1219,20 @@ public class Git {
      * wrong commit hash
      *
      */
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget)
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget, boolean unified)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<FileDiff> result = new ArrayList<>();
         int i = 0;
         FileDiff aux = new FileDiff();
-
-        String command = "git diff " + commitSource + " " + commitTarget;
-
+        String command = null;
+        if(!unified){
+         command = "git diff " + commitSource + " " + commitTarget;
+        }
+        else{
+         command= "git diff " + commitSource + " " + commitTarget+ "-- unified";
+        }
+       
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
@@ -1263,6 +1269,9 @@ public class Git {
                 } else if (line.charAt(0) == '-') {
                 	String c=line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.REMOVED));
+                }
+                  else if(line.charAt(0)== '@'){
+                    aux.setArroba(line);
                 }
 
             }
