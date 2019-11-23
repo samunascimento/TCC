@@ -11,5 +11,5 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  * @author gleiph
  */
 public enum LineType {
-    ADDED, REMOVED
+    ADDED, REMOVED,MODIFIED, UNTRACKED, RENAMED, DELETED, COPIED, UNMERGED, UNMODIFIED, IGNORED;
 }

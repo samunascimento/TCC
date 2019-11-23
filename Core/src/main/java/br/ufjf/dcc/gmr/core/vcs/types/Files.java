@@ -15,6 +15,4 @@ public class Files {
         this.status = new ArrayList<>();
     }
     
-    
-    
 }

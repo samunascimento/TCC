@@ -8,5 +8,9 @@ import java.util.List;
  * @author Beatr
  */
 public class Unmerged {
-    public List<String> unmerged = new ArrayList<>();
+    public List<String> unmerged;
+    
+    public Unmerged(){
+        unmerged = new ArrayList<>();
+    }
 }
