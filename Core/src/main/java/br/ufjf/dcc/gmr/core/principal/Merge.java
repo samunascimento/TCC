@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class Merge {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound  {
-        String repository = "";
+        String repository = "C:\\Users\\felip\\Desktop\\Bolsa\\Bolsa - Copia";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
         
@@ -67,9 +67,10 @@ public class Merge {
             status = Git.status(repository);
         } catch (RepositoryNotFound | IOException e) {
         }
-        System.out.println("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||");
+        
+        /*System.out.println("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||");
         for (Object statu : status) {
             System.out.println(statu);
-        }
+        }*/
     }
 }

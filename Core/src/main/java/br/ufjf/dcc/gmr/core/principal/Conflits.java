@@ -65,6 +65,9 @@ public class Conflits {
     public static void getConflits(List<Formats> mergeList, String repository) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, CheckoutError  {
     	
     	String array[] = new String[2];
+    	String path;
+    	 List<String> conflitsArchives = new ArrayList<>();
+    	 List<String> status = new ArrayList<>();
     	
     	try {
             Git.checkout("master", repository);
@@ -78,7 +81,7 @@ public class Conflits {
     		System.out.println("***************MERGE NUMBER "+i+"***************");
     		
             List<String> parents = Git.parent(repository, mergeList.get(i).getCommitHash());
-            
+           
             System.out.println("**************PREPARING MERGE BETWEEN:***************");
             System.out.println("***************PARENT 1: "+parents.get(0) +"***************");
             System.out.println("***************PARENT 2: "+parents.get(1) +"***************");
@@ -94,13 +97,44 @@ public class Conflits {
             	System.out.println("***************ERROR IN MERGE EXECUTION***************");
             }
             
-            System.out.println("***************STATUS MERGE***************");
+            System.out.println("***************RUNNING STATUS***************");
             try {
-                Git.status(repository);
+            	 System.out.println("***************GENERAL STATUS***************");
+                status = Git.status(repository);
+                
+                for(int i1=0; i1 < status.size(); i1++) {
+                	System.out.println(status.get(i1));
+                }
+                System.out.println("***************UNMERGE ARCHIVES***************");
+                conflitsArchives = Git.statusUnmerged(repository);
+                
+                for(int i1=0; i1 < status.size(); i1++) {
+                	System.out.println(status.get(i1));
+                }
             } catch (RepositoryNotFound | IOException e) {
             	 System.out.println("***************ERROR IN STATUS EXECUTION***************");
             }
             
+         
+            System.out.println("***************CONFLITS AREA***************");
+			for(int i2=0; i2 < conflitsArchives.size(); i2++) {
+				 System.out.println("***************STARTS ARCHIVE: "+conflitsArchives.get(i2)+"***************");
+				
+				String aux = repository.replace("\\", "/");
+							
+				String conflitPath = conflitsArchives.get(i2);
+				String aux2 = conflitPath.replaceFirst("UU ", "");
+				String aux5 = aux2.replaceFirst("Core", "/Core");
+				
+				String aux3 = aux.concat(aux5);
+				String completePath = aux3.replace("\\", "/");
+				
+				
+				getAreaConflits(completePath);
+				
+				 System.out.println("***************ENDS ARCHIVE**************");
+			}
+			 System.out.println("***************FINISH CONFLITS AREA***************");
             
             System.out.println("***************MERGE ABORT AND CLEAR***************");
             try {
@@ -114,6 +148,8 @@ public class Conflits {
             }
             
     	}
+    	
+    	System.out.println("***************FINISH MERGE LOOP***************");
         
         
     }
@@ -127,9 +163,9 @@ public class Conflits {
 
              String linha;
              List <String> str = new ArrayList<>();
-             List <String> areaConflit = new ArrayList<>();
-             List <String> areaIncomeConflit = new ArrayList<>();
-             List <String> areaCurrentConflit = new ArrayList<>();
+             //List <String> areaConflit = new ArrayList<>();
+             //List <String> areaIncomeConflit = new ArrayList<>();
+             //List <String> areaCurrentConflit = new ArrayList<>();
              while( (linha = br.readLine()) != null ) {
                  str.add(linha);
              }
@@ -138,14 +174,14 @@ public class Conflits {
              for(int i=0; i < str.size(); i++){
                  if ( str.get(i).contains("<<<<<<<") ) {
                      for(int j=i; !str.get(j).contains("======="); j++) {
-                         areaCurrentConflit.add(str.get(j));
+                         //areaCurrentConflit.add(str.get(j));
                          System.out.println(str.get(j) + "\n");
                      }
                  }
-                 if ( str.get(i).contains("=======") ) {
+                 if ( str.get(i).startsWith("=======") ) {
 
                      for(int w=i; !str.get(w).contains(">>>>>>>"); w++) {
-                         areaIncomeConflit.add(str.get(w));
+                         //areaIncomeConflit.add(str.get(w));
                          System.out.println(str.get(w) + "\n");
                      }
                  }
