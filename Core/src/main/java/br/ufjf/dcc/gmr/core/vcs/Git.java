@@ -883,7 +883,7 @@ public class Git {
      *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @return Return a List<String> that goes contains all commits that is
+     * @return Return a List String that goes contains all commits that is
      * merges
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
