@@ -211,18 +211,50 @@ public class Git {
         String command = "git status --short";
         CLIExecution execute;
         Files files = new Files();
+        LineType type = null;
+        LineInformation information;
         
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
-       
+        String []array;
         for (String line : execute.getOutput()) {
             files.status.add(line);
-            
+            if(line.contains("M")){
+                array = line.split("M");
+                information = new LineInformation(array[1], type.MODIFIED);
+            }
+            if(line.contains("A")){
+                array = line.split("A");
+                information = new LineInformation(array[1], type.ADDED);
+            }
+            if(line.contains("D")){
+                array = line.split("D");
+                information = new LineInformation(array[1], type.DELETED);
+            }
+            if(line.contains("?")){
+                array = line.split("?");
+                information = new LineInformation(array[1], type.UNTRACKED);
+            }
+            if(line.contains("R")){
+                array = line.split("R");
+                information = new LineInformation(array[1], type.RENAMED);
+            }
+            if(line.contains("C")){
+                array = line.split("C");
+                information = new LineInformation(array[1], type.COPIED);
+            }
+            if(line.contains("U")){
+                array = line.split("U");
+                information = new LineInformation(array[1], type.UNMERGED);
+            }
+            if(line.contains("!")){
+                array = line.split("!");
+                information = new LineInformation(array[1], type.IGNORED);
+            }
         }
-        
         return files.status;  
     }
 
@@ -1112,7 +1144,7 @@ public class Git {
                 	aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-') {
                 	String c=line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.REMOVED));
+                    aux.getLines().add(new LineInformation(c, LineType.DELETED));
                 }
                   else if(line.charAt(0)== '@'){
                     aux.setArroba(line);
