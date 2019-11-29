@@ -38,7 +38,7 @@ public class MergesTest {
             Git.checkout(mergeEvent.getParents().get(1), repositoryPath);
             if (Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath, false, false)) {
                 mergeEvent.setConflict(true);
-                for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", true)) {
+                for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                     conflictFile.setFileName(fileDiff.getFilePathSource());
                     for (LineInformation line : fileDiff.getLines()) {
                         conflict.add(line.toString());

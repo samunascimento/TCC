@@ -22,7 +22,7 @@ import java.util.List;
  * @author ice
  */
 public class Merge {
-
+/*
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
         String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF - Copia";
         List<Formats> list = new ArrayList<>();
@@ -74,4 +74,4 @@ public class Merge {
             System.out.println(statu);
          }
     }
-}
+*/}

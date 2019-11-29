@@ -51,15 +51,15 @@ public class MergeEvent {
 			for(ConflictFile file : this.conflictFiles) {
 				System.out.println("File Name: " + file.getFileName());
 				for(int i = 0; i < file.getConflictRegion().size(); i++) {
-					System.out.println("Conflitct " + (i+1) + "\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+					System.out.println("Conflitct " + (i+1) + "\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
 					for(String v : file.getConflictRegion().get(i).getV1()) {
 						System.out.println(v);
 					}
-					System.out.println("==================================================");
+					System.out.println("\n========================================\n");
 					for(String v : file.getConflictRegion().get(i).getV2()) {
 						System.out.println(v);
 					}
-					System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+					System.out.println("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
 				}
 			}
 		} else {

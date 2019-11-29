@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
-        String repositoryPath = "/home/joao/Git/Teste";
+        String repositoryPath = "/home/joao/Git/voldemort";
         /*List<FileDiff> fileDiff = Git.diff(repositoryPath,"","");
     	for(FileDiff diff : fileDiff) {	
     		System.out.println(diff.getFilePathSource() + " -------- " + diff.getFilePathTarget());
