@@ -32,8 +32,7 @@ public class Jasome {
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument {
 
         try {
-                    String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
-        String projectPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy/Core/src";
+              String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
 //            String repositoryPath = "/Users/gleiph/repositories/voldemort";
 //            String projectPath = "/Users/gleiph/repositories/voldemort/src";
 
