@@ -22,6 +22,7 @@ public class MergesTest {
         List<String> allMerges = Git.giveAllMerges(repositoryPath);
         String[] family = null;
         String[] parents = null;
+        String[] aux = null;
         MergeEvent mergeEvent = new MergeEvent();
         List<MergeEvent> list = new ArrayList<>();
         ConflictFile conflictFile = new ConflictFile();
@@ -39,19 +40,20 @@ public class MergesTest {
             if (Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath, false, false)) {
                 mergeEvent.setConflict(true);
                 for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
-                    conflictFile.setFileName(fileDiff.getFilePathSource());
+                    aux = fileDiff.getFilePathSource().split("/");
+                    conflictFile.setFileName(aux[aux.length - 1]);
                     for (LineInformation line : fileDiff.getLines()) {
-                        conflict.add(line.toString());
+                        conflict.add(line.getContent());							
                     }
                     for (int i = 0; i < conflict.size(); i++) {
-                        if (conflict.get(i).contains("+<<<<<<<")) {
+                        if (conflict.get(i).contains("< HEAD")) {
                             i++;
-                            while (!conflict.get(i).contains("+=======")) {
+                            while (!conflict.get(i).contains("=====")) {
                                 conflictRegion.getV1().add(conflict.get(i));
                                 i++;
                             }
                             i++;
-                            while (!conflict.get(i).contains("+>>>>>>>")) {
+                            while (!conflict.get(i).contains(">>>>>")) {
                                 conflictRegion.getV2().add(conflict.get(i));
                                 i++;
                             }
@@ -61,6 +63,7 @@ public class MergesTest {
                     }
                     mergeEvent.addConflictFiles(conflictFile);
                     conflictFile = new ConflictFile();
+                    conflict.clear();
                 }
                 Git.mergeAbort(repositoryPath);
             }

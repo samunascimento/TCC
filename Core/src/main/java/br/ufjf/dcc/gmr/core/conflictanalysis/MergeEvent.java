@@ -39,7 +39,7 @@ public class MergeEvent {
 		this.conflictFiles.add(conflictFiles);
 	}
 	public void print() {
-		System.out.println("*************Merge*************");
+		System.out.println("***************************************Merge***************************************");
 		System.out.println("Hash: " + hash );
 		for(int i = 0; i < parents.size(); i++) {
 			System.out.println("Parent " + (i+1) + ": " + parents.get(i));
@@ -49,22 +49,29 @@ public class MergeEvent {
 		if(isConflict) {
 			System.out.println("Is Conflict\nConflicts:\n");
 			for(ConflictFile file : this.conflictFiles) {
-				System.out.println("File Name: " + file.getFileName());
+				System.out.println("\t\tFile Name: " + file.getFileName() + "\n");
 				for(int i = 0; i < file.getConflictRegion().size(); i++) {
-					System.out.println("Conflitct " + (i+1) + "\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-					for(String v : file.getConflictRegion().get(i).getV1()) {
-						System.out.println(v);
-					}
-					System.out.println("\n========================================\n");
-					for(String v : file.getConflictRegion().get(i).getV2()) {
-						System.out.println(v);
-					}
-					System.out.println("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+					System.out.println("\t\tConflitct " + (i+1) + "\n\t\t<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+					if(!file.getConflictRegion().get(i).getV1().isEmpty())
+						for(String v : file.getConflictRegion().get(i).getV1()) {
+							System.out.println("\t\t"+ v);
+						}
+					else 
+						System.out.println("\t\t(vazio)");
+					System.out.println("\t\t========================================");
+					if(!file.getConflictRegion().get(i).getV2().isEmpty())
+						for(String v : file.getConflictRegion().get(i).getV2()) {
+							System.out.println("\t\t"+ v);
+						}
+					else 
+						System.out.println("\t\t(vazio)");
+					System.out.println("\t\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n\n");
 				}
 			}
 		} else {
 			System.out.println("Not is Conflict");
 		}
+		System.out.println("***********************************************************************************");
 		
 	}
 	public String getCommonAncestorOfParents() {
