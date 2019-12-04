@@ -67,12 +67,10 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     @Override
     public void startDocument() {
-        System.out.println("\nIniciando o Parsing...\n");
     }
 
     @Override
     public void endDocument() {
-        System.out.println("\nFim do Parsing...");
 
     }
 
@@ -341,33 +339,22 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         tagAtual = qName;
 
         if (tagAtual.equals("Project")) {
-            System.out.println("Project");
             project = false;
         }
 
         else if (tagAtual.equals("Package")) {
-            System.out.println("Packages");
             projectMetrics.getListPackageMetric().add(packageMetrics);
             pacckage = false;
         }
         else if (tagAtual.equals("Class")) {
-            System.out.println("class");
             packageMetrics.getListClassMetrics().add(classMetrics);
             clazz = false;
         }
         else if (tagAtual.equals("Method")) {
-            System.out.println("method");
             classMetrics.getListMethodsMetrics().add(methodMetrics);
             method = false;
         }
 
     }
 
-    public static void main(String[] args) throws Exception {
-
-        //vou deixar o método main aqui pra fazer testes com o SAX
-        ReadXMLUsingSAX mySax = new ReadXMLUsingSAX();
-        mySax.fazerParsing("/Users/gleiph/Desktop/output.xml");
-        System.out.println("Quantidade de pacotes: " + mySax.getProjectMetrics().getListPackageMetric().size());
-    }
 }
