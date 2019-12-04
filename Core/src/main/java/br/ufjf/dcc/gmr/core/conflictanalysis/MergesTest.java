@@ -1,9 +1,14 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufjf.dcc.gmr.core.cli.CLIExecute;
+import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
@@ -17,17 +22,65 @@ import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 
 public class MergesTest {
+	private static String auxGetFileContentLinux(String folderPath, String file) throws IOException{
+		CLIExecution cliE = CLIExecute.execute("ls -p",folderPath);
+		String aux = "";
+		if(cliE.getOutput().contains(file)) {
+			folderPath = folderPath + file;
+			return folderPath;
+		} else {
+			for(String line : cliE.getOutput()) {
+				if(line.endsWith("/")) {
+					aux = auxGetFileContentLinux(folderPath+line,file);
+					if(aux != "")
+						return aux;
+				}
+			}
+		}
+		return "";
+	}
+	private static void auxGetFileContentWindows(String folderPath, String file) throws IOException{
 
-    public static void SearchAllConflicts(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
-        List<String> allMerges = Git.giveAllMerges(repositoryPath);
+	}
+
+	public static List<String> getFileContent(String folderPath, String fileName) throws IOException{
+		List<String> content = new ArrayList<>();
+		String path = "";
+		if(folderPath.startsWith("C") || folderPath.startsWith("c") ) {
+			
+		} else {
+			if(!folderPath.endsWith("/"))
+				folderPath = folderPath + "/";
+			path = auxGetFileContentLinux(folderPath,fileName);
+		}
+		if(path == "")
+			return null;
+		else {
+			File file = new File(path);   
+			BufferedReader br = new BufferedReader(new FileReader(file)); 
+			String st; 
+			while ((st = br.readLine()) != null) 
+				content.add(st);
+		}
+		return content;
+		
+	}
+	
+    public static void searchAllConflicts(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
+        
+    	
+    	List<String> allMerges = Git.giveAllMerges(repositoryPath);
         String[] family = null;
         String[] parents = null;
-        String[] aux = null;
+        String[] auxArray = null;
         MergeEvent mergeEvent = new MergeEvent();
         List<MergeEvent> list = new ArrayList<>();
         ConflictFile conflictFile = new ConflictFile();
         ConflictRegion conflictRegion = new ConflictRegion();
         List<String> conflict = new ArrayList<>();
+        
+        
+        
         for (String merge : allMerges) {
             family = merge.split(",");
             mergeEvent.setHash(family[1]);
@@ -40,12 +93,12 @@ public class MergesTest {
             if (Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath, false, false)) {
                 mergeEvent.setConflict(true);
                 for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
-                    aux = fileDiff.getFilePathSource().split("/");
-                    conflictFile.setFileName(aux[aux.length - 1]);
+                    auxArray = fileDiff.getFilePathSource().split("/");
+                    conflictFile.setFileName(auxArray[auxArray.length - 1]);
                     for (LineInformation line : fileDiff.getLines()) {
                         conflict.add(line.getContent());							
                     }
-                    for (int i = 0; i < conflict.size(); i++) {
+                    /*for (int i = 0; i < conflict.size(); i++) {
                         if (conflict.get(i).contains("< HEAD")) {
                             i++;
                             while (!conflict.get(i).contains("=====")) {
@@ -60,7 +113,8 @@ public class MergesTest {
                             conflictFile.addConflictRegion(conflictRegion);
                             conflictRegion = new ConflictRegion();
                         }
-                    }
+                    }*/
+                    
                     mergeEvent.addConflictFiles(conflictFile);
                     conflictFile = new ConflictFile();
                     conflict.clear();
@@ -73,8 +127,9 @@ public class MergesTest {
             mergeEvent = new MergeEvent();
             conflictFile = new ConflictFile();
             conflictRegion = new ConflictRegion();
-
         }
+        
+        
 
     }
 
