@@ -14,6 +14,8 @@ public class MergeEvent {
 	private boolean isConflict = false;
 	
 	MergeEvent(){
+		this.hash = "";
+		this.commonAncestorOfParents = "";
 		this.parents = new ArrayList<>();
 		conflictFiles = new ArrayList<>();
 	}

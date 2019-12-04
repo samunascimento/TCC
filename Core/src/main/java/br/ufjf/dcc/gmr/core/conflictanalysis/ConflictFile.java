@@ -10,6 +10,7 @@ public class ConflictFile {
 	
 	public ConflictFile() {
 		this.conflictRegion = new ArrayList<>();
+		this.fileName = "";
 	}
 	
 	public String getFileName() {

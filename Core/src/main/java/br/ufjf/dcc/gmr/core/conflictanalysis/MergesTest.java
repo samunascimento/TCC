@@ -78,6 +78,7 @@ public class MergesTest {
         ConflictFile conflictFile = new ConflictFile();
         ConflictRegion conflictRegion = new ConflictRegion();
         List<String> conflict = new ArrayList<>();
+        int auxInt = 0;
         
         
         
@@ -89,17 +90,15 @@ public class MergesTest {
                 mergeEvent.addParents(parent);
             }
             mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
-            Git.checkout(mergeEvent.getParents().get(1), repositoryPath);
-            if (Git.mergeIsConflicting(mergeEvent.getParents().get(0), repositoryPath, false, false)) {
+            Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
+            if (Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath, false, false)) {
                 mergeEvent.setConflict(true);
                 for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                     auxArray = fileDiff.getFilePathSource().split("/");
                     conflictFile.setFileName(auxArray[auxArray.length - 1]);
-                    for (LineInformation line : fileDiff.getLines()) {
-                        conflict.add(line.getContent());							
-                    }
                     conflict = getFileContent(repositoryPath,conflictFile.getFileName());
-                    for(int i = 0; i < conflict.size(); i++) {
+                    auxInt = conflict.size(); 
+                    for(int i = 0; i < auxInt; i++) {
                         if (conflict.get(i).contains("<<<<<<")) {
                         	conflictRegion.setBeginLine(i+1);
                             i++;

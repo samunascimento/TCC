@@ -19,10 +19,14 @@ public class FileDiff {
     private String filePathTarget;
     private List<LineInformation> lines;
     private List<String> arroba;
+    private List<String> allMessage;
 
     public FileDiff() {
+    	this.setAllMessage(new ArrayList<>());
         this.lines = new ArrayList<>();
         this.arroba = new ArrayList<>();
+        this.filePathSource = "";
+        this.filePathTarget = "";
     }
 
     public String getFilePathSource() {
@@ -56,5 +60,13 @@ public class FileDiff {
     public void setArroba(String arroba) {
         this.arroba.add(arroba);
     }
+
+	public List<String> getAllMessage() {
+		return allMessage;
+	}
+
+	public void setAllMessage(List<String> allMessage) {
+		this.allMessage = allMessage;
+	}
 
 }

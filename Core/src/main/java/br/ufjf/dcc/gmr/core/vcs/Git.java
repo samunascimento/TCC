@@ -1121,7 +1121,7 @@ public class Git {
                 }
             }
         } else {
-
+        	aux.setAllMessage(execution.getOutput());
             for (String line : execution.getOutput()) {
 
                 if (line.startsWith("diff --")) {
@@ -1152,6 +1152,7 @@ public class Git {
 
             }
             result.add(aux);
+            aux = new FileDiff();
 
         }
 
