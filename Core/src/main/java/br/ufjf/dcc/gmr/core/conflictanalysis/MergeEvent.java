@@ -49,23 +49,15 @@ public class MergeEvent {
 		if(isConflict) {
 			System.out.println("Is Conflict\nConflicts:\n");
 			for(ConflictFile file : this.conflictFiles) {
-				System.out.println("\t\tFile Name: " + file.getFileName() + "\n");
-				for(int i = 0; i < file.getConflictRegion().size(); i++) {
-					System.out.println("\t\tConflitct " + (i+1) + "\n\t\t<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-					if(!file.getConflictRegion().get(i).getV1().isEmpty())
-						for(String v : file.getConflictRegion().get(i).getV1()) {
-							System.out.println("\t\t"+ v);
-						}
-					else 
-						System.out.println("\t\t(vazio)");
-					System.out.println("\t\t========================================");
-					if(!file.getConflictRegion().get(i).getV2().isEmpty())
-						for(String v : file.getConflictRegion().get(i).getV2()) {
-							System.out.println("\t\t"+ v);
-						}
-					else 
-						System.out.println("\t\t(vazio)");
-					System.out.println("\t\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n\n");
+				System.out.println("\tFile Name: " + file.getFileName() + "\n");
+				for(ConflictRegion region : file.getConflictRegion()) {
+					System.out.println("\t\t<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + region.getBeginLine() + ")");
+					for(String line : region.getV1())
+						System.out.println("\t\t\t" + line);
+					System.out.println("\t\t============================== (" + region.getSeparatorLine() + ")");
+					for(String line : region.getV2())
+						System.out.println("\t\t\t" + line);
+					System.out.println("\t\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + region.getEndLine() + ")\n\n");
 				}
 			}
 		} else {

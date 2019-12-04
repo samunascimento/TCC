@@ -98,23 +98,26 @@ public class MergesTest {
                     for (LineInformation line : fileDiff.getLines()) {
                         conflict.add(line.getContent());							
                     }
-                    /*for (int i = 0; i < conflict.size(); i++) {
-                        if (conflict.get(i).contains("< HEAD")) {
+                    conflict = getFileContent(repositoryPath,conflictFile.getFileName());
+                    for(int i = 0; i < conflict.size(); i++) {
+                        if (conflict.get(i).contains("<<<<<<")) {
+                        	conflictRegion.setBeginLine(i+1);
                             i++;
                             while (!conflict.get(i).contains("=====")) {
                                 conflictRegion.getV1().add(conflict.get(i));
                                 i++;
                             }
+                            conflictRegion.setSeparatorLine(i+1);
                             i++;
                             while (!conflict.get(i).contains(">>>>>")) {
                                 conflictRegion.getV2().add(conflict.get(i));
                                 i++;
                             }
+                            conflictRegion.setEndLine(i+1);
                             conflictFile.addConflictRegion(conflictRegion);
                             conflictRegion = new ConflictRegion();
                         }
-                    }*/
-                    
+                    }
                     mergeEvent.addConflictFiles(conflictFile);
                     conflictFile = new ConflictFile();
                     conflict.clear();
