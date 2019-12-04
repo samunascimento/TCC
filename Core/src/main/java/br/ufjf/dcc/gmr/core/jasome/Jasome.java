@@ -14,8 +14,8 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
-import br.ufjf.dcc.gmr.core.jasome.ReadXMLUsingSAX;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -27,14 +27,15 @@ import java.util.List;
  */
 public class Jasome {
 
-    private static final String FILE_PATH = "./thirdparty/jasome/build/distributions/jasome/bin/jasome";
+    private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
+            .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
+            .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
+            .concat("jasome");
 
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument {
 
         try {
               String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
-//            String repositoryPath = "/Users/gleiph/repositories/voldemort";
-//            String projectPath = "/Users/gleiph/repositories/voldemort/src";
 
             List<Formats> log = Git.log(repositoryPath);
 
