@@ -22,7 +22,7 @@ public class FileDiff {
     private List<String> allMessage;
 
     public FileDiff() {
-    	this.setAllMessage(new ArrayList<>());
+    	this.allMessage = new ArrayList<>();
         this.lines = new ArrayList<>();
         this.arroba = new ArrayList<>();
         this.filePathSource = "";

@@ -954,7 +954,7 @@ public class Git {
      * @throws CheckoutError
      */
     public static boolean mergeIsConflicting(String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException, CheckoutError {
-        CLIExecution cliE = CLIExecute.execute("git merge " + entity, repositoryPath);
+        CLIExecution cliE = CLIExecute.execute("git merge --no-edit " + entity, repositoryPath);
         boolean check = false;
         if (!cliE.getError().isEmpty()) {
             for (String line : cliE.getError()) {

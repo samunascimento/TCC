@@ -8,12 +8,14 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 public class MergeEvent {
 	
 	private String hash;
+	private List<SpecialConflictFile> specialConflictFiles;
 	private List<String> parents;
 	private List<ConflictFile> conflictFiles;
 	private String commonAncestorOfParents;
 	private boolean isConflict = false;
 	
 	MergeEvent(){
+		this.specialConflictFiles = new ArrayList<>();
 		this.hash = "";
 		this.commonAncestorOfParents = "";
 		this.parents = new ArrayList<>();
@@ -62,6 +64,10 @@ public class MergeEvent {
 					System.out.println("\t\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + region.getEndLine() + ")\n\n");
 				}
 			}
+			for(SpecialConflictFile spc : this.specialConflictFiles) {
+				System.out.println("\tFile Name: "+ spc.getFileName() + "\n\t\tHas not been"
+						+ " merged as it has been renamed or deleted.");
+			}
 		} else {
 			System.out.println("Not is Conflict");
 		}
@@ -79,6 +85,15 @@ public class MergeEvent {
 	}
 	public void setConflict(boolean isConflict) {
 		this.isConflict = isConflict;
+	}
+	public List<SpecialConflictFile> getSpecialConflictFiles() {
+		return specialConflictFiles;
+	}
+	public void setSpecialConflictFiles(List<SpecialConflictFile> specialConflictFiles) {
+		this.specialConflictFiles = specialConflictFiles;
+	}
+	public void addSpecialConflictFiles(SpecialConflictFile specialConflictFiles) {
+		this.specialConflictFiles.add(specialConflictFiles);
 	}
 	
 	
