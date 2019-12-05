@@ -61,6 +61,8 @@ public class Jasome {
             }
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
+        }catch(NullPointerException ex){
+            System.out.println("Commit não possui arquivo Java");                
         } catch (UnknownSwitch ex) {
             System.out.println("UnknownSwitch");
         } catch (RefusingToClean ex) {
