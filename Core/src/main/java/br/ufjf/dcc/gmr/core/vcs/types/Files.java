@@ -9,10 +9,10 @@ import java.util.List;
  * @author Beatr
  */
 public class Files {
-    public List<String> status;
+    public List<String> allStatus;
 
     public Files() {
-        this.status = new ArrayList<>();
+        this.allStatus = new ArrayList<>();
     }
     
 }

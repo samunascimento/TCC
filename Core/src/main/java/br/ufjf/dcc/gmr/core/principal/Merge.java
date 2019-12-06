@@ -11,6 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 //import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.text.ParseException;
@@ -22,9 +23,9 @@ import java.util.List;
  * @author ice
  */
 public class Merge {
-/*
+
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
-        String repository = "C:\\Users\\icout\\OneDrive\\Área de Trabalho\\UFJF - Copia";
+        String repository = "C:\\Users\\Beatr\\Desktop\\UFJF";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
 
@@ -63,15 +64,15 @@ public class Merge {
             Conflicts.getConflicts(mergeList, repository);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
         }
-        List status = new ArrayList();
+        FileStatus status = null;
         try {
             status = Git.status(repository);
         } catch (RepositoryNotFound | IOException e) {
         }
 
         System.out.println("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||");
-         for (Object statu : status) {
+         for (Object statu : status.files.allStatus) {
             System.out.println(statu);
          }
     }
-*/}
+}

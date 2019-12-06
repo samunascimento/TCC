@@ -28,9 +28,12 @@ import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
+import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
+import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
+import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import br.ufjf.dcc.gmr.core.vcs.types.Unmerged;
 import java.io.IOException;
 import java.text.ParseException;
@@ -207,77 +210,92 @@ public class Git {
      * @TODO:What is the meaning when this method returns true or false? Would
      * you improve the output?
      */
-    public static List<String> status(String repositoryPath) throws RepositoryNotFound, IOException {
+    public static FileStatus status(String repositoryPath) throws RepositoryNotFound, IOException {
         String command = "git status --short";
         CLIExecution execute;
-        Files files = new Files();
-        LineType type = null;
-        LineInformation information;
+        Status type = null;
+        FileStatus status = new FileStatus();
+            
         
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
-        String []array;
+        
         for (String line : execute.getOutput()) {
-            files.status.add(line);
-            if(line.contains("M")){
+            String []array;
+            if(line.startsWith(" M")){
                 array = line.split("M");
-                information = new LineInformation(array[1], type.MODIFIED);
+                status.setType(type.MODIFIED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
-            if(line.contains("A")){
+            if(line.startsWith(" A")){
                 array = line.split("A");
-                information = new LineInformation(array[1], type.ADDED);
+                status.setType(type.ADDED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
-            if(line.contains("D")){
+            if(line.startsWith(" D")){
                 array = line.split("D");
-                information = new LineInformation(array[1], type.DELETED);
+                status.setType(type.DELETED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
             if(line.contains("?")){
-                array = line.split("?");
-                information = new LineInformation(array[1], type.UNTRACKED);
+                array = line.split(" ");
+                status.setType(type.UNTRACKED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
-            if(line.contains("R")){
+            if(line.startsWith(" R")){
                 array = line.split("R");
-                information = new LineInformation(array[1], type.RENAMED);
+                status.setType(type.RENAMED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
-            if(line.contains("C")){
+            if(line.startsWith(" C")){
                 array = line.split("C");
-                information = new LineInformation(array[1], type.COPIED);
+                status = new FileStatus(type.COPIED,array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
-            if(line.contains("U")){
+            if(line.startsWith(" U")){
                 array = line.split("U");
-                information = new LineInformation(array[1], type.UNMERGED);
+                status.setType(type.UNMERGED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
             if(line.contains("!")){
-                array = line.split("!");
-                information = new LineInformation(array[1], type.IGNORED);
+                array = line.split(" ");
+                status.setType(type.IGNORED);
+                status.setPath(array[1]);
+                status.files.allStatus.add(status.getType()+" "+status.getPath());
             }
         }
-        return files.status;  
+        return status;  
     }
 
-    public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
+    public static FileUnmerged statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
         String command = "git status --short";
         CLIExecution execute;
-        List<String> lista = new ArrayList<>();
-        Unmerged u = new Unmerged();
+        FileStatus status = status(repositoryPath);
+        FileUnmerged u = new FileUnmerged();
 
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
-        lista = status(repositoryPath);
-        if (!lista.isEmpty()) {
-            for (int i = 0; i < lista.size(); i++) {
-                if (lista.get(i).contains("U")) {
-                    u.unmerged.add(lista.get(i));
+        List<String> allStatus = status.files.allStatus;
+        if (!allStatus.isEmpty()) {
+            for (int i = 0; i < allStatus.size(); i++) {
+                if (allStatus.get(i).contains("U")) {
+                    u.file.unmerged.add(allStatus.get(i));
                 }
             }
         }
-        return u.unmerged;
+        return u;
     }
 
     ///GIT CLONE

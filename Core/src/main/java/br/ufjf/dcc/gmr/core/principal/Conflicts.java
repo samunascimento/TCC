@@ -14,6 +14,8 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
+import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -66,8 +68,8 @@ public class Conflicts {
 
         String array[] = new String[2];
         String path;
-        List<String> conflictsArchives = new ArrayList<>();
-        List<String> status = new ArrayList<>();
+        FileUnmerged conflictsArchives = Git.statusUnmerged(repository);
+        FileStatus status = Git.status(repository);
 
         try {
             Git.checkout("master", repository);
@@ -102,26 +104,26 @@ public class Conflicts {
                 System.out.println("***************GENERAL STATUS***************");
                 status = Git.status(repository);
 
-                for (int i1 = 0; i1 < status.size(); i1++) {
-                    System.out.println(status.get(i1));
+                for (int i1 = 0; i1 < status.files.allStatus.size(); i1++) {
+                    System.out.println(status.files.allStatus.get(i1));
                 }
                 System.out.println("***************UNMERGE ARCHIVES***************");
                 conflictsArchives = Git.statusUnmerged(repository);
 
-                for (int i1 = 0; i1 < status.size(); i1++) {
-                    System.out.println(status.get(i1));
+                for (int i1 = 0; i1 < status.files.allStatus.size(); i1++) {
+                    System.out.println(status.files.allStatus.get(i1));
                 }
             } catch (RepositoryNotFound | IOException e) {
                 System.out.println("***************ERROR IN STATUS EXECUTION***************");
             }
 
             System.out.println("***************CONFLICTS AREA***************");
-            for (int i2 = 0; i2 < conflictsArchives.size(); i2++) {
-                System.out.println("***************STARTS ARCHIVE: " + conflictsArchives.get(i2) + "***************");
+            for (int i2 = 0; i2 < conflictsArchives.file.unmerged.size(); i2++) {
+                System.out.println("***************STARTS ARCHIVE: " + conflictsArchives.file.unmerged.get(i2) + "***************");
 
                 String aux = repository.replace("\\", "/");
 
-                String conflitPath = conflictsArchives.get(i2);
+                String conflitPath = conflictsArchives.file.unmerged.get(i2);
                 String aux2 = conflitPath.replaceFirst("UU ", "");
                 String aux5 = aux2.replaceFirst("Core", "/Core");
 
