@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.principal;
+package br.ufjf.dcc.gmr.core.vcs.types;
+import br.ufjf.dcc.gmr.core.vcs.types.File;
 import java.util.ArrayList;
 /**
  *

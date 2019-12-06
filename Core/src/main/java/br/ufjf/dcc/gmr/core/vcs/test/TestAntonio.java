@@ -5,7 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
 
-import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;

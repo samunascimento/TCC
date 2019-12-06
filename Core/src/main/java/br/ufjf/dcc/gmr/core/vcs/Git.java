@@ -9,7 +9,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.BranchAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;

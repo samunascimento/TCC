@@ -7,7 +7,7 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;

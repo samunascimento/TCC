@@ -3,7 +3,7 @@ package br.ufjf.dcc.gmr.core.principal;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;

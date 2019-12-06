@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.vcs.example;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.Formats;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
