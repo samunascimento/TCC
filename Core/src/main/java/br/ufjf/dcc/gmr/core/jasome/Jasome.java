@@ -38,10 +38,10 @@ public class Jasome {
         try {
             int i =0;
             String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
-            List<Formats> log = Git.log(repositoryPath);
-            
-            // lista com as versoes do projeto
-            List<ReadXMLUsingSAX> versoes = new ArrayList<>();
+            Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
+            List<Formats> log = Git.log(repositoryPath); 
+            System.out.println(log.size());
+            List<ReadXMLUsingSAX> versoes = new ArrayList<>(); //lista com as versões do projeto
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
                 System.out.println("======================" + revision.getCommitHash() + "==================");
