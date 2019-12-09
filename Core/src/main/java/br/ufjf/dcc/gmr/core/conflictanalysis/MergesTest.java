@@ -22,46 +22,15 @@ import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 
 public class MergesTest {
-	private static String auxGetFileContentLinux(String folderPath, String file) throws IOException{
-		CLIExecution cliE = CLIExecute.execute("ls -p",folderPath);
-		String aux = "";
-		if(cliE.getOutput().contains(file)) {
-			folderPath = folderPath + file;
-			return folderPath;
-		} else {
-			for(String line : cliE.getOutput()) {
-				if(line.endsWith("/")) {
-					aux = auxGetFileContentLinux(folderPath+line,file);
-					if(aux != "")
-						return aux;
-				}
-			}
-		}
-		return "";
-	}
-	private static void auxGetFileContentWindows(String folderPath, String file) throws IOException{
 
-	}
 
-	public static List<String> getFileContent(String folderPath, String fileName) throws IOException{
+	public static List<String> getFileContent(String folderPath) throws IOException{
 		List<String> content = new ArrayList<>();
-		String path = "";
-		if(folderPath.startsWith("C") || folderPath.startsWith("c") ) {
-			
-		} else {
-			if(!folderPath.endsWith("/"))
-				folderPath = folderPath + "/";
-			path = auxGetFileContentLinux(folderPath,fileName);
-		}
-		if(path == "")
-			return null;
-		else {
-			File file = new File(path);   
-			BufferedReader br = new BufferedReader(new FileReader(file)); 
-			String st; 
-			while ((st = br.readLine()) != null) 
+		File file = new File(folderPath);   
+		BufferedReader br = new BufferedReader(new FileReader(file)); 
+		String st; 
+		while ((st = br.readLine()) != null) 
 				content.add(st);
-		}
 		return content;
 		
 	}
@@ -80,7 +49,24 @@ public class MergesTest {
         List<String> conflict = new ArrayList<>();
         SpecialConflictFile spc = new SpecialConflictFile();
         int auxInt = 0;
+        int soType = -1;
         
+        
+        if(repositoryPath.contains("\\\\")) {
+        	soType = 2;
+        	if(!repositoryPath.endsWith("\\\\"))
+        		repositoryPath = repositoryPath + "\\\\";
+        }
+        else if(repositoryPath.contains("\\")) {
+        	soType = 1;
+        	if(!repositoryPath.endsWith("\\"))
+        		repositoryPath = repositoryPath + "\\";
+        }
+        else if(repositoryPath.contains("/")) {
+        	soType = 0;
+        	if(!repositoryPath.endsWith("/"))
+        		repositoryPath = repositoryPath + "/";
+        }
         
         
         for (String merge : allMerges) {
@@ -97,9 +83,17 @@ public class MergesTest {
                 mergeEvent.setConflict(true);
                 for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                 	if(!fileDiff.getLines().isEmpty()) {
-	                    auxArray = fileDiff.getFilePathSource().split("/");
+	                    //auxArray = fileDiff.getFilePathSource().split("/");
+                		switch(soType) {
+                		case 0: auxArray = fileDiff.getFilePathSource().split("/");
+                				break;
+                		case 1: auxArray = fileDiff.getFilePathSource().split("\\");
+        						break;
+                		case 2: auxArray = fileDiff.getFilePathSource().split("\\\\");
+        						break;
+                		}
 	                    conflictFile.setFileName(auxArray[auxArray.length - 1]);
-	                    conflict = getFileContent(repositoryPath,conflictFile.getFileName());
+	                    conflict = getFileContent(repositoryPath + fileDiff.getFilePathSource());
 	                    auxInt = conflict.size(); 
 	                    for(int i = 0; i < auxInt; i++) {
 	                        if (conflict.get(i).contains("<<<<<<")) {
