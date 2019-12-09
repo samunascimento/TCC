@@ -683,7 +683,6 @@ public class Git {
         CLIExecution execution = null;
 
         execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println(execution);
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
