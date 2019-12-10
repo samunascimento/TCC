@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
@@ -40,7 +39,7 @@ public class MergesTest {
 
     }
 
-    public static void searchAllConflicts(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
+    public static void searchAllConflicts(String repositoryPath, int linesContext) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
 
         List<String> allMerges = Git.giveAllMerges(repositoryPath);
         String[] family = null;
@@ -51,16 +50,10 @@ public class MergesTest {
         ConflictFile conflictFile = new ConflictFile();
         ConflictRegion conflictRegion = new ConflictRegion();
         List<String> conflict = new ArrayList<>();
-        SpecialConflictFile spc = new SpecialConflictFile();
         int auxInt = 0;
         int soType = -1;
 
-        if (repositoryPath.contains("\\\\")) {
-            soType = 2;
-            if (!repositoryPath.endsWith("\\\\")) {
-                repositoryPath = repositoryPath + "\\\\";
-            }
-        } else if (repositoryPath.contains("\\")) {
+        if (repositoryPath.contains("\\")) {
             soType = 1;
             if (!repositoryPath.endsWith("\\")) {
                 repositoryPath = repositoryPath + "\\";
@@ -72,15 +65,13 @@ public class MergesTest {
             }
         }
 
-        
         for (String merge : allMerges) {
-            
+
             family = merge.split(",");
             mergeEvent.setHash(family[1]);
             parents = family[0].split(" ");
-            for (String parent : parents) { 
+            for (String parent : parents) {
                 mergeEvent.addParents(parent);
-                //System.out.println(parent);
             }
             mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
             try {
@@ -100,16 +91,12 @@ public class MergesTest {
                 mergeEvent.setConflict(true);
                 for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                     if (!fileDiff.getLines().isEmpty()) {
-                        //auxArray = fileDiff.getFilePathSource().split("/");
                         switch (soType) {
                             case 0:
                                 auxArray = fileDiff.getFilePathSource().split("/");
                                 break;
                             case 1:
                                 auxArray = fileDiff.getFilePathSource().split("\\");
-                                break;
-                            case 2:
-                                auxArray = fileDiff.getFilePathSource().split("\\\\");
                                 break;
                         }
                         conflictFile.setFileName(auxArray[auxArray.length - 1]);
@@ -118,6 +105,12 @@ public class MergesTest {
                         for (int i = 0; i < auxInt; i++) {
                             if (conflict.get(i).contains("<<<<<<")) {
                                 conflictRegion.setBeginLine(i + 1);
+                                for(int j = i - linesContext; j < i;j++){
+                                    if(j<0)
+                                        j=-1;
+                                    else
+                                        conflictRegion.getAfterContext().add(conflict.get(j));
+                                }
                                 i++;
                                 while (!conflict.get(i).contains("=====")) {
                                     conflictRegion.getV1().add(conflict.get(i));
@@ -130,6 +123,12 @@ public class MergesTest {
                                     i++;
                                 }
                                 conflictRegion.setEndLine(i + 1);
+                                for (int j = i+1; j < i+1+linesContext ; j++) {
+                                    if (j == conflict.size())
+                                        break;
+                                    else
+                                        conflictRegion.getBeforeContext().add(conflict.get(j));
+                                }
                                 conflictFile.addConflictRegion(conflictRegion);
                                 conflictRegion = new ConflictRegion();
                             }
@@ -140,11 +139,10 @@ public class MergesTest {
                     }
                     for (String line : fileDiff.getAllMessage()) {
                         if (line.startsWith("* Unmerged path")) {
-                            line.replaceAll(" ", "");
                             auxArray = line.split("/");
-                            spc.setFileName(auxArray[auxArray.length - 1]);
-                            mergeEvent.addSpecialConflictFiles(spc);
-                            spc = new SpecialConflictFile();
+                            conflictFile.setFileName(auxArray[auxArray.length - 1]);
+                            mergeEvent.addConflictFiles(conflictFile);
+                            conflictFile = new ConflictFile();
                         }
                     }
                 }

@@ -26,8 +26,8 @@ import java.io.IOException;
 public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
-        String repositoryPath = "/home/joao/Git/Twitter4J";
-        MergesTest.searchAllConflicts(repositoryPath);
+        String repositoryPath = "/home/joao/Git/voldemort";
+        MergesTest.searchAllConflicts(repositoryPath,10);
     }
 
 }
