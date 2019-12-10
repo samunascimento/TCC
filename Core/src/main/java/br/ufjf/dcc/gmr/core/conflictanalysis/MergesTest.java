@@ -40,7 +40,7 @@ public class MergesTest {
 
     }
 
-    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext) throws IOException, 
+    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean printProgress) throws IOException, 
             LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, 
             ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
 
@@ -55,6 +55,10 @@ public class MergesTest {
         List<String> conflict = new ArrayList<>();
         int auxInt = 0;
         int soType = -1;
+        double analysed = 1.0;
+        double analysedPercentage = 0.0;
+        double progress = 0.0;
+        
 
         if (repositoryPath.contains("\\")) {
             soType = 1;
@@ -155,7 +159,17 @@ public class MergesTest {
             list.add(mergeEvent);
             mergeEvent = new MergeEvent();
             conflictFile = new ConflictFile();
-            conflictRegion = new ConflictRegion();            
+            conflictRegion = new ConflictRegion();
+            
+            if(printProgress){
+                progress = Math.ceil((analysed/allMerges.size())*100);
+                if(progress > analysedPercentage){
+                    System.out.println((int)progress + "%...");
+                   analysedPercentage = progress;
+                }
+                analysed = analysed + 1.0;
+            }
+            
         }
         return list;
     }

@@ -31,12 +31,13 @@ public class TestJoao {
         
         
         String repositoryPath = "/home/joao/Git/voldemort";
-        List<MergeEvent> list = MergesTest.searchAllConflicts(repositoryPath,3);
-        for(MergeEvent merge : list){
+        System.out.println("Olá");
+        List<MergeEvent> list = MergesTest.searchAllConflicts(repositoryPath,3,true);
+        /*for(MergeEvent merge : list){
             if(merge.isConflict()){
                 merge.print();
             }
-        }
+        }*/
     
     
     }
