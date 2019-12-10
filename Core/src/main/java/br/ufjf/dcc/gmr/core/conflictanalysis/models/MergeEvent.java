@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis;
+package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class MergeEvent {
     private String commonAncestorOfParents;
     private boolean isConflict = false;
 
-    MergeEvent() {
+    public MergeEvent() {
         this.hash = "";
         this.commonAncestorOfParents = "";
         this.parents = new ArrayList<>();
@@ -49,6 +49,7 @@ public class MergeEvent {
     }
 
     public void print() {
+        int c ;
         System.out.println("***************************************Merge***************************************");
         System.out.println("Hash: " + hash);
         for (int i = 0; i < parents.size(); i++) {
@@ -64,8 +65,10 @@ public class MergeEvent {
                     System.out.println("\t\t" + file.getFileName() + " has not been"
                             + " merged as it has been renamed or deleted.");
                 } else {
+                    c = 0;
                     for (ConflictRegion region : file.getConflictRegion()) {
-                        System.out.println("\t################################################");
+                        c++;
+                        System.out.println("\t#################Conflict " + c + "#################");
                         for (String line : region.getAfterContext()) {
                             System.out.println("\t\t" + line);
                         }
@@ -81,7 +84,7 @@ public class MergeEvent {
                         for (String line : region.getBeforeContext()) {
                             System.out.println("\t\t" + line);
                         }
-                        System.out.println("\t################################################\n\n");
+                        System.out.println("\t###################################################\n\n");
                     }
                 }
             }

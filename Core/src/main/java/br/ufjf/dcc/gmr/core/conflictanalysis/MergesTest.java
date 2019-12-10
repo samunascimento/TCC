@@ -1,13 +1,14 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictFile;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictRegion;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import br.ufjf.dcc.gmr.core.cli.CLIExecute;
-import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
@@ -39,7 +40,9 @@ public class MergesTest {
 
     }
 
-    public static void searchAllConflicts(String repositoryPath, int linesContext) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
+    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext) throws IOException, 
+            LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, 
+            ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
 
         List<String> allMerges = Git.giveAllMerges(repositoryPath);
         String[] family = null;
@@ -149,13 +152,12 @@ public class MergesTest {
                 Git.mergeAbort(repositoryPath);
             }
             Git.checkout("master", repositoryPath);
-            mergeEvent.print();
             list.add(mergeEvent);
             mergeEvent = new MergeEvent();
             conflictFile = new ConflictFile();
-            conflictRegion = new ConflictRegion();
+            conflictRegion = new ConflictRegion();            
         }
-
+        return list;
     }
 
 }

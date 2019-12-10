@@ -1,5 +1,6 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis;
+package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictRegion;
 import java.util.ArrayList;
 import java.util.List;
 

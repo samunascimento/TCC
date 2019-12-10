@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.MergesTest;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
@@ -17,6 +18,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -26,8 +28,17 @@ import java.io.IOException;
 public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
+        
+        
         String repositoryPath = "/home/joao/Git/voldemort";
-        MergesTest.searchAllConflicts(repositoryPath,10);
+        List<MergeEvent> list = MergesTest.searchAllConflicts(repositoryPath,3);
+        for(MergeEvent merge : list){
+            if(merge.isConflict()){
+                merge.print();
+            }
+        }
+    
+    
     }
 
 }
