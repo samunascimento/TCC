@@ -37,48 +37,48 @@ public class Jasome {
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound {
 
         try {
-            int i =0;
+            int i = 0;
             String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
             Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
-            List<Formats> log = Git.log(repositoryPath); 
+            List<Formats> log = Git.log(repositoryPath);
             System.out.println(log.size());
             List<ReadXMLUsingSAX> versoes = new ArrayList<>(); //lista com as versões do projeto
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
-                
-                if(revision.getCommitHash().startsWith("fc36d40f"))
+
+                if (revision.getCommitHash().startsWith("fc36d40f")) {
                     System.out.println("Aqui");
-                
+                }
+
                 System.out.println("======================" + revision.getCommitHash() + "==================");
                 Git.clean(repositoryPath, true, 3);
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.checkout(revision.getCommitHash(), repositoryPath);
-                
+
                 System.out.println(new Date());
-                
+
                 CLIExecution extractMetrics = extractMetrics(repositoryPath);
 
-                if(extractMetrics.getError() != null && !extractMetrics.getError().isEmpty())
+                if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
                     System.out.println("Tem erro!!!!S");
-                
+                }
+
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
                 versoes.add(readXml);
-                
-                
+
                 try {
                     System.out.println(versoes.get(i).getProjectMetrics().getTloc().getValue());
-                    
+
                 } catch (Exception e) {
                     System.out.println("Pulando versão " + revision.getCommitHash());
-                }finally{
+                } finally {
                     i++;
                 }
-                
-                
+
                 System.out.println(new Date());
-                
+
             }
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
@@ -93,7 +93,12 @@ public class Jasome {
     }
 
     public static CLIExecution extractMetrics(String path) throws IOException {
-        return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
+        String os = System.getProperty("os.name");
+        if (os.startsWith("Windows")) {
+            return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat(path), ".");
+        }
+        else
+            return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
     }
 
 }
