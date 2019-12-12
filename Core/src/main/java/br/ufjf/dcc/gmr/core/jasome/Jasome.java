@@ -13,6 +13,7 @@ import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
@@ -31,19 +32,23 @@ public class Jasome {
     private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
             .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
-            .concat("jasome.bat");
+            .concat("jasome");
 
-    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument {
+    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound {
 
         try {
             int i =0;
-            String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
+            String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
             Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
             List<Formats> log = Git.log(repositoryPath); 
             System.out.println(log.size());
             List<ReadXMLUsingSAX> versoes = new ArrayList<>(); //lista com as versões do projeto
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
+                
+                if(revision.getCommitHash().startsWith("fc36d40f"))
+                    System.out.println("Aqui");
+                
                 System.out.println("======================" + revision.getCommitHash() + "==================");
                 Git.clean(repositoryPath, true, 3);
                 Git.reset(repositoryPath, true, false, false, null);
@@ -51,22 +56,32 @@ public class Jasome {
                 
                 System.out.println(new Date());
                 
-                String extractMetrics = extractMetrics(repositoryPath);
+                CLIExecution extractMetrics = extractMetrics(repositoryPath);
 
+                if(extractMetrics.getError() != null && !extractMetrics.getError().isEmpty())
+                    System.out.println("Tem erro!!!!S");
+                
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
-                readXml.fazerParsing(extractMetrics);
+                readXml.fazerParsing(extractMetrics.getOutputString());
                 versoes.add(readXml);
                 
-                System.out.println(versoes.get(i).getProjectMetrics().getTloc().getValue());
+                
+                try {
+                    System.out.println(versoes.get(i).getProjectMetrics().getTloc().getValue());
+                    
+                } catch (Exception e) {
+                    System.out.println("Pulando versão " + revision.getCommitHash());
+                }finally{
+                    i++;
+                }
+                
                 
                 System.out.println(new Date());
-                i++;
+                
             }
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
-        } catch (NullPointerException ex) {
-            System.out.println("Commit não possui arquivo Java");
         } catch (UnknownSwitch ex) {
             System.out.println("UnknownSwitch");
         } catch (RefusingToClean ex) {
@@ -77,16 +92,8 @@ public class Jasome {
 
     }
 
-    public static String extractMetrics(String path) throws IOException {
-
-        CLIExecution execute = CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
-        List<String> output = execute.getOutput();
-
-        StringBuilder sb = new StringBuilder();
-        for (String line : output) {
-            sb.append(line).append("\n");
-        }
-        return sb.toString();
+    public static CLIExecution extractMetrics(String path) throws IOException {
+        return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
     }
 
 }

@@ -84,5 +84,18 @@ public class CLIExecution {
                 
     }
     
+    public String getOutputString() {
+        
+        List<String> output = this.getOutput();
+
+        StringBuilder sb = new StringBuilder();
+        for (String line : output) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
+    
+    
+    
     
 }
