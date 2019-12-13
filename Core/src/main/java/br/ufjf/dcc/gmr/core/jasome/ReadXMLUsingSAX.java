@@ -37,7 +37,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private VersionMetrics versionMetrics;
     private ProjectMetrics projectMetrics = new ProjectMetrics();
 
-    public VersionMetrics getProjectMetrics() {
+    public VersionMetrics getVersionMetrics() {
         return versionMetrics;
     }
 

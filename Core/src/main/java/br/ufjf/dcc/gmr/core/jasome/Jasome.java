@@ -37,6 +37,7 @@ public class Jasome {
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound {
 
         try {
+            ProjectMetrics projectMetrics = new ProjectMetrics();
             int i = 0;
             String repositoryPath = "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\arquivoTeste\\Core\\src";
             Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
@@ -67,9 +68,10 @@ public class Jasome {
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
                 versoes.add(readXml);
-
+                projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
+                System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
                 try {
-                    System.out.println(versoes.get(i).getProjectMetrics().getTloc().getValue());
+                    System.out.println(versoes.get(i).getVersionMetrics().getTloc().getValue());
 
                 } catch (Exception e) {
                     System.out.println("Pulando versão " + revision.getCommitHash());
