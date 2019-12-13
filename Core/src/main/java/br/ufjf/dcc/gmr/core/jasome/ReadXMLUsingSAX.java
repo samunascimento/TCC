@@ -34,9 +34,10 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private MethodMetrics methodMetrics;
     private ClassMetrics classMetrics;
     private PackageMetrics packageMetrics;
-    private ProjectMetrics projectMetrics;
+    private VersionMetrics projectMetrics;
+    private Project projectEnd = new Project();
 
-    public ProjectMetrics getProjectMetrics() {
+    public VersionMetrics getProjectMetrics() {
         return projectMetrics;
     }
 
@@ -44,7 +45,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     public ReadXMLUsingSAX() {
         super();
-        projectMetrics = new ProjectMetrics();
+        projectMetrics = new VersionMetrics();
     }
 
     public void fazerParsing(String xml) {
@@ -90,8 +91,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         if (tagAtual.equals("Project")) {
             project = true;
-            projectMetrics = new ProjectMetrics();
-            projectMetrics.setSourceDir(atts.getValue(0));
+            projectMetrics = new VersionMetrics();
+            projectEnd.setSourceDir(atts.getValue(0));
         }
 
         else if (tagAtual.equals("Package")) {

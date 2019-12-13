@@ -38,7 +38,7 @@ public class Jasome {
 
         try {
             int i = 0;
-            String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
+            String repositoryPath = "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\arquivoTeste\\Core\\src";
             Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
             List<Formats> log = Git.log(repositoryPath);
             System.out.println(log.size());
@@ -95,7 +95,7 @@ public class Jasome {
     public static CLIExecution extractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat(path), ".");
+            return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
         }
         else
             return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
