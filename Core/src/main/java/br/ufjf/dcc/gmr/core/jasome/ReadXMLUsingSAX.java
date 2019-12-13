@@ -34,18 +34,18 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private MethodMetrics methodMetrics;
     private ClassMetrics classMetrics;
     private PackageMetrics packageMetrics;
-    private VersionMetrics projectMetrics;
-    private Project projectEnd = new Project();
+    private VersionMetrics versionMetrics;
+    private ProjectMetrics projectMetrics = new ProjectMetrics();
 
     public VersionMetrics getProjectMetrics() {
-        return projectMetrics;
+        return versionMetrics;
     }
 
     Metric metric = new Metric();
 
     public ReadXMLUsingSAX() {
         super();
-        projectMetrics = new VersionMetrics();
+        versionMetrics = new VersionMetrics();
     }
 
     public void fazerParsing(String xml) {
@@ -91,8 +91,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         if (tagAtual.equals("Project")) {
             project = true;
-            projectMetrics = new VersionMetrics();
-            projectEnd.setSourceDir(atts.getValue(0));
+            versionMetrics = new VersionMetrics();
+            projectMetrics.setSourceDir(atts.getValue(0));
         }
 
         else if (tagAtual.equals("Package")) {
@@ -129,7 +129,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             metric.setValue(value2);
 
             if (project && !pacckage && !clazz && !method) {
-                projectMetrics.setTloc(metric);
+                versionMetrics.setTloc(metric);
             }
             else if (project && pacckage && !clazz && !method) {
                 if (metric.getName().equals("A")) {
@@ -344,7 +344,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         }
 
         else if (tagAtual.equals("Package")) {
-            projectMetrics.getListPackageMetric().add(packageMetrics);
+            versionMetrics.getListPackageMetric().add(packageMetrics);
             pacckage = false;
         }
         else if (tagAtual.equals("Class")) {

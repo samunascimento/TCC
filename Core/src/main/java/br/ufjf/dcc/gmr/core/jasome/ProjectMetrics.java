@@ -9,7 +9,7 @@ package br.ufjf.dcc.gmr.core.jasome;
  *
  * @author antonio
  */
-public class Project {
+public class ProjectMetrics {
     private String sourceDir;
     
     public String getSourceDir() {
