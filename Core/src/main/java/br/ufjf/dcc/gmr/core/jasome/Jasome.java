@@ -66,7 +66,6 @@ public class Jasome {
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
                 projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
-                System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
                 try {
                     System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
                 } catch (Exception e) {
