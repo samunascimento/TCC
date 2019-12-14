@@ -39,11 +39,9 @@ public class Jasome {
         try {
             ProjectMetrics projectMetrics = new ProjectMetrics();
             int i = 0;
-            String repositoryPath = "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\arquivoTeste\\Core\\src";
-            Git.checkout("master", repositoryPath); //checkout para voltar para a versão master
-            List<Formats> log = Git.log(repositoryPath);
+            String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
+            List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
-            List<ReadXMLUsingSAX> versoes = new ArrayList<>(); //lista com as versões do projeto
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
 
@@ -67,12 +65,10 @@ public class Jasome {
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
-                versoes.add(readXml);
                 projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
                 System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
                 try {
-                    System.out.println(versoes.get(i).getVersionMetrics().getTloc().getValue());
-
+                    System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
                 } catch (Exception e) {
                     System.out.println("Pulando versão " + revision.getCommitHash());
                 } finally {
