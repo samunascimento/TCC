@@ -35,11 +35,11 @@ public class Jasome {
             .concat("jasome");
 
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound {
-
+        
+        ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
-            ProjectMetrics projectMetrics = new ProjectMetrics();
             int i = 0;
-            String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
+            String repositoryPath = "C:\\\\Users\\\\anton\\\\Desktop\\\\rpg-combate";
             List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
@@ -68,9 +68,25 @@ public class Jasome {
                 projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
                 try {
                     System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
+                    List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
+
+                    for (int j = 0; j < listPackage.size(); j++) {
+                        if (projectMetrics.getListPackageMetrics().size() == 0) {
+                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
+                        } else {
+                            for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
+                                if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
+                                    j++;
+                                }
+                            }
+                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
+                        }
+                    }
+                    
                 } catch (Exception e) {
                     System.out.println("Pulando versão " + revision.getCommitHash());
                 } finally {
+                    System.out.println("Commit numero :" + i);
                     i++;
                 }
 
@@ -87,6 +103,8 @@ public class Jasome {
             System.out.println(ex.getMessage());
         }
 
+        projectMetrics.getNamePackageMetrics();
+        List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
     public static CLIExecution extractMetrics(String path) throws IOException {
