@@ -323,7 +323,7 @@ public class Git {
         String command = "git clone " + url;
         if (name != null) {
             command = command.concat(" ").concat(name);
-        }
+        } 
 
         if (url == null || url.isEmpty()) {
             throw new UrlNotFound();

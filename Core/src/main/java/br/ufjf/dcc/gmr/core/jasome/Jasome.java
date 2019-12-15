@@ -15,6 +15,7 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +35,19 @@ public class Jasome {
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
             .concat("jasome");
 
-    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound {
+    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound, UrlNotFound {
         
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
+            String repositoryUrl = null; //por enquanto apenas para repositorios publicos
             String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
+            String repositoryName=null;  
+            if(repositoryUrl!=null){
+               Git.clone(repositoryUrl,repositoryPath,repositoryName);
+               repositoryPath=repositoryPath.concat("\\").concat(repositoryName);
+            }
+            System.out.println(repositoryPath);
             List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
