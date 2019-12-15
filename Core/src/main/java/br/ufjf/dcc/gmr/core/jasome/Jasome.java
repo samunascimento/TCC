@@ -41,7 +41,7 @@ public class Jasome {
         try {
             int i = 0;
             String repositoryUrl = null; //por enquanto apenas para repositorios publicos
-            String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
+            String repositoryPath = "C:\\Users\\anton\\Desktop\\batalha-naval-java";
             String repositoryName=null;  
             if(repositoryUrl!=null){
                Git.clone(repositoryUrl,repositoryPath,repositoryName);
@@ -91,6 +91,24 @@ public class Jasome {
                             projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
                         }
                     }
+                     //Filtrabdo por classe
+                    //Irei refator tudo isso depois
+                    for(int j=0;j<listPackage.size();j++){
+                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
+                            if(projectMetrics.getListClassMetrics().size() == 0){
+                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                                System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                            }else{
+                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
+                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
+                                        y++;
+                                    }
+                                }
+                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                                System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                            }
+                        }
+                    }
                     
                 } catch (Exception e) {
                     System.out.println("for está lançando exceção(consertar)");
@@ -113,7 +131,8 @@ public class Jasome {
         }
 
         projectMetrics.getNamePackageMetrics();
-        List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
+        projectMetrics.getNameClassMetrics();
+        //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
     public static CLIExecution extractMetrics(String path) throws IOException {
