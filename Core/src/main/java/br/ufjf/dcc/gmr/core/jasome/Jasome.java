@@ -76,43 +76,49 @@ public class Jasome {
                     if(projectMetrics.getListVersionMetrics().get(i).getError()){
                         System.out.println("temos um erro nesta versão");
                     }
-                    System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());                 
+                    
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-
-                    for (int j = 0; j < listPackage.size(); j++) {
+                    //filtrando pacotes
+                    boolean contem= false;
+                    for (int j = 0; j < listPackage.size(); j++){
                         if (projectMetrics.getListPackageMetrics().size() == 0) {
                             projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
-                        } else {
+                        }else {
                             for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
                                 if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
-                                    j++;
+                                    contem = true;
                                 }
                             }
-                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
+                            if(contem == false){
+                                projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
+                            }
                         }
                     }
+                    //fim
                      //Filtrabdo por classe
                     //Irei refator tudo isso depois
-                    for(int j=0;j<listPackage.size();j++){
-                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
-                            if(projectMetrics.getListClassMetrics().size() == 0){
-                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                                System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                            }else{
-                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
-                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
-                                        y++;
-                                    }
-                                }
-                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                                System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                            }
-                        }
-                    }
+//                    for(int j=0;j<listPackage.size();j++){
+//                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
+//                            if(projectMetrics.getListClassMetrics().size() == 0){
+//                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+//                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+//                            }else{
+//                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
+//                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
+//                                        y++;
+//                                    }
+//                                }
+//                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+//                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+//                            }
+//                        }
+//                    }
+                    //fim
                     
-                } catch (Exception e) {
-                    System.out.println("for está lançando exceção(consertar)");
-                } finally {
+                    
+                } //catch (Exception e) {
+                    //System.out.println("for está lançando exceção(consertar)");
+                 finally {
                     System.out.println("Commit numero :" + i);
                     i++;
                 }
@@ -131,7 +137,7 @@ public class Jasome {
         }
 
         projectMetrics.getNamePackageMetrics();
-        projectMetrics.getNameClassMetrics();
+        //projectMetrics.getNameClassMetrics();
         //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
