@@ -13,9 +13,35 @@ import java.util.List;
  * @author antonio
  */
 public class ProjectMetrics {
+
     private List<VersionMetrics> listVersionMetrics = new ArrayList<>();
+
     private String sourceDir;
+
+    private List<String> listPackageMetrics = new ArrayList<>();
+    private List<String> listClassMetrics  = new ArrayList<>();
+    private List<String> listMethodMetrics  = new ArrayList<>();
     
+    public void getNamePackageMetrics(){
+        System.out.println("LIST OF PACKAGES");
+        for(int i=0;i<listPackageMetrics.size();i++){
+            String namePackage = listPackageMetrics.get(i);
+            System.out.println("["+i+"]"+namePackage);
+        }
+    }
+    
+    public List<PackageMetrics> getMetricPackage(String namePackage){
+        List<PackageMetrics> listPackageMetrics = new ArrayList<>();
+        for(int i=0;i<listVersionMetrics.size();i++){
+            for(int j=0;j<listVersionMetrics.get(i).getListPackageMetric().size();j++){
+                if(listVersionMetrics.get(i).getListPackageMetric().get(j).getName().equals(namePackage)){
+                    listPackageMetrics.add(listVersionMetrics.get(i).getListPackageMetric().get(j));
+                }
+            }
+        }
+        return listPackageMetrics;
+    }
+
     public String getSourceDir() {
         return sourceDir;
     }
@@ -34,4 +60,23 @@ public class ProjectMetrics {
     public void setListVersionMetrics(List<VersionMetrics> listVersionMetrics) {
         this.listVersionMetrics = listVersionMetrics;
     }
+
+    public List<String> getListPackageMetrics() {
+        return listPackageMetrics;
+    }
+
+    public void setListPackageMetrics(List<String> listPackageMetrics) {
+        this.listPackageMetrics = listPackageMetrics;
+    }
+
+    public List<String> getListClassMetrics() {
+        return listClassMetrics;
+    }
+
+    public void setListClassMetrics(List<String> listClassMetrics) {
+        this.listClassMetrics = listClassMetrics;
+    }
+    
+    
+
 }
