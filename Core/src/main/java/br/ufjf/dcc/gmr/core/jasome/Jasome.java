@@ -79,17 +79,17 @@ public class Jasome {
                     
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
                     //filtrando pacotes
-                    boolean contem= false;
+                    boolean contemPackage= false;
                     for (int j = 0; j < listPackage.size(); j++){
                         if (projectMetrics.getListPackageMetrics().size() == 0) {
                             projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
                         }else {
                             for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
                                 if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
-                                    contem = true;
+                                    contemPackage = true;
                                 }
                             }
-                            if(contem == false){
+                            if(contemPackage == false){
                                 projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
                             }
                         }
@@ -97,22 +97,25 @@ public class Jasome {
                     //fim
                      //Filtrabdo por classe
                     //Irei refator tudo isso depois
-//                    for(int j=0;j<listPackage.size();j++){
-//                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
-//                            if(projectMetrics.getListClassMetrics().size() == 0){
-//                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-//                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-//                            }else{
-//                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
-//                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
-//                                        y++;
-//                                    }
-//                                }
-//                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-//                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-//                            }
-//                        }
-//                    }
+                    boolean contemClass = false;
+                    for(int j=0;j<listPackage.size();j++){
+                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
+                            if(projectMetrics.getListClassMetrics().size() == 0){
+                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                            }else{
+                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
+                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
+                                        contemClass = true;
+                                    }
+                                }
+                                if(contemClass == false){
+                                    projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                                }
+                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                            }
+                        }
+                    }
                     //fim
                     
                     
@@ -137,7 +140,7 @@ public class Jasome {
         }
 
         projectMetrics.getNamePackageMetrics();
-        //projectMetrics.getNameClassMetrics();
+        projectMetrics.getNameClassMetrics();
         //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
