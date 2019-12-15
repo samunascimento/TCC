@@ -16,6 +16,8 @@ public class VersionMetrics {
     private Metric tloc;
     
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
+    
+    private boolean error = false;
 
     public Metric getTloc() {
         return tloc;
@@ -31,5 +33,12 @@ public class VersionMetrics {
 
     public void setListPackageMetric(List<PackageMetrics> listPackageMetric) {
         this.listPackageMetric = listPackageMetric;
+    }
+    
+    public void setError(boolean error){
+        this.error=error;
+    }
+    public boolean getError(){
+        return this.error;
     }
 }

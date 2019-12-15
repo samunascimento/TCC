@@ -39,7 +39,7 @@ public class Jasome {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
-            String repositoryPath = "C:\\\\Users\\\\anton\\\\Desktop\\\\rpg-combate";
+            String repositoryPath = "C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src";
             List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
@@ -57,17 +57,18 @@ public class Jasome {
                 System.out.println(new Date());
 
                 CLIExecution extractMetrics = extractMetrics(repositoryPath);
-
-                if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
-                    System.out.println("Tem erro!!!!S");
-                }
-
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
                 projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
+                if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
+                    projectMetrics.getListVersionMetrics().get(i).setError(true);
+                }
                 try {
-                    System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
+                    if(projectMetrics.getListVersionMetrics().get(i).getError()){
+                        System.out.println("temos um erro nesta versão");
+                    }
+                    System.out.println(projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());                 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
 
                     for (int j = 0; j < listPackage.size(); j++) {
@@ -79,12 +80,12 @@ public class Jasome {
                                     j++;
                                 }
                             }
-                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
+                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
                         }
                     }
                     
                 } catch (Exception e) {
-                    System.out.println("Pulando versão " + revision.getCommitHash());
+                    System.out.println("for está lançando exceção(consertar)");
                 } finally {
                     System.out.println("Commit numero :" + i);
                     i++;
