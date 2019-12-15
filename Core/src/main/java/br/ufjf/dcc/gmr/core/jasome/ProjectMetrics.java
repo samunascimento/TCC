@@ -42,6 +42,28 @@ public class ProjectMetrics {
         return listPackageMetrics;
     }
 
+    public void getNameClassMetrics(){
+        System.out.println("LIST OF CLASS");
+        for(int i=0;i<listClassMetrics.size();i++){
+            String nameClass = listClassMetrics.get(i);
+            System.out.println("["+i+"]"+nameClass);
+        }
+    }
+    
+    public List<ClassMetrics> getMetricClass(String nameClass){
+        List<ClassMetrics> listClassMetrics = new ArrayList<>();
+        for(int i=0;i<listVersionMetrics.size();i++){
+            for(int j=0;j<listVersionMetrics.get(i).getListPackageMetric().size();j++){
+                for(int w=0;w<listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().size();w++){
+                    if(listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().get(w).getName().equals(nameClass)){
+                        listClassMetrics.add(listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().get(w));
+                    }
+                }
+            }
+        }
+        return listClassMetrics;
+    }
+    
     public String getSourceDir() {
         return sourceDir;
     }
