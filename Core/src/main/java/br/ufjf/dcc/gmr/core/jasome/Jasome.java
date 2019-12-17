@@ -40,12 +40,18 @@ public class Jasome {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
-            String repositoryUrl = null; //por enquanto apenas para repositorios publicos
-            String repositoryPath = "C:\\Users\\anton\\Desktop\\batalha-naval-java";
-            String repositoryName=null;  
-            if(repositoryUrl!=null){
+            String repositoryUrl =null; //url do repositório remoto
+            String repositoryPath = "C:\\Users\\guilh\\Desktop";
+            String repositoryName=null;  //nome da pasta a ser criada e não pode ter espaço no nome
+            String user = null; //usuario github
+            String password = null; //senha github
+            if(repositoryUrl!=null && repositoryName!=null && user==null && password==null ){
                Git.clone(repositoryUrl,repositoryPath,repositoryName);
                repositoryPath=repositoryPath.concat("\\").concat(repositoryName);
+            }
+            else if(repositoryUrl!=null && repositoryName!=null && user!=null && password!=null){
+                Git.clone(repositoryUrl,repositoryPath,repositoryName, user, password);
+                repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             }
             System.out.println(repositoryPath);
             List<Formats> log = Git.logAll(repositoryPath);
