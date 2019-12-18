@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
@@ -41,7 +36,7 @@ public class Jasome {
         try {
             int i = 0;
             String repositoryUrl =null; //url do repositório remoto
-            String repositoryPath = "C:\\Users\\guilh\\Desktop";
+            String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
             String repositoryName=null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github

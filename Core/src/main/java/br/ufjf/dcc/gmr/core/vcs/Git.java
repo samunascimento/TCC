@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.vcs;
 
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
@@ -30,11 +25,9 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
-import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
-import br.ufjf.dcc.gmr.core.vcs.types.Unmerged;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,9 +44,6 @@ import java.util.logging.Logger;
  */
 public class Git {
 
-    /*--------------------------------------------------------------------------
-     * Inicio comandos do Antônio 
-    --------------------------------------------------------------------------*/
     /**
      * @param repositoryString
      * @param hashCommit
@@ -195,13 +185,6 @@ public class Git {
         return Git.log(repositoryPath, true, true);
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Antônio 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Inicio comandos do Beatriz 
-    --------------------------------------------------------------------------*/
-    /// STATUS GIT
     /**
      * @param repositoryPath
      * @return
@@ -298,16 +281,6 @@ public class Git {
         return u;
     }
 
-    ///GIT CLONE
-    /**
-     * description
-     *
-     * @param url
-     * @param directory
-     * @param name
-     * @return
-     * @throws RepositoryNotFound
-     */
     /**
      * description
      *
@@ -358,13 +331,6 @@ public class Git {
         return clone(command, directory, name);
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Beatriz 
-    --------------------------------------------------------------------------*/
-
- /*--------------------------------------------------------------------------
-     * Inicio comandos do Felippe 
-    --------------------------------------------------------------------------*/
     /**
      * Description TODO: Test implementation
      *
@@ -377,10 +343,6 @@ public class Git {
      * @throws LocalRepositoryNotAGitRepository
      * @throws OptionNotExist
      * @throws IOException
-     */
-    /**
-     * @throws IOException
-     * @TODO:Please improve the options
      */
     public static boolean pull(String repositoryPath, String remoteBranch, Boolean quiet) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
 
@@ -472,12 +434,6 @@ public class Git {
         return true;
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Felippe 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Inicio comandos do Guilherme 
-    --------------------------------------------------------------------------*/
     /**
      *
      * @param repositoryPath repository
@@ -609,13 +565,6 @@ public class Git {
         return lista;
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Guilherme 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Inicio comandos do Ian 
-    --------------------------------------------------------------------------*/
-    ///clean
     /**
      * @param repositoryPath - String used to recive the repository path.
      * @param force - If the Git configuration variable clean.requireForce is
@@ -663,7 +612,6 @@ public class Git {
         return true;
     }
 
-///mergeBase
     /**
      * Private method used by the other merge methods to execute a merge.
      *
@@ -703,7 +651,6 @@ public class Git {
         return true;
     }
 
-    ///mergeBranch
     /**
      * This method merge changes from one branch into the current branch.
      *
@@ -723,7 +670,6 @@ public class Git {
         return mergeBase(repositoryPath, command);
     }
 
-    ///mergeBranch
     /**
      * This method merge changes from one branch into another.
      *
@@ -744,7 +690,6 @@ public class Git {
         return mergeBase(repositoryPath, command);
     }
 
-    ///mergeAbort
     /**
      * This method abort a merge that resulted in conflicts.
      *
@@ -761,7 +706,6 @@ public class Git {
         return mergeBase(repositoryPath, "--abort");
     }
 
-    ///mergeContinue
     /**
      * This method continue a merge that resulted in conflicts.
      *
@@ -778,12 +722,6 @@ public class Git {
         return mergeBase(repositoryPath, "--continue");
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Ian 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Inicio comandos do João 
-    --------------------------------------------------------------------------*/
     /**
      * Create a new branch and switch to it if requested.
      *
@@ -1030,12 +968,6 @@ public class Git {
         return cliE.getOutput().toString().replace("[", "").replace("]", "");
     }
 
-    /*--------------------------------------------------------------------------
-     * Fim comandos do João 
-    --------------------------------------------------------------------------*/
- /*--------------------------------------------------------------------------
-     * Inicio comandos do Luan
-    --------------------------------------------------------------------------*/
     /**
      *
      * This method executes the git command 'reset'. This command can be called
@@ -1174,7 +1106,4 @@ public class Git {
 
         return result;
     }
-    /*--------------------------------------------------------------------------
-     * Fim comandos do Luan
-    --------------------------------------------------------------------------*/
 }

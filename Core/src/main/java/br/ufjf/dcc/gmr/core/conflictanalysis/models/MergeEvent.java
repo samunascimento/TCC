@@ -3,7 +3,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ufjf.dcc.gmr.core.vcs.Git;
 
 public class MergeEvent {
 

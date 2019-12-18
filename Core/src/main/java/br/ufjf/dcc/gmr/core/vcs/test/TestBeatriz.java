@@ -3,10 +3,7 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
-import br.ufjf.dcc.gmr.core.vcs.types.Files;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
