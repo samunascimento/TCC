@@ -108,7 +108,6 @@ public class Git {
         Formats model = null;
 
         execution = CLIExecute.execute(command, repositoryPath);
-        execution = CLIExecute.execute(command, repositoryPath);
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
