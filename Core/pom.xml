@@ -5,6 +5,53 @@
     <artifactId>Core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <antlr4.visitor>true</antlr4.visitor>
+        <antlr4.listener>true</antlr4.listener>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.7.1</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.0</version>
+                <configuration>
+                    <sourceDirectory>${basedir}//src/main/java/br/ufjf/dcc/gmr/core/grammars/java</sourceDirectory>
+                    <outputDirectory>${basedir}//src/main/java/br/ufjf/dcc/gmr/core/grammars/java</outputDirectory>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>br.ufjf.dcc.gmr.core.grammars.java</argument>
+                    </arguments>
+                    <includes>
+                        <include>JavaLexer.g4</include>
+                        <include>JavaParser.g4</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>   
+    </build>
     <!--dependencies>
         <dependency>
             <groupId>br.uff.ic.gems</groupId>
@@ -18,9 +65,5 @@
             <version>4.12</version>
         </dependency>
     </dependencies-->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+
 </project>
