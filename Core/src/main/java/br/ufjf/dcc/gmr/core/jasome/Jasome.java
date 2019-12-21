@@ -36,7 +36,7 @@ public class Jasome {
         try {
             int i = 0;
             String repositoryUrl = null; //url do repositório remoto
-            String repositoryPath = "C:\\Users\\guilh\\Desktop\\Projetometricas";
+            String repositoryPath = "C:\\Users\\anton\\Desktop\\projeto-exemplo";
             String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
@@ -117,6 +117,30 @@ public class Jasome {
                         }
                     }
                     //fim
+                    
+                    //Filtrando por método
+                    boolean contemMetodo = false;
+                    for(int j=0;j<listPackage.size();j++){
+                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
+                            for(int w=0;w<listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().size();w++){
+                                if(projectMetrics.getListMethodMetrics().size() == 0){
+                                    projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
+                                }else{
+                                    for(int x=0;x<projectMetrics.getListMethodMetrics().size();x++){
+                                        if(projectMetrics.getListMethodMetrics().get(x).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()))){
+                                            contemMetodo = true;
+                                        }
+                                    }
+                                    if(contemMetodo == false){
+                                        projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    
+                    //fim
 
                 } //catch (Exception e) {
                 //System.out.println("for está lançando exceção(consertar)");
@@ -140,8 +164,9 @@ public class Jasome {
             System.out.println(ex.getMessage());
         }
 
-        projectMetrics.getNamePackageMetrics();
-        projectMetrics.getNameClassMetrics();
+        //projectMetrics.getNamePackageMetrics();
+        //projectMetrics.getNameClassMetrics();
+        projectMetrics.getNameMethodMetrics();
         //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
