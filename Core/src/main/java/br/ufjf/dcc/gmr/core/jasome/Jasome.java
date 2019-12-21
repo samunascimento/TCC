@@ -35,9 +35,9 @@ public class Jasome {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
-            String repositoryUrl = "https://github.com/IanCouto/ControleDeEstoque.git"; //url do repositório remoto
+            String repositoryUrl = null; //url do repositório remoto
             String repositoryPath = "C:\\Users\\guilh\\Desktop\\Projetometricas";
-            String repositoryName = "fsdfsdsdfsdf";  //nome da pasta a ser criada e não pode ter espaço no nome
+            String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
             if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user == null && password == null) {
