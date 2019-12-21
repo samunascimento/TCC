@@ -48,7 +48,7 @@ public class Jasome {
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             }
             System.out.println(repositoryPath);
-            List<Formats> log = Git.log(repositoryPath);
+            List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
