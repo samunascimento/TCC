@@ -31,25 +31,24 @@ public class Jasome {
             .concat("jasome");
 
     public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound, UrlNotFound {
-        
+
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
-            String repositoryUrl =null; //url do repositório remoto
-            String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
-            String repositoryName=null;  //nome da pasta a ser criada e não pode ter espaço no nome
+            String repositoryUrl = "https://github.com/IanCouto/ControleDeEstoque.git"; //url do repositório remoto
+            String repositoryPath = "C:\\Users\\guilh\\Desktop\\Projetometricas";
+            String repositoryName = "fsdfsdsdfsdf";  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
-            if(repositoryUrl!=null && repositoryName!=null && user==null && password==null ){
-               Git.clone(repositoryUrl,repositoryPath,repositoryName);
-               repositoryPath=repositoryPath.concat("\\").concat(repositoryName);
-            }
-            else if(repositoryUrl!=null && repositoryName!=null && user!=null && password!=null){
-                Git.clone(repositoryUrl,repositoryPath,repositoryName, user, password);
+            if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user == null && password == null) {
+                Git.clone(repositoryUrl, repositoryPath, repositoryName);
+                repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
+            } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
+                Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             }
             System.out.println(repositoryPath);
-            List<Formats> log = Git.logAll(repositoryPath);
+            List<Formats> log = Git.log(repositoryPath);
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
@@ -74,43 +73,43 @@ public class Jasome {
                     projectMetrics.getListVersionMetrics().get(i).setError(true);
                 }
                 try {
-                    if(projectMetrics.getListVersionMetrics().get(i).getError()){
-                        System.out.println("temos um erro nesta versão");
-                    }
-                    
+                    //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
+                      //  System.out.println("temos um erro nesta versão");
+                    //}
+
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
                     //filtrando pacotes
-                    boolean contemPackage= false;
-                    for (int j = 0; j < listPackage.size(); j++){
+                    boolean contemPackage = false;
+                    for (int j = 0; j < listPackage.size(); j++) {
                         if (projectMetrics.getListPackageMetrics().size() == 0) {
                             projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
-                        }else {
+                        } else {
                             for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
                                 if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
                                     contemPackage = true;
                                 }
                             }
-                            if(contemPackage == false){
+                            if (contemPackage == false) {
                                 projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
                             }
                         }
                     }
                     //fim
-                     //Filtrabdo por classe
+                    //Filtrabdo por classe
                     //Irei refator tudo isso depois
                     boolean contemClass = false;
-                    for(int j=0;j<listPackage.size();j++){
-                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
-                            if(projectMetrics.getListClassMetrics().size() == 0){
+                    for (int j = 0; j < listPackage.size(); j++) {
+                        for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
+                            if (projectMetrics.getListClassMetrics().size() == 0) {
                                 projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
                                 //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                            }else{
-                                for(int w=0;w<projectMetrics.getListClassMetrics().size();w++){
-                                    if(projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))){
+                            } else {
+                                for (int w = 0; w < projectMetrics.getListClassMetrics().size(); w++) {
+                                    if (projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))) {
                                         contemClass = true;
                                     }
                                 }
-                                if(contemClass == false){
+                                if (contemClass == false) {
                                     projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
                                 }
                                 //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
@@ -118,11 +117,10 @@ public class Jasome {
                         }
                     }
                     //fim
-                    
-                    
+
                 } //catch (Exception e) {
-                    //System.out.println("for está lançando exceção(consertar)");
-                 finally {
+                //System.out.println("for está lançando exceção(consertar)");
+                finally {
                     System.out.println("Commit numero :" + i);
                     i++;
                 }
@@ -130,6 +128,8 @@ public class Jasome {
                 System.out.println(new Date());
 
             }
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("Não é um repositório válido");
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
         } catch (UnknownSwitch ex) {
@@ -149,9 +149,9 @@ public class Jasome {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
-        }
-        else
+        } else {
             return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
+        }
     }
 
 }
