@@ -73,9 +73,9 @@ public class Jasome {
                     projectMetrics.getListVersionMetrics().get(i).setError(true);
                 }
                 try {
-                    //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
-                      //  System.out.println("temos um erro nesta versão");
-                    //}
+                    if (projectMetrics.getListVersionMetrics().get(i).getError()) {
+                        System.out.println("temos um erro nesta versão");
+                    }
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
                     //filtrando pacotes
