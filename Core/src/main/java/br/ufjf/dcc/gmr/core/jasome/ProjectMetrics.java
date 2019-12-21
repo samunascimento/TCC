@@ -59,6 +59,31 @@ public class ProjectMetrics {
         return listClassMetrics;
     }
     
+    public List<MethodMetrics> getMetricMethod(String nameMethod){
+        List<MethodMetrics> listMethodMetrics = new ArrayList<>();
+        for(int i=0;i<listVersionMetrics.size();i++){
+            for(int j=0;j<listVersionMetrics.get(i).getListPackageMetric().size();j++){
+                for(int w=0;w<listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().size();w++){
+                    for(int y=0;y<listVersionMetrics.get(i).getListPackageMetric().get(j).listClassMetrics.get(w).getListMethodsMetrics().size();y++){
+                        if(listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().get(w).getListMethodsMetrics().get(y).getName().equals(nameMethod)){
+                            listMethodMetrics.add(listVersionMetrics.get(i).getListPackageMetric().get(j).getListClassMetrics().get(w).getListMethodsMetrics().get(y));
+                        }
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    public void getNameMethodMetrics(){
+        System.out.println("LIST OF METHOD");
+        for(int i=0;i<listPackageMetrics.size();i++){
+            String nameMethod = listMethodMetrics.get(i);
+            System.out.println("["+i+"]"+nameMethod);
+        }
+    }
+    
     public String getSourceDir() {
         return sourceDir;
     }
@@ -93,7 +118,13 @@ public class ProjectMetrics {
     public void setListClassMetrics(List<String> listClassMetrics) {
         this.listClassMetrics = listClassMetrics;
     }
-    
-    
 
+    public List<String> getListMethodMetrics() {
+        return listMethodMetrics;
+    }
+
+    public void setListMethodMetrics(List<String> listMethodMetrics) {
+        this.listMethodMetrics = listMethodMetrics;
+    }
+    
 }
