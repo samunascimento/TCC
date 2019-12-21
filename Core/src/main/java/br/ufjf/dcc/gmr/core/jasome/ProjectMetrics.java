@@ -73,7 +73,7 @@ public class ProjectMetrics {
             }
         }
         
-        return null;
+        return listMethodMetrics;
     }
     
     public void getNameMethodMetrics(){
