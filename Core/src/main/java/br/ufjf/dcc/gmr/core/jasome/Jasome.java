@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -36,7 +37,7 @@ public class Jasome {
         try {
             int i = 0;
             String repositoryUrl = null; //url do repositório remoto
-            String repositoryPath = "C:\\Users\\anton\\Desktop\\projeto-exemplo";
+            String repositoryPath = "C:\\Users\\anton\\Desktop\\batalha-naval-java";
             String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
@@ -164,9 +165,53 @@ public class Jasome {
             System.out.println(ex.getMessage());
         }
 
+        
+        Scanner ler = new Scanner(System.in);
+        String filterMetric;
+        while (true) {
+            System.out.println("PACKAGE|CLASS|METHOD");
+            filterMetric = ler.next();
+            switch (filterMetric) {
+                case "PACKAGE":
+                    projectMetrics.getNamePackageMetrics();
+                    String namePackage;
+                    namePackage = ler.next();
+                    List<PackageMetrics> listPack = new ArrayList<>();
+                    listPack = projectMetrics.getMetricPackage(namePackage);
+                    for(int i=0;i<listPack.size();i++){
+                        System.out.println(listPack.get(i));
+                    }
+                    break;
+                case "CLASS":
+                    projectMetrics.getNameClassMetrics();
+                    String nameClass;
+                    nameClass = ler.next();
+                    List<ClassMetrics> listClass = new ArrayList<>();
+                    listClass = projectMetrics.getMetricClass(nameClass);
+                    for(int i=0;i<listClass.size();i++){
+                        System.out.println(listClass.get(i));
+                    }
+                    break;
+                case "METHOD":
+                    projectMetrics.getNameMethodMetrics();
+                    String nameMethod;
+                    nameMethod = ler.next();
+                    List<MethodMetrics> listMethod = new ArrayList<>();
+                    listMethod = projectMetrics.getMetricMethod(nameMethod);
+                    for(int i=0;i<listMethod.size();i++){
+                        System.out.println(listMethod.get(i));
+                    }
+                    break;
+                default:
+                    System.out.println("teste");
+
+            }
+        }
+
+        
         //projectMetrics.getNamePackageMetrics();
         //projectMetrics.getNameClassMetrics();
-        projectMetrics.getNameMethodMetrics();
+        //projectMetrics.getNameMethodMetrics();
         //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
