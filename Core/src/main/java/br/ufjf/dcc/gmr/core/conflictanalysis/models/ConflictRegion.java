@@ -14,7 +14,7 @@ public class ConflictRegion {
     private int separatorLine;
     private int endLine;
 
-    public ConflictRegion() {
+    protected ConflictRegion() {
         this.afterContext = new ArrayList<>();
         this.beforeContext = new ArrayList<>();
         this.v1 = new ArrayList<>();
@@ -25,7 +25,7 @@ public class ConflictRegion {
         return v1;
     }
 
-    public void setV1(List<String> v1) {
+    protected void setV1(List<String> v1) {
         this.v1 = v1;
     }
 
@@ -33,7 +33,7 @@ public class ConflictRegion {
         return v2;
     }
 
-    public void setV2(List<String> v2) {
+    protected void setV2(List<String> v2) {
         this.v2 = v2;
     }
 
@@ -41,7 +41,7 @@ public class ConflictRegion {
         return file;
     }
 
-    public void setFile(String file) {
+    protected void setFile(String file) {
         this.file = file;
     }
 
@@ -49,7 +49,7 @@ public class ConflictRegion {
         return beginLine;
     }
 
-    public void setBeginLine(int beginLine) {
+    protected void setBeginLine(int beginLine) {
         this.beginLine = beginLine;
     }
 
@@ -57,7 +57,7 @@ public class ConflictRegion {
         return separatorLine;
     }
 
-    public void setSeparatorLine(int separatorLine) {
+    protected void setSeparatorLine(int separatorLine) {
         this.separatorLine = separatorLine;
     }
 
@@ -65,7 +65,7 @@ public class ConflictRegion {
         return endLine;
     }
 
-    public void setEndLine(int endLine) {
+    protected void setEndLine(int endLine) {
         this.endLine = endLine;
     }
 
@@ -73,7 +73,7 @@ public class ConflictRegion {
         return afterContext;
     }
 
-    public void setAfterContext(List<String> afterContext) {
+    protected void setAfterContext(List<String> afterContext) {
         this.afterContext = afterContext;
     }
 
@@ -81,7 +81,7 @@ public class ConflictRegion {
         return beforeContext;
     }
 
-    public void setBeforeContext(List<String> beforeContext) {
+    protected void setBeforeContext(List<String> beforeContext) {
         this.beforeContext = beforeContext;
     }
 

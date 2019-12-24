@@ -12,7 +12,7 @@ public class MergeEvent {
     private String commonAncestorOfParents;
     private boolean isConflict = false;
 
-    public MergeEvent() {
+    protected MergeEvent() {
         this.hash = "";
         this.commonAncestorOfParents = "";
         this.parents = new ArrayList<>();
@@ -23,7 +23,7 @@ public class MergeEvent {
         return hash;
     }
 
-    public void setHash(String hash) {
+    protected void setHash(String hash) {
         this.hash = hash;
     }
 
@@ -31,7 +31,7 @@ public class MergeEvent {
         return parents;
     }
 
-    public void addParents(String parent) {
+    protected void addParents(String parent) {
         parents.add(parent);
     }
 
@@ -39,11 +39,11 @@ public class MergeEvent {
         return conflictFiles;
     }
 
-    public void setConflictFiles(List<ConflictFile> conflictFiles) {
+    protected void setConflictFiles(List<ConflictFile> conflictFiles) {
         this.conflictFiles = conflictFiles;
     }
 
-    public void addConflictFiles(ConflictFile conflictFiles) {
+    protected void addConflictFiles(ConflictFile conflictFiles) {
         this.conflictFiles.add(conflictFiles);
     }
 
@@ -102,7 +102,7 @@ public class MergeEvent {
         return commonAncestorOfParents;
     }
 
-    public void setCommonAncestorOfParents(String commonAncestorOfParents) {
+    protected void setCommonAncestorOfParents(String commonAncestorOfParents) {
         this.commonAncestorOfParents = commonAncestorOfParents;
     }
 
@@ -110,7 +110,7 @@ public class MergeEvent {
         return isConflict;
     }
 
-    public void setConflict(boolean isConflict) {
+    protected void setConflict(boolean isConflict) {
         this.isConflict = isConflict;
     }
 

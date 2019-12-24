@@ -37,11 +37,11 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}//src/main/java/br/ufjf/dcc/gmr/core/grammars/java</sourceDirectory>
-                    <outputDirectory>${basedir}//src/main/java/br/ufjf/dcc/gmr/core/grammars/java</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/java</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/java</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.grammars.java</argument>
+                        <argument>br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java</argument>
                     </arguments>
                     <includes>
                         <include>JavaLexer.g4</include>

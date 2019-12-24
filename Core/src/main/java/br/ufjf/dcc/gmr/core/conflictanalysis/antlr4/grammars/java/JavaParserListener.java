@@ -1,5 +1,5 @@
 // Generated from JavaParser.g4 by ANTLR 4.7.1
-package br.ufjf.dcc.gmr.core.grammars.java;
+package br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

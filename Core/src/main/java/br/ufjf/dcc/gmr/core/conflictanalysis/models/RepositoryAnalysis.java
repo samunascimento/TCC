@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis;
+package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictRegion;
@@ -26,7 +26,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MergesTest {
+public interface RepositoryAnalysis {
 
     public static List<String> getFileContent(String folderPath) throws IOException {
         List<String> content = new ArrayList<>();
@@ -85,13 +85,13 @@ public class MergesTest {
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.clean(repositoryPath, true, 0);
             } catch (InvalidDocument ex) {
-                Logger.getLogger(MergesTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownSwitch ex) {
-                Logger.getLogger(MergesTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RefusingToClean ex) {
-                Logger.getLogger(MergesTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IsOutsideRepository ex) {
-                Logger.getLogger(MergesTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             }
             Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
             if (Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath, false, false)) {

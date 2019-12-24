@@ -8,7 +8,7 @@ public class ConflictFile {
     private String fileName;
     private List<ConflictRegion> conflictRegion;
 
-    public ConflictFile() {
+    protected ConflictFile() {
         this.conflictRegion = new ArrayList<>();
         this.fileName = "";
     }
@@ -17,7 +17,7 @@ public class ConflictFile {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
+    protected void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
@@ -25,11 +25,11 @@ public class ConflictFile {
         return conflictRegion;
     }
 
-    public void setConflictRegion(List<ConflictRegion> conflictRegion) {
+    protected void setConflictRegion(List<ConflictRegion> conflictRegion) {
         this.conflictRegion = conflictRegion;
     }
 
-    public void addConflictRegion(ConflictRegion conflictRegion) {
+    protected void addConflictRegion(ConflictRegion conflictRegion) {
         this.conflictRegion.add(conflictRegion);
     }
 
