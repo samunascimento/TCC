@@ -41,7 +41,7 @@ public class Jasome {
             String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
-            if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user == null && password == null) {
+            if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
                 Git.clone(repositoryUrl, repositoryPath, repositoryName);
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
