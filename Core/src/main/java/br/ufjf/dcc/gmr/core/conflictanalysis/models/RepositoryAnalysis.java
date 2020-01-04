@@ -126,7 +126,7 @@ public interface RepositoryAnalysis {
                                             if(j<0)
                                                 j=-1;
                                             else
-                                                conflictRegion.getAfterContext().add(conflict.get(j));
+                                                conflictRegion.getBeforeContext().add(conflict.get(j));
                                         }
                                         i++;
                                         while (!conflict.get(i).contains("=====")) {
@@ -144,7 +144,7 @@ public interface RepositoryAnalysis {
                                             if (j == conflict.size())
                                                 break;
                                             else
-                                                conflictRegion.getBeforeContext().add(conflict.get(j));
+                                                conflictRegion.getAfterContext().add(conflict.get(j));
                                         }
                                         conflictFile.addConflictRegion(conflictRegion);
                                         conflictRegion = new ConflictRegion();

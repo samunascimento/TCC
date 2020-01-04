@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
 
@@ -36,16 +37,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
     }
-    
-    
-    
-    
-    
-    
 
-
-
-    
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,11 +52,11 @@ public class Main extends javax.swing.JFrame {
         scrollPane = new javax.swing.JScrollPane();
         list = new javax.swing.JList<>();
         repPath = new javax.swing.JTextField();
-        ncl = new javax.swing.JTextField();
         analyseB = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        ncl = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Git Repository Analysis");
@@ -72,15 +64,27 @@ public class Main extends javax.swing.JFrame {
 
         firstPanel.setBackground(new java.awt.Color(1, 1, 1));
 
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listMouseClicked(evt);
+            }
+        });
         scrollPane.setViewportView(list);
 
         analyseB.setText("Analyse");
+        analyseB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                analyseBMouseClicked(evt);
+            }
+        });
 
         jLabel1.setForeground(new java.awt.Color(254, 254, 254));
         jLabel1.setText("Repository Path");
 
         jLabel2.setForeground(new java.awt.Color(254, 254, 254));
         jLabel2.setText("Number of Context Lines");
+
+        ncl.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " " }));
 
         javax.swing.GroupLayout firstPanelLayout = new javax.swing.GroupLayout(firstPanel);
         firstPanel.setLayout(firstPanelLayout);
@@ -89,11 +93,11 @@ public class Main extends javax.swing.JFrame {
             .addGroup(firstPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(firstPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPane)
+                    .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                     .addComponent(repPath)
                     .addGroup(firstPanelLayout.createSequentialGroup()
-                        .addComponent(ncl, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
+                        .addComponent(ncl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addGap(124, 124, 124)
                         .addComponent(analyseB))
@@ -113,13 +117,13 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(repPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(jLabel2)
-                .addGap(10, 10, 10)
+                .addGap(7, 7, 7)
                 .addGroup(firstPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(analyseB)
-                    .addComponent(ncl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(ncl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -137,6 +141,52 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void analyseBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analyseBMouseClicked
+
+        try {
+            DefaultListModel model = new DefaultListModel();
+            events = RepositoryAnalysis.searchAllConflicts(repPath.getText(),ncl.getSelectedIndex(),true);
+            for(MergeEvent merge : events){
+                model.addElement(merge.getHash());
+            }
+            list.setModel(model);
+        } catch (IOException ex) {    
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            JOptionPane.showMessageDialog(null,"The currently path is not a git repository!","ERROR", JOptionPane.ERROR_MESSAGE);
+        } 
+    }//GEN-LAST:event_analyseBMouseClicked
+
+    private void listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMouseClicked
+        if(evt.getClickCount() > 1){
+            if(events.get(list.getSelectedIndex()).getConflictFiles().isEmpty()){
+                JOptionPane.showMessageDialog(null,"This merge do not have conflict files","Clean", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                new VisualizeMerge(events.get(list.getSelectedIndex()));
+            }
+        }
+    }//GEN-LAST:event_listMouseClicked
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 /**
  * @param args the command line arguments
  */
@@ -199,7 +249,7 @@ public static void main(String args[]) {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList<String> list;
-    private javax.swing.JTextField ncl;
+    private javax.swing.JComboBox<String> ncl;
     private javax.swing.JTextField repPath;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
