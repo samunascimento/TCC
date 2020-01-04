@@ -40,11 +40,9 @@ public interface RepositoryAnalysis {
 
     }
 
-    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean printProgress) throws IOException, 
-            LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, 
-            ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
+    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean printProgress) throws IOException, LocalRepositoryNotAGitRepository {
 
-        List<String> allMerges = Git.giveAllMerges(repositoryPath);
+        List<String> allMerges = null;
         String[] family = null;
         String[] parents = null;
         String[] auxArray = null;
@@ -58,6 +56,12 @@ public interface RepositoryAnalysis {
         double analysed = 1.0;
         double analysedPercentage = 0.0;
         double progress = 0.0;
+        
+        try {
+            allMerges = Git.giveAllMerges(repositoryPath);
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            throw new LocalRepositoryNotAGitRepository();
+        }
         
 
         if (repositoryPath.contains("\\")) {
@@ -93,69 +97,107 @@ public interface RepositoryAnalysis {
             } catch (IsOutsideRepository ex) {
                 Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
-            if (Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath, false, false)) {
-                mergeEvent.setConflict(true);
-                for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
-                    if (!fileDiff.getLines().isEmpty()) {
-                        switch (soType) {
-                            case 0:
-                                auxArray = fileDiff.getFilePathSource().split("/");
-                                break;
-                            case 1:
-                                auxArray = fileDiff.getFilePathSource().split("\\");
-                                break;
-                        }
-                        conflictFile.setFileName(auxArray[auxArray.length - 1]);
-                        conflict = getFileContent(repositoryPath + fileDiff.getFilePathSource());
-                        auxInt = conflict.size();
-                        for (int i = 0; i < auxInt; i++) {
-                            if (conflict.get(i).contains("<<<<<<")) {
-                                conflictRegion.setBeginLine(i + 1);
-                                for(int j = i - linesContext; j < i;j++){
-                                    if(j<0)
-                                        j=-1;
-                                    else
-                                        conflictRegion.getAfterContext().add(conflict.get(j));
-                                }
-                                i++;
-                                while (!conflict.get(i).contains("=====")) {
-                                    conflictRegion.getV1().add(conflict.get(i));
-                                    i++;
-                                }
-                                conflictRegion.setSeparatorLine(i + 1);
-                                i++;
-                                while (!conflict.get(i).contains(">>>>>")) {
-                                    conflictRegion.getV2().add(conflict.get(i));
-                                    i++;
-                                }
-                                conflictRegion.setEndLine(i + 1);
-                                for (int j = i+1; j < i+1+linesContext ; j++) {
-                                    if (j == conflict.size())
+            try {
+                Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
+            } catch (CheckoutError ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                if (Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath, false, false)) {
+                    mergeEvent.setConflict(true);
+                    try {
+                        for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
+                            if (!fileDiff.getLines().isEmpty()) {
+                                switch (soType) {
+                                    case 0:
+                                        auxArray = fileDiff.getFilePathSource().split("/");
                                         break;
-                                    else
-                                        conflictRegion.getBeforeContext().add(conflict.get(j));
+                                    case 1:
+                                        auxArray = fileDiff.getFilePathSource().split("\\");
+                                        break;
                                 }
-                                conflictFile.addConflictRegion(conflictRegion);
-                                conflictRegion = new ConflictRegion();
+                                conflictFile.setFileName(auxArray[auxArray.length - 1]);
+                                conflict = getFileContent(repositoryPath + fileDiff.getFilePathSource());
+                                auxInt = conflict.size();
+                                for (int i = 0; i < auxInt; i++) {
+                                    if (conflict.get(i).contains("<<<<<<")) {
+                                        conflictRegion.setBeginLine(i + 1);
+                                        for(int j = i - linesContext; j < i;j++){
+                                            if(j<0)
+                                                j=-1;
+                                            else
+                                                conflictRegion.getAfterContext().add(conflict.get(j));
+                                        }
+                                        i++;
+                                        while (!conflict.get(i).contains("=====")) {
+                                            conflictRegion.getV1().add(conflict.get(i));
+                                            i++;
+                                        }
+                                        conflictRegion.setSeparatorLine(i + 1);
+                                        i++;
+                                        while (!conflict.get(i).contains(">>>>>")) {
+                                            conflictRegion.getV2().add(conflict.get(i));
+                                            i++;
+                                        }
+                                        conflictRegion.setEndLine(i + 1);
+                                        for (int j = i+1; j < i+1+linesContext ; j++) {
+                                            if (j == conflict.size())
+                                                break;
+                                            else
+                                                conflictRegion.getBeforeContext().add(conflict.get(j));
+                                        }
+                                        conflictFile.addConflictRegion(conflictRegion);
+                                        conflictRegion = new ConflictRegion();
+                                    }
+                                }
+                                mergeEvent.addConflictFiles(conflictFile);
+                                conflictFile = new ConflictFile();
+                                conflict.clear();
+                            }
+                            for (String line : fileDiff.getAllMessage()) {
+                                if (line.startsWith("* Unmerged path")) {
+                                    auxArray = line.split("/");
+                                    conflictFile.setFileName(auxArray[auxArray.length - 1]);
+                                    mergeEvent.addConflictFiles(conflictFile);
+                                    conflictFile = new ConflictFile();
+                                }
                             }
                         }
-                        mergeEvent.addConflictFiles(conflictFile);
-                        conflictFile = new ConflictFile();
-                        conflict.clear();
+                    } catch (InvalidCommitHash ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    for (String line : fileDiff.getAllMessage()) {
-                        if (line.startsWith("* Unmerged path")) {
-                            auxArray = line.split("/");
-                            conflictFile.setFileName(auxArray[auxArray.length - 1]);
-                            mergeEvent.addConflictFiles(conflictFile);
-                            conflictFile = new ConflictFile();
-                        }
+                    try {
+                        Git.mergeAbort(repositoryPath);
+                    } catch (NoRemoteForTheCurrentBranch ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ThereIsNoMergeInProgress ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ThereIsNoMergeToAbort ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (AlreadyUpToDate ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NotSomethingWeCanMerge ex) {
+                        Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                Git.mergeAbort(repositoryPath);
+            } catch (NoRemoteForTheCurrentBranch ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ThereIsNoMergeInProgress ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ThereIsNoMergeToAbort ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (AlreadyUpToDate ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotSomethingWeCanMerge ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CheckoutError ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Git.checkout("master", repositoryPath);
+            try {
+                Git.checkout("master", repositoryPath);
+            } catch (CheckoutError ex) {
+                Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
+            }
             list.add(mergeEvent);
             mergeEvent = new MergeEvent();
             conflictFile = new ConflictFile();

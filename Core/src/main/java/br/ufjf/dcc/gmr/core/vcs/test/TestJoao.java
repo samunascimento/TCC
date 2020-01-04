@@ -32,33 +32,15 @@ public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
 
-        /*String repositoryPath = "/home/joao/Git/voldemort";
+        String repositoryPath = "/home/joao/Git/voldemort";
         System.out.println("Olá");
         List<MergeEvent> list = RepositoryAnalysis.searchAllConflicts(repositoryPath,3,true);
         for(MergeEvent merge : list){
             if(merge.isConflict()){
                 merge.print();
             }
-        }*/
-        String path = "/home/joao/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java";
+        }
 
-        ANTLRFileStream fileStream = new ANTLRFileStream(path);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
-        JavaVisitor visitor = new JavaVisitor();
-        
-
-        JFrame frame = new JFrame("Java parser");
-        JPanel panel = new JPanel();
-        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.open();
-        frame.add(viewer);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        visitor.visit(tree);
     }
 
 }
