@@ -54,7 +54,7 @@ public class Jasome {
         return repositoryPath;
     }
     
-    public void runVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
+    public void runVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException{
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
@@ -63,11 +63,6 @@ public class Jasome {
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
-
-                if (revision.getCommitHash().startsWith("fc36d40f")) {
-                    System.out.println("Aqui");
-                }
-
                 System.out.println("======================" + revision.getCommitHash() + "==================");
                 Git.clean(repositoryPath, true, 3);
                 Git.reset(repositoryPath, true, false, false, null);
@@ -102,6 +97,8 @@ public class Jasome {
                 System.out.println(new Date());
 
             }
+        }catch (NullPointerException ex) {
+            System.out.println("Fim do arquivo");
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("Não é um repositório válido");
         } catch (IOException ex) {
