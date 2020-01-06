@@ -10,38 +10,34 @@ import java.io.InputStreamReader;
  * @author gleiph
  */
 public class CLIExecute {
-    
+
     public static CLIExecution execute(String command, String directory) throws IOException {
-        
-        CLIExecution execution = new CLIExecution();
-        
-        
-        Runtime runtime = Runtime.getRuntime();
-        Process exec = runtime.exec(command, null,
-                new File(directory));
 
-        String s;
-
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(exec.getErrorStream()));
-
-        // read the output from the command
-        while ((s = stdInput.readLine()) != null) {
-            execution.addOutput(s);
+        try {
+            CLIExecution execution = new CLIExecution();
+            
+            Runtime runtime = Runtime.getRuntime();
+            Process exec = runtime.exec(command, null,
+                    new File(directory));
+            
+            ReadStream in = new ReadStream(exec.getInputStream());
+            ReadStream er = new ReadStream(exec.getErrorStream());
+            in.start();
+            er.start();
+            exec.waitFor();
+            
+            execution.setError(er.getOutput());
+            execution.setOutput(in.getOutput());
+            return execution;
+        } catch (InterruptedException ex) {
+            return new CLIExecution();
         }
-
-        // read any errors from the attempted command
-        while ((s = stdError.readLine()) != null) {
-            execution.addError(s);
-        }
-        
-        return execution;
     }
-    
-    public static CLIExecution execute(String[] cmd) throws IOException{
-        
+
+    public static CLIExecution execute(String[] cmd) throws IOException {
+
         CLIExecution execution = new CLIExecution();
-        
+
         Runtime runtime = Runtime.getRuntime();
         Process exec = runtime.exec(cmd);
         String s;
@@ -58,8 +54,8 @@ public class CLIExecute {
         while ((s = stdError.readLine()) != null) {
             execution.addError(s);
         }
-        
+
         return execution;
     }
-    
+
 }

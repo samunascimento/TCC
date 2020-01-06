@@ -37,7 +37,7 @@ public class Jasome {
         try {
             int i = 0;
             String repositoryUrl = null; //url do repositório remoto
-            String repositoryPath = "C:\\Users\\anton\\Desktop\\batalha-naval-java";
+            String repositoryPath = "C:\\Users\\Gleiph\\repositories\\UFJFCopy";
             String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
             String user = null; //usuario github
             String password = null; //senha github
@@ -66,6 +66,7 @@ public class Jasome {
                 System.out.println(new Date());
 
                 CLIExecution extractMetrics = extractMetrics(repositoryPath);
+                System.out.println(new Date());
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                 readXml.fazerParsing(extractMetrics.getOutputString());
@@ -77,6 +78,7 @@ public class Jasome {
                     if (projectMetrics.getListVersionMetrics().get(i).getError()) {
                         System.out.println("temos um erro nesta versão");
                     }
+                    System.out.println("TLOC = "+projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
                     //filtrando pacotes
