@@ -25,28 +25,39 @@ import java.util.Scanner;
  */
 public class Jasome {
 
+    private String repositoryUrl = null; //url do repositório remoto
+    private String repositoryPath = "C:\\Users\\anton\\Desktop\\projeto-exemplo";
+    private String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
+    private String user = null; //usuario github
+    private String password = null; //senha github
+    
     private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
             .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
             .concat("jasome");
 
-    public static void main(String[] args) throws LocalRepositoryNotAGitRepository, CheckoutError, ParseException, InvalidDocument, RepositoryNotFound, UrlNotFound {
+    public Jasome(String repository) {
+        repositoryPath = repository;
+    }
 
-        ProjectMetrics projectMetrics = new ProjectMetrics();
-        try {
-            int i = 0;
-            String repositoryUrl = null; //url do repositório remoto
-            String repositoryPath = "C:\\Users\\Gleiph\\repositories\\UFJFCopy";
-            String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
-            String user = null; //usuario github
-            String password = null; //senha github
-            if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
+    public void checkRepository() throws RepositoryNotFound, UrlNotFound{
+        if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
                 Git.clone(repositoryUrl, repositoryPath, repositoryName);
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
                 Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
             }
+    }
+
+    public String getRepositoryPath() {
+        return repositoryPath;
+    }
+    
+    public void runVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
+        ProjectMetrics projectMetrics = new ProjectMetrics();
+        try {
+            int i = 0;
             System.out.println(repositoryPath);
             List<Formats> log = Git.logAll(repositoryPath);
             System.out.println(log.size());
@@ -61,9 +72,8 @@ public class Jasome {
                 Git.clean(repositoryPath, true, 3);
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.checkout(revision.getCommitHash(), repositoryPath);
-
                 System.out.println(new Date());
-
+                
                 CLIExecution extractMetrics = extractMetrics(repositoryPath);
                 System.out.println(new Date());
                 System.out.println("==============================================");
@@ -80,9 +90,10 @@ public class Jasome {
                     System.out.println("TLOC = "+projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-
-                } //catch (Exception e) {
-                //System.out.println("for está lançando exceção(consertar)");
+                    extractMetricPackage(projectMetrics, listPackage);
+                    extractMetricClass(projectMetrics, listPackage);
+                    extractMetricMethod(projectMetrics, listPackage);
+                }
                 finally {
                     System.out.println("Commit numero :" + i);
                     i++;
@@ -102,27 +113,72 @@ public class Jasome {
         } catch (IsOutsideRepository ex) {
             System.out.println(ex.getMessage());
         }
-
-        //projectMetrics.getNamePackageMetrics();
-        //projectMetrics.getNameClassMetrics();
-        //projectMetrics.getNameMethodMetrics();
-        //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
 
-    public void extractMetricPackage(ProjectMetrics projectMetrics){
-        
+    public void extractMetricClass(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+        boolean contemClass = false;
+        for (int j = 0; j < listPackage.size(); j++) {
+            for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
+                if (projectMetrics.getListClassMetrics().size() == 0) {
+                    projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                    //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                } else {
+                    for (int w = 0; w < projectMetrics.getListClassMetrics().size(); w++) {
+                        if (projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))) {
+                            contemClass = true;
+                        }
+                    }
+                    if (contemClass == false) {
+                        projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                    }
+                    //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
+                }
+            }
+        }
+    }
+
+    public void extractMetricPackage(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+        boolean contemPackage = false;
+        for (int j = 0; j < listPackage.size(); j++) {
+            if (projectMetrics.getListPackageMetrics().size() == 0) {
+                projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
+            } else {
+                for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
+                    if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
+                        contemPackage = true;
+                    }
+                }
+                if (contemPackage == false) {
+                    projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
+                }
+            }
+        }
     }
     
-    public void extractMetricClass(ProjectMetrics projectMetrics){
-        
+    public void extractMetricMethod(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+        boolean contemMetodo = false;
+        for (int j = 0; j < listPackage.size(); j++) {
+            for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
+                for (int w = 0; w < listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().size(); w++) {
+                    if (projectMetrics.getListMethodMetrics().size() == 0) {
+                        projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
+                    } else {
+                        for (int x = 0; x < projectMetrics.getListMethodMetrics().size(); x++) {
+                            if (projectMetrics.getListMethodMetrics().get(x).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()))) {
+                                contemMetodo = true;
+                            }
+                        }
+                        if (contemMetodo == false) {
+                            projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
+                        }
+                    }
+                }
+            }
+        }
     }
-    
-    public void extractMetricMethod(ProjectMetrics projectMetrics){
-        
-    }
-    
-    public void readFilter(ProjectMetrics projectMetrics){
-         Scanner ler = new Scanner(System.in);
+
+    public void readFilter(ProjectMetrics projectMetrics) {
+        Scanner ler = new Scanner(System.in);
         String filterMetric;
         while (true) {
             System.out.println("PACKAGE|CLASS|METHOD");
@@ -134,7 +190,7 @@ public class Jasome {
                     namePackage = ler.next();
                     List<PackageMetrics> listPack = new ArrayList<>();
                     listPack = projectMetrics.getMetricPackage(namePackage);
-                    for(int i=0;i<listPack.size();i++){
+                    for (int i = 0; i < listPack.size(); i++) {
                         System.out.println(listPack.get(i));
                     }
                     break;
@@ -144,7 +200,7 @@ public class Jasome {
                     nameClass = ler.next();
                     List<ClassMetrics> listClass = new ArrayList<>();
                     listClass = projectMetrics.getMetricClass(nameClass);
-                    for(int i=0;i<listClass.size();i++){
+                    for (int i = 0; i < listClass.size(); i++) {
                         System.out.println(listClass.get(i));
                     }
                     break;
@@ -154,7 +210,7 @@ public class Jasome {
                     nameMethod = ler.next();
                     List<MethodMetrics> listMethod = new ArrayList<>();
                     listMethod = projectMetrics.getMetricMethod(nameMethod);
-                    for(int i=0;i<listMethod.size();i++){
+                    for (int i = 0; i < listMethod.size(); i++) {
                         System.out.println(listMethod.get(i));
                     }
                     break;
@@ -164,11 +220,8 @@ public class Jasome {
             }
         }
 
-        
     }
-    
-    
-    public static CLIExecution extractMetrics(String path) throws IOException {
+     public static CLIExecution extractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
@@ -176,5 +229,10 @@ public class Jasome {
             return CLIExecute.execute(FILE_PATH.concat(" ").concat(path), ".");
         }
     }
-
+    
+    public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
+        Jasome jasome = new Jasome("C:\\Users\\anton\\Desktop\\projeto-exemplo");
+        jasome.runVersion(jasome.getRepositoryPath());
+        
+    }
 }
