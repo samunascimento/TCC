@@ -1,5 +1,4 @@
 package br.ufjf.dcc.gmr.core.jasome;
-
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
@@ -81,69 +80,6 @@ public class Jasome {
                     System.out.println("TLOC = "+projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                    //filtrando pacotes
-                    boolean contemPackage = false;
-                    for (int j = 0; j < listPackage.size(); j++) {
-                        if (projectMetrics.getListPackageMetrics().size() == 0) {
-                            projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
-                        } else {
-                            for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
-                                if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
-                                    contemPackage = true;
-                                }
-                            }
-                            if (contemPackage == false) {
-                                projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
-                            }
-                        }
-                    }
-                    //fim
-                    //Filtrabdo por classe
-                    //Irei refator tudo isso depois
-                    boolean contemClass = false;
-                    for (int j = 0; j < listPackage.size(); j++) {
-                        for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
-                            if (projectMetrics.getListClassMetrics().size() == 0) {
-                                projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                            } else {
-                                for (int w = 0; w < projectMetrics.getListClassMetrics().size(); w++) {
-                                    if (projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))) {
-                                        contemClass = true;
-                                    }
-                                }
-                                if (contemClass == false) {
-                                    projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                                }
-                                //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                            }
-                        }
-                    }
-                    //fim
-                    
-                    //Filtrando por método
-                    boolean contemMetodo = false;
-                    for(int j=0;j<listPackage.size();j++){
-                        for(int y=0;y<listPackage.get(j).getListClassMetrics().size();y++){
-                            for(int w=0;w<listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().size();w++){
-                                if(projectMetrics.getListMethodMetrics().size() == 0){
-                                    projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
-                                }else{
-                                    for(int x=0;x<projectMetrics.getListMethodMetrics().size();x++){
-                                        if(projectMetrics.getListMethodMetrics().get(x).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()))){
-                                            contemMetodo = true;
-                                        }
-                                    }
-                                    if(contemMetodo == false){
-                                        projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    
-                    //fim
 
                 } //catch (Exception e) {
                 //System.out.println("for está lançando exceção(consertar)");
@@ -167,8 +103,26 @@ public class Jasome {
             System.out.println(ex.getMessage());
         }
 
+        //projectMetrics.getNamePackageMetrics();
+        //projectMetrics.getNameClassMetrics();
+        //projectMetrics.getNameMethodMetrics();
+        //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
+    }
+
+    public void extractMetricPackage(ProjectMetrics projectMetrics){
         
-        Scanner ler = new Scanner(System.in);
+    }
+    
+    public void extractMetricClass(ProjectMetrics projectMetrics){
+        
+    }
+    
+    public void extractMetricMethod(ProjectMetrics projectMetrics){
+        
+    }
+    
+    public void readFilter(ProjectMetrics projectMetrics){
+         Scanner ler = new Scanner(System.in);
         String filterMetric;
         while (true) {
             System.out.println("PACKAGE|CLASS|METHOD");
@@ -211,12 +165,9 @@ public class Jasome {
         }
 
         
-        //projectMetrics.getNamePackageMetrics();
-        //projectMetrics.getNameClassMetrics();
-        //projectMetrics.getNameMethodMetrics();
-        //List<PackageMetrics>listPack = projectMetrics.getMetricPackage("dsoo.jogo.rpg.combate");
     }
-
+    
+    
     public static CLIExecution extractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
