@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaVisitor;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.JavaVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
@@ -32,14 +32,17 @@ public class TestJoao {
 
     public static void main(String[] args) throws IOException, BranchNotFound, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash {
 
-        String repositoryPath = "/home/joao/Git/voldemort";
+        /*String repositoryPath = "/home/joao/Git/voldemort";
         System.out.println("Olá");
         List<MergeEvent> list = RepositoryAnalysis.searchAllConflicts(repositoryPath,3,true);
         for(MergeEvent merge : list){
             if(merge.isConflict()){
                 merge.print();
             }
-        }
+        }*/
+        
+        String filePath = "/home/joao/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java";
+        RepositoryAnalysis.analyzeJavaSyntaxTree(filePath);
 
     }
 

@@ -1,5 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
@@ -25,6 +27,9 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public interface RepositoryAnalysis {
 
@@ -38,6 +43,23 @@ public interface RepositoryAnalysis {
         }
         return content;
 
+    }
+    
+    public static List<SyntaxStructure> analyzeJavaSyntaxTree (String filePath) throws IOException {
+        
+        ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+        JavaLexer lexer = new JavaLexer(fileStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        JavaParser parser = new JavaParser(tokens);
+        ParseTree tree = parser.compilationUnit();
+        
+        JavaVisitor visitor = new JavaVisitor();
+        visitor.visit(tree);
+        for(SyntaxStructure ss : visitor.getList()){
+            System.out.println(ss.getStructureType());
+            System.out.println("Text:\n\n" +ss.getStartLine() +"\n"+ ss.getText() +ss.getFinalLine()+ "\n\n\n\n\n" );
+        }
+        return null;
     }
 
     public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean printProgress) throws IOException, LocalRepositoryNotAGitRepository {
