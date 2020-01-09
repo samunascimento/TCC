@@ -82,7 +82,7 @@ public class Jasome {
                     if (projectMetrics.getListVersionMetrics().get(i).getError()) {
                         System.out.println("temos um erro nesta versão");
                     }
-                    System.out.println("TLOC = "+projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
+                    System.out.println("TLOC = "+ projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
                     extractMetricPackage(projectMetrics, listPackage);
@@ -130,25 +130,26 @@ public class Jasome {
                 System.out.println("");
                 System.out.println("======================" + revision.getCommitHash() + "==================");     
                 System.out.println("Commit numero :" + i);
-                for (int k = 0; k < files.get(i).length; k++) { 
-                    System.out.println("======================" + arquivos[k].toString() + "==================");
+                for (int k = 0; k < files.get(i).length; k++) {
                     Git.clean(repositoryPath, true, 3);
                     Git.reset(repositoryPath, true, false, false, null);
                     Git.checkout(revision.getCommitHash(), repositoryPath);
-                    System.out.println(new Date());
                     if (files.get(i)[k].toString().endsWith(".java") && files.get(i)[k].isFile()) {
                         CLIExecution extractMetrics = extractMetrics(files.get(i)[k].toString());
+                        System.out.println("======================" + arquivos[k].toString() + "==================");
+                        System.out.println(new Date());
                         System.out.println("==============================================");
                         ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
                         readXml.fazerParsing(extractMetrics.getOutputString());
                         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
-                        //if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
-                        //    projectMetrics.getListVersionMetrics().get(i).setError(true);
-                        //}
+                        if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
+                            projectMetrics.getListVersionMetrics().get(i).setError(true);
+                            
+                        }
                         try {
-                            //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
-                            //    System.out.println("temos um erro nesta versão");
-                            //}
+                            if (projectMetrics.getListVersionMetrics().get(i).getError()) {
+                                System.out.println("temos um erro no arquivo: " + arquivos[k].toString());
+                            }
                             System.out.println("TLOC = " + projectMetrics.getListVersionMetrics().get(j).getTloc().getValue());
 
                             List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
@@ -156,10 +157,10 @@ public class Jasome {
                             extractMetricClass(projectMetrics, listPackage);
                             extractMetricMethod(projectMetrics, listPackage);
                         } finally {
+                            j++;
+                            System.out.println(new Date());
                         }
                     }
-                    System.out.println(new Date());
-                    j++;
                 }
                 i++;
             }
@@ -294,7 +295,7 @@ public class Jasome {
     }
     
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
-        Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core\\src\\main\\java\\br\\ufjf\\dcc\\gmr\\core\\jasome");
+        Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\clonepublico\\trabalhoOO\\BatalhaNaval\\src\\batalhanaval");
         jasome.runVersion(jasome.getRepositoryPath());
         //versão de teste
         //jasome.runVersionClassTest(jasome.getRepositoryPath());

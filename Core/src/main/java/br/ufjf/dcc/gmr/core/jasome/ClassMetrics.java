@@ -54,6 +54,8 @@ public class ClassMetrics {
     private String lineStart;
     private String name;
     private String sourceFile;
+    
+    private boolean error = false;
 
     public ClassMetrics() {
         this.listMethodsMetrics = new ArrayList<>();
@@ -395,6 +397,14 @@ public class ClassMetrics {
         this.lineStart = lineStart;
     }
 
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(String sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+    
     public String getName() {
         return name;
     }
@@ -402,12 +412,4 @@ public class ClassMetrics {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getSourceFile() {
-        return sourceFile;
-    }
-
-    public void setSourceFile(String sourceFile) {
-        this.sourceFile = sourceFile;
-    } 
 }
