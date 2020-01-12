@@ -136,7 +136,7 @@ public class Jasome {
                     Git.checkout(revision.getCommitHash(), repositoryPath);
                     if (files.get(i)[k].toString().endsWith(".java") && files.get(i)[k].isFile()) {
                         CLIExecution extractMetrics = extractMetrics(files.get(i)[k].toString());
-                        System.out.println("======================" + arquivos[k].toString() + "==================");
+                        System.out.println("======================" + arquivos[k].getName() + "==================");
                         System.out.println(new Date());
                         System.out.println("==============================================");
                         ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
