@@ -31,6 +31,8 @@ public class Jasome {
     private String user = null; //usuario github
     private String password = null; //senha github
     
+    private static String repository;
+    
     private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
             .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
@@ -52,6 +54,14 @@ public class Jasome {
 
     public String getRepositoryPath() {
         return repositoryPath;
+    }
+    
+    
+    public static String runOneVersion() throws IOException{
+        CLIExecution extractMetrics = extractMetrics("C:\\Users\\anton\\Desktop\\helloworld");
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
+        readXml.fazerParsing(extractMetrics.getOutputString());
+        return extractMetrics.getOutputString();
     }
     
     public void runVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException{
@@ -110,6 +120,10 @@ public class Jasome {
         } catch (IsOutsideRepository ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    public void hello(){
+        System.out.println("teste");
     }
     
     public void runVersionClassTest(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
