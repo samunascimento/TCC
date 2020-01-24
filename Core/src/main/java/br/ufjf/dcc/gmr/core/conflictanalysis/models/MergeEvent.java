@@ -115,7 +115,7 @@ public class MergeEvent {
     }
 
 }
-
+/*
 public static int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<String> output = new ArrayList<>();
@@ -161,3 +161,4 @@ public static int returnNewLineNumber(String directory, String commitSource, Str
         System.out.println("Não foi possivel encontrar a linha no arquivo original");
         return -1;
     }
+*/
