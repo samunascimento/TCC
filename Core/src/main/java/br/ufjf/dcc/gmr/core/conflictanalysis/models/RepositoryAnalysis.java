@@ -44,20 +44,20 @@ public interface RepositoryAnalysis {
         return content;
 
     }
-    
-    public static List<SyntaxStructure> analyzeJavaSyntaxTree (String filePath) throws IOException {
-        
+
+    public static List<SyntaxStructure> analyzeJavaSyntaxTree(String filePath) throws IOException {
+
         ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         JavaParser parser = new JavaParser(tokens);
         ParseTree tree = parser.compilationUnit();
-        
+
         JavaVisitor visitor = new JavaVisitor();
         visitor.visit(tree);
-        for(SyntaxStructure ss : visitor.getList()){
+        for (SyntaxStructure ss : visitor.getList()) {
             System.out.println(ss.getStructureType());
-            System.out.println("Text:\n\n" +ss.getStartLine() +"\n"+ ss.getText() +ss.getFinalLine()+ "\n\n\n\n\n" );
+            System.out.println("Text:\n\n" + ss.getStartLine() + "\n" + ss.getText() + ss.getFinalLine() + "\n\n\n\n\n");
         }
         return null;
     }
@@ -78,13 +78,12 @@ public interface RepositoryAnalysis {
         double analysed = 1.0;
         double analysedPercentage = 0.0;
         double progress = 0.0;
-        
+
         try {
             allMerges = Git.giveAllMerges(repositoryPath);
         } catch (LocalRepositoryNotAGitRepository ex) {
             throw new LocalRepositoryNotAGitRepository();
         }
-        
 
         if (repositoryPath.contains("\\")) {
             soType = 1;
@@ -144,11 +143,12 @@ public interface RepositoryAnalysis {
                                 for (int i = 0; i < auxInt; i++) {
                                     if (conflict.get(i).contains("<<<<<<")) {
                                         conflictRegion.setBeginLine(i + 1);
-                                        for(int j = i - linesContext; j < i;j++){
-                                            if(j<0)
-                                                j=-1;
-                                            else
+                                        for (int j = i - linesContext; j < i; j++) {
+                                            if (j < 0) {
+                                                j = -1;
+                                            } else {
                                                 conflictRegion.getBeforeContext().add(conflict.get(j));
+                                            }
                                         }
                                         i++;
                                         while (!conflict.get(i).contains("=====")) {
@@ -162,11 +162,12 @@ public interface RepositoryAnalysis {
                                             i++;
                                         }
                                         conflictRegion.setEndLine(i + 1);
-                                        for (int j = i+1; j < i+1+linesContext ; j++) {
-                                            if (j == conflict.size())
+                                        for (int j = i + 1; j < i + 1 + linesContext; j++) {
+                                            if (j == conflict.size()) {
                                                 break;
-                                            else
+                                            } else {
                                                 conflictRegion.getAfterContext().add(conflict.get(j));
+                                            }
                                         }
                                         conflictFile.addConflictRegion(conflictRegion);
                                         conflictRegion = new ConflictRegion();
@@ -224,18 +225,63 @@ public interface RepositoryAnalysis {
             mergeEvent = new MergeEvent();
             conflictFile = new ConflictFile();
             conflictRegion = new ConflictRegion();
-            
-            if(printProgress){
-                progress = Math.ceil((analysed/allMerges.size())*100);
-                if(progress > analysedPercentage){
-                    System.out.println((int)progress + "%...");
-                   analysedPercentage = progress;
+
+            if (printProgress) {
+                progress = Math.ceil((analysed / allMerges.size()) * 100);
+                if (progress > analysedPercentage) {
+                    System.out.println((int) progress + "%...");
+                    analysedPercentage = progress;
                 }
                 analysed = analysed + 1.0;
             }
-            
+
         }
         return list;
     }
 
+    public static int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        List<String> output = new ArrayList<>();
+        output = Git.auxiliardiff(directory, commitSource, commitTarget);
+        //verificar se a linha existia originalmente
+        if (output.size() < originalLineNumber) {
+            //se existir
+
+            int contador = 0;
+            int contadorExcluidas = 0;
+            int contadorAdicionadas = 0;
+            for (String line : output) {
+                if (contador == originalLineNumber) {
+                    if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                        System.out.println("A linha desejada foi excluida");
+                        return -1;
+
+                    } else {
+                        break;
+                    }
+                } else {
+
+                    if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                        contador++;
+                    } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
+                        contador++;
+                        contadorAdicionadas++;
+                    } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                        contador++;
+                    } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                        contador++;
+                        contadorExcluidas++;
+                    }
+
+                }
+            }
+
+            int linhaaproximada = originalLineNumber - contadorExcluidas + contadorAdicionadas;
+            return linhaaproximada;
+        }
+        //senão
+
+        System.out.println("Não foi possivel encontrar a linha no arquivo original");
+        return -1;
+    }
 }
