@@ -1105,4 +1105,31 @@ public class Git {
 
         return result;
     }
+    
+    public static List<String> auxiliardiff(String directory, String commitSource, String commitTarget)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        
+         String command= "git diff " + commitSource + " " + commitTarget;
+        
+       
+        CLIExecution execution = CLIExecute.execute(command, directory);
+
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                    
+                }
+                if (line.contains("fatal: ambiguous argument")) {
+                    throw new InvalidCommitHash();
+                }
+            }
+        } 
+        	
+		return execution.getOutput();
+        
+
+        
+    }
 }
