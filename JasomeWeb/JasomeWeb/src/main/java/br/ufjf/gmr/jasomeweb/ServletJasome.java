@@ -33,7 +33,6 @@ public class ServletJasome extends HttpServlet {
             throws ServletException, IOException {
         String repository = request.getParameter("repository");
         request.getRequestDispatcher("metrics.jsp").forward(request, response);
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
