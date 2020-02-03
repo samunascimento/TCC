@@ -18,17 +18,12 @@ import java.text.ParseException;
  */
 public class JasomeWeb {
     
-    private static String repository;
-    private Jasome jasome = new Jasome(repository);
     
-    public JasomeWeb(){
-        
+    public static void JasomeWeb(String nameRepository){
+        Jasome jasome = new Jasome(nameRepository);
     }
     
-    public String getRepository(){
-       return repository;
-    }
-    public static String getMetric() throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
-        return Jasome.runOneVersion();
+    public static void hello(){
+        System.out.println("hello");
     }
 }

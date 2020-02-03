@@ -4,7 +4,6 @@
     Author     : anton
 --%>
 
-<%@page import="br.ufjf.dcc.gmr.core.jasome.Jasome"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,6 +16,7 @@
         <form method="post" action="JasomeWeb">
             <input type="text" name="repository">
             <input type="submit" value="show metrics">
+            <button onclick="">chamar metodo hello</button>
         </form>
     </body>
 </html>
