@@ -57,11 +57,16 @@ public class Jasome {
     }
     
     
-    public static String runOneVersion() throws IOException{
-        CLIExecution extractMetrics = extractMetrics("C:\\Users\\anton\\Desktop\\helloworld");
+    public List<String> runOneVersion(String repositoryPach) throws IOException{
+        CLIExecution extractMetrics = extractMetrics(repositoryPach);
         ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
         readXml.fazerParsing(extractMetrics.getOutputString());
-        return extractMetrics.getOutputString();
+        System.out.println(extractMetrics.getOutputString());
+        List<String> metric = new ArrayList<>();
+        for(String line : extractMetrics.getOutput()){
+            metric.add(line);
+        }
+        return metric;
     }
     
     public void runVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException{
@@ -390,8 +395,14 @@ public class Jasome {
     }
     
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
-        Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core");
-        jasome.runVersion(jasome.getRepositoryPath());
+        Jasome jasome = new Jasome("C:\\Users\\anton\\Desktop\\projeto-exemplo");
+        //jasome.runVersion(jasome.getRepositoryPath());
+        List<String> listVersion = new ArrayList<>();
+        listVersion = jasome.runOneVersion("C:\\Users\\anton\\Desktop\\projeto-exemplo");
+        for(String line : listVersion){
+            System.out.println(line);
+        }
+        
         
         //versão de teste passando um repositório com arquivos java
         

@@ -4,6 +4,7 @@
     Author     : anton
 --%>
 
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,10 +14,14 @@
     </head>
     <body>
         <h1>Metrics</h1>
-        <form method="post" action="JasomeWeb">
-            <input type="text" name="repository">
-            <input type="submit" value="show metrics">
-            <button onclick="">chamar metodo hello</button>
-        </form>
+                <h1 align="center" >Metrics</h1>
+        <p>
+            <%
+                List<String> styles = (List<String>) request.getAttribute("styles");
+                for(String s: styles){
+                    out.print("<p>line " + s + "</p>");
+                }
+            %>
+        </p>
     </body>
 </html>

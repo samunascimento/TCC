@@ -18,6 +18,10 @@
     </head>
     <body>
         <h1>Jasome Web</h1>
+        <form method="GET" action="JasomeWebServlet">
+            <input name="url" type="text" placeholder="url">
+            <button type="submit"> enviar</button>
+        </form>
         <div class="button-center">
             <button type="button" class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">
                 new repository
