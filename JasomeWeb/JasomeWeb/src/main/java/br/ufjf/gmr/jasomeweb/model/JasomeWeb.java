@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.gmr.jasomeweb;
+package br.ufjf.gmr.jasomeweb.model;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -18,12 +18,4 @@ import java.text.ParseException;
  */
 public class JasomeWeb {
     
-    
-    public static void JasomeWeb(String nameRepository){
-        Jasome jasome = new Jasome(nameRepository);
-    }
-    
-    public static void hello(){
-        System.out.println("hello");
-    }
 }
