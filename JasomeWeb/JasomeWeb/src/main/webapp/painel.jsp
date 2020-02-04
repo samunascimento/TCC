@@ -19,7 +19,33 @@
     <body>
         <h1>Jasome Web</h1>
         <div class="button-center">
-            <a href="https://www.google.com.br/"><button class="btn btn-lg btn-primary btn-block">new repository</button></a>
+            <button type="button" class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">
+                new repository
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Create a new project</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="inputName" class="sr-only">Name project</label>
+                            <input type="name" id="inputEmail" class="form-control" placeholder="Name project">
+                            <br>
+                            <label for="inputURL" class="sr-only">URL</label>
+                            <input type="name" class="form-control" placeholder="URL" required autofocus>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Create project</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <br>
             <button class="btn btn-lg btn-primary btn-block">repositories</button>
         </div>
