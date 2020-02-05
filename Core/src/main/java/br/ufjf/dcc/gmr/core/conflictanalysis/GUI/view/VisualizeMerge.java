@@ -22,7 +22,7 @@ public class VisualizeMerge extends javax.swing.JFrame {
     public VisualizeMerge(MergeEvent event) {
         initComponents();
         this.event = event;
-        super.setTitle(event.getHash());
+        super.setTitle(event.getHash().getTitle());
         parentOne.setText("Parent 1: " + event.getParents().get(0));
         parentTwo.setText("Parent 2: " + event.getParents().get(1));
         DefaultListModel model = new DefaultListModel();

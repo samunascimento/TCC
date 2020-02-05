@@ -25,6 +25,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -100,12 +101,12 @@ public interface RepositoryAnalysis {
         for (String merge : allMerges) {
 
             family = merge.split(",");
-            mergeEvent.setHash(family[1]);
+            mergeEvent.setHash(new CommitData(family[1], repositoryPath));
             parents = family[0].split(" ");
             for (String parent : parents) {
-                mergeEvent.addParents(parent);
+                mergeEvent.addParents(new CommitData(parent, repositoryPath));
             }
-            mergeEvent.setCommonAncestorOfParents(Git.mergeBaseCommand(repositoryPath, mergeEvent.getParents()));
+            mergeEvent.setCommonAncestorOfParents(new CommitData(Git.mergeBaseCommand(repositoryPath, Arrays.asList(parents)), repositoryPath));
             try {
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.clean(repositoryPath, true, 0);
@@ -119,12 +120,12 @@ public interface RepositoryAnalysis {
                 Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                Git.checkout(mergeEvent.getParents().get(0), repositoryPath);
+                Git.checkout(mergeEvent.getParents().get(0).getCommitHash(), repositoryPath);
             } catch (CheckoutError ex) {
                 Logger.getLogger(RepositoryAnalysis.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                if (Git.mergeIsConflicting(mergeEvent.getParents().get(1), repositoryPath, false, false)) {
+                if (Git.mergeIsConflicting(mergeEvent.getParents().get(1).getCommitHash(), repositoryPath, false, false)) {
                     mergeEvent.setConflict(true);
                     try {
                         for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {

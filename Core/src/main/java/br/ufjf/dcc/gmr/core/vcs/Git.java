@@ -937,6 +937,31 @@ public class Git {
         }
         return check;
     }
+    
+    /**
+     * Return form:
+     * 
+     * Commit Hash
+     * Author Name
+     * Author Date
+     * Committer Name
+     * Committer Date
+     * Title
+     * 
+     * @param commitHash
+     * @param repositoryPath
+     * @return
+     * @throws IOException 
+     */
+    public static List<String> getBaseCommitInfo(String commitHash, String repositoryPath) {
+        CLIExecution cliE = null;
+        try {
+           cliE = CLIExecute.execute("git show "+commitHash+" --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch", repositoryPath);
+        } catch (IOException ex) {
+            return null;
+        }
+        return cliE.getOutput();
+    }
 
     /**
      * Find a common ancestor of the parents

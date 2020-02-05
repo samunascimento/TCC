@@ -3,35 +3,34 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.models;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MergeEvent {
 
-    private String hash;
-    private List<String> parents;
+    private CommitData hash;
+    private List<CommitData> parents;
     private List<ConflictFile> conflictFiles;
-    private String commonAncestorOfParents;
+    private CommitData commonAncestorOfParents;
     private boolean isConflict = false;
 
     protected MergeEvent() {
-        this.hash = "";
-        this.commonAncestorOfParents = "";
+        this.hash = null;
+        this.commonAncestorOfParents = null;
         this.parents = new ArrayList<>();
         conflictFiles = new ArrayList<>();
     }
 
-    public String getHash() {
+    public CommitData getHash() {
         return hash;
     }
 
-    protected void setHash(String hash) {
+    protected void setHash(CommitData hash) {
         this.hash = hash;
     }
 
-    public List<String> getParents() {
+    public List<CommitData> getParents() {
         return parents;
     }
 
-    protected void addParents(String parent) {
+    protected void addParents(CommitData parent) {
         parents.add(parent);
     }
 
@@ -48,14 +47,14 @@ public class MergeEvent {
     }
 
     public void print() {
-        int c ;
+        int c;
         System.out.println("***************************************Merge***************************************");
-        System.out.println("Hash: " + hash);
+        System.out.println("Hash: " + hash.getCommitHash());
         for (int i = 0; i < parents.size(); i++) {
-            System.out.println("Parent " + (i + 1) + ": " + parents.get(i));
+            System.out.println("Parent " + (i + 1) + ": " + parents.get(i).getCommitHash());
         }
 
-        System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents);
+        System.out.println("Common Ancestor of Parents: " + commonAncestorOfParents.getCommitHash());
         if (isConflict) {
             System.out.println("Is Conflict\nConflicts:\n");
             for (ConflictFile file : this.conflictFiles) {
@@ -98,11 +97,11 @@ public class MergeEvent {
 
     }
 
-    public String getCommonAncestorOfParents() {
+    public CommitData getCommonAncestorOfParents() {
         return commonAncestorOfParents;
     }
 
-    protected void setCommonAncestorOfParents(String commonAncestorOfParents) {
+    protected void setCommonAncestorOfParents(CommitData commonAncestorOfParents) {
         this.commonAncestorOfParents = commonAncestorOfParents;
     }
 
