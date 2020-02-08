@@ -30,17 +30,15 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
     }
     
     public void process(ParserRuleContext ctx) {
-        SyntaxStructure ss = new SyntaxStructure();
-        
+        //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
-        ss.setStructureType(aux[0]);
         
-        ss.setText(ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";"));
+        //Get text
+        String strAux = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
         
-        ss.setStartLine(ctx.getStart().getLine());
-        ss.setFinalLine(ctx.getStop().getLine());
-        list.add(ss);
+        //Adding in list
+        list.add(new SyntaxStructure(ctx.getStart().getLine(),ctx.getStop().getLine(),strAux,aux[0]));
     }
 
     @Override

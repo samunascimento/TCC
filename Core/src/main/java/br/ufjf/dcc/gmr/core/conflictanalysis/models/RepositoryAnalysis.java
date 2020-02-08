@@ -56,11 +56,36 @@ public interface RepositoryAnalysis {
 
         JavaVisitor visitor = new JavaVisitor();
         visitor.visit(tree);
-        for (SyntaxStructure ss : visitor.getList()) {
-            System.out.println(ss.getStructureType());
-            System.out.println("Text:\n\n" + ss.getStartLine() + "\n" + ss.getText() + ss.getFinalLine() + "\n\n\n\n\n");
+
+        return visitor.getList();
+    }
+
+    public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
+        List<SyntaxStructure> list = new ArrayList<>();
+        for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
+            if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
+                start++;
+                list.add(ss);
+            }
+            if (start > stop) {
+                break;
+            }
         }
-        return null;
+        return list;
+    }
+
+    public static List<SyntaxStructure> getStructureTypeInInterval(List<SyntaxStructure> main, int start, int stop) throws IOException {
+        List<SyntaxStructure> list = new ArrayList<>();
+        for (SyntaxStructure ss : main) {
+            if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
+                start++;
+                list.add(ss);
+            }
+            if (start > stop) {
+                break;
+            }
+        }
+        return list;
     }
 
     public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean printProgress) throws IOException, LocalRepositoryNotAGitRepository {

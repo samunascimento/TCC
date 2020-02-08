@@ -6,6 +6,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.models.JavaVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
 */
 import br.ufjf.dcc.gmr.core.conflictanalysis.models.CommitData;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.RepositoryAnalysis;
+import br.ufjf.dcc.gmr.core.conflictanalysis.models.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.BranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
@@ -45,13 +47,15 @@ public class TestJoao {
             }
         }*/
         
-        /*String filePath = "/home/joao/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java";
-        RepositoryAnalysis.analyzeJavaSyntaxTree(filePath);*/
+        String filePath = "/home/joao/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestBeatriz.java";
+        for(SyntaxStructure ss : RepositoryAnalysis.getStructureTypeInInterval(filePath,14,18)){
+            System.out.println(ss.getStartLine() + " " + ss.getText() + "\t(" + ss.getStructureType() + ")\n");
+        }
         
-        String repositoryPath = "/home/joao/Git/UFJF";
+        /*String repositoryPath = "/home/joao/Git/UFJF";
         CommitData commit = new CommitData("44d54ec033e6fcb6905099d07ce08636db771cca",repositoryPath);
         System.out.println(commit.getTitle() + "\n" + commit.getCommitHash() + "\n" + commit.getAuthor() + "\n" + commit.getAuthorDate().toString() + "\n" + commit.getCommitter()+ "\n" + commit.getCommitterDate().toString());
-
+        */
     }
 
 }
