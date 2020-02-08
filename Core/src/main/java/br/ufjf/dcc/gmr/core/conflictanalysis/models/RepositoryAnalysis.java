@@ -64,7 +64,7 @@ public interface RepositoryAnalysis {
         List<SyntaxStructure> list = new ArrayList<>();
         for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
             if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
-                start++;
+                start = ss.getStartLine() + 1;
                 list.add(ss);
             }
             if (start > stop) {
@@ -78,7 +78,7 @@ public interface RepositoryAnalysis {
         List<SyntaxStructure> list = new ArrayList<>();
         for (SyntaxStructure ss : main) {
             if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
-                start++;
+                start = ss.getStartLine() + 1;
                 list.add(ss);
             }
             if (start > stop) {
