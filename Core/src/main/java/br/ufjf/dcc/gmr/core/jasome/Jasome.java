@@ -311,7 +311,6 @@ public class Jasome {
             ProjectMetrics projectMetrics = new ProjectMetrics();
             //List<File> absoluteFiles = new ArrayList<>();
             if (directory.isDirectory()) {
-                //System.out.println(directory.getPath());
                 String[] subDirectory = directory.list();
                 if (subDirectory != null) {
                     for (String dir : subDirectory) {
@@ -343,6 +342,7 @@ public class Jasome {
                     if (projectMetrics.getListVersionMetrics().get(k).getError()) {
                         System.out.println("temos um erro no arquivo: " + directory.getAbsoluteFile().toString());
                     }
+                    System.out.println("Directory: " + directory.getPath());
                     System.out.println("TLOC = " + projectMetrics.getListVersionMetrics().get(0).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(0).getListPackageMetric();
@@ -350,7 +350,6 @@ public class Jasome {
                     extractMetricClass(projectMetrics, listPackage);
                     extractMetricMethod(projectMetrics, listPackage);
                 } finally {
-                    System.out.println(new Date());
                     k++;
                 }
             }
@@ -395,13 +394,13 @@ public class Jasome {
     }
     
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
-        Jasome jasome = new Jasome("C:\\Users\\anton\\Desktop\\projeto-exemplo");
+        Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core");
         //jasome.runVersion(jasome.getRepositoryPath());
-        List<String> listVersion = new ArrayList<>();
-        listVersion = jasome.runOneVersion("C:\\Users\\anton\\Desktop\\projeto-exemplo");
-        for(String line : listVersion){
-            System.out.println(line);
-        }
+        //List<String> listVersion = new ArrayList<>();
+        ///listVersion = jasome.runOneVersion("C:\\Users\\anton\\Desktop\\projeto-exemplo");
+        //for(String line : listVersion){
+        //    System.out.println(line);
+        //}
         
         
         //versão de teste passando um repositório com arquivos java
@@ -410,6 +409,6 @@ public class Jasome {
         
         //versão de teste passando repositório qualquer, buscando por todos os arquivos java dentro dele e de suas subpastas.
         //PROBLEMA:(não consigo armazenar em projectMetrics pois o método para conseguir todos os arquivos é recursivo, sendo assim não consigo armazenar tais métricas, apenas gerá-las.
-        //jasome.RunRepository(jasome.getRepositoryPath());
+        jasome.RunRepository(jasome.getRepositoryPath());
     }
 }
