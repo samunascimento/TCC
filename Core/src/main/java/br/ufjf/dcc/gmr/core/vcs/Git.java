@@ -1078,7 +1078,7 @@ public class Git {
          command = "git diff " + commitSource + " " + commitTarget;
         }
         else{
-         command= "git diff " + commitSource + " " + commitTarget+ "-- unified";
+         command= "git diff " + commitSource + " " + commitTarget+ "--unified";
         }
        
         CLIExecution execution = CLIExecute.execute(command, directory);
@@ -1135,7 +1135,7 @@ public class Git {
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         
-         String command= "git diff " + commitSource + " " + commitTarget;
+         String command= "git diff " + commitSource + " " + commitTarget+ "--unified=0";
         
        
         CLIExecution execution = CLIExecute.execute(command, directory);

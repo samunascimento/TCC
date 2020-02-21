@@ -26,18 +26,13 @@ public class TestLuan {
           String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         // Git.reset(repositoryPath,true, false, false,"");
-        List<FileDiff> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         try {
-            result = Git.diff(repositoryPath, "4790a3a", " 25fedab",false);
+            
+            result = Git.auxiliardiff(repositoryPath, "4790a3a", " 25fedab");
 
-            for (FileDiff file : result) {
-                System.out.println("=======================================");
-                System.out.println(file.getFilePathSource());
-                System.out.println(file.getFilePathTarget());
-                System.out.println("Lines");
-                for (LineInformation line : file.getLines()) {
-                    System.out.println(line);
-                }
+            for (String line: result) {
+                System.out.println(line);
             }
 
         } catch (IOException ex) {

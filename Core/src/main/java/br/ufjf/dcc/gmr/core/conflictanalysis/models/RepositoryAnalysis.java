@@ -266,48 +266,22 @@ public interface RepositoryAnalysis {
     }
 
     public static int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
+    
+        //Verificar se a linha existe no arquivo original, e se existir
         List<String> output = new ArrayList<>();
-        output = Git.auxiliardiff(directory, commitSource, commitTarget);
-        //verificar se a linha existia originalmente
-        if (output.size() < originalLineNumber) {
-            //se existir
-
-            int contador = 0;
-            int contadorExcluidas = 0;
-            int contadorAdicionadas = 0;
+        
+            int counter=0;
+            output = Git.auxiliardiff(directory, commitSource, commitTarget);
             for (String line : output) {
-                if (contador == originalLineNumber) {
-                    if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                        System.out.println("A linha desejada foi excluida");
-                        return -1;
-
-                    } else {
-                        break;
-                    }
-                } else {
-
-                    if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                        contador++;
-                    } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
-                        contador++;
-                        contadorAdicionadas++;
-                    } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                        contador++;
-                    } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                        contador++;
-                        contadorExcluidas++;
-                    }
-
+               if(line.charAt(0)== '@' && line.charAt(1)=='@'){
+                   String c=line.substring(5);
+                    
+                   
                 }
-            }
 
-            int linhaaproximada = originalLineNumber - contadorExcluidas + contadorAdicionadas;
-            return linhaaproximada;
         }
-        //senão
-
-        System.out.println("Não foi possivel encontrar a linha no arquivo original");
-        return -1;
-    }
+        
+        return 0;
+    
+}
 }
