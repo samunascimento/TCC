@@ -31,8 +31,8 @@ public class Jasome {
     private String user = null; //usuario github
     private String password = null; //senha github
     
-    public static List<String> fileNames = new ArrayList<>();
-    public static List<String> pathNames = new ArrayList<>();
+    private static List<String> fileNames = new ArrayList<>();
+    private static List<String> pathNames = new ArrayList<>();
     
     private static String repository;
     
@@ -320,7 +320,7 @@ public class Jasome {
             } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith(".java")) {
                 fileNames.add(directory.getName().toString());
                 pathNames.add(directory.getAbsoluteFile().toString());
-                System.out.println("adicionado arquivo: " + directory.getName());
+                System.out.println("adicionando arquivo: " + directory.getName());
             }
         } catch (NullPointerException ex) {
             System.out.println("Fim do arquivo");
