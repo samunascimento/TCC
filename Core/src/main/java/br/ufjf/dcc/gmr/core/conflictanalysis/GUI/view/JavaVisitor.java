@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.conflictanalysis.models;
+package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParserBaseVisitor;
-import br.ufjf.dcc.gmr.core.conflictanalysis.models.SyntaxStructure;
+import br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -38,7 +38,7 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
         String strAux = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
         
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart().getLine(),ctx.getStop().getLine(),strAux,aux[0]));
+        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),strAux,aux[0]));
     }
 
     @Override

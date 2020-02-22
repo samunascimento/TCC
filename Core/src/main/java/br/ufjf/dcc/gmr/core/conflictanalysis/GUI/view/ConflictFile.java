@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.models;
+package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,7 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.models;
+package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
-import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictFile;
-import br.ufjf.dcc.gmr.core.conflictanalysis.models.ConflictRegion;
-import br.ufjf.dcc.gmr.core.conflictanalysis.models.MergeEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,8 +23,6 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -63,8 +58,8 @@ public interface RepositoryAnalysis {
     public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
         List<SyntaxStructure> list = new ArrayList<>();
         for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
-            if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
-                start = ss.getStartLine() + 1;
+            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine()<= stop) {
+                start = ss.getStart().getLine() + 1;
                 list.add(ss);
             }
             if (start > stop) {
@@ -77,8 +72,8 @@ public interface RepositoryAnalysis {
     public static List<SyntaxStructure> getStructureTypeInInterval(List<SyntaxStructure> main, int start, int stop) throws IOException {
         List<SyntaxStructure> list = new ArrayList<>();
         for (SyntaxStructure ss : main) {
-            if (ss.isOneLine() && ss.getStartLine() >= start && ss.getFinalLine() <= stop) {
-                start = ss.getStartLine() + 1;
+            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine()<= stop) {
+                start = ss.getStart().getLine() + 1;
                 list.add(ss);
             }
             if (start > stop) {
@@ -228,10 +223,10 @@ public interface RepositoryAnalysis {
             System.out.println("ERROR: IsOutsideRepository error!");
         } catch (InvalidDocument ex) {
             System.out.println("ERROR: InvalidDocument error!");
-        } catch (IOException ex) {
-            throw new IOException();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+        } catch (IOException ex) {
+            throw new IOException();
         }
         return list;
     }

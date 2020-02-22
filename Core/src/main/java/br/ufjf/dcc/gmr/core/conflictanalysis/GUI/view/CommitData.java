@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.models;
+package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
 
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.util.Date;
