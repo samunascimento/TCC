@@ -197,65 +197,64 @@ public class Git {
         CLIExecution execute;
         Status type = null;
         FileStatus status = new FileStatus();
-            
-        
+
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
         }
 
         execute = CLIExecute.execute(command, repositoryPath);
-        
+
         for (String line : execute.getOutput()) {
-            String []array;
-            if(line.startsWith(" M")){
+            String[] array;
+            if (line.startsWith(" M")) {
                 array = line.split("M");
                 status.setType(type.MODIFIED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.startsWith(" A")){
+            if (line.startsWith(" A")) {
                 array = line.split("A");
                 status.setType(type.ADDED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.startsWith(" D")){
+            if (line.startsWith(" D")) {
                 array = line.split("D");
                 status.setType(type.DELETED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.contains("?")){
+            if (line.contains("?")) {
                 array = line.split(" ");
                 status.setType(type.UNTRACKED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.startsWith(" R")){
+            if (line.startsWith(" R")) {
                 array = line.split("R");
                 status.setType(type.RENAMED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.startsWith(" C")){
+            if (line.startsWith(" C")) {
                 array = line.split("C");
-                status = new FileStatus(type.COPIED,array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status = new FileStatus(type.COPIED, array[1]);
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.startsWith(" U")){
+            if (line.startsWith(" U")) {
                 array = line.split("U");
                 status.setType(type.UNMERGED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
-            if(line.contains("!")){
+            if (line.contains("!")) {
                 array = line.split(" ");
                 status.setType(type.IGNORED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType()+" "+status.getPath());
+                status.files.allStatus.add(status.getType() + " " + status.getPath());
             }
         }
-        return status;  
+        return status;
     }
 
     public static FileUnmerged statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
@@ -295,7 +294,7 @@ public class Git {
         String command = "git clone " + url;
         if (name != null) {
             command = command.concat(" ").concat(name);
-        } 
+        }
 
         if (url == null || url.isEmpty()) {
             throw new UrlNotFound();
@@ -937,30 +936,20 @@ public class Git {
         }
         return check;
     }
-    
+
     /**
      * Return form:
-     * 
-     * Commit Hash
-     * Author Name
-     * Author Date
-     * Committer Name
-     * Committer Date
-     * Title
-     * 
+     *
+     * Commit Hash Author Name Author Date Committer Name Committer Date Title
+     *
      * @param commitHash
      * @param repositoryPath
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
-    public static List<String> getBaseCommitInfo(String commitHash, String repositoryPath) {
-        CLIExecution cliE = null;
-        try {
-           cliE = CLIExecute.execute("git show "+commitHash+" --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch", repositoryPath);
-        } catch (IOException ex) {
-            return null;
-        }
-        return cliE.getOutput();
+    public static List<String> getBaseCommitInfo(String commitHash, String repositoryPath) throws IOException {
+        String command = "git show " + commitHash + " --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch";
+        return CLIExecute.execute(command,repositoryPath).getOutput();
     }
 
     /**
@@ -1074,13 +1063,12 @@ public class Git {
         int i = 0;
         FileDiff aux = new FileDiff();
         String command = null;
-        if(!unified){
-         command = "git diff " + commitSource + " " + commitTarget;
+        if (!unified) {
+            command = "git diff " + commitSource + " " + commitTarget;
+        } else {
+            command = "git diff " + commitSource + " " + commitTarget + "--unified";
         }
-        else{
-         command= "git diff " + commitSource + " " + commitTarget+ "--unified";
-        }
-       
+
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
@@ -1093,7 +1081,7 @@ public class Git {
                 }
             }
         } else {
-        	aux.setAllMessage(execution.getOutput());
+            aux.setAllMessage(execution.getOutput());
             for (String line : execution.getOutput()) {
 
                 if (line.startsWith("diff --")) {
@@ -1106,19 +1094,18 @@ public class Git {
                 }
 
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                	String c=line.substring(5);
-                	aux.setFilePathTarget(c);
+                    String c = line.substring(5);
+                    aux.setFilePathTarget(c);
                 } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
-                	String c=line.substring(1);
+                    String c = line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.ADDED));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                	String c=line.substring(5);
-                	aux.setFilePathSource(c);
+                    String c = line.substring(5);
+                    aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                	String c=line.substring(1);
+                    String c = line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.DELETED));
-                }
-                  else if(line.charAt(0)== '@'){
+                } else if (line.charAt(0) == '@') {
                     aux.setArroba(line);
                 }
 
@@ -1130,31 +1117,27 @@ public class Git {
 
         return result;
     }
-    
+
     public static List<String> auxiliardiff(String directory, String commitSource, String commitTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        
-         String command= "git diff " + commitSource + " " + commitTarget+ "--unified=0";
-        
-       
+        String command = "git diff " + commitSource + " " + commitTarget + "--unified=0";
+
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
-                    
+
                 }
                 if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidCommitHash();
                 }
             }
-        } 
-        	
-		return execution.getOutput();
-        
+        }
 
-        
+        return execution.getOutput();
+
     }
 }

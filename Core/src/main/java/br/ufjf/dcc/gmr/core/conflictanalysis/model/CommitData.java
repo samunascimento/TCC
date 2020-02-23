@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class CommitData {
 
-    public CommitData(String hash, String repositoryPath) {
+    public CommitData(String hash, String repositoryPath) throws IOException {
         List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
         this.commitHash = info.get(0);
         this.author = info.get(1);

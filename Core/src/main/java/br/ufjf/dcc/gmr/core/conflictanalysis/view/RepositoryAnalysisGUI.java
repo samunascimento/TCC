@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis.getFileContent;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
@@ -26,18 +26,17 @@ import java.util.List;
 import javax.swing.JFileChooser;
 
 public class RepositoryAnalysisGUI extends javax.swing.JFrame {
-    
-    private List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean gui) throws IOException {
-        
+
+    public List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean gui) throws IOException {
+
         //Main list
         List<MergeEvent> list = new ArrayList<>();
-        
+
         //MergeEvent's field
         CommitData hash;
         List<CommitData> parents = new ArrayList<>();
         List<ConflictFile> conflictFiles = new ArrayList<>();
         CommitData commonAncestorOfParents;
-        boolean isConflict;
 
         //ConflictFile's field
         String fileName;
@@ -48,7 +47,6 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
         List<String> beforeContext = new ArrayList<>();
         List<String> v1 = new ArrayList<>();
         List<String> v2 = new ArrayList<>();
-        String file;
         int beginLine;
         int separatorLine;
         int endLine;
@@ -59,7 +57,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
         double progress;
         double analysed = 0.0;
         double analysedPercentage = 0.0;
-        
+
         //Start
         try {
             //Getting all merges's hashes
@@ -67,53 +65,49 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
 
             //Scanning and processing the hash list
             for (String merge : allMerges) {
+                
                 //Getting hash from merge
-                hash = new CommitData(merge.split(",")[1], repositoryPath);
+                auxArray = merge.split(",");
+                hash = new CommitData(auxArray[1], repositoryPath);
 
                 //Getting parents from merge
-                for (String parent : merge.split(",")[1].split(" ")) {
+                for (String parent : auxArray[0].split(" ")){
                     parents.add(new CommitData(parent, repositoryPath));
                 }
 
                 //Getting commonAncestorOfParents from parents's array
-                commonAncestorOfParents = new CommitData(Git.mergeBaseCommand(repositoryPath, Arrays.asList(merge.split(",")[1].split(" "))), repositoryPath);
-
-                /////////////////////////////////
-                Git.reset(repositoryPath, true, false, false, null);
-                Git.clean(repositoryPath, true, 0);
-                /////////////////////////////////
+                commonAncestorOfParents = new CommitData(Git.mergeBaseCommand(repositoryPath, Arrays.asList(merge.split(",")[0].split(" "))), repositoryPath);
 
                 //Moving to first parent
                 Git.checkout(parents.get(0).getCommitHash(), repositoryPath);
 
                 //Checking if merge is a conflcit 
                 if (Git.mergeIsConflicting(parents.get(1).getCommitHash(), repositoryPath, false, false)) {
-                    //Setting isConflict to true
-                    isConflict = true;
                     
                     //Processing conflcit
                     for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                         //
                         if (!fileDiff.getLines().isEmpty()) {
                             //Getting file name ("if" to differentiate the operating system: CMD and Linux)
-                            if (fileDiff.getFilePathSource().contains("/"))
+                            if (fileDiff.getFilePathSource().contains("/")) {
                                 auxArray = fileDiff.getFilePathSource().split("/");
-                            else
+                            } else {
                                 auxArray = fileDiff.getFilePathSource().split("\\");
+                            }
                             fileName = auxArray[auxArray.length - 1];
 
                             //Getting conflcit file content
-                            allFile = getFileContent(repositoryPath + fileDiff.getFilePathSource());
-                            
+                            allFile = RepositoryAnalysis.getFileContent(repositoryPath + fileDiff.getFilePathSource());
+
                             ////Geting conflict regions from conflict file
                             for (int i = 0; i < allFile.size(); i++) {
                                 if (allFile.get(i).contains("<<<<<<")) {
-                                    beginLine = i + 1 ;
+                                    beginLine = i + 1;
                                     for (int j = i - linesContext; j < i; j++) {
                                         if (j < 0) {
                                             j = 1;
                                         } else {
-                                           beforeContext.add(allFile.get(j));
+                                            beforeContext.add(allFile.get(j));
                                         }
                                     }
                                     i++;
@@ -136,8 +130,8 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                                         }
                                     }
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(beforeContext,afterContext,v1,v2,beginLine,separatorLine,endLine));
-                                    
+                                    conflictRegion.add(new ConflictRegion(beforeContext, afterContext, v1, v2, beginLine, separatorLine, endLine));
+
                                     //Reseting variables
                                     beforeContext.clear();
                                     afterContext.clear();
@@ -145,51 +139,54 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                                     v2.clear();
                                 }
                             }
-                            
+
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName,conflictRegion));
-                            
+                            conflictFiles.add(new ConflictFile(fileName, conflictRegion));
+
                             //Reseting conflictRegion
                             conflictRegion.clear();
-                            
+
                         }
-                        
+
                         //Search and getting special types of conflcit
                         for (String line : fileDiff.getAllMessage()) {
                             if (line.startsWith("* Unmerged path")) {
                                 auxArray = line.split("/");
-                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1],null));
+                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1], null));
                             }
                         }
-                        
+
                     }
-                    
+
                     //Aborting conflictuos merge
                     Git.mergeAbort(repositoryPath);
-                     
+
                 }
-                
-                //Return to master
+
+                //Return to master and reseting repository
                 Git.checkout("master", repositoryPath);
-                
+                Git.reset(repositoryPath, true, false, false, null);
+                Git.clean(repositoryPath, true, 0);
+
                 //Adding merge event in list
-                list.add(new MergeEvent(hash,parents,conflictFiles,commonAncestorOfParents));
-                
-                //Reseting conflict files
+                list.add(new MergeEvent(hash, parents, conflictFiles, commonAncestorOfParents));
+
+                //Reseting conflict files and parents
                 conflictFiles.clear();
-                
-                ////////////////////////////////////////////////////////////////////////
+                parents.clear();
+
+                //Progress
                 progress = Math.ceil((analysed / allMerges.size()) * 100);
                 if (progress > analysedPercentage) {
                     if (gui) {
-                        
+
                     } else {
                         System.out.println((int) progress + "%...");
                     }
                     analysedPercentage = progress;
                 }
                 analysed = analysed + 1.0;
-               ////////////////////////////////////////////////////////////////////////
+                
             }
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
@@ -230,12 +227,8 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
         } catch (IOException ex) {
             throw new IOException();
         }
-        
+
         return list;
-    }
-    
-    public initGUI(){
-        initComponents();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -410,9 +403,9 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
 
     private void analyseBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analyseBMouseClicked
         if (repositoryPathTF.getText().isEmpty()) {
-            
+
         } else {
-            
+
         }
     }//GEN-LAST:event_analyseBMouseClicked
     private void chooseFileBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseFileBMouseClicked
