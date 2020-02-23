@@ -99,7 +99,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                             //Getting conflcit file content
                             allFile = RepositoryAnalysis.getFileContent(repositoryPath + fileDiff.getFilePathSource());
 
-                            ////Geting conflict regions from conflict file
+                            //Geting conflict regions from conflict file
                             for (int i = 0; i < allFile.size(); i++) {
                                 if (allFile.get(i).contains("<<<<<<")) {
                                     beginLine = i + 1;
@@ -130,7 +130,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                                         }
                                     }
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(beforeContext, afterContext, v1, v2, beginLine, separatorLine, endLine));
+                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext),new ArrayList<>(afterContext),new ArrayList<>(v1),new ArrayList<>(v2), beginLine, separatorLine, endLine));
 
                                     //Reseting variables
                                     beforeContext.clear();
@@ -141,7 +141,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName, conflictRegion));
+                            conflictFiles.add(new ConflictFile(fileName,new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -169,7 +169,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                 Git.clean(repositoryPath, true, 0);
 
                 //Adding merge event in list
-                list.add(new MergeEvent(hash, parents, conflictFiles, commonAncestorOfParents));
+                list.add(new MergeEvent(hash,new ArrayList<>(parents),new ArrayList<>(conflictFiles), commonAncestorOfParents));
 
                 //Reseting conflict files and parents
                 conflictFiles.clear();

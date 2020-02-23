@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class TestJoao {
 
     public static void main(String[] args){
-        String repositoryPath = "/home/joao/Git/Dvoldemort";
+        String repositoryPath = "C:\\Users\\joaop\\Git\\Twitter4J";
         RepositoryAnalysisGUI gui = new RepositoryAnalysisGUI();
         try {
             for(MergeEvent merge : gui.searchAllConflicts(repositoryPath, 2, false)){
