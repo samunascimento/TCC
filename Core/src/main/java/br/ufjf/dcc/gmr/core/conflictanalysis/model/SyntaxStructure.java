@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
+package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import org.antlr.v4.runtime.Token;
 

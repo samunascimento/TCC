@@ -1,49 +1,41 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
+package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MergeEvent {
 
-    private CommitData hash;
-    private List<CommitData> parents;
-    private List<ConflictFile> conflictFiles;
-    private CommitData commonAncestorOfParents;
-    private boolean isConflict = false;
-
-    protected MergeEvent() {
-        this.hash = null;
-        this.commonAncestorOfParents = null;
-        this.parents = new ArrayList<>();
-        conflictFiles = new ArrayList<>();
+    private final CommitData hash;
+    private final List<CommitData> parents;
+    private final List<ConflictFile> conflictFiles;
+    private final CommitData commonAncestorOfParents;
+    private final boolean isConflict;
+    
+    public MergeEvent(CommitData hash, List<CommitData> parents, List<ConflictFile> conflictFiles, CommitData commonAncestorOfParents) {
+        this.hash = hash;
+        this.parents = parents;
+        this.conflictFiles = conflictFiles;
+        this.commonAncestorOfParents = commonAncestorOfParents;
+        this.isConflict = !conflictFiles.isEmpty();
     }
-
+        
     public CommitData getHash() {
         return hash;
-    }
-
-    protected void setHash(CommitData hash) {
-        this.hash = hash;
     }
 
     public List<CommitData> getParents() {
         return parents;
     }
 
-    protected void addParents(CommitData parent) {
-        parents.add(parent);
-    }
-
     public List<ConflictFile> getConflictFiles() {
         return conflictFiles;
     }
 
-    protected void setConflictFiles(List<ConflictFile> conflictFiles) {
-        this.conflictFiles = conflictFiles;
+    public CommitData getCommonAncestorOfParents() {
+        return commonAncestorOfParents;
     }
-
-    protected void addConflictFiles(ConflictFile conflictFiles) {
-        this.conflictFiles.add(conflictFiles);
+    
+    public boolean isConflict() {
+        return isConflict;
     }
 
     public void print() {
@@ -86,31 +78,11 @@ public class MergeEvent {
                     }
                 }
             }
-            /*for (SpecialConflictFile spc : this.specialConflictFiles) {
-                System.out.println("\tFile Name: " + spc.getFileName() + "\n\t\tHas not been"
-                        + " merged as it has been renamed or deleted.");
-            }*/
         } else {
             System.out.println("Not is Conflict");
         }
         System.out.println("***********************************************************************************");
 
-    }
-
-    public CommitData getCommonAncestorOfParents() {
-        return commonAncestorOfParents;
-    }
-
-    protected void setCommonAncestorOfParents(CommitData commonAncestorOfParents) {
-        this.commonAncestorOfParents = commonAncestorOfParents;
-    }
-
-    public boolean isConflict() {
-        return isConflict;
-    }
-
-    protected void setConflict(boolean isConflict) {
-        this.isConflict = isConflict;
     }
 
 }

@@ -1,7 +1,10 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
+package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis.getFileContent;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
@@ -16,253 +19,225 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JFileChooser;
-import javax.swing.JProgressBar;
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 
-public class RepositoryAnalysis extends javax.swing.JFrame  {
+public class RepositoryAnalysisGUI extends javax.swing.JFrame {
     
-    public RepositoryAnalysis() {
-        initComponents();
-    }
-    
-    private void setProgressBarStatus(int status){
-        progressBar.setValue(status);
-        progressBar.setString(status + "%");
-    }
-    
-      public static List<String> getFileContent(String folderPath) throws IOException {
-        List<String> content = new ArrayList<>();
-        File file = new File(folderPath);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String st;
-        while ((st = br.readLine()) != null) {
-            content.add(st);
-        }
-        return content;
-
-    }
-
-    public static List<SyntaxStructure> analyzeJavaSyntaxTree(String filePath) throws IOException {
-
-        ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
-
-        JavaVisitor visitor = new JavaVisitor();
-        visitor.visit(tree);
-
-        return visitor.getList();
-    }
-
-    public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
-        List<SyntaxStructure> list = new ArrayList<>();
-        for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
-            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine() <= stop) {
-                start = ss.getStart().getLine() + 1;
-                list.add(ss);
-            }
-            if (start > stop) {
-                break;
-            }
-        }
-        return list;
-    }
-
-    public static List<SyntaxStructure> getStructureTypeInInterval(List<SyntaxStructure> main, int start, int stop) throws IOException {
-        List<SyntaxStructure> list = new ArrayList<>();
-        for (SyntaxStructure ss : main) {
-            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine() <= stop) {
-                start = ss.getStart().getLine() + 1;
-                list.add(ss);
-            }
-            if (start > stop) {
-                break;
-            }
-        }
-        return list;
-    }
-
-    public static List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean gui) throws IOException {
+    private List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean gui) throws IOException {
         
-        List<String> allMerges = null;
-        String[] family = null;
-        String[] parents = null;
-        String[] auxArray = null;
-        MergeEvent mergeEvent = new MergeEvent();
+        //Main list
         List<MergeEvent> list = new ArrayList<>();
-        ConflictFile conflictFile = new ConflictFile();
-        ConflictRegion conflictRegion = new ConflictRegion();
-        List<String> conflict = new ArrayList<>();
-        int auxInt = 0;
-        int soType = -1;
-        double analysed = 1.0;
-        double analysedPercentage = 0.0;
-        double progress = 0.0;
+        
+        //MergeEvent's field
+        CommitData hash;
+        List<CommitData> parents = new ArrayList<>();
+        List<ConflictFile> conflictFiles = new ArrayList<>();
+        CommitData commonAncestorOfParents;
+        boolean isConflict;
 
+        //ConflictFile's field
+        String fileName;
+        List<ConflictRegion> conflictRegion = new ArrayList<>();
+
+        //ConflictRegion's field
+        List<String> afterContext = new ArrayList<>();
+        List<String> beforeContext = new ArrayList<>();
+        List<String> v1 = new ArrayList<>();
+        List<String> v2 = new ArrayList<>();
+        String file;
+        int beginLine;
+        int separatorLine;
+        int endLine;
+
+        //Assistants
+        String[] auxArray;
+        List<String> allFile;
+        double progress;
+        double analysed = 0.0;
+        double analysedPercentage = 0.0;
+        
+        //Start
         try {
-            allMerges = Git.giveAllMerges(repositoryPath);
-            if (repositoryPath.contains("\\")) {
-                soType = 1;
-                if (!repositoryPath.endsWith("\\")) {
-                    repositoryPath = repositoryPath + "\\";
-                }
-            } else if (repositoryPath.contains("/")) {
-                soType = 0;
-                if (!repositoryPath.endsWith("/")) {
-                    repositoryPath = repositoryPath + "/";
-                }
-            }
+            //Getting all merges's hashes
+            List<String> allMerges = Git.giveAllMerges(repositoryPath);
+
+            //Scanning and processing the hash list
             for (String merge : allMerges) {
-                family = merge.split(",");
-                mergeEvent.setHash(new CommitData(family[1], repositoryPath));
-                parents = family[0].split(" ");
-                for (String parent : parents) {
-                    mergeEvent.addParents(new CommitData(parent, repositoryPath));
+                //Getting hash from merge
+                hash = new CommitData(merge.split(",")[1], repositoryPath);
+
+                //Getting parents from merge
+                for (String parent : merge.split(",")[1].split(" ")) {
+                    parents.add(new CommitData(parent, repositoryPath));
                 }
-                mergeEvent.setCommonAncestorOfParents(new CommitData(Git.mergeBaseCommand(repositoryPath, Arrays.asList(parents)), repositoryPath));
+
+                //Getting commonAncestorOfParents from parents's array
+                commonAncestorOfParents = new CommitData(Git.mergeBaseCommand(repositoryPath, Arrays.asList(merge.split(",")[1].split(" "))), repositoryPath);
+
+                /////////////////////////////////
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.clean(repositoryPath, true, 0);
-                Git.checkout(mergeEvent.getParents().get(0).getCommitHash(), repositoryPath);
-                if (Git.mergeIsConflicting(mergeEvent.getParents().get(1).getCommitHash(), repositoryPath, false, false)) {
-                    mergeEvent.setConflict(true);
+                /////////////////////////////////
+
+                //Moving to first parent
+                Git.checkout(parents.get(0).getCommitHash(), repositoryPath);
+
+                //Checking if merge is a conflcit 
+                if (Git.mergeIsConflicting(parents.get(1).getCommitHash(), repositoryPath, false, false)) {
+                    //Setting isConflict to true
+                    isConflict = true;
+                    
+                    //Processing conflcit
                     for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
+                        //
                         if (!fileDiff.getLines().isEmpty()) {
-                            switch (soType) {
-                                case 0:
-                                    auxArray = fileDiff.getFilePathSource().split("/");
-                                    break;
-                                case 1:
-                                    auxArray = fileDiff.getFilePathSource().split("\\");
-                                    break;
-                            }
-                            conflictFile.setFileName(auxArray[auxArray.length - 1]);
-                            conflict = getFileContent(repositoryPath + fileDiff.getFilePathSource());
-                            auxInt = conflict.size();
-                            for (int i = 0; i < auxInt; i++) {
-                                if (conflict.get(i).contains("<<<<<<")) {
-                                    conflictRegion.setBeginLine(i + 1);
+                            //Getting file name ("if" to differentiate the operating system: CMD and Linux)
+                            if (fileDiff.getFilePathSource().contains("/"))
+                                auxArray = fileDiff.getFilePathSource().split("/");
+                            else
+                                auxArray = fileDiff.getFilePathSource().split("\\");
+                            fileName = auxArray[auxArray.length - 1];
+
+                            //Getting conflcit file content
+                            allFile = getFileContent(repositoryPath + fileDiff.getFilePathSource());
+                            
+                            ////Geting conflict regions from conflict file
+                            for (int i = 0; i < allFile.size(); i++) {
+                                if (allFile.get(i).contains("<<<<<<")) {
+                                    beginLine = i + 1 ;
                                     for (int j = i - linesContext; j < i; j++) {
                                         if (j < 0) {
-                                            j = -1;
+                                            j = 1;
                                         } else {
-                                            conflictRegion.getBeforeContext().add(conflict.get(j));
+                                           beforeContext.add(allFile.get(j));
                                         }
                                     }
                                     i++;
-                                    while (!conflict.get(i).contains("=====")) {
-                                        conflictRegion.getV1().add(conflict.get(i));
+                                    while (!allFile.get(i).contains("=====")) {
+                                        v1.add(allFile.get(i));
                                         i++;
                                     }
-                                    conflictRegion.setSeparatorLine(i + 1);
+                                    separatorLine = i + 1;
                                     i++;
-                                    while (!conflict.get(i).contains(">>>>>")) {
-                                        conflictRegion.getV2().add(conflict.get(i));
+                                    while (!allFile.get(i).contains(">>>>>")) {
+                                        v2.add(allFile.get(i));
                                         i++;
                                     }
-                                    conflictRegion.setEndLine(i + 1);
+                                    endLine = i + 1;
                                     for (int j = i + 1; j < i + 1 + linesContext; j++) {
-                                        if (j == conflict.size()) {
+                                        if (j == allFile.size()) {
                                             break;
                                         } else {
-                                            conflictRegion.getAfterContext().add(conflict.get(j));
+                                            afterContext.add(allFile.get(j));
                                         }
                                     }
-                                    conflictFile.addConflictRegion(conflictRegion);
-                                    conflictRegion = new ConflictRegion();
+                                    //Adding a new conflict region
+                                    conflictRegion.add(new ConflictRegion(beforeContext,afterContext,v1,v2,beginLine,separatorLine,endLine));
+                                    
+                                    //Reseting variables
+                                    beforeContext.clear();
+                                    afterContext.clear();
+                                    v1.clear();
+                                    v2.clear();
                                 }
                             }
-                            mergeEvent.addConflictFiles(conflictFile);
-                            conflictFile = new ConflictFile();
-                            conflict.clear();
+                            
+                            //Adding a new list of conflcit regions
+                            conflictFiles.add(new ConflictFile(fileName,conflictRegion));
+                            
+                            //Reseting conflictRegion
+                            conflictRegion.clear();
+                            
                         }
+                        
+                        //Search and getting special types of conflcit
                         for (String line : fileDiff.getAllMessage()) {
                             if (line.startsWith("* Unmerged path")) {
                                 auxArray = line.split("/");
-                                conflictFile.setFileName(auxArray[auxArray.length - 1]);
-                                mergeEvent.addConflictFiles(conflictFile);
-                                conflictFile = new ConflictFile();
+                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1],null));
                             }
                         }
+                        
                     }
+                    
+                    //Aborting conflictuos merge
                     Git.mergeAbort(repositoryPath);
+                     
                 }
+                
+                //Return to master
                 Git.checkout("master", repositoryPath);
-                list.add(mergeEvent);
-                mergeEvent = new MergeEvent();
-                conflictFile = new ConflictFile();
-                conflictRegion = new ConflictRegion();
+                
+                //Adding merge event in list
+                list.add(new MergeEvent(hash,parents,conflictFiles,commonAncestorOfParents));
+                
+                //Reseting conflict files
+                conflictFiles.clear();
+                
+                ////////////////////////////////////////////////////////////////////////
                 progress = Math.ceil((analysed / allMerges.size()) * 100);
                 if (progress > analysedPercentage) {
-                    if(gui){
-
+                    if (gui) {
+                        
                     } else {
                         System.out.println((int) progress + "%...");
                     }
                     analysedPercentage = progress;
                 }
                 analysed = analysed + 1.0;
+               ////////////////////////////////////////////////////////////////////////
             }
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
         } catch (NoRemoteForTheCurrentBranch ex) {
             System.out.println("ERROR: NoRemoteForTheCurrentBranch error!");
+            throw new IOException();
         } catch (ThereIsNoMergeInProgress ex) {
             System.out.println("ERROR: ThereIsNoMergeInProgress error!");
+            throw new IOException();
         } catch (ThereIsNoMergeToAbort ex) {
             System.out.println("ERROR: ThereIsNoMergeToAbort error!");
+            throw new IOException();
         } catch (AlreadyUpToDate ex) {
             System.out.println("ERROR: AlreadyUpToDate error!");
+            throw new IOException();
         } catch (NotSomethingWeCanMerge ex) {
             System.out.println("ERROR: NotSomethingWeCanMerge error!");
+            throw new IOException();
         } catch (InvalidCommitHash ex) {
             System.out.println("ERROR: InvalidCommitHash error!");
+            throw new IOException();
         } catch (UnknownSwitch ex) {
             System.out.println("ERROR: UnknownSwitch error!");
+            throw new IOException();
         } catch (RefusingToClean ex) {
             System.out.println("ERROR: RefusingToClean error!");
+            throw new IOException();
         } catch (IsOutsideRepository ex) {
             System.out.println("ERROR: IsOutsideRepository error!");
+            throw new IOException();
         } catch (InvalidDocument ex) {
             System.out.println("ERROR: InvalidDocument error!");
+            throw new IOException();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
         } catch (IOException ex) {
             throw new IOException();
         }
+        
         return list;
     }
-
-    public static int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
-        //Verificar se a linha existe no arquivo original, e se existir
-        List<String> output = new ArrayList<>();
-
-        int counter = 0;
-        output = Git.auxiliardiff(directory, commitSource, commitTarget);
-        for (String line : output) {
-            if (line.charAt(0) == '@' && line.charAt(1) == '@') {
-                String c = line.substring(5);
-
-            }
-
-        }
-
-        return 0;
-
-    }
     
+    public initGUI(){
+        initComponents();
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -274,6 +249,8 @@ public class RepositoryAnalysis extends javax.swing.JFrame  {
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         progressBar = new javax.swing.JProgressBar();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         outputPanel = new javax.swing.JPanel();
         scrollPaneOutput = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
@@ -289,6 +266,11 @@ public class RepositoryAnalysis extends javax.swing.JFrame  {
         chooseFileB.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 chooseFileBMouseClicked(evt);
+            }
+        });
+        chooseFileB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseFileBActionPerformed(evt);
             }
         });
 
@@ -326,6 +308,10 @@ public class RepositoryAnalysis extends javax.swing.JFrame  {
         table.setName(""); // NOI18N
         jScrollPane1.setViewportView(table);
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel1.setText("Number of Context Lines");
+
         javax.swing.GroupLayout inputPanelLayout = new javax.swing.GroupLayout(inputPanel);
         inputPanel.setLayout(inputPanelLayout);
         inputPanelLayout.setHorizontalGroup(
@@ -334,24 +320,36 @@ public class RepositoryAnalysis extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(repositoryPathTF, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, inputPanelLayout.createSequentialGroup()
-                        .addComponent(chooseFileB)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(analyseB))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, inputPanelLayout.createSequentialGroup()
-                        .addComponent(repositoryPathL)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(inputPanelLayout.createSequentialGroup()
+                        .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(inputPanelLayout.createSequentialGroup()
+                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(repositoryPathTF)
+                                    .addGroup(inputPanelLayout.createSequentialGroup()
+                                        .addComponent(repositoryPathL)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(inputPanelLayout.createSequentialGroup()
+                                .addComponent(chooseFileB)
+                                .addGap(218, 218, 218)))
+                        .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(analyseB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         inputPanelLayout.setVerticalGroup(
             inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inputPanelLayout.createSequentialGroup()
                 .addGap(9, 9, 9)
-                .addComponent(repositoryPathL)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(repositoryPathL)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repositoryPathTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(repositoryPathTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chooseFileB)
@@ -411,20 +409,31 @@ public class RepositoryAnalysis extends javax.swing.JFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void analyseBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analyseBMouseClicked
-
+        if (repositoryPathTF.getText().isEmpty()) {
+            
+        } else {
+            
+        }
     }//GEN-LAST:event_analyseBMouseClicked
     private void chooseFileBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseFileBMouseClicked
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int check = jfc.showOpenDialog(null);
-        if(check == JFileChooser.APPROVE_OPTION){
+        if (check == JFileChooser.APPROVE_OPTION) {
             repositoryPathTF.setText(jfc.getSelectedFile().getPath());
         }
     }//GEN-LAST:event_chooseFileBMouseClicked
+
+    private void chooseFileBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chooseFileBActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton analyseB;
     private javax.swing.JButton chooseFileB;
     private javax.swing.JPanel inputPanel;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;

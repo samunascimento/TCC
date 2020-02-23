@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view;
+package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParserBaseVisitor;
-import br.ufjf.dcc.gmr.core.conflictanalysis.GUI.view.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
