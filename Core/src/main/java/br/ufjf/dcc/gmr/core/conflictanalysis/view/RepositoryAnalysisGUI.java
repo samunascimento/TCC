@@ -23,9 +23,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 public class RepositoryAnalysisGUI extends javax.swing.JFrame {
+
+    private List<MergeEvent> currentList = null;
+    private MergeEvent currentMerge = null;
+    private ConflictFile currentFile = null;
+    private int currentFileIndex = 0;
+    private int currentConflictIndex = 0;
+    private int currentMaxFileIndex = 0;
+    private int currentMaxConflictIndex = 0;
 
     public List<MergeEvent> searchAllConflicts(String repositoryPath, int linesContext, boolean gui) throws IOException {
 
@@ -63,15 +77,20 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
             //Getting all merges's hashes
             List<String> allMerges = Git.giveAllMerges(repositoryPath);
 
+            //Progress Bar of GUI
+            if (gui) {
+                this.progressBar.setStringPainted(true);    
+            }
+
             //Scanning and processing the hash list
             for (String merge : allMerges) {
-                
+
                 //Getting hash from merge
                 auxArray = merge.split(",");
                 hash = new CommitData(auxArray[1], repositoryPath);
 
                 //Getting parents from merge
-                for (String parent : auxArray[0].split(" ")){
+                for (String parent : auxArray[0].split(" ")) {
                     parents.add(new CommitData(parent, repositoryPath));
                 }
 
@@ -83,7 +102,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
 
                 //Checking if merge is a conflcit 
                 if (Git.mergeIsConflicting(parents.get(1).getCommitHash(), repositoryPath, false, false)) {
-                    
+
                     //Processing conflcit
                     for (FileDiff fileDiff : Git.diff(repositoryPath, "", "", false)) {
                         //
@@ -130,7 +149,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                                         }
                                     }
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext),new ArrayList<>(afterContext),new ArrayList<>(v1),new ArrayList<>(v2), beginLine, separatorLine, endLine));
+                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1), new ArrayList<>(v2), beginLine, separatorLine, endLine));
 
                                     //Reseting variables
                                     beforeContext.clear();
@@ -141,7 +160,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName,new ArrayList<>(conflictRegion)));
+                            conflictFiles.add(new ConflictFile(fileName, new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -169,7 +188,7 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                 Git.clean(repositoryPath, true, 0);
 
                 //Adding merge event in list
-                list.add(new MergeEvent(hash,new ArrayList<>(parents),new ArrayList<>(conflictFiles), commonAncestorOfParents));
+                list.add(new MergeEvent(hash, new ArrayList<>(parents), new ArrayList<>(conflictFiles), commonAncestorOfParents));
 
                 //Reseting conflict files and parents
                 conflictFiles.clear();
@@ -179,14 +198,13 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                 progress = Math.ceil((analysed / allMerges.size()) * 100);
                 if (progress > analysedPercentage) {
                     if (gui) {
-
-                    } else {
-                        System.out.println((int) progress + "%...");
+                        this.progressBar.setValue((int)progress);
                     }
+                    System.out.println((int) progress + "%...");
                     analysedPercentage = progress;
                 }
                 analysed = analysed + 1.0;
-                
+
             }
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
@@ -230,63 +248,157 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
 
         return list;
     }
+    public void initGUI() {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RepositoryAnalysisGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RepositoryAnalysisGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RepositoryAnalysisGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RepositoryAnalysisGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                initComponents();
+                setVisible(true);
+            }
+        });
+    }
+    private void changeInfo(MergeEvent merge) {
+        this.currentMerge = merge;
+        this.info.setText("Commit\n"
+                + " Title: " + merge.getHash().getTitle() + "\n"
+                + " Hash: " + merge.getHash().getCommitHash() + "\n"
+                + " Author: " + merge.getHash().getAuthor() + "\n"
+                + " Author Date: " + merge.getHash().getAuthorDate() + "\n"
+                + " Committer:: " + merge.getHash().getCommitter() + "\n"
+                + " Committer Date: " + merge.getHash().getCommitterDate() + "\n"
+                + "\nParent 1\n"
+                + " Title: " + merge.getParents().get(0).getTitle() + "\n"
+                + " Hash: " + merge.getParents().get(0).getCommitHash() + "\n"
+                + " Author: " + merge.getParents().get(0).getAuthor() + "\n"
+                + " Author Date: " + merge.getParents().get(0).getAuthorDate() + "\n"
+                + " Committer:: " + merge.getParents().get(0).getCommitter() + "\n"
+                + " Committer Date: " + merge.getParents().get(0).getCommitterDate() + "\n"
+                + "\nParent 2\n"
+                + " Title: " + merge.getParents().get(1).getTitle() + "\n"
+                + " Hash: " + merge.getParents().get(1).getCommitHash() + "\n"
+                + " Author: " + merge.getParents().get(1).getAuthor() + "\n"
+                + " Author Date: " + merge.getParents().get(1).getAuthorDate() + "\n"
+                + " Committer:: " + merge.getParents().get(1).getCommitter() + "\n"
+                + " Committer Date: " + merge.getParents().get(1).getCommitterDate() + "\n"
+        );
+    }
+    private void updateFileChangeByMerge(MergeEvent merge) {
+        if (merge.isConflict()) {
+            this.fileNameLabel.setText("File Name: " + merge.getConflictFiles().get(0).getFileName());
+            this.currentFile = merge.getConflictFiles().get(0);
+            this.fileIndexLabel.setText("1/" + merge.getConflictFiles().size());
+            this.currentFileIndex = 1;
+            this.currentMaxFileIndex = merge.getConflictFiles().size();
 
+            if (!merge.getConflictFiles().get(0).getConflictRegion().equals(null)) {
+                this.conflictIndexLabel.setText("1/" + merge.getConflictFiles().get(0).getConflictRegion().size());
+                this.currentConflictIndex = 1;
+                this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
+                this.output.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getForm());
+            } else {
+                this.conflictIndexLabel.setText("0/0");
+                this.currentConflictIndex = 0;
+                this.currentMaxConflictIndex = 0;
+                this.output.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
+            }
+        } else {
+            this.fileNameLabel.setText("File Name: ");
+            this.currentFile = null;
+
+            this.fileIndexLabel.setText("0/0");
+            this.currentFileIndex = 0;
+            this.currentMaxFileIndex = 0;
+
+            this.conflictIndexLabel.setText("0/0");
+            this.currentConflictIndex = 0;
+            this.currentMaxConflictIndex = 0;
+            
+            this.output.setText("");
+        }
+    }
+    private void updateFile(ConflictFile file) {
+        this.fileNameLabel.setText("File Name: " + file.getFileName());
+        this.fileIndexLabel.setText(this.currentFileIndex + "/" + this.currentMaxFileIndex);
+        this.currentFile = file;
+        if (file.getConflictRegion() != null) {
+            this.conflictIndexLabel.setText("1/" + file.getConflictRegion().size());
+            this.currentConflictIndex = 1;
+            this.currentMaxConflictIndex = file.getConflictRegion().size();
+            this.output.setText(file.getConflictRegion().get(0).getForm());
+        } else {
+            this.conflictIndexLabel.setText("0/0");
+            this.currentConflictIndex = 0;
+            this.currentMaxConflictIndex = 0;
+            this.output.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
+        }
+    }
+    private void updateRegion(ConflictRegion region){
+        this.conflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
+        this.output.setText(region.getForm());
+        
+    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        inputPanel = new javax.swing.JPanel();
-        repositoryPathTF = new javax.swing.JTextField();
-        repositoryPathL = new javax.swing.JLabel();
-        chooseFileB = new javax.swing.JButton();
-        analyseB = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        inputPanel = new javax.swing.JPanel();
+        repositoryPathLabel = new javax.swing.JLabel();
+        findDirectoryButton = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
-        outputPanel = new javax.swing.JPanel();
-        scrollPaneOutput = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
-        menu = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        numLinesBox = new javax.swing.JComboBox<>();
+        numContextLabel = new javax.swing.JLabel();
+        textField = new javax.swing.JTextField();
+        analyseButton = new javax.swing.JButton();
+        changeFile = new javax.swing.JPanel();
+        previousFileButton = new javax.swing.JButton();
+        nextFileButton = new javax.swing.JButton();
+        fileIndexLabel = new javax.swing.JLabel();
+        fileNameLabel = new javax.swing.JLabel();
+        nextConflictButton = new javax.swing.JButton();
+        previousConflictButton = new javax.swing.JButton();
+        conflictIndexLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        output = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        info = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Git Repository Analysis");
+        setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
 
-        repositoryPathL.setText("RepositoryPath");
-
-        chooseFileB.setText("Choose File");
-        chooseFileB.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                chooseFileBMouseClicked(evt);
-            }
-        });
-        chooseFileB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chooseFileBActionPerformed(evt);
-            }
-        });
-
-        analyseB.setText("Analyse");
-        analyseB.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                analyseBMouseClicked(evt);
-            }
-        });
+        mainPanel.setBackground(new java.awt.Color(0, 0, 0));
 
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title", "Date", "Hash", "Conflict"
+                "Title ", "Date", "Hash", "Conflict"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                true, true, true, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -297,146 +409,315 @@ public class RepositoryAnalysisGUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        table.setToolTipText("");
-        table.setName(""); // NOI18N
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        repositoryPathLabel.setText("Repository Path:");
 
-        jLabel1.setText("Number of Context Lines");
+        findDirectoryButton.setText("Find Directory");
+        findDirectoryButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                findDirectoryButtonMouseClicked(evt);
+            }
+        });
+
+        numLinesBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0 Lines", "1 Line", "2 Lines", "3 Lines", "4 Lines", "5 Lines", "6 Lines", "7 Lines", "8 Lines", "9 Lines", "10 Lines" }));
+
+        numContextLabel.setText("Number of Context Lines");
+
+        textField.setEditable(false);
+
+        analyseButton.setText("Analyse");
+        analyseButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                analyseButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout inputPanelLayout = new javax.swing.GroupLayout(inputPanel);
         inputPanel.setLayout(inputPanelLayout);
         inputPanelLayout.setHorizontalGroup(
             inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputPanelLayout.createSequentialGroup()
+            .addGroup(inputPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inputPanelLayout.createSequentialGroup()
-                        .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(inputPanelLayout.createSequentialGroup()
-                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(repositoryPathTF)
-                                    .addGroup(inputPanelLayout.createSequentialGroup()
-                                        .addComponent(repositoryPathL)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(inputPanelLayout.createSequentialGroup()
-                                .addComponent(chooseFileB)
-                                .addGap(218, 218, 218)))
-                        .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(analyseB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(findDirectoryButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
+                        .addComponent(analyseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(inputPanelLayout.createSequentialGroup()
+                        .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numLinesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputPanelLayout.createSequentialGroup()
+                        .addComponent(repositoryPathLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(numContextLabel)))
                 .addContainerGap())
         );
         inputPanelLayout.setVerticalGroup(
             inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inputPanelLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(repositoryPathL)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(repositoryPathTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chooseFileB)
-                    .addComponent(analyseB))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        textArea.setColumns(20);
-        textArea.setRows(5);
-        scrollPaneOutput.setViewportView(textArea);
-
-        javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
-        outputPanel.setLayout(outputPanelLayout);
-        outputPanelLayout.setHorizontalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(repositoryPathLabel)
+                    .addComponent(numContextLabel))
+                .addGap(1, 1, 1)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numLinesBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(findDirectoryButton)
+                    .addComponent(analyseButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        outputPanelLayout.setVerticalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputPanelLayout.createSequentialGroup()
+
+        previousFileButton.setText("Previous File");
+        previousFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                previousFileButtonMouseClicked(evt);
+            }
+        });
+
+        nextFileButton.setText("Next File");
+        nextFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nextFileButtonMouseClicked(evt);
+            }
+        });
+
+        fileIndexLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        fileIndexLabel.setText("0/0");
+
+        fileNameLabel.setText("File Name: ");
+
+        nextConflictButton.setText("Next Conflict");
+        nextConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nextConflictButtonMouseClicked(evt);
+            }
+        });
+
+        previousConflictButton.setText("Previous Conflcit");
+        previousConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                previousConflictButtonMouseClicked(evt);
+            }
+        });
+
+        conflictIndexLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        conflictIndexLabel.setText("0/0");
+
+        javax.swing.GroupLayout changeFileLayout = new javax.swing.GroupLayout(changeFile);
+        changeFile.setLayout(changeFileLayout);
+        changeFileLayout.setHorizontalGroup(
+            changeFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(changeFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(changeFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(changeFileLayout.createSequentialGroup()
+                        .addComponent(fileNameLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(changeFileLayout.createSequentialGroup()
+                        .addComponent(previousFileButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextFileButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                        .addComponent(previousConflictButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(conflictIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextConflictButton)))
+                .addContainerGap())
+        );
+        changeFileLayout.setVerticalGroup(
+            changeFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changeFileLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(scrollPaneOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fileNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(changeFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(previousFileButton)
+                    .addComponent(fileIndexLabel)
+                    .addComponent(nextFileButton)
+                    .addComponent(nextConflictButton)
+                    .addComponent(previousConflictButton)
+                    .addComponent(conflictIndexLabel))
                 .addContainerGap())
         );
 
-        jMenu1.setText("File");
-        menu.add(jMenu1);
+        output.setEditable(false);
+        output.setColumns(20);
+        output.setRows(5);
+        jScrollPane2.setViewportView(output);
 
-        jMenu2.setText("Edit");
-        menu.add(jMenu2);
+        info.setEditable(false);
+        info.setColumns(20);
+        info.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        info.setRows(5);
+        info.setText("Commit\n Title:\n Hash:\n Author:\n Author Date:\n Committer:\n Committer Date:\n\nParent 1\n Title:\n Hash:\n Author:\n Author Date:\n Committer:\n Committer Date:\n\nParent 2\n Title:\n Hash:\n Author:\n Author Date:\n Committer:\n Committer Date:");
+        jScrollPane3.setViewportView(info);
 
-        setJMenuBar(menu);
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(changeFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(inputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(changeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addGap(11, 11, 11)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(inputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(inputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(outputPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void analyseBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analyseBMouseClicked
-        if (repositoryPathTF.getText().isEmpty()) {
-
-        } else {
-
-        }
-    }//GEN-LAST:event_analyseBMouseClicked
-    private void chooseFileBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseFileBMouseClicked
+    private void findDirectoryButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_findDirectoryButtonMouseClicked
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int check = jfc.showOpenDialog(null);
         if (check == JFileChooser.APPROVE_OPTION) {
-            repositoryPathTF.setText(jfc.getSelectedFile().getPath());
+            this.textField.setText(jfc.getSelectedFile().getPath());
         }
-    }//GEN-LAST:event_chooseFileBMouseClicked
+    }//GEN-LAST:event_findDirectoryButtonMouseClicked
+    private void analyseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_analyseButtonMouseClicked
+        if (this.textField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please, choose a directory!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (JOptionPane.showConfirmDialog(null, "Analyse " + this.textField.getText() + " ?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+            try {
+                this.currentList = this.searchAllConflicts(this.textField.getText(), this.numLinesBox.getSelectedIndex(), true);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "The selected directory is not a git repository.\nPlease, choose a new directory!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+            for (MergeEvent merge : this.currentList) {
+                model.addRow(new Object[]{merge.getHash().getTitle(),
+                    merge.getHash().getCommitterDate(),
+                    merge.getHash().getCommitHash(),
+                    merge.isConflict()
+                });
+            }
+            this.changeInfo(this.currentList.get(0));
+            this.updateFileChangeByMerge(currentList.get(0));
+            this.currentMerge = currentList.get(0);
 
-    private void chooseFileBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseFileBActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chooseFileBActionPerformed
-
+        }
+    }//GEN-LAST:event_analyseButtonMouseClicked
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        if (evt.getClickCount() > 1) {
+            MergeEvent merge = this.currentList.get(this.table.getSelectedRow());
+            this.changeInfo(merge);
+            this.updateFileChangeByMerge(merge);
+            this.currentMerge = merge;
+        }
+    }//GEN-LAST:event_tableMouseClicked
+    private void nextFileButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextFileButtonMouseClicked
+        if (this.currentMaxFileIndex != 0 && this.currentMaxFileIndex != 1) {
+            if (this.currentFileIndex == this.currentMaxFileIndex) {
+                this.currentFileIndex = 1;
+            } else {
+                this.currentFileIndex = this.currentFileIndex + 1;
+            }
+            updateFile(this.currentMerge.getConflictFiles().get( this.currentFileIndex - 1));
+        }
+    }//GEN-LAST:event_nextFileButtonMouseClicked
+    private void previousFileButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previousFileButtonMouseClicked
+        if (this.currentMaxFileIndex != 0 && this.currentMaxFileIndex != 1) {
+            if (this.currentFileIndex == 1) {
+                this.currentFileIndex = this.currentMaxFileIndex;
+            } else {
+                this.currentFileIndex = this.currentFileIndex - 1;
+            }
+            updateFile(this.currentMerge.getConflictFiles().get( this.currentFileIndex - 1));
+        }
+    }//GEN-LAST:event_previousFileButtonMouseClicked
+    private void previousConflictButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_previousConflictButtonMouseClicked
+        if (this.currentMaxConflictIndex != 0 && this.currentMaxConflictIndex != 1) {
+            if (this.currentConflictIndex == 1) {
+                this.currentConflictIndex = this.currentMaxConflictIndex;
+            } else {
+                this.currentConflictIndex = this.currentConflictIndex - 1;
+            }
+            this.updateRegion(this.currentFile.getConflictRegion().get(this.currentConflictIndex - 1));
+        }
+    }//GEN-LAST:event_previousConflictButtonMouseClicked
+    private void nextConflictButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextConflictButtonMouseClicked
+        if (this.currentMaxConflictIndex != 0 && this.currentMaxConflictIndex != 1) {
+            if (this.currentConflictIndex == this.currentMaxConflictIndex) {
+                this.currentConflictIndex = 1;
+            } else {
+                this.currentConflictIndex = this.currentConflictIndex + 1;
+            }
+            this.updateRegion(this.currentFile.getConflictRegion().get(this.currentConflictIndex - 1));
+        }
+    }//GEN-LAST:event_nextConflictButtonMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analyseB;
-    private javax.swing.JButton chooseFileB;
+    private javax.swing.JButton analyseButton;
+    private javax.swing.JPanel changeFile;
+    private javax.swing.JLabel conflictIndexLabel;
+    private javax.swing.JLabel fileIndexLabel;
+    private javax.swing.JLabel fileNameLabel;
+    private javax.swing.JButton findDirectoryButton;
+    private javax.swing.JTextArea info;
     private javax.swing.JPanel inputPanel;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JMenuBar menu;
-    private javax.swing.JPanel outputPanel;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JButton nextConflictButton;
+    private javax.swing.JButton nextFileButton;
+    private javax.swing.JLabel numContextLabel;
+    private javax.swing.JComboBox<String> numLinesBox;
+    private javax.swing.JTextArea output;
+    private javax.swing.JButton previousConflictButton;
+    private javax.swing.JButton previousFileButton;
     private javax.swing.JProgressBar progressBar;
-    private javax.swing.JLabel repositoryPathL;
-    private javax.swing.JTextField repositoryPathTF;
-    private javax.swing.JScrollPane scrollPaneOutput;
+    private javax.swing.JLabel repositoryPathLabel;
     private javax.swing.JTable table;
-    private javax.swing.JTextArea textArea;
+    private javax.swing.JTextField textField;
     // End of variables declaration//GEN-END:variables
 }

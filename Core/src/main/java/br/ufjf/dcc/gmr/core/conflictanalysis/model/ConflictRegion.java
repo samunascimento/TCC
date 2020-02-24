@@ -11,7 +11,7 @@ public class ConflictRegion {
     private final int beginLine;
     private final int separatorLine;
     private final int endLine;
-    
+
     public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine, int endLine) {
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
@@ -48,6 +48,35 @@ public class ConflictRegion {
 
     public int getEndLine() {
         return endLine;
+    }
+
+    private String generateForm() {
+        String str = "";
+        for (String line : this.beforeContext) {
+            str = str + line + "\n";
+        }
+        str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
+        for (String line : this.v1) {
+            str = str + line + "\n";
+        }
+        str = str + "============================== (" + this.separatorLine + ")\n";
+        for (String line : this.v2) {
+            str = str + line + "\n";
+        }
+        str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
+        for (String line : this.afterContext) {
+            str = str + line + "\n";
+        }
+        return str;
+    }
+    
+
+    public String getForm(){
+        return generateForm();
+    }
+    
+    public void print(){
+        System.out.println(generateForm());
     }
 
 }
