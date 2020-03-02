@@ -45,7 +45,7 @@ public class Jasome {
         repositoryPath = repository;
     }
 
-    public void checkRepository() throws RepositoryNotFound, UrlNotFound{
+    public void CheckRepository() throws RepositoryNotFound, UrlNotFound{
         if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
                 Git.clone(repositoryUrl, repositoryPath, repositoryName);
                 repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
@@ -55,22 +55,9 @@ public class Jasome {
             }
     }
 
-    public String getRepositoryPath() {
+    public String GetRepositoryPath() {
         return repositoryPath;
-    }
-    
-    
-    public List<String> runOneVersion(String repositoryPach) throws IOException{
-        CLIExecution extractMetrics = extractMetrics(repositoryPach);
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
-        readXml.fazerParsing(extractMetrics.getOutputString());
-        System.out.println(extractMetrics.getOutputString());
-        List<String> metric = new ArrayList<>();
-        for(String line : extractMetrics.getOutput()){
-            metric.add(line);
-        }
-        return metric;
-    }
+    }  
     
     public void ExtractClassMetrics(String repositoryPath, List files, List paths, Formats revision,int x) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException{
         ProjectMetrics projectMetrics = new ProjectMetrics();
@@ -84,7 +71,7 @@ public class Jasome {
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.checkout(revision.getCommitHash(), repositoryPath);
                 
-                CLIExecution extractMetrics = extractMetrics(paths.get(k).toString());
+                CLIExecution extractMetrics = ExtractMetrics(paths.get(k).toString());
                 System.out.println(new Date());
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
@@ -100,9 +87,9 @@ public class Jasome {
                     System.out.println("TLOC = "+ projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                    extractMetricPackage(projectMetrics, listPackage);
-                    extractMetricClass(projectMetrics, listPackage);
-                    extractMetricMethod(projectMetrics, listPackage);
+                    ExtractMetricPackage(projectMetrics, listPackage);
+                    ExtractMetricClass(projectMetrics, listPackage);
+                    ExtractMetricMethod(projectMetrics, listPackage);
                 }
                 finally {
                     System.out.println("Commit numero :" + x);
@@ -127,78 +114,7 @@ public class Jasome {
         }
     }
     
-    public void hello(){
-        System.out.println("teste");
-    }
-    
-  /*  public void RunEspecificRepository(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
-        ProjectMetrics projectMetrics = new ProjectMetrics();
-        try {
-            int i = 0;
-            int j = 0;
-            System.out.println(repositoryPath);
-            List<Formats> log = Git.logAll(repositoryPath);
-            List<File[]> files = new ArrayList<>();
-            System.out.println(log.size());
-            System.out.println("=================REVs=======================");
-            for (Formats revision : log) {
-                File diretorio = new File(repositoryPath);
-                File[] arquivos = diretorio.listFiles();
-                files.add(arquivos);
-                System.out.println("");
-                System.out.println("");
-                System.out.println("======================" + revision.getCommitHash() + "==================");     
-                System.out.println("Commit numero :" + i);
-                for (int k = 0; k < files.get(i).length; k++) {
-                    Git.clean(repositoryPath, true, 3);
-                    Git.reset(repositoryPath, true, false, false, null);
-                    Git.checkout(revision.getCommitHash(), repositoryPath);
-                    if (files.get(i)[k].toString().endsWith(".java") && files.get(i)[k].isFile()) {
-                        CLIExecution extractMetrics = extractMetrics(files.get(i)[k].toString());
-                        System.out.println("======================" + arquivos[k].getName() +  "==================");
-                        System.out.println(new Date());
-                        System.out.println("==============================================");
-                        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
-                        readXml.fazerParsing(extractMetrics.getOutputString());
-                        projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
-                        if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
-                            projectMetrics.getListVersionMetrics().get(i).setError(true);
-                            
-                        }
-                        try {
-                            if (projectMetrics.getListVersionMetrics().get(i).getError()) {
-                                System.out.println("temos um erro no arquivo: " + arquivos[k].toString());
-                            }
-                            System.out.println("TLOC = " + projectMetrics.getListVersionMetrics().get(j).getTloc().getValue());
-
-                            List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                            extractMetricPackage(projectMetrics, listPackage);
-                            extractMetricClass(projectMetrics, listPackage);
-                            extractMetricMethod(projectMetrics, listPackage);
-                        } finally {
-                            j++;
-                            System.out.println(new Date());
-                        }
-                    }
-                }
-                i++;
-            }
-        } catch (NullPointerException ex) {
-            System.out.println("Fim do arquivo");
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("Não é um repositório válido");
-        } catch (IOException ex) {
-            System.out.println("Diretorio não existe");
-        } catch (UnknownSwitch ex) {
-            System.out.println("UnknownSwitch");
-        } catch (RefusingToClean ex) {
-            System.out.println(ex.getMessage());
-        } catch (IsOutsideRepository ex) {
-            System.out.println(ex.getMessage());
-        }
-    }*/
-
-    public void extractMetricClass(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+    public void ExtractMetricClass(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
         boolean contemClass = false;
         for (int j = 0; j < listPackage.size(); j++) {
             for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
@@ -220,7 +136,7 @@ public class Jasome {
         }
     }
 
-    public void extractMetricPackage(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+    public void ExtractMetricPackage(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
         boolean contemPackage = false;
         for (int j = 0; j < listPackage.size(); j++) {
             if (projectMetrics.getListPackageMetrics().size() == 0) {
@@ -238,7 +154,7 @@ public class Jasome {
         }
     }
     
-    public void extractMetricMethod(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
+    public void ExtractMetricMethod(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
         boolean contemMetodo = false;
         for (int j = 0; j < listPackage.size(); j++) {
             for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
@@ -260,7 +176,7 @@ public class Jasome {
         }
     }
 
-    public void readFilter(ProjectMetrics projectMetrics) {
+    public void ReadFilter(ProjectMetrics projectMetrics) {
         Scanner ler = new Scanner(System.in);
         String filterMetric;
         while (true) {
@@ -305,7 +221,7 @@ public class Jasome {
 
     }
     
-    public void listarJavaArchives(String repositoryPath, File directory, Formats revision) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
+    public void ListJavaArchives(String repositoryPath, File directory, Formats revision) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
         try {
             int k=0;
             ProjectMetrics projectMetrics = new ProjectMetrics();
@@ -313,7 +229,7 @@ public class Jasome {
                 String[] subDirectory = directory.list();
                 if (subDirectory != null) {
                     for (String dir : subDirectory) {
-                        listarJavaArchives(repositoryPath, new File(directory + File.separator + dir), revision);
+                        ListJavaArchives(repositoryPath, new File(directory + File.separator + dir), revision);
                     }
                 }
                 
@@ -327,7 +243,7 @@ public class Jasome {
         } 
     }
 
- public void RunListarJavaArchives(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
+ public void RunListJavaArchives(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         File directory = new File(repositoryPath);
         System.out.println(repositoryPath);
         List<Formats> log = Git.logAll(repositoryPath);
@@ -335,7 +251,7 @@ public class Jasome {
         System.out.println(log.size());
         System.out.println("=================REVs=======================");
         revision.add(log.get(0));  
-        listarJavaArchives(repositoryPath, directory, revision.get(0));
+        ListJavaArchives(repositoryPath, directory, revision.get(0));
     }
  
   public void RunJasome (String repositoryPath,List files, List paths) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
@@ -353,7 +269,7 @@ public class Jasome {
             ExtractClassMetrics(repositoryPath, files,paths, revision.get(i),i);
     }
   }
-     public static CLIExecution extractMetrics(String path) throws IOException {
+     public static CLIExecution ExtractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
@@ -364,16 +280,9 @@ public class Jasome {
     
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
         Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core");
-        //jasome.runVersion(jasome.getRepositoryPath());
-        //List<String> listVersion = new ArrayList<>();
-        ///listVersion = jasome.runOneVersion("C:\\Users\\anton\\Desktop\\projeto-exemplo");
-        //for(String line : listVersion){
-        //    System.out.println(line);
-        //}        
-        //versão de teste passando repositório qualquer, buscando por todos os arquivos java dentro dele e de suas subpastas.
-        jasome.RunListarJavaArchives(jasome.getRepositoryPath());
+        jasome.RunListJavaArchives(jasome.GetRepositoryPath());
         for(int k = 0; k < fileNames.size(); k++){
-            jasome.RunJasome(jasome.getRepositoryPath(),fileNames,pathNames);
+            jasome.RunJasome(jasome.GetRepositoryPath(),fileNames,pathNames);
         }
     }
 }
