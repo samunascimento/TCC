@@ -16,8 +16,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TestFrame extends JFrame{
     JPanel mainPanel;
-    JFileChooser chooser;    
+    JFileChooser chooser; 
+    JTable table;
+    DefaultTableModel newTable = new DefaultTableModel();
     
+    private void Table(){
+        JPanel tablePanel = new JPanel();
+        newTable.addColumn("Name");
+        newTable.addColumn("Status");
+        table = new JTable(newTable);
+        table.setSize(500, 250);
+        tablePanel.add(table, BorderLayout.NORTH);
+        mainPanel.add(tablePanel, BorderLayout.EAST);
+        this.add(mainPanel);
+        this.setVisible(true);  
+    }
     private void panelConfig() {
         this.setSize(1400, 800);
         
@@ -42,6 +55,7 @@ public class TestFrame extends JFrame{
     public void setPanel(){
         panelConfig();
         Chooser();
+        Table();
     }
     
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
