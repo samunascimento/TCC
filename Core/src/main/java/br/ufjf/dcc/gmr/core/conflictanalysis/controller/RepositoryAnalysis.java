@@ -87,6 +87,7 @@ public interface RepositoryAnalysis {
                 break;
             } else {
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+// posteriormente acressentar nome
 
                 } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
                     currentLine++;
@@ -99,6 +100,7 @@ public interface RepositoryAnalysis {
                 }
 
             }
+                    currentLine++;
 
         }
         
