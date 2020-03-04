@@ -22,9 +22,9 @@ public class returnNewLineNumber {
     String commitSource;
     String commitTarget;
     int originalLineNumber;
-    String aCommit[];
-    String bCommit[];
-    int contadorDeCommits=0;
+    List<String> aFiles=new ArrayList<>();
+    List<String> bFiles=new ArrayList<>();
+   
     
    
     
@@ -83,14 +83,13 @@ public class returnNewLineNumber {
     private void setACommit(String line){
         String newLine;
         newLine=line.replace("+++ a", "");
-        aCommit[contadorDeCommits]=newLine;
+        aFiles.add(line);
         
     }
     private void setBCommit(String line){
         String newLine;
         newLine=line.replace("--- b", "");
-        bCommit[contadorDeCommits]=newLine;
-        this.contadorDeCommits++;
+        bFiles.add(line);
     }
     
     
