@@ -32,12 +32,6 @@ public class JasomeWeb {
 
     public List<String> getMetricVersion(String repositoryPach) throws IOException{
         Jasome jasome = new Jasome(repositoryPach);
-        List<String> listMetric = new ArrayList<>();
-        listMetric = jasome.runOneVersion(repositoryPach);
-        List<String> listMetrics = new ArrayList<>();
-        for(int i=0;i<listMetric.size();i++){
-            listMetrics.add(listMetric.get(i));
-        }
-        return listMetrics;
+        jasome.
     }
 }

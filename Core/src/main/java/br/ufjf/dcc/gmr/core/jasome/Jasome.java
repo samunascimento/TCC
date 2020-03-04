@@ -57,7 +57,8 @@ public class Jasome {
 
     public String GetRepositoryPath() {
         return repositoryPath;
-    }  
+    }
+    
     
     public void ExtractClassMetrics(String repositoryPath, List files, List paths, Formats revision,int x) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException{
         ProjectMetrics projectMetrics = new ProjectMetrics();
@@ -71,7 +72,7 @@ public class Jasome {
                 Git.reset(repositoryPath, true, false, false, null);
                 Git.checkout(revision.getCommitHash(), repositoryPath);
                 
-                CLIExecution extractMetrics = ExtractMetrics(paths.get(k).toString());
+                CLIExecution extractMetrics = extractMetrics(paths.get(k).toString());
                 System.out.println(new Date());
                 System.out.println("==============================================");
                 ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
@@ -269,7 +270,7 @@ public class Jasome {
             ExtractClassMetrics(repositoryPath, files,paths, revision.get(i),i);
     }
   }
-     public static CLIExecution ExtractMetrics(String path) throws IOException {
+     public static CLIExecution extractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return CLIExecute.execute(FILE_PATH.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
@@ -278,6 +279,15 @@ public class Jasome {
         }
     }
     
+    public static CLIExecution extractMetrics(String path, String pathJasome) throws IOException {
+        String os = System.getProperty("os.name");
+        if (os.startsWith("Windows")) {
+            return CLIExecute.execute(pathJasome.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
+        } else {
+            return CLIExecute.execute(pathJasome.concat(" ").concat(path), ".");
+        }
+    } 
+     
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError{
         Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF\\Core");
         jasome.RunListJavaArchives(jasome.GetRepositoryPath());
