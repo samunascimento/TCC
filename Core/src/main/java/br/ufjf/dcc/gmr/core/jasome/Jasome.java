@@ -209,7 +209,7 @@ public class Jasome {
 
     }
 
-    public void ListJavaArchives(String repositoryPath, File directory, Formats revision) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
+    public void ListJavaArchives(String repositoryPath, File directory) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
         try {
             int k = 0;
             ProjectMetrics projectMetrics = new ProjectMetrics();
@@ -217,7 +217,7 @@ public class Jasome {
                 String[] subDirectory = directory.list();
                 if (subDirectory != null) {
                     for (String dir : subDirectory) {
-                        ListJavaArchives(repositoryPath, new File(directory + File.separator + dir), revision);
+                        ListJavaArchives(repositoryPath, new File(directory + File.separator + dir));
                     }
                 }
 
@@ -234,12 +234,8 @@ public class Jasome {
     public void RunListJavaArchives(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         File directory = new File(repositoryPath);
         System.out.println(repositoryPath);
-        List<Formats> log = Git.logAll(repositoryPath);
-        List<Formats> revision = new ArrayList<>();
-        System.out.println(log.size());
         System.out.println("=================REVs=======================");
-        revision.add(log.get(0));
-        ListJavaArchives(repositoryPath, directory, revision.get(0));
+        ListJavaArchives(repositoryPath, directory);
     }
 
     public void RunJasome(String repositoryPath, List files, List paths, int commitNumber) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
@@ -273,6 +269,7 @@ public class Jasome {
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
             for (int i = 0; i < log.size(); i++) {
+                jasome.fileNames.clear();
                 Git.clean(jasome.GetRepositoryPath(), true, 3);
                 Git.reset(jasome.GetRepositoryPath(), true, false, false, null);
                 Git.checkout(log.get(i).getCommitHash(), jasome.GetRepositoryPath());
