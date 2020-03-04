@@ -72,41 +72,6 @@ public interface RepositoryAnalysis {
         return list;
     }
 
-    public static int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-        //Verificar se a linha existe no arquivo original, e se existir
-        List<String> output = new ArrayList<>();
-        int counter = 0;
-        int currentLine = 0;
-        output = Git.auxiliardiff(directory, commitSource, commitTarget);
-        for (String line : output) {
-            if (line.charAt(0) == '@' && line.charAt(1) == '@') {
-                String c = line.substring(5) + line.substring(6);
-                currentLine = Integer.parseInt(c);
-            }
-            if (currentLine >= originalLineNumber) {
-                break;
-            } else {
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-// posteriormente acressentar nome
-
-                } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
-                    currentLine++;
-                    counter++;
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-
-                } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                    currentLine++;
-                    counter--;
-                }
-
-            }
-                    currentLine++;
-
-        }
-        
-        int newNumber= originalLineNumber - counter;
-
-        return newNumber;
-    }
+   
 
 }
