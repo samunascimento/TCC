@@ -20,6 +20,7 @@
         <h1>Jasome Web</h1>
         <form method="GET" action="JasomeWebServlet">
             <input name="url" type="text" placeholder="url">
+            <input name="jasomePath" type="text" placeholder="jasomePath">
             <button type="submit"> enviar</button>
         </form>
         <div class="button-center">

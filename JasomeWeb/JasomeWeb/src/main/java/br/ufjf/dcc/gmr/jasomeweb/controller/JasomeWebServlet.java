@@ -59,10 +59,12 @@ public class JasomeWebServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String t = request.getParameter("url");
+        String repositoryPath = request.getParameter("url");
+        String jasomePath = request.getParameter("jasomePath");
+        
         JasomeWeb jweb = new JasomeWeb();
         //List<String> result = jweb.getList(t);
-        List<String> result = jweb.getMetricVersion(t);
+        List<String> result = jweb.getMetricVersion(repositoryPath, jasomePath);
         RequestDispatcher view = request.getRequestDispatcher("metrics.jsp");
         request.setAttribute("styles", result);
         view.forward(request, response);

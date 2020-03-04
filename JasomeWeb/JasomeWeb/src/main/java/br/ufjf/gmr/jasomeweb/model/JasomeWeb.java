@@ -4,13 +4,10 @@
  * and open the template in the editor.
  */
 package br.ufjf.gmr.jasomeweb.model;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+
+import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.jasome.Jasome;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +27,11 @@ public class JasomeWeb {
         return listMetrics;
     }
 
-    public List<String> getMetricVersion(String repositoryPach) throws IOException{
-        Jasome jasome = new Jasome(repositoryPach);
-        jasome.
+    public List<String> getMetricVersion(String repositoryPath, String jasomePath) throws IOException {
+        Jasome jasome = new Jasome(repositoryPath);
+        CLIExecution extractMetrics = Jasome.extractMetrics(repositoryPath, jasomePath);
+        
+        
+        return extractMetrics.getOutput();
     }
 }
