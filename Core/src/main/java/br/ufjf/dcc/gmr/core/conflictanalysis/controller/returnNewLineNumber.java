@@ -11,115 +11,113 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
+import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 
 /**
  *
  * @author luand
  */
 public class returnNewLineNumber {
-    
+
     String directory;
     String commitSource;
     String commitTarget;
     int originalLineNumber;
-    List<String> aFiles=new ArrayList<>();
-    List<String> bFiles=new ArrayList<>();
-   
-    
-   
-    
-    
-    public returnNewLineNumber(){
-    
-    String directory=new String();
-    String commitSource=new String();
-    String commitTarget=new String();
-    int originalLineNumber;
-     
+    List<FileDiff> chunks;
+
+    public returnNewLineNumber() {
+
+        chunks = new ArrayList<>();
     }
 
-    public int returnNewLineNumber(String directory, String commitSource, String commitTarget, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+    public List<FileDiff> FillFileDiff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
         //Verificar se a linha existe no arquivo original, e se existir
-         this.directory=directory;
-         this.commitSource=commitSource;
-         this.commitTarget=commitTarget;
-         this.originalLineNumber=originalLineNumber;
-        
+
         List<String> output = new ArrayList<>();
-        int counter = 0;
+        FileDiff aux = new FileDiff();
+
         int currentLine = 0;
         output = Git.auxiliardiff(directory, commitSource, commitTarget);
         for (String line : output) {
-            if (line.charAt(0) == '@' && line.charAt(1) == '@') {
-                currentLine=StartingLine(line);
+            if (line.startsWith("diff --" )&& currentLine!=0) {
+
+                chunks.add(aux);
+                aux = new FileDiff();
             }
-            if (currentLine >= originalLineNumber) {
-                break;
-            } else {
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                   setACommit(line); 
 
-                } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
-                    currentLine++;
-                    counter++;
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-
-                    setBCommit(line);
-                } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                    currentLine++;
-                    counter--;
-                }
-
+            if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                String c = line.substring(5);
+                aux.setFilePathTarget(c);
+            } else if (line.length() < 2 && line.charAt(0) == '+') {
+                String c = " ";
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                currentLine++;
+            } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                currentLine++;
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                String c = line.substring(5);
+                aux.setFilePathSource(c);
+            } else if (line.length() < 2 && line.charAt(0) == '-') {
+                String c = " ";
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                currentLine++;
+            } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+                currentLine++;
+            } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                currentLine = StartingLine(line);
             }
-            currentLine++;
 
         }
+        chunks.add(aux);
+        aux = new FileDiff();
+        return chunks;
+    }
 
-        int newNumber = originalLineNumber - counter;
+    private int StartingLine(String a) {
 
-        return newNumber;
+        if (a.contains("-")) {
+            String c[];
+            c = a.split("-");
+            a = c[1];
+            String g[];
+            if (a.contains(",")) {
+                g = a.split(",");
+                if (g[0].contains("+")) {
+                    g = g[0].split("\\+");
+                    g[0] = g[0].replace(" ", "");
+                }
+            } else {
+                g = a.split("\\+");
+                g[0] = g[0].replace(" ", "");
+            }
+            int startingLine;
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+        } else {
+
+            String c[];
+            c = a.split("\\+");
+            a = c[1];
+
+            String g[];
+            if (a.contains(",")) {
+                g = a.split(",");
+            } else {
+                g = a.split("/+");
+            }
+            int startingLine;
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+
+        }
     }
-    
-    private void setACommit(String line){
-        String newLine;
-        newLine=line.replace("+++ a", "");
-        aFiles.add(line);
-        
-    }
-    private void setBCommit(String line){
-        String newLine;
-        newLine=line.replace("--- b", "");
-        bFiles.add(line);
-    }
-    
-    
-    private int StartingLine(String a){
-    
-       if(a.contains("-"))
-       {
-           String c[];
-           c=a.split("-");
-           a=c[1];
-           String g[];
-           g=a.split(",");
-           int startingLine;
-           startingLine=Integer.parseInt(c[0]);
-           
-           return startingLine;
-       }else{
-           
-           String c[];
-           c=a.split("+");
-           a=c[1];
-           String g[];
-           g=a.split(",");
-           int startingLine;
-           startingLine=Integer.parseInt(c[0]);
-           
-           return startingLine;
-           
-           
-       }
-    }
-    
+
 }

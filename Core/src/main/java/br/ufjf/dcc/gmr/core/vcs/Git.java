@@ -1098,13 +1098,13 @@ public class Git {
                     aux.setFilePathTarget(c);
                 } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED));
+                    aux.getLines().add(new LineInformation(c, LineType.ADDED,0));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
                     String c = line.substring(5);
                     aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED));
+                    aux.getLines().add(new LineInformation(c, LineType.DELETED,0));
                 } else if (line.charAt(0) == '@') {
                     aux.setArroba(line);
                 }
@@ -1121,9 +1121,10 @@ public class Git {
     public static List<String> auxiliardiff(String directory, String commitSource, String commitTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        String command = "git diff " + commitSource + " " + commitTarget + "--unified=0";
-
+        String command = "git diff " + commitSource + " " + commitTarget + " --unified=0";
+        
         CLIExecution execution = CLIExecute.execute(command, directory);
+        
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
