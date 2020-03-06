@@ -12,4 +12,20 @@ public class FileUnmerged {
         path = " ";
         file = new Unmerged();
     }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Unmerged getFile() {
+        return file;
+    }
+
+    public void setFile(Unmerged file) {
+        this.file = file;
+    }
 }
