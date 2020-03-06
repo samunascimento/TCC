@@ -14,6 +14,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 /**
  *
@@ -29,16 +32,20 @@ public class View extends JFrame {
     JFileChooser chooser;
     JProgressBar progressBar;
     JMenuBar menuBar;
+    JMenu menu;
+    JMenuItem submenu;
 
     View() {
         tableChooserPanel = new JPanel();
         textPanel = new JPanel();
         chooser = new JFileChooser();
         menuBar = new JMenuBar();
+        menu = new JMenu();
         table = new JTable();
         textArea = new JTextArea();
         progressBar = new JProgressBar();
         tableChooserScrollPane = new JScrollPane();
+        submenu = new JMenuItem();
     }
 
     private void setTableChooserPanel() {
@@ -56,49 +63,32 @@ public class View extends JFrame {
 
     private void setChooser() {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setCurrentDirectory(new java.io.File("C:\\Users\\Beatr\\Desktop"));
+        chooser.setCurrentDirectory(new java.io.File(""));
         chooser.setRequestFocusEnabled(false);
         chooser.addActionListener(this::chooserActionPerformed);
+        chooser.setVisible(false);
         tableChooserPanel.add(chooser, BorderLayout.NORTH);
-
     }
 
     private void setTable() {
         table.setAutoCreateRowSorter(true);
         table.setFont(new java.awt.Font("Tahoma", 0, 18));
-        DefaultTableModel model = new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Version", "Id"
-            }
-        ){
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        };
-        for(int i = 100, j = 0;i >= 0;i--,j++){
-            Object[] row = {i,j};
-            model.addRow(row);
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.addColumn("sha");
+        model.addColumn("status");
+        for (int i = 100, j = 0; i >= 0; i--, j++) {
+            model.insertRow(0, new Object[]{i, j});
         }
         table.setModel(model);
     }
 
     private void setMenuBar() {
-        menuBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 50));
+        submenu.addActionListener(this::openRepository);
+        submenu.setText("Open Repository");
+        menu.add(submenu);
+        menu.setText("File");
         menuBar.setBorder(BorderFactory.createTitledBorder("MENU BAR"));
+        menuBar.add(menu);
     }
 
     private void setTextArea() {
@@ -111,7 +101,7 @@ public class View extends JFrame {
         progressBar.setVisible(false);
         progressBar.setForeground(Color.BLUE);
         progressBar.setValue(50);
-        progressBar.setFont(new java.awt.Font("Verdana",0,12) {
+        progressBar.setFont(new java.awt.Font("Verdana", 0, 12) {
         });
     }
 
@@ -138,12 +128,20 @@ public class View extends JFrame {
     }
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
+        //File file = chooser.getSelectedFile().getAbsoluteFile();
         progressBar.setVisible(true);
-        File file = chooser.getSelectedFile().getAbsoluteFile();
+        Thread run = new Thread(new ProgressBarAction(progressBar));
+        chooser.setVisible(false);
+        run.start();
+    }
+
+    private void openRepository(java.awt.event.ActionEvent evt) {
+        chooser.setVisible(true);
     }
 
     public static void main(String[] args) {
-        View frame = new View();frame.setVisible(true);
+        View frame = new View();
+        frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
         frame.setMainPanel();
         frame.setVisible(true);
