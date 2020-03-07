@@ -27,7 +27,7 @@ import java.util.Scanner;
 public class Jasome {
 
     private String repositoryUrl = null; //url do repositório remoto
-    private String repositoryPath = "C:\\Users\\anton\\Desktop\\projeto-exemplo";
+    private String repositoryPath = null;
     private String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
     private String user = null; //usuario github
     private String password = null; //senha github
@@ -64,9 +64,8 @@ public class Jasome {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         try {
             int i = 0;
-            System.out.println(repositoryPath);
             System.out.println("=================REVs=======================");
-            for (int k = 0; k < files.size(); k++) {
+            for (int k = 0; k < fileNames.size();k++) {
                 System.out.println("======================" + files.get(i).toString() + "==================");
                 CLIExecution extractMetrics = extractMetrics(paths.get(k).toString());
                 System.out.println(new Date());
@@ -240,7 +239,6 @@ public class Jasome {
 
     public void RunJasome(String repositoryPath, List files, List paths, int commitNumber) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         File directory = new File(repositoryPath);
-        System.out.println(repositoryPath);
         ExtractClassMetrics(repositoryPath, files, paths, commitNumber);
 
     }
@@ -265,7 +263,7 @@ public class Jasome {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository {
         try {
-            Jasome jasome = new Jasome("C:\\Users\\guilh\\Desktop\\Projetometricas\\teste\\UFJF");
+            Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
             for (int i = 0; i < log.size(); i++) {
@@ -277,6 +275,9 @@ public class Jasome {
                 System.out.println("");
                 System.out.println("======================" + log.get(i).getCommitHash() + "==================");
                 jasome.RunListJavaArchives(jasome.GetRepositoryPath());
+                System.out.println("");
+                System.out.println("número de arquivos: " + jasome.fileNames.size());
+                System.out.println("");
                 jasome.RunJasome(jasome.GetRepositoryPath(), jasome.fileNames, jasome.pathNames, i);
 
             }
