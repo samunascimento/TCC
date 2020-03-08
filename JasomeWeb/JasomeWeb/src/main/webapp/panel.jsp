@@ -120,7 +120,7 @@
                 </div>
             </div>
             <!-- Mobile Menu start -->
-            <div class="mobile-menu-area">
+<!--            <div class="mobile-menu-area">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -129,7 +129,7 @@
                                     <ul class="mobile-menu-nav">
                                         <li><a data-toggle="collapse" data-target="#Charts" href="#">Home <span class="admin-project-icon edu-icon edu-down-arrow"></span></a>
                                             <ul class="collapse dropdown-header-top">
-                                                <li><a href="index.html">Dashboard v.1</a></li>
+                                                <li><a href="index.html">Home</a></li>
                                                 <li><a href="analytics.html">Analytics</a></li>
                                             </ul>
                                         </li>
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <!-- Mobile Menu end -->
             <div class="breadcome-area">
                 <div class="container-fluid">
@@ -158,9 +158,9 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <ul class="breadcome-menu">
-                                            <li><a href="#">Home</a> <span class="bread-slash">/</span>
+                                            <li><a href="#">Projetos</a> <span class="bread-slash">/</span>
                                             </li>
-                                            <li><span class="bread-blod">Dashboard V.1</span>
+                                            <li><span class="bread-blod">Home</span>
                                             </li>
                                         </ul>
                                     </div>
