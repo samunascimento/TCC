@@ -34,7 +34,8 @@ public class Jasome {
 
     private List<String> fileNames = new ArrayList<>();
     private List<String> pathNames = new ArrayList<>();
-
+    private List<String> archiveType = new ArrayList<>();
+    
     private static String repository;
 
     private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
@@ -208,7 +209,7 @@ public class Jasome {
 
     }
 
-    public void listJavaArchives(String repositoryPath, File directory) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
+    public void listJavaArchives(String repositoryPath, File directory,List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
         try {
             int k = 0;
             ProjectMetrics projectMetrics = new ProjectMetrics();
@@ -216,11 +217,11 @@ public class Jasome {
                 String[] subDirectory = directory.list();
                 if (subDirectory != null) {
                     for (String dir : subDirectory) {
-                        listJavaArchives(repositoryPath, new File(directory + File.separator + dir));
+                        listJavaArchives(repositoryPath, new File(directory + File.separator + dir),archiveTypes);
                     }
                 }
 
-            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith(".java")) {
+            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith(archiveTypes.get(0))) {
                 fileNames.add(directory.getName().toString());
                 pathNames.add(directory.getAbsoluteFile().toString());
                 System.out.println("adicionando arquivo: " + directory.getName());
@@ -273,6 +274,7 @@ public class Jasome {
         try {
             Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF");
             File directory = new File(jasome.GetRepositoryPath());
+            jasome.archiveType.add(".java");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
             for (int i = 0; i < log.size(); i++) {
@@ -280,7 +282,7 @@ public class Jasome {
                 jasome.gitCommands(jasome, log, i);
                 System.out.println("");
                 System.out.println("");
-                jasome.listJavaArchives(jasome.GetRepositoryPath(),directory);
+                jasome.listJavaArchives(jasome.GetRepositoryPath(),directory,jasome.archiveType);
                 jasome.javaArchivesCount();        
                 jasome.runJasome(jasome.GetRepositoryPath(), jasome.fileNames, jasome.pathNames, i);
 
