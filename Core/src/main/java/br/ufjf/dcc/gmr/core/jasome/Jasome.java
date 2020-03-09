@@ -221,7 +221,7 @@ public class Jasome {
                     }
                 }
 
-            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith(archiveTypes.get(0))) {
+            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith("." + archiveTypes.get(0))) {
                 fileNames.add(directory.getName().toString());
                 pathNames.add(directory.getAbsoluteFile().toString());
                 System.out.println("adicionando arquivo: " + directory.getName());
@@ -274,7 +274,7 @@ public class Jasome {
         try {
             Jasome jasome = new Jasome("C:\\Users\\Principal\\Desktop\\teste\\UFJF");
             File directory = new File(jasome.GetRepositoryPath());
-            jasome.archiveType.add(".java");
+            jasome.archiveType.add("java");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
             for (int i = 0; i < log.size(); i++) {
