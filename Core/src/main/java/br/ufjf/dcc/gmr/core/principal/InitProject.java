@@ -40,7 +40,7 @@ import java.util.List;
  */
 
 public class InitProject{
-    public void project(String name, String path ) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
+    public Project project(String name, String path ) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
          
                
         Project project = new Project();
@@ -71,6 +71,8 @@ public class InitProject{
          for (Object statu : status.files.allStatus) {
             System.out.println(statu);
          }*/
+               
+               return project;
     }
     
     /**
