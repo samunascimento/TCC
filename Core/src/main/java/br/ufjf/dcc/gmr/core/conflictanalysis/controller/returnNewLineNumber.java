@@ -41,7 +41,7 @@ public class returnNewLineNumber {
         int currentLine = 0;
         output = Git.auxiliardiff(directory, commitSource, commitTarget);
         for (String line : output) {
-            if (line.startsWith("diff --" )&& currentLine!=0) {
+            if (line.startsWith("diff --") && currentLine != 0) {
 
                 chunks.add(aux);
                 aux = new FileDiff();
@@ -118,6 +118,28 @@ public class returnNewLineNumber {
             return startingLine;
 
         }
+    }
+
+    
+    
+    
+    public int InitreturnNewLineNumber(String directory1, String commitSource1, String commitTarget1, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        this.directory = directory1;
+        this.commitTarget = commitTarget1;
+        this.commitSource = commitSource1;
+        chunks = FillFileDiff(directory, commitSource, commitTarget);
+
+        for (int i = 0; i < chunks.size(); i++) {
+            for (int j = 0; j < chunks.get(i).getLines().size(); j++) {
+                if (chunks.get(i).getLines().get(i).getLineNumber() >= originalLineNumber) {
+                    
+                }
+            }
+
+        }
+
+        return 0;
     }
 
 }
