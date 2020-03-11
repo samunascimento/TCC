@@ -24,6 +24,7 @@ public class ProgressBarAction implements Runnable{
     public void run() {
         progressBar.setMinimum(0);
         progressBar.setMaximum(100);
+        
         for(int i = 0; i <= 100; i++){
             try {
                 Thread.sleep(100l);

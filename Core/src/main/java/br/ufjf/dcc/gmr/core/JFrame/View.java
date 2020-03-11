@@ -1,13 +1,19 @@
 package br.ufjf.dcc.gmr.core.JFrame;
 
+import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
+import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
+import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -17,24 +23,30 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
+import br.ufjf.dcc.gmr.core.vcs.types.Project;
+import br.ufjf.dcc.gmr.core.principal.InitProject;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Beatr
  */
 public class View extends JFrame {
-
+    
     JPanel tableChooserPanel;
     JPanel textPanel;
     JScrollPane tableChooserScrollPane;
     JTable table;
-    JTextArea textArea;
+    private JTextArea textArea;
     JFileChooser chooser;
     JProgressBar progressBar;
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem submenu;
-
+    InitProject initProject;
+    Project project;
     View() {
         tableChooserPanel = new JPanel();
         textPanel = new JPanel();
@@ -46,6 +58,8 @@ public class View extends JFrame {
         progressBar = new JProgressBar();
         tableChooserScrollPane = new JScrollPane();
         submenu = new JMenuItem();
+        initProject = new InitProject();
+        project= new Project();
     }
 
     private void setTableChooserPanel() {
@@ -69,14 +83,15 @@ public class View extends JFrame {
         chooser.setVisible(false);
         tableChooserPanel.add(chooser, BorderLayout.NORTH);
     }
-
+    
+    
+    
     private void setTable() {
         table.setAutoCreateRowSorter(true);
-        table.setFont(new java.awt.Font("Tahoma", 0, 18));
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addColumn("sha");
         model.addColumn("status");
-        for (int i = 100, j = 0; i >= 0; i--, j++) {
+        for (int i = 30, j = 0; i >= 0; i--, j++) {
             model.insertRow(0, new Object[]{i, j});
         }
         table.setModel(model);
@@ -92,17 +107,16 @@ public class View extends JFrame {
     }
 
     private void setTextArea() {
-        textArea.setEditable(false);
+        getTextArea().setEditable(false);
     }
 
     private void setProgressBar() {
         progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 50));
         progressBar.setBorder(BorderFactory.createTitledBorder("PROGRESS BAR"));
         progressBar.setVisible(false);
-        progressBar.setForeground(Color.BLUE);
-        progressBar.setValue(50);
         progressBar.setFont(new java.awt.Font("Verdana", 0, 12) {
         });
+        progressBar.setStringPainted(true);
     }
 
     private void showPanel() {
@@ -112,7 +126,7 @@ public class View extends JFrame {
         this.add(progressBar, BorderLayout.SOUTH);
         tableChooserPanel.add(tableChooserScrollPane, BorderLayout.CENTER);
         tableChooserScrollPane.setViewportView(table);
-        textPanel.add(textArea, BorderLayout.CENTER);
+        textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);
     }
 
@@ -128,7 +142,12 @@ public class View extends JFrame {
     }
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
-        //File file = chooser.getSelectedFile().getAbsoluteFile();
+        String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
+        try {
+            project = initProject.project(filePath, filePath, textArea);
+        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
         progressBar.setVisible(true);
         Thread run = new Thread(new ProgressBarAction(progressBar));
         chooser.setVisible(false);
@@ -145,6 +164,20 @@ public class View extends JFrame {
         frame.setExtendedState(MAXIMIZED_BOTH);
         frame.setMainPanel();
         frame.setVisible(true);
+    }
+
+    /**
+     * @return the textArea
+     */
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    /**
+     * @param textArea the textArea to set
+     */
+    public void setTextArea(JTextArea textArea) {
+        this.textArea = textArea;
     }
 
 }
