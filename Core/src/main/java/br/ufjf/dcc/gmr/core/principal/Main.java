@@ -58,12 +58,9 @@ public class Main {
         int a =0, k = 0, g=0;
         for (int i=0; i < project.getVersions().size(); i++){
             if(project.getVersions().get(i).getFile() != null){
-                a++;
+                for(int j=0; j < project.getVersions().get(i).getFile().size(); j++ )
+                System.out.println(project.getVersions().get(i).getFile().get(j).getPath());
             }
-            if(project.getVersions().get(i).isMerge()){
-                g++;
-            }
-            k++;
         }
         System.out.println(a +" | "+ k +" | "+g);
        /* List<Formats> mergeList = Conflicts.getMerges(repository);
