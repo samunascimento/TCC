@@ -36,37 +36,27 @@ import java.util.List;
 /**
  *
  * @author felip
+ * 
  */
 
-public class Main {
-    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
+public class InitProject{
+    public Project project(String name, String path ) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
          
                
         Project project = new Project();
         
-        project.setName("Dependencia de Conflitos");
-        project.setPath("C:\\Users\\felip\\Desktop\\CODE\\Projetos\\sistema-da-igreja");
+        project.setName(name);
+        project.setPath(path);
         
         List<Version> versionList = createVersionList(project.getPath());
         
-        project.setVersions(versionList);
+        project.setVersions(versionList);      
+        createFileList(project);
         
         //printOutVersionList(project.getVersions(), false);
         //printOutVersionList(project.getVersions(), true);
-      
-        createFileList(project);
-        int a =0, k = 0, g=0;
-        for (int i=0; i < project.getVersions().size(); i++){
-            if(project.getVersions().get(i).getFile() != null){
-                a++;
-            }
-            if(project.getVersions().get(i).isMerge()){
-                g++;
-            }
-            k++;
-        }
-        System.out.println(a +" | "+ k +" | "+g);
-       /* List<Formats> mergeList = Conflicts.getMerges(repository);
+     
+               /* List<Formats> mergeList = Conflicts.getMerges(repository);
         try {
             Conflicts.getConflicts(mergeList, repository);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
@@ -81,6 +71,8 @@ public class Main {
          for (Object statu : status.files.allStatus) {
             System.out.println(statu);
          }*/
+               
+               return project;
     }
     
     /**
@@ -93,11 +85,11 @@ public class Main {
      * @throws java.io.IOException 
      * 
      */
-    
+      
       public static void createFileList(Project project) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, RepositoryNotFound{
         
         
-        FileUnmerged status = new FileUnmerged();
+        FileUnmerged conflictsArchives = new FileUnmerged();
         for(int i=0; i < project.getVersions().size(); i++){
             
             if( project.getVersions().get(i).isMerge() ){
@@ -115,20 +107,18 @@ public class Main {
                 }
                 
                 try{
-                   status = Git.statusUnmerged(project.getPath());
+                   conflictsArchives = Git.statusUnmerged(project.getPath());
                 }catch  ( IOException ex){
                     System.out.println("ERROR : "+ex);
                 }
                 
                 List<File> files = new ArrayList<>();
                 
-                for (int i1 = 0; i1 < status.file.unmerged.size(); i1++) {
+                for (int i1 = 0; i1 < conflictsArchives.file.unmerged.size(); i1++) {                    
                     
-                    System.out.println(status.file.unmerged.get(i1));
-                    String aux[] = status.file.unmerged.get(i1).split(" ");
+                    String aux[] = conflictsArchives.file.unmerged.get(i1).split(" ");                    
                     
-                    
-                    File file = new File(aux[0], aux[1]);
+                    File file = new File(aux[1], aux[0]);                
                     files.add(file);
                     
                    
@@ -216,7 +206,7 @@ public class Main {
                 System.out.print(versionList.get(i).getDate());
                 System.out.print(" || ");
                 System.out.println(versionList.get(i).getDescription());
-              
+              zz
             }
         }   
           System.out.println("|||||||||||||||||||||||||||||||||||||||||||END|||||||||||||||||||||||||||||||||||||||||||");

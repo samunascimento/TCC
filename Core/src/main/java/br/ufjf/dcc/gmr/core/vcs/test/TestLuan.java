@@ -36,7 +36,7 @@ public class TestLuan {
                 
                 System.out.println(number.toString());
             }
- line.getLines();
+
         }
         
 }
