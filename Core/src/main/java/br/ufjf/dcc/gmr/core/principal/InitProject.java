@@ -8,21 +8,15 @@ package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import static br.ufjf.dcc.gmr.core.vcs.Git.mergeIsConflicting;
-import static br.ufjf.dcc.gmr.core.vcs.Git.status;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
-import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
@@ -206,7 +200,7 @@ public class InitProject{
                 System.out.print(versionList.get(i).getDate());
                 System.out.print(" || ");
                 System.out.println(versionList.get(i).getDescription());
-              zz
+              
             }
         }   
           System.out.println("|||||||||||||||||||||||||||||||||||||||||||END|||||||||||||||||||||||||||||||||||||||||||");

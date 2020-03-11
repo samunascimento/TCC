@@ -29,12 +29,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author Beatr
  */
 public class View extends JFrame {
-    
+
     JPanel tableChooserPanel;
     JPanel textPanel;
     JScrollPane tableChooserScrollPane;
@@ -47,6 +48,7 @@ public class View extends JFrame {
     JMenuItem submenu;
     InitProject initProject;
     Project project;
+
     View() {
         tableChooserPanel = new JPanel();
         textPanel = new JPanel();
@@ -59,7 +61,7 @@ public class View extends JFrame {
         tableChooserScrollPane = new JScrollPane();
         submenu = new JMenuItem();
         initProject = new InitProject();
-        project= new Project();
+        project = new Project();
     }
 
     private void setTableChooserPanel() {
@@ -83,9 +85,7 @@ public class View extends JFrame {
         chooser.setVisible(false);
         tableChooserPanel.add(chooser, BorderLayout.NORTH);
     }
-    
-    
-    
+
     private void setTable() {
         table.setAutoCreateRowSorter(true);
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -143,11 +143,35 @@ public class View extends JFrame {
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
+
+        
+        //Verificar essa solução....
         try {
-            project = initProject.project(filePath, filePath, textArea);
-        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
+            project = initProject.project(filePath, filePath);
+        } catch (IOException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (OptionNotExist ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RepositoryNotFound ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CheckoutError ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoRemoteForTheCurrentBranch ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ThereIsNoMergeInProgress ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotSomethingWeCanMerge ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ThereIsNoMergeToAbort ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AlreadyUpToDate ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         progressBar.setVisible(true);
         Thread run = new Thread(new ProgressBarAction(progressBar));
         chooser.setVisible(false);
