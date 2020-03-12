@@ -40,7 +40,9 @@ public class returnNewLineNumber {
 
         int currentLine = 0;
         output = Git.auxiliardiff(directory, commitSource, commitTarget);
-        for (String line : output) {
+        String line;
+        for(int i=0; i<output.size();i++) {
+         line=output.get(i);
             if (line.startsWith("diff --") && currentLine != 0) {
 
                 chunks.add(aux);
@@ -50,25 +52,17 @@ public class returnNewLineNumber {
             if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
                 String c = line.substring(5);
                 aux.setFilePathTarget(c);
-            } else if (line.length() < 2 && line.charAt(0) == '+') {
-                String c = " ";
-                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
-                currentLine++;
-            } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
+            }  else if (line.charAt(0) == '+') {
                 String c = line.substring(1);
-                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
                 currentLine++;
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
                 String c = line.substring(5);
                 aux.setFilePathSource(c);
-            } else if (line.length() < 2 && line.charAt(0) == '-') {
-                String c = " ";
-                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
-                currentLine++;
-            } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+            }  else if (line.charAt(0) == '-' ) {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
-                currentLine++;
             } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                 currentLine = StartingLine(line);
             }
@@ -120,8 +114,33 @@ public class returnNewLineNumber {
         }
     }
 
+    private int processingChunkModifiedLine(List<FileDiff> chunk,int originalLineNumber){
+       
+        for (int i = 0; i < chunk.size(); i++) {
+            for (int j = 0; j < chunk.get(i).getLines().size(); j++) {
+                if (chunk.get(i).getLines().get(i).getLineNumber() == originalLineNumber) {
+                    return i;
+                }
+                }
+            }
+        return -1;
+    }
     
-    
+    private int [] processingChunkUnModifiedLine(List<FileDiff> chunk,int originalLineNumber){
+       
+        int contAuxiliar=0;
+        for (int i = 0; i < chunk.size(); i++) {
+            contAuxiliar++;
+            for (int j = 0; j < chunk.get(i).getLines().size(); j++) {
+                if (chunk.get(i).getLines().get(i).getLineNumber() > originalLineNumber) {
+                   int v[]=new int[2];
+                   v=new int[]{contAuxiliar,i};
+                    return v;
+                }
+                }
+            }
+        return null;
+    }
     
     public int InitreturnNewLineNumber(String directory1, String commitSource1, String commitTarget1, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
@@ -129,15 +148,15 @@ public class returnNewLineNumber {
         this.commitTarget = commitTarget1;
         this.commitSource = commitSource1;
         chunks = FillFileDiff(directory, commitSource, commitTarget);
-
-        for (int i = 0; i < chunks.size(); i++) {
-            for (int j = 0; j < chunks.get(i).getLines().size(); j++) {
-                if (chunks.get(i).getLines().get(i).getLineNumber() >= originalLineNumber) {
-                    
-                }
-            }
-
+        int i=processingChunkModifiedLine(chunks, originalLineNumber);
+        
+        if(i==-1){
+            
         }
+        
+        
+
+        
 
         return 0;
     }
