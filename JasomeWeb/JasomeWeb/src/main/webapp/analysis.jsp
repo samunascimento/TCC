@@ -1,4 +1,10 @@
 <%-- 
+    Document   : analysis
+    Created on : 11/03/2020, 14:15:04
+    Author     : anton
+--%>
+
+<%-- 
     Document   : panel
     Created on : 08/03/2020, 13:38:48
     Author     : anton
@@ -172,7 +178,7 @@
             </div>
         </div>
         <!-- Panel -->
-        <h1>Painel principal</h1>
+        <h1>Analysis</h1>
         <!-- End Panel -->
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
