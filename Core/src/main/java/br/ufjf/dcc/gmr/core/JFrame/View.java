@@ -25,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import java.awt.Color;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -67,14 +68,12 @@ public class View extends JFrame {
     private void setTableChooserPanel() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tableChooserPanel.setLayout(new BorderLayout());
-        tableChooserPanel.setBorder(BorderFactory.createTitledBorder("CHOOSER & TABLE"));
         tableChooserPanel.setPreferredSize(new Dimension(350, Short.MAX_VALUE));
 
     }
 
     private void setTextPanel() {
         textPanel.setLayout(new BorderLayout());
-        textPanel.setBorder(BorderFactory.createTitledBorder("TEXT"));
     }
 
     private void setChooser() {
@@ -91,32 +90,32 @@ public class View extends JFrame {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addColumn("sha");
         model.addColumn("status");
-        for (int i = 30, j = 0; i >= 0; i--, j++) {
-            model.insertRow(0, new Object[]{i, j});
-        }
         table.setModel(model);
     }
 
+    @SuppressWarnings("empty-statement")
+    public void clearTable(JTable table) {        
+        for (DefaultTableModel model = (DefaultTableModel) table.getModel();
+                table.getRowCount() > 0;
+                model.removeRow(table.getRowCount() - 1));
+    }
+    
     private void setMenuBar() {
         submenu.addActionListener(this::openRepository);
         submenu.setText("Open Repository");
         menu.add(submenu);
         menu.setText("File");
-        menuBar.setBorder(BorderFactory.createTitledBorder("MENU BAR"));
         menuBar.add(menu);
     }
 
     private void setTextArea() {
-        getTextArea().setEditable(false);
+        textArea.setEditable(false);
     }
 
     private void setProgressBar() {
-        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 50));
-        progressBar.setBorder(BorderFactory.createTitledBorder("PROGRESS BAR"));
-        progressBar.setVisible(false);
-        progressBar.setFont(new java.awt.Font("Verdana", 0, 12) {
-        });
+        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 20));
         progressBar.setStringPainted(true);
+        progressBar.setVisible(false);
     }
 
     private void showPanel() {
@@ -142,40 +141,26 @@ public class View extends JFrame {
     }
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
+        clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
-
-        
-        //Verificar essa solução....
-        try {
-            project = initProject.project(filePath, filePath);
-        } catch (IOException ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (OptionNotExist ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RepositoryNotFound ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CheckoutError ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoRemoteForTheCurrentBranch ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ThereIsNoMergeInProgress ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotSomethingWeCanMerge ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ThereIsNoMergeToAbort ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AlreadyUpToDate ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         progressBar.setVisible(true);
         Thread run = new Thread(new ProgressBarAction(progressBar));
         chooser.setVisible(false);
         run.start();
+                
+        //Verificar essa solução....
+        try {
+            project = initProject.project(filePath, filePath);
+        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        for (int i = 0; i < project.getVersions().size(); i++) {
+            model.insertRow(0, new Object[]{project.getVersions().get(i), i});
+        }
+        table.setModel(model);
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
