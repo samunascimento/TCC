@@ -37,9 +37,9 @@ import java.util.logging.Logger;
  */
 public class View extends JFrame {
 
-    JPanel tableChooserPanel;
+    JPanel tablePanel;
     JPanel textPanel;
-    JScrollPane tableChooserScrollPane;
+    JScrollPane tableScrollPane;
     JTable table;
     private JTextArea textArea;
     JFileChooser chooser;
@@ -49,9 +49,10 @@ public class View extends JFrame {
     JMenuItem submenu;
     InitProject initProject;
     Project project;
+    JFrame chooserFrame;
 
     View() {
-        tableChooserPanel = new JPanel();
+        tablePanel = new JPanel();
         textPanel = new JPanel();
         chooser = new JFileChooser();
         menuBar = new JMenuBar();
@@ -59,16 +60,17 @@ public class View extends JFrame {
         table = new JTable();
         textArea = new JTextArea();
         progressBar = new JProgressBar();
-        tableChooserScrollPane = new JScrollPane();
+        tableScrollPane = new JScrollPane();
         submenu = new JMenuItem();
         initProject = new InitProject();
         project = new Project();
+        chooserFrame = new JFrame();
     }
 
     private void setTableChooserPanel() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tableChooserPanel.setLayout(new BorderLayout());
-        tableChooserPanel.setPreferredSize(new Dimension(350, Short.MAX_VALUE));
+        tablePanel.setLayout(new BorderLayout());
+        tablePanel.setPreferredSize(new Dimension(350, Short.MAX_VALUE));
 
     }
 
@@ -82,7 +84,6 @@ public class View extends JFrame {
         chooser.setRequestFocusEnabled(false);
         chooser.addActionListener(this::chooserActionPerformed);
         chooser.setVisible(false);
-        tableChooserPanel.add(chooser, BorderLayout.NORTH);
     }
 
     private void setTable() {
@@ -94,12 +95,12 @@ public class View extends JFrame {
     }
 
     @SuppressWarnings("empty-statement")
-    public void clearTable(JTable table) {        
+    public void clearTable(JTable table) {
         for (DefaultTableModel model = (DefaultTableModel) table.getModel();
                 table.getRowCount() > 0;
                 model.removeRow(table.getRowCount() - 1));
     }
-    
+
     private void setMenuBar() {
         submenu.addActionListener(this::openRepository);
         submenu.setText("Open Repository");
@@ -118,15 +119,45 @@ public class View extends JFrame {
         progressBar.setVisible(false);
     }
 
+    private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
+        clearTable(table);
+        String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
+        progressBar.setVisible(true);
+        Thread run = new Thread(new ProgressBarAction(progressBar));
+        chooser.setVisible(false);
+        chooserFrame.setVisible(false);
+        run.start();
+
+        //Verificar essa solução....
+        try {
+            project = initProject.project(filePath, filePath);
+        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        for (int i = 0; i < project.getVersions().size(); i++) {
+            model.insertRow(0, new Object[]{project.getVersions().get(i), i});
+        }
+        table.setModel(model);
+    }
+
+    private void openRepository(java.awt.event.ActionEvent evt) {
+        chooserFrame.setExtendedState(MAXIMIZED_BOTH);
+        chooser.setVisible(true);
+        chooserFrame.setVisible(true);
+    }
+
     private void showPanel() {
-        this.add(tableChooserPanel, BorderLayout.WEST);
+        this.add(tablePanel, BorderLayout.WEST);
         this.add(textPanel, BorderLayout.CENTER);
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
-        tableChooserPanel.add(tableChooserScrollPane, BorderLayout.CENTER);
-        tableChooserScrollPane.setViewportView(table);
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tableScrollPane.setViewportView(table);
         textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);
+        chooserFrame.add(chooser, BorderLayout.CENTER);
     }
 
     private void setMainPanel() {
@@ -138,33 +169,6 @@ public class View extends JFrame {
         setTextArea();
         setProgressBar();
         showPanel();
-    }
-
-    private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
-        clearTable(table);
-        String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
-
-        progressBar.setVisible(true);
-        Thread run = new Thread(new ProgressBarAction(progressBar));
-        chooser.setVisible(false);
-        run.start();
-                
-        //Verificar essa solução....
-        try {
-            project = initProject.project(filePath, filePath);
-        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        for (int i = 0; i < project.getVersions().size(); i++) {
-            model.insertRow(0, new Object[]{project.getVersions().get(i), i});
-        }
-        table.setModel(model);
-    }
-
-    private void openRepository(java.awt.event.ActionEvent evt) {
-        chooser.setVisible(true);
     }
 
     public static void main(String[] args) {
