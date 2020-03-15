@@ -64,9 +64,10 @@ public class JasomeWebServlet extends HttpServlet {
         
         JasomeWeb jweb = new JasomeWeb();
         //List<String> result = jweb.getList(t);
+        //List<String> result = jweb.getMetricVersion(repositoryPath, jasomePath);
         List<String> result = jweb.getMetricVersion(repositoryPath, jasomePath);
         RequestDispatcher view = request.getRequestDispatcher("metrics.jsp");
-        request.setAttribute("styles", result);
+        request.setAttribute("result", result);
         view.forward(request, response);
     }
 

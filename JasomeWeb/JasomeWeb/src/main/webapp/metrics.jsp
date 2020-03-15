@@ -17,8 +17,8 @@
                 <h1 align="center" >Metrics</h1>
         <p>
             <%
-                List<String> styles = (List<String>) request.getAttribute("styles");
-                for(String s: styles){
+                List<String> result = (List<String>) request.getAttribute("result");
+                for(String s: result){
                     out.print("<p>line " + s + "</p>");
                 }
             %>

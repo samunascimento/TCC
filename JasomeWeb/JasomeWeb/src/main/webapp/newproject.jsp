@@ -183,7 +183,7 @@
                             <input name="url" type="text" class="form-control" placeholder="Url GitHub">
                         </div>
                         <div class="form-group">
-                            <input name="jasomepath" type="text" class="form-control" placeholder="Jasome Path">
+                            <input name="jasomePath" type="text" class="form-control" placeholder="jasomePath">
                         </div>
                     </div>
                     <div class="row" style="text-align: center">
