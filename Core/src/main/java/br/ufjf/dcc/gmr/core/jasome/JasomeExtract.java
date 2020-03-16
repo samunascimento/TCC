@@ -5,7 +5,9 @@
  */
 package br.ufjf.dcc.gmr.core.jasome;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -72,6 +74,50 @@ public class JasomeExtract {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    public void readFilter(ProjectMetrics projectMetrics) {
+        Scanner ler = new Scanner(System.in);
+        String filterMetric;
+        while (true) {
+            System.out.println("PACKAGE|CLASS|METHOD");
+            filterMetric = ler.next();
+            switch (filterMetric) {
+                case "PACKAGE":
+                    projectMetrics.getNamePackageMetrics();
+                    String namePackage;
+                    namePackage = ler.next();
+                    List<PackageMetrics> listPack = new ArrayList<>();
+                    listPack = projectMetrics.getMetricPackage(namePackage);
+                    for (int i = 0; i < listPack.size(); i++) {
+                        System.out.println(listPack.get(i));
+                    }
+                    break;
+                case "CLASS":
+                    projectMetrics.getNameClassMetrics();
+                    String nameClass;
+                    nameClass = ler.next();
+                    List<ClassMetrics> listClass = new ArrayList<>();
+                    listClass = projectMetrics.getMetricClass(nameClass);
+                    for (int i = 0; i < listClass.size(); i++) {
+                        System.out.println(listClass.get(i));
+                    }
+                    break;
+                case "METHOD":
+                    projectMetrics.getNameMethodMetrics();
+                    String nameMethod;
+                    nameMethod = ler.next();
+                    List<MethodMetrics> listMethod = new ArrayList<>();
+                    listMethod = projectMetrics.getMetricMethod(nameMethod);
+                    for (int i = 0; i < listMethod.size(); i++) {
+                        System.out.println(listMethod.get(i));
+                    }
+                    break;
+                default:
+                    System.out.println("teste");
+
             }
         }
     }
