@@ -65,6 +65,7 @@ public class JasomeMethods {
 
     public void runProject(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         ProjectMetrics projectMetrics = new ProjectMetrics();
+        JasomeExtract jasomeExtract = new JasomeExtract();
         try {
             int i = 0;
             System.out.println(repositoryPath);
@@ -93,9 +94,9 @@ public class JasomeMethods {
                     printMetrics(projectMetrics, i);
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                    extractMetricPackage(projectMetrics, listPackage);
-                    extractMetricClass(projectMetrics, listPackage);
-                    extractMetricMethod(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricClass(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
                 } finally {
                     System.out.println("Commit numero :" + i);
                     i++;
@@ -129,6 +130,7 @@ public class JasomeMethods {
 
     public void runJasome(String repositoryPath, List files, List paths, int numberCommit) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         ProjectMetrics projectMetrics = new ProjectMetrics();
+        JasomeExtract jasomeExtract = new JasomeExtract();
         try {
             int i = 0;
             System.out.println("=================REVs=======================");
@@ -150,9 +152,9 @@ public class JasomeMethods {
                     System.out.println("TLOC = " + projectMetrics.getListVersionMetrics().get(i).getTloc().getValue());
 
                     List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                    extractMetricPackage(projectMetrics, listPackage);
-                    extractMetricClass(projectMetrics, listPackage);
-                    extractMetricMethod(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricClass(projectMetrics, listPackage);
+                    jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
                 } finally {
                     System.out.println("Commit numero :" + numberCommit);
                     i++;
@@ -167,69 +169,6 @@ public class JasomeMethods {
             System.out.println("Diretorio não existe");
         }
     }
-
-    public void extractMetricClass(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
-        boolean contemClass = false;
-        for (int j = 0; j < listPackage.size(); j++) {
-            for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
-                if (projectMetrics.getListClassMetrics().size() == 0) {
-                    projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                    //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                } else {
-                    for (int w = 0; w < projectMetrics.getListClassMetrics().size(); w++) {
-                        if (projectMetrics.getListClassMetrics().get(w).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()))) {
-                            contemClass = true;
-                        }
-                    }
-                    if (contemClass == false) {
-                        projectMetrics.getListClassMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                    }
-                    //System.out.println(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()));
-                }
-            }
-        }
-    }
-
-    public void extractMetricPackage(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
-        boolean contemPackage = false;
-        for (int j = 0; j < listPackage.size(); j++) {
-            if (projectMetrics.getListPackageMetrics().size() == 0) {
-                projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName());
-            } else {
-                for (int y = 0; y < projectMetrics.getListPackageMetrics().size(); y++) {
-                    if (projectMetrics.getListPackageMetrics().get(y).equals(listPackage.get(j).getName())) {
-                        contemPackage = true;
-                    }
-                }
-                if (contemPackage == false) {
-                    projectMetrics.getListPackageMetrics().add(listPackage.get(j).getName()); //está acessando espaço de memoria inválido
-                }
-            }
-        }
-    }
-
-    public void extractMetricMethod(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
-        boolean contemMetodo = false;
-        for (int j = 0; j < listPackage.size(); j++) {
-            for (int y = 0; y < listPackage.get(j).getListClassMetrics().size(); y++) {
-                for (int w = 0; w < listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().size(); w++) {
-                    if (projectMetrics.getListMethodMetrics().size() == 0) {
-                        projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
-                    } else {
-                        for (int x = 0; x < projectMetrics.getListMethodMetrics().size(); x++) {
-                            if (projectMetrics.getListMethodMetrics().get(x).equals(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()))) {
-                                contemMetodo = true;
-                            }
-                        }
-                        if (contemMetodo == false) {
-                            projectMetrics.getListMethodMetrics().add(listPackage.get(j).getName().concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getName()).concat(".").concat(listPackage.get(j).getListClassMetrics().get(y).getListMethodsMetrics().get(w).getName()));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void readFilter(ProjectMetrics projectMetrics) {
         Scanner ler = new Scanner(System.in);
         String filterMetric;
