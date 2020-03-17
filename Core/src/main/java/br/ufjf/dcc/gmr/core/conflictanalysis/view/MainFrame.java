@@ -46,14 +46,14 @@ public class MainFrame extends JFrame {
 
     //Analyse Frame
     private JFrame analyseFrame = new JFrame();
-    private MainInfo mainInfo = null;
-    private JPanel mainPanel = new JPanel();
-    private JLabel repositoryPathLabel = new JLabel("RepositoryPath");
-    private JLabel numberOfContextLinesLabel = new JLabel("Number of Context Lines");
-    private JButton findDirectoryButton = new JButton("Find Directory");
-    private JButton analyseButton = new JButton("Analyse");
-    private JTextField textField = new JTextField();
-    private JComboBox numContextComboBox = new JComboBox(new String[]{
+    private MainInfo analyseFrameMainInfo = null;
+    private JPanel analyseFrameMainPanel = new JPanel();
+    private JLabel analyseFrameRepositoryPathLabel = new JLabel("RepositoryPath");
+    private JLabel analyseFrameNumberOfContextLinesLabel = new JLabel("Number of Context Lines");
+    private JButton analyseFrameFindDirectoryButton = new JButton("Find Directory");
+    private JButton analyseFrameAnalyseButton = new JButton("Analyse");
+    private JTextField analyseFrameTextField = new JTextField();
+    private JComboBox analyseFrameNumContextComboBox = new JComboBox(new String[]{
         "0 Lines",
         "1 Line",
         "2 Lines",
@@ -130,68 +130,67 @@ public class MainFrame extends JFrame {
         this.analyseFrame.setResizable(false);
         this.analyseFrame.setSize(600, 250);
         this.customizePanel();
-        this.analyseFrame.add(this.mainPanel);
+        this.analyseFrame.add(this.analyseFrameMainPanel);
         this.customizeButtons();
         this.customizeTextField();
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        this.mainPanel.add(this.repositoryPathLabel, gbc);
+        this.analyseFrameMainPanel.add(this.analyseFrameRepositoryPathLabel, gbc);
         gbc.gridy = 1;
-        this.mainPanel.add(this.numberOfContextLinesLabel, gbc);
+        this.analyseFrameMainPanel.add(this.analyseFrameNumberOfContextLinesLabel, gbc);
         gbc.gridy = 2;
-        this.mainPanel.add(this.findDirectoryButton, gbc);
+        this.analyseFrameMainPanel.add(this.analyseFrameFindDirectoryButton, gbc);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.weightx = 1;
-        this.mainPanel.add(this.textField, gbc);
+        this.analyseFrameMainPanel.add(this.analyseFrameTextField, gbc);
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        this.mainPanel.add(this.numContextComboBox, gbc);
+        this.analyseFrameMainPanel.add(this.analyseFrameNumContextComboBox, gbc);
         gbc.gridx = 2;
         gbc.gridy = 2;
         gbc.weightx = 0;
-        this.mainPanel.add(this.analyseButton, gbc);
-
-        this.pack();
+        this.analyseFrameMainPanel.add(this.analyseFrameAnalyseButton, gbc);
+        this.analyseFrame.pack();
     }
 
     private void customizePanel() {
-        this.mainPanel.setLayout(new GridBagLayout());
+        this.analyseFrameMainPanel.setLayout(new GridBagLayout());
     }
 
     private void customizeLabels() {
-        this.repositoryPathLabel.setFont(Font.getFont(Font.SANS_SERIF));
-        this.numberOfContextLinesLabel.setFont(Font.getFont(Font.SANS_SERIF));
+        this.analyseFrameRepositoryPathLabel.setFont(Font.getFont(Font.SANS_SERIF));
+        this.analyseFrameNumberOfContextLinesLabel.setFont(Font.getFont(Font.SANS_SERIF));
     }
 
     private void customizeTextField() {
-        this.textField.setEditable(false);
+        this.analyseFrameTextField.setEditable(false);
     }
 
     private void customizeButtons() {
-        this.findDirectoryButton.addActionListener(new ActionListener() {
+        this.analyseFrameFindDirectoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int check = jfc.showOpenDialog(null);
                 if (check == JFileChooser.APPROVE_OPTION) {
-                    textField.setText(jfc.getSelectedFile().getPath());
+                    analyseFrameTextField.setText(jfc.getSelectedFile().getPath());
                 }
             }
 
         });
-        this.analyseButton.addActionListener(new ActionListener() {
+        this.analyseFrameAnalyseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                if (textField.getText() == null) {
+                if (analyseFrameTextField.getText() == null) {
                     JOptionPane.showMessageDialog(null, "Repository Path text field is empty!", "ERROR!", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(textField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(analyseFrameTextField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                         try {
-                            String auxStr = textField.getText();
-                            int auxInt = numContextComboBox.getSelectedIndex();
+                            String auxStr = analyseFrameTextField.getText();
+                            int auxInt = analyseFrameNumContextComboBox.getSelectedIndex();
                             resetAnalyseFrame();
                             mainTabbedPane.addTab(getProjectName(auxStr),new MergePanel(RepositoryAnalysis.searchAllMerges(auxStr, auxInt)));
                         } catch (IOException ex) {
@@ -205,8 +204,8 @@ public class MainFrame extends JFrame {
     }
 
     private String getProjectName(String project) {
-        if (project.contains("\\")) {
-            return project.split("\\")[project.split("\\").length - 1];
+        if (project.contains("\\\\")) {
+            return project.split("\\\\")[project.split("\\\\").length - 1];
         } else {
             return project.split("/")[project.split("/").length - 1];
         }
@@ -215,7 +214,7 @@ public class MainFrame extends JFrame {
     
     private void resetAnalyseFrame(){
         this.analyseFrame.setVisible(false);
-        this.numContextComboBox.setSelectedIndex(0);
-        this.textField.setText("");
+        this.analyseFrameNumContextComboBox.setSelectedIndex(0);
+        this.analyseFrameTextField.setText("");
     }
 }
