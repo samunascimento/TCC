@@ -5,6 +5,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
 import javax.swing.JButton;
@@ -27,10 +28,10 @@ public class MergePanel extends JPanel {
     //Tables
     private JTable mainTable = new JTable();
     //Text Areas
-    private JTextArea conflictTextArea;
-    private JTextArea mergeInfoTextArea;
+    private JTextArea conflictTextArea = new JTextArea();
+    private JTextArea mergeInfoTextArea = new JTextArea();
     //Separator
-    private JSeparator separator;
+    private JSeparator separator = new JSeparator();
     //ScrollPane
     private JScrollPane mainTableScrollPane = new JScrollPane();
     private JScrollPane conflictTextAreaScrollPane = new JScrollPane();
@@ -44,13 +45,16 @@ public class MergePanel extends JPanel {
     private int currentMaxConflictIndex = 0;
     //Sub Panel
     private JPanel subPanel = new JPanel();
-    private JButton previousFileButton = new JButton("Previous File");
-    private JButton nextFileButton = new JButton("Next File");
-    private JButton previousConflictButton = new JButton("Previous Conflict");
-    private JButton nextConflictButton = new JButton("Next Conflict");
-    private JLabel fileNameLabel = new JLabel("File Name:");
-    private JLabel fileIndexLabel = new JLabel("0/0");
-    private JLabel conflictIndexLabel = new JLabel("0/0");
+    private JButton subPanelPreviousFileButton = new JButton("Previous File");
+    private JButton subPanelNextFileButton = new JButton("Next File");
+    private JButton subPanelPreviousConflictButton = new JButton("Previous Conflict");
+    private JButton subPanelNextConflictButton = new JButton("Next Conflict");
+    private JLabel subPanelFileNameLabel = new JLabel("File Name:");
+    private JLabel subPanelFileIndexLabel = new JLabel("0/0");
+    private JLabel subPanelConflictIndexLabel = new JLabel("0/0");
+    //Block Panel
+    private JPanel panel1 = new JPanel();
+    private JPanel panel2 = new JPanel();
 
     public MergePanel(List<MergeEvent> list) {
         this.list = list;
@@ -59,27 +63,21 @@ public class MergePanel extends JPanel {
 
     private void setPanel() {
 
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(8, 8, 5, 5);
-
-        gbc.gridheight = 3;
+        this.setLayout(new GridLayout(1,2));
+        this.panel1.setLayout(new GridLayout(1,1));
+        this.panel2.setLayout(new GridLayout(3,1));
+        this.add(this.panel1);
+        this.add(this.panel2);
+        
+        
         customizeTable();
-        this.add(this.mainTableScrollPane, gbc);
-        gbc.gridx = 1;
-        this.add(this.separator, gbc);
-        gbc.gridheight = 1;
-        gbc.gridx = 2;
+        this.panel1.add(this.mainTableScrollPane);
         this.customizeSubPanel();
-        this.add(this.subPanel, gbc);
-        gbc.gridy = 1;
+        this.panel2.add(this.subPanel);
         this.customizeConflictTextArea();
-        this.add(this.conflictTextAreaScrollPane, gbc);
-        gbc.gridy = 2;
+        this.panel2.add(this.conflictTextAreaScrollPane);
         this.customizeMergeInfoTextArea();
-        this.add(this.mergeInfoTextAreaScrollPane, gbc);
+        this.panel2.add(this.mergeInfoTextAreaScrollPane);
 
         this.changeInfo(this.list.get(0));
         this.updateFileChangeByMerge(list.get(0));
@@ -120,7 +118,12 @@ public class MergePanel extends JPanel {
         }
         mainTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-
+                if (evt.getClickCount() > 1) {
+                    MergeEvent merge = list.get(mainTable.getSelectedRow());
+                    changeInfo(merge);
+                    updateFileChangeByMerge(merge);
+                    currentMerge = merge;
+                }
             }
         });
         this.mainTableScrollPane.setViewportView(this.mainTable);
@@ -167,42 +170,42 @@ public class MergePanel extends JPanel {
         this.customizeButtons();
 
         gbc.gridwidth = 6;
-        this.subPanel.add(this.fileNameLabel, gbc);
+        this.subPanel.add(this.subPanelFileNameLabel, gbc);
         gbc.gridwidth = 1;
         gbc.gridy = 1;
-        this.subPanel.add(this.previousFileButton, gbc);
+        this.subPanel.add(this.subPanelPreviousFileButton, gbc);
         gbc.gridx = 1;
-        this.subPanel.add(this.fileIndexLabel, gbc);
+        this.subPanel.add(this.subPanelFileIndexLabel, gbc);
         gbc.gridx = 2;
-        this.subPanel.add(this.nextFileButton, gbc);
+        this.subPanel.add(this.subPanelNextFileButton, gbc);
         gbc.gridx = 3;
-        this.subPanel.add(this.previousConflictButton, gbc);
+        this.subPanel.add(this.subPanelPreviousConflictButton, gbc);
         gbc.gridx = 4;
-        this.subPanel.add(this.conflictIndexLabel, gbc);
+        this.subPanel.add(this.subPanelConflictIndexLabel, gbc);
         gbc.gridx = 5;
-        this.subPanel.add(this.nextFileButton, gbc);
+        this.subPanel.add(this.subPanelNextConflictButton, gbc);
     }
 
     private void customizeButtons() {
-        previousFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        subPanelPreviousFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 previousFileButtonMouseClicked(evt);
             }
         });
 
-        nextFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        subPanelNextFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 nextFileButtonMouseClicked(evt);
             }
         });
 
-        nextConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        subPanelNextConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 nextConflictButtonMouseClicked(evt);
             }
         });
 
-        previousConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        subPanelPreviousConflictButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 previousConflictButtonMouseClicked(evt);
             }
@@ -261,53 +264,53 @@ public class MergePanel extends JPanel {
                 + " Hash: " + merge.getHash().getCommitHash() + "\n"
                 + " Author: " + merge.getHash().getAuthor() + "\n"
                 + " Author Date: " + merge.getHash().getAuthorDate() + "\n"
-                + " Committer:: " + merge.getHash().getCommitter() + "\n"
+                + " Committer: " + merge.getHash().getCommitter() + "\n"
                 + " Committer Date: " + merge.getHash().getCommitterDate() + "\n"
                 + "\nParent 1\n"
                 + " Title: " + merge.getParents().get(0).getTitle() + "\n"
                 + " Hash: " + merge.getParents().get(0).getCommitHash() + "\n"
                 + " Author: " + merge.getParents().get(0).getAuthor() + "\n"
                 + " Author Date: " + merge.getParents().get(0).getAuthorDate() + "\n"
-                + " Committer:: " + merge.getParents().get(0).getCommitter() + "\n"
+                + " Committer: " + merge.getParents().get(0).getCommitter() + "\n"
                 + " Committer Date: " + merge.getParents().get(0).getCommitterDate() + "\n"
                 + "\nParent 2\n"
                 + " Title: " + merge.getParents().get(1).getTitle() + "\n"
                 + " Hash: " + merge.getParents().get(1).getCommitHash() + "\n"
                 + " Author: " + merge.getParents().get(1).getAuthor() + "\n"
                 + " Author Date: " + merge.getParents().get(1).getAuthorDate() + "\n"
-                + " Committer:: " + merge.getParents().get(1).getCommitter() + "\n"
+                + " Committer: " + merge.getParents().get(1).getCommitter() + "\n"
                 + " Committer Date: " + merge.getParents().get(1).getCommitterDate() + "\n"
         );
     }
 
     private void updateFileChangeByMerge(MergeEvent merge) {
         if (merge.isConflict()) {
-            this.fileNameLabel.setText("File Name: " + merge.getConflictFiles().get(0).getFileName());
+            this.subPanelFileNameLabel.setText("File Name: " + merge.getConflictFiles().get(0).getFileName());
             this.currentFile = merge.getConflictFiles().get(0);
-            this.fileIndexLabel.setText("1/" + merge.getConflictFiles().size());
+            this.subPanelFileIndexLabel.setText("1/" + merge.getConflictFiles().size());
             this.currentFileIndex = 1;
             this.currentMaxFileIndex = merge.getConflictFiles().size();
 
             if (!merge.getConflictFiles().get(0).getConflictRegion().equals(null)) {
-                this.conflictIndexLabel.setText("1/" + merge.getConflictFiles().get(0).getConflictRegion().size());
+                this.subPanelConflictIndexLabel.setText("1/" + merge.getConflictFiles().get(0).getConflictRegion().size());
                 this.currentConflictIndex = 1;
                 this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getForm());
             } else {
-                this.conflictIndexLabel.setText("0/0");
+                this.subPanelConflictIndexLabel.setText("0/0");
                 this.currentConflictIndex = 0;
                 this.currentMaxConflictIndex = 0;
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
             }
         } else {
-            this.fileNameLabel.setText("File Name: ");
+            this.subPanelFileNameLabel.setText("File Name: ");
             this.currentFile = null;
 
-            this.fileIndexLabel.setText("0/0");
+            this.subPanelFileIndexLabel.setText("0/0");
             this.currentFileIndex = 0;
             this.currentMaxFileIndex = 0;
 
-            this.conflictIndexLabel.setText("0/0");
+            this.subPanelConflictIndexLabel.setText("0/0");
             this.currentConflictIndex = 0;
             this.currentMaxConflictIndex = 0;
 
@@ -316,16 +319,16 @@ public class MergePanel extends JPanel {
     }
 
     private void updateFile(ConflictFile file) {
-        this.fileNameLabel.setText("File Name: " + file.getFileName());
-        this.fileIndexLabel.setText(this.currentFileIndex + "/" + this.currentMaxFileIndex);
+        this.subPanelFileNameLabel.setText("File Name: " + file.getFileName());
+        this.subPanelFileIndexLabel.setText(this.currentFileIndex + "/" + this.currentMaxFileIndex);
         this.currentFile = file;
         if (file.getConflictRegion() != null) {
-            this.conflictIndexLabel.setText("1/" + file.getConflictRegion().size());
+            this.subPanelConflictIndexLabel.setText("1/" + file.getConflictRegion().size());
             this.currentConflictIndex = 1;
             this.currentMaxConflictIndex = file.getConflictRegion().size();
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getForm());
         } else {
-            this.conflictIndexLabel.setText("0/0");
+            this.subPanelConflictIndexLabel.setText("0/0");
             this.currentConflictIndex = 0;
             this.currentMaxConflictIndex = 0;
             this.conflictTextArea.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
@@ -333,7 +336,7 @@ public class MergePanel extends JPanel {
     }
 
     private void updateRegion(ConflictRegion region) {
-        this.conflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
+        this.subPanelConflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
         this.conflictTextArea.setText(region.getForm());
 
     }
