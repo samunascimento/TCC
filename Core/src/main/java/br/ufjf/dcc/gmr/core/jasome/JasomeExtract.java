@@ -5,6 +5,10 @@
  */
 package br.ufjf.dcc.gmr.core.jasome;
 
+import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +18,6 @@ import java.util.Scanner;
  * @author Principal
  */
 public class JasomeExtract {
-    
     
     public void extractMetricClass(ProjectMetrics projectMetrics, List<PackageMetrics> listPackage) {
         boolean contemClass = false;

@@ -11,6 +11,10 @@ import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
+import br.ufjf.dcc.gmr.core.jasome.JasomeExtract;
+import br.ufjf.dcc.gmr.core.jasome.ReadXMLUsingSAX;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
@@ -73,35 +77,7 @@ public class JasomeMethods {
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
-                System.out.println("======================" + revision.getCommitHash() + "==================");
-                Git.clean(repositoryPath, true, 3);
-                Git.reset(repositoryPath, true, false, false, null);
-                Git.checkout(revision.getCommitHash(), repositoryPath);
-                System.out.println(new Date());
-                CLIExecution extractMetrics = extractMetrics(repositoryPath);
-                System.out.println(new Date());
-                System.out.println("==============================================");
-                ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
-                readXml.fazerParsing(extractMetrics.getOutputString());
-                projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
-                if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
-                    projectMetrics.getListVersionMetrics().get(i).setError(true);
-                }
-                try {
-                    //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
-                    //    System.out.println("temos um erro nesta versão");
-                    //}
-                    printMetrics(projectMetrics, i);
-
-                    List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-                    jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
-                    jasomeExtract.extractMetricClass(projectMetrics, listPackage);
-                    jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
-                } finally {
-                    System.out.println("Commit numero :" + i);
-                    i++;
-                }
-
+                projectMetrics = analyzeVersion(revision, repositoryPath, i); 
                 System.out.println(new Date());
 
             }
@@ -118,6 +94,40 @@ public class JasomeMethods {
         } catch (IsOutsideRepository ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    public ProjectMetrics analyzeVersion(Formats revision, String repositoryPath1, int i) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
+        ProjectMetrics projectMetrics = new ProjectMetrics();
+        JasomeExtract jasomeExtract = new JasomeExtract();
+        System.out.println("======================" + revision.getCommitHash() + "==================");
+        Git.clean(repositoryPath1, true, 3);
+        Git.reset(repositoryPath1, true, false, false, null);
+        Git.checkout(revision.getCommitHash(), repositoryPath1);
+        System.out.println(new Date());
+        CLIExecution extractMetrics = extractMetrics(repositoryPath1);
+        System.out.println(new Date());
+        System.out.println("==============================================");
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
+        readXml.fazerParsing(extractMetrics.getOutputString());
+        projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
+        if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
+            projectMetrics.getListVersionMetrics().get(i).setError(true);
+        }
+        try {
+            //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
+            //    System.out.println("temos um erro nesta versão");
+            //}
+            printMetrics(projectMetrics, i);
+            
+            List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
+            jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
+            jasomeExtract.extractMetricClass(projectMetrics, listPackage);
+            jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
+        } finally {
+            System.out.println("Commit numero :" + i);
+            i++;
+        }
+        return projectMetrics;
     }
 
     public void printMetrics(ProjectMetrics projectMetrics,int version) {
