@@ -216,18 +216,18 @@ public class JasomeMethods {
     public static CLIExecution extractMetrics(String path) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CLIExecute.execute(jasomePath.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
+            return CLIExecute.executeParallel(jasomePath.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
         } else {
-            return CLIExecute.execute(jasomePath.concat(" ").concat(path), ".");
+            return CLIExecute.executeParallel(jasomePath.concat(" ").concat(path), ".");
         }
     }
 
     public static CLIExecution extractMetrics(String path, String pathJasome) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CLIExecute.execute(pathJasome.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
+            return CLIExecute.executeParallel(pathJasome.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
         } else {
-            return CLIExecute.execute(pathJasome.concat(" ").concat(path), ".");
+            return CLIExecute.executeParallel(pathJasome.concat(" ").concat(path), ".");
         }
     }
 
