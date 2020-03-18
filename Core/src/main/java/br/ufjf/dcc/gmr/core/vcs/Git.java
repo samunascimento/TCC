@@ -667,6 +667,45 @@ public class Git {
         String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
     }
+    
+       
+    public static boolean merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
+        
+        
+        String command = "git merge ";
+
+        if (!commit) {
+            command = command + " --no-commit ";
+        }
+
+        if (!fastForward) {
+            command = command + "--no-ff ";
+        }
+
+        command = command + revision;
+        
+        CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+        
+          if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("No remote for the current branch.")) {
+                    throw new NoRemoteForTheCurrentBranch(line);
+                } else if (line.contains("There is no merge in progress")) {
+                    throw new ThereIsNoMergeInProgress(line);
+                } else if (line.contains("There is no merge to abort")) {
+                    throw new ThereIsNoMergeToAbort(line);
+                } else if (line.contains("Already up to date")) {
+                    throw new AlreadyUpToDate(line);
+                } else if (line.contains("not something we can merge")) {
+                    throw new NotSomethingWeCanMerge(line);
+                }
+            }
+            return false;
+        }
+        return true;
+        
+        
+    }
 
     /**
      * This method merge changes from one branch into another.
