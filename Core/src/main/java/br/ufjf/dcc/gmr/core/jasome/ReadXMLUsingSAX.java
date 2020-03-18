@@ -1,5 +1,11 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
+import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.ParserConfigurationException;

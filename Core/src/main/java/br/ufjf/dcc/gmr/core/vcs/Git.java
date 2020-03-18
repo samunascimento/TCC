@@ -988,7 +988,7 @@ public class Git {
      */
     public static List<String> getBaseCommitInfo(String commitHash, String repositoryPath) throws IOException {
         String command = "git show " + commitHash + " --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch";
-        return CLIExecute.execute(command,repositoryPath).getOutput();
+        return CLIExecute.execute(command, repositoryPath).getOutput();
     }
 
     /**
@@ -1137,13 +1137,13 @@ public class Git {
                     aux.setFilePathTarget(c);
                 } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED,0));
+                    aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
                     String c = line.substring(5);
                     aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED,0));
+                    aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
                 } else if (line.charAt(0) == '@') {
                     aux.setArroba(line);
                 }
@@ -1161,9 +1161,8 @@ public class Git {
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff " + commitSource + " " + commitTarget + " --unified=0";
-        
+
         CLIExecution execution = CLIExecute.execute(command, directory);
-        
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {

@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.jasome;
+package br.ufjf.dcc.gmr.core.jasome.model;
 
 /**
  *

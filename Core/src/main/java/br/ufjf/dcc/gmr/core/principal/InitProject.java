@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
@@ -23,7 +24,6 @@ import static br.ufjf.dcc.gmr.core.vcs.Git.mergeIsConflicting;
 import static br.ufjf.dcc.gmr.core.vcs.Git.status;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
-import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;

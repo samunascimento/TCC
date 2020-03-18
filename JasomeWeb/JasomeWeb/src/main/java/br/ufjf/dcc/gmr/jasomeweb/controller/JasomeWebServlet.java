@@ -5,10 +5,20 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.controller;
 
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.gmr.jasomeweb.model.JasomeWeb;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -64,9 +74,29 @@ public class JasomeWebServlet extends HttpServlet {
         
         JasomeWeb jweb = new JasomeWeb();
         //List<String> result = jweb.getList(t);
-        List<String> result = jweb.getMetricVersion(repositoryPath, jasomePath);
+        //List<String> result = jweb.getMetricVersion(repositoryPath, jasomePath);
+        List<String> result = null;
+        try {
+            result = jweb.getMetricVersion(repositoryPath, jasomePath);
+        } catch (RepositoryNotFound ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidDocument ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CheckoutError ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RefusingToClean ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownSwitch ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IsOutsideRepository ex) {
+            Logger.getLogger(JasomeWebServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         RequestDispatcher view = request.getRequestDispatcher("metrics.jsp");
-        request.setAttribute("styles", result);
+        request.setAttribute("result", result);
         view.forward(request, response);
     }
 
