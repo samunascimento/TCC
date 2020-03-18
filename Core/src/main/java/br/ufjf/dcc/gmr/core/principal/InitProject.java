@@ -45,9 +45,9 @@ import javax.swing.JTextArea;
  */
 public class InitProject {
 
-    public Project project(String name, String path, JTextArea textArea) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
+    public Project project(String name, String path) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
 
-        textArea.setText("Batata");
+        
         Project project = new Project();
 
         project.setName(name);
