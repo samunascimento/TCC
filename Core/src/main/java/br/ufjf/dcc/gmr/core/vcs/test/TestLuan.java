@@ -27,17 +27,11 @@ public class TestLuan {
         String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         returnNewLineNumber a = new returnNewLineNumber();
-        List<FileDiff> teste = new ArrayList<>();
+        int teste;
 
-        teste = a.FillFileDiff(repositoryPath, "b3405dc", "79cde21 ");
+        teste= a.InitreturnNewLineNumber(repositoryPath, "b3405dc", "79cde21",30,"a/Core/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIExecute.java");
 
-        for (FileDiff line : teste) {
-            for (LineInformation number : line.getLines()) {
-
-                System.out.println(number.toString());
-            }
-
-        }
-
+        
+        System.out.println(teste);
     }
 }

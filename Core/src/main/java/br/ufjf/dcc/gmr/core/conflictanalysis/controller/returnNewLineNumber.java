@@ -26,6 +26,7 @@ public class returnNewLineNumber {
     String commitTarget;
     int originalLineNumber;
     List<FileDiff> chunks;
+    String FilePath;
 
     public returnNewLineNumber() {
 
@@ -115,38 +116,50 @@ public class returnNewLineNumber {
         }
     }
 
-    private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber) {
+    private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath) {
 
-        int cont=0;
+        int cont = 0;
+        int j = 0;
+        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
+            j++;
+        }
+
         for (int i = 0; i < chunk.size(); i++) {
-            for (int j = 0; j < chunk.get(i).getLines().size(); j++) {
-                if (chunk.get(i).getLines().get(i).getLineNumber() > originalLineNumber) {
-                    return cont;
-                }
-                if(chunk.get(i).getLines().get(j).getType()==LineType.ADDED){
-                    
-                }
-                if(chunk.get(i).getLines().get(j).getType()==LineType.DELETED){
-                    
+
+            if (chunk.get(j).getLines().get(i).getLineNumber() > originalLineNumber) {
+                return cont;
+            } else {
+                if (chunk.get(j).getLines().get(i).getLineNumber() == originalLineNumber) {
+                    if(chunk.get(j).getLines().get(i).getType() == LineType.DELETED)
+                        return -1;
+                } else {
+                    if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
+                        cont++;
+                    }
+                    if (chunk.get(j).getLines().get(i).getType() == LineType.DELETED) {
+                        cont--;
+                    }
                 }
             }
         }
-        return -1;
+        return cont;
     }
 
-    public int InitreturnNewLineNumber(String directory1, String commitSource1, String commitTarget1, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
+    public int InitreturnNewLineNumber(String directory1, String commitSource1, String commitTarget1, int originalLineNumber, String filePath1) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+        this.FilePath = filePath1;
         this.directory = directory1;
         this.commitTarget = commitTarget1;
         this.commitSource = commitSource1;
         chunks = FillFileDiff(directory, commitSource, commitTarget);
-        int i = processingChunkModifiedLine(chunks, originalLineNumber);
-
-        if (i == -1) {
-
+        int i = processingChunkModifiedLine(chunks, originalLineNumber, filePath1);
+        
+        if(i==-1){
+            System.out.println("A linha desejada foi excluida");
+            return -1;
         }
+        
 
-        return 0;
+        return originalLineNumber+i;
     }
 
 }
