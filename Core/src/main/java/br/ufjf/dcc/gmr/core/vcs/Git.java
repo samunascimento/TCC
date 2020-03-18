@@ -667,11 +667,9 @@ public class Git {
         String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
     }
-    
-       
+
     public static boolean merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-        
-        
+
         String command = "git merge ";
 
         if (!commit) {
@@ -683,10 +681,10 @@ public class Git {
         }
 
         command = command + revision;
-        
+
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        
-          if (!execution.getError().isEmpty()) {
+
+        if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("No remote for the current branch.")) {
                     throw new NoRemoteForTheCurrentBranch(line);
@@ -703,8 +701,7 @@ public class Git {
             return false;
         }
         return true;
-        
-        
+
     }
 
     /**
