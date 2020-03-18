@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTree;
 
 /**
  *
@@ -50,7 +51,8 @@ public class View extends JFrame {
     InitProject initProject;
     Project project;
     JFrame chooserFrame;
-
+    JTree tree;
+    
     View() {
         tablePanel = new JPanel();
         textPanel = new JPanel();
@@ -65,19 +67,26 @@ public class View extends JFrame {
         initProject = new InitProject();
         project = new Project();
         chooserFrame = new JFrame();
+        tree = new JTree();
     }
 
     private void setTableChooserPanel() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tablePanel.setLayout(new BorderLayout());
-        tablePanel.setPreferredSize(new Dimension(350, Short.MAX_VALUE));
+        tablePanel.setPreferredSize(new Dimension(500, Short.MAX_VALUE));
+        tablePanel.setVisible(false);
 
     }
 
     private void setTextPanel() {
         textPanel.setLayout(new BorderLayout());
+        textPanel.setVisible(false);
     }
-
+    
+    private void setTree(){
+        tree.setVisible(false);
+    }
+    
     private void setChooser() {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(new java.io.File(""));
@@ -114,7 +123,7 @@ public class View extends JFrame {
     }
 
     private void setProgressBar() {
-        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 20));
+        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 50));
         progressBar.setStringPainted(true);
         progressBar.setVisible(false);
     }
@@ -127,19 +136,21 @@ public class View extends JFrame {
         chooser.setVisible(false);
         chooserFrame.setVisible(false);
         run.start();
-
-        //Verificar essa solução....
+        System.out.println(project.getVersions().size());
         try {
-            project = initProject.project(filePath, filePath);
+            project = initProject.project(filePath, filePath, textArea);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
-            model.insertRow(0, new Object[]{project.getVersions().get(i), i});
+            model.insertRow(0, new Object[]{project.getVersions().get(i), project.getVersions().get(i).getFile().get(i).getStatus()});
         }
         table.setModel(model);
+        tablePanel.setVisible(true);
+        textPanel.setVisible(true);
+        tree.setVisible(true);
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
@@ -154,6 +165,7 @@ public class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
         tablePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tablePanel.add(tree,BorderLayout.EAST);
         tableScrollPane.setViewportView(table);
         textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);
@@ -168,6 +180,7 @@ public class View extends JFrame {
         setTable();
         setTextArea();
         setProgressBar();
+        setTree();
         showPanel();
     }
 
