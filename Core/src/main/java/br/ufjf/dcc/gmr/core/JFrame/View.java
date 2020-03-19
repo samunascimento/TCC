@@ -94,12 +94,12 @@ public class View extends JFrame {
     }
 
     @SuppressWarnings("empty-statement")
-    public void clearTable(JTable table) {        
+    public void clearTable(JTable table) {
         for (DefaultTableModel model = (DefaultTableModel) table.getModel();
                 table.getRowCount() > 0;
                 model.removeRow(table.getRowCount() - 1));
     }
-    
+
     private void setMenuBar() {
         submenu.addActionListener(this::openRepository);
         submenu.setText("Open Repository");
@@ -148,14 +148,14 @@ public class View extends JFrame {
         Thread run = new Thread(new ProgressBarAction(progressBar));
         chooser.setVisible(false);
         run.start();
-                
+
         //Verificar essa solução....
         try {
             project = initProject.project(filePath, filePath);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
             model.insertRow(0, new Object[]{project.getVersions().get(i), i});

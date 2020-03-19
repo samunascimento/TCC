@@ -21,7 +21,13 @@ import java.util.List;
 public class Merge {
 
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
-        String repository = "C:\\Users\\felip\\Desktop\\Bolsa\\Bolsa - Copia";
+        
+        //InitProject init = new InitProject();
+        //Project project = init.project("C:\\Users\\felip\\Desktop\\CODE\\Projetos\\sistema-da-igreja", path, textArea);
+    }
+}
+/*
+String repository = "C:\\Users\\felip\\Desktop\\Bolsa\\Bolsa - Copia";
         List<Formats> list = new ArrayList<>();
         List<Formats> mergeList = new ArrayList<>();
 
@@ -70,5 +76,4 @@ public class Merge {
          for (Object statu : status.files.allStatus) {
             System.out.println(statu);
          }
-    }
-}
+*/
