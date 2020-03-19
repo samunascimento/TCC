@@ -2,14 +2,8 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.returnNewLineNumber;
-import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
-import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 
 /**
  *
