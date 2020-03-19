@@ -24,12 +24,12 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 //        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF";
-        String repositoryPath = "/ice/UFJF";
+        String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         returnNewLineNumber a = new returnNewLineNumber();
         List<FileDiff> teste = new ArrayList<>();
 
-        teste = a.FillFileDiff(repositoryPath, "988214d8721e66f30088cccef106887f10150f02", "e03c59a6e99d01fcc55fb9cccc75c75eb1fad3b0");
+        teste = a.FillFileDiff(repositoryPath, "b3405dc", "79cde21 ");
 
         for (FileDiff line : teste) {
             for (LineInformation number : line.getLines()) {

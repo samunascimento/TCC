@@ -85,6 +85,7 @@ public class View extends JFrame {
     
     private void setTree(){
         tree.setVisible(false);
+        tree.setLayout(new BorderLayout());
     }
     
     private void setChooser() {
@@ -104,7 +105,7 @@ public class View extends JFrame {
     }
 
     @SuppressWarnings("empty-statement")
-    public void clearTable(JTable table) {
+    private void clearTable(JTable table) {
         for (DefaultTableModel model = (DefaultTableModel) table.getModel();
                 table.getRowCount() > 0;
                 model.removeRow(table.getRowCount() - 1));
@@ -138,7 +139,7 @@ public class View extends JFrame {
         run.start();
         System.out.println(project.getVersions().size());
         try {
-            project = initProject.project(filePath, filePath, textArea);
+            project = initProject.project(filePath, filePath);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -202,7 +203,7 @@ public class View extends JFrame {
     /**
      * @param textArea the textArea to set
      */
-    public void setTextArea(JTextArea textArea) {
+    private void setTextArea(JTextArea textArea) {
         this.textArea = textArea;
     }
 

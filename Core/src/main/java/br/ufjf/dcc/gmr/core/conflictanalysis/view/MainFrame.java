@@ -10,8 +10,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -84,6 +82,7 @@ public class MainFrame extends JFrame {
         this.setTitle("Analysis of Merge Conflicts in Git Repositories");
         this.setResizable(false);
         this.setExtendedState(MAXIMIZED_BOTH);
+        this.setUndecorated(true);
     }
 
     private void customizeMenu() {
@@ -117,11 +116,7 @@ public class MainFrame extends JFrame {
         gbc.gridy = 1;
         this.homePanel.add(this.yearLabel, gbc);
     }
-    
-    
-    
-    
-    
+
     private void customizeAnalyseFrame() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 5, 5);
@@ -192,7 +187,7 @@ public class MainFrame extends JFrame {
                             String auxStr = analyseFrameTextField.getText();
                             int auxInt = analyseFrameNumContextComboBox.getSelectedIndex();
                             resetAnalyseFrame();
-                            mainTabbedPane.addTab(getProjectName(auxStr),new MergePanel(RepositoryAnalysis.searchAllMerges(auxStr, auxInt)));
+                            mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(RepositoryAnalysis.searchAllMerges(auxStr, auxInt)));
                         } catch (IOException ex) {
                             JOptionPane.showMessageDialog(null, "The selected directory is not a git repository.\nPlease, choose a new directory!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -211,8 +206,8 @@ public class MainFrame extends JFrame {
         }
 
     }
-    
-    private void resetAnalyseFrame(){
+
+    private void resetAnalyseFrame() {
         this.analyseFrame.setVisible(false);
         this.analyseFrameNumContextComboBox.setSelectedIndex(0);
         this.analyseFrameTextField.setText("");
