@@ -26,11 +26,14 @@ import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
 import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -52,7 +55,7 @@ public class View extends JFrame {
     Project project;
     JFrame chooserFrame;
     JTree tree;
-    
+
     View() {
         tablePanel = new JPanel();
         textPanel = new JPanel();
@@ -82,12 +85,28 @@ public class View extends JFrame {
         textPanel.setLayout(new BorderLayout());
         textPanel.setVisible(false);
     }
-    
-    private void setTree(){
+
+    private void setTree(int i) {
         tree.setVisible(false);
         tree.setLayout(new BorderLayout());
+        if (project.getVersions().size() > 0) {
+            DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(project.getVersions().get(i).getSHA());
+            createNodes(shaTree, i);
+            tree = new JTree(shaTree);
+        }
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
     }
-    
+
+    private void createNodes(DefaultMutableTreeNode SHAroot, int i) {
+        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile());
+        SHAroot.add(fileTree);
+        for (int j = 0; j < project.getVersions().get(i).getFile().get(i).getChuncks().size(); j++) {
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile().get(i).getChuncks().get(j).getBegin().getLineNumber());
+            fileTree.add(chunkTree);
+        }
+    }
+
     private void setChooser() {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setCurrentDirectory(new java.io.File(""));
@@ -137,7 +156,6 @@ public class View extends JFrame {
         chooser.setVisible(false);
         chooserFrame.setVisible(false);
         run.start();
-        System.out.println(project.getVersions().size());
         try {
             project = initProject.project(filePath, filePath);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
@@ -149,9 +167,16 @@ public class View extends JFrame {
             model.insertRow(0, new Object[]{project.getVersions().get(i), project.getVersions().get(i).getFile().get(i).getStatus()});
         }
         table.setModel(model);
-        tablePanel.setVisible(true);
-        textPanel.setVisible(true);
-        tree.setVisible(true);
+        if (project.getVersions().size() > 0) {
+            tablePanel.setVisible(true);
+            textPanel.setVisible(true);
+            tree.setVisible(true);
+        }else{
+            textPanel.setVisible(true);
+            textArea.setText("Empty Project");
+            textArea.setFont(new Font(null,1,15));
+        }
+
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
@@ -166,7 +191,7 @@ public class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
         tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-        tablePanel.add(tree,BorderLayout.EAST);
+        tablePanel.add(tree, BorderLayout.EAST);
         tableScrollPane.setViewportView(table);
         textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);
@@ -181,7 +206,7 @@ public class View extends JFrame {
         setTable();
         setTextArea();
         setProgressBar();
-        setTree();
+        setTree(0);
         showPanel();
     }
 
