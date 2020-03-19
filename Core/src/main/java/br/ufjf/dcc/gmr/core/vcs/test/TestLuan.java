@@ -29,7 +29,7 @@ public class TestLuan {
         returnNewLineNumber a = new returnNewLineNumber();
         int teste;
 
-        teste= a.InitreturnNewLineNumber(repositoryPath, "b3405dc", "79cde21",30,"a/Core/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIExecute.java");
+        teste= a.InitreturnNewLineNumber(repositoryPath, "b3405dc", "79cde21",30,"/Core/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIExecute.java");
 
         
         System.out.println(teste);

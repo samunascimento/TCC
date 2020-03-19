@@ -124,24 +124,25 @@ public class returnNewLineNumber {
             j++;
         }
 
-        for (int i = 0; i < chunk.size(); i++) {
+        for (int i = 0; i < chunk.get(j).getLines().size(); i++) {
 
             if (chunk.get(j).getLines().get(i).getLineNumber() > originalLineNumber) {
                 return cont;
             } else {
-                if (chunk.get(j).getLines().get(i).getLineNumber() == originalLineNumber) {
-                    if(chunk.get(j).getLines().get(i).getType() == LineType.DELETED)
-                        return -1;
-                } else {
                     if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
                         cont++;
                     }
                     if (chunk.get(j).getLines().get(i).getType() == LineType.DELETED) {
-                        cont--;
+                       
+                        if(originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber()){
+                        return -1;
+                         }else{
+                         cont--;
+                         }
                     }
                 }
             }
-        }
+        
         return cont;
     }
 
