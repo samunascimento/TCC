@@ -7,7 +7,7 @@ package br.ufjf.dcc.gmr.core.vcs.types;
 public class FileStatus {
     private Status type;
     private String path;
-    public Files files;
+    
     
     public FileStatus(Status tipo, String line){
         type = tipo;
@@ -17,7 +17,6 @@ public class FileStatus {
     public FileStatus(){
         type = null;
         path = " ";
-        files = new Files();
     }
     /**
      * @return the type

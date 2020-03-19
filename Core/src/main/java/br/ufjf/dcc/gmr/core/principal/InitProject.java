@@ -153,9 +153,9 @@ public class InitProject {
 
                 Git.merge(pathProject, parents.get(1), false, true);
 
-                FileUnmerged statusUnmerged = Git.statusUnmerged(pathProject);
+                List<String> statusUnmerged = Git.statusUnmerged(pathProject);
 
-                for (String file : statusUnmerged.file.unmerged) {
+                for (String file : statusUnmerged) {
 
                     result.getFile().add(createFile(file));
                 }
