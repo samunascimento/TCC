@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.principal;
 
+import br.ufjf.dcc.gmr.core.JFrame.View;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
@@ -158,7 +159,10 @@ public class InitProject {
         result.setPath(projectPath);
 
         List<Formats> logs = Git.log(projectPath);
+        View.progressBar.setMinimum(0);
+        View.progressBar.setMaximum(logs.size());
         for (int i = 0; i < logs.size(); i++) {
+            View.progressBar.setValue(i);
             Formats log = logs.get(i);
             aux.add(createVersion(projectPath, log));
         }

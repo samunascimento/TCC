@@ -52,7 +52,7 @@ public class View extends JFrame {
     JTable table;
     private JTextArea textArea;
     JFileChooser chooser;
-    JProgressBar progressBar;
+    public static JProgressBar progressBar;
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem submenu;
@@ -157,30 +157,28 @@ public class View extends JFrame {
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
         progressBar.setVisible(true);
-        Thread run = new Thread(new ProgressBarAction(progressBar));
+        ProgressBarAction aux = new ProgressBarAction(progressBar, filePath, filePath);
+        Thread run = new Thread(aux);
         chooser.setVisible(false);
         chooserFrame.setVisible(false);
         run.start();
-        try {
-            project = initProject.createProject(filePath, filePath);
-        } catch (AlreadyUpToDate | ThereIsNoMergeInProgress | NoRemoteForTheCurrentBranch | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | CheckoutError | RepositoryNotFound | OptionNotExist | ParseException | LocalRepositoryNotAGitRepository | IsOutsideRepository | RefusingToClean | UnknownSwitch | InvalidDocument | IOException ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        project = aux.getProject();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
             Version version = project.getVersions().get(i);
-            model.insertRow(0, new Object[]{version.getSHA(),version.getStatus()});
+            model.insertRow(0, new Object[]{version.getSHA(), version.getStatus()});
         }
         table.setModel(model);
         if (project.getVersions().size() > 0) {
             tablePanel.setVisible(true);
             textPanel.setVisible(true);
             tree.setVisible(true);
-        }else{
+        } else {
             textPanel.setVisible(true);
             textArea.setText("Empty Project");
-            textArea.setFont(new Font(null,1,15));
+            textArea.setFont(new Font(null, 1, 15));
         }
+        progressBar.setVisible(false);
 
     }
 
