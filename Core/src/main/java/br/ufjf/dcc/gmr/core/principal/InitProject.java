@@ -45,37 +45,12 @@ import javax.swing.JTextArea;
  */
 public class InitProject {
 
-    public Project project(String name, String path, JTextArea textArea) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, AlreadyUpToDate {
-
-        textArea.setText("Batata");
-        Project project = new Project();
-
-        project.setName(name);
-        project.setPath(path);
-
-        //createVersionList(project);
-        //createFileList(project);
-        //printOutVersionList(project.getVersions(), false);
-        //printOutVersionList(project.getVersions(), true);
-        /* List<Formats> mergeList = Conflicts.getMerges(repository);
-        try {
-            Conflicts.getConflicts(mergeList, repository);
-        } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | CheckoutError e) {
-        }
-        FileStatus status = null;
-        try {
-            status = Git.status(repository);
-        } catch (RepositoryNotFound | IOException e) {
-        }
-
-        System.out.println("||||||||||||||||||||||||||||MERGES||||||||||||||||||||||||||");
-         for (Object statu : status.files.allStatus) {
-            System.out.println(statu);
-         }*/
-        return project;
+    public Project project(String name, String path) throws AlreadyUpToDate, ThereIsNoMergeInProgress, NoRemoteForTheCurrentBranch, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, CheckoutError, RepositoryNotFound, OptionNotExist, ParseException, LocalRepositoryNotAGitRepository, IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument, IOException {
+      
+        return createProject(name, path);
     }
 
-    public static List<Chunk> createConflictChunksList(String filePath) {
+    private static List<Chunk> createConflictChunksList(String filePath) {
 
         List<Chunk> result = new ArrayList<>();
         Chunk chunk = new Chunk();
@@ -127,7 +102,7 @@ public class InitProject {
 
     }
 
-    public static File createFile(String pathFile) {
+    private static File createFile(String pathFile) {
 
         File result = new File();
 
@@ -139,11 +114,12 @@ public class InitProject {
         return result;
     }
 
-    public static Version createVersion(String pathProject, String SHA) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
+    private static Version createVersion(String pathProject, String SHA) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = new Version();
 
         List<String> parents = Git.parent(pathProject, SHA);
+        result.setParent(parents);
 
         if (parents.size() == 2) {
 
@@ -170,66 +146,27 @@ public class InitProject {
 
         return result;
     }
-
-    public static void printOutVersionList(List<Version> versionList, boolean parentPrint) {
-        //get the biggest author name for the formatting be correct
-        String biggestAuthorName = versionList.get(0).getAuthor();
-        String spaceAux = new String();
-
-        System.out.println("|||||||||||||||||||||||||||||||||||||||||||START|||||||||||||||||||||||||||||||||||||||||||");
-        if (parentPrint) {
-            System.out.println("|||||||||||||||||||||||||||||||||||||||||||ONLY MERGE VERSIONS|||||||||||||||||||||||||||||||||||||||||||");
-            for (int i = 1; i < versionList.size(); i++) {
-                if (biggestAuthorName.length() < versionList.get(i).getAuthor().length()) {
-                    biggestAuthorName = versionList.get(i).getAuthor();
-                }
-            }
-            for (int i = versionList.size() - 1; i >= 0; i--) {
-
-                if (versionList.get(i).isMerge()) {
-                    System.out.print(versionList.get(i).getAuthor());
-                    //calculates how much blank spaces are needed for the formatting be correct 
-                    for (int j = 0; j < biggestAuthorName.length() - versionList.get(i).getAuthor().length(); j++) {
-                        spaceAux += " ";
-                    }
-
-                    System.out.print(spaceAux + " || ");
-                    spaceAux = "";
-                    System.out.print(versionList.get(i).getSHA());
-                    System.out.print(" || ");
-                    System.out.print(versionList.get(i).getDate());
-                    System.out.print(" || ");
-                    System.out.print(versionList.get(i).getParent());
-                    System.out.print(" || ");
-                    System.out.println(versionList.get(i).getDescription());
-                }
-            }
-        } else {
-            System.out.println("|||||||||||||||||||||||||||||||||||||||||||ALL VERSIONS|||||||||||||||||||||||||||||||||||||||||||");
-            for (int i = 1; i < versionList.size(); i++) {
-                if (biggestAuthorName.length() < versionList.get(i).getAuthor().length()) {
-                    biggestAuthorName = versionList.get(i).getAuthor();
-                }
-            }
-            for (int i = versionList.size() - 1; i >= 0; i--) {
-                System.out.print(versionList.get(i).getAuthor());
-                //calculates how much blank spaces are needed for the formatting be correct 
-                for (int j = 0; j < biggestAuthorName.length() - versionList.get(i).getAuthor().length(); j++) {
-                    spaceAux += " ";
-                }
-
-                System.out.print(spaceAux + " || ");
-                spaceAux = "";
-                System.out.print(versionList.get(i).getSHA());
-                System.out.print(" || ");
-                System.out.print(versionList.get(i).getDate());
-                System.out.print(" || ");
-                System.out.println(versionList.get(i).getDescription());
-
-            }
+    
+    private static Project createProject(String name, String pathProject) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, AlreadyUpToDate, ThereIsNoMergeInProgress {
+        
+        Project result = new Project();
+        List<Version> aux = new ArrayList<>();
+        result.setName(name);
+        result.setPath(pathProject);
+        
+        List<Formats> logs = Git.log(pathProject);
+        
+        for (Formats log : logs) {
+            
+            aux.add(createVersion(pathProject,log.getCommitHash()));
         }
-        System.out.println("|||||||||||||||||||||||||||||||||||||||||||END|||||||||||||||||||||||||||||||||||||||||||");
+        
+        result.setVersions(aux);
+        
+        return result;
     }
+
+   
 }
 
 /*List<Formats> list = new ArrayList<>();

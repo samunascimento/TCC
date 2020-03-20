@@ -2,13 +2,17 @@ package br.ufjf.dcc.gmr.core.JFrame;
 
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
@@ -140,7 +144,7 @@ public class View extends JFrame {
         showPanel();
     }
 
-    private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
+    private void chooserActionPerformed(java.awt.event.ActionEvent evt) throws IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument {
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
 
