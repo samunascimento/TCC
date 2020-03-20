@@ -21,16 +21,13 @@ public class ReturnNewLineNumber {
 
     public static final int REMOVED_LINE = -Integer.MAX_VALUE;
 
-    /**
-     * Description: Constructor, initializate the array.
-     *
-     */
+    
     /**
      * This method goes trough the diffs between the commit source and the
-     * commit target and salve all the informations on a created type "FileDiff"
+     * commit target and salve all the information on a created type "FileDiff"
      *
      * @param directory This parameter tells the command the path to the
-     * repository we are dealling with
+     * repository we are dealing with
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @return returns a created type "FileDiff" that contains all the
@@ -82,7 +79,7 @@ public class ReturnNewLineNumber {
      * Method used by "fillFileDiff" to read the diff output and get the
      * starting line of the chunk.
      *
-     * @param a Line of the diff with the required starting line informations.
+     * @param a Line of the diff with the required starting line information.
      * @return The starting line of the diff chunk
      */
     private int startingLine(String a) {
@@ -125,15 +122,15 @@ public class ReturnNewLineNumber {
     }
 
     /**
-     * Methos that process the FileDiff and returns how much lines were added
+     * Methods that process the FileDiff and returns how much lines were added
      * and removed before an specific number
      *
      * @param chunk Processed diff command in a FileDiff
      * @param originalLineNumber Number of the original line that you want to
      * know in the new
-     * @param filePath the path of the archieve where the original line was
+     * @param filePath the path of the archive where the original line was
      * located.
-     * @return the difference between added and removed lines on the archieve
+     * @return the difference between added and removed lines on the archive
      * before the original line.
      */
     private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
@@ -175,12 +172,12 @@ public class ReturnNewLineNumber {
      * Public method that call the private ones and return the final number
      *
      * @param directory This parameter tells the command the path to the
-     * repository we are dealling with
+     * repository we are dealing with
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @param originalLineNumber Number of the original line that you want to
      * know in the new
-     * @param filePath the path of the archieve where the original line was
+     * @param filePath the path of the archive where the original line was
      * located.
      * @return The number of the "originalLineNumber" on the new file
      * @throws IOException

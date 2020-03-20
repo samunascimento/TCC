@@ -1027,12 +1027,12 @@ public class Git {
      * The command undo the last commit or merge;
      *
      * @param repositoryPath This parameter tells the command the path to the
-     * repository we are dealling with
+     * repository we are dealing with
      * @param hard If this parameter is true the command will do a hard reset
      * @param mixed If this parameter is true the command will do a mixed reset
      * @param soft If this parameter is true the command will do a soft reset
      * @param document this parameter is used in case of a mixed reset and is
-     * the "doccument" that the command will remove
+     * the "document" that the command will remove
      * @return return true if the command was executed and false if not
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      * exception that occurs when the repositorypath is wrong
@@ -1077,11 +1077,11 @@ public class Git {
     }
 
     /**
-     * This method recieves two commitHash and returns the difference between
-     * them ussing an FileDiff list.
+     * This method receive two commitHash and returns the difference between
+     * them using an FileDiff list.
      *
      * @param directory This parameter tells the command the path to the
-     * repository we are dealling with
+     * repository we are dealing with
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @param unified
