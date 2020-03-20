@@ -1,7 +1,5 @@
 package br.ufjf.dcc.gmr.core.jasome.model;
 
-import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
-import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import java.util.ArrayList;
 import java.util.List;
 

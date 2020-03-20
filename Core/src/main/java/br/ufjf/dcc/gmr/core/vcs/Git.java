@@ -192,11 +192,13 @@ public class Git {
      * @TODO:What is the meaning when this method returns true or false? Would
      * you improve the output?
      */
-    public static FileStatus status(String repositoryPath) throws RepositoryNotFound, IOException {
+    public static List<FileStatus> status(String repositoryPath) throws RepositoryNotFound, IOException {
+
+        List<FileStatus> result = new ArrayList<>();
         String command = "git status --short";
         CLIExecution execute;
         Status type = null;
-        FileStatus status = new FileStatus();
+        FileStatus status = null;
 
         if (repositoryPath == null || repositoryPath.isEmpty()) {
             throw new RepositoryNotFound();
@@ -208,75 +210,76 @@ public class Git {
             String[] array;
             if (line.startsWith(" M")) {
                 array = line.split("M");
+                status = new FileStatus();
                 status.setType(type.MODIFIED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.startsWith(" A")) {
                 array = line.split("A");
+                status = new FileStatus();
                 status.setType(type.ADDED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.startsWith(" D")) {
                 array = line.split("D");
+                status = new FileStatus();
+
                 status.setType(type.DELETED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.contains("?")) {
                 array = line.split(" ");
+                status = new FileStatus();
                 status.setType(type.UNTRACKED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.startsWith(" R")) {
                 array = line.split("R");
+                status = new FileStatus();
                 status.setType(type.RENAMED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.startsWith(" C")) {
                 array = line.split("C");
                 status = new FileStatus(type.COPIED, array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.startsWith(" U")) {
                 array = line.split("U");
+                status = new FileStatus();
                 status.setType(type.UNMERGED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
             if (line.contains("!")) {
                 array = line.split(" ");
+                status = new FileStatus();
+
                 status.setType(type.IGNORED);
                 status.setPath(array[1]);
-                status.files.allStatus.add(status.getType() + " " + status.getPath());
+                result.add(status);
             }
         }
-        return status;
+        return result;
     }
 
-    public static FileUnmerged statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
-        String command = "git status --short";
-        CLIExecution execute;
-        FileStatus status = status(repositoryPath);
-        FileUnmerged u = new FileUnmerged();
+    public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
+        
+        List<String> result = new ArrayList<>();
+        List<FileStatus> status = status(repositoryPath);
 
-        if (repositoryPath == null || repositoryPath.isEmpty()) {
-            throw new RepositoryNotFound();
-        }
-
-        execute = CLIExecute.execute(command, repositoryPath);
-        List<String> allStatus = status.files.allStatus;
-        if (!allStatus.isEmpty()) {
-            for (int i = 0; i < allStatus.size(); i++) {
-                if (allStatus.get(i).contains("U")) {
-                    u.file.unmerged.add(allStatus.get(i));
-                }
+        for (FileStatus file : status) {
+            if (file.getType() == Status.UNMERGED) {
+                result.add(file.getPath());
             }
         }
-        return u;
+        
+        return result;
     }
 
     /**
@@ -667,11 +670,9 @@ public class Git {
         String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
         return mergeBase(repositoryPath, command);
     }
-    
-       
+
     public static boolean merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-        
-        
+
         String command = "git merge ";
 
         if (!commit) {
@@ -683,10 +684,10 @@ public class Git {
         }
 
         command = command + revision;
-        
+
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        
-          if (!execution.getError().isEmpty()) {
+
+        if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("No remote for the current branch.")) {
                     throw new NoRemoteForTheCurrentBranch(line);
@@ -703,8 +704,7 @@ public class Git {
             return false;
         }
         return true;
-        
-        
+
     }
 
     /**

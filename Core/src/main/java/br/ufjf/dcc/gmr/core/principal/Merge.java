@@ -1,17 +1,11 @@
 package br.ufjf.dcc.gmr.core.principal;
 
-import br.ufjf.dcc.gmr.core.vcs.types.Formats;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 //import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

@@ -20,12 +20,9 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import static br.ufjf.dcc.gmr.core.vcs.Git.mergeIsConflicting;
-import static br.ufjf.dcc.gmr.core.vcs.Git.status;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
-import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
@@ -36,7 +33,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -44,6 +40,7 @@ import javax.swing.JTextArea;
  *
  */
 public class InitProject {
+
 
     public Project project(String name, String path) throws AlreadyUpToDate, ThereIsNoMergeInProgress, NoRemoteForTheCurrentBranch, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, CheckoutError, RepositoryNotFound, OptionNotExist, ParseException, LocalRepositoryNotAGitRepository, IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument, IOException {
       
@@ -133,9 +130,9 @@ public class InitProject {
 
                 Git.merge(pathProject, parents.get(1), false, true);
 
-                FileUnmerged statusUnmerged = Git.statusUnmerged(pathProject);
+                List<String> statusUnmerged = Git.statusUnmerged(pathProject);
 
-                for (String file : statusUnmerged.file.unmerged) {
+                for (String file : statusUnmerged) {
 
                     result.getFile().add(createFile(file));
                 }

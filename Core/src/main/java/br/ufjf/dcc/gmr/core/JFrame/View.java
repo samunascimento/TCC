@@ -15,7 +15,6 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,11 +28,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
-import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -41,9 +43,9 @@ import java.util.logging.Logger;
  */
 public class View extends JFrame {
 
-    JPanel tableChooserPanel;
+    JPanel tablePanel;
     JPanel textPanel;
-    JScrollPane tableChooserScrollPane;
+    JScrollPane tableScrollPane;
     JTable table;
     private JTextArea textArea;
     JFileChooser chooser;
@@ -53,9 +55,11 @@ public class View extends JFrame {
     JMenuItem submenu;
     InitProject initProject;
     Project project;
+    JFrame chooserFrame;
+    JTree tree;
 
     View() {
-        tableChooserPanel = new JPanel();
+        tablePanel = new JPanel();
         textPanel = new JPanel();
         chooser = new JFileChooser();
         menuBar = new JMenuBar();
@@ -63,21 +67,46 @@ public class View extends JFrame {
         table = new JTable();
         textArea = new JTextArea();
         progressBar = new JProgressBar();
-        tableChooserScrollPane = new JScrollPane();
+        tableScrollPane = new JScrollPane();
         submenu = new JMenuItem();
         initProject = new InitProject();
         project = new Project();
+        chooserFrame = new JFrame();
+        tree = new JTree();
     }
 
     private void setTableChooserPanel() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tableChooserPanel.setLayout(new BorderLayout());
-        tableChooserPanel.setPreferredSize(new Dimension(350, Short.MAX_VALUE));
+        tablePanel.setLayout(new BorderLayout());
+        tablePanel.setPreferredSize(new Dimension(500, Short.MAX_VALUE));
+        tablePanel.setVisible(false);
 
     }
 
     private void setTextPanel() {
         textPanel.setLayout(new BorderLayout());
+        textPanel.setVisible(false);
+    }
+
+    private void setTree(int i) {
+        tree.setVisible(false);
+        tree.setLayout(new BorderLayout());
+        if (project.getVersions().size() > 0) {
+            DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(project.getVersions().get(i).getSHA());
+            createNodes(shaTree, i);
+            tree = new JTree(shaTree);
+        }
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+    }
+
+    private void createNodes(DefaultMutableTreeNode SHAroot, int i) {
+        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile());
+        SHAroot.add(fileTree);
+        for (int j = 0; j < project.getVersions().get(i).getFile().get(i).getChuncks().size(); j++) {
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile().get(i).getChuncks().get(j).getBegin().getLineNumber());
+            fileTree.add(chunkTree);
+        }
     }
 
     private void setChooser() {
@@ -86,7 +115,6 @@ public class View extends JFrame {
         chooser.setRequestFocusEnabled(false);
         chooser.addActionListener(this::chooserActionPerformed);
         chooser.setVisible(false);
-        tableChooserPanel.add(chooser, BorderLayout.NORTH);
     }
 
     private void setTable() {
@@ -98,12 +126,12 @@ public class View extends JFrame {
     }
 
     @SuppressWarnings("empty-statement")
-    public void clearTable(JTable table) {        
+    private void clearTable(JTable table) {
         for (DefaultTableModel model = (DefaultTableModel) table.getModel();
                 table.getRowCount() > 0;
                 model.removeRow(table.getRowCount() - 1));
     }
-    
+
     private void setMenuBar() {
         submenu.addActionListener(this::openRepository);
         submenu.setText("Open Repository");
@@ -117,7 +145,7 @@ public class View extends JFrame {
     }
 
     private void setProgressBar() {
-        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 20));
+        progressBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 50));
         progressBar.setStringPainted(true);
         progressBar.setVisible(false);
     }
@@ -145,30 +173,66 @@ public class View extends JFrame {
     }
 
     private void chooserActionPerformed(java.awt.event.ActionEvent evt) throws IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument {
+
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
-
         progressBar.setVisible(true);
         Thread run = new Thread(new ProgressBarAction(progressBar));
         chooser.setVisible(false);
+        chooserFrame.setVisible(false);
         run.start();
-                
-        //Verificar essa solução....
         try {
             project = initProject.project(filePath, filePath);
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
-            model.insertRow(0, new Object[]{project.getVersions().get(i), i});
+            model.insertRow(0, new Object[]{project.getVersions().get(i), project.getVersions().get(i).getFile().get(i).getStatus()});
         }
         table.setModel(model);
+        if (project.getVersions().size() > 0) {
+            tablePanel.setVisible(true);
+            textPanel.setVisible(true);
+            tree.setVisible(true);
+        }else{
+            textPanel.setVisible(true);
+            textArea.setText("Empty Project");
+            textArea.setFont(new Font(null,1,15));
+        }
+
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
+        chooserFrame.setExtendedState(MAXIMIZED_BOTH);
         chooser.setVisible(true);
+        chooserFrame.setVisible(true);
+    }
+
+    private void showPanel() {
+        this.add(tablePanel, BorderLayout.WEST);
+        this.add(textPanel, BorderLayout.CENTER);
+        this.add(menuBar, BorderLayout.NORTH);
+        this.add(progressBar, BorderLayout.SOUTH);
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tablePanel.add(tree, BorderLayout.EAST);
+        tableScrollPane.setViewportView(table);
+        textPanel.add(getTextArea(), BorderLayout.CENTER);
+        this.setVisible(true);
+        chooserFrame.add(chooser, BorderLayout.CENTER);
+    }
+
+    private void setMainPanel() {
+        setTextPanel();
+        setTableChooserPanel();
+        setMenuBar();
+        setChooser();
+        setTable();
+        setTextArea();
+        setProgressBar();
+        setTree(0);
+        showPanel();
     }
 
     public static void main(String[] args) {
@@ -189,7 +253,7 @@ public class View extends JFrame {
     /**
      * @param textArea the textArea to set
      */
-    public void setTextArea(JTextArea textArea) {
+    private void setTextArea(JTextArea textArea) {
         this.textArea = textArea;
     }
 

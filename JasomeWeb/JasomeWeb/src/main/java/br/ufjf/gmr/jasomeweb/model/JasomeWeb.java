@@ -44,7 +44,6 @@ public class JasomeWeb {
         Formats formats = new Formats(null, "39e7e8da2f0cdc8dfff519d07454e3ddea92e844", null, null);
         CLIExecution extractMetrics = jasomeMethods.extractMetrics(repositoryPath, jasomePath);
         ProjectMetrics projectMetrics = jasomeMethods.analyzeVersion(formats, repositoryPath, 0);
-        projectMetrics.getListClassMetrics();
         return projectMetrics.getListClassMetrics();
         
     }
