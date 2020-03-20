@@ -29,6 +29,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
@@ -167,7 +168,8 @@ public class View extends JFrame {
         }
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
-            model.insertRow(0, new Object[]{project.getVersions().get(i), project.getVersions().get(i).getFile().get(i).getStatus()});
+            Version version = project.getVersions().get(i);
+            model.insertRow(0, new Object[]{version.getSHA(),version.getStatus()});
         }
         table.setModel(model);
         if (project.getVersions().size() > 0) {

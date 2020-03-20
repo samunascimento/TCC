@@ -25,6 +25,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.File;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;
+import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
@@ -106,58 +107,66 @@ public class InitProject {
         return result;
     }
 
-    private static Version createVersion(String pathProject, String SHA) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
+    private static Version createVersion(String pathProject, Formats log) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = new Version();
 
-        List<String> parents = Git.parent(pathProject, SHA);
+        List<String> parents = Git.parent(pathProject, log.getCommitHash());
         result.setParent(parents);
-
+        
         if (parents.size() == 2) {
-
+            result.setMerge(true);
+            
             Git.reset(pathProject, true, false, false, null);
-
             Git.clean(pathProject, true, 0);
-
             Git.checkout(parents.get(0), pathProject);
 
             if (Git.mergeIsConflicting(parents.get(0), pathProject, true, true)) {
-
                 Git.merge(pathProject, parents.get(1), false, true);
-
                 List<String> statusUnmerged = Git.statusUnmerged(pathProject);
 
                 for (String file : statusUnmerged) {
-
                     result.getFile().add(createFile(file));
                 }
-
-            }
-
+                
+                result.setStatus(MergeStatus.CONFLICT);
+                
+            }else result.setStatus(MergeStatus.NON_CONFLICT);
+            
+           
+        } else{
+            result.setMerge(false);
+            result.setStatus(MergeStatus.NON_CONFLICT);
         }
-
+        
+        result.setSHA(log.getCommitHash());
+        result.setAuthor(log.getAuthorName());
+        result.setCommiter(null);
+        result.setDate(log.getAuthorDate());
+        result.setDescription(log.getCommitDescription());
+        result.setParent(Git.parent(pathProject, log.getCommitHash()));
+        
+        
         return result;
     }
-    
+
     public static Project createProject(String name, String projectPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, AlreadyUpToDate, ThereIsNoMergeInProgress {
-        
+
         Project result = new Project();
         List<Version> aux = new ArrayList<>();
         result.setName(name);
         result.setPath(projectPath);
-        
+
         List<Formats> logs = Git.log(projectPath);
-        
         for (int i = 0; i < logs.size(); i++) {
-            aux.add(createVersion(projectPath, logs.get(i).getCommitHash()));
+            Formats log = logs.get(i);
+            aux.add(createVersion(projectPath, log));
         }
-        
         result.setVersions(aux);
-        
+
         return result;
     }
 
-   
 }
 
 /*List<Formats> list = new ArrayList<>();

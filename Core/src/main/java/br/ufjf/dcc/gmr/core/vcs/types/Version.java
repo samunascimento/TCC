@@ -8,13 +8,30 @@ import java.util.List;
  * @author icout
  */
 public class Version {
-    String SHA, author, commiter, description;
-    Date date;
-    boolean merge;
+
+    /**
+     * @return the status
+     */
+    public MergeStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(MergeStatus status) {
+        this.status = status;
+    }
+    private String SHA;
+    private String author;
     //conflict?
-    List<File> file;
-    List<String> parent;
-    
+    private String commiter;
+    private String description;
+    private Date date;
+    private boolean merge;
+    private List<File> file;
+    private List<String> parent;
+    private MergeStatus status;
 
     public Version() {
         SHA = new String();
@@ -27,13 +44,15 @@ public class Version {
         description = new String();
     }
 
-    public Version(String SHA, String author, Date date, boolean merge, List<String> parent, String description) {
+    public Version(String SHA, String author, Date date, boolean merge,
+            List<String> parent, String description, MergeStatus status) {
         this.SHA = SHA;
         this.author = author;
         this.date = date;
         this.merge = merge;
         this.description = description;
         this.parent = parent;
+        this.status = status;
     }
 
     public String getDescription() {
