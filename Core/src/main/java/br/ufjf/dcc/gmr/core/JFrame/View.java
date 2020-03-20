@@ -15,6 +15,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,6 +29,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.text.ParseException;
@@ -150,30 +152,7 @@ public class View extends JFrame {
         progressBar.setVisible(false);
     }
 
-    private void showPanel() {
-        this.add(tableChooserPanel, BorderLayout.WEST);
-        this.add(textPanel, BorderLayout.CENTER);
-        this.add(menuBar, BorderLayout.NORTH);
-        this.add(progressBar, BorderLayout.SOUTH);
-        tableChooserPanel.add(tableChooserScrollPane, BorderLayout.CENTER);
-        tableChooserScrollPane.setViewportView(table);
-        textPanel.add(getTextArea(), BorderLayout.CENTER);
-        this.setVisible(true);
-    }
-
-    private void setMainPanel() {
-        setTextPanel();
-        setTableChooserPanel();
-        setMenuBar();
-        setChooser();
-        setTable();
-        setTextArea();
-        setProgressBar();
-        showPanel();
-    }
-
-    private void chooserActionPerformed(java.awt.event.ActionEvent evt) throws IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument {
-
+    private void chooserActionPerformed(java.awt.event.ActionEvent evt) {
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
         progressBar.setVisible(true);
@@ -182,11 +161,10 @@ public class View extends JFrame {
         chooserFrame.setVisible(false);
         run.start();
         try {
-            project = initProject.project(filePath, filePath);
-        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | CheckoutError | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | AlreadyUpToDate ex) {
+            project = initProject.createProject(filePath, filePath);
+        } catch (AlreadyUpToDate | ThereIsNoMergeInProgress | NoRemoteForTheCurrentBranch | NotSomethingWeCanMerge | ThereIsNoMergeToAbort | CheckoutError | RepositoryNotFound | OptionNotExist | ParseException | LocalRepositoryNotAGitRepository | IsOutsideRepository | RefusingToClean | UnknownSwitch | InvalidDocument | IOException ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
             model.insertRow(0, new Object[]{project.getVersions().get(i), project.getVersions().get(i).getFile().get(i).getStatus()});

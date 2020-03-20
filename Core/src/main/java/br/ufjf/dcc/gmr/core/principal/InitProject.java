@@ -23,6 +23,7 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
 import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
@@ -40,12 +41,6 @@ import java.util.List;
  *
  */
 public class InitProject {
-
-
-    public Project project(String name, String path) throws AlreadyUpToDate, ThereIsNoMergeInProgress, NoRemoteForTheCurrentBranch, NotSomethingWeCanMerge, ThereIsNoMergeToAbort, CheckoutError, RepositoryNotFound, OptionNotExist, ParseException, LocalRepositoryNotAGitRepository, IsOutsideRepository, RefusingToClean, UnknownSwitch, InvalidDocument, IOException {
-      
-        return createProject(name, path);
-    }
 
     private static List<Chunk> createConflictChunksList(String filePath) {
 
@@ -144,18 +139,17 @@ public class InitProject {
         return result;
     }
     
-    private static Project createProject(String name, String pathProject) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, AlreadyUpToDate, ThereIsNoMergeInProgress {
+    public static Project createProject(String name, String projectPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, AlreadyUpToDate, ThereIsNoMergeInProgress {
         
         Project result = new Project();
         List<Version> aux = new ArrayList<>();
         result.setName(name);
-        result.setPath(pathProject);
+        result.setPath(projectPath);
         
-        List<Formats> logs = Git.log(pathProject);
+        List<Formats> logs = Git.log(projectPath);
         
-        for (Formats log : logs) {
-            
-            aux.add(createVersion(pathProject,log.getCommitHash()));
+        for (int i = 0; i < logs.size(); i++) {
+            aux.add(createVersion(projectPath, logs.get(i).getCommitHash()));
         }
         
         result.setVersions(aux);
