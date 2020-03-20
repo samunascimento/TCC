@@ -1161,7 +1161,7 @@ public class Git {
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff " + commitSource + " " + commitTarget + " --unified=0";
-
+        System.out.println(command);
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
