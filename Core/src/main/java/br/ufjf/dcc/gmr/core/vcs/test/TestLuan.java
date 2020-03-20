@@ -4,6 +4,7 @@ import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import java.io.IOException;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
+import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 
 /**
  *
@@ -17,16 +18,29 @@ public class TestLuan {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-//        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF";
-        String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
+        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
+//        String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
         ReturnNewLineNumber a = new ReturnNewLineNumber();
-        int teste;
+        int teste = 0;
 
-        teste= a.initreturnNewLineNumber(repositoryPath, "9852438", "3d52ccc",1,"/Core/src/main/java/br/ufjf/dcc/gmr/core/jasome/model/PackageMetrics.java");
+        try {
+            teste= a.initreturnNewLineNumber(repositoryPath, "b3405dcdee74ee047ad2cb0119cb98cbc1b0da5a",
+                    "79cde21", 15
+                    ,"/Core/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIExecute.java");
+            
+            if (teste == ReturnNewLineNumber.REMOVED_LINE) {
+                System.out.println("The line was removed...");
+            }else{
+                System.out.println("The new line number is " + teste);
+            }
+            
+        } catch (PathDontExist ex) {
+            System.out.println(ex.getMessage());
+        }
 
+         
         
-        System.out.println(teste);
     }
     
 }

@@ -19,22 +19,12 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineType;
  */
 public class ReturnNewLineNumber {
 
-    String directory; 
-    String commitSource;
-    String commitTarget;
-    int originalLineNumber;
-    List<FileDiff> chunks;
-    String FilePath;
+    public static final int REMOVED_LINE = -Integer.MAX_VALUE;
 
     /**
      * Description: Constructor, initializate the array.
      *
      */
-    public ReturnNewLineNumber() {
-
-        chunks = new ArrayList<>();
-    }
-
     /**
      * This method goes trough the diffs between the commit source and the
      * commit target and salve all the informations on a created type "FileDiff"
@@ -51,7 +41,9 @@ public class ReturnNewLineNumber {
      */
     private List<FileDiff> fillFileDiff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
+        List<FileDiff> chunks = new ArrayList<>();
         List<String> output = new ArrayList<>();
+
         FileDiff aux = new FileDiff();
         int currentLine = 0;
         output = Git.auxiliardiff(directory, commitSource, commitTarget);
@@ -69,7 +61,7 @@ public class ReturnNewLineNumber {
             } else if (line.charAt(0) == '+') {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
-            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.length()>5) {
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.length() > 5) {
                 String c = line.substring(5);
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-') {
@@ -82,7 +74,7 @@ public class ReturnNewLineNumber {
 
         }
         chunks.add(aux);
-        aux = new FileDiff();
+        
         return chunks;
     }
 
@@ -144,24 +136,19 @@ public class ReturnNewLineNumber {
      * @return the difference between added and removed lines on the archieve
      * before the original line.
      */
-    private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath)  {
+    private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
 
         int cont = 0;
         int j = 0;
-        try {
-              
-            while (!chunk.get(j).getFilePathSource().equals(filePath)) {
-            if(j+1>=chunk.size()){
+
+        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
+            if (j + 1 >= chunk.size()) {
                 throw new PathDontExist();
             }
-                j++;
-            
+            j++;
+
         }
-        } catch ( PathDontExist ex) {
-            System.out.println("The given path does not exist on this diff");
-            return -2000000000;
-        }
-    
+
         for (int i = 0; i < chunk.get(j).getLines().size(); i++) {
 
             if (chunk.get(j).getLines().get(i).getLineNumber() > originalLineNumber) {
@@ -173,7 +160,7 @@ public class ReturnNewLineNumber {
                 if (chunk.get(j).getLines().get(i).getType() == LineType.DELETED) {
 
                     if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber()) {
-                        return -100000;
+                        return REMOVED_LINE;
                     } else {
                         cont--;
                     }
@@ -187,35 +174,34 @@ public class ReturnNewLineNumber {
     /**
      * Public method that call the private ones and return the final number
      *
-     * @param directory1 This parameter tells the command the path to the
+     * @param directory This parameter tells the command the path to the
      * repository we are dealling with
-     * @param commitSource1 This parameter is the commit we want to compare
-     * @param commitTarget1 This parameter is the commit we want to compare to.
+     * @param commitSource This parameter is the commit we want to compare
+     * @param commitTarget This parameter is the commit we want to compare to.
      * @param originalLineNumber Number of the original line that you want to
      * know in the new
-     * @param filePath1 the path of the archieve where the original line was
+     * @param filePath the path of the archieve where the original line was
      * located.
      * @return The number of the "originalLineNumber" on the new file
      * @throws IOException
      * @throws LocalRepositoryNotAGitRepository
      * @throws InvalidCommitHash
+     * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
      */
-    public int initreturnNewLineNumber(String directory1, String commitSource1, String commitTarget1, int originalLineNumber, String filePath1) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-        this.FilePath = filePath1;
-        this.directory = directory1;
-        this.commitTarget = commitTarget1;
-        this.commitSource = commitSource1;
-        chunks = fillFileDiff(directory, commitSource, commitTarget);
-        int i = processingChunkModifiedLine(chunks, originalLineNumber, filePath1);
-        if (i == -100000) {
-            System.out.println("A linha desejada foi excluida");
-            return -100000;
+    public int initreturnNewLineNumber(String directory, String commitSource,
+            String commitTarget, int originalLineNumber, String filePath)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
+
+        List<FileDiff> chunks = fillFileDiff(directory, commitSource, commitTarget);
+        int i;
+
+        i = processingChunkModifiedLine(chunks, originalLineNumber, filePath);
+
+        if (i == REMOVED_LINE) {
+            return REMOVED_LINE;
         }
-        if(i==-2000000000){
-            return -2000000000;
-        }
-        int finalNumber = originalLineNumber + i;
-        return finalNumber;
+
+        return originalLineNumber + i;
     }
 
 }
