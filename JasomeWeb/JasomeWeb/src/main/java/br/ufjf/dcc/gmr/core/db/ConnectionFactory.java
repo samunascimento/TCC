@@ -20,9 +20,9 @@ public class ConnectionFactory {
     private static final String URL = "jdbc:postgresql://localhost:5432/metricsdb";
     private static final String USER = "postgres";
     private static final String PASS = "admin";
+    private static Connection con= null;
     
     public static Connection getConnection(){
-        Connection con= null;
         try {
             Class.forName(DRIVER);
             con = DriverManager.getConnection(URL, USER, PASS);
@@ -32,6 +32,18 @@ public class ConnectionFactory {
         }
         
         return con;
+    }
+    
+    public int executeSql(String sql) throws SQLException{
+        try{
+            Statement stm = con.createStatement();
+            int res = stm.executeUpdate(sql);
+            con.close();
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 //    
 //    public static void closeConnection(Connection con){
