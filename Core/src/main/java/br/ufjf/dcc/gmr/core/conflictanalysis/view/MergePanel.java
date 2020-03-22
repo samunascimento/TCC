@@ -89,14 +89,14 @@ public class MergePanel extends JPanel {
         this.mainTable.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Title ", "Date", "Hash", "Conflict"
+                    "Hash", "Conflict"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -110,8 +110,6 @@ public class MergePanel extends JPanel {
         DefaultTableModel model = (DefaultTableModel) this.mainTable.getModel();
         for (MergeEvent merge : this.list) {
             model.addRow(new Object[]{
-                merge.getHash().getTitle(),
-                merge.getHash().getCommitterDate(),
                 merge.getHash().getCommitHash(),
                 merge.isConflict()
             });
