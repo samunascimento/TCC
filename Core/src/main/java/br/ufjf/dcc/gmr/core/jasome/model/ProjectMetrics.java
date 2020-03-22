@@ -12,7 +12,7 @@ public class ProjectMetrics {
     private List<VersionMetrics> listVersionMetrics = new ArrayList<>();
 
     private String sourceDir;
-
+    private int id;
     private List<String> listPackageMetrics = new ArrayList<>();
     private List<String> listClassMetrics  = new ArrayList<>();
     private List<String> listMethodMetrics  = new ArrayList<>();
@@ -83,6 +83,16 @@ public class ProjectMetrics {
             System.out.println("["+i+"]"+nameMethod);
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
     
     public String getSourceDir() {
         return sourceDir;
