@@ -29,14 +29,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
+import br.ufjf.dcc.gmr.core.vcs.types.File;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
+import javax.swing.text.html.parser.DTDConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -75,7 +79,6 @@ public class View extends JFrame {
         initProject = new InitProject();
         project = new Project();
         chooserFrame = new JFrame();
-        tree = new JTree();
     }
 
     private void setTableChooserPanel() {
@@ -91,23 +94,31 @@ public class View extends JFrame {
         textPanel.setVisible(false);
     }
 
-    private void setTree(int i) {
-        tree.setVisible(false);
-        tree.setLayout(new BorderLayout());
+    private void setTree(Version version) {
         if (project.getVersions().size() > 0) {
-            DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(project.getVersions().get(i).getSHA());
-            createNodes(shaTree, i);
+            DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
+            for (int i = 0; i < version.getFile().size(); i++) {
+                createNodes(shaTree, version.getFile().get(i));
+            }
             tree = new JTree(shaTree);
+            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+            tree.setLayout(new BorderLayout());
+            tablePanel.add(tree, BorderLayout.EAST);
+            tree.setVisible(true);
+            
+        }else{
+            DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
+            tree = new JTree(emptyNode);
+            tablePanel.add(tree, BorderLayout.EAST);
+            tree.setVisible(true);
         }
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
     }
 
-    private void createNodes(DefaultMutableTreeNode SHAroot, int i) {
-        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile());
+    private void createNodes(DefaultMutableTreeNode SHAroot, File file) {
+        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());
         SHAroot.add(fileTree);
-        for (int j = 0; j < project.getVersions().get(i).getFile().get(i).getChuncks().size(); j++) {
-            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(project.getVersions().get(i).getFile().get(i).getChuncks().get(j).getBegin().getLineNumber());
+        for (int i = 0; i < file.getChuncks().size(); i++) {
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(file.getChuncks().get(i).getBegin().getLineNumber());
             fileTree.add(chunkTree);
         }
     }
@@ -121,6 +132,11 @@ public class View extends JFrame {
     }
 
     private void setTable() {
+        table.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tableFocusGained(evt);
+            }
+        });
         table.setAutoCreateRowSorter(true);
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addColumn("sha");
@@ -157,22 +173,26 @@ public class View extends JFrame {
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
         progressBar.setVisible(true);
-        ProgressBarAction aux = new ProgressBarAction(progressBar, filePath, filePath);
-        Thread run = new Thread(aux);
         chooser.setVisible(false);
         chooserFrame.setVisible(false);
-        run.start();
-        project = aux.getProject();
+        //ProgressBarAction aux = new ProgressBarAction(progressBar, filePath, filePath);
+        //Thread run = new Thread(aux);
+        //run.start();
+        //project = aux.getProject();
+        try {
+            project = InitProject.createProject(filePath, filePath);
+        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | AlreadyUpToDate | ThereIsNoMergeInProgress ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
             Version version = project.getVersions().get(i);
-            model.insertRow(0, new Object[]{version.getSHA(), version.getStatus()});
+            model.insertRow(0, new String[]{version.getSHA(), version.getStatus().toString()});
         }
         table.setModel(model);
         if (project.getVersions().size() > 0) {
             tablePanel.setVisible(true);
             textPanel.setVisible(true);
-            tree.setVisible(true);
         } else {
             textPanel.setVisible(true);
             textArea.setText("Empty Project");
@@ -180,6 +200,11 @@ public class View extends JFrame {
         }
         progressBar.setVisible(false);
 
+    }
+
+    private void tableFocusGained(java.awt.event.FocusEvent evt) {
+        //setTree(project.getVersionBySHA(table.getValueAt(table.getSelectedRow(),0)));
+        setTree(project.getVersions().get(0));
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
@@ -194,7 +219,7 @@ public class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
         tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-        tablePanel.add(tree, BorderLayout.EAST);
+        
         tableScrollPane.setViewportView(table);
         textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);
@@ -209,7 +234,6 @@ public class View extends JFrame {
         setTable();
         setTextArea();
         setProgressBar();
-        setTree(0);
         showPanel();
     }
 

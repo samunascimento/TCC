@@ -41,9 +41,17 @@ public class Project {
     public List<Version> getVersions() {
         return versions;
     }
-
+    
     public void setVersions(List<Version> versions) {
         this.versions = versions;
+    }
+    
+    public Version getVersionBySHA(Object SHA){
+        for(int i = 0; i < versions.size(); i++){
+            if(versions.get(i).getSHA().equals(SHA))
+                return versions.get(i);
+        }
+        return null;
     }
     public Project(String name, String path, List<Version> versions) {
         this.name = name;

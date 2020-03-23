@@ -129,7 +129,7 @@ public class InitProject {
                 for (String file : statusUnmerged) {
                     result.getFile().add(createFile(file));
                 }
-                
+                System.out.println(MergeStatus.CONFLICT);
                 result.setStatus(MergeStatus.CONFLICT);
                 
             }else result.setStatus(MergeStatus.NON_CONFLICT);
@@ -162,7 +162,7 @@ public class InitProject {
         View.progressBar.setMinimum(0);
         View.progressBar.setMaximum(logs.size());
         for (int i = 0; i < logs.size(); i++) {
-            View.progressBar.setValue(i);
+            //View.progressBar.setValue(i);
             Formats log = logs.get(i);
             aux.add(createVersion(projectPath, log));
         }
