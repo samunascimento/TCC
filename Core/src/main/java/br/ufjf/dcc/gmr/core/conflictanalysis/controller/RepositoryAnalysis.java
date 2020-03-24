@@ -90,7 +90,7 @@ public interface RepositoryAnalysis {
         }
         return list;
     }
-    
+
     public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException {
 
         //Main list
@@ -129,7 +129,6 @@ public interface RepositoryAnalysis {
         try {
             //Getting all merges's hashes
             List<String> allMerges = Git.giveAllMerges(repositoryPath);
-
 
             //Scanning and processing the hash list
             for (String merge : allMerges) {
@@ -198,14 +197,15 @@ public interface RepositoryAnalysis {
                                         }
                                     }
                                     //Getting original v1 and v2 first line
-                                    originalV1FirstLine = rnln.initreturnNewLineNumber(repositoryPath,"",parents.get(0).getCommitHash(),beginLine+1,fileDiff.getFilePathSource());
-                                    originalV2FirstLine = rnln.initreturnNewLineNumber(repositoryPath,"",parents.get(1).getCommitHash(),separatorLine+1,fileDiff.getFilePathSource());        
+                                    originalV1FirstLine = rnln.initreturnNewLineNumber(repositoryPath, "", parents.get(0).getCommitHash(), beginLine + 1, fileDiff.getFilePathSource());
+                                    originalV2FirstLine = rnln.initreturnNewLineNumber(repositoryPath, "", parents.get(1).getCommitHash(), separatorLine + 1, fileDiff.getFilePathSource());
                                     System.out.println(repositoryPath + fileDiff.getFilePathSource());
                                     System.out.println("v1: " + originalV1FirstLine);
                                     System.out.println("v2: " + originalV2FirstLine);
+
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1), 
-                                            new ArrayList<>(v2), beginLine, separatorLine, endLine,originalV1FirstLine,originalV2FirstLine));
+                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
+                                            new ArrayList<>(v2), beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
 
                                     //Reseting variables
                                     beforeContext.clear();
@@ -216,7 +216,7 @@ public interface RepositoryAnalysis {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName,repositoryPath + fileDiff.getFilePathSource(), new ArrayList<>(conflictRegion)));
+                            conflictFiles.add(new ConflictFile(fileName, repositoryPath + fileDiff.getFilePathSource(), new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -227,7 +227,7 @@ public interface RepositoryAnalysis {
                         for (String line : fileDiff.getAllMessage()) {
                             if (line.startsWith("* Unmerged path")) {
                                 auxArray = line.split("/");
-                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1],null, null));
+                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1], null, null));
                             }
                         }
 
@@ -259,6 +259,9 @@ public interface RepositoryAnalysis {
                 analysed = analysed + 1.0;
 
             }
+            
+            return RepositoryAnalysis.getJavaSyntax(list, repositoryPath);
+            
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
             throw new IOException();
@@ -295,16 +298,39 @@ public interface RepositoryAnalysis {
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
-        } catch (IOException ex) {
-            throw new IOException();
         } catch (PathDontExist ex) {
             System.out.println("ERROR: PathDontExist error!");
             throw new IOException();
+        } catch (IOException ex) {
+            throw new IOException();
         }
-
-        return list;
     }
 
-   
+    public static List<MergeEvent> getJavaSyntax(List<MergeEvent> list, String repositoryPath) throws IOException {
+        try {
+            for (MergeEvent merge : list) {
+                for (ConflictFile file : merge.getConflictFiles()) {
+                    if (file.getFileName().endsWith(".java") && !file.getConflictRegion().isEmpty()) {
+                        for (ConflictRegion region : file.getConflictRegion()) {
+                            Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
+                            region.setSyntaxV1(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV1FirstLine(), region.getSeparatorLine() - 1));
+                            Git.checkout(merge.getParents().get(1).getCommitHash(), repositoryPath);
+                            region.setSyntaxV2(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV2FirstLine(), region.getEndLine() - 1));
+                            Git.checkout("master", repositoryPath);
+                        }
+                    }
+                }
+            }
+            return list;
+        } catch (IOException ex) {
+            throw new IOException();
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
+        } catch (CheckoutError ex) {
+            System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        }
+    }
 
 }
