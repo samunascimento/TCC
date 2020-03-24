@@ -16,6 +16,7 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
+import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -111,8 +114,11 @@ public interface RepositoryAnalysis {
         int beginLine;
         int separatorLine;
         int endLine;
+        int originalV1FirstLine;
+        int originalV2FirstLine;
 
         //Assistants
+        ReturnNewLineNumber rnln = new ReturnNewLineNumber();
         String[] auxArray;
         List<String> allFile;
         double progress;
@@ -191,8 +197,15 @@ public interface RepositoryAnalysis {
                                             afterContext.add(allFile.get(j));
                                         }
                                     }
+                                    //Getting original v1 and v2 first line
+                                    originalV1FirstLine = rnln.initreturnNewLineNumber(repositoryPath,"",parents.get(0).getCommitHash(),beginLine+1,fileDiff.getFilePathSource());
+                                    originalV2FirstLine = rnln.initreturnNewLineNumber(repositoryPath,"",parents.get(1).getCommitHash(),separatorLine+1,fileDiff.getFilePathSource());        
+                                    System.out.println(repositoryPath + fileDiff.getFilePathSource());
+                                    System.out.println("v1: " + originalV1FirstLine);
+                                    System.out.println("v2: " + originalV2FirstLine);
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1), new ArrayList<>(v2), beginLine, separatorLine, endLine));
+                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1), 
+                                            new ArrayList<>(v2), beginLine, separatorLine, endLine,originalV1FirstLine,originalV2FirstLine));
 
                                     //Reseting variables
                                     beforeContext.clear();
@@ -203,7 +216,7 @@ public interface RepositoryAnalysis {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName, new ArrayList<>(conflictRegion)));
+                            conflictFiles.add(new ConflictFile(fileName,repositoryPath + fileDiff.getFilePathSource(), new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -214,7 +227,7 @@ public interface RepositoryAnalysis {
                         for (String line : fileDiff.getAllMessage()) {
                             if (line.startsWith("* Unmerged path")) {
                                 auxArray = line.split("/");
-                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1], null));
+                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1],null, null));
                             }
                         }
 
@@ -283,6 +296,9 @@ public interface RepositoryAnalysis {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
         } catch (IOException ex) {
+            throw new IOException();
+        } catch (PathDontExist ex) {
+            System.out.println("ERROR: PathDontExist error!");
             throw new IOException();
         }
 

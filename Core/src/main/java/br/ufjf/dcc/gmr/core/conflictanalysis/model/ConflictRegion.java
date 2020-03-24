@@ -11,8 +11,13 @@ public class ConflictRegion {
     private final int beginLine;
     private final int separatorLine;
     private final int endLine;
+    
+    private final int originalV1FirstLine;
+    private final int originalV2FirstLine;
+    private List<SyntaxStructure> syntaxV1;
+    private List<SyntaxStructure> syntaxV2;
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine, int endLine) {
+    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine, int endLine, int originalV1FirstLine, int originalV2FirstLine) {
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -20,6 +25,32 @@ public class ConflictRegion {
         this.beginLine = beginLine;
         this.separatorLine = separatorLine;
         this.endLine = endLine;
+        this.originalV1FirstLine = originalV1FirstLine;
+        this.originalV2FirstLine = originalV2FirstLine;
+    }
+
+    public void setSyntaxV1(List<SyntaxStructure> syntaxV1) {
+        this.syntaxV1 = syntaxV1;
+    }
+
+    public void setSyntaxV2(List<SyntaxStructure> syntaxV2) {
+        this.syntaxV2 = syntaxV2;
+    }
+
+    public int getOriginalV1FirstLine() {
+        return originalV1FirstLine;
+    }
+
+    public int getOriginalV2FirstLine() {
+        return originalV2FirstLine;
+    }
+
+    public List<SyntaxStructure> getSyntaxV1() {
+        return syntaxV1;
+    }
+
+    public List<SyntaxStructure> getSyntaxV2() {
+        return syntaxV2;
     }
 
     public List<String> getAfterContext() {
