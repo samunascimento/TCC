@@ -15,7 +15,6 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,10 +28,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
-import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.text.ParseException;
@@ -40,7 +37,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTree;
-import javax.swing.text.html.parser.DTDConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -95,18 +91,25 @@ public class View extends JFrame {
     }
 
     private void setTree(Version version) {
-        if (project.getVersions().size() > 0) {
+
+        for (File file : version.getFile()) {
+            System.out.println(file.getPath());
+        }
+        List<File> files = version.getFile();
+        if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
-            for (int i = 0; i < version.getFile().size(); i++) {
-                createNodes(shaTree, version.getFile().get(i));
+
+            for (File file : files) {
+                createNodes(shaTree, file);
             }
+
             tree = new JTree(shaTree);
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
             tree.setLayout(new BorderLayout());
             tablePanel.add(tree, BorderLayout.EAST);
             tree.setVisible(true);
-            
-        }else{
+
+        } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
             tree = new JTree(emptyNode);
             tablePanel.add(tree, BorderLayout.EAST);
@@ -187,7 +190,7 @@ public class View extends JFrame {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < project.getVersions().size(); i++) {
             Version version = project.getVersions().get(i);
-            model.insertRow(0, new String[]{version.getSHA(), version.getStatus().toString()});
+            model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
         }
         table.setModel(model);
         if (project.getVersions().size() > 0) {
@@ -203,8 +206,11 @@ public class View extends JFrame {
     }
 
     private void tableFocusGained(java.awt.event.FocusEvent evt) {
-        //setTree(project.getVersionBySHA(table.getValueAt(table.getSelectedRow(),0)));
-        setTree(project.getVersions().get(0));
+
+        Version version = project.getVersions().get(table.getSelectedRow());
+
+        setTree(version);
+//        setTree(project.getVersions().get(0));
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {
@@ -219,7 +225,7 @@ public class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
         tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-        
+
         tableScrollPane.setViewportView(table);
         textPanel.add(getTextArea(), BorderLayout.CENTER);
         this.setVisible(true);

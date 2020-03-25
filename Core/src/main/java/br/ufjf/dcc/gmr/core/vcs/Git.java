@@ -208,21 +208,21 @@ public class Git {
 
         for (String line : execute.getOutput()) {
             String[] array;
-            if (line.startsWith(" M")) {
+            if (line.startsWith("M")) {
                 array = line.split("M");
                 status = new FileStatus();
                 status.setType(type.MODIFIED);
                 status.setPath(array[1]);
                 result.add(status);
             }
-            if (line.startsWith(" A")) {
+            if (line.startsWith("A")) {
                 array = line.split("A");
                 status = new FileStatus();
                 status.setType(type.ADDED);
                 status.setPath(array[1]);
                 result.add(status);
             }
-            if (line.startsWith(" D")) {
+            if (line.startsWith("D")) {
                 array = line.split("D");
                 status = new FileStatus();
 
@@ -237,20 +237,20 @@ public class Git {
                 status.setPath(array[1]);
                 result.add(status);
             }
-            if (line.startsWith(" R")) {
+            if (line.startsWith("R")) {
                 array = line.split("R");
                 status = new FileStatus();
                 status.setType(type.RENAMED);
                 status.setPath(array[1]);
                 result.add(status);
             }
-            if (line.startsWith(" C")) {
+            if (line.startsWith("C")) {
                 array = line.split("C");
                 status = new FileStatus(type.COPIED, array[1]);
                 result.add(status);
             }
-            if (line.startsWith(" U")) {
-                array = line.split("U");
+            if (line.startsWith("UU")) {
+                array = line.split("UU");
                 status = new FileStatus();
                 status.setType(type.UNMERGED);
                 status.setPath(array[1]);
@@ -269,7 +269,7 @@ public class Git {
     }
 
     public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
-        
+
         List<String> result = new ArrayList<>();
         List<FileStatus> status = status(repositoryPath);
 
@@ -278,7 +278,7 @@ public class Git {
                 result.add(file.getPath());
             }
         }
-        
+
         return result;
     }
 
@@ -671,7 +671,7 @@ public class Git {
         return mergeBase(repositoryPath, command);
     }
 
-    public static boolean merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
+    public static List<String> merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         String command = "git merge ";
 
@@ -685,6 +685,7 @@ public class Git {
 
         command = command + revision;
 
+        System.out.println("command = " + command);
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
 
         if (!execution.getError().isEmpty()) {
@@ -699,12 +700,34 @@ public class Git {
                     throw new AlreadyUpToDate(line);
                 } else if (line.contains("not something we can merge")) {
                     throw new NotSomethingWeCanMerge(line);
+                } else if (line.contains("Automatic merge went well; stopped before committing as requested")) {
+                    return execution.getOutput();
                 }
             }
-            return false;
+            return null;
         }
-        return true;
+        return execution.getOutput();
 
+    }
+
+    public static boolean isFailedMerge(String projectPath, String SHALeft, String SHARight) throws IOException, LocalRepositoryNotAGitRepository, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
+        Git.reset(projectPath, true, false, false, null);
+        Git.clean(projectPath, true, 0);
+        Git.checkout(SHALeft, projectPath);
+        List<String> merge = Git.merge(projectPath, SHARight, false, false);
+
+        return isConflict(merge);
+    }
+
+    public static boolean isConflict(List<String> mergeMessage) {
+        String MERGE_FAIL_MESSAGE = "Automatic merge failed";
+
+        for (String line : mergeMessage) {
+            if (line.contains(MERGE_FAIL_MESSAGE)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1179,11 +1202,11 @@ public class Git {
         return execution.getOutput();
 
     }
-    
+
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        String command = "git diff --unified=0 " + fileSource + " " + fileTarget ;
+        String command = "git diff --unified=0 " + fileSource + " " + fileTarget;
         System.out.println(command);
         CLIExecution execution = CLIExecute.execute(command, directory);
 

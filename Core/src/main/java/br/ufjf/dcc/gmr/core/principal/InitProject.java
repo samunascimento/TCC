@@ -23,7 +23,6 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.File;
-import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;
 import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
@@ -111,6 +110,9 @@ public class InitProject {
     private static Version createVersion(String pathProject, Formats log) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = new Version();
+        
+        if(log.getCommitHash().startsWith("21da4207"))
+                System.out.println("Conflito");
 
         List<String> parents = Git.parent(pathProject, log.getCommitHash());
         result.setParent(parents);
@@ -122,8 +124,10 @@ public class InitProject {
             Git.clean(pathProject, true, 0);
             Git.checkout(parents.get(0), pathProject);
 
-            if (Git.mergeIsConflicting(parents.get(0), pathProject, true, true)) {
-                Git.merge(pathProject, parents.get(1), false, true);
+            
+            
+            if (Git.isFailedMerge(pathProject, parents.get(0), parents.get(1))) {
+                
                 List<String> statusUnmerged = Git.statusUnmerged(pathProject);
 
                 for (String file : statusUnmerged) {
@@ -158,7 +162,7 @@ public class InitProject {
         result.setName(name);
         result.setPath(projectPath);
 
-        List<Formats> logs = Git.log(projectPath);
+        List<Formats> logs = Git.logAll(projectPath);
         View.progressBar.setMinimum(0);
         View.progressBar.setMaximum(logs.size());
         for (int i = 0; i < logs.size(); i++) {
