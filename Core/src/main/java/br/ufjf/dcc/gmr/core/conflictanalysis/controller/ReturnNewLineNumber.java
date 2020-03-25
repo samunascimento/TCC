@@ -21,7 +21,6 @@ public class ReturnNewLineNumber {
 
     public static final int REMOVED_LINE = -Integer.MAX_VALUE;
 
-    
     /**
      * This method goes trough the diffs between the commit source and the
      * commit target and salve all the information on a created type "FileDiff"
@@ -71,11 +70,10 @@ public class ReturnNewLineNumber {
 
         }
         chunks.add(aux);
-        
+
         return chunks;
     }
 
-    
     private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<FileDiff> chunks = new ArrayList<>();
@@ -93,12 +91,22 @@ public class ReturnNewLineNumber {
                 aux = new FileDiff();
             }
             if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                if (line.contains("\\\\")) {
+                    String c = line.substring(7);
+                    c = c.replace("\\\\", "\\");
+                    aux.setFilePathTarget(c);
+                }
                 String c = line.substring(5);
                 aux.setFilePathTarget(c);
             } else if (line.charAt(0) == '+') {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.length() > 5) {
+                if (line.contains("\\\\")) {
+                    String c = line.substring(7);
+                    c = c.replace("\\\\", "\\");
+                    aux.setFilePathSource(c);
+                }
                 String c = line.substring(5);
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-') {
@@ -111,10 +119,10 @@ public class ReturnNewLineNumber {
 
         }
         chunks.add(aux);
-        
+
         return chunks;
     }
-    
+
     /**
      * Method used by "fillFileDiff" to read the diff output and get the
      * starting line of the chunk.
@@ -177,8 +185,17 @@ public class ReturnNewLineNumber {
 
         int cont = 0;
         int j = 0;
-
-        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
+        if (chunk.get(j).getFilePathSource().contains("\\\\")) {
+            String c = chunk.get(j).getFilePathSource().substring(2);
+            c = c.replace("\\\\", "\\").replace("\"","");
+            chunk.get(j).setFilePathSource(c);
+        }
+        if (chunk.get(j).getFilePathTarget().contains("\\\\")) {
+            String c = chunk.get(j).getFilePathTarget().substring(2);
+            c = c.replace("\\\\", "\\").replace("\"","");
+            chunk.get(j).setFilePathTarget(c);
+        }
+        while (!chunk.get(j).getFilePathSource().equals(filePath)) {      
             if (j + 1 >= chunk.size()) {
                 throw new PathDontExist();
             }
@@ -240,7 +257,7 @@ public class ReturnNewLineNumber {
 
         return originalLineNumber + i;
     }
-    
+
     public int initReturnNewLineNumberFile(String directory, String pathSource,
             String pathTarget, int originalLineNumber)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
