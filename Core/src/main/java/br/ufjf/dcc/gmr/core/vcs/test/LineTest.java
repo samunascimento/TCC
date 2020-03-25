@@ -26,6 +26,7 @@ public class LineTest {
         if(!directory.isDirectory())
             directory.mkdir();
         
+        
         ReturnNewLineNumber newLine = new ReturnNewLineNumber();
         try {
             int initReturnNewLineNumberFile = newLine.initReturnNewLineNumberFile("/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy2",

@@ -18,25 +18,62 @@ import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class RepositoryAnalysis {
 
-    public static List<String> getFileContent(String folderPath) throws IOException {
+    private static File createSandbox(String repositoryPath) throws IOException {
+        File sandbox;
+        if (repositoryPath.contains("\\")) {
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\RepositoryAnalysisSandbox");
+        } else {
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox");
+        }
+        try {
+            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), "RepositoryAnalysisSandbox");
+        } catch (RepositoryNotFound ex) {
+            System.out.println("ERROR: RepositoryNotFound error!");
+            throw new IOException();
+        } catch (UrlNotFound ex) {
+            System.out.println("ERROR: UrlNotFound error!");
+            throw new IOException();
+        }
+        return sandbox;
+    }
+
+    private static boolean deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDirectory(children[i]);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+
+    private static List<String> getFileContent(String folderPath) throws IOException {
         List<String> content = new ArrayList<>();
         File file = new File(folderPath);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -102,6 +139,7 @@ public class RepositoryAnalysis {
 
         //ConflictFile's field
         String fileName;
+        String filePath;
         List<ConflictRegion> conflictRegion = new ArrayList<>();
 
         //ConflictRegion's field
@@ -118,10 +156,12 @@ public class RepositoryAnalysis {
         //Assistants
         ReturnNewLineNumber rnln = new ReturnNewLineNumber();
         String[] auxArray;
+        String insideFilePath;
         List<String> allFile;
         double progress;
         double analysed = 0.0;
         double analysedPercentage = 0.0;
+        File sandbox = RepositoryAnalysis.createSandbox(repositoryPath);
 
         //Start
         try {
@@ -154,11 +194,15 @@ public class RepositoryAnalysis {
                         //
                         if (!fileDiff.getLines().isEmpty()) {
                             //Getting file name ("if" to differentiate the operating system: CMD and Linux)
-                            if (fileDiff.getFilePathSource().contains("/")) {
-                                auxArray = fileDiff.getFilePathSource().split("/");
+
+                            if (repositoryPath.contains("\\")) {
+                                filePath = repositoryPath + fileDiff.getFilePathSource().replaceAll("/", "\\\\");
+                                insideFilePath = fileDiff.getFilePathSource().replaceAll("/", "\\\\");
                             } else {
-                                auxArray = fileDiff.getFilePathSource().split("\\");
+                                filePath = repositoryPath + fileDiff.getFilePathSource();
+                                insideFilePath = fileDiff.getFilePathSource();
                             }
+                            auxArray = fileDiff.getFilePathSource().split("/");
                             fileName = auxArray[auxArray.length - 1];
 
                             //Getting conflcit file content
@@ -195,11 +239,14 @@ public class RepositoryAnalysis {
                                         }
                                     }
                                     //Getting original v1 and v2 first line
-                                    originalV1FirstLine = rnln.initReturnNewLineNumber(repositoryPath, "", parents.get(0).getCommitHash(), beginLine + 1, fileDiff.getFilePathSource());
-                                    originalV2FirstLine = rnln.initReturnNewLineNumber(repositoryPath, "", parents.get(1).getCommitHash(), separatorLine + 1, fileDiff.getFilePathSource());
-                                    System.out.println(repositoryPath + fileDiff.getFilePathSource());
+                                    Git.checkout(parents.get(0).getCommitHash(), sandbox.getPath());
+                                    originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
+                                    Git.checkout(parents.get(1).getCommitHash(), sandbox.getPath());
+                                    originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
+                                    Git.checkout("master", sandbox.getPath());
                                     System.out.println("v1: " + originalV1FirstLine);
                                     System.out.println("v2: " + originalV2FirstLine);
+                                    System.out.println(filePath);
 
                                     //Adding a new conflict region
                                     conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
@@ -214,7 +261,7 @@ public class RepositoryAnalysis {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName, repositoryPath + fileDiff.getFilePathSource(), new ArrayList<>(conflictRegion)));
+                            conflictFiles.add(new ConflictFile(fileName, filePath, new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -257,54 +304,68 @@ public class RepositoryAnalysis {
                 analysed = analysed + 1.0;
 
             }
-
-            return RepositoryAnalysis.getJavaSyntax(list, repositoryPath);
+            deleteDirectory(sandbox);
+            return list;
 
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (NoRemoteForTheCurrentBranch ex) {
             System.out.println("ERROR: NoRemoteForTheCurrentBranch error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (ThereIsNoMergeInProgress ex) {
             System.out.println("ERROR: ThereIsNoMergeInProgress error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (ThereIsNoMergeToAbort ex) {
             System.out.println("ERROR: ThereIsNoMergeToAbort error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (AlreadyUpToDate ex) {
             System.out.println("ERROR: AlreadyUpToDate error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (NotSomethingWeCanMerge ex) {
             System.out.println("ERROR: NotSomethingWeCanMerge error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (InvalidCommitHash ex) {
             System.out.println("ERROR: InvalidCommitHash error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (UnknownSwitch ex) {
             System.out.println("ERROR: UnknownSwitch error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (RefusingToClean ex) {
             System.out.println("ERROR: RefusingToClean error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (IsOutsideRepository ex) {
             System.out.println("ERROR: IsOutsideRepository error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (InvalidDocument ex) {
             System.out.println("ERROR: InvalidDocument error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (PathDontExist ex) {
             System.out.println("ERROR: PathDontExist error!");
+            deleteDirectory(sandbox);
             throw new IOException();
         } catch (IOException ex) {
+            deleteDirectory(sandbox);
             throw new IOException();
         }
     }
 
-    public static List<MergeEvent> getJavaSyntax(List<MergeEvent> list, String repositoryPath) throws IOException {
+    private static List<MergeEvent> getJavaSyntax(List<MergeEvent> list, String repositoryPath) throws IOException {
         try {
             for (MergeEvent merge : list) {
                 for (ConflictFile file : merge.getConflictFiles()) {
