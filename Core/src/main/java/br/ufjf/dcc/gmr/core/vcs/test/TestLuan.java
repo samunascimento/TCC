@@ -25,7 +25,7 @@ public class TestLuan {
         int teste = 0;
 
         try {
-            teste= a.initreturnNewLineNumber(repositoryPath, "b3405dcdee74ee047ad2cb0119cb98cbc1b0da5a",
+            teste= a.initReturnNewLineNumber(repositoryPath, "b3405dcdee74ee047ad2cb0119cb98cbc1b0da5a",
                     "79cde21", 15
                     ,"/Core/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIExecute.java");
             

@@ -30,13 +30,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-public interface RepositoryAnalysis {
+public class RepositoryAnalysis {
 
     public static List<String> getFileContent(String folderPath) throws IOException {
         List<String> content = new ArrayList<>();
@@ -197,8 +195,8 @@ public interface RepositoryAnalysis {
                                         }
                                     }
                                     //Getting original v1 and v2 first line
-                                    originalV1FirstLine = rnln.initreturnNewLineNumber(repositoryPath, "", parents.get(0).getCommitHash(), beginLine + 1, fileDiff.getFilePathSource());
-                                    originalV2FirstLine = rnln.initreturnNewLineNumber(repositoryPath, "", parents.get(1).getCommitHash(), separatorLine + 1, fileDiff.getFilePathSource());
+                                    originalV1FirstLine = rnln.initReturnNewLineNumber(repositoryPath, "", parents.get(0).getCommitHash(), beginLine + 1, fileDiff.getFilePathSource());
+                                    originalV2FirstLine = rnln.initReturnNewLineNumber(repositoryPath, "", parents.get(1).getCommitHash(), separatorLine + 1, fileDiff.getFilePathSource());
                                     System.out.println(repositoryPath + fileDiff.getFilePathSource());
                                     System.out.println("v1: " + originalV1FirstLine);
                                     System.out.println("v2: " + originalV2FirstLine);
@@ -259,9 +257,9 @@ public interface RepositoryAnalysis {
                 analysed = analysed + 1.0;
 
             }
-            
+
             return RepositoryAnalysis.getJavaSyntax(list, repositoryPath);
-            
+
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
             throw new IOException();

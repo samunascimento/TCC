@@ -43,7 +43,7 @@ public class ReturnNewLineNumber {
 
         FileDiff aux = new FileDiff();
         int currentLine = 0;
-        output = Git.auxiliardiff(directory, commitSource, commitTarget);
+        output = Git.auxiliarDiff(directory, commitSource, commitTarget);
         String line;
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
@@ -75,6 +75,46 @@ public class ReturnNewLineNumber {
         return chunks;
     }
 
+    
+    private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        List<FileDiff> chunks = new ArrayList<>();
+        List<String> output = new ArrayList<>();
+
+        FileDiff aux = new FileDiff();
+        int currentLine = 0;
+        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);
+        String line;
+        for (int i = 0; i < output.size(); i++) {
+            line = output.get(i);
+            if (line.startsWith("diff --") && currentLine != 0) {
+
+                chunks.add(aux);
+                aux = new FileDiff();
+            }
+            if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                String c = line.substring(5);
+                aux.setFilePathTarget(c);
+            } else if (line.charAt(0) == '+') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.length() > 5) {
+                String c = line.substring(5);
+                aux.setFilePathSource(c);
+            } else if (line.charAt(0) == '-') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+                currentLine++;
+            } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                currentLine = startingLine(line);
+            }
+
+        }
+        chunks.add(aux);
+        
+        return chunks;
+    }
+    
     /**
      * Method used by "fillFileDiff" to read the diff output and get the
      * starting line of the chunk.
@@ -185,7 +225,7 @@ public class ReturnNewLineNumber {
      * @throws InvalidCommitHash
      * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
      */
-    public int initreturnNewLineNumber(String directory, String commitSource,
+    public int initReturnNewLineNumber(String directory, String commitSource,
             String commitTarget, int originalLineNumber, String filePath)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
 
@@ -193,6 +233,22 @@ public class ReturnNewLineNumber {
         int i;
 
         i = processingChunkModifiedLine(chunks, originalLineNumber, filePath);
+
+        if (i == REMOVED_LINE) {
+            return REMOVED_LINE;
+        }
+
+        return originalLineNumber + i;
+    }
+    
+    public int initReturnNewLineNumberFile(String directory, String pathSource,
+            String pathTarget, int originalLineNumber)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
+
+        List<FileDiff> chunks = fillOneFileDiff(directory, pathSource, pathTarget);
+        int i;
+
+        i = processingChunkModifiedLine(chunks, originalLineNumber, pathSource.replace(directory, ""));
 
         if (i == REMOVED_LINE) {
             return REMOVED_LINE;
