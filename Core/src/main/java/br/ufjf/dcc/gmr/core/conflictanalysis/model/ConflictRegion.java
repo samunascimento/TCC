@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConflictRegion {
@@ -11,11 +12,11 @@ public class ConflictRegion {
     private final int beginLine;
     private final int separatorLine;
     private final int endLine;
-    
+
     private final int originalV1FirstLine;
     private final int originalV2FirstLine;
-    private List<SyntaxStructure> syntaxV1;
-    private List<SyntaxStructure> syntaxV2;
+    private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
+    private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
 
     public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine, int endLine, int originalV1FirstLine, int originalV2FirstLine) {
         this.beforeContext = beforeContext;
@@ -87,12 +88,24 @@ public class ConflictRegion {
             str = str + line + "\n";
         }
         str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        for (String line : this.v1) {
-            str = str + line + "\n";
+        if (syntaxV1.isEmpty() || syntaxV1.size() != v1.size()) {
+            for (String line : this.v1) {
+                str = str + line + "\n";
+            }
+        } else {
+            for (int i = 0; i < v1.size(); i++) {
+                str = str + v1.get(i) + "\t(" + syntaxV1.get(i).getStructureType() + ")\n";
+            }
         }
         str = str + "============================== (" + this.separatorLine + ")\n";
-        for (String line : this.v2) {
-            str = str + line + "\n";
+        if (syntaxV2.isEmpty() || syntaxV2.size() != v2.size()) {
+            for (String line : this.v2) {
+                str = str + line + "\n";
+            }
+        } else {
+            for (int i = 0; i < v2.size(); i++) {
+                str = str + v2.get(i) + "\t(" + syntaxV2.get(i).getStructureType() + ")\n";
+            }
         }
         str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
@@ -100,13 +113,12 @@ public class ConflictRegion {
         }
         return str;
     }
-    
 
-    public String getForm(){
+    public String getForm() {
         return generateForm();
     }
-    
-    public void print(){
+
+    public void print() {
         System.out.println(generateForm());
     }
 

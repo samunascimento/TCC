@@ -244,9 +244,6 @@ public class RepositoryAnalysis {
                                     Git.checkout(parents.get(1).getCommitHash(), sandbox.getPath());
                                     originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
                                     Git.checkout("master", sandbox.getPath());
-                                    System.out.println("v1: " + originalV1FirstLine);
-                                    System.out.println("v2: " + originalV2FirstLine);
-                                    System.out.println(filePath);
 
                                     //Adding a new conflict region
                                     conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
@@ -305,7 +302,7 @@ public class RepositoryAnalysis {
 
             }
             deleteDirectory(sandbox);
-            return list;
+            return RepositoryAnalysis.getJavaSyntax(list,repositoryPath);
 
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
@@ -366,15 +363,22 @@ public class RepositoryAnalysis {
     }
 
     private static List<MergeEvent> getJavaSyntax(List<MergeEvent> list, String repositoryPath) throws IOException {
+        System.out.println("koé");
         try {
             for (MergeEvent merge : list) {
                 for (ConflictFile file : merge.getConflictFiles()) {
                     if (file.getFileName().endsWith(".java") && !file.getConflictRegion().isEmpty()) {
                         for (ConflictRegion region : file.getConflictRegion()) {
-                            Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
-                            region.setSyntaxV1(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV1FirstLine(), region.getSeparatorLine() - 1));
-                            Git.checkout(merge.getParents().get(1).getCommitHash(), repositoryPath);
-                            region.setSyntaxV2(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV2FirstLine(), region.getEndLine() - 1));
+                            if (!(region.getBeginLine() + 1 == region.getSeparatorLine()) && region.getOriginalV1FirstLine() > 0) {
+                                Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
+                                region.setSyntaxV1(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV1FirstLine(),
+                                        region.getOriginalV1FirstLine() + (region.getSeparatorLine() - region.getBeginLine() - 2)));
+                            }
+                            if (!(region.getSeparatorLine() + 1 == region.getEndLine()) && region.getOriginalV2FirstLine() > 0) {
+                                Git.checkout(merge.getParents().get(1).getCommitHash(), repositoryPath);
+                                region.setSyntaxV2(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV2FirstLine(),
+                                        region.getOriginalV2FirstLine() - (region.getEndLine() - region.getSeparatorLine() - 1)));
+                            }
                             Git.checkout("master", repositoryPath);
                         }
                     }
