@@ -45,10 +45,11 @@ import javax.swing.tree.TreeSelectionModel;
  * @author Beatr
  */
 public class View extends JFrame {
-
-    JPanel tablePanel;
+    
+    JPanel tableTreePanel;
     JPanel textPanel;
     JScrollPane tableScrollPane;
+    JScrollPane treeScrollPane;
     JTable table;
     private JTextArea textArea;
     JFileChooser chooser;
@@ -62,8 +63,9 @@ public class View extends JFrame {
     JTree tree;
 
     View() {
-        tablePanel = new JPanel();
+        tableTreePanel = new JPanel();
         textPanel = new JPanel();
+        treeScrollPane = new JScrollPane();
         chooser = new JFileChooser();
         menuBar = new JMenuBar();
         menu = new JMenu();
@@ -75,55 +77,63 @@ public class View extends JFrame {
         initProject = new InitProject();
         project = new Project();
         chooserFrame = new JFrame();
+        tree = new JTree();
+        tree.setVisible(false);
+    }
+    
+    private void setTreeScrollPane(){
+        treeScrollPane.setPreferredSize(new Dimension(195, (int)tableTreePanel.getPreferredSize().getHeight()));
+        treeScrollPane.setVisible(false);
+    }
+    
+    private void setTableScrollPane(){
+        tableScrollPane.setPreferredSize(new Dimension(295 ,(int)tableTreePanel.getPreferredSize().getHeight()));
+    }
+    
+    private void setTableTreePanel(){
+        tableTreePanel.setPreferredSize(new Dimension(305, this.getHeight() - (int)menuBar.getPreferredSize().getHeight() - 45));
+        tableTreePanel.setVisible(false);
     }
 
-    private void setTableChooserPanel() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tablePanel.setLayout(new BorderLayout());
-        tablePanel.setPreferredSize(new Dimension(500, Short.MAX_VALUE));
-        tablePanel.setVisible(false);
-
-    }
 
     private void setTextPanel() {
         textPanel.setLayout(new BorderLayout());
-        textPanel.setVisible(false);
     }
 
     private void setTree(Version version) {
-
-        for (File file : version.getFile()) {
-            System.out.println(file.getPath());
-        }
         List<File> files = version.getFile();
+        JTree tree = new JTree();
+        tree.setShowsRootHandles(true);
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
-
-            for (File file : files) {
-                createNodes(shaTree, file);
-            }
-
             tree = new JTree(shaTree);
+            for (File file : files) {
+                shaTree.add(createNodes(file));
+            }
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
             tree.setLayout(new BorderLayout());
-            tablePanel.add(tree, BorderLayout.EAST);
             tree.setVisible(true);
-
         } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
             tree = new JTree(emptyNode);
-            tablePanel.add(tree, BorderLayout.EAST);
             tree.setVisible(true);
         }
+        this.tree = tree;
+        treeScrollPane.setVisible(true);
+        tableTreePanel.setPreferredSize(new Dimension(500, (int)tableTreePanel.getPreferredSize().getHeight()));
+        treeScrollPane.setViewportView(tree);
+        treeScrollPane.updateUI();
+        tableTreePanel.updateUI();
     }
 
-    private void createNodes(DefaultMutableTreeNode SHAroot, File file) {
+    private DefaultMutableTreeNode createNodes(File file) {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());
-        SHAroot.add(fileTree);
-        for (int i = 0; i < file.getChuncks().size(); i++) {
-            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(file.getChuncks().get(i).getBegin().getLineNumber());
+        for (int i = 0; i < file.getChuncks().size(); i++) { //verificar porque a lista de chuncks está vazia
+            int lineNumber = file.getChuncks().get(i).getBegin().getLineNumber();
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(lineNumber);
             fileTree.add(chunkTree);
         }
+        return fileTree;
     }
 
     private void setChooser() {
@@ -140,7 +150,6 @@ public class View extends JFrame {
                 tableFocusGained(evt);
             }
         });
-        table.setAutoCreateRowSorter(true);
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addColumn("sha");
         model.addColumn("status");
@@ -155,6 +164,7 @@ public class View extends JFrame {
     }
 
     private void setMenuBar() {
+        menuBar.setPreferredSize(new Dimension(Short.MAX_VALUE, 30));
         submenu.addActionListener(this::openRepository);
         submenu.setText("Open Repository");
         menu.add(submenu);
@@ -194,7 +204,7 @@ public class View extends JFrame {
         }
         table.setModel(model);
         if (project.getVersions().size() > 0) {
-            tablePanel.setVisible(true);
+            tableTreePanel.setVisible(true);
             textPanel.setVisible(true);
         } else {
             textPanel.setVisible(true);
@@ -202,6 +212,7 @@ public class View extends JFrame {
             textArea.setFont(new Font(null, 1, 15));
         }
         progressBar.setVisible(false);
+        tableTreePanel.setVisible(true);
 
     }
 
@@ -220,31 +231,39 @@ public class View extends JFrame {
     }
 
     private void showPanel() {
-        this.add(tablePanel, BorderLayout.WEST);
+        this.add(tableTreePanel, BorderLayout.WEST);
         this.add(textPanel, BorderLayout.CENTER);
         this.add(menuBar, BorderLayout.NORTH);
-        this.add(progressBar, BorderLayout.SOUTH);
-        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-
+        this.add(progressBar, BorderLayout.SOUTH); 
+        
+        tableTreePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tableTreePanel.add(treeScrollPane, BorderLayout.EAST);
+        
         tableScrollPane.setViewportView(table);
+        
         textPanel.add(getTextArea(), BorderLayout.CENTER);
-        this.setVisible(true);
+        
         chooserFrame.add(chooser, BorderLayout.CENTER);
+        
+        this.setVisible(true);
     }
 
     private void setMainPanel() {
-        setTextPanel();
-        setTableChooserPanel();
         setMenuBar();
-        setChooser();
+        setTableTreePanel();
+        setTextPanel();
+        setTreeScrollPane();
+        setTableScrollPane();
         setTable();
         setTextArea();
+        setChooser();
         setProgressBar();
         showPanel();
     }
 
     public static void main(String[] args) {
         View frame = new View();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
         frame.setMainPanel();

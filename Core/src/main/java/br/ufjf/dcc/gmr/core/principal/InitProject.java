@@ -110,9 +110,6 @@ public class InitProject {
     private static Version createVersion(String pathProject, Formats log) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = new Version();
-        
-        if(log.getCommitHash().startsWith("21da4207"))
-                System.out.println("Conflito");
 
         List<String> parents = Git.parent(pathProject, log.getCommitHash());
         result.setParent(parents);
@@ -133,7 +130,6 @@ public class InitProject {
                 for (String file : statusUnmerged) {
                     result.getFile().add(createFile(file));
                 }
-                System.out.println(MergeStatus.CONFLICT);
                 result.setStatus(MergeStatus.CONFLICT);
                 
             }else result.setStatus(MergeStatus.NON_CONFLICT);

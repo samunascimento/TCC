@@ -685,7 +685,6 @@ public class Git {
 
         command = command + revision;
 
-        System.out.println("command = " + command);
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
 
         if (!execution.getError().isEmpty()) {
