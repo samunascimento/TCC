@@ -5,10 +5,64 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
  *
  * @author anton
  */
 public class VersionMetricsDao {
+    private final Connection connection;
+
+    public VersionMetricsDao() {
+        this.connection = ConnectionFactory.getConnection();
+    }
     
+    public void insert(VersionMetrics versionMetrics){
+        String sql = "INSERT INTO tb_versionMetrics " +
+        "(ID,tloc)" +
+        "VALUES (?,?);";
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            stmt.setInt(1, versionMetrics.getId());
+            stmt.setInt(2, Integer.parseInt(versionMetrics.getTloc().getValue()));
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    public void delete(){
+        String sql = "DELETE FROM tb_versionMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    
+    public void select(){
+        String sql = "SELECT * FROM tb_versionMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

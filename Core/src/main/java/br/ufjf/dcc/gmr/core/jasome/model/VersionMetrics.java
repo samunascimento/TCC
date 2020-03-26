@@ -10,6 +10,8 @@ import java.util.List;
 public class VersionMetrics {
     private Metric tloc;
     
+    private int id;
+    
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
     
     private boolean error = false;
@@ -35,5 +37,19 @@ public class VersionMetrics {
     }
     public boolean getError(){
         return this.error;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 }

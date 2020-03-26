@@ -5,10 +5,76 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
  *
  * @author anton
  */
 public class PackageMetricsDao {
+    private final Connection connection;
+
+    public PackageMetricsDao() {
+        this.connection = ConnectionFactory.getConnection();
+    }
+    
+    public void insert(PackageMetrics packageMetrics){
+        String sql = "INSERT INTO tb_packageMetrics " +
+        "(ID,aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID)" +
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?);";
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            stmt.setInt(1, packageMetrics.getId());
+            stmt.setInt(2, Integer.parseInt(packageMetrics.getA().getValue()));
+            stmt.setInt(3, Integer.parseInt(packageMetrics.getCcrc().getValue()));
+            stmt.setInt(4, Integer.parseInt(packageMetrics.getCa().getValue()));
+            stmt.setInt(5, Integer.parseInt(packageMetrics.getA().getValue()));
+            stmt.setInt(6, Integer.parseInt(packageMetrics.getCe().getValue()));
+            stmt.setInt(7, Integer.parseInt(packageMetrics.getDms().getValue()));
+            stmt.setInt(8, Integer.parseInt(packageMetrics.getI().getValue()));
+            stmt.setInt(9, Integer.parseInt(packageMetrics.getNoc().getValue()));
+            stmt.setInt(10, Integer.parseInt(packageMetrics.getPkgRCi().getValue()));
+            stmt.setInt(11, Integer.parseInt(packageMetrics.getPkgTCi().getValue()));
+            stmt.setInt(12, Integer.parseInt(packageMetrics.getTloc().getValue()));
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    public void delete(){
+        String sql = "DELETE FROM tb_packageMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    
+    public void select(){
+        String sql = "SELECT * FROM tb_packageMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
     
 }
