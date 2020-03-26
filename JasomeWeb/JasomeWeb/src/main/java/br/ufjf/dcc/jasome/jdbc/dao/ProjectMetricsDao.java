@@ -22,9 +22,9 @@ public class ProjectMetricsDao {
         this.connection = ConnectionFactory.getConnection();
     }
     
-    public void addProjectMetric(ProjectMetrics projectMetrics){
-        String sql = "INSERT INTO tb_projectmetrics " +
-        "(id,sourcedir)" +
+    public void insert(ProjectMetrics projectMetrics){
+        String sql = "INSERT INTO tb_projectMetrics " +
+        "(ID,sourceDir)" +
         "VALUES (?,?);";
 
         try{
@@ -36,7 +36,33 @@ public class ProjectMetricsDao {
             stmt.close();
         } catch(SQLException e){
             throw new RuntimeException(e);
-        }
-        
+        }  
+    }
+    public void delete(){
+        String sql = "DELETE FROM tb_projectMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    
+    public void select(){
+        String sql = "SELECT * FROM tb_projectMetrics ";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            //set values
+            //stmt.setInt(1, projectMetrics.getId());
+            //stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.execute();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
     }
 }

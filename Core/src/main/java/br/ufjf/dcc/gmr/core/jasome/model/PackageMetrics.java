@@ -8,6 +8,20 @@ import java.util.List;
  * @author antonio henrique
  */
 public class PackageMetrics {
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
     Metric a;
     Metric ccrc;
     Metric ca;
@@ -19,6 +33,8 @@ public class PackageMetrics {
     Metric pkgRCi;
     Metric pkgTCi;
     Metric tloc;
+    
+    private int id;
     
     List<ClassMetrics> listClassMetrics;
     
