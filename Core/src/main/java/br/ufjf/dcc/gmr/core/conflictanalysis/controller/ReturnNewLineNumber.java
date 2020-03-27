@@ -91,22 +91,13 @@ public class ReturnNewLineNumber {
                 aux = new FileDiff();
             }
             if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                if (line.contains("\\\\")) {
-                    String c = line.substring(7);
-                    c = c.replace("\\\\", "\\");
-                    aux.setFilePathTarget(c);
-                }
                 String c = line.substring(5);
                 aux.setFilePathTarget(c);
             } else if (line.charAt(0) == '+') {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.length() > 5) {
-                if (line.contains("\\\\")) {
-                    String c = line.substring(7);
-                    c = c.replace("\\\\", "\\");
-                    aux.setFilePathSource(c);
-                }
+
                 String c = line.substring(5);
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-') {
@@ -185,17 +176,25 @@ public class ReturnNewLineNumber {
 
         int cont = 0;
         int j = 0;
-        if (chunk.get(j).getFilePathSource().contains("\\\\")) {
-            String c = chunk.get(j).getFilePathSource().substring(2);
-            c = c.replace("\\\\", "\\").replace("\"","");
-            chunk.get(j).setFilePathSource(c);
+
+        int os = getOperationalSystem();
+
+        if (os == 1) {
+            for (int i = 0; i < chunk.get(i).getLines().size(); i++) {
+                if (chunk.get(i).getFilePathSource().contains("\\\\")) {
+                    String c = chunk.get(i).getFilePathSource().substring(7);
+                    c = c.replace("\\\\", "\\").replace("\"", "");
+                    chunk.get(i).setFilePathSource(c);
+                }
+                if (chunk.get(i).getFilePathTarget().contains("\\\\")) {
+                    String c = chunk.get(i).getFilePathTarget().substring(7);
+                    c = c.replace("\\\\", "\\").replace("\"", "");
+                    chunk.get(i).setFilePathTarget(c);
+                }
+            }
         }
-        if (chunk.get(j).getFilePathTarget().contains("\\\\")) {
-            String c = chunk.get(j).getFilePathTarget().substring(2);
-            c = c.replace("\\\\", "\\").replace("\"","");
-            chunk.get(j).setFilePathTarget(c);
-        }
-        while (!chunk.get(j).getFilePathSource().equals(filePath)) {      
+
+        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
             if (j + 1 >= chunk.size()) {
                 throw new PathDontExist();
             }
@@ -272,6 +271,15 @@ public class ReturnNewLineNumber {
         }
 
         return originalLineNumber + i;
+    }
+
+    private int getOperationalSystem() {
+        String os = System.getProperty("os.name");
+        if (os.startsWith("Windows")) {
+            return 1;
+        } else {
+            return 2;
+        }
     }
 
 }
