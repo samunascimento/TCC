@@ -34,17 +34,17 @@ public class PackageMetricsDao {
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            stmt.setInt(1, Integer.parseInt(packageMetrics.getA().getValue()));
-            stmt.setInt(2, Integer.parseInt(packageMetrics.getCcrc().getValue()));
-            stmt.setInt(3, Integer.parseInt(packageMetrics.getCa().getValue()));
-            stmt.setInt(4, Integer.parseInt(packageMetrics.getA().getValue()));
-            stmt.setInt(5, Integer.parseInt(packageMetrics.getCe().getValue()));
-            stmt.setInt(6, Integer.parseInt(packageMetrics.getDms().getValue()));
-            stmt.setInt(7, Integer.parseInt(packageMetrics.getI().getValue()));
-            stmt.setInt(8, Integer.parseInt(packageMetrics.getNoc().getValue()));
-            stmt.setInt(9, Integer.parseInt(packageMetrics.getPkgRCi().getValue()));
-            stmt.setInt(10, Integer.parseInt(packageMetrics.getPkgTCi().getValue()));
-            stmt.setInt(11, Integer.parseInt(packageMetrics.getTloc().getValue()));
+            stmt.setInt(1, Integer.parseInt(packageMetrics.getA().getId()));
+            stmt.setInt(2, Integer.parseInt(packageMetrics.getCcrc().getId()));
+            stmt.setInt(3, Integer.parseInt(packageMetrics.getCa().getId()));
+            stmt.setInt(4, Integer.parseInt(packageMetrics.getA().getId()));
+            stmt.setInt(5, Integer.parseInt(packageMetrics.getCe().getId()));
+            stmt.setInt(6, Integer.parseInt(packageMetrics.getDms().getId()));
+            stmt.setInt(7, Integer.parseInt(packageMetrics.getI().getId()));
+            stmt.setInt(8, Integer.parseInt(packageMetrics.getNoc().getId()));
+            stmt.setInt(9, Integer.parseInt(packageMetrics.getPkgRCi().getId()));
+            stmt.setInt(10, Integer.parseInt(packageMetrics.getPkgTCi().getId()));
+            stmt.setInt(11, Integer.parseInt(packageMetrics.getTloc().getId()));
             stmt.executeUpdate();
             ResultSet tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
