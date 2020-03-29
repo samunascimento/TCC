@@ -5,10 +5,11 @@ package br.ufjf.dcc.gmr.core.jasome.model;
  * @author antonio henrique
  */
 public class Metric {
-    String description;
-    String name;
-    String value;
-    String id;
+    
+    private String description;
+    private String name;
+    private String value;
+    private int id;
 
     public String getDescription() {
         return description;
@@ -37,14 +38,14 @@ public class Metric {
     /**
      * @return the id
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
     
