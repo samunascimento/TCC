@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 /**
  *
@@ -18,9 +19,11 @@ import java.sql.SQLException;
  */
 public class VersionMetricsDao {
     private final Connection connection;
+    private List<VersionMetrics> listVersionMetrics;
 
     public VersionMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
+        listVersionMetrics = new ArrayList<>();
     }
     
     public int insert(VersionMetrics versionMetrics){
@@ -55,15 +58,17 @@ public class VersionMetricsDao {
         }  
     }
     
-    public void select(){
+    public List<VersionMetrics> select(VersionMetrics versionMetrics){
+        this.listVersionMetrics.add(versionMetrics);
         String sql = "SELECT * FROM tb_versionMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
             //set values
             //stmt.setInt(1, projectMetrics.getId());
             //stmt.setString(2, projectMetrics.getSourceDir());
-            stmt.execute();
+            stmt.executeUpdate();
             stmt.close();
+            return this.listVersionMetrics;
         } catch(SQLException e){
             throw new RuntimeException(e);
         }
