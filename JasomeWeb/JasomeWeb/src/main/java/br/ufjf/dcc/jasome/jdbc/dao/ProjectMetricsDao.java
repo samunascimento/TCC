@@ -20,14 +20,16 @@ import java.util.*;
 public class ProjectMetricsDao {
         private final Connection connection;
         private List<ProjectMetrics> listProjectMetrics;
+        private ResultSet tableKeys;
+        private ProjectMetrics projectMetrics;
 
     public ProjectMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
         listProjectMetrics = new ArrayList<>();
+        projectMetrics = new ProjectMetrics();
     }
     
     public int insert(ProjectMetrics projectMetrics){
-        this.listProjectMetrics.add(projectMetrics);
         
         String sql = "INSERT INTO tb_projectMetrics " +
         "(sourceDir)" +
@@ -64,11 +66,14 @@ public class ProjectMetricsDao {
         String sql = "SELECT * FROM tb_projectMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //set values
-            //stmt.setInt(1, projectMetrics.getId());
-            //stmt.setString(2, projectMetrics.getSourceDir());
             stmt.executeUpdate();
+            tableKeys = stmt.getGeneratedKeys();
             stmt.close();
+            while (tableKeys.next()) {
+                int ID = tableKeys.getInt("ID");
+                projectMetrics.setId(ID);
+                this.listProjectMetrics.add(projectMetrics);
+            }
             return listProjectMetrics;
         } catch(SQLException e){
             throw new RuntimeException(e);
