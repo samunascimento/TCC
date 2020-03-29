@@ -18,6 +18,6 @@ public class TestInsert {
         projectMetrics.setId(0);
         projectMetrics.setSourceDir("sourceDir56784");
         ProjectMetricsDao dao = new ProjectMetricsDao();
-        dao.addProjectMetric(projectMetrics);
+        dao.insert(projectMetrics);
     }
 }

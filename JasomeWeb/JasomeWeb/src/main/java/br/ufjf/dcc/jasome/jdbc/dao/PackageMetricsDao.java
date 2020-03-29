@@ -82,6 +82,10 @@ public class PackageMetricsDao {
             stmt.executeUpdate();
             stmt.close();
             while (tableKeys.next()) {
+                
+                /*
+                Aqui você recebeu os dados do banco
+                */
                 int aID = tableKeys.getInt("aID");
                 int ccrcID = tableKeys.getInt("ccrcID");
                 int caID = tableKeys.getInt("caID");
@@ -93,6 +97,13 @@ public class PackageMetricsDao {
                 int pkgtciID = tableKeys.getInt("pkgTCiID");
                 int tlocID = tableKeys.getInt("tlocID");
 
+                /*
+                Agora tem que buscar os dados na tabela de Metrics. Tente seguir os seguintes passos: 
+                1) buscar na tabela metrics pelos IDs retornado
+                2) criar um objeto para cada um (Deveria ter na classe metricsDAO)
+                3) Adicionar aqui com um set na métrica
+                */
+                
                 packageMetrics.getA().setId(aID);
                 packageMetrics.getCcrc().setId(ccrcID);
                 packageMetrics.getCa().setId(caID);
