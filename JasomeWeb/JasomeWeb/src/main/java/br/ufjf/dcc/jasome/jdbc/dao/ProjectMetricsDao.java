@@ -27,6 +27,8 @@ public class ProjectMetricsDao {
     }
     
     public int insert(ProjectMetrics projectMetrics){
+        this.listProjectMetrics.add(projectMetrics);
+        
         String sql = "INSERT INTO tb_projectMetrics " +
         "(sourceDir)" +
         "VALUES (?);";
@@ -58,8 +60,7 @@ public class ProjectMetricsDao {
         }  
     }
     
-    public List<ProjectMetrics> select(ProjectMetrics projectMetrics){
-        this.listProjectMetrics.add(projectMetrics);
+    public List<ProjectMetrics> select(){
         String sql = "SELECT * FROM tb_projectMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);

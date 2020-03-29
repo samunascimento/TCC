@@ -29,6 +29,8 @@ public class PackageMetricsDao {
     }
 
     public int insert(PackageMetrics packageMetrics) {
+        this.listPackageMetrics.add(packageMetrics);
+        
         String sql = "INSERT INTO tb_packageMetrics "
                 + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
@@ -69,8 +71,7 @@ public class PackageMetricsDao {
         }
     }
 
-    public List<PackageMetrics> select(PackageMetrics packageMetrics) {
-        this.listPackageMetrics.add(packageMetrics);
+    public List<PackageMetrics> select() {
         String sql = "SELECT * FROM tb_packageMetrics ";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);

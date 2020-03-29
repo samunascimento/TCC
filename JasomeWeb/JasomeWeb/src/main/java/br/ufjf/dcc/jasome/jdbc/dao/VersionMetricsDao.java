@@ -27,6 +27,8 @@ public class VersionMetricsDao {
     }
     
     public int insert(VersionMetrics versionMetrics){
+        this.listVersionMetrics.add(versionMetrics);
+        
         String sql = "INSERT INTO tb_versionMetrics " +
         "(tloc)" +
         "VALUES (?);";
@@ -58,8 +60,7 @@ public class VersionMetricsDao {
         }  
     }
     
-    public List<VersionMetrics> select(VersionMetrics versionMetrics){
-        this.listVersionMetrics.add(versionMetrics);
+    public List<VersionMetrics> select(){
         String sql = "SELECT * FROM tb_versionMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
