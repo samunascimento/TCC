@@ -8,6 +8,7 @@ public class Metric {
     String description;
     String name;
     String value;
+    String id;
 
     public String getDescription() {
         return description;
@@ -32,7 +33,20 @@ public class Metric {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
     
     
 }
