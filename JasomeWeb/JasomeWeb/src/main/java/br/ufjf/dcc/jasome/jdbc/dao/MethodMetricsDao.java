@@ -5,11 +5,13 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +23,12 @@ public class MethodMetricsDao {
     List<MethodMetrics> listMethodMetrics;
     MethodMetrics methodMetrics;
     ResultSet tableKeys;
+    
+    public MethodMetricsDao(){
+        this.connection = ConnectionFactory.getConnection();
+        listMethodMetrics = new ArrayList<>();
+    }
+    
     
     public int insert(MethodMetrics methodMetrics){
         String sql = "INSERT INTO tb_methodMetrics "
