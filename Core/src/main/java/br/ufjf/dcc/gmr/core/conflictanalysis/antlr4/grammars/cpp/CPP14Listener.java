@@ -1,4 +1,5 @@
-// Generated from grammar/CPP14.g4 by ANTLR 4.8
+// Generated from CPP14.g4 by ANTLR 4.7.1
+package br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
