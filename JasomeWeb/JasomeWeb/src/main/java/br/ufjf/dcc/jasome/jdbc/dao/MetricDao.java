@@ -67,6 +67,22 @@ public class MetricDao {
     //Metric tlocID;
     Metric wmcID;
     
+    //Method Metric
+    
+    Metric ciID;
+    Metric diID;
+    Metric finID;
+    Metric foutID;
+    Metric iovarsID;
+    Metric mclcID;
+    Metric nbdID;
+    Metric ncompID;
+    Metric nopID;
+    Metric nvarID;
+    Metric siID;
+    //Metric tlocID;
+    Metric vgID;
+    
     
     //Package Metric
     public Metric getaID() {
@@ -149,7 +165,9 @@ public class MetricDao {
         this.pkgTCiID = pkgTCiID;
     }
 
+    //
     //  * Atributo comum para ClassMetric e MethodMetric
+    //
     public Metric getTlocID() {
         return tlocID;
     }
@@ -465,7 +483,101 @@ public class MetricDao {
     }
     
     // Method Metric
-    
-    
+
+    public Metric getCiID() {
+        return ciID;
+    }
+
+    public void setCiID(Metric ciID) {
+        this.ciID = ciID;
+    }
+
+    public Metric getDiID() {
+        return diID;
+    }
+
+    public void setDiID(Metric diID) {
+        this.diID = diID;
+    }
+
+    public Metric getFinID() {
+        return finID;
+    }
+
+    public void setFinID(Metric finID) {
+        this.finID = finID;
+    }
+
+    public Metric getFoutID() {
+        return foutID;
+    }
+
+    public void setFoutID(Metric foutID) {
+        this.foutID = foutID;
+    }
+
+    public Metric getIovarsID() {
+        return iovarsID;
+    }
+
+    public void setIovarsID(Metric iovarsID) {
+        this.iovarsID = iovarsID;
+    }
+
+    public Metric getMclcID() {
+        return mclcID;
+    }
+
+    public void setMclcID(Metric mclcID) {
+        this.mclcID = mclcID;
+    }
+
+    public Metric getNbdID() {
+        return nbdID;
+    }
+
+    public void setNbdID(Metric nbdID) {
+        this.nbdID = nbdID;
+    }
+
+    public Metric getNcompID() {
+        return ncompID;
+    }
+
+    public void setNcompID(Metric ncompID) {
+        this.ncompID = ncompID;
+    }
+
+    public Metric getNopID() {
+        return nopID;
+    }
+
+    public void setNopID(Metric nopID) {
+        this.nopID = nopID;
+    }
+
+    public Metric getNvarID() {
+        return nvarID;
+    }
+
+    public void setNvarID(Metric nvarID) {
+        this.nvarID = nvarID;
+    }
+
+    public Metric getSiID() {
+        return siID;
+    }
+
+    public void setSiID(Metric siID) {
+        this.siID = siID;
+    }
+
+    public Metric getVgID() {
+        return vgID;
+    }
+
+    public void setVgID(Metric vgID) {
+        this.vgID = vgID;
+    }
     
 }
