@@ -35,7 +35,7 @@ public class ClassMetricsDao {
         String sql = "INSERT INTO tb_classMetrics "
                 + "(aa,ad,ai,ait,ao,av,clrci,cltci,dit,hmd,hmi,mhf,mif,ma,md,"
                 + "mi,mit,mo,nf,nm,nma,nmi,noa,noch,nod,nol,nopa,norm,npf,npm,nsf,"
-                + "nsm,pmr,pmd,pmi,rtloc,six,tloc,wmc"
+                + "nsm,pmr,pmd,pmi,rtloc,six,tloc,wmc)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,);";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
