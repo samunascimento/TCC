@@ -21,12 +21,15 @@ import java.util.*;
 public class PackageMetricsDao {
 
     private final Connection connection;
-    List<PackageMetrics> listPackageMetrics;
-    ResultSet tableKeys;
+    private List<PackageMetrics> listPackageMetrics;
+    private ResultSet tableKeys;
+    private PackageMetrics packageMetrics;
+    private MetricDao metrics;
 
     public PackageMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
         listPackageMetrics = new ArrayList<>();
+        packageMetrics = new PackageMetrics();
     }
 
     public int insert(PackageMetrics packageMetrics) {
@@ -39,11 +42,11 @@ public class PackageMetricsDao {
             stmt.setInt(1, packageMetrics.getA().getId());
             stmt.setInt(2, packageMetrics.getCcrc().getId());
             stmt.setInt(3, packageMetrics.getCa().getId());
-            stmt.setInt(4, packageMetrics.getA().getId());
-            stmt.setInt(5, packageMetrics.getCe().getId());
-            stmt.setInt(6, packageMetrics.getDms().getId());
-            stmt.setInt(7, packageMetrics.getI().getId());
-            stmt.setInt(8, packageMetrics.getNoc().getId());
+            stmt.setInt(4, packageMetrics.getCe().getId());
+            stmt.setInt(5, packageMetrics.getDms().getId());
+            stmt.setInt(6, packageMetrics.getI().getId());
+            stmt.setInt(7, packageMetrics.getNoc().getId());
+            stmt.setInt(8, packageMetrics.getNoi().getId());
             stmt.setInt(9, packageMetrics.getPkgRCi().getId());
             stmt.setInt(10, packageMetrics.getPkgTCi().getId());
             stmt.setInt(11, packageMetrics.getTloc().getId());
@@ -72,7 +75,7 @@ public class PackageMetricsDao {
     }
 
     public List<PackageMetrics> select() throws SQLException {
-        PackageMetrics packageMetrics = new PackageMetrics();
+
         String sql = "SELECT * FROM tb_packageMetrics ";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -81,11 +84,8 @@ public class PackageMetricsDao {
             //stmt.setString(2, projectMetrics.getSourceDir());
             stmt.executeUpdate();
             stmt.close();
+
             while (tableKeys.next()) {
-                
-                /*
-                Aqui você recebeu os dados do banco
-                */
                 int aID = tableKeys.getInt("aID");
                 int ccrcID = tableKeys.getInt("ccrcID");
                 int caID = tableKeys.getInt("caID");
@@ -93,17 +93,45 @@ public class PackageMetricsDao {
                 int dmsID = tableKeys.getInt("dmsID");
                 int iID = tableKeys.getInt("iID");
                 int nocID = tableKeys.getInt("nocID");
+                int noiID = tableKeys.getInt("noiID");
                 int pkgrcID = tableKeys.getInt("pkgRCiD");
                 int pkgtciID = tableKeys.getInt("pkgTCiID");
                 int tlocID = tableKeys.getInt("tlocID");
 
-                /*
-                Agora tem que buscar os dados na tabela de Metrics. Tente seguir os seguintes passos: 
-                1) buscar na tabela metrics pelos IDs retornado
-                2) criar um objeto para cada um (Deveria ter na classe metricsDAO)
-                3) Adicionar aqui com um set na métrica
-                */
-                
+                /*metrics.getaID().setDescription(tableKeys.getString(2));
+                metrics.getaID().setName(tableKeys.getString(3));
+                metrics.getaID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getCcrcID().setDescription(tableKeys.getString(2));
+                metrics.getCcrcID().setName(tableKeys.getString(3));
+                metrics.getCcrcID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getCaID().setDescription(tableKeys.getString(2));
+                metrics.getCaID().setName(tableKeys.getString(3));
+                metrics.getCaID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getCeID().setDescription(tableKeys.getString(2));
+                metrics.getCeID().setName(tableKeys.getString(3));
+                metrics.getCeID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getDmsID().setDescription(tableKeys.getString(2));
+                metrics.getDmsID().setName(tableKeys.getString(3));
+                metrics.getDmsID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getiID().setDescription(tableKeys.getString(2));
+                metrics.getiID().setName(tableKeys.getString(3));
+                metrics.getiID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getNocID().setDescription(tableKeys.getString(2));
+                metrics.getNocID().setName(tableKeys.getString(3));
+                metrics.getNocID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getNoiID().setDescription(tableKeys.getString(2));
+                metrics.getNoiID().setName(tableKeys.getString(3));
+                metrics.getNoiID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getPkgRCiID().setDescription(tableKeys.getString(2));
+                metrics.getPkgRCiID().setName(tableKeys.getString(3));
+                metrics.getPkgRCiID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getPkgTCiID().setDescription(tableKeys.getString(2));
+                metrics.getPkgTCiID().setName(tableKeys.getString(3));
+                metrics.getPkgTCiID().setValue(Float.toString(tableKeys.getFloat(4)));
+                metrics.getTlocID().setDescription(tableKeys.getString(2));
+                metrics.getTlocID().setName(tableKeys.getString(3));
+                metrics.getTlocID().setValue(Float.toString(tableKeys.getFloat(4)));*/
+
                 packageMetrics.getA().setId(aID);
                 packageMetrics.getCcrc().setId(ccrcID);
                 packageMetrics.getCa().setId(caID);
@@ -111,6 +139,7 @@ public class PackageMetricsDao {
                 packageMetrics.getDms().setId(dmsID);
                 packageMetrics.getI().setId(iID);
                 packageMetrics.getNoc().setId(nocID);
+                packageMetrics.getNoi().setId(noiID);
                 packageMetrics.getPkgRCi().setId(pkgrcID);
                 packageMetrics.getPkgTCi().setId(pkgtciID);
                 packageMetrics.getTloc().setId(tlocID);
