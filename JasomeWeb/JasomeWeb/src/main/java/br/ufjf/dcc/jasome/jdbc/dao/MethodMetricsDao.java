@@ -53,7 +53,50 @@ public class MethodMetricsDao {
     }
     
     public List<MethodMetrics> select(){
-        return null;
+        String sql = "SELECT * FROM tb_methodMetrics";
+        
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            while(tableKeys.next()){
+                int ciID = tableKeys.getInt("ciID");
+                int diID = tableKeys.getInt("diID");
+                int finID = tableKeys.getInt("finID");
+                int foutID = tableKeys.getInt("foutID");
+                int iovarsID = tableKeys.getInt("iovarsID");
+                int mclcID = tableKeys.getInt("mclcID");
+                int nbdID = tableKeys.getInt("nbdID");
+                int ncompID = tableKeys.getInt("ncompID");
+                int nopID = tableKeys.getInt("nopID");
+                int nvarID = tableKeys.getInt("nvarID");
+                int siID = tableKeys.getInt("siID");
+                int tlocID = tableKeys.getInt("tlocID");
+                int vgID = tableKeys.getInt("vgID");
+
+                methodMetrics.getCi().setId(ciID);
+                methodMetrics.getDi().setId(diID);
+                methodMetrics.getFin().setId(finID);
+                methodMetrics.getFout().setId(foutID);
+                methodMetrics.getIovars().setId(iovarsID);
+                methodMetrics.getMclc().setId(mclcID);
+                methodMetrics.getNbd().setId(nbdID);
+                methodMetrics.getNcomp().setId(ncompID);
+                methodMetrics.getNop().setId(nopID);
+                methodMetrics.getNvar().setId(nvarID);
+                methodMetrics.getSi().setId(siID);
+                methodMetrics.getTloc().setId(tlocID);
+                methodMetrics.getVg().setId(vgID);
+                
+                this.listMethodMetrics.add(methodMetrics);
+
+            }
+            stmt.executeUpdate();
+            stmt.close();
+            return this.listMethodMetrics;
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    
     }
     
     public void delete(int id){
