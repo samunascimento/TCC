@@ -19,36 +19,36 @@ import java.util.List;
  * @author anton
  */
 public class MethodMetricsDao {
+
     private Connection connection;
     List<MethodMetrics> listMethodMetrics;
     MethodMetrics methodMetrics;
     ResultSet tableKeys;
-    
-    public MethodMetricsDao(){
+
+    public MethodMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
         listMethodMetrics = new ArrayList<>();
     }
-    
-    
-    public int insert(MethodMetrics methodMetrics){
+
+    public int insert(MethodMetrics methodMetrics) {
         String sql = "INSERT INTO tb_methodMetrics "
                 + "(ci,di,fin,fout,iovars,mclc,nbd,ncomp,nop,nvar,si,tloc,vg)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, methodMetrics.getCi().getId());
-            stmt.setInt(1, methodMetrics.getDi().getId());
-            stmt.setInt(1, methodMetrics.getFin().getId());
-            stmt.setInt(1, methodMetrics.getFout().getId());
-            stmt.setInt(1, methodMetrics.getIovars().getId());
-            stmt.setInt(1, methodMetrics.getMclc().getId());
-            stmt.setInt(1, methodMetrics.getNbd().getId());
-            stmt.setInt(1, methodMetrics.getNcomp().getId());
-            stmt.setInt(1, methodMetrics.getNop().getId());
-            stmt.setInt(1, methodMetrics.getNvar().getId());
-            stmt.setInt(1, methodMetrics.getSi().getId());
-            stmt.setInt(1, methodMetrics.getTloc().getId());
-            stmt.setInt(1, methodMetrics.getVg().getId());
+            stmt.setInt(2, methodMetrics.getDi().getId());
+            stmt.setInt(3, methodMetrics.getFin().getId());
+            stmt.setInt(4, methodMetrics.getFout().getId());
+            stmt.setInt(5, methodMetrics.getIovars().getId());
+            stmt.setInt(6, methodMetrics.getMclc().getId());
+            stmt.setInt(7, methodMetrics.getNbd().getId());
+            stmt.setInt(8, methodMetrics.getNcomp().getId());
+            stmt.setInt(9, methodMetrics.getNop().getId());
+            stmt.setInt(10, methodMetrics.getNvar().getId());
+            stmt.setInt(11, methodMetrics.getSi().getId());
+            stmt.setInt(12, methodMetrics.getTloc().getId());
+            stmt.setInt(13, methodMetrics.getVg().getId());
             stmt.executeUpdate();
             tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
@@ -59,14 +59,14 @@ public class MethodMetricsDao {
             throw new RuntimeException(e);
         }
     }
-    
-    public List<MethodMetrics> select(){
+
+    public List<MethodMetrics> select() {
         String sql = "SELECT * FROM tb_methodMetrics";
-        
-        try{
+
+        try {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
-            while(tableKeys.next()){
+            while (tableKeys.next()) {
                 int ciID = tableKeys.getInt("ciID");
                 int diID = tableKeys.getInt("diID");
                 int finID = tableKeys.getInt("finID");
@@ -94,22 +94,22 @@ public class MethodMetricsDao {
                 methodMetrics.getSi().setId(siID);
                 methodMetrics.getTloc().setId(tlocID);
                 methodMetrics.getVg().setId(vgID);
-                
+
                 this.listMethodMetrics.add(methodMetrics);
 
             }
             stmt.executeUpdate();
             stmt.close();
             return this.listMethodMetrics;
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    
+
     }
-    
-    public void delete(int id){
+
+    public void delete(int id) {
         String sql = "DELETE FROM tb_methodMetrics WHERE id = ? ";
-        
+
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             //set values
@@ -120,5 +120,15 @@ public class MethodMetricsDao {
             throw new RuntimeException(e);
         }
     }
-    
+
+    public void update(String column, String columnValue, int id) {
+        String sql = "UPDATE tb_methodMetrics SET " + column + " = '" + columnValue + "' WHERE ID = '" + id + "'";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
