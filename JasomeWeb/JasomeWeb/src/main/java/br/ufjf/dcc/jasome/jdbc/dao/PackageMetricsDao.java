@@ -152,4 +152,15 @@ public class PackageMetricsDao {
             throw new RuntimeException(e);
         }
     }
+    
+    public void update(String column, String columnValue , int id){
+        String sql = "UPDATE tb_packageMetrics SET " + column + " = '" + columnValue + "' WHERE ID = '" + id + "'";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);  
+            stmt.executeUpdate();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
 }

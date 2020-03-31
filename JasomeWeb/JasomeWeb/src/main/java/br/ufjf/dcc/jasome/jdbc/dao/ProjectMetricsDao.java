@@ -79,4 +79,15 @@ public class ProjectMetricsDao {
             throw new RuntimeException(e);
         }  
     }
+    
+    public void update(String sourceDir, int id){
+        String sql = "UPDATE tb_projectMetrics SET sourceDir = '" + sourceDir + "' WHERE ID = '" + id + "'";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);  
+            stmt.executeUpdate();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
 }

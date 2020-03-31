@@ -74,4 +74,15 @@ public class VersionMetricsDao {
             throw new RuntimeException(e);
         }
     }
+    
+    public void update(String tloc, String id){
+        String sql = "UPDATE tb_versionMetrics SET tloc = '" + tloc + "' WHERE ID = '" + id + "'";
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);  
+            stmt.executeUpdate();
+            stmt.close();
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
 }
