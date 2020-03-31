@@ -36,7 +36,7 @@ public class VersionMetricsDao {
         try{
             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             //set values
-            stmt.setInt(1, Integer.parseInt(versionMetrics.getTloc().getValue()));
+            stmt.setInt(1, versionMetrics.getTloc().getId());
             stmt.executeUpdate();
             ResultSet tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
@@ -60,7 +60,7 @@ public class VersionMetricsDao {
         }  
     }
     
-    public List<VersionMetrics> select(){
+    public List<VersionMetrics> select(int id){
         String sql = "SELECT * FROM tb_versionMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);

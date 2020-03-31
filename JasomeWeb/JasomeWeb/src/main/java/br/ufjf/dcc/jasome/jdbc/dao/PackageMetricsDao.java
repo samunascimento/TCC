@@ -7,7 +7,6 @@ package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
-import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,15 +20,10 @@ import java.util.*;
 public class PackageMetricsDao {
 
     private final Connection connection;
-    private List<PackageMetrics> listPackageMetrics;
     private ResultSet tableKeys;
-    private PackageMetrics packageMetrics;
-    private MetricDao metrics;
 
     public PackageMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
-        listPackageMetrics = new ArrayList<>();
-        packageMetrics = new PackageMetrics();
     }
 
     public int insert(PackageMetrics packageMetrics) {
@@ -75,6 +69,9 @@ public class PackageMetricsDao {
     }
 
     public List<PackageMetrics> select() throws SQLException {
+
+        List<PackageMetrics> listPackageMetrics = new ArrayList<>();
+        PackageMetrics packageMetrics = new PackageMetrics();
 
         String sql = "SELECT * FROM tb_packageMetrics ";
         try {
@@ -131,7 +128,6 @@ public class PackageMetricsDao {
                 metrics.getTlocID().setDescription(tableKeys.getString(2));
                 metrics.getTlocID().setName(tableKeys.getString(3));
                 metrics.getTlocID().setValue(Float.toString(tableKeys.getFloat(4)));*/
-
                 packageMetrics.getA().setId(aID);
                 packageMetrics.getCcrc().setId(ccrcID);
                 packageMetrics.getCa().setId(caID);
@@ -144,23 +140,29 @@ public class PackageMetricsDao {
                 packageMetrics.getPkgTCi().setId(pkgtciID);
                 packageMetrics.getTloc().setId(tlocID);
 
-                this.listPackageMetrics.add(packageMetrics);
+                listPackageMetrics.add(packageMetrics);
             }
 
-            return this.listPackageMetrics;
+            return listPackageMetrics;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    public void update(String column, String columnValue , int id){
+
+    public void update(String column, String columnValue, int id) {
         String sql = "UPDATE tb_packageMetrics SET " + column + " = '" + columnValue + "' WHERE ID = '" + id + "'";
-        try{
-            PreparedStatement stmt = connection.prepareStatement(sql);  
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
             stmt.close();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
-        }  
+        }
+    }
+
+    private class listPackageMetrics {
+
+        public listPackageMetrics() {
+        }
     }
 }
