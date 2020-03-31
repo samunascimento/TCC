@@ -22,6 +22,7 @@ public class ClassMetricsDao {
 
     private Connection connection;
     List<ClassMetrics> listClassMetrics;
+    ClassMetrics classMetrics;
     ResultSet tableKeys;
 
     public ClassMetricsDao(){
@@ -34,8 +35,8 @@ public class ClassMetricsDao {
         String sql = "INSERT INTO tb_classMetrics "
                 + "(aa,ad,ai,ait,ao,av,clrci,cltci,dit,hmd,hmi,mhf,mif,ma,md,"
                 + "mi,mit,mo,nf,nm,nma,nmi,noa,noch,nod,nol,nopa,norm,npf,npm,nsf,"
-                + "nsm,pmr,pmd,pmi,rtloc,six,tloc,wmc"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,);";
+                + "nsm,pmr,pmd,pmi,rtloc,six,tloc,wmc)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, classMetrics.getAa().getId());
@@ -102,8 +103,102 @@ public class ClassMetricsDao {
     }
     
     public List<ClassMetrics> select() throws SQLException{
-                
-        return null;
+        String sql = "SELECT * FROM tb_classMetrics";
+        
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            while(tableKeys.next()){
+                int aaID = tableKeys.getInt("aaID");
+                int adID = tableKeys.getInt("adID");
+                int aiID = tableKeys.getInt("aiID");
+                int aitID = tableKeys.getInt("aitID");
+                int aoID = tableKeys.getInt("aoID");
+                int avID = tableKeys.getInt("avID");
+                int clrciID = tableKeys.getInt("clrciID");
+                int cltciID = tableKeys.getInt("cltciID");
+                int ditID = tableKeys.getInt("ditID");
+                int hmdID = tableKeys.getInt("hmdID");
+                int hmiID = tableKeys.getInt("hmiID");
+                int mhfID = tableKeys.getInt("mhfID");
+                int mifID = tableKeys.getInt("mifID");
+                int maID = tableKeys.getInt("maID");
+                int mdID = tableKeys.getInt("mdID");
+                int miID = tableKeys.getInt("miID");
+                int mitID = tableKeys.getInt("mitID");
+                int moID = tableKeys.getInt("moID");
+                int nfID = tableKeys.getInt("nfID");
+                int nmID = tableKeys.getInt("nmID");
+                int nmaID = tableKeys.getInt("nmaID");
+                int nmiID = tableKeys.getInt("nmiID");
+                int noaID = tableKeys.getInt("noaID");
+                int nochID = tableKeys.getInt("nochID");
+                int nodID = tableKeys.getInt("nodID");
+                int nolID = tableKeys.getInt("nolID");
+                int nopaID = tableKeys.getInt("nopaID");
+                int normID = tableKeys.getInt("normID");
+                int npfID = tableKeys.getInt("npfID");
+                int npmID = tableKeys.getInt("npmID");
+                int nsfID = tableKeys.getInt("nsfID");
+                int nsmID = tableKeys.getInt("nsmID");
+                int pmrID = tableKeys.getInt("pmrID");
+                int pmdID = tableKeys.getInt("pmdID");
+                int pmiID = tableKeys.getInt("pmiID");
+                int rtlocID = tableKeys.getInt("rtlocID");
+                int sixID = tableKeys.getInt("sixID");
+                int tlocID = tableKeys.getInt("tlocID");
+                int wmcID = tableKeys.getInt("wmcID");
+
+                classMetrics.getAa().setId(aaID);
+                classMetrics.getAd().setId(adID);
+                classMetrics.getAi().setId(aiID);
+                classMetrics.getAit().setId(aitID);
+                classMetrics.getAo().setId(aoID);
+                classMetrics.getAv().setId(avID);
+                classMetrics.getClrci().setId(clrciID);
+                classMetrics.getCltci().setId(cltciID);
+                classMetrics.getDit().setId(ditID);
+                classMetrics.getHmd().setId(hmdID);
+                classMetrics.getHmi().setId(hmiID);
+                classMetrics.getMhf().setId(mhfID);
+                classMetrics.getMif().setId(mifID);
+                classMetrics.getMa().setId(maID);
+                classMetrics.getMd().setId(mdID);
+                classMetrics.getMi().setId(miID);
+                classMetrics.getMit().setId(mitID);
+                classMetrics.getMo().setId(moID);
+                classMetrics.getNf().setId(nfID);
+                classMetrics.getNm().setId(nmID);
+                classMetrics.getNma().setId(nmaID);
+                classMetrics.getNmi().setId(nmiID);
+                classMetrics.getNoa().setId(noaID);
+                classMetrics.getNoch().setId(nochID);
+                classMetrics.getNod().setId(nodID);
+                classMetrics.getNol().setId(nolID);
+                classMetrics.getNopa().setId(nopaID);
+                classMetrics.getNorm().setId(normID);
+                classMetrics.getNpf().setId(npfID);
+                classMetrics.getNpm().setId(npmID);
+                classMetrics.getNsf().setId(nsfID);
+                classMetrics.getNsm().setId(nsmID);
+                classMetrics.getPmr().setId(pmrID);
+                classMetrics.getPmd().setId(pmdID);
+                classMetrics.getPmi().setId(pmiID);
+                classMetrics.getRtloc().setId(rtlocID);
+                classMetrics.getSix().setId(sixID);
+                classMetrics.getTloc().setId(tlocID);
+                classMetrics.getWmc().setId(wmcID);
+
+                this.listClassMetrics.add(classMetrics);
+
+            }
+            stmt.executeUpdate();
+            stmt.close();
+            return this.listClassMetrics;
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+    
     
 }

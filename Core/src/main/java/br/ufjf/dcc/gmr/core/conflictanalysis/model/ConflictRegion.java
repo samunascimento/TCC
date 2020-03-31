@@ -84,27 +84,47 @@ public class ConflictRegion {
 
     private String generateForm() {
         String str = "";
+        int j = 0;
         for (String line : this.beforeContext) {
             str = str + line + "\n";
         }
         str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        if (syntaxV1.isEmpty() || syntaxV1.size() != v1.size()) {
+        if (syntaxV1.isEmpty()) {
             for (String line : this.v1) {
                 str = str + line + "\n";
             }
         } else {
             for (int i = 0; i < v1.size(); i++) {
-                str = str + v1.get(i) + "\t(" + syntaxV1.get(i).getStructureType() + ")\n";
+                if (j < this.syntaxV1.size()) {
+                    if (this.originalV1FirstLine + i == this.syntaxV1.get(j).getStart().getLine()) {
+                        str = str + v1.get(i) + "\t(" + syntaxV1.get(i).getStructureType() + ")\n";
+                        j++;
+                    } else {
+                        str = str + v1.get(i) + "\n";
+                    }
+                } else {
+                    str = str + v1.get(i) + "\n";
+                }
             }
         }
+        j = 0;
         str = str + "============================== (" + this.separatorLine + ")\n";
-        if (syntaxV2.isEmpty() || syntaxV2.size() != v2.size()) {
+        if (syntaxV2.isEmpty()) {
             for (String line : this.v2) {
                 str = str + line + "\n";
             }
         } else {
             for (int i = 0; i < v2.size(); i++) {
-                str = str + v2.get(i) + "\t(" + syntaxV2.get(i).getStructureType() + ")\n";
+                if (j < this.syntaxV2.size()) {
+                    if (this.originalV2FirstLine + i == this.syntaxV2.get(j).getStart().getLine()) {
+                        str = str + v2.get(i) + "\t(" + syntaxV2.get(i).getStructureType() + ")\n";
+                        j++;
+                    } else {
+                        str = str + v2.get(i) + "\n";
+                    }
+                } else {
+                    str = str + v2.get(i) + "\n";
+                }
             }
         }
         str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
@@ -112,6 +132,7 @@ public class ConflictRegion {
             str = str + line + "\n";
         }
         return str;
+    }
     }
 
     public String getForm() {
