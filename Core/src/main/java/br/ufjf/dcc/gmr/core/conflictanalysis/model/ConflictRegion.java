@@ -133,7 +133,8 @@ public class ConflictRegion {
         }
         return str;
     }
-    }
+    //} 
+    // Esse fechamento estava quebrando o arquivo, eu comentei ele, depois vê se era isso mesmo que queria
 
     public String getForm() {
         return generateForm();
