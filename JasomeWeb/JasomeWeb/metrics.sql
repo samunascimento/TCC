@@ -7,7 +7,7 @@ DROP TABLE tb_metric;
 
 
 CREATE TABLE tb_metric (
-    ID int NOT NULL,
+    ID serial NOT NULL,
     description varchar(255) NOT NULL,
     name varchar(255),
     value REAL,
@@ -15,14 +15,14 @@ CREATE TABLE tb_metric (
 );
 
 CREATE TABLE tb_projectMetrics(
-    ID int NOT NULL,
+    ID serial NOT NULL,
     sourceDir varchar(256) NOT NULL,
     PRIMARY KEY (ID)
 );
 
 
 CREATE TABLE tb_versionMetrics (
-    ID int NOT NULL,
+    ID serial NOT NULL,
     tloc int NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (tloc) REFERENCES tb_metric(ID)
@@ -30,7 +30,7 @@ CREATE TABLE tb_versionMetrics (
 
 
 CREATE TABLE tb_packageMetrics (
-    ID int NOT NULL,
+    ID serial NOT NULL,
     aID int NOT NULL,
     ccrcID int NOT NULL,
     caID int NOT NULL,
@@ -58,8 +58,8 @@ CREATE TABLE tb_packageMetrics (
 
 
 CREATE TABLE tb_classMetrics (
-	ID int NOT NULL,
-	aa int NOT NULL,
+    ID serial NOT NULL,
+    aa int NOT NULL,
     ad int NOT NULL,
     ai int NOT NULL,
     ait int NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE tb_classMetrics (
 );
 
 CREATE TABLE tb_methodMetrics (
-    ID int NOT NULL,
+    ID serial NOT NULL,
     ci int NOT NULL,
     di int NOT NULL,
     fin int NOT NULL,
