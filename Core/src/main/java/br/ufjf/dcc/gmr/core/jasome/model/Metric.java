@@ -8,7 +8,7 @@ public class Metric {
     
     private String description;
     private String name;
-    private String value;
+    private double value;
     private int id;
 
     public String getDescription() {
@@ -27,11 +27,11 @@ public class Metric {
         this.name = name;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

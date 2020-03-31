@@ -91,6 +91,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName,
             Attributes atts) {
+        
+        
 
         // recupera o nome da tag atual
         tagAtual = qName;
@@ -132,7 +134,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
             metric.setDescription(value0);
             metric.setName(value1);
-            metric.setValue(value2);
+            metric.setValue(Double.parseDouble(value2));
 
             if (project && !pacckage && !clazz && !method) {
                 versionMetrics.setTloc(metric);
