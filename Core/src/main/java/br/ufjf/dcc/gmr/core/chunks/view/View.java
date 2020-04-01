@@ -1,5 +1,6 @@
-package br.ufjf.dcc.gmr.core.JFrame;
+package br.ufjf.dcc.gmr.core.chunks.view;
 
+import br.ufjf.dcc.gmr.core.chunks.controller.JTreeMouseListener;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
@@ -28,7 +29,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
-import br.ufjf.dcc.gmr.core.vcs.types.File;
+import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.Font;
 import java.io.IOException;
@@ -101,13 +102,14 @@ public class View extends JFrame {
     }
 
     private void setTree(Version version) {
-        List<File> files = version.getFile();
+        List<MyFile> files = version.getFile();
         JTree tree = new JTree();
+        tree.addMouseListener(new JTreeMouseListener(tree));
         tree.setShowsRootHandles(true);
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
             tree = new JTree(shaTree);
-            for (File file : files) {
+            for (MyFile file : files) {
                 shaTree.add(createNodes(file));
             }
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -126,7 +128,7 @@ public class View extends JFrame {
         tableTreePanel.updateUI();
     }
 
-    private DefaultMutableTreeNode createNodes(File file) {
+    private DefaultMutableTreeNode createNodes(MyFile file) {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());
         for (int i = 0; i < file.getChuncks().size(); i++) { //verificar porque a lista de chuncks está vazia
             int lineNumber = file.getChuncks().get(i).getBegin().getLineNumber();
@@ -186,7 +188,7 @@ public class View extends JFrame {
         clearTable(table);
         String filePath = chooser.getSelectedFile().getAbsoluteFile().toString();
         progressBar.setVisible(true);
-        chooser.setVisible(false);
+        chooser.setVisible(false);  
         chooserFrame.setVisible(false);
         //ProgressBarAction aux = new ProgressBarAction(progressBar, filePath, filePath);
         //Thread run = new Thread(aux);
@@ -217,11 +219,13 @@ public class View extends JFrame {
     }
 
     private void tableFocusGained(java.awt.event.FocusEvent evt) {
-
-        Version version = project.getVersions().get(table.getSelectedRow());
-
+        int row = table.getSelectedRow();
+        if(row < 0){
+            row = 0;
+        }
+        Version version = project.getVersions().get(row);
         setTree(version);
-//        setTree(project.getVersions().get(0));
+        
     }
 
     private void openRepository(java.awt.event.ActionEvent evt) {

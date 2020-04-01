@@ -5,7 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.principal;
 
-import br.ufjf.dcc.gmr.core.JFrame.View;
+import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
@@ -22,7 +22,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
-import br.ufjf.dcc.gmr.core.vcs.types.File;
+import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.vcs.types.Line;
 import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
@@ -30,6 +30,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -78,7 +79,8 @@ public class InitProject {
             }
 
         } catch (IOException e) {
-            System.out.println("File not found!");
+            System.out.println("filePath: " + filePath);
+            e.printStackTrace();
         }
         return result;
     }
@@ -95,9 +97,9 @@ public class InitProject {
 
     }
 
-    private static File createFile(String pathFile) {
+    private static MyFile createFile(String pathFile) {
 
-        File result = new File();
+        MyFile result = new MyFile();
 
         result.setPath(pathFile);
         result.setStatus(Status.UNMERGED);
@@ -128,7 +130,10 @@ public class InitProject {
                 List<String> statusUnmerged = Git.statusUnmerged(pathProject);
 
                 for (String file : statusUnmerged) {
-                    result.getFile().add(createFile(file));
+                    while (file.startsWith(" ")) {                        
+                        file = file.replaceFirst(" ", "");
+                    }
+                    result.getFile().add(createFile(pathProject.concat(File.separator).concat(file)));
                 }
                 result.setStatus(MergeStatus.CONFLICT);
                 

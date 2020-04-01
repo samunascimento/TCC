@@ -672,7 +672,7 @@ public class Git {
     }
 
     public static List<String> merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-
+        
         String command = "git merge ";
 
         if (!commit) {
@@ -720,7 +720,10 @@ public class Git {
 
     public static boolean isConflict(List<String> mergeMessage) {
         String MERGE_FAIL_MESSAGE = "Automatic merge failed";
-
+        if(mergeMessage == null){
+            return false;
+        }
+        
         for (String line : mergeMessage) {
             if (line.contains(MERGE_FAIL_MESSAGE)) {
                 return true;

@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author icout
  */
-public class File {
+public class MyFile {
     
     private String path;
     private Status status;
@@ -14,14 +14,14 @@ public class File {
     private boolean renamed;
     private List<Chunk> chuncks;
     
-    public File() {
+    public MyFile() {
         path = new String();
         status = Status.UNTRACKED;
         type = new String();
         renamed = false;
         chuncks = new ArrayList<>();
     }
-    public File(String path, Status status){
+    public MyFile(String path, Status status){
         this.path = path;
         this.status = status;
     }

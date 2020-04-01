@@ -29,7 +29,7 @@ public class Version {
     private String description;
     private Date date;
     private boolean merge;
-    private List<File> file;
+    private List<MyFile> file;
     private List<String> parent;
     private MergeStatus status;
 
@@ -114,11 +114,11 @@ public class Version {
         this.merge = merge;
     }
 
-    public List<File> getFile() {
+    public List<MyFile> getFile() {
         return file;
     }
 
-    public void setFile(List<File> file) {
+    public void setFile(List<MyFile> file) {
         this.file = file;
     }
     
