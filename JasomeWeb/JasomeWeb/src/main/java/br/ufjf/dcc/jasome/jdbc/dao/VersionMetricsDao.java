@@ -6,6 +6,7 @@
 package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -75,8 +76,8 @@ public class VersionMetricsDao {
         }
     }
     
-    public void update(String tloc, String id){
-        String sql = "UPDATE tb_versionMetrics SET tloc = '" + tloc + "' WHERE ID = '" + id + "'";
+    public void update(Metric metric, String id){
+        String sql = "UPDATE tb_versionMetrics SET tloc = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);  
             stmt.executeUpdate();

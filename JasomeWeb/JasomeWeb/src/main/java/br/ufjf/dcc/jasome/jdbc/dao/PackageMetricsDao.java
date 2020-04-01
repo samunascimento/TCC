@@ -6,6 +6,7 @@
 package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -149,8 +150,8 @@ public class PackageMetricsDao {
         }
     }
 
-    public void update(String column, String columnValue, int id) {
-        String sql = "UPDATE tb_packageMetrics SET " + column + " = '" + columnValue + "' WHERE ID = '" + id + "'";
+    public void update(Metric metric, int id) {
+        String sql = "UPDATE tb_packageMetrics SET '" + metric.getName() + " = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
