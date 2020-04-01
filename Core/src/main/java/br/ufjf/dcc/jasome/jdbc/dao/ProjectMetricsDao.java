@@ -21,12 +21,10 @@ public class ProjectMetricsDao {
         private final Connection connection;
         private List<ProjectMetrics> listProjectMetrics;
         private ResultSet tableKeys;
-        private ProjectMetrics projectMetrics;
 
     public ProjectMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
         listProjectMetrics = new ArrayList<>();
-        projectMetrics = new ProjectMetrics();
     }
     
     public int insert(ProjectMetrics projectMetrics){
@@ -63,6 +61,9 @@ public class ProjectMetricsDao {
     }
     
     public List<ProjectMetrics> select(){
+        ProjectMetrics projectMetrics;
+        projectMetrics = new ProjectMetrics();
+        
         String sql = "SELECT * FROM tb_projectMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -75,6 +76,24 @@ public class ProjectMetricsDao {
                 this.listProjectMetrics.add(projectMetrics);
             }
             return listProjectMetrics;
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }  
+    }
+    
+    public ProjectMetrics selectID(int id) throws SQLException{
+        ProjectMetrics projectMetrics;
+        projectMetrics = new ProjectMetrics();
+        
+        String sql = "SELECT * FROM tb_projectMetrics WHERE ID = " + id;
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+            tableKeys = stmt.getGeneratedKeys();
+            stmt.close();
+            int projectId = tableKeys.getInt(1);
+            projectMetrics.setId(projectId);
+            return projectMetrics;
         } catch(SQLException e){
             throw new RuntimeException(e);
         }  

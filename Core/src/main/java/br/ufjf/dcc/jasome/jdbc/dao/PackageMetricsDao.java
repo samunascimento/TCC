@@ -74,7 +74,7 @@ public class PackageMetricsDao {
         List<PackageMetrics> listPackageMetrics = new ArrayList<>();
         PackageMetrics packageMetrics = new PackageMetrics();
 
-        String sql = "SELECT * FROM tb_packageMetrics ";
+        String sql = "SELECT * FROM tb_packageMetrics";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             //set values
@@ -96,39 +96,6 @@ public class PackageMetricsDao {
                 int pkgtciID = tableKeys.getInt("pkgTCiID");
                 int tlocID = tableKeys.getInt("tlocID");
 
-                /*metrics.getaID().setDescription(tableKeys.getString(2));
-                metrics.getaID().setName(tableKeys.getString(3));
-                metrics.getaID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getCcrcID().setDescription(tableKeys.getString(2));
-                metrics.getCcrcID().setName(tableKeys.getString(3));
-                metrics.getCcrcID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getCaID().setDescription(tableKeys.getString(2));
-                metrics.getCaID().setName(tableKeys.getString(3));
-                metrics.getCaID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getCeID().setDescription(tableKeys.getString(2));
-                metrics.getCeID().setName(tableKeys.getString(3));
-                metrics.getCeID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getDmsID().setDescription(tableKeys.getString(2));
-                metrics.getDmsID().setName(tableKeys.getString(3));
-                metrics.getDmsID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getiID().setDescription(tableKeys.getString(2));
-                metrics.getiID().setName(tableKeys.getString(3));
-                metrics.getiID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getNocID().setDescription(tableKeys.getString(2));
-                metrics.getNocID().setName(tableKeys.getString(3));
-                metrics.getNocID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getNoiID().setDescription(tableKeys.getString(2));
-                metrics.getNoiID().setName(tableKeys.getString(3));
-                metrics.getNoiID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getPkgRCiID().setDescription(tableKeys.getString(2));
-                metrics.getPkgRCiID().setName(tableKeys.getString(3));
-                metrics.getPkgRCiID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getPkgTCiID().setDescription(tableKeys.getString(2));
-                metrics.getPkgTCiID().setName(tableKeys.getString(3));
-                metrics.getPkgTCiID().setValue(Float.toString(tableKeys.getFloat(4)));
-                metrics.getTlocID().setDescription(tableKeys.getString(2));
-                metrics.getTlocID().setName(tableKeys.getString(3));
-                metrics.getTlocID().setValue(Float.toString(tableKeys.getFloat(4)));*/
                 packageMetrics.getA().setId(aID);
                 packageMetrics.getCcrc().setId(ccrcID);
                 packageMetrics.getCa().setId(caID);
@@ -150,6 +117,24 @@ public class PackageMetricsDao {
         }
     }
 
+    public PackageMetrics selectID(int id) throws SQLException {
+        PackageMetrics packageMetrics;
+        packageMetrics = new PackageMetrics();
+                
+        String sql = "SELECT * FROM tb_packageMetrics WHERE ID = " + id;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+            stmt.close();
+            tableKeys = stmt.getGeneratedKeys();
+            int packageId = tableKeys.getInt(1);
+            packageMetrics.setId(packageId);
+            return packageMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void update(Metric metric, int id) {
         String sql = "UPDATE tb_packageMetrics SET '" + metric.getName() + " = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
         try {
@@ -158,6 +143,7 @@ public class PackageMetricsDao {
             stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+
         }
     }
 
