@@ -12,8 +12,8 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 
 /**
- * Class created to implement a method to get the Line number of a old archive in
- * a new.
+ * Class created to implement a method to get the Line number of a old archive
+ * in a new.
  *
  * @author Luan Reis
  */
@@ -180,15 +180,13 @@ public class ReturnNewLineNumber {
         boolean os = isWindows();
 
         if (os) {
-            for (int i = 0; i < chunk.get(i).getLines().size(); i++) {
+            for (int i = 0; i < chunk.size(); i++) {
                 if (chunk.get(i).getFilePathSource().contains("\\\\")) {
-                    String c = chunk.get(i).getFilePathSource().substring(7);
-                    c = c.replace("\\\\", "\\").replace("\"", "");
+                    String c = windowsPath(chunk.get(i).getFilePathSource());
                     chunk.get(i).setFilePathSource(c);
                 }
                 if (chunk.get(i).getFilePathTarget().contains("\\\\")) {
-                    String c = chunk.get(i).getFilePathTarget().substring(7);
-                    c = c.replace("\\\\", "\\").replace("\"", "");
+                    String c = windowsPath(chunk.get(i).getFilePathTarget());
                     chunk.get(i).setFilePathTarget(c);
                 }
             }
@@ -222,6 +220,14 @@ public class ReturnNewLineNumber {
         }
 
         return cont;
+    }
+
+    private String windowsPath(String stringPath) {
+        String path;
+        String[] splitC = stringPath.split(":");
+        path = splitC[0].charAt(splitC[0].length() - 1) + ":" + splitC[1];
+        path = path.replace("\\\\", "\\").replace("\"", "");
+        return path;
     }
 
     /**
