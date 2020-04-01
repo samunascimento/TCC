@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
  *
  * @author luand
  */
-public class CPPvisitor extends CPP14BaseVisitor<Object> {
+public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
 
@@ -23,7 +23,7 @@ public class CPPvisitor extends CPP14BaseVisitor<Object> {
         return list;
     }
 
-    public CPPvisitor() {
+    public CPPVisitor() {
         list = new ArrayList<>();
     }
 

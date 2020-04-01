@@ -12,7 +12,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 
 /**
- * Class created to implete a method to get the Line number of a old archieve in
+ * Class created to implement a method to get the Line number of a old archive in
  * a new.
  *
  * @author Luan Reis
@@ -177,9 +177,9 @@ public class ReturnNewLineNumber {
         int cont = 0;
         int j = 0;
 
-        int os = getOperationalSystem();
+        boolean os = isWindows();
 
-        if (os == 1) {
+        if (os) {
             for (int i = 0; i < chunk.get(i).getLines().size(); i++) {
                 if (chunk.get(i).getFilePathSource().contains("\\\\")) {
                     String c = chunk.get(i).getFilePathSource().substring(7);
@@ -273,12 +273,12 @@ public class ReturnNewLineNumber {
         return originalLineNumber + i;
     }
 
-    private int getOperationalSystem() {
+    private boolean isWindows() {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return 1;
+            return true;
         } else {
-            return 2;
+            return false;
         }
     }
 
