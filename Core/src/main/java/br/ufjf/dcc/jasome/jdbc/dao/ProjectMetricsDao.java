@@ -19,12 +19,10 @@ import java.util.*;
  */
 public class ProjectMetricsDao {
         private final Connection connection;
-        private List<ProjectMetrics> listProjectMetrics;
         private ResultSet tableKeys;
 
     public ProjectMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
-        listProjectMetrics = new ArrayList<>();
     }
     
     public int insert(ProjectMetrics projectMetrics){
@@ -61,6 +59,8 @@ public class ProjectMetricsDao {
     }
     
     public List<ProjectMetrics> select(){
+        List<ProjectMetrics> listProjectMetrics = new ArrayList<>();
+        MetricDao metrics = new MetricDao();
         ProjectMetrics projectMetrics;
         projectMetrics = new ProjectMetrics();
         

@@ -19,18 +19,14 @@ import java.util.*;
  * @author anton
  */
 public class VersionMetricsDao {
-    private final Connection connection;
-    private List<VersionMetrics> listVersionMetrics;
+    private final Connection connection;   
     ResultSet tableKeys;
 
     public VersionMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
-        listVersionMetrics = new ArrayList<>();
     }
     
-    public int insert(VersionMetrics versionMetrics){
-        this.listVersionMetrics.add(versionMetrics);
-        
+    public int insert(VersionMetrics versionMetrics){      
         String sql = "INSERT INTO tb_versionMetrics " +
         "(tloc)" +
         "VALUES (?);";
@@ -63,6 +59,10 @@ public class VersionMetricsDao {
     }
     
     public List<VersionMetrics> select(int id){
+        VersionMetrics versionMetrics =  new VersionMetrics();
+        List<VersionMetrics> listVersionMetrics = new ArrayList<>();
+        MetricDao metrics = new MetricDao();
+        
         String sql = "SELECT * FROM tb_versionMetrics ";
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -71,7 +71,12 @@ public class VersionMetricsDao {
             //stmt.setString(2, projectMetrics.getSourceDir());
             stmt.executeUpdate();
             stmt.close();
-            return this.listVersionMetrics;
+            while (tableKeys.next()) {
+                versionMetrics.setTloc(metrics.selectID(versionMetrics.getTloc().getId()));
+                
+                listVersionMetrics.add(versionMetrics);
+            }
+            return listVersionMetrics;
         } catch(SQLException e){
             throw new RuntimeException(e);
         }
