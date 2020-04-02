@@ -24,7 +24,6 @@ import br.ufjf.dcc.gmr.core.exception.RemoteRefBranchNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
-import br.ufjf.dcc.gmr.core.vcs.types.FileUnmerged;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
