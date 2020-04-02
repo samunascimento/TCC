@@ -8,24 +8,48 @@ import org.antlr.v4.runtime.Token;
  */
 public class SyntaxStructure {
 
-    private Token start;
-    private Token stop;
+    private int startLine;
+    private int stopLine;
+    private int startLineStartColumn;
+    private int startLineStopColumn;
+    private int stopLineStartColumn;
+    private int stopLineStopColumn;
     private String text;
     private String structureType;
 
     public SyntaxStructure(Token start, Token stop, String text, String structureType) {
-        this.start = start;
-        this.stop = stop;
+        this.startLine = start.getLine();
+        this.stopLine = stop.getLine();
+        this.startLineStartColumn = start.getStartIndex();
+        this.startLineStopColumn = start.getStopIndex();
+        this.stopLineStartColumn = stop.getStartIndex();
+        this.stopLineStopColumn = stop.getStopIndex();
         this.text = text;
         this.structureType = structureType;
     }
 
-    public Token getStart() {
-        return start;
+    public int getStartLine() {
+        return startLine;
     }
 
-    public Token getStop() {
-        return stop;
+    public int getStopLine() {
+        return stopLine;
+    }
+
+    public int getStartLineStartColumn() {
+        return startLineStartColumn;
+    }
+
+    public int getStartLineStopColumn() {
+        return startLineStopColumn;
+    }
+
+    public int getStopLineStartColumn() {
+        return stopLineStartColumn;
+    }
+
+    public int getStopLineStopColumn() {
+        return stopLineStopColumn;
     }
 
     public String getText() {
@@ -37,7 +61,7 @@ public class SyntaxStructure {
     }
     
     public boolean isOneLine(){
-        if(start.getLine() == stop.getLine())
+        if(startLine == stopLine)
             return true;
         return false;
     }

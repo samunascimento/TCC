@@ -1,5 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Lexer;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
@@ -40,6 +42,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class RepositoryAnalysis {
 
+    /*---------------------------------------------------------------------------------------
+                                        Tools
+    ---------------------------------------------------------------------------------------*/
     private static File createSandbox(String repositoryPath) throws IOException {
         File sandbox;
         if (repositoryPath.contains("\\")) {
@@ -83,48 +88,72 @@ public class RepositoryAnalysis {
         return content;
     }
 
+    /*---------------------------------------------------------------------------------------
+                                        ANTLR4
+    ---------------------------------------------------------------------------------------*/
     public static List<SyntaxStructure> analyzeJavaSyntaxTree(String filePath) throws IOException {
+        if (!filePath.endsWith(".java")) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            JavaLexer lexer = new JavaLexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            JavaParser parser = new JavaParser(tokens);
+            ParseTree tree = parser.compilationUnit();
 
-        ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
+            JavaVisitor visitor = new JavaVisitor();
+            visitor.visit(tree);
 
-        JavaVisitor visitor = new JavaVisitor();
-        visitor.visit(tree);
+            return visitor.getList();
+        } else {
+            throw new IOException();
+        }
+    }
 
-        return visitor.getList();
+    public static List<SyntaxStructure> analyzeCPPSyntaxTree(String filePath) throws IOException {
+        if (!filePath.endsWith(".cpp") && !filePath.endsWith(".h")) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            CPP14Lexer lexer = new CPP14Lexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CPP14Parser parser = new CPP14Parser(tokens);
+            ParseTree tree = parser.translationunit();
+
+            CPPVisitor visitor = new CPPVisitor();
+            visitor.visit(tree);
+
+            return visitor.getList();
+        } else {
+
+            throw new IOException();
+        }
     }
 
     public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
-        List<SyntaxStructure> list = new ArrayList<>();
-        for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
-            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine() <= stop) {
-                start = ss.getStart().getLine() + 1;
-                list.add(ss);
+        try {
+            List<SyntaxStructure> list = new ArrayList();
+            if (filePath.endsWith(".java")) {
+                for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
+                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                        list.add(ss);
+                    }
+                }
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                for (SyntaxStructure ss : analyzeCPPSyntaxTree(filePath)) {
+                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                        list.add(ss);
+                    }
+                }
+            } else {
+                return null;
             }
-            if (start > stop) {
-                break;
-            }
+            return list;
+        } catch (IOException ex) {
+            System.out.println("ERROR: FilePath of analyseSyntaxTree does mot exist!");
+            throw new IOException();
         }
-        return list;
     }
 
-    public static List<SyntaxStructure> getStructureTypeInInterval(List<SyntaxStructure> main, int start, int stop) throws IOException {
-        List<SyntaxStructure> list = new ArrayList<>();
-        for (SyntaxStructure ss : main) {
-            if (ss.isOneLine() && ss.getStart().getLine() >= start && ss.getStop().getLine() <= stop) {
-                start = ss.getStart().getLine() + 1;
-                list.add(ss);
-            }
-            if (start > stop) {
-                break;
-            }
-        }
-        return list;
-    }
-
+    /*---------------------------------------------------------------------------------------
+                                        Main function
+    ---------------------------------------------------------------------------------------*/
     public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException {
 
         //Main list
@@ -238,11 +267,18 @@ public class RepositoryAnalysis {
                                         }
                                     }
                                     //Getting original v1 and v2 first line
-                                    Git.checkout(parents.get(0).getCommitHash(), sandbox.getPath());
-                                    originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
-                                    Git.checkout(parents.get(1).getCommitHash(), sandbox.getPath());
-                                    originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
-                                    Git.checkout("master", sandbox.getPath());
+                                    originalV1FirstLine = -1;
+                                    originalV2FirstLine = -1;        
+                                    if (!v1.isEmpty()) {
+                                        Git.checkout(parents.get(0).getCommitHash(), sandbox.getPath());
+                                        originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
+                                        Git.checkout("master", sandbox.getPath());
+                                    }
+                                    if (!v2.isEmpty()) {
+                                        Git.checkout(parents.get(1).getCommitHash(), sandbox.getPath());
+                                        originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
+                                        Git.checkout("master", sandbox.getPath());
+                                    }
 
                                     //Adding a new conflict region
                                     conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
@@ -301,7 +337,16 @@ public class RepositoryAnalysis {
 
             }
             deleteDirectory(sandbox);
-            return RepositoryAnalysis.getJavaSyntax(list,repositoryPath);
+            for(MergeEvent merge : list){
+                for(ConflictFile file : merge.getConflictFiles()){
+                    if(!file.getConflictRegion().isEmpty()){
+                        for(ConflictRegion region : file.getConflictRegion()){
+                            region.setSyntaxV1SyntaxV2(repositoryPath,file.getFilePath(),merge.getParents().get(0).getCommitHash(),merge.getParents().get(1).getCommitHash());
+                        }
+                    }
+                }
+            }
+            return list;
 
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
@@ -357,40 +402,6 @@ public class RepositoryAnalysis {
             throw new IOException();
         } catch (IOException ex) {
             deleteDirectory(sandbox);
-            throw new IOException();
-        }
-    }
-
-    private static List<MergeEvent> getJavaSyntax(List<MergeEvent> list, String repositoryPath) throws IOException {
-        System.out.println("koé");
-        try {
-            for (MergeEvent merge : list) {
-                for (ConflictFile file : merge.getConflictFiles()) {
-                    if (file.getFileName().endsWith(".java") && !file.getConflictRegion().isEmpty()) {
-                        for (ConflictRegion region : file.getConflictRegion()) {
-                            if (!(region.getBeginLine() + 1 == region.getSeparatorLine()) && region.getOriginalV1FirstLine() > 0) {
-                                Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
-                                region.setSyntaxV1(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV1FirstLine(),
-                                        region.getOriginalV1FirstLine() + (region.getSeparatorLine() - region.getBeginLine() - 2)));
-                            }
-                            if (!(region.getSeparatorLine() + 1 == region.getEndLine()) && region.getOriginalV2FirstLine() > 0) {
-                                Git.checkout(merge.getParents().get(1).getCommitHash(), repositoryPath);
-                                region.setSyntaxV2(RepositoryAnalysis.getStructureTypeInInterval(file.getFilePath(), region.getOriginalV2FirstLine(),
-                                        region.getOriginalV2FirstLine() - (region.getEndLine() - region.getSeparatorLine() - 1)));
-                            }
-                            Git.checkout("master", repositoryPath);
-                        }
-                    }
-                }
-            }
-            return list;
-        } catch (IOException ex) {
-            throw new IOException();
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
-            throw new IOException();
-        } catch (CheckoutError ex) {
-            System.out.println("ERROR: CheckoutError error!");
             throw new IOException();
         }
     }

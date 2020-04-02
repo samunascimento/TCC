@@ -1,7 +1,14 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConflictRegion {
 
@@ -13,12 +20,15 @@ public class ConflictRegion {
     private final int separatorLine;
     private final int endLine;
 
-    private final int originalV1FirstLine;
-    private final int originalV2FirstLine;
-    private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
-    private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
+    private final int originalV1StartLine;
+    private final int originalV1StopLine;
+    private final int originalV2StartLine;
+    private final int originalV2StopLine;
+    private List<SyntaxStructure> syntaxV1;
+    private List<SyntaxStructure> syntaxV2;
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine, int endLine, int originalV1FirstLine, int originalV2FirstLine) {
+    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine,
+            int endLine, int originalV1StartLine, int originalV2StartLine) {
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -26,24 +36,65 @@ public class ConflictRegion {
         this.beginLine = beginLine;
         this.separatorLine = separatorLine;
         this.endLine = endLine;
-        this.originalV1FirstLine = originalV1FirstLine;
-        this.originalV2FirstLine = originalV2FirstLine;
+        this.originalV1StartLine = originalV1StartLine;
+        if (originalV1StartLine > 0) {
+            this.originalV1StopLine = originalV1StartLine + (separatorLine - beginLine - 2);
+        } else {
+            this.originalV1StopLine = -1;
+        }
+        this.originalV2StartLine = originalV2StartLine;
+        if (originalV2StartLine > 0) {
+            this.originalV2StopLine = originalV2StartLine + (endLine - separatorLine - 2);
+        } else {
+            this.originalV2StopLine = -1;
+        }
     }
 
-    public void setSyntaxV1(List<SyntaxStructure> syntaxV1) {
-        this.syntaxV1 = syntaxV1;
+    public int getOriginalV1StartLine() {
+        return originalV1StartLine;
     }
 
-    public void setSyntaxV2(List<SyntaxStructure> syntaxV2) {
-        this.syntaxV2 = syntaxV2;
+    public int getOriginalV1StopLine() {
+        return originalV1StopLine;
+    }
+
+    public int getOriginalV2StartLine() {
+        return originalV2StartLine;
+    }
+
+    public int getOriginalV2StopLine() {
+        return originalV2StopLine;
+    }
+
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
+        try {
+            if (this.originalV1StartLine > 0) {
+                Git.checkout(v1Commit, repositoryPath);
+                RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+            if (this.originalV2StartLine > 0) {
+                Git.checkout(v2Commit, repositoryPath);
+                RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+        } catch (IOException ex) {
+            throw new IOException();
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
+        } catch (CheckoutError ex) {
+            System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        }
     }
 
     public int getOriginalV1FirstLine() {
-        return originalV1FirstLine;
+        return originalV1StartLine;
     }
 
     public int getOriginalV2FirstLine() {
-        return originalV2FirstLine;
+        return originalV2StartLine;
     }
 
     public List<SyntaxStructure> getSyntaxV1() {
@@ -84,48 +135,16 @@ public class ConflictRegion {
 
     private String generateForm() {
         String str = "";
-        int j = 0;
         for (String line : this.beforeContext) {
             str = str + line + "\n";
         }
         str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        if (syntaxV1.isEmpty()) {
-            for (String line : this.v1) {
-                str = str + line + "\n";
-            }
-        } else {
-            for (int i = 0; i < v1.size(); i++) {
-                if (j < this.syntaxV1.size()) {
-                    if (this.originalV1FirstLine + i == this.syntaxV1.get(j).getStart().getLine()) {
-                        str = str + v1.get(i) + "\t(" + syntaxV1.get(i).getStructureType() + ")\n";
-                        j++;
-                    } else {
-                        str = str + v1.get(i) + "\n";
-                    }
-                } else {
-                    str = str + v1.get(i) + "\n";
-                }
-            }
+        for (String line : this.v1) {
+            str = str + line + "\n";
         }
-        j = 0;
         str = str + "============================== (" + this.separatorLine + ")\n";
-        if (syntaxV2.isEmpty()) {
-            for (String line : this.v2) {
-                str = str + line + "\n";
-            }
-        } else {
-            for (int i = 0; i < v2.size(); i++) {
-                if (j < this.syntaxV2.size()) {
-                    if (this.originalV2FirstLine + i == this.syntaxV2.get(j).getStart().getLine()) {
-                        str = str + v2.get(i) + "\t(" + syntaxV2.get(i).getStructureType() + ")\n";
-                        j++;
-                    } else {
-                        str = str + v2.get(i) + "\n";
-                    }
-                } else {
-                    str = str + v2.get(i) + "\n";
-                }
-            }
+        for (String line : this.v2) {
+            str = str + line + "\n";
         }
         str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
@@ -133,8 +152,6 @@ public class ConflictRegion {
         }
         return str;
     }
-    //} 
-    // Esse fechamento estava quebrando o arquivo, eu comentei ele, depois vê se era isso mesmo que queria
 
     public String getForm() {
         return generateForm();

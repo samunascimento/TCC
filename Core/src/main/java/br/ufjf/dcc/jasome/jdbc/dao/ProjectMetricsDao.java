@@ -73,7 +73,7 @@ public class ProjectMetricsDao {
             while (tableKeys.next()) {
                 int ID = tableKeys.getInt("ID");
                 projectMetrics.setId(ID);
-                this.listProjectMetrics.add(projectMetrics);
+                listProjectMetrics.add(projectMetrics);
             }
             return listProjectMetrics;
         } catch(SQLException e){
