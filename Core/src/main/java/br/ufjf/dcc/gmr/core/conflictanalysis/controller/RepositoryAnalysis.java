@@ -5,7 +5,6 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.JavaVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;

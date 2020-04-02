@@ -5,7 +5,7 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import java.io.IOException;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 
 /**
  *
@@ -19,7 +19,7 @@ public class TestLuan {
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-//        String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
+        /*      String repositoryPath = "/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy";
        String repositoryPath = "C:\\Users\\luand.LAPTOP-78V9SGN0\\Documents\\GitHub\\UFJF";
 
          Gson gson = new Gson();
@@ -31,7 +31,7 @@ public class TestLuan {
 	
 	// 2. Java object to JSON string
 	String jsonInString = gson.toJson(obj);
-        
+         */
     }
-    
+
 }

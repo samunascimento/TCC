@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.MainInfo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
