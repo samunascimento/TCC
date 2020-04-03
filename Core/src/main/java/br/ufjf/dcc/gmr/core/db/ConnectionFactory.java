@@ -16,7 +16,7 @@ import java.sql.Statement;
 public class ConnectionFactory {
     
     private static final String DRIVER = "org.postgresql.Driver";
-    private static final String URL = "jdbc:postgresql://localhost:5432/JasomeMetrics";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Metrics";
     private static final String USER = "postgres";
     private static final String PASS = "mortrius";
     
