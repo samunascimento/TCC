@@ -58,7 +58,7 @@ public class MetricDao {
         metric = new Metric();
         List<Metric> listMetrics = new ArrayList<>();
 
-        String sql = "SELECT * FROM tb_metric WHERE ID = " + id;
+        String sql = "SELECT * FROM tb_metric";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
