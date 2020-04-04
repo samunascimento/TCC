@@ -24,8 +24,8 @@ public class ConflictRegion {
     private final int originalV1StopLine;
     private final int originalV2StartLine;
     private final int originalV2StopLine;
-    private List<SyntaxStructure> syntaxV1;
-    private List<SyntaxStructure> syntaxV2;
+    private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
+    private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
 
     public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
@@ -70,12 +70,12 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
-                RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
-                RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 Git.checkout("master", repositoryPath);
             }
         } catch (IOException ex) {
@@ -151,6 +151,35 @@ public class ConflictRegion {
             str = str + line + "\n";
         }
         return str;
+    }
+
+    public String getV1StructureTypes() {
+        String str = "";
+        for (SyntaxStructure ss : this.syntaxV1) {
+            if (!str.contains(ss.getStructureType())) {
+                str = str + ss.getStructureType() + ", ";
+            }
+        }
+        if (str == "") {
+            return "V1 doesn't has any structure type!";
+        } else {
+            return str;
+        }
+    }
+
+    public String getV2StructureTypes() {
+        String str = "";
+        for (SyntaxStructure ss : this.syntaxV2) {
+            if (!str.contains(ss.getStructureType())) {
+                str = str + ", ";
+                str = str + ss.getStructureType();
+            }
+        }
+        if (str == "") {
+            return "V2 doesn't has any structure type!";
+        } else {
+            return str.replaceFirst(", ", "");
+        }
     }
 
     public String getForm() {
