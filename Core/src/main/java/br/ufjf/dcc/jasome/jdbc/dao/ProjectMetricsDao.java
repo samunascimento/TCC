@@ -19,7 +19,6 @@ import java.util.*;
  */
 public class ProjectMetricsDao {
         private final Connection connection;
-        private ResultSet tableKeys;
 
     public ProjectMetricsDao() {
         this.connection = ConnectionFactory.getConnection();
@@ -68,6 +67,7 @@ public class ProjectMetricsDao {
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
+            ResultSet tableKeys;
             tableKeys = stmt.getGeneratedKeys();
             stmt.close();
             while (tableKeys.next()) {
@@ -89,7 +89,9 @@ public class ProjectMetricsDao {
         try{
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
+            ResultSet tableKeys;
             tableKeys = stmt.getGeneratedKeys();
+            tableKeys.next();
             stmt.close();
             int projectId = tableKeys.getInt(1);
             projectMetrics.setId(projectId);
