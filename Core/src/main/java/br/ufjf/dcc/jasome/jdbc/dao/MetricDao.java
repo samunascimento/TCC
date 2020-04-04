@@ -63,8 +63,10 @@ public class MetricDao {
             stmt.executeUpdate();
             stmt.close();
             tableKeys = stmt.getGeneratedKeys();
-            int packageId = tableKeys.getInt(1);
-            metric.setId(packageId);
+            metric.setId(tableKeys.getInt(1));
+            metric.setName(tableKeys.getString("name"));
+            metric.setDescription(tableKeys.getString("description"));
+            metric.setValue(tableKeys.getDouble("value"));
             return metric;
         } catch (SQLException e) {
             throw new RuntimeException(e);
