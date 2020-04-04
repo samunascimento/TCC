@@ -92,7 +92,7 @@ public class RepositoryAnalysis {
                                         ANTLR4
     ---------------------------------------------------------------------------------------*/
     public static List<SyntaxStructure> analyzeJavaSyntaxTree(String filePath) throws IOException {
-        if (!filePath.endsWith(".java")) {
+        if (filePath.endsWith(".java")) {
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             JavaLexer lexer = new JavaLexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -109,7 +109,7 @@ public class RepositoryAnalysis {
     }
 
     public static List<SyntaxStructure> analyzeCPPSyntaxTree(String filePath) throws IOException {
-        if (!filePath.endsWith(".cpp") && !filePath.endsWith(".h")) {
+        if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -146,7 +146,7 @@ public class RepositoryAnalysis {
             }
             return list;
         } catch (IOException ex) {
-            System.out.println("ERROR: FilePath of analyseSyntaxTree does mot exist!");
+            System.out.println("ERROR: FilePath of analyseSyntaxTree: "+ filePath + " does not exist!");
             throw new IOException();
         }
     }

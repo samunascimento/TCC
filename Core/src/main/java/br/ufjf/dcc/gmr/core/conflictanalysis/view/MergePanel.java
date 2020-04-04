@@ -36,6 +36,8 @@ public class MergePanel extends JPanel {
     private JScrollPane mainTableScrollPane = new JScrollPane();
     private JScrollPane conflictTextAreaScrollPane = new JScrollPane();
     private JScrollPane mergeInfoTextAreaScrollPane = new JScrollPane();
+    private JScrollPane subPanelV1StructureTypeTextAreaScrollPane = new JScrollPane();
+    private JScrollPane subPanelV2StructureTypeTextAreaScrollPane = new JScrollPane();
     //Currents
     private MergeEvent currentMerge = null;
     private ConflictFile currentFile = null;
@@ -52,6 +54,8 @@ public class MergePanel extends JPanel {
     private JLabel subPanelFileNameLabel = new JLabel("File Name:");
     private JLabel subPanelFileIndexLabel = new JLabel("0/0");
     private JLabel subPanelConflictIndexLabel = new JLabel("0/0");
+    private JTextArea subPanelV1StructureTypeTextArea = new JTextArea("V1:");
+    private JTextArea subPanelV2StructureTypeTextArea = new JTextArea("V2:");
     //Block Panel
     private JPanel panel1 = new JPanel();
     private JPanel panel2 = new JPanel();
@@ -63,13 +67,12 @@ public class MergePanel extends JPanel {
 
     private void setPanel() {
 
-        this.setLayout(new GridLayout(1,2));
-        this.panel1.setLayout(new GridLayout(1,1));
-        this.panel2.setLayout(new GridLayout(3,1));
+        this.setLayout(new GridLayout(1, 2));
+        this.panel1.setLayout(new GridLayout(1, 1));
+        this.panel2.setLayout(new GridLayout(3, 1));
         this.add(this.panel1);
         this.add(this.panel2);
-        
-        
+
         customizeTable();
         this.panel1.add(this.mainTableScrollPane);
         this.customizeSubPanel();
@@ -166,6 +169,7 @@ public class MergePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(8, 8, 5, 5);
         this.customizeButtons();
+        this.customizeSubPanelTextArea();
 
         gbc.gridwidth = 6;
         this.subPanel.add(this.subPanelFileNameLabel, gbc);
@@ -182,8 +186,23 @@ public class MergePanel extends JPanel {
         this.subPanel.add(this.subPanelConflictIndexLabel, gbc);
         gbc.gridx = 5;
         this.subPanel.add(this.subPanelNextConflictButton, gbc);
+        gbc.gridwidth = 7;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        this.subPanel.add(this.subPanelV1StructureTypeTextArea, gbc);
+        gbc.gridy = 3;
+        this.subPanel.add(this.subPanelV2StructureTypeTextArea, gbc);
     }
-
+    
+    private void customizeSubPanelTextArea(){
+        this.subPanelV1StructureTypeTextArea.setEditable(false);
+        this.subPanelV1StructureTypeTextArea.setBackground(this.subPanel.getBackground());
+        this.subPanelV1StructureTypeTextAreaScrollPane.setViewportView(this.subPanelV1StructureTypeTextArea);
+        this.subPanelV2StructureTypeTextArea.setEditable(false);
+        this.subPanelV2StructureTypeTextArea.setBackground(this.subPanel.getBackground());
+        this.subPanelV2StructureTypeTextAreaScrollPane.setViewportView(this.subPanelV2StructureTypeTextArea);
+    }
+    
     private void customizeButtons() {
         subPanelPreviousFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -294,11 +313,15 @@ public class MergePanel extends JPanel {
                 this.currentConflictIndex = 1;
                 this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getForm());
+                this.subPanelV1StructureTypeTextArea.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1StructureTypes());
+                this.subPanelV2StructureTypeTextArea.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2StructureTypes());
             } else {
                 this.subPanelConflictIndexLabel.setText("0/0");
                 this.currentConflictIndex = 0;
                 this.currentMaxConflictIndex = 0;
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
+                this.subPanelV1StructureTypeTextArea.setText("V1: ");
+                this.subPanelV2StructureTypeTextArea.setText("V2: ");
             }
         } else {
             this.subPanelFileNameLabel.setText("File Name: ");
@@ -313,6 +336,8 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = 0;
 
             this.conflictTextArea.setText("");
+            this.subPanelV1StructureTypeTextArea.setText("V1: ");
+            this.subPanelV2StructureTypeTextArea.setText("V2: ");
         }
     }
 
@@ -325,17 +350,23 @@ public class MergePanel extends JPanel {
             this.currentConflictIndex = 1;
             this.currentMaxConflictIndex = file.getConflictRegion().size();
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getForm());
+            this.subPanelV1StructureTypeTextArea.setText("V1: " + file.getConflictRegion().get(0).getV1StructureTypes());
+            this.subPanelV2StructureTypeTextArea.setText("V2: " + file.getConflictRegion().get(0).getV2StructureTypes());
         } else {
             this.subPanelConflictIndexLabel.setText("0/0");
             this.currentConflictIndex = 0;
             this.currentMaxConflictIndex = 0;
             this.conflictTextArea.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
+            this.subPanelV1StructureTypeTextArea.setText("V1: ");
+            this.subPanelV2StructureTypeTextArea.setText("V2: ");
         }
     }
 
     private void updateRegion(ConflictRegion region) {
         this.subPanelConflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
         this.conflictTextArea.setText(region.getForm());
+        this.subPanelV1StructureTypeTextArea.setText("V1: " + region.getV1StructureTypes());
+        this.subPanelV2StructureTypeTextArea.setText("V2: " + region.getV2StructureTypes());
 
     }
 

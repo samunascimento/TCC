@@ -65,5 +65,5 @@ public class SyntaxStructure {
             return true;
         return false;
     }
-
+    
 }
