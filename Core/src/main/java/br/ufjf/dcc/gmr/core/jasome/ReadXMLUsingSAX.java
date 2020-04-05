@@ -9,6 +9,9 @@ import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.*;
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -135,10 +138,13 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             metric.setDescription(value0);
             metric.setName(value1);
             metric.setValue(Double.parseDouble(value2));
+            
+            try {
 
             if (project && !pacckage && !clazz && !method) {
-                versionMetrics.setTloc(metric);
-                versionMetricsDao.insert(versionMetrics);
+              
+                    versionMetrics.setTloc(metric);
+                    versionMetricsDao.insert(versionMetrics);
             } else if (project && pacckage && !clazz && !method) {
                 if (metric.getName().equals("A")) {
                     packageMetrics.setA(metric);
@@ -185,6 +191,10 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                     metricsDao.insert(metric);
                 }
                 packageMetricsDao.insert(packageMetrics);
+                } 
+            }catch (SQLException ex) {
+                    Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
             } else if (project && pacckage && clazz && !method) {
                 if (metric.getName().equals("Aa")) {
