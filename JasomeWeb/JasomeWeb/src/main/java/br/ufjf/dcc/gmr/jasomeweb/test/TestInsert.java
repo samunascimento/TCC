@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.SQLException;
 
 /**
  *
@@ -16,7 +17,7 @@ import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
  */
 public class TestInsert {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         Metric a = new Metric();
         a.setName("metric geral");

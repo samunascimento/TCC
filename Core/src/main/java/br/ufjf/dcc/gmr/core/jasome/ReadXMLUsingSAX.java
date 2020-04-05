@@ -101,99 +101,94 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName,
             Attributes atts) {
+        try {
+            // recupera o nome da tag atual
+            tagAtual = qName;
 
-        // recupera o nome da tag atual
-        tagAtual = qName;
+            if (tagAtual.equals("Project")) {
+                project = true;
+                versionMetrics = new VersionMetrics();
+                projectMetrics.setSourceDir(atts.getValue(0));
 
-        if (tagAtual.equals("Project")) {
-            project = true;
-            versionMetrics = new VersionMetrics();
-            projectMetrics.setSourceDir(atts.getValue(0));
+            } else if (tagAtual.equals("Package")) {
+                pacckage = true;
+                packageMetrics = new PackageMetrics();
+                packageMetrics.setName(atts.getValue(0));
+            } else if (tagAtual.equals("Class")) {
+                clazz = true;
+                classMetrics = new ClassMetrics();
+                classMetrics.setLineEnd(atts.getValue(0));
+                classMetrics.setLineStart(atts.getValue(1));
+                classMetrics.setName(atts.getValue(2));
+                classMetrics.setSourceFile(atts.getValue(3));
+            } else if (tagAtual.equals("Method")) {
+                method = true;
+                methodMetrics = new MethodMetrics();
+                methodMetrics.setConstructor(atts.getValue(0));
+                methodMetrics.setLineEnd(atts.getValue(1));
+                methodMetrics.setLineStart(atts.getValue(2));
+                methodMetrics.setName(atts.getValue(3));
+            } else if (tagAtual.equals("Metric")) {
+                metric = new Metric();
 
-        } else if (tagAtual.equals("Package")) {
-            pacckage = true;
-            packageMetrics = new PackageMetrics();
-            packageMetrics.setName(atts.getValue(0));
-        } else if (tagAtual.equals("Class")) {
-            clazz = true;
-            classMetrics = new ClassMetrics();
-            classMetrics.setLineEnd(atts.getValue(0));
-            classMetrics.setLineStart(atts.getValue(1));
-            classMetrics.setName(atts.getValue(2));
-            classMetrics.setSourceFile(atts.getValue(3));
-        } else if (tagAtual.equals("Method")) {
-            method = true;
-            methodMetrics = new MethodMetrics();
-            methodMetrics.setConstructor(atts.getValue(0));
-            methodMetrics.setLineEnd(atts.getValue(1));
-            methodMetrics.setLineStart(atts.getValue(2));
-            methodMetrics.setName(atts.getValue(3));
-        } else if (tagAtual.equals("Metric")) {
-            metric = new Metric();
+                String value0 = atts.getValue(0);
+                String value1 = atts.getValue(1);
+                String value2 = atts.getValue(2);
 
-            String value0 = atts.getValue(0);
-            String value1 = atts.getValue(1);
-            String value2 = atts.getValue(2);
+                metric.setDescription(value0);
+                metric.setName(value1);
+                metric.setValue(Double.parseDouble(value2));
 
-            metric.setDescription(value0);
-            metric.setName(value1);
-            metric.setValue(Double.parseDouble(value2));
-            
-            try {
+                if (project && !pacckage && !clazz && !method) {
 
-            if (project && !pacckage && !clazz && !method) {
-              
                     versionMetrics.setTloc(metric);
                     versionMetricsDao.insert(versionMetrics);
-            } else if (project && pacckage && !clazz && !method) {
-                if (metric.getName().equals("A")) {
-                    packageMetrics.setA(metric);
-                    metricsDao.insert(metric);
+                } else if (project && pacckage && !clazz && !method) {
+                    if (metric.getName().equals("A")) {
+                        packageMetrics.setA(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("CCRC")) {
-                    packageMetrics.setCcrc(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("CCRC")) {
+                        packageMetrics.setCcrc(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("Ca")) {
-                    packageMetrics.setCa(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("Ca")) {
+                        packageMetrics.setCa(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("Ce")) {
-                    packageMetrics.setCe(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("Ce")) {
+                        packageMetrics.setCe(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("DMS")) {
-                    packageMetrics.setDms(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("DMS")) {
+                        packageMetrics.setDms(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("I")) {
-                    packageMetrics.setI(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("I")) {
+                        packageMetrics.setI(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("NOC")) {
-                    packageMetrics.setNoc(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("NOC")) {
+                        packageMetrics.setNoc(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("NOI")) {
-                    packageMetrics.setNoi(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("NOI")) {
+                        packageMetrics.setNoi(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("PkgRCi")) {
-                    packageMetrics.setPkgRCi(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("PkgRCi")) {
+                        packageMetrics.setPkgRCi(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("PkgTCi")) {
-                    packageMetrics.setPkgTCi(metric);
-                    metricsDao.insert(metric);
+                    } else if (metric.getName().equals("PkgTCi")) {
+                        packageMetrics.setPkgTCi(metric);
+                        metricsDao.insert(metric);
 
-                } else if (metric.getName().equals("TLOC")) {
-                    packageMetrics.setTloc(metric);
-                    metricsDao.insert(metric);
-                }
-                packageMetricsDao.insert(packageMetrics);
-                } 
-            }catch (SQLException ex) {
-                    Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
+                    } else if (metric.getName().equals("TLOC")) {
+                        packageMetrics.setTloc(metric);
+                        metricsDao.insert(metric);
+                    }
+                    packageMetricsDao.insert(packageMetrics);
                 }
 
             } else if (project && pacckage && clazz && !method) {
@@ -305,8 +300,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 } else if (metric.getName().equals("VG")) {
                     methodMetrics.setVg(metric);
                 }
-
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
