@@ -22,7 +22,6 @@ import java.util.List;
 public class MetricDao {
 
     private Connection connection;
-    ResultSet tableKeys;
 
     public MetricDao() {
         this.connection = ConnectionFactory.getConnection();
@@ -60,7 +59,7 @@ public class MetricDao {
         }
     }
 
-    public List<Metric> select(int id) throws SQLException {
+    public List<Metric> select() throws SQLException {
         Metric metric;
         metric = new Metric();
         List<Metric> listMetrics = new ArrayList<>();
@@ -68,12 +67,13 @@ public class MetricDao {
         PreparedStatement stmt = null;
         
         String sql = "SELECT * FROM tb_metric";
+        
+        ResultSet tableKeys;
 
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.executeUpdate();
-            stmt.close();
-            tableKeys = stmt.getGeneratedKeys();
+            tableKeys = stmt.executeQuery();
+            //tableKeys = stmt.getGeneratedKeys();
             while (tableKeys.next()) {
                 metric.setId(tableKeys.getInt(1));
                 metric.setName(tableKeys.getString("name"));
@@ -99,11 +99,12 @@ public class MetricDao {
         
         PreparedStatement stmt = null;
         
+        ResultSet tableKeys;
+        
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.executeUpdate();
-            stmt.close();
-            tableKeys = stmt.getGeneratedKeys();
+            tableKeys = stmt.executeQuery();
+            //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
             metric.setId(tableKeys.getInt(1));
             metric.setName(tableKeys.getString("name"));

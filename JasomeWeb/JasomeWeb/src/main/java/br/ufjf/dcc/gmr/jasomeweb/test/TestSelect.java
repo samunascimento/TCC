@@ -5,15 +5,33 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.test;
 
+import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author anton
  */
 public class TestSelect {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         
+        List<Metric> listMetrics = new ArrayList();
+        Metric metric = new Metric();
+        MetricDao dao = new MetricDao();
+        
+        metric = dao.selectID(18);
+        
+        System.out.println(metric.getName());
+        System.out.println(metric.getValue());
+        System.out.println(metric.getDescription());      
+        
+        listMetrics = dao.select();
+        
+        System.out.println(listMetrics.size());
     }
 }
