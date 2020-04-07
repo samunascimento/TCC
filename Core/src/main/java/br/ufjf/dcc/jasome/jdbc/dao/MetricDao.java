@@ -115,5 +115,42 @@ public class MetricDao {
             }
         }
     }
+    
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM tb_metric WHERE ID = ?";
+        
+        PreparedStatement stmt = null; 
+                
+        try {
+            stmt = connection.prepareStatement(sql);
+            //set values
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public void update(Metric metric, int id) throws SQLException {
+        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() +  "' WHERE ID = '" + id + "';";
+        
+        PreparedStatement stmt = null;
+                
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
 }
