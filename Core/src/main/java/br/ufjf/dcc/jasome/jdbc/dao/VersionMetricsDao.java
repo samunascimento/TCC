@@ -73,35 +73,35 @@ public class VersionMetricsDao {
         }
     }
 
-    public List<VersionMetrics> select(int id) throws SQLException {
-        VersionMetrics versionMetrics = new VersionMetrics();
+    public List<VersionMetrics> select() throws SQLException {
+        
+        VersionMetrics versionMetrics = null;
+
         List<VersionMetrics> listVersionMetrics = new ArrayList<>();
-        MetricDao metrics = new MetricDao();
+        MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_versionmetrics ";
 
         PreparedStatement stmt = null;
 
-        ResultSet tableKeys = null;
+        ResultSet resultSet = null;
 
         try {
             stmt = connection.prepareStatement(sql);
-            //set values
-            //stmt.setInt(1, projectMetrics.getId());
-            //stmt.setString(2, projectMetrics.getSourceDir());
-            tableKeys = stmt.executeQuery();
-            //tableKeys = stmt.getGeneratedKeys()
-            while (tableKeys.next()) {
+            
+            resultSet = stmt.executeQuery();
+            
+            while (resultSet.next()) {
+                
+                versionMetrics = new VersionMetrics();
 
-                int tlocID = tableKeys.getInt("tloc");
+                int tlocID = resultSet.getInt("tloc");
 
-                versionMetrics.getTloc().setId(tlocID);
+                Metric metric = metricDao.selectID(tlocID);
 
-                int versionId = tableKeys.getInt(1);
+                versionMetrics.setTloc(metric);
 
-                versionMetrics.setId(versionId);
-
-                versionMetrics.setTloc(metrics.selectID(versionMetrics.getTloc().getId()));
+                versionMetrics.setId(resultSet.getInt("id"));
 
                 listVersionMetrics.add(versionMetrics);
             }
@@ -118,25 +118,27 @@ public class VersionMetricsDao {
     public VersionMetrics selectID(int id) throws SQLException {
         VersionMetrics versionMetrics;
         versionMetrics = new VersionMetrics();
-        MetricDao metrics = new MetricDao();
+        MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_versionmetrics WHERE ID = " + id;
 
         PreparedStatement stmt = null;
 
-        ResultSet tableKeys = null;
+        ResultSet resultSet = null;
 
         try {
             stmt = connection.prepareStatement(sql);
-            tableKeys = stmt.executeQuery();
+            resultSet = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
-            tableKeys.next();
+            resultSet.next();
 
-            int tlocID = tableKeys.getInt("tloc");
+            int tlocID = resultSet.getInt("tloc");
 
-            versionMetrics.getTloc().setId(tlocID);
+            Metric metric = metricDao.selectID(tlocID);
 
-            versionMetrics.setTloc(metrics.selectID(versionMetrics.getTloc().getId()));
+            versionMetrics.setTloc(metric);
+
+            versionMetrics.setId(resultSet.getInt("id"));
 
             return versionMetrics;
         } catch (SQLException e) {

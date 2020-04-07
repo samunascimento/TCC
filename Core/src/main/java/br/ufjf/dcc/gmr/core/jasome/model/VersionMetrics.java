@@ -52,4 +52,11 @@ public class VersionMetrics {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "VersionMetrics{" + "tloc=" + tloc + ", id=" + id + ", listPackageMetric=" + listPackageMetric +'}';
+    }
+    
+    
 }
