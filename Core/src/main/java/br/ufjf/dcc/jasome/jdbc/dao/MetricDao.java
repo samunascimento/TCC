@@ -59,6 +59,25 @@ public class MetricDao {
             }
         }
     }
+    
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM tb_metric WHERE ID = ?";
+        
+        PreparedStatement stmt = null;
+                
+        try {
+            stmt = connection.prepareStatement(sql);
+            //set values
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
     public List<Metric> select() throws SQLException {
         Metric metric;
@@ -120,5 +139,4 @@ public class MetricDao {
             }
         }
     }
-
 }

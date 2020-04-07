@@ -27,7 +27,7 @@ public class VersionMetricsDao {
     }
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
-        String sql = "INSERT INTO tb_versionMetrics "
+        String sql = "INSERT INTO tb_versionmetrics "
                 + "(tloc)"
                 + "VALUES (?);";
         
@@ -54,7 +54,7 @@ public class VersionMetricsDao {
     }
 
     public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM tb_versionMetrics WHERE ID = ?";
+        String sql = "DELETE FROM tb_versionmetrics WHERE ID = ?";
         
         PreparedStatement stmt = null;
                 
@@ -77,7 +77,7 @@ public class VersionMetricsDao {
         List<VersionMetrics> listVersionMetrics = new ArrayList<>();
         MetricDao metrics = new MetricDao();
 
-        String sql = "SELECT * FROM tb_versionMetrics ";
+        String sql = "SELECT * FROM tb_versionmetrics ";
         
         PreparedStatement stmt = null;
         
@@ -119,7 +119,7 @@ public class VersionMetricsDao {
         versionMetrics = new VersionMetrics();
         MetricDao metrics = new MetricDao();
 
-        String sql = "SELECT * FROM tb_projectMetrics WHERE ID = " + id;
+        String sql = "SELECT * FROM tb_versionmetrics WHERE ID = " + id;
         
         PreparedStatement stmt = null;
         
