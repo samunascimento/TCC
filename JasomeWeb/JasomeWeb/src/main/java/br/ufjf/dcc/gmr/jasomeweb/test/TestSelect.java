@@ -25,7 +25,7 @@ public class TestSelect {
         Metric metric = new Metric();
         MetricDao dao = new MetricDao();
         
-        metric = dao.selectID(4);
+        metric = dao.selectID(3);
         
         System.out.println(metric.getName());
         System.out.println(metric.getValue());
@@ -35,6 +35,13 @@ public class TestSelect {
         
         System.out.println(listMetrics.size());
         
-        
+        for (Metric listMetric : listMetrics) {
+            
+            System.out.println(listMetric.getName());
+            System.out.println(listMetric.getValue());
+            System.out.println(listMetric.getDescription());      
+            System.out.println(listMetric.getId());
+        }
+       
     }
 }

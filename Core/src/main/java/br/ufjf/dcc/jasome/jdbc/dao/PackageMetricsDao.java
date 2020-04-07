@@ -29,8 +29,9 @@ public class PackageMetricsDao {
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+                + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?) "
+                + "RETURNING id;";
         
         PreparedStatement stmt = null;
         

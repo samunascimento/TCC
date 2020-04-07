@@ -61,7 +61,7 @@ public class MetricDao {
 
     public List<Metric> select() throws SQLException {
         Metric metric;
-        metric = new Metric();
+ 
         List<Metric> listMetrics = new ArrayList<>();
 
         PreparedStatement stmt = null;
@@ -70,10 +70,10 @@ public class MetricDao {
 
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.executeQuery();
-            ResultSet resultSet = stmt.getGeneratedKeys();
+            ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                metric.setId(resultSet.getInt(1));
+                metric = new Metric();
+                metric.setId(resultSet.getInt("id"));
                 metric.setName(resultSet.getString("name"));
                 metric.setDescription(resultSet.getString("description"));
                 metric.setValue(resultSet.getDouble("value"));
@@ -102,7 +102,7 @@ public class MetricDao {
 
             ResultSet result = stmt.executeQuery();
             result.next();
-            metric.setId(result.getInt(1));
+            metric.setId(result.getInt("id"));
             metric.setName(result.getString("name"));
             metric.setDescription(result.getString("description"));
             metric.setValue(result.getDouble("value"));

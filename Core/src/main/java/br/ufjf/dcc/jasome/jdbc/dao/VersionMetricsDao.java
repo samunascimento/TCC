@@ -28,11 +28,12 @@ public class VersionMetricsDao {
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tloc)"
-                + "VALUES (?);";
-        
+                + "(tloc) "
+                + "VALUES (?) "
+                + "RETURNING id;";
+
         PreparedStatement stmt = null;
-        
+
         ResultSet tableKeys = null;
 
         try {
@@ -55,9 +56,9 @@ public class VersionMetricsDao {
 
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM tb_versionmetrics WHERE ID = ?";
-        
+
         PreparedStatement stmt = null;
-                
+
         try {
             stmt = connection.prepareStatement(sql);
             //set values
@@ -78,11 +79,11 @@ public class VersionMetricsDao {
         MetricDao metrics = new MetricDao();
 
         String sql = "SELECT * FROM tb_versionmetrics ";
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet tableKeys = null;
-                
+
         try {
             stmt = connection.prepareStatement(sql);
             //set values
@@ -95,9 +96,9 @@ public class VersionMetricsDao {
                 int tlocID = tableKeys.getInt("tloc");
 
                 versionMetrics.getTloc().setId(tlocID);
-                
+
                 int versionId = tableKeys.getInt(1);
-                
+
                 versionMetrics.setId(versionId);
 
                 versionMetrics.setTloc(metrics.selectID(versionMetrics.getTloc().getId()));
@@ -120,17 +121,17 @@ public class VersionMetricsDao {
         MetricDao metrics = new MetricDao();
 
         String sql = "SELECT * FROM tb_versionmetrics WHERE ID = " + id;
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet tableKeys = null;
-                
+
         try {
             stmt = connection.prepareStatement(sql);
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
-            
+
             int tlocID = tableKeys.getInt("tloc");
 
             versionMetrics.getTloc().setId(tlocID);
@@ -149,9 +150,9 @@ public class VersionMetricsDao {
 
     public void update(Metric metric, String id) throws SQLException {
         String sql = "UPDATE tb_versionMetrics SET tloc = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
-        
+
         PreparedStatement stmt = null;
-        
+
         try {
             stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
