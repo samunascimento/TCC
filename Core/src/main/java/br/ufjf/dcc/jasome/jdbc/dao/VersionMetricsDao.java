@@ -36,7 +36,7 @@ public class VersionMetricsDao {
         ResultSet tableKeys = null;
 
         try {
-            stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement(sql);
             //set values
             stmt.setInt(1, versionMetrics.getTloc().getId());
             tableKeys = stmt.executeQuery();

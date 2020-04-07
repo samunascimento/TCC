@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +34,7 @@ public class TestSelect {
         listMetrics = dao.select();
         
         System.out.println(listMetrics.size());
+        
+        
     }
 }

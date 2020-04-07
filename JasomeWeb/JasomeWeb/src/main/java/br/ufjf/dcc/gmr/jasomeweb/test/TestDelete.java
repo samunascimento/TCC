@@ -5,12 +5,21 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.test;
 
+import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
+import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.SQLException;
+
 /**
  *
  * @author anton
  */
 public class TestDelete {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws SQLException {
+
+        VersionMetricsDao dao = new VersionMetricsDao();
         
+        dao.delete(4);
+
     }
 }

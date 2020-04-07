@@ -23,9 +23,11 @@ public class TestInsert {
         a.setName("metric geral");
         a.setDescription("teste descricao");
         a.setValue(10.00);
+        a.setId(2);
 
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao();
         VersionMetrics versionMetrics = new VersionMetrics();
+        
 
         MetricDao dao = new MetricDao();
         int insert = dao.insert(a);
