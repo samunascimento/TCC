@@ -25,7 +25,7 @@ public class TestSelect {
         Metric metric = new Metric();
         MetricDao dao = new MetricDao();
         
-        metric = dao.selectID(18);
+        metric = dao.selectID(4);
         
         System.out.println(metric.getName());
         System.out.println(metric.getValue());

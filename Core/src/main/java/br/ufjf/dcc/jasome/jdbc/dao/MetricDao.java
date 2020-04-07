@@ -30,23 +30,25 @@ public class MetricDao {
     public int insert(Metric metric) throws SQLException {
 
         String sql = "INSERT INTO tb_metric "
-                + "(name, description, value)"
-                + "VALUES (?,?,?);";
-        
+                + "(name, description, value) "
+                + "VALUES (?,?,?)"
+                + "RETURNING id;";
+
         PreparedStatement stmt = null;
-        
+
         try {
-            stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement(sql);
 
             stmt.setString(1, metric.getName());
             stmt.setString(2, metric.getDescription());
             stmt.setDouble(3, metric.getValue());
 
-            stmt.executeUpdate();
+            System.out.println(stmt);
 
-            ResultSet result = stmt.getGeneratedKeys();
+            ResultSet result = stmt.executeQuery();
+
             result.next();
-             
+
             return result.getInt(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -61,15 +63,14 @@ public class MetricDao {
         Metric metric;
         metric = new Metric();
         List<Metric> listMetrics = new ArrayList<>();
-       
+
         PreparedStatement stmt = null;
-        
+
         String sql = "SELECT * FROM tb_metric";
 
         try {
             stmt = connection.prepareStatement(sql);
             stmt.executeQuery();
-            stmt.close();
             ResultSet resultSet = stmt.getGeneratedKeys();
             while (resultSet.next()) {
                 metric.setId(resultSet.getInt(1));
@@ -93,12 +94,12 @@ public class MetricDao {
         metric = new Metric();
 
         String sql = "SELECT * FROM tb_metric WHERE ID = " + id;
-        
+
         PreparedStatement stmt = null;
-        
+
         try {
             stmt = connection.prepareStatement(sql);
-            
+
             ResultSet result = stmt.executeQuery();
             result.next();
             metric.setId(result.getInt(1));

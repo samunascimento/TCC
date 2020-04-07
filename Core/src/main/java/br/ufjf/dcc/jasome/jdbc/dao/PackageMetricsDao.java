@@ -49,6 +49,7 @@ public class PackageMetricsDao {
             stmt.setInt(9, packageMetrics.getPkgRCi().getId());
             stmt.setInt(10, packageMetrics.getPkgTCi().getId());
             stmt.setInt(11, packageMetrics.getTloc().getId());
+            
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
