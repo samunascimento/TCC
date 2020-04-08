@@ -16,6 +16,7 @@ public class ConflictRegion {
     private final List<String> afterContext;
     private final List<String> v1;
     private final List<String> v2;
+    private final List<String> solution;
     private final int beginLine;
     private final int separatorLine;
     private final int endLine;
@@ -26,13 +27,15 @@ public class ConflictRegion {
     private final int originalV2StopLine;
     private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
     private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
+    
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, int beginLine, int separatorLine,
+    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2,List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
         this.v2 = v2;
+        this.solution = solution;
         this.beginLine = beginLine;
         this.separatorLine = separatorLine;
         this.endLine = endLine;
@@ -148,6 +151,10 @@ public class ConflictRegion {
         }
         str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
+            str = str + line + "\n";
+        }
+        str = str + "\nSOLUTION:\n";
+        for (String line : this.solution){
             str = str + line + "\n";
         }
         return str;

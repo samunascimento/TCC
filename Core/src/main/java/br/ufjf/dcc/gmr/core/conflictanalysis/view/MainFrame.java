@@ -44,7 +44,6 @@ public class MainFrame extends JFrame {
     private JButton homePanelAnalyseButton = new JButton("Analyse");
     private JTextField homePanelTextField = new JTextField();
     private JComboBox homePanelNumContextComboBox = new JComboBox(new String[]{
-        "0 Lines",
         "1 Line",
         "2 Lines",
         "3 Lines",
@@ -150,7 +149,7 @@ public class MainFrame extends JFrame {
                     if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(homePanelTextField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                         try {
                             String auxStr = homePanelTextField.getText();
-                            int auxInt = homePanelNumContextComboBox.getSelectedIndex();
+                            int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
                             resetHomePanel();
                             mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(RepositoryAnalysis.searchAllMerges(auxStr, auxInt)));
                         } catch (IOException ex) {
