@@ -32,11 +32,11 @@ public class PackageMetricsDao {
                 + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) "
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
-        
+
         PreparedStatement stmt = null;
-        
-         ResultSet tableKeys = null;
-        
+
+        ResultSet tableKeys = null;
+
         try {
             stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, packageMetrics.getA().getId());
@@ -50,7 +50,7 @@ public class PackageMetricsDao {
             stmt.setInt(9, packageMetrics.getPkgRCi().getId());
             stmt.setInt(10, packageMetrics.getPkgTCi().getId());
             stmt.setInt(11, packageMetrics.getTloc().getId());
-            
+
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
@@ -67,9 +67,9 @@ public class PackageMetricsDao {
 
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM tb_packageMetrics WHERE ID = ?";
-        
-        PreparedStatement stmt = null; 
-                
+
+        PreparedStatement stmt = null;
+
         try {
             stmt = connection.prepareStatement(sql);
             //set values
@@ -87,59 +87,52 @@ public class PackageMetricsDao {
     public List<PackageMetrics> select() throws SQLException {
         MetricDao metrics = new MetricDao();
         List<PackageMetrics> listPackageMetrics = new ArrayList<>();
-        PackageMetrics packageMetrics = new PackageMetrics();
+        PackageMetrics packageMetrics = null;
+        MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_packageMetrics";
-        
+
         PreparedStatement stmt = null;
-        
-        ResultSet tableKeys = null;
-                
+
+        ResultSet resultSet = null;
+
         try {
             stmt = connection.prepareStatement(sql);
             //set values
             //stmt.setInt(1, projectMetrics.getId());
             //stmt.setString(2, projectMetrics.getSourceDir());
-            tableKeys = stmt.executeQuery();
+            resultSet = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
-            while (tableKeys.next()) {
-                int aID = tableKeys.getInt("aID");
-                int ccrcID = tableKeys.getInt("ccrcID");
-                int caID = tableKeys.getInt("caID");
-                int ceID = tableKeys.getInt("ceID");
-                int dmsID = tableKeys.getInt("dmsID");
-                int iID = tableKeys.getInt("iID");
-                int nocID = tableKeys.getInt("nocID");
-                int noiID = tableKeys.getInt("noiID");
-                int pkgrcID = tableKeys.getInt("pkgRCiD");
-                int pkgtciID = tableKeys.getInt("pkgTCiID");
-                int tlocID = tableKeys.getInt("tlocID");
+            while (resultSet.next()) {
+                
+                packageMetrics = new PackageMetrics();
+                
+                int aID = resultSet.getInt("aID");
+                int ccrcID = resultSet.getInt("ccrcID");
+                int caID = resultSet.getInt("caID");
+                int ceID = resultSet.getInt("ceID");
+                int dmsID = resultSet.getInt("dmsID");
+                int iID = resultSet.getInt("iID");
+                int nocID = resultSet.getInt("nocID");
+                int noiID = resultSet.getInt("noiID");
+                int pkgrcID = resultSet.getInt("pkgRCiD");
+                int pkgtciID = resultSet.getInt("pkgTCiID");
+                int tlocID = resultSet.getInt("tlocID");
 
-                packageMetrics.getA().setId(aID);
-                packageMetrics.getCcrc().setId(ccrcID);
-                packageMetrics.getCa().setId(caID);
-                packageMetrics.getCe().setId(ceID);
-                packageMetrics.getDms().setId(dmsID);
-                packageMetrics.getI().setId(iID);
-                packageMetrics.getNoc().setId(nocID);
-                packageMetrics.getNoi().setId(noiID);
-                packageMetrics.getPkgRCi().setId(pkgrcID);
-                packageMetrics.getPkgTCi().setId(pkgtciID);
-                packageMetrics.getTloc().setId(tlocID);
+                packageMetrics.setA(metrics.selectID(aID));
+                packageMetrics.setCcrc(metrics.selectID(ccrcID));
+                packageMetrics.setCa(metrics.selectID(caID));
+                packageMetrics.setCe(metrics.selectID(ceID));
+                packageMetrics.setDms(metrics.selectID(dmsID));
+                packageMetrics.setI(metrics.selectID(iID));
+                packageMetrics.setNoc(metrics.selectID(nocID));
+                packageMetrics.setNoi(metrics.selectID(noiID));
+                packageMetrics.setPkgRCi(metrics.selectID(pkgrcID));
+                packageMetrics.setPkgTCi(metrics.selectID(pkgtciID));
+                packageMetrics.setTloc(metrics.selectID(tlocID));
 
-                int packageId = tableKeys.getInt(1);
+                int packageId = resultSet.getInt("id");
                 packageMetrics.setId(packageId);
-                packageMetrics.setA(metrics.selectID(packageMetrics.getA().getId()));
-                packageMetrics.setCcrc(metrics.selectID(packageMetrics.getCcrc().getId()));
-                packageMetrics.setCa(metrics.selectID(packageMetrics.getCa().getId()));
-                packageMetrics.setCe(metrics.selectID(packageMetrics.getCe().getId()));
-                packageMetrics.setDms(metrics.selectID(packageMetrics.getDms().getId()));
-                packageMetrics.setI(metrics.selectID(packageMetrics.getI().getId()));
-                packageMetrics.setNoc(metrics.selectID(packageMetrics.getNoc().getId()));
-                packageMetrics.setNoi(metrics.selectID(packageMetrics.getNoi().getId()));
-                packageMetrics.setPkgRCi(metrics.selectID(packageMetrics.getPkgRCi().getId()));
-                packageMetrics.setPkgTCi(metrics.selectID(packageMetrics.getPkgTCi().getId()));
-                packageMetrics.setTloc(metrics.selectID(packageMetrics.getTloc().getId()));
 
                 listPackageMetrics.add(packageMetrics);
             }
@@ -156,60 +149,49 @@ public class PackageMetricsDao {
 
     public PackageMetrics selectID(int id) throws SQLException {
         MetricDao metrics = new MetricDao();
-        PackageMetrics packageMetrics;
-        packageMetrics = new PackageMetrics();
+        PackageMetrics packageMetrics = null;
 
         String sql = "SELECT * FROM tb_packageMetrics WHERE ID = " + id;
-        
+
         PreparedStatement stmt = null;
-        
-        ResultSet tableKeys = null;
-        
+
+        ResultSet resultSet = null;
+
         try {
             stmt = connection.prepareStatement(sql);
-            tableKeys = stmt.executeQuery();
+            resultSet = stmt.executeQuery();
 
             //tableKeys = stmt.getGeneratedKeys();
-            tableKeys.next();
+            resultSet.next();
 
-            int aID = tableKeys.getInt("aID");
-            int ccrcID = tableKeys.getInt("ccrcID");
-            int caID = tableKeys.getInt("caID");
-            int ceID = tableKeys.getInt("ceID");
-            int dmsID = tableKeys.getInt("dmsID");
-            int iID = tableKeys.getInt("iID");
-            int nocID = tableKeys.getInt("nocID");
-            int noiID = tableKeys.getInt("noiID");
-            int pkgrcID = tableKeys.getInt("pkgRCiD");
-            int pkgtciID = tableKeys.getInt("pkgTCiID");
-            int tlocID = tableKeys.getInt("tlocID");
+            packageMetrics = new PackageMetrics();
 
-            packageMetrics.getA().setId(aID);
-            packageMetrics.getCcrc().setId(ccrcID);
-            packageMetrics.getCa().setId(caID);
-            packageMetrics.getCe().setId(ceID);
-            packageMetrics.getDms().setId(dmsID);
-            packageMetrics.getI().setId(iID);
-            packageMetrics.getNoc().setId(nocID);
-            packageMetrics.getNoi().setId(noiID);
-            packageMetrics.getPkgRCi().setId(pkgrcID);
-            packageMetrics.getPkgTCi().setId(pkgtciID);
-            packageMetrics.getTloc().setId(tlocID);
+            int aID = resultSet.getInt("aID");
+            int ccrcID = resultSet.getInt("ccrcID");
+            int caID = resultSet.getInt("caID");
+            int ceID = resultSet.getInt("ceID");
+            int dmsID = resultSet.getInt("dmsID");
+            int iID = resultSet.getInt("iID");
+            int nocID = resultSet.getInt("nocID");
+            int noiID = resultSet.getInt("noiID");
+            int pkgrcID = resultSet.getInt("pkgRCiD");
+            int pkgtciID = resultSet.getInt("pkgTCiID");
+            int tlocID = resultSet.getInt("tlocID");
 
-            int packageId = tableKeys.getInt(1);
+            packageMetrics.setA(metrics.selectID(aID));
+            packageMetrics.setCcrc(metrics.selectID(ccrcID));
+            packageMetrics.setCa(metrics.selectID(caID));
+            packageMetrics.setCe(metrics.selectID(ceID));
+            packageMetrics.setDms(metrics.selectID(dmsID));
+            packageMetrics.setI(metrics.selectID(iID));
+            packageMetrics.setNoc(metrics.selectID(nocID));
+            packageMetrics.setNoi(metrics.selectID(noiID));
+            packageMetrics.setPkgRCi(metrics.selectID(pkgrcID));
+            packageMetrics.setPkgTCi(metrics.selectID(pkgtciID));
+            packageMetrics.setTloc(metrics.selectID(tlocID));
+
+            int packageId = resultSet.getInt("id");
             packageMetrics.setId(packageId);
-            
-            packageMetrics.setA(metrics.selectID(packageMetrics.getA().getId()));
-            packageMetrics.setCcrc(metrics.selectID(packageMetrics.getCcrc().getId()));
-            packageMetrics.setCa(metrics.selectID(packageMetrics.getCa().getId()));
-            packageMetrics.setCe(metrics.selectID(packageMetrics.getCe().getId()));
-            packageMetrics.setDms(metrics.selectID(packageMetrics.getDms().getId()));
-            packageMetrics.setI(metrics.selectID(packageMetrics.getI().getId()));
-            packageMetrics.setNoc(metrics.selectID(packageMetrics.getNoc().getId()));
-            packageMetrics.setNoi(metrics.selectID(packageMetrics.getNoi().getId()));
-            packageMetrics.setPkgRCi(metrics.selectID(packageMetrics.getPkgRCi().getId()));
-            packageMetrics.setPkgTCi(metrics.selectID(packageMetrics.getPkgTCi().getId()));
-            packageMetrics.setTloc(metrics.selectID(packageMetrics.getTloc().getId()));
             
             return packageMetrics;
         } catch (SQLException e) {
@@ -223,9 +205,9 @@ public class PackageMetricsDao {
 
     public void update(Metric metric, int id) throws SQLException {
         String sql = "UPDATE tb_packageMetrics SET '" + metric.getName() + " = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
-        
+
         PreparedStatement stmt = null;
-                
+
         try {
             stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();

@@ -78,6 +78,7 @@ public class VersionMetricsDao {
         VersionMetrics versionMetrics = null;
 
         List<VersionMetrics> listVersionMetrics = new ArrayList<>();
+        
         MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_versionmetrics ";
