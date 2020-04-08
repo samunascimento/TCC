@@ -20,6 +20,7 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
@@ -65,16 +66,16 @@ public class InitProject {
 
                 if (str.get(i).contains("<<<<<<<")) {
                     chunk = new Chunk();
-                    chunk.setBegin(new Line(getSubList(str, i, i), i + 1));
+                    chunk.setBegin(new Line(ListUtils.getSubList(str, i, i), i + 1));
                 }
 
                 if (str.get(i).startsWith("=======")) {
-                    chunk.setSeparator(new Line(getSubList(str, i, i), i + 1));
+                    chunk.setSeparator(new Line(ListUtils.getSubList(str, i, i), i + 1));
                 }
 
                 if (str.get(i).contains(">>>>>>>")) {
-                    chunk.setEnd(new Line(getSubList(str, i, i), i + 1));
-                    chunk.setContent(getSubList(str, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                    chunk.setEnd(new Line(ListUtils.getSubList(str, i, i), i + 1));
+                    chunk.setContent(ListUtils.getSubList(str, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
                 }
             }
 
@@ -85,17 +86,7 @@ public class InitProject {
         return result;
     }
 
-    private static List<String> getSubList(List<String> content, int begin, int end) {
 
-        List<String> result = new ArrayList<>();
-
-        for (int i = begin; i <= end; i++) {
-            result.add(content.get(i));
-        }
-
-        return result;
-
-    }
 
     private static MyFile createFile(String pathFile) {
 

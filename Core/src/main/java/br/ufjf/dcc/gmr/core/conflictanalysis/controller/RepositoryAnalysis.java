@@ -7,6 +7,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
@@ -24,6 +25,7 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import java.io.BufferedReader;
@@ -146,10 +148,11 @@ public class RepositoryAnalysis {
             }
             return list;
         } catch (IOException ex) {
-            System.out.println("ERROR: FilePath of analyseSyntaxTree: "+ filePath + " does not exist!");
+            System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
             throw new IOException();
         }
     }
+
 
     /*---------------------------------------------------------------------------------------
                                         Main function
@@ -175,9 +178,12 @@ public class RepositoryAnalysis {
         List<String> beforeContext = new ArrayList<>();
         List<String> v1 = new ArrayList<>();
         List<String> v2 = new ArrayList<>();
+        List<String> solution = new ArrayList<>();
         int beginLine;
         int separatorLine;
         int endLine;
+        int solutionFirstLine;
+        int solutionFinalLine;
         int originalV1FirstLine;
         int originalV2FirstLine;
 
@@ -268,7 +274,7 @@ public class RepositoryAnalysis {
                                     }
                                     //Getting original v1 and v2 first line
                                     originalV1FirstLine = -1;
-                                    originalV2FirstLine = -1;        
+                                    originalV2FirstLine = -1;
                                     if (!v1.isEmpty()) {
                                         Git.checkout(parents.get(0).getCommitHash(), sandbox.getPath());
                                         originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
@@ -280,15 +286,25 @@ public class RepositoryAnalysis {
                                         Git.checkout("master", sandbox.getPath());
                                     }
 
+                                    //Getting solution
+                                    Git.checkout(hash.getCommitHash(), sandbox.getPath());
+                                    solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - beforeContext.size());
+                                    solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + afterContext.size());
+                                    if (solutionFirstLine > 0 && solutionFinalLine > 0) {
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath),solutionFirstLine - 1,solutionFinalLine - 1);
+                                    }
+                                    Git.checkout("master", sandbox.getPath());
+
                                     //Adding a new conflict region
                                     conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
-                                            new ArrayList<>(v2), beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
+                                            new ArrayList<>(v2), new ArrayList<>(solution), beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
 
                                     //Reseting variables
                                     beforeContext.clear();
                                     afterContext.clear();
                                     v1.clear();
                                     v2.clear();
+                                    solution.clear();
                                 }
                             }
 
@@ -337,11 +353,11 @@ public class RepositoryAnalysis {
 
             }
             deleteDirectory(sandbox);
-            for(MergeEvent merge : list){
-                for(ConflictFile file : merge.getConflictFiles()){
-                    if(!file.getConflictRegion().isEmpty()){
-                        for(ConflictRegion region : file.getConflictRegion()){
-                            region.setSyntaxV1SyntaxV2(repositoryPath,file.getFilePath(),merge.getParents().get(0).getCommitHash(),merge.getParents().get(1).getCommitHash());
+            for (MergeEvent merge : list) {
+                for (ConflictFile file : merge.getConflictFiles()) {
+                    if (!file.getConflictRegion().isEmpty()) {
+                        for (ConflictRegion region : file.getConflictRegion()) {
+                            region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
                         }
                     }
                 }
@@ -407,3 +423,4 @@ public class RepositoryAnalysis {
     }
 
 }
+
