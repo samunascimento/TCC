@@ -27,10 +27,12 @@ public class ConflictRegion {
     private final int originalV2StopLine;
     private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
     private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
-    
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2,List<String> solution, int beginLine, int separatorLine,
+    private DeveloperDecision developerDecision;
+
+    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
+
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -51,6 +53,13 @@ public class ConflictRegion {
         } else {
             this.originalV2StopLine = -1;
         }
+        
+        this.developerDecision = this.generateDeveloperDecision();
+
+    }
+
+    public String getDeveloperDecision() {
+        return developerDecision.name();
     }
 
     public int getOriginalV1StartLine() {
@@ -154,7 +163,7 @@ public class ConflictRegion {
             str = str + line + "\n";
         }
         str = str + "\nSOLUTION:\n";
-        for (String line : this.solution){
+        for (String line : this.solution) {
             str = str + line + "\n";
         }
         return str;
@@ -195,6 +204,71 @@ public class ConflictRegion {
 
     public void print() {
         System.out.println(generateForm());
+    }
+
+    private String getRawStringForm(List<String> list) {
+        String raw = "";
+        for (String line : list) {
+            raw = raw.concat(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+        }
+        return raw;
+    }
+
+    private List<String> getRawListStringForm(List<String> list) {
+        List<String> raw = new ArrayList<>();
+        for (String line : list) {
+            raw.add(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+        }
+        return raw;
+    }
+
+    private DeveloperDecision auxGenerateDeveloperDecision() {
+        
+        List<String> rawSolution = getRawListStringForm(this.solution);
+        List<String> rawV1 = getRawListStringForm(this.v1);
+        List<String> rawV2 = getRawListStringForm(this.v2);
+        List<String> rawBeforeContext = getRawListStringForm(this.beforeContext);
+        List<String> rawAfterContext = getRawListStringForm(this.afterContext);
+        
+        boolean newLines = false;
+        boolean containsV1V2 = false;
+        
+        for(String line : rawSolution){
+            if(rawBeforeContext.contains(line) || rawAfterContext.contains(line)){
+                
+            } else if (rawV1.contains(line) || rawV2.contains(line)){
+                containsV1V2 = true;
+            } else {
+                newLines = true;
+            }
+        }
+        if(!newLines && containsV1V2){
+            return DeveloperDecision.COMBINATION;
+        } else if (newLines && containsV1V2) {
+            return DeveloperDecision.NEWCODE;
+        } else {
+            return DeveloperDecision.NONE;
+        }
+    }
+
+    private DeveloperDecision generateDeveloperDecision() {
+
+        String rawSolution = getRawStringForm(this.solution);
+        String rawV1 = getRawStringForm(this.v1);
+        String rawV2 = getRawStringForm(this.v2);
+        String rawBeforeContext = getRawStringForm(this.beforeContext);
+        String rawAfterContext = getRawStringForm(this.afterContext);
+
+        if (rawSolution == rawBeforeContext.concat(rawV1).concat(rawAfterContext)) {
+            return DeveloperDecision.VERSION1;
+        } else if (rawSolution == rawBeforeContext.concat(rawV2).concat(rawAfterContext)) {
+            return DeveloperDecision.VERSION2;
+        } else if (rawSolution == rawBeforeContext.concat(rawV1).concat(rawV2).concat(rawAfterContext)
+                || rawSolution == rawBeforeContext.concat(rawV2).concat(rawV1).concat(rawAfterContext)) {
+            return DeveloperDecision.CONCATENATION;
+        } else {
+            return auxGenerateDeveloperDecision();
+        }
     }
 
 }

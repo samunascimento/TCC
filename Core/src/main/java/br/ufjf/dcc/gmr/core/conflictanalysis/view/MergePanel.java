@@ -38,6 +38,7 @@ public class MergePanel extends JPanel {
     private JScrollPane mergeInfoTextAreaScrollPane = new JScrollPane();
     private JScrollPane subPanelV1StructureTypeTextAreaScrollPane = new JScrollPane();
     private JScrollPane subPanelV2StructureTypeTextAreaScrollPane = new JScrollPane();
+    private JScrollPane subPanelDeveloperDecisionTextAreaScrollPane = new JScrollPane();
     //Currents
     private MergeEvent currentMerge = null;
     private ConflictFile currentFile = null;
@@ -56,6 +57,7 @@ public class MergePanel extends JPanel {
     private JLabel subPanelConflictIndexLabel = new JLabel("0/0");
     private JTextArea subPanelV1StructureTypeTextArea = new JTextArea("V1:");
     private JTextArea subPanelV2StructureTypeTextArea = new JTextArea("V2:");
+    private JTextArea subPanelDeveloperDecisionTextArea = new JTextArea("DEVELOPER DECISION:");
     //Block Panel
     private JPanel panel1 = new JPanel();
     private JPanel panel2 = new JPanel();
@@ -189,9 +191,11 @@ public class MergePanel extends JPanel {
         gbc.gridwidth = 7;
         gbc.gridx = 0;
         gbc.gridy = 2;
-        this.subPanel.add(this.subPanelV1StructureTypeTextArea, gbc);
+        this.subPanel.add(this.subPanelV1StructureTypeTextAreaScrollPane, gbc);
         gbc.gridy = 3;
-        this.subPanel.add(this.subPanelV2StructureTypeTextArea, gbc);
+        this.subPanel.add(this.subPanelV2StructureTypeTextAreaScrollPane, gbc);
+        gbc.gridy = 4;
+        this.subPanel.add(this.subPanelDeveloperDecisionTextArea,gbc);
     }
     
     private void customizeSubPanelTextArea(){
@@ -201,6 +205,9 @@ public class MergePanel extends JPanel {
         this.subPanelV2StructureTypeTextArea.setEditable(false);
         this.subPanelV2StructureTypeTextArea.setBackground(this.subPanel.getBackground());
         this.subPanelV2StructureTypeTextAreaScrollPane.setViewportView(this.subPanelV2StructureTypeTextArea);
+        this.subPanelDeveloperDecisionTextArea.setEditable(false);
+        this.subPanelDeveloperDecisionTextArea.setBackground(this.subPanel.getBackground());
+        this.subPanelDeveloperDecisionTextAreaScrollPane.setViewportView(this.subPanelDeveloperDecisionTextArea);
     }
     
     private void customizeButtons() {
@@ -315,6 +322,7 @@ public class MergePanel extends JPanel {
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getForm());
                 this.subPanelV1StructureTypeTextArea.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1StructureTypes());
                 this.subPanelV2StructureTypeTextArea.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2StructureTypes());
+                this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getDeveloperDecision());
             } else {
                 this.subPanelConflictIndexLabel.setText("0/0");
                 this.currentConflictIndex = 0;
@@ -322,6 +330,7 @@ public class MergePanel extends JPanel {
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
                 this.subPanelV1StructureTypeTextArea.setText("V1: ");
                 this.subPanelV2StructureTypeTextArea.setText("V2: ");
+                this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
             }
         } else {
             this.subPanelFileNameLabel.setText("File Name: ");
@@ -338,6 +347,7 @@ public class MergePanel extends JPanel {
             this.conflictTextArea.setText("");
             this.subPanelV1StructureTypeTextArea.setText("V1: ");
             this.subPanelV2StructureTypeTextArea.setText("V2: ");
+            this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
     }
 
@@ -352,6 +362,8 @@ public class MergePanel extends JPanel {
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getForm());
             this.subPanelV1StructureTypeTextArea.setText("V1: " + file.getConflictRegion().get(0).getV1StructureTypes());
             this.subPanelV2StructureTypeTextArea.setText("V2: " + file.getConflictRegion().get(0).getV2StructureTypes());
+            this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
+            
         } else {
             this.subPanelConflictIndexLabel.setText("0/0");
             this.currentConflictIndex = 0;
@@ -359,6 +371,7 @@ public class MergePanel extends JPanel {
             this.conflictTextArea.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
             this.subPanelV1StructureTypeTextArea.setText("V1: ");
             this.subPanelV2StructureTypeTextArea.setText("V2: ");
+            this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
     }
 
@@ -367,6 +380,7 @@ public class MergePanel extends JPanel {
         this.conflictTextArea.setText(region.getForm());
         this.subPanelV1StructureTypeTextArea.setText("V1: " + region.getV1StructureTypes());
         this.subPanelV2StructureTypeTextArea.setText("V2: " + region.getV2StructureTypes());
+        this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 
     }
 
