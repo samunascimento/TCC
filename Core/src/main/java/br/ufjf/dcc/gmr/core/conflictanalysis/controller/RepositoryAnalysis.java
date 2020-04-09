@@ -4,6 +4,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Lexer;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
@@ -117,6 +119,24 @@ public class RepositoryAnalysis {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
+
+            CPPVisitor visitor = new CPPVisitor();
+            visitor.visit(tree);
+
+            return visitor.getList();
+        } else {
+
+            throw new IOException();
+        }
+    }
+    
+    public static List<SyntaxStructure> analyzePythonSyntaxTree(String filePath) throws IOException {
+        if (filePath.endsWith(".py")) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            Python3Lexer lexer = new Python3Lexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            Python3Parser parser = new Python3Parser(tokens);
+            ParseTree tree = parser.file_input();
 
             CPPVisitor visitor = new CPPVisitor();
             visitor.visit(tree);
