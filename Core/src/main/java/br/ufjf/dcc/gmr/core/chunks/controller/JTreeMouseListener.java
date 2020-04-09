@@ -10,10 +10,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-/**
- *
- * @author icout
- */
 public class JTreeMouseListener extends MouseAdapter {
 
     private JTree tree;
