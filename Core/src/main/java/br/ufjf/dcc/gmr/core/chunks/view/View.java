@@ -17,9 +17,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
-import br.ufjf.dcc.gmr.core.principal.InitProject;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import java.awt.Color;
 import java.util.List;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,24 +30,25 @@ import javax.swing.tree.TreeSelectionModel;
  * @author Beatr
  */
 public class View extends JFrame {
-
+    
+    
     JPanel tableTreePanel;
     JPanel textPanel;
-    JScrollPane tableScrollPane;
+    //Remove
     JScrollPane treeScrollPane;
     JTable table;
     JTextArea textArea;
+    //Remove
     JFileChooser chooser;
     public static JProgressBar progressBar;
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem submenu;
-    InitProject initProject;
     Project project;
     JFrame chooserFrame;
     JTree tree;
 
-    View() {
+    public View() {
         tableTreePanel = new JPanel();
         textPanel = new JPanel();
         treeScrollPane = new JScrollPane();
@@ -57,9 +58,7 @@ public class View extends JFrame {
         table = new JTable();
         textArea = new JTextArea();
         progressBar = new JProgressBar();
-        tableScrollPane = new JScrollPane();
         submenu = new JMenuItem();
-        initProject = new InitProject();
         project = new Project();
         chooserFrame = new JFrame();
         tree = new JTree();
@@ -71,13 +70,9 @@ public class View extends JFrame {
         treeScrollPane.setVisible(false);
     }
 
-    private void setTableScrollPane() {
-        tableScrollPane.setPreferredSize(new Dimension(295, (int) tableTreePanel.getPreferredSize().getHeight()));
-    }
-
     private void setTableTreePanel() {
         tableTreePanel.setPreferredSize(new Dimension(305, this.getHeight() - (int) menuBar.getPreferredSize().getHeight() - 45));
-        tableTreePanel.setVisible(false);
+        tableTreePanel.setVisible(true);
     }
 
     private void setTextPanel() {
@@ -173,10 +168,11 @@ public class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(progressBar, BorderLayout.SOUTH);
 
-        tableTreePanel.add(tableScrollPane, BorderLayout.CENTER);
+        tableTreePanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        treeScrollPane.setBackground(Color.red);
         tableTreePanel.add(treeScrollPane, BorderLayout.EAST);
 
-        tableScrollPane.setViewportView(table);
+        
 
         textPanel.add(textArea, BorderLayout.CENTER);
 
@@ -190,7 +186,6 @@ public class View extends JFrame {
         setTableTreePanel();
         setTextPanel();
         setTreeScrollPane();
-        setTableScrollPane();
         setTable();
         setTextArea();
         setChooser();
