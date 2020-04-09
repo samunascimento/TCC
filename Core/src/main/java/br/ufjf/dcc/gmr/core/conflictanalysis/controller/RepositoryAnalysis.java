@@ -129,7 +129,7 @@ public class RepositoryAnalysis {
             throw new IOException();
         }
     }
-    
+
     public static List<SyntaxStructure> analyzePythonSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".py")) {
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -159,6 +159,12 @@ public class RepositoryAnalysis {
                 }
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 for (SyntaxStructure ss : analyzeCPPSyntaxTree(filePath)) {
+                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                        list.add(ss);
+                    }
+                }
+            } else if (filePath.endsWith(".py")) {
+                for (SyntaxStructure ss : analyzePythonSyntaxTree(filePath)) {
                     if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
                         list.add(ss);
                     }
@@ -311,7 +317,7 @@ public class RepositoryAnalysis {
                                     solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - beforeContext.size());
                                     solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + afterContext.size());
                                     if (solutionFirstLine > 0 && solutionFinalLine > 0) {
-                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath),solutionFirstLine - 1,solutionFinalLine - 1);
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath), solutionFirstLine - 1, solutionFinalLine - 1);
                                     }
                                     Git.checkout("master", sandbox.getPath());
 
@@ -443,4 +449,3 @@ public class RepositoryAnalysis {
     }
 
 }
-
