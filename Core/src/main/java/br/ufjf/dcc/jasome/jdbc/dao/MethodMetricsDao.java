@@ -7,6 +7,7 @@ package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,44 +70,69 @@ public class MethodMetricsDao {
     public List<MethodMetrics> select() {
         String sql = "SELECT * FROM tb_methodMetrics";
 
+        MethodMetrics methodMetrics = null;
+        List<MethodMetrics> listMethodMetrics = new ArrayList<>();
+        MetricDao metricDao = new MetricDao();
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                
+                methodMetrics = new MethodMetrics();
+                
+                int ciID = resultSet.getInt("ci");
+                int diID = resultSet.getInt("di");
+                int finID = resultSet.getInt("fin");
+                int foutID = resultSet.getInt("fout");
+                int iovarsID = resultSet.getInt("iovars");
+                int mclcID = resultSet.getInt("mclc");
+                int nbdID = resultSet.getInt("nbd");
+                int ncompID = resultSet.getInt("ncomp");
+                int nopID = resultSet.getInt("nop");
+                int nvarID = resultSet.getInt("nvar");
+                int siID = resultSet.getInt("si");
+                int tlocID = resultSet.getInt("tloc");
+                int vgID = resultSet.getInt("vg");
 
-            while (tableKeys.next()) {
-                int ciID = tableKeys.getInt("ciID");
-                int diID = tableKeys.getInt("diID");
-                int finID = tableKeys.getInt("finID");
-                int foutID = tableKeys.getInt("foutID");
-                int iovarsID = tableKeys.getInt("iovarsID");
-                int mclcID = tableKeys.getInt("mclcID");
-                int nbdID = tableKeys.getInt("nbdID");
-                int ncompID = tableKeys.getInt("ncompID");
-                int nopID = tableKeys.getInt("nopID");
-                int nvarID = tableKeys.getInt("nvarID");
-                int siID = tableKeys.getInt("siID");
-                int tlocID = tableKeys.getInt("tlocID");
-                int vgID = tableKeys.getInt("vgID");
+                Metric ciIDMetric = metricDao.selectID(ciID);
+                Metric diIDMetric = metricDao.selectID(diID);
+                Metric finIDMetric = metricDao.selectID(finID);
+                Metric foutIDMetric = metricDao.selectID(foutID);
+                Metric iovarsIDMetric = metricDao.selectID(iovarsID);
+                Metric mclcIDMetric = metricDao.selectID(mclcID);
+                Metric nbdIDMetric = metricDao.selectID(nbdID);
+                Metric ncompIDMetric = metricDao.selectID(ncompID);
+                Metric nopIDMetric = metricDao.selectID(nopID);
+                Metric nvarIDMetric = metricDao.selectID(nvarID);
+                Metric siIDMetric = metricDao.selectID(siID);
+                Metric tlocIDMetric = metricDao.selectID(tlocID);
+                Metric vgIDMetric = metricDao.selectID(vgID);
+                
+                
+                methodMetrics.setCi(ciIDMetric);
+                methodMetrics.setDi(diIDMetric);
+                methodMetrics.setFin(finIDMetric);
+                methodMetrics.setFout(foutIDMetric);
+                methodMetrics.setIovars(iovarsIDMetric);
+                methodMetrics.setMclc(mclcIDMetric);
+                methodMetrics.setNbd(nbdIDMetric);
+                methodMetrics.setNcomp(ncompIDMetric);
+                methodMetrics.setNop(nopIDMetric);
+                methodMetrics.setNvar(nvarIDMetric);
+                methodMetrics.setSi(siIDMetric);
+                methodMetrics.setTloc(tlocIDMetric);
+                methodMetrics.setVg(vgIDMetric);
+                
+                methodMetrics.setId(resultSet.getInt("id"));
 
-                methodMetrics.getCi().setId(ciID);
-                methodMetrics.getDi().setId(diID);
-                methodMetrics.getFin().setId(finID);
-                methodMetrics.getFout().setId(foutID);
-                methodMetrics.getIovars().setId(iovarsID);
-                methodMetrics.getMclc().setId(mclcID);
-                methodMetrics.getNbd().setId(nbdID);
-                methodMetrics.getNcomp().setId(ncompID);
-                methodMetrics.getNop().setId(nopID);
-                methodMetrics.getNvar().setId(nvarID);
-                methodMetrics.getSi().setId(siID);
-                methodMetrics.getTloc().setId(tlocID);
-                methodMetrics.getVg().setId(vgID);
-
-                this.listMethodMetrics.add(methodMetrics);
 
             }
-            stmt.executeUpdate();
+            listMethodMetrics.add(methodMetrics);
             stmt.close();
-            return this.listMethodMetrics;
+            return listMethodMetrics;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

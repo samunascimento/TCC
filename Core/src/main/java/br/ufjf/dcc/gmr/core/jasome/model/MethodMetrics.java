@@ -20,6 +20,7 @@ public class MethodMetrics {
     Metric tloc;
     Metric vg;
     
+    private int id;
     private String constructor;
     private String lineEnd;
     private String lineStart;
@@ -161,6 +162,15 @@ public class MethodMetrics {
     public void setConstructor(String constructor) {
         this.constructor = constructor;
     } 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     
     
 }

@@ -8,7 +8,6 @@ import java.util.List;
  * @author antonio henrique
  */
 public class ClassMetrics {
-    private int id;
     Metric aa;
     Metric ad;
     Metric ai;
@@ -51,6 +50,7 @@ public class ClassMetrics {
 
     List<MethodMetrics> listMethodsMetrics = new ArrayList<>();
     
+    private int id;
     private String lineEnd;
     private String lineStart;
     private String name;
