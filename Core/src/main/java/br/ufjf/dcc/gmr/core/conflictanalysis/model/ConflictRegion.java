@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,13 +54,9 @@ public class ConflictRegion {
         } else {
             this.originalV2StopLine = -1;
         }
-        
-        this.developerDecision = this.generateDeveloperDecision();
 
-    }
+        this.developerDecision = generateDeveloperDecision();
 
-    public String getDeveloperDecision() {
-        return developerDecision.name();
     }
 
     public int getOriginalV1StartLine() {
@@ -76,29 +73,6 @@ public class ConflictRegion {
 
     public int getOriginalV2StopLine() {
         return originalV2StopLine;
-    }
-
-    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
-        try {
-            if (this.originalV1StartLine > 0) {
-                Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                Git.checkout("master", repositoryPath);
-            }
-            if (this.originalV2StartLine > 0) {
-                Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                Git.checkout("master", repositoryPath);
-            }
-        } catch (IOException ex) {
-            throw new IOException();
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
-            throw new IOException();
-        } catch (CheckoutError ex) {
-            System.out.println("ERROR: CheckoutError error!");
-            throw new IOException();
-        }
     }
 
     public int getOriginalV1FirstLine() {
@@ -145,7 +119,34 @@ public class ConflictRegion {
         return endLine;
     }
 
-    private String generateForm() {
+    public String getDeveloperDecision() {
+        return developerDecision.name();
+    }
+
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
+        try {
+            if (this.originalV1StartLine > 0) {
+                Git.checkout(v1Commit, repositoryPath);
+                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+            if (this.originalV2StartLine > 0) {
+                Git.checkout(v2Commit, repositoryPath);
+                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+        } catch (IOException ex) {
+            throw new IOException();
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
+        } catch (CheckoutError ex) {
+            System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        }
+    }
+
+    public String getForm() {
         String str = "";
         for (String line : this.beforeContext) {
             str = str + line + "\n";
@@ -198,77 +199,66 @@ public class ConflictRegion {
         }
     }
 
-    public String getForm() {
-        return generateForm();
-    }
+    private DeveloperDecision generateDeveloperDecision() {
+        if (solution.isEmpty()) {
+            return DeveloperDecision.IMPRECISE;
+        } else if (solution.size() == 2) {
+            return DeveloperDecision.NONE;
+        } else {
 
-    public void print() {
-        System.out.println(generateForm());
-    }
+            String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
+            String rawV1 = ListUtils.getRawStringForm(this.v1);
+            String rawV2 = ListUtils.getRawStringForm(this.v2);
+            boolean containsNewCode = containsNewCode();
+            boolean containsV1OrV2 = containsV1OrV2();
 
-    private String getRawStringForm(List<String> list) {
-        String raw = "";
-        for (String line : list) {
-            raw = raw.concat(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
-        }
-        return raw;
-    }
-
-    private List<String> getRawListStringForm(List<String> list) {
-        List<String> raw = new ArrayList<>();
-        for (String line : list) {
-            raw.add(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
-        }
-        return raw;
-    }
-
-    private DeveloperDecision auxGenerateDeveloperDecision() {
-        
-        List<String> rawSolution = getRawListStringForm(this.solution);
-        List<String> rawV1 = getRawListStringForm(this.v1);
-        List<String> rawV2 = getRawListStringForm(this.v2);
-        List<String> rawBeforeContext = getRawListStringForm(this.beforeContext);
-        List<String> rawAfterContext = getRawListStringForm(this.afterContext);
-        
-        boolean newLines = false;
-        boolean containsV1V2 = false;
-        
-        for(String line : rawSolution){
-            if(rawBeforeContext.contains(line) || rawAfterContext.contains(line)){
-                
-            } else if (rawV1.contains(line) || rawV2.contains(line)){
-                containsV1V2 = true;
+            if (containsNewCode && containsV1OrV2) {
+                return DeveloperDecision.NEWCODE;
+            } else if (rawSolution.contains(rawV1) && rawSolution.contains(rawV2)) {
+                return DeveloperDecision.CONCATENATION;
+            } else if (rawSolution.contains(rawV1)) {
+                return DeveloperDecision.VERSION1;
+            } else if (rawSolution.contains(rawV2)) {
+                return DeveloperDecision.VERSION2;
+            } else if(containsV1OrV2) {
+                return DeveloperDecision.COMBINATION;
             } else {
-                newLines = true;
+                return DeveloperDecision.NONE;
+            }
+
+        }
+    }
+
+    private boolean containsNewCode() {
+
+        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
+        List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
+        List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
+
+        for (String line : rawSolution) {
+            if (!(rawV1.contains(line) || rawV2.contains(line))) {
+                return true;
             }
         }
-        if(!newLines && containsV1V2){
-            return DeveloperDecision.COMBINATION;
-        } else if (newLines && containsV1V2) {
-            return DeveloperDecision.NEWCODE;
-        } else {
-            return DeveloperDecision.NONE;
-        }
+
+        return false;
+
     }
 
-    private DeveloperDecision generateDeveloperDecision() {
+    private boolean containsV1OrV2() {
 
-        String rawSolution = getRawStringForm(this.solution);
-        String rawV1 = getRawStringForm(this.v1);
-        String rawV2 = getRawStringForm(this.v2);
-        String rawBeforeContext = getRawStringForm(this.beforeContext);
-        String rawAfterContext = getRawStringForm(this.afterContext);
+        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
+        List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
+        List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
 
-        if (rawSolution == rawBeforeContext.concat(rawV1).concat(rawAfterContext)) {
-            return DeveloperDecision.VERSION1;
-        } else if (rawSolution == rawBeforeContext.concat(rawV2).concat(rawAfterContext)) {
-            return DeveloperDecision.VERSION2;
-        } else if (rawSolution == rawBeforeContext.concat(rawV1).concat(rawV2).concat(rawAfterContext)
-                || rawSolution == rawBeforeContext.concat(rawV2).concat(rawV1).concat(rawAfterContext)) {
-            return DeveloperDecision.CONCATENATION;
-        } else {
-            return auxGenerateDeveloperDecision();
+        for (String line : rawSolution) {
+            if (rawV1.contains(line) || rawV2.contains(line)) {
+                return true;
+            }
         }
+
+        return false;
+
     }
 
 }

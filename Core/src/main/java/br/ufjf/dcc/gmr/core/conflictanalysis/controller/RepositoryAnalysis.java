@@ -205,6 +205,7 @@ public class RepositoryAnalysis {
         List<String> v1 = new ArrayList<>();
         List<String> v2 = new ArrayList<>();
         List<String> solution = new ArrayList<>();
+        List<String> solutionWithoutContext = new ArrayList<>();
         int beginLine;
         int separatorLine;
         int endLine;
@@ -222,6 +223,7 @@ public class RepositoryAnalysis {
         double analysed = 0.0;
         double analysedPercentage = 0.0;
         File sandbox = RepositoryAnalysis.createSandbox(repositoryPath);
+        int auxInt;
 
         //Start
         try {
@@ -274,7 +276,7 @@ public class RepositoryAnalysis {
                                     beginLine = i + 1;
                                     for (int j = i - linesContext; j < i; j++) {
                                         if (j < 0) {
-                                            j = 1;
+                                            j = -1;
                                         } else {
                                             beforeContext.add(allFile.get(j));
                                         }
@@ -292,7 +294,7 @@ public class RepositoryAnalysis {
                                     }
                                     endLine = i + 1;
                                     for (int j = i + 1; j < i + 1 + linesContext; j++) {
-                                        if (j == allFile.size()) {
+                                        if (j >= allFile.size()) {
                                             break;
                                         } else {
                                             afterContext.add(allFile.get(j));
@@ -314,9 +316,27 @@ public class RepositoryAnalysis {
 
                                     //Getting solution
                                     Git.checkout(hash.getCommitHash(), sandbox.getPath());
-                                    solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - beforeContext.size());
-                                    solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + afterContext.size());
-                                    if (solutionFirstLine > 0 && solutionFinalLine > 0) {
+                                    if (!beforeContext.isEmpty()) {
+                                        solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - 1);
+                                    } else {
+                                        solutionFirstLine = 0;
+                                    }
+                                    if (!afterContext.isEmpty()) {
+                                        solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + 1);
+                                    } else {
+                                        solutionFinalLine = 0;
+                                    }
+                                    if(solutionFirstLine == 0 && solutionFinalLine == 0){
+                                        solution = getFileContent(sandbox.getPath() + insideFilePath);
+                                        solution.add(0,"<SOF>");
+                                        solution.add("<EOF>");
+                                    } else if (solutionFirstLine == 0){
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath),0, solutionFinalLine - 1);
+                                        solution.add(0,"<SOF>");
+                                    } else if (solutionFinalLine == 0){
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath),solutionFirstLine - 1,getFileContent(sandbox.getPath() + insideFilePath).size() - 1);
+                                        solution.add("<EOF>");
+                                    } else if (solutionFirstLine > 0 && solutionFinalLine > 0) {
                                         solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath), solutionFirstLine - 1, solutionFinalLine - 1);
                                     }
                                     Git.checkout("master", sandbox.getPath());
