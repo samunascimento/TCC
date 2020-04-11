@@ -205,7 +205,6 @@ public class RepositoryAnalysis {
         List<String> v1 = new ArrayList<>();
         List<String> v2 = new ArrayList<>();
         List<String> solution = new ArrayList<>();
-        List<String> solutionWithoutContext = new ArrayList<>();
         int beginLine;
         int separatorLine;
         int endLine;
@@ -223,7 +222,6 @@ public class RepositoryAnalysis {
         double analysed = 0.0;
         double analysedPercentage = 0.0;
         File sandbox = RepositoryAnalysis.createSandbox(repositoryPath);
-        int auxInt;
 
         //Start
         try {
