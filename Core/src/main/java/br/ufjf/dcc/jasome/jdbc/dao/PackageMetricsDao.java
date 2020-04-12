@@ -38,7 +38,7 @@ public class PackageMetricsDao {
         ResultSet tableKeys = null;
 
         try {
-            stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement(sql);
             stmt.setInt(1, packageMetrics.getA().getId());
             stmt.setInt(2, packageMetrics.getCcrc().getId());
             stmt.setInt(3, packageMetrics.getCa().getId());

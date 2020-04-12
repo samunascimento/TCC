@@ -43,7 +43,6 @@ public class MetricDao {
             stmt.setString(2, metric.getDescription());
             stmt.setDouble(3, metric.getValue());
 
-            System.out.println(stmt);
 
             ResultSet result = stmt.executeQuery();
 

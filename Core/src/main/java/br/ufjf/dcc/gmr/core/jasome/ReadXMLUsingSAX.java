@@ -137,58 +137,91 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
                 metric.setDescription(value0);
                 metric.setName(value1);
-                metric.setValue(Double.parseDouble(value2));
+
+                if (value2.contains(",")) {
+                    value2 = value2.replace(",", ".");
+                    metric.setValue(Double.parseDouble(value2));
+                } else {
+                    metric.setValue(Double.parseDouble(value2));
+                }
 
                 if (project && !pacckage && !clazz && !method) {
 
+                    int id = metricsDao.insert(metric);
+                    metric.setId(id);
                     versionMetrics.setTloc(metric);
-                    versionMetricsDao.insert(versionMetrics);
+                    int versionId = versionMetricsDao.insert(versionMetrics);
+
                 } else if (project && pacckage && !clazz && !method) {
                     if (metric.getName().equals("A")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setA(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("CCRC")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setCcrc(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("Ca")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setCa(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("Ce")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setCe(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("DMS")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setDms(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("I")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setI(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("NOC")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setNoc(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("NOI")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setNoi(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("PkgRCi")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setPkgRCi(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("PkgTCi")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setPkgTCi(metric);
-                        metricsDao.insert(metric);
 
                     } else if (metric.getName().equals("TLOC")) {
+
+                        int id = metricsDao.insert(metric);
+                        metric.setId(id);
                         packageMetrics.setTloc(metric);
-                        metricsDao.insert(metric);
+                        
+                        int packageId = packageMetricsDao.insert(packageMetrics);
                     }
-                    packageMetricsDao.insert(packageMetrics);
+
                 }
 
             } else if (project && pacckage && clazz && !method) {
@@ -312,6 +345,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             throws SAXException {
 
         tagAtual = qName;
+        
 
         if (tagAtual.equals("Project")) {
             project = false;
