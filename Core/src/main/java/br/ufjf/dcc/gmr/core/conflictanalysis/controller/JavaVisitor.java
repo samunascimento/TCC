@@ -24,6 +24,7 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
     }
     
     public void process(ParserRuleContext ctx) {
+        
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");

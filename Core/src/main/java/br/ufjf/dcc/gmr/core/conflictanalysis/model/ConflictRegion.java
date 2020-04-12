@@ -26,8 +26,8 @@ public class ConflictRegion {
     private final int originalV1StopLine;
     private final int originalV2StartLine;
     private final int originalV2StopLine;
-    private List<SyntaxStructure> syntaxV1 = new ArrayList<>();
-    private List<SyntaxStructure> syntaxV2 = new ArrayList<>();
+    private List<SyntaxStructure> syntaxV1;
+    private List<SyntaxStructure> syntaxV2;
 
     private DeveloperDecision developerDecision;
 
@@ -171,32 +171,40 @@ public class ConflictRegion {
     }
 
     public String getV1StructureTypes() {
-        String str = "";
-        for (SyntaxStructure ss : this.syntaxV1) {
-            if (!str.contains(ss.getStructureType())) {
-                str = str + ss.getStructureType() + ", ";
-            }
-        }
-        if (str == "") {
-            return "V1 doesn't has any structure type!";
+        if (syntaxV1 == null) {
+            return "Not compilable file ,or extension not parseble, impossible to get syntax structures!";
         } else {
-            return str;
+            String str = "";
+            for (SyntaxStructure ss : this.syntaxV1) {
+                if (!str.contains(ss.getStructureType())) {
+                    str = str + ", " + ss.getStructureType();
+                }
+            }
+            if (str == "") {
+                return "V1 doesn't has any structure type!";
+            } else {
+                return str.replaceFirst(", ", "");
+            }
         }
     }
 
     public String getV2StructureTypes() {
-        String str = "";
-        for (SyntaxStructure ss : this.syntaxV2) {
-            if (!str.contains(ss.getStructureType())) {
-                str = str + ", ";
-                str = str + ss.getStructureType();
+        if (syntaxV2 == null) {
+            return "Not compilable file ,or extension not parseble, impossible to get syntax structures!";
+        } else {
+            String str = "";
+            for (SyntaxStructure ss : this.syntaxV2) {
+                if (!str.contains(ss.getStructureType())) {
+                    str = str + ", " + ss.getStructureType();
+                }
+            }
+            if (str == "") {
+                return "V2 doesn't has any structure type!";
+            } else {
+                return str.replaceFirst(", ", "");
             }
         }
-        if (str == "") {
-            return "V2 doesn't has any structure type!";
-        } else {
-            return str.replaceFirst(", ", "");
-        }
+
     }
 
     private DeveloperDecision generateDeveloperDecision() {
@@ -220,7 +228,7 @@ public class ConflictRegion {
                 return DeveloperDecision.VERSION1;
             } else if (rawSolution.contains(rawV2)) {
                 return DeveloperDecision.VERSION2;
-            } else if(containsV1OrV2) {
+            } else if (containsV1OrV2) {
                 return DeveloperDecision.COMBINATION;
             } else {
                 return DeveloperDecision.NONE;
