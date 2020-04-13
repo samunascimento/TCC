@@ -153,8 +153,8 @@ public class MethodMetricsDao {
         }
     }
 
-    public void update(String column, String columnValue, int id) {
-        String sql = "UPDATE tb_methodMetrics SET " + column + " = '" + columnValue + "' WHERE ID = '" + id + "'";
+    public void update(Metric metric,int id) {
+        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() +  "' WHERE ID = '" + id + "';";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
