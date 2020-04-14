@@ -23,9 +23,11 @@ CREATE TABLE tb_projectMetrics(
 
 CREATE TABLE tb_versionMetrics (
     ID serial NOT NULL,
-    tloc serial NOT NULL,
+    tlocID serial NOT NULL,
+    projectID serial NOT NULL,
     PRIMARY KEY (ID),
-    FOREIGN KEY (tloc) REFERENCES tb_metric(ID)
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (projectID) REFERENCES tb_projectMetrics(ID)
 );
 
 
@@ -42,6 +44,7 @@ CREATE TABLE tb_packageMetrics (
     pkgRCiD serial NOT NULL,
     pkgTCiID serial NOT NULL,
     tlocID serial NOT NULL,
+    versionID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (aID) REFERENCES tb_metric(ID),
     FOREIGN KEY (ccrcID) REFERENCES tb_metric(ID),
@@ -53,7 +56,8 @@ CREATE TABLE tb_packageMetrics (
     FOREIGN KEY (noiID) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgRCiD) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgTCiID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (versionID) REFERENCES tb_versionMetrics(ID)
 );
 
 
@@ -98,6 +102,7 @@ CREATE TABLE tb_classMetrics (
     six serial NOT NULL,
     tloc serial NOT NULL,
     wmc serial NOT NULL,
+    packageID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (aa) REFERENCES tb_metric(ID),
     FOREIGN KEY (ad) REFERENCES tb_metric(ID),
@@ -137,7 +142,8 @@ CREATE TABLE tb_classMetrics (
     FOREIGN KEY (rtloc) REFERENCES tb_metric(ID),
     FOREIGN KEY (six) REFERENCES tb_metric(ID),
     FOREIGN KEY (tloc) REFERENCES tb_metric(ID),
-    FOREIGN KEY (wmc) REFERENCES tb_metric(ID)
+    FOREIGN KEY (wmc) REFERENCES tb_metric(ID),
+    FOREIGN KEY (packageID) REFERENCES tb_packageMetrics(ID)
 );
 
 CREATE TABLE tb_methodMetrics (
@@ -155,6 +161,7 @@ CREATE TABLE tb_methodMetrics (
     si serial NOT NULL,
     tloc serial NOT NULL,
     vg serial NOT NULL,
+    classID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (ci) REFERENCES tb_metric(ID),
     FOREIGN KEY (di) REFERENCES tb_metric(ID),
@@ -168,5 +175,6 @@ CREATE TABLE tb_methodMetrics (
     FOREIGN KEY (nvar) REFERENCES tb_metric(ID),
     FOREIGN KEY (si) REFERENCES tb_metric(ID),
     FOREIGN KEY (tloc) REFERENCES tb_metric(ID),
-    FOREIGN KEY (vg) REFERENCES tb_metric(ID)
+    FOREIGN KEY (vg) REFERENCES tb_metric(ID),
+    FOREIGN KEY (classID) REFERENCES tb_classMetrics(ID)
 );
