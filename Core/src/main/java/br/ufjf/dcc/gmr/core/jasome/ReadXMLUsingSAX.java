@@ -447,31 +447,58 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
                 } else if (project && pacckage && clazz && method) {
                     if (metric.getName().equals("Ci")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setCi(metric);
                     } else if (metric.getName().equals("Di")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setDi(metric);
                     } else if (metric.getName().equals("Fin")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setFin(metric);
                     } else if (metric.getName().equals("Fout")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setFout(metric);
                     } else if (metric.getName().equals("IOVars")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setIovars(metric);
                     } else if (metric.getName().equals("MCLC")) {
-                        methodMetrics.setMclc(metric);;
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        methodMetrics.setMclc(metric);
                     } else if (metric.getName().equals("NBD")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setNbd(metric);
                     } else if (metric.getName().equals("NCOMP")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setNcomp(metric);
                     } else if (metric.getName().equals("NOP")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setNop(metric);
                     } else if (metric.getName().equals("NVAR")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setNvar(metric);
                     } else if (metric.getName().equals("Si")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setSi(metric);
                     } else if (metric.getName().equals("TLOC")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setTloc(metric);
                     } else if (metric.getName().equals("VG")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         methodMetrics.setVg(metric);
+                        int methodId = methodMetricDao.insert(methodMetrics);
                     }
 
                 }

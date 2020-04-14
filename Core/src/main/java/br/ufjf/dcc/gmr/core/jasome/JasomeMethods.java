@@ -114,7 +114,6 @@ public class JasomeMethods {
             //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
             //    System.out.println("temos um erro nesta versão");
             //}
-            printMetrics(projectMetrics, i);
             
             List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
             jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
@@ -125,14 +124,6 @@ public class JasomeMethods {
             i++;
         }
         return projectMetrics;
-    }
-
-    public void printMetrics(ProjectMetrics projectMetrics,int version) {
-        System.out.println("Project: TLOC = " + projectMetrics.getListVersionMetrics().get(version).getTloc().getValue());
-        System.out.println("Package: Number of Classes = " + projectMetrics.getListVersionMetrics().get(version).getListPackageMetric().get(0).getNoc().getValue());
-        System.out.println("Class: Number of Methods = " + projectMetrics.getListVersionMetrics().get(version).getListPackageMetric().get(0).getListClassMetrics().get(0).getMa().getValue());
-        System.out.println("Method : Number of Parametes = " + projectMetrics.getListVersionMetrics().get(version).getListPackageMetric().get(0).getListClassMetrics().get(0).getListMethodsMetrics().get(0).getNop().getValue());
-
     }
 
     public void runJasome(String repositoryPath, List files, List paths, int numberCommit) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
