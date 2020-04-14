@@ -6,8 +6,16 @@ import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
+import br.ufjf.dcc.jasome.jdbc.dao.ClassMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
+import br.ufjf.dcc.jasome.jdbc.dao.PackageMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -42,6 +50,12 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private PackageMetrics packageMetrics;
     private VersionMetrics versionMetrics;
     private ProjectMetrics projectMetrics = new ProjectMetrics();
+
+    MetricDao metricDao = new MetricDao();
+    PackageMetricsDao packageMetricDao = new PackageMetricsDao();
+    VersionMetricsDao versionMetricDao = new VersionMetricsDao();
+    ClassMetricsDao classMetricDao = new ClassMetricsDao();
+    MethodMetricsDao methodMetricDao = new MethodMetricsDao();
 
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
@@ -99,31 +113,25 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             project = true;
             versionMetrics = new VersionMetrics();
             projectMetrics.setSourceDir(atts.getValue(0));
-        }
-
-        else if (tagAtual.equals("Package")) {
+        } else if (tagAtual.equals("Package")) {
             pacckage = true;
             packageMetrics = new PackageMetrics();
             packageMetrics.setName(atts.getValue(0));
-        }
-        else if (tagAtual.equals("Class")) {
+        } else if (tagAtual.equals("Class")) {
             clazz = true;
             classMetrics = new ClassMetrics();
             classMetrics.setLineEnd(atts.getValue(0));
             classMetrics.setLineStart(atts.getValue(1));
             classMetrics.setName(atts.getValue(2));
             classMetrics.setSourceFile(atts.getValue(3));
-        }
-        else if (tagAtual.equals("Method")) {
+        } else if (tagAtual.equals("Method")) {
             method = true;
             methodMetrics = new MethodMetrics();
             methodMetrics.setConstructor(atts.getValue(0));
             methodMetrics.setLineEnd(atts.getValue(1));
             methodMetrics.setLineStart(atts.getValue(2));
             methodMetrics.setName(atts.getValue(3));
-        }
-
-        else if (tagAtual.equals("Metric")) {
+        } else if (tagAtual.equals("Metric")) {
             metric = new Metric();
 
             String value0 = atts.getValue(0);
@@ -132,211 +140,186 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
             metric.setDescription(value0);
             metric.setName(value1);
-            //metric.setValue(value2);
-
-            if (project && !pacckage && !clazz && !method) {
-                versionMetrics.setTloc(metric);
+            
+            if (value2.contains(",")) {
+                value2 = value2.replace(",", ".");
+                metric.setValue(Double.parseDouble(value2));
+            } else {
+                
+                metric.setValue(Double.parseDouble(value2));
             }
-            else if (project && pacckage && !clazz && !method) {
-                if (metric.getName().equals("A")) {
-                    packageMetrics.setA(metric);
-                }
-                else if (metric.getName().equals("CCRC")) {
-                    packageMetrics.setCcrc(metric);
-                }
-                else if (metric.getName().equals("Ca")) {
-                    packageMetrics.setCa(metric);
-                }
-                else if (metric.getName().equals("Ce")) {
-                    packageMetrics.setCe(metric);
-                }
-                else if (metric.getName().equals("DMS")) {
-                    packageMetrics.setDms(metric);
-                }
-                else if (metric.getName().equals("I")) {
-                    packageMetrics.setI(metric);
-                }
-                else if (metric.getName().equals("NOC")) {
-                    packageMetrics.setNoc(metric);
-                }
-                else if (metric.getName().equals("NOI")) {
-                    packageMetrics.setNoi(metric);
-                }
-                else if (metric.getName().equals("PkgRCi")) {
-                    packageMetrics.setPkgRCi(metric);
-                }
-                else if (metric.getName().equals("PkgTCi")) {
-                    packageMetrics.setPkgTCi(metric);
-                }
-                else if (metric.getName().equals("TLOC")) {
-                    packageMetrics.setTloc(metric);
-                }
+            
+            try {
+                if (project && !pacckage && !clazz && !method) {
 
-            }
-            else if (project && pacckage && clazz && !method) {
-                if (metric.getName().equals("Aa")) {
-                    classMetrics.setAa(metric);
-                }
-                else if (metric.getName().equals("Ad")) {
-                    classMetrics.setAd(metric);
-                }
-                else if (metric.getName().equals("Ai")) {
-                    classMetrics.setAi(metric);
-                }
-                else if (metric.getName().equals("Ait")) {
-                    classMetrics.setAit(metric);
-                }
-                else if (metric.getName().equals("Ao")) {
-                    classMetrics.setAo(metric);
-                }
-                else if (metric.getName().equals("Av")) {
-                    classMetrics.setAv(metric);
-                }
-                else if (metric.getName().equals("ClRCi")) {
-                    classMetrics.setClrci(metric);
-                }
-                else if (metric.getName().equals("ClTCi")) {
-                    classMetrics.setCltci(metric);
-                }
-                else if (metric.getName().equals("DIT")) {
-                    classMetrics.setDit(metric);
-                }
-                else if (metric.getName().equals("HMd")) {
-                    classMetrics.setHmd(metric);
-                }
-                else if (metric.getName().equals("HMi")) {
-                    classMetrics.setHmi(metric);
-                }
-                else if (metric.getName().equals("MHF")) {
-                    classMetrics.setMhf(metric);
-                }
-                else if (metric.getName().equals("MIF")) {
-                    classMetrics.setMif(metric);
-                }
-                else if (metric.getName().equals("Ma")) {
-                    classMetrics.setMa(metric);
-                }
-                else if (metric.getName().equals("Md")) {
-                    classMetrics.setMd(metric);
-                }
-                else if (metric.getName().equals("Mi")) {
-                    classMetrics.setMi(metric);
-                }
-                else if (metric.getName().equals("Mit")) {
-                    classMetrics.setMit(metric);
-                }
-                else if (metric.getName().equals("Mo")) {
-                    classMetrics.setMo(metric);
-                }
-                else if (metric.getName().equals("NF")) {
-                    classMetrics.setNf(metric);
-                }
-                else if (metric.getName().equals("NM")) {
-                    classMetrics.setNm(metric);
-                }
-                else if (metric.getName().equals("NMA")) {
-                    classMetrics.setNma(metric);
-                }
-                else if (metric.getName().equals("NMI")) {
-                    classMetrics.setNmi(metric);
-                }
-                else if (metric.getName().equals("NOA")) {
-                    classMetrics.setNoa(metric);
-                }
-                else if (metric.getName().equals("NOCh")) {
-                    classMetrics.setNoch(metric);
-                }
-                else if (metric.getName().equals("NOD")) {
-                    classMetrics.setNod(metric);
-                }
-                else if (metric.getName().equals("NOL")) {
-                    classMetrics.setNol(metric);
-                }
-                else if (metric.getName().equals("NOPa")) {
-                    classMetrics.setNopa(metric);
-                }
-                else if (metric.getName().equals("NORM")) {
-                    classMetrics.setNorm(metric);
-                }
-                else if (metric.getName().equals("NPF")) {
-                    classMetrics.setNpf(metric);
-                }
-                else if (metric.getName().equals("NPM")) {
-                    classMetrics.setNpm(metric);
-                }
-                else if (metric.getName().equals("NSF")) {
-                    classMetrics.setNsf(metric);
-                }
-                else if (metric.getName().equals("NSM")) {
-                    classMetrics.setNsm(metric);
-                }
-                else if (metric.getName().equals("PMR")) {
-                    classMetrics.setPmr(metric);
-                }
-                else if (metric.getName().equals("PMd")) {
-                    classMetrics.setPmd(metric);
-                }
-                else if (metric.getName().equals("PMi")) {
-                    classMetrics.setPmi(metric);
-                }
-                else if (metric.getName().equals("RTLOC")) {
-                    classMetrics.setRtloc(metric);
-                }
-                else if (metric.getName().equals("SIX")) {
-                    classMetrics.setSix(metric);
-                }
-                else if (metric.getName().equals("TLOC")) {
-                    classMetrics.setTloc(metric);
-                }
-                else if (metric.getName().equals("WMC")) {
-                    classMetrics.setWmc(metric);
-                }
+                    int insert = metricDao.insert(metric);
+                    metric.setId(insert);
+                    versionMetrics.setTloc(metric);
+                    int versionId = versionMetricDao.insert(versionMetrics);
 
-            }
-            else if (project && pacckage && clazz && method) {
-                if (metric.getName().equals("Ci")) {
-                    methodMetrics.setCi(metric);
-                }
-                else if (metric.getName().equals("Di")) {
-                    methodMetrics.setDi(metric);
-                }
-                else if (metric.getName().equals("Fin")) {
-                    methodMetrics.setFin(metric);
-                }
-                else if (metric.getName().equals("Fout")) {
-                    methodMetrics.setFout(metric);
-                }
-                else if (metric.getName().equals("IOVars")) {
-                    methodMetrics.setIovars(metric);
-                }
-                else if (metric.getName().equals("MCLC")) {
-                    methodMetrics.setMclc(metric);;
-                }
-                else if (metric.getName().equals("NBD")) {
-                    methodMetrics.setNbd(metric);
-                }
-                else if (metric.getName().equals("NCOMP")) {
-                    methodMetrics.setNcomp(metric);
-                }
-                else if (metric.getName().equals("NOP")) {
-                    methodMetrics.setNop(metric);
-                }
-                else if (metric.getName().equals("NVAR")) {
-                    methodMetrics.setNvar(metric);
-                }
-                else if (metric.getName().equals("Si")) {
-                    methodMetrics.setSi(metric);
-                }
-                else if (metric.getName().equals("TLOC")) {
-                    methodMetrics.setTloc(metric);
-                }
-                else if (metric.getName().equals("VG")) {
-                    methodMetrics.setVg(metric);
-                }
+                } else if (project && pacckage && !clazz && !method) {
+                    if (metric.getName().equals("A")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setA(metric);
+                    } else if (metric.getName().equals("CCRC")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setCcrc(metric);
+                    } else if (metric.getName().equals("Ca")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setCa(metric);
+                    } else if (metric.getName().equals("Ce")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setCe(metric);
+                    } else if (metric.getName().equals("DMS")) {
+                        //int insert = metricDao.insert(metric);
+                        //metric.setId(insert);
+                        packageMetrics.setDms(metric);
+                    } else if (metric.getName().equals("I")) {
+                        //int insert = metricDao.insert(metric);
+                        //metric.setId(insert);
+                        packageMetrics.setI(metric);
+                    } else if (metric.getName().equals("NOC")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setNoc(metric);
+                    } else if (metric.getName().equals("NOI")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setNoi(metric);
+                    } else if (metric.getName().equals("PkgRCi")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setPkgRCi(metric);
+                    } else if (metric.getName().equals("PkgTCi")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setPkgTCi(metric);
+                    } else if (metric.getName().equals("TLOC")) {
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        packageMetrics.setTloc(metric);
+                        int packageId = packageMetricDao.insert(packageMetrics);
+                    }
 
+                } else if (project && pacckage && clazz && !method) {
+                    if (metric.getName().equals("Aa")) {
+                        classMetrics.setAa(metric);
+                    } else if (metric.getName().equals("Ad")) {
+                        classMetrics.setAd(metric);
+                    } else if (metric.getName().equals("Ai")) {
+                        classMetrics.setAi(metric);
+                    } else if (metric.getName().equals("Ait")) {
+                        classMetrics.setAit(metric);
+                    } else if (metric.getName().equals("Ao")) {
+                        classMetrics.setAo(metric);
+                    } else if (metric.getName().equals("Av")) {
+                        classMetrics.setAv(metric);
+                    } else if (metric.getName().equals("ClRCi")) {
+                        classMetrics.setClrci(metric);
+                    } else if (metric.getName().equals("ClTCi")) {
+                        classMetrics.setCltci(metric);
+                    } else if (metric.getName().equals("DIT")) {
+                        classMetrics.setDit(metric);
+                    } else if (metric.getName().equals("HMd")) {
+                        classMetrics.setHmd(metric);
+                    } else if (metric.getName().equals("HMi")) {
+                        classMetrics.setHmi(metric);
+                    } else if (metric.getName().equals("MHF")) {
+                        classMetrics.setMhf(metric);
+                    } else if (metric.getName().equals("MIF")) {
+                        classMetrics.setMif(metric);
+                    } else if (metric.getName().equals("Ma")) {
+                        classMetrics.setMa(metric);
+                    } else if (metric.getName().equals("Md")) {
+                        classMetrics.setMd(metric);
+                    } else if (metric.getName().equals("Mi")) {
+                        classMetrics.setMi(metric);
+                    } else if (metric.getName().equals("Mit")) {
+                        classMetrics.setMit(metric);
+                    } else if (metric.getName().equals("Mo")) {
+                        classMetrics.setMo(metric);
+                    } else if (metric.getName().equals("NF")) {
+                        classMetrics.setNf(metric);
+                    } else if (metric.getName().equals("NM")) {
+                        classMetrics.setNm(metric);
+                    } else if (metric.getName().equals("NMA")) {
+                        classMetrics.setNma(metric);
+                    } else if (metric.getName().equals("NMI")) {
+                        classMetrics.setNmi(metric);
+                    } else if (metric.getName().equals("NOA")) {
+                        classMetrics.setNoa(metric);
+                    } else if (metric.getName().equals("NOCh")) {
+                        classMetrics.setNoch(metric);
+                    } else if (metric.getName().equals("NOD")) {
+                        classMetrics.setNod(metric);
+                    } else if (metric.getName().equals("NOL")) {
+                        classMetrics.setNol(metric);
+                    } else if (metric.getName().equals("NOPa")) {
+                        classMetrics.setNopa(metric);
+                    } else if (metric.getName().equals("NORM")) {
+                        classMetrics.setNorm(metric);
+                    } else if (metric.getName().equals("NPF")) {
+                        classMetrics.setNpf(metric);
+                    } else if (metric.getName().equals("NPM")) {
+                        classMetrics.setNpm(metric);
+                    } else if (metric.getName().equals("NSF")) {
+                        classMetrics.setNsf(metric);
+                    } else if (metric.getName().equals("NSM")) {
+                        classMetrics.setNsm(metric);
+                    } else if (metric.getName().equals("PMR")) {
+                        classMetrics.setPmr(metric);
+                    } else if (metric.getName().equals("PMd")) {
+                        classMetrics.setPmd(metric);
+                    } else if (metric.getName().equals("PMi")) {
+                        classMetrics.setPmi(metric);
+                    } else if (metric.getName().equals("RTLOC")) {
+                        classMetrics.setRtloc(metric);
+                    } else if (metric.getName().equals("SIX")) {
+                        classMetrics.setSix(metric);
+                    } else if (metric.getName().equals("TLOC")) {
+                        classMetrics.setTloc(metric);
+                    } else if (metric.getName().equals("WMC")) {
+                        classMetrics.setWmc(metric);
+                    }
+
+                } else if (project && pacckage && clazz && method) {
+                    if (metric.getName().equals("Ci")) {
+                        methodMetrics.setCi(metric);
+                    } else if (metric.getName().equals("Di")) {
+                        methodMetrics.setDi(metric);
+                    } else if (metric.getName().equals("Fin")) {
+                        methodMetrics.setFin(metric);
+                    } else if (metric.getName().equals("Fout")) {
+                        methodMetrics.setFout(metric);
+                    } else if (metric.getName().equals("IOVars")) {
+                        methodMetrics.setIovars(metric);
+                    } else if (metric.getName().equals("MCLC")) {
+                        methodMetrics.setMclc(metric);;
+                    } else if (metric.getName().equals("NBD")) {
+                        methodMetrics.setNbd(metric);
+                    } else if (metric.getName().equals("NCOMP")) {
+                        methodMetrics.setNcomp(metric);
+                    } else if (metric.getName().equals("NOP")) {
+                        methodMetrics.setNop(metric);
+                    } else if (metric.getName().equals("NVAR")) {
+                        methodMetrics.setNvar(metric);
+                    } else if (metric.getName().equals("Si")) {
+                        methodMetrics.setSi(metric);
+                    } else if (metric.getName().equals("TLOC")) {
+                        methodMetrics.setTloc(metric);
+                    } else if (metric.getName().equals("VG")) {
+                        methodMetrics.setVg(metric);
+                    }
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     @Override
@@ -347,21 +330,16 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         if (tagAtual.equals("Project")) {
             project = false;
-        }
-
-        else if (tagAtual.equals("Package")) {
+        } else if (tagAtual.equals("Package")) {
             versionMetrics.getListPackageMetric().add(packageMetrics);
             pacckage = false;
-        }
-        else if (tagAtual.equals("Class")) {
+        } else if (tagAtual.equals("Class")) {
             packageMetrics.getListClassMetrics().add(classMetrics);
             clazz = false;
-        }
-        else if (tagAtual.equals("Method")) {
+        } else if (tagAtual.equals("Method")) {
             classMetrics.getListMethodsMetrics().add(methodMetrics);
             method = false;
         }
 
     }
-
 }

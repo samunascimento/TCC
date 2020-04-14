@@ -14,11 +14,6 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.jasome.jdbc.dao.ClassMetricsDao;
-import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
-import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
-import br.ufjf.dcc.jasome.jdbc.dao.PackageMetricsDao;
-import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -44,12 +39,6 @@ public class JasomeMethods {
 
     private static String repository;
     private static String jasomePath;
-
-    private MetricDao metricDao = new MetricDao();
-    private VersionMetricsDao versionMetricDao = new VersionMetricsDao();
-    private PackageMetricsDao packageMetricDao = new PackageMetricsDao();
-    private ClassMetricsDao classMetricDao = new ClassMetricsDao();
-    private MethodMetricsDao methodsMetricDao = new MethodMetricsDao();
 
     private static final String FILE_PATH = ".".concat(File.separator).concat("thirdparty").concat(File.separator)
             .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
@@ -85,7 +74,7 @@ public class JasomeMethods {
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             for (Formats revision : log) {
-                projectMetrics = analyzeVersion(revision, repositoryPath, i);
+                projectMetrics = analyzeVersion(revision, repositoryPath, i); 
                 System.out.println(new Date());
 
             }
@@ -126,7 +115,7 @@ public class JasomeMethods {
             //    System.out.println("temos um erro nesta versão");
             //}
             printMetrics(projectMetrics, i);
-
+            
             List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
             jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
             jasomeExtract.extractMetricClass(projectMetrics, listPackage);
@@ -138,7 +127,7 @@ public class JasomeMethods {
         return projectMetrics;
     }
 
-    public void printMetrics(ProjectMetrics projectMetrics, int version) {
+    public void printMetrics(ProjectMetrics projectMetrics,int version) {
         System.out.println("Project: TLOC = " + projectMetrics.getListVersionMetrics().get(version).getTloc().getValue());
         System.out.println("Package: Number of Classes = " + projectMetrics.getListVersionMetrics().get(version).getListPackageMetric().get(0).getNoc().getValue());
         System.out.println("Class: Number of Methods = " + projectMetrics.getListVersionMetrics().get(version).getListPackageMetric().get(0).getListClassMetrics().get(0).getMa().getValue());
