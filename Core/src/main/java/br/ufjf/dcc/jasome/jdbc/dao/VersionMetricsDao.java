@@ -28,8 +28,8 @@ public class VersionMetricsDao {
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tloc) "
-                + "VALUES (?) "
+                + "(tlocID, projectID) "
+                + "VALUES (?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -40,6 +40,7 @@ public class VersionMetricsDao {
             stmt = connection.prepareStatement(sql);
             //set values
             stmt.setInt(1, versionMetrics.getTloc().getId());
+            stmt.setInt(2, versionMetrics.getProjectID());
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();
@@ -96,7 +97,7 @@ public class VersionMetricsDao {
                 
                 versionMetrics = new VersionMetrics();
 
-                int tlocID = resultSet.getInt("tloc");
+                int tlocID = resultSet.getInt("tlocID");
 
                 Metric metric = metricDao.selectID(tlocID);
 
@@ -133,7 +134,7 @@ public class VersionMetricsDao {
             //tableKeys = stmt.getGeneratedKeys();
             resultSet.next();
 
-            int tlocID = resultSet.getInt("tloc");
+            int tlocID = resultSet.getInt("tlocID");
 
             Metric metric = metricDao.selectID(tlocID);
 
@@ -151,8 +152,8 @@ public class VersionMetricsDao {
         }
     }
 
-    public void update(Metric metric, String id) throws SQLException {
-        String sql = "UPDATE tb_versionMetrics SET tloc = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
+    public void update(VersionMetrics verionMetric, int id) throws SQLException {
+        String sql = null; // "UPDATE tb_versionMetrics SET tloc = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
 
         PreparedStatement stmt = null;
 

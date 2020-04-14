@@ -6,8 +6,10 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
+import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +25,21 @@ public class TestConnection {
         VersionMetricsDao versionDao = new VersionMetricsDao();
 
         VersionMetrics versionMetric = new VersionMetrics();
+        
+        ProjectMetricsDao projectDao =  new ProjectMetricsDao();
+        
+        ProjectMetrics project =  new ProjectMetrics();
+        
+        project.setSourceDir("teste");
+        project.setUrl("testeUrl");
+        project.setName("testname");
+        project.setOrganization("organization");
+        
+        int projectId = projectDao.insert(project);
+        
+        project.setId(projectId);
+        
+        
 
         Metric metric = new Metric();
         metric.setName("name");
@@ -36,6 +53,8 @@ public class TestConnection {
         System.out.println("insert = " + insert);
 
         metric.setId(insert);
+        
+        versionMetric.setProjectID(projectId);
 
         versionMetric.setTloc(metric);
 

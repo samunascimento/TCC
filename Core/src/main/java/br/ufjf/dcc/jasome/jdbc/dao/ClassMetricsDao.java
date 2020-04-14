@@ -34,10 +34,10 @@ public class ClassMetricsDao {
     
     public int insert(ClassMetrics classMetrics) {
         String sql = "INSERT INTO tb_classMetrics "
-                + "(aa,ad,ai,ait,ao,av,clrci,cltci,dit,hmd,hmi,mhf,mif,ma,md,"
-                + "mi,mit,mo,nf,nm,nma,nmi,noa,noch,nod,nol,nopa,norm,npf,npm,nsf,"
-                + "nsm,pmr,pmd,pmi,rtloc,six,tloc,wmc)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "(aaID,adID,aiID,aitID,aoID,avID,clrciID,cltciID,ditID,hmdID,hmiID,mhfID,mifID,maID,mdID,"
+                + "miID,mitID,moID,nfID,nmID,nmaID,nmiID,noaID,nochID,nodID,nolID,nopaID,normID,npfID,npmID,nsfID,"
+                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID,packageID)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
         
         PreparedStatement stmt = null;
@@ -85,6 +85,7 @@ public class ClassMetricsDao {
             stmt.setInt(37, classMetrics.getSix().getId());
             stmt.setInt(38, classMetrics.getTloc().getId());
             stmt.setInt(39, classMetrics.getWmc().getId());
+            stmt.setInt(40, classMetrics.getPackageId());
             
             tableKeys = stmt.executeQuery();
             
@@ -131,45 +132,45 @@ public class ClassMetricsDao {
             while(resultSet.next()){
                 classMetrics = new ClassMetrics();
                 
-                int aaID = resultSet.getInt("aa");
-                int adID = resultSet.getInt("ad");
-                int aiID = resultSet.getInt("ai");
-                int aitID = resultSet.getInt("ait");
-                int aoID = resultSet.getInt("ao");
-                int avID = resultSet.getInt("av");
-                int clrciID = resultSet.getInt("clrci");
-                int cltciID = resultSet.getInt("cltci");
-                int ditID = resultSet.getInt("dit");
-                int hmdID = resultSet.getInt("hmd");
-                int hmiID = resultSet.getInt("hmi");
-                int mhfID = resultSet.getInt("mhf");
-                int mifID = resultSet.getInt("mif");
-                int maID = resultSet.getInt("ma");
-                int mdID = resultSet.getInt("md");
-                int miID = resultSet.getInt("mi");
-                int mitID = resultSet.getInt("mit");
-                int moID = resultSet.getInt("mo");
-                int nfID = resultSet.getInt("nf");
-                int nmID = resultSet.getInt("nm");
-                int nmaID = resultSet.getInt("nma");
-                int nmiID = resultSet.getInt("nmi");
-                int noaID = resultSet.getInt("noa");
-                int nochID = resultSet.getInt("noch");
-                int nodID = resultSet.getInt("nod");
-                int nolID = resultSet.getInt("nol");
-                int nopaID = resultSet.getInt("nopa");
-                int normID = resultSet.getInt("norm");
-                int npfID = resultSet.getInt("npf");
-                int npmID = resultSet.getInt("npm");
-                int nsfID = resultSet.getInt("nsf");
-                int nsmID = resultSet.getInt("nsm");
-                int pmrID = resultSet.getInt("pmr");
-                int pmdID = resultSet.getInt("pmd");
-                int pmiID = resultSet.getInt("pmi");
-                int rtlocID = resultSet.getInt("rtloc");
-                int sixID = resultSet.getInt("six");
-                int tlocID = resultSet.getInt("tloc");
-                int wmcID = resultSet.getInt("wmc");
+                int aaID = resultSet.getInt("aaID");
+                int adID = resultSet.getInt("adID");
+                int aiID = resultSet.getInt("aiID");
+                int aitID = resultSet.getInt("aitID");
+                int aoID = resultSet.getInt("aoID");
+                int avID = resultSet.getInt("avID");
+                int clrciID = resultSet.getInt("clrciID");
+                int cltciID = resultSet.getInt("cltciID");
+                int ditID = resultSet.getInt("ditID");
+                int hmdID = resultSet.getInt("hmdID");
+                int hmiID = resultSet.getInt("hmiID");
+                int mhfID = resultSet.getInt("mhfID");
+                int mifID = resultSet.getInt("mifID");
+                int maID = resultSet.getInt("maID");
+                int mdID = resultSet.getInt("mdID");
+                int miID = resultSet.getInt("miID");
+                int mitID = resultSet.getInt("mitID");
+                int moID = resultSet.getInt("moID");
+                int nfID = resultSet.getInt("nfID");
+                int nmID = resultSet.getInt("nmID");
+                int nmaID = resultSet.getInt("nmaID");
+                int nmiID = resultSet.getInt("nmiID");
+                int noaID = resultSet.getInt("noaID");
+                int nochID = resultSet.getInt("nochID");
+                int nodID = resultSet.getInt("nodID");
+                int nolID = resultSet.getInt("nolID");
+                int nopaID = resultSet.getInt("nopaID");
+                int normID = resultSet.getInt("normID");
+                int npfID = resultSet.getInt("npfID");
+                int npmID = resultSet.getInt("npmID");
+                int nsfID = resultSet.getInt("nsfID");
+                int nsmID = resultSet.getInt("nsmID");
+                int pmrID = resultSet.getInt("pmrID");
+                int pmdID = resultSet.getInt("pmdID");
+                int pmiID = resultSet.getInt("pmiID");
+                int rtlocID = resultSet.getInt("rtlocID");
+                int sixID = resultSet.getInt("sixID");
+                int tlocID = resultSet.getInt("tlocID");
+                int wmcID = resultSet.getInt("wmcID");
 
                 Metric aaIDMetric = metricDao.selectID(aaID);
                 Metric adIDMetric = metricDao.selectID(adID);
@@ -262,8 +263,8 @@ public class ClassMetricsDao {
         }
     }
     
-    public void update(Metric metric, int id) throws SQLException {
-        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() +  "' WHERE ID = '" + id + "';";
+    public void update(ClassMetrics classMetric, int id) throws SQLException { //arrumar
+        String sql = null;// "UPDATE tb_Classmetrics SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() +  "' WHERE ID = '" + id + "';";
         
         PreparedStatement stmt = null;
                 

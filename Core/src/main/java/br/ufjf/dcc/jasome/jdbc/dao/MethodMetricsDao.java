@@ -33,8 +33,8 @@ public class MethodMetricsDao {
 
     public int insert(MethodMetrics methodMetrics) {
         String sql = "INSERT INTO tb_methodMetrics "
-                + "(ci,di,fin,fout,iovars,mclc,nbd,ncomp,nop,nvar,si,tloc,vg)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "(ciID,diID,finID,foutID,iovarsID,mclcID,nbdID,ncompID,nopID,nvarID,siID,tlocID,vgID,classID)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -56,6 +56,7 @@ public class MethodMetricsDao {
             stmt.setInt(11, methodMetrics.getSi().getId());
             stmt.setInt(12, methodMetrics.getTloc().getId());
             stmt.setInt(13, methodMetrics.getVg().getId());
+            stmt.setInt(14, methodMetrics.getClassId());
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
@@ -83,19 +84,19 @@ public class MethodMetricsDao {
 
                 methodMetrics = new MethodMetrics();
 
-                int ciID = resultSet.getInt("ci");
-                int diID = resultSet.getInt("di");
-                int finID = resultSet.getInt("fin");
-                int foutID = resultSet.getInt("fout");
-                int iovarsID = resultSet.getInt("iovars");
-                int mclcID = resultSet.getInt("mclc");
-                int nbdID = resultSet.getInt("nbd");
-                int ncompID = resultSet.getInt("ncomp");
-                int nopID = resultSet.getInt("nop");
-                int nvarID = resultSet.getInt("nvar");
-                int siID = resultSet.getInt("si");
-                int tlocID = resultSet.getInt("tloc");
-                int vgID = resultSet.getInt("vg");
+                int ciID = resultSet.getInt("ciID");
+                int diID = resultSet.getInt("diID");
+                int finID = resultSet.getInt("finID");
+                int foutID = resultSet.getInt("foutID");
+                int iovarsID = resultSet.getInt("iovarsID");
+                int mclcID = resultSet.getInt("mclcID");
+                int nbdID = resultSet.getInt("nbdID");
+                int ncompID = resultSet.getInt("ncompID");
+                int nopID = resultSet.getInt("nopID");
+                int nvarID = resultSet.getInt("nvarID");
+                int siID = resultSet.getInt("siID");
+                int tlocID = resultSet.getInt("tlocID");
+                int vgID = resultSet.getInt("vgID");
 
                 Metric ciIDMetric = metricDao.selectID(ciID);
                 Metric diIDMetric = metricDao.selectID(diID);
@@ -152,19 +153,19 @@ public class MethodMetricsDao {
             resultSet.next();
             methodMetrics = new MethodMetrics();
 
-            int ciID = resultSet.getInt("ci");
-            int diID = resultSet.getInt("di");
-            int finID = resultSet.getInt("fin");
-            int foutID = resultSet.getInt("fout");
-            int iovarsID = resultSet.getInt("iovars");
-            int mclcID = resultSet.getInt("mclc");
-            int nbdID = resultSet.getInt("nbd");
-            int ncompID = resultSet.getInt("ncomp");
-            int nopID = resultSet.getInt("nop");
-            int nvarID = resultSet.getInt("nvar");
-            int siID = resultSet.getInt("si");
-            int tlocID = resultSet.getInt("tloc");
-            int vgID = resultSet.getInt("vg");
+            int ciID = resultSet.getInt("ciID");
+            int diID = resultSet.getInt("diID");
+            int finID = resultSet.getInt("finID");
+            int foutID = resultSet.getInt("foutID");
+            int iovarsID = resultSet.getInt("iovarsID");
+            int mclcID = resultSet.getInt("mclcID");
+            int nbdID = resultSet.getInt("nbdID");
+            int ncompID = resultSet.getInt("ncompID");
+            int nopID = resultSet.getInt("nopID");
+            int nvarID = resultSet.getInt("nvarID");
+            int siID = resultSet.getInt("siID");
+            int tlocID = resultSet.getInt("tlocID");
+            int vgID = resultSet.getInt("vgID");
 
             methodMetrics.setCi(metricDao.selectID(ciID));
             methodMetrics.setDi(metricDao.selectID(diID));
@@ -203,8 +204,8 @@ public class MethodMetricsDao {
         }
     }
 
-    public void update(Metric metric, int id) {
-        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() + "' WHERE ID = '" + id + "';";
+    public void update(MethodMetrics methodMetric, int id) {
+        String sql =null; // "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() + "' WHERE ID = '" + id + "';";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();

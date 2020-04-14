@@ -8,6 +8,8 @@ import java.util.List;
  * @author antonio henrique
  */
 public class VersionMetrics {
+
+    
     private Metric tloc;
     
     private int id;
@@ -15,6 +17,8 @@ public class VersionMetrics {
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
     
     private boolean error = false;
+    
+    private int projectID;
 
     public Metric getTloc() {
         return tloc;
@@ -56,6 +60,20 @@ public class VersionMetrics {
     @Override
     public String toString() {
         return "VersionMetrics{" + "tloc=" + tloc + ", id=" + id + ", listPackageMetric=" + listPackageMetric +'}';
+    }
+    
+    /**
+     * @return the projectID
+     */
+    public int getProjectID() {
+        return projectID;
+    }
+
+    /**
+     * @param projectID the projectID to set
+     */
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
     }
     
     

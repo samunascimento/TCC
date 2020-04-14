@@ -8,6 +8,8 @@ import java.util.List;
  * @author antonio henrique
  */
 public class ClassMetrics {
+
+    
     Metric aa;
     Metric ad;
     Metric ai;
@@ -51,6 +53,8 @@ public class ClassMetrics {
     List<MethodMetrics> listMethodsMetrics = new ArrayList<>();
     
     private int id;
+    private int packageId;
+    
     private String lineEnd;
     private String lineStart;
     private String name;
@@ -422,5 +426,18 @@ public class ClassMetrics {
         this.id = id;
     }
     
+    /**
+     * @return the packageId
+     */
+    public int getPackageId() {
+        return packageId;
+    }
+
+    /**
+     * @param packageId the packageId to set
+     */
+    public void setPackageId(int packageId) {
+        this.packageId = packageId;
+    }
     
 }

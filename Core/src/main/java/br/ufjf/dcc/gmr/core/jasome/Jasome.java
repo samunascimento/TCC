@@ -22,14 +22,17 @@ public class Jasome {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException {
         try {
-            //ProjectMetricsDao projectDao = projectDao = new ProjectMetricsDao();
-            //ProjectMetrics project = project = new ProjectMetrics();
+
             JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-            
-           // project.setSourceDir(jasome.GetRepositoryPath());
-           // projectDao.insert(project);
-            
-            jasome.runProject(jasome.GetRepositoryPath());
+
+            ProjectMetrics project = new ProjectMetrics();
+
+            project.setSourceDir(jasome.GetRepositoryPath());
+            project.setUrl("testeUrl");
+            project.setName("testname");
+            project.setOrganization("organization");
+
+            jasome.runProject(project);
             /*jasome.getArchiveType().add("java");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());

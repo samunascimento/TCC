@@ -6,6 +6,8 @@ package br.ufjf.dcc.gmr.core.jasome.model;
  * @author antonio henrique
  */
 public class MethodMetrics {
+
+    
     Metric ci;
     Metric di;
     Metric fin;
@@ -21,6 +23,8 @@ public class MethodMetrics {
     Metric vg;
     
     private int id;
+    private int classId;
+    
     private String constructor;
     private String lineEnd;
     private String lineStart;
@@ -169,6 +173,20 @@ public class MethodMetrics {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    /**
+     * @return the classId
+     */
+    public int getClassId() {
+        return classId;
+    }
+
+    /**
+     * @param classId the classId to set
+     */
+    public void setClassId(int classId) {
+        this.classId = classId;
     }
     
     

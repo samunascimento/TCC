@@ -14,12 +14,16 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -64,17 +68,22 @@ public class JasomeMethods {
         return repositoryPath;
     }
 
-    public void runProject(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
+    public void runProject(ProjectMetrics project) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         try {
             int i = 0;
-            System.out.println(repositoryPath);
-            List<Formats> log = Git.logAll(repositoryPath);
+            System.out.println(project.getSourceDir());
+            List<Formats> log = Git.logAll(project.getSourceDir());
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
+            
+            ProjectMetricsDao projectDao = projectDao = new ProjectMetricsDao();
+            int projectId = projectDao.insert(project);
+            project.setId(projectId);
+            
             for (Formats revision : log) {
-                projectMetrics = analyzeVersion(revision, repositoryPath, i); 
+                projectMetrics = analyzeVersion(revision, project, i); 
                 System.out.println(new Date());
 
             }
@@ -90,21 +99,23 @@ public class JasomeMethods {
             System.out.println(ex.getMessage());
         } catch (IsOutsideRepository ex) {
             System.out.println(ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(JasomeMethods.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ProjectMetrics analyzeVersion(Formats revision, String repositoryPath1, int i) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
+    public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         System.out.println("======================" + revision.getCommitHash() + "==================");
-        Git.clean(repositoryPath1, true, 3);
-        Git.reset(repositoryPath1, true, false, false, null);
-        Git.checkout(revision.getCommitHash(), repositoryPath1);
+        Git.clean(project.getSourceDir(), true, 3);
+        Git.reset(project.getSourceDir(), true, false, false, null);
+        Git.checkout(revision.getCommitHash(), project.getSourceDir());
         System.out.println(new Date());
-        CLIExecution extractMetrics = extractMetrics(repositoryPath1);
+        CLIExecution extractMetrics = extractMetrics(project);
         System.out.println(new Date());
         System.out.println("==============================================");
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX();
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project);
         readXml.fazerParsing(extractMetrics.getOutputString());
         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
         if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
@@ -126,7 +137,7 @@ public class JasomeMethods {
         return projectMetrics;
     }
 
-    public void runJasome(String repositoryPath, List files, List paths, int numberCommit) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
+    /*public void runJasome(ProjectMetrics project, List files, List paths, int numberCommit) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         try {
@@ -166,7 +177,7 @@ public class JasomeMethods {
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
         }
-    }
+    }*/
 
     public void listJavaArchives(String repositoryPath, File directory, List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
         try {
@@ -211,12 +222,12 @@ public class JasomeMethods {
         }
     }
 
-    public static CLIExecution extractMetrics(String path) throws IOException {
+    public static CLIExecution extractMetrics(ProjectMetrics project) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CLIExecute.executeParallel(jasomePath.concat(".bat").concat(" ").concat("\"").concat(path).concat("\""), ".");
+            return CLIExecute.executeParallel(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
         } else {
-            return CLIExecute.executeParallel(jasomePath.concat(" ").concat(path), ".");
+            return CLIExecute.executeParallel(jasomePath.concat(" ").concat(project.getSourceDir()), ".");
         }
     }
 
