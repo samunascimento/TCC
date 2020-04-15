@@ -20,4 +20,21 @@ public class ListUtils {
         return result;
 
     }
+    
+    public static String getRawStringForm(List<String> list) {
+        String raw = "";
+        for (String line : list) {
+            raw = raw + (line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+        }
+        return raw;
+    }
+
+    public static List<String> getRawListStringForm(List<String> list) {
+        List<String> raw = new ArrayList<>();
+        for (String line : list) {
+            raw.add(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+        }
+        return raw;
+    }
+    
 }

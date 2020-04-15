@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.principal;
+/*package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author ice
  */
-public class Conflicts {
+/*public class Conflicts {
 
     public static List<Formats> getMerges(String repository) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist {
         List<Formats> merge = Git.logMergeAll(repository);
@@ -190,4 +190,4 @@ public class Conflicts {
             System.out.println("File not found!");
         }
     }
-}
+}*/

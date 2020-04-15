@@ -29,8 +29,8 @@ public class PackageMetricsDao {
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?) "
+                + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID,versionID) " //adicionar nocId, iId
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -38,7 +38,7 @@ public class PackageMetricsDao {
         ResultSet tableKeys = null;
 
         try {
-            stmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement(sql);
             stmt.setInt(1, packageMetrics.getA().getId());
             stmt.setInt(2, packageMetrics.getCcrc().getId());
             stmt.setInt(3, packageMetrics.getCa().getId());
@@ -50,6 +50,7 @@ public class PackageMetricsDao {
             stmt.setInt(9, packageMetrics.getPkgRCi().getId());
             stmt.setInt(10, packageMetrics.getPkgTCi().getId());
             stmt.setInt(11, packageMetrics.getTloc().getId());
+            stmt.setInt(12, packageMetrics.getVersionId());
 
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
@@ -203,8 +204,8 @@ public class PackageMetricsDao {
         }
     }
 
-    public void update(Metric metric, int id) throws SQLException {
-        String sql = "UPDATE tb_packageMetrics SET '" + metric.getName() + " = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
+    public void update(PackageMetrics packageMetrics, int id) throws SQLException {
+        String sql = null; // "UPDATE tb_packageMetrics SET '" + metric.getName() + " = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
 
         PreparedStatement stmt = null;
 

@@ -103,6 +103,11 @@ public class RepositoryAnalysis {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                System.out.println("ParserError!");
+                return null;
+            }
+
             JavaVisitor visitor = new JavaVisitor();
             visitor.visit(tree);
 
@@ -119,6 +124,10 @@ public class RepositoryAnalysis {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
+            
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                return null;
+            }
 
             CPPVisitor visitor = new CPPVisitor();
             visitor.visit(tree);
@@ -137,8 +146,12 @@ public class RepositoryAnalysis {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();
-
-            CPPVisitor visitor = new CPPVisitor();
+            
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                return null;
+            }
+            
+            Python3Visitor visitor = new Python3Visitor();
             visitor.visit(tree);
 
             return visitor.getList();
@@ -150,21 +163,22 @@ public class RepositoryAnalysis {
 
     public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
         try {
+
+            List<SyntaxStructure> rawList = null;
             List<SyntaxStructure> list = new ArrayList();
+
             if (filePath.endsWith(".java")) {
-                for (SyntaxStructure ss : analyzeJavaSyntaxTree(filePath)) {
-                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
-                        list.add(ss);
-                    }
-                }
+                rawList = analyzeJavaSyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-                for (SyntaxStructure ss : analyzeCPPSyntaxTree(filePath)) {
-                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
-                        list.add(ss);
-                    }
-                }
+                rawList = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
-                for (SyntaxStructure ss : analyzePythonSyntaxTree(filePath)) {
+                rawList = analyzePythonSyntaxTree(filePath);
+            } else {
+                return null;
+            }
+
+            if (rawList != null) {
+                for (SyntaxStructure ss : rawList) {
                     if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
                         list.add(ss);
                     }
@@ -274,7 +288,7 @@ public class RepositoryAnalysis {
                                     beginLine = i + 1;
                                     for (int j = i - linesContext; j < i; j++) {
                                         if (j < 0) {
-                                            j = 1;
+                                            j = -1;
                                         } else {
                                             beforeContext.add(allFile.get(j));
                                         }
@@ -292,7 +306,7 @@ public class RepositoryAnalysis {
                                     }
                                     endLine = i + 1;
                                     for (int j = i + 1; j < i + 1 + linesContext; j++) {
-                                        if (j == allFile.size()) {
+                                        if (j >= allFile.size()) {
                                             break;
                                         } else {
                                             afterContext.add(allFile.get(j));
@@ -314,9 +328,27 @@ public class RepositoryAnalysis {
 
                                     //Getting solution
                                     Git.checkout(hash.getCommitHash(), sandbox.getPath());
-                                    solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - beforeContext.size());
-                                    solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + afterContext.size());
-                                    if (solutionFirstLine > 0 && solutionFinalLine > 0) {
+                                    if (!beforeContext.isEmpty()) {
+                                        solutionFirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine - 1);
+                                    } else {
+                                        solutionFirstLine = 0;
+                                    }
+                                    if (!afterContext.isEmpty()) {
+                                        solutionFinalLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, endLine + 1);
+                                    } else {
+                                        solutionFinalLine = 0;
+                                    }
+                                    if (solutionFirstLine == 0 && solutionFinalLine == 0) {
+                                        solution = getFileContent(sandbox.getPath() + insideFilePath);
+                                        solution.add(0, "<SOF>");
+                                        solution.add("<EOF>");
+                                    } else if (solutionFirstLine == 0) {
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath), 0, solutionFinalLine - 1);
+                                        solution.add(0, "<SOF>");
+                                    } else if (solutionFinalLine == 0) {
+                                        solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath), solutionFirstLine - 1, getFileContent(sandbox.getPath() + insideFilePath).size() - 1);
+                                        solution.add("<EOF>");
+                                    } else if (solutionFirstLine > 0 && solutionFinalLine > 0) {
                                         solution = ListUtils.getSubList(getFileContent(sandbox.getPath() + insideFilePath), solutionFirstLine - 1, solutionFinalLine - 1);
                                     }
                                     Git.checkout("master", sandbox.getPath());

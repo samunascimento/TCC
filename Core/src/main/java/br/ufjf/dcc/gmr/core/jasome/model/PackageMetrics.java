@@ -9,19 +9,7 @@ import java.util.List;
  */
 public class PackageMetrics {
 
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
+    
     Metric a;
     Metric ccrc;
     Metric ca;
@@ -35,6 +23,8 @@ public class PackageMetrics {
     Metric tloc;
     
     private int id;
+    
+    private int versionId;
     
     List<ClassMetrics> listClassMetrics;
     
@@ -146,6 +136,34 @@ public class PackageMetrics {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    /**
+     * @return the versionId
+     */
+    public int getVersionId() {
+        return versionId;
+    }
+
+    /**
+     * @param versionId the versionId to set
+     */
+    public void setVersionId(int versionId) {
+        this.versionId = versionId;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
     
     

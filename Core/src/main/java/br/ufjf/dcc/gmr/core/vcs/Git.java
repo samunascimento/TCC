@@ -26,7 +26,10 @@ import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.vcs.types.FileStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
+import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
+import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Status;
+import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -142,6 +145,66 @@ public class Git {
 
         return list;
     }
+    
+    private static List<Version> logVersion(String repositoryPath, boolean merge, boolean all) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
+        CLIExecution execution = null;
+        String command = "git log ";
+        if (merge) {
+            command = command.concat(" --merges ");
+        }
+
+        if (all) {
+            command = command.concat(" --all ");
+        }
+
+        //log method formatting
+        command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
+        List<Version> list = new ArrayList<>();
+        Version model = new Version();
+
+        execution = CLIExecute.execute(command, repositoryPath);
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+                }
+            }
+        }
+        //size: Number of Parameters
+        String array[];
+        int i = 0;
+        for (String line : execution.getOutput()) {
+            array = line.split(",", 4);
+            String authorName = array[0];
+            String commitHash = array[1];
+            String authorDate = array[2];
+            String commitDescription = array[3];
+            List<String> parent = Git.parent(repositoryPath, commitHash);
+            List<MyFile> file = new ArrayList<>();
+            boolean versionIsMerge = false;
+            if( parent.size() == 2){
+                versionIsMerge = true;
+            }
+            //Split Date
+            //System.out.println("autorDate: " + authorDate);
+            array = array[2].split(" ", 3);
+            String dateForm = array[0];
+            String time = array[1];
+            String text = dateForm + " " + time;
+            String localization = array[2];
+            String formato = "yyyy-MM-dd HH:mm:ss";
+            Date dateFormat = new SimpleDateFormat(formato).parse(text);
+            //end
+
+            model = new Version(commitHash, authorName, dateFormat, versionIsMerge, parent, commitDescription, MergeStatus.NON_CONFLICT);            
+            model.setFile(file);
+            list.add(model);
+            i++;
+        }
+
+        return list;
+    }
+
 
     /**
      * @param repositoryPath
@@ -171,6 +234,10 @@ public class Git {
      */
     public static List<Formats> logAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
         return Git.log(repositoryPath, false, true);
+    }
+    
+    public static List<Version> logAllVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist {
+        return Git.logVersion(repositoryPath, false, true);
     }
 
     /**
@@ -267,14 +334,18 @@ public class Git {
         return result;
     }
 
-    public static List<String> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
-
-        List<String> result = new ArrayList<>();
+    public static List<MyFile> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
+        
         List<FileStatus> status = status(repositoryPath);
+         
+        List<MyFile> result = new ArrayList<>();       
 
         for (FileStatus file : status) {
             if (file.getType() == Status.UNMERGED) {
-                result.add(file.getPath());
+                MyFile aux = new MyFile();
+                aux.setPath(file.getPath());
+                aux.setStatus(Status.UNMERGED);
+                result.add(aux);
             }
         }
 
