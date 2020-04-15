@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 
@@ -21,7 +20,6 @@ public final class View extends JFrame {
 
     private JPanel leftPanel;
     private JPanel rightPanel;
-    private JScrollPane tablePane;
     private JScrollPane treePane;
     private JTable table;
     private JTextArea textArea;
@@ -43,7 +41,6 @@ public final class View extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
-        this.tablePane = new JScrollPane(getTable());
         this.chooser = new JFileChooser();
         this.menuBar = new JMenuBar();
         this.menu = new JMenu();
@@ -66,11 +63,11 @@ public final class View extends JFrame {
     private void paintTablePanel() {
         int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
         int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
-        getTableScrollPane().setPreferredSize(new Dimension(leftPanelWidth, leftPanelHight));
     }
 
     private void paintLeftPanel() {
         int menuBarHight = (int) menuBar.getPreferredSize().getHeight();
+        this.leftPanel.setLayout(new BorderLayout());
         getLeftPanel().setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
         getLeftPanel().setVisible(false);
     }
@@ -168,7 +165,7 @@ public final class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(getProgressBar(), BorderLayout.SOUTH);
 
-        getLeftPanel().add(getTableScrollPane(), BorderLayout.CENTER);
+        getLeftPanel().add(new JScrollPane(table), BorderLayout.CENTER);
         getLeftPanel().add(getTreeScrollPane(), BorderLayout.EAST);
 
         getRightPanel().add(getTextArea(), BorderLayout.CENTER);
@@ -286,13 +283,6 @@ public final class View extends JFrame {
     }
 
     /**
-     * @return the tablePane
-     */
-    public JScrollPane getTableScrollPane() {
-        return tablePane;
-    }
-
-    /**
      * @return the textArea
      */
     public JTextArea getTextArea() {
@@ -395,13 +385,6 @@ public final class View extends JFrame {
      */
     public void setTable(JTable table) {
         this.table = table;
-    }
-
-    /**
-     * @param tableScrollPane the tablePane to set
-     */
-    public void setTableScrollPane(JScrollPane tableScrollPane) {
-        this.tablePane = tableScrollPane;
     }
 
     /**
