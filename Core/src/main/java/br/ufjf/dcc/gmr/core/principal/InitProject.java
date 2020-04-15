@@ -6,30 +6,10 @@
 package br.ufjf.dcc.gmr.core.principal;
 
 import br.ufjf.dcc.gmr.core.chunks.view.View;
-import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
-
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
-import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
-import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
-import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
-import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
-import br.ufjf.dcc.gmr.core.vcs.types.Formats;
-import br.ufjf.dcc.gmr.core.vcs.types.Line;
-import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
-import br.ufjf.dcc.gmr.core.vcs.types.Project;
-import br.ufjf.dcc.gmr.core.vcs.types.Status;
-import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import br.ufjf.dcc.gmr.core.vcs.types.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -149,9 +129,7 @@ public class InitProject {
         result.setPath(projectPath);
         
         List<Version> versions = Git.logAllVersion(projectPath);
-        
-        View.progressBar.setMinimum(0);    
-        View.progressBar.setMaximum(versions.size());       
+             
         
         for (Version version : versions) {            
           
