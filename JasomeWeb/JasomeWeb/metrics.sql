@@ -24,10 +24,8 @@ CREATE TABLE tb_projectMetrics(
 CREATE TABLE tb_versionMetrics (
     ID serial NOT NULL,
     tlocID serial NOT NULL,
-    projectID serial NOT NULL,
     PRIMARY KEY (ID),
-    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (projectID) REFERENCES tb_projectMetrics(ID)
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
 
 
@@ -177,4 +175,11 @@ CREATE TABLE tb_methodMetrics (
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
     FOREIGN KEY (vgID) REFERENCES tb_metric(ID),
     FOREIGN KEY (classID) REFERENCES tb_classMetrics(ID)
+);
+
+CREATE TABLE tb_project_version (
+    project_id serial NOT NULL,
+    version_id serial NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES tb_projectMetrics(ID),
+    FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
 );
