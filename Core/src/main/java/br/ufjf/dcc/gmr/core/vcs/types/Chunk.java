@@ -93,4 +93,11 @@ public class Chunk {
     public void setSeparator(Line separator) {
         this.separator = separator;
     }
+
+    @Override
+    public String toString() {
+        return  begin.getLineNumber() + "";
+    }
+    
+    
 }

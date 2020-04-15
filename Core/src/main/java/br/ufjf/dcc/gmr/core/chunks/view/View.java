@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.view;
 
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 
@@ -20,7 +21,6 @@ public final class View extends JFrame {
 
     private JPanel leftPanel;
     private JPanel rightPanel;
-    private JScrollPane tablePane;
     private JScrollPane treePane;
     private JTable table;
     private JTextArea textArea;
@@ -42,7 +42,6 @@ public final class View extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
-        this.tablePane = new JScrollPane(getTable());
         this.chooser = new JFileChooser();
         this.menuBar = new JMenuBar();
         this.menu = new JMenu();
@@ -57,24 +56,20 @@ public final class View extends JFrame {
     }
 
     private void paintTreePane() {
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        getTreeScrollPane().setPreferredSize(new Dimension(180, leftPanelHight));
-        getTreeScrollPane().setVisible(false);
-    }
-
-    private void paintTablePanel() {
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
-        getTableScrollPane().setPreferredSize(new Dimension(leftPanelWidth, leftPanelHight));
+        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
+        this.treePane.setPreferredSize(new Dimension(180, leftPanelHight));
+        this.treePane.setVisible(false);
     }
 
     private void paintLeftPanel() {
         int menuBarHight = (int) menuBar.getPreferredSize().getHeight();
+        this.leftPanel.setLayout(new BorderLayout());
         getLeftPanel().setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
         getLeftPanel().setVisible(false);
     }
 
     private void paintRightPanel() {
+        this.rightPanel.setLayout(new BorderLayout());
         int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
         int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
         getRightPanel().setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
@@ -84,31 +79,33 @@ public final class View extends JFrame {
         List<MyFile> files = version.getFile();
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
-            tree.setModel((TreeModel) shaTree);//erro
-            getTree().addMouseListener(new JTreeMouseListener(getTree()));
+            DefaultTreeModel model = new DefaultTreeModel(shaTree);
+            getTree().setModel(model);
+            getTree().addMouseListener(new JTreeMouseListener(this, version));
             getTree().setShowsRootHandles(true);
             for (MyFile file : files) {
                 shaTree.add(createNodes(file));
             }
             getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-            getTree().setVisible(true);
         } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
-            tree.setModel((TreeModel) emptyNode);//erro
-            getTree().setVisible(true);
+            DefaultTreeModel model = new DefaultTreeModel(emptyNode);
+            getTree().setModel(model);
         }
+        getTree().setVisible(true);
         int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
         getLeftPanel().setPreferredSize(new Dimension(500, leftPanelHight));
         getTreeScrollPane().setVisible(true);
         getTreeScrollPane().updateUI();
         getLeftPanel().updateUI();
     }
-
+    
     private DefaultMutableTreeNode createNodes(MyFile file) {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());//encontrar caminho relativo
+        
         for (int i = 0; i < file.getChuncks().size(); i++) { 
-            int lineNumber = file.getChuncks().get(i).getBegin().getLineNumber();
-            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(lineNumber);
+            Chunk chunk = file.getChuncks().get(i);
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(chunk);
             fileTree.add(chunkTree);
         }
         return fileTree;
@@ -145,6 +142,7 @@ public final class View extends JFrame {
     }
 
     private void paintTextArea() {
+        this.textArea.setLayout(new BorderLayout());
         getTextArea().setEditable(false);
     }
 
@@ -166,7 +164,7 @@ public final class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(getProgressBar(), BorderLayout.SOUTH);
 
-        getLeftPanel().add(getTableScrollPane(), BorderLayout.CENTER);
+        getLeftPanel().add(new JScrollPane(table), BorderLayout.CENTER);
         getLeftPanel().add(getTreeScrollPane(), BorderLayout.EAST);
 
         getRightPanel().add(getTextArea(), BorderLayout.CENTER);
@@ -181,7 +179,6 @@ public final class View extends JFrame {
         paintLeftPanel();
         paintRightPanel();
         paintTreePane();
-        paintTablePanel();
         paintTable();
         paintTextArea();
         paintChooser();
@@ -281,13 +278,6 @@ public final class View extends JFrame {
      */
     public JTable getTable() {
         return table;
-    }
-
-    /**
-     * @return the tablePane
-     */
-    public JScrollPane getTableScrollPane() {
-        return tablePane;
     }
 
     /**
@@ -393,13 +383,6 @@ public final class View extends JFrame {
      */
     public void setTable(JTable table) {
         this.table = table;
-    }
-
-    /**
-     * @param tableScrollPane the tablePane to set
-     */
-    public void setTableScrollPane(JScrollPane tableScrollPane) {
-        this.tablePane = tableScrollPane;
     }
 
     /**

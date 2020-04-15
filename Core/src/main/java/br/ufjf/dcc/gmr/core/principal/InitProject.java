@@ -43,8 +43,8 @@ public class InitProject {
             }
 
             for (int i = 0; i < str.size(); i++) {
-
-                if (str.get(i).contains("<<<<<<<")) {
+                
+                if (str.get(i).startsWith("<<<<<<<")) {
                     chunk = new Chunk();
                     chunk.setBegin(new Line(ListUtils.getSubList(str, i, i), i + 1));
                 }
@@ -53,9 +53,10 @@ public class InitProject {
                     chunk.setSeparator(new Line(ListUtils.getSubList(str, i, i), i + 1));
                 }
 
-                if (str.get(i).contains(">>>>>>>")) {
+                if (str.get(i).startsWith(">>>>>>>")) {
                     chunk.setEnd(new Line(ListUtils.getSubList(str, i, i), i + 1));
                     chunk.setContent(ListUtils.getSubList(str, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                    result.add(chunk);
                 }
             }
 
