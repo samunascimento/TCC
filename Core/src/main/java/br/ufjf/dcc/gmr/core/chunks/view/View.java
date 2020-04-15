@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -84,19 +85,20 @@ public final class View extends JFrame {
         List<MyFile> files = version.getFile();
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
-            tree.setModel((TreeModel) shaTree);//erro
+            DefaultTreeModel model = new DefaultTreeModel(shaTree);
+            getTree().setModel(model);
             getTree().addMouseListener(new JTreeMouseListener(getTree()));
             getTree().setShowsRootHandles(true);
             for (MyFile file : files) {
                 shaTree.add(createNodes(file));
             }
             getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-            getTree().setVisible(true);
         } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
-            tree.setModel((TreeModel) emptyNode);//erro
-            getTree().setVisible(true);
+            DefaultTreeModel model = new DefaultTreeModel(emptyNode);
+            getTree().setModel(model);
         }
+        getTree().setVisible(true);
         int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
         getLeftPanel().setPreferredSize(new Dimension(500, leftPanelHight));
         getTreeScrollPane().setVisible(true);
