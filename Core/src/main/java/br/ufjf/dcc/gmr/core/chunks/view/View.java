@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.view;
 
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
+import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
@@ -55,14 +56,9 @@ public final class View extends JFrame {
     }
 
     private void paintTreePane() {
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        getTreeScrollPane().setPreferredSize(new Dimension(180, leftPanelHight));
-        getTreeScrollPane().setVisible(false);
-    }
-
-    private void paintTablePanel() {
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
+        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
+        this.treePane.setPreferredSize(new Dimension(180, leftPanelHight));
+        this.treePane.setVisible(false);
     }
 
     private void paintLeftPanel() {
@@ -73,6 +69,7 @@ public final class View extends JFrame {
     }
 
     private void paintRightPanel() {
+        this.rightPanel.setLayout(new BorderLayout());
         int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
         int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
         getRightPanel().setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
@@ -84,7 +81,7 @@ public final class View extends JFrame {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
             DefaultTreeModel model = new DefaultTreeModel(shaTree);
             getTree().setModel(model);
-            getTree().addMouseListener(new JTreeMouseListener(getTree()));
+            getTree().addMouseListener(new JTreeMouseListener(this, version));
             getTree().setShowsRootHandles(true);
             for (MyFile file : files) {
                 shaTree.add(createNodes(file));
@@ -102,12 +99,13 @@ public final class View extends JFrame {
         getTreeScrollPane().updateUI();
         getLeftPanel().updateUI();
     }
-
+    
     private DefaultMutableTreeNode createNodes(MyFile file) {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());//encontrar caminho relativo
+        
         for (int i = 0; i < file.getChuncks().size(); i++) { 
-            int lineNumber = file.getChuncks().get(i).getBegin().getLineNumber();
-            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(lineNumber);
+            Chunk chunk = file.getChuncks().get(i);
+            DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(chunk);
             fileTree.add(chunkTree);
         }
         return fileTree;
@@ -144,6 +142,7 @@ public final class View extends JFrame {
     }
 
     private void paintTextArea() {
+        this.textArea.setLayout(new BorderLayout());
         getTextArea().setEditable(false);
     }
 
@@ -180,7 +179,6 @@ public final class View extends JFrame {
         paintLeftPanel();
         paintRightPanel();
         paintTreePane();
-        paintTablePanel();
         paintTable();
         paintTextArea();
         paintChooser();
