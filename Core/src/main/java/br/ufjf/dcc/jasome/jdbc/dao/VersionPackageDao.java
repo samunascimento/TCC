@@ -1,7 +1,12 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import java.sql.Connection;
@@ -10,23 +15,23 @@ import java.sql.SQLException;
 
 /**
  *
- * @author gleiph
+ * @author Principal
  */
-public class ProjectVersionDao {
+public class VersionPackageDao {
+    
+        private Connection connection;
 
-    private Connection connection;
-
-    public static final String PROJECT_ID = "project_id";
     public static final String VERSION_ID = "version_id";
+    public static final String PACKAGE_ID = "package_id";
 
-    public ProjectVersionDao() {
+    public VersionPackageDao() {
         this.connection = ConnectionFactory.getConnection();
     }
 
-    public void insert(ProjectMetrics projectMetrics, VersionMetrics versionMetrics) throws SQLException {
+    public void insert(VersionMetrics versionMetrics, PackageMetrics packageMetrics) throws SQLException {
 
-        String sql = "INSERT INTO tb_project_version "
-                + "(" + PROJECT_ID + ", " + VERSION_ID + ") "
+        String sql = "INSERT INTO tb_version_package "
+                + "(" + VERSION_ID + ", " + PACKAGE_ID + ") "
                 + "VALUES (?,?)";
 
         PreparedStatement stmt = null;
@@ -34,8 +39,8 @@ public class ProjectVersionDao {
         try {
             stmt = connection.prepareStatement(sql);
 
-            stmt.setInt(1, projectMetrics.getId());
-            stmt.setInt(2, versionMetrics.getId());
+            stmt.setInt(1, versionMetrics.getId());
+            stmt.setInt(2, packageMetrics.getId());
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -45,5 +50,5 @@ public class ProjectVersionDao {
             }
         }
     }
-
+    
 }
