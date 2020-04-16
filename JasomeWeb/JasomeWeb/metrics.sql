@@ -183,3 +183,24 @@ CREATE TABLE tb_project_version (
     FOREIGN KEY (project_id) REFERENCES tb_projectMetrics(ID),
     FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
 );
+
+CREATE TABLE tb_version_package (
+    version_id serial NOT NULL,
+    package_id serial NOT NULL,
+    FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
+    FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID)
+);
+
+CREATE TABLE tb_package_class (
+    package_id serial NOT NULL,
+    class_id serial NOT NULL,
+    FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID),
+    FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID)
+);
+
+CREATE TABLE tb_class_method (
+    class_id serial NOT NULL,
+    method_id serial NOT NULL,
+    FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID),
+    FOREIGN KEY (method_id) REFERENCES tb_methodMetrics(ID)
+);
