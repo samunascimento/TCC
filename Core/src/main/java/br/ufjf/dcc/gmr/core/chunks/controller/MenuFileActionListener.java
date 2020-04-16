@@ -14,11 +14,11 @@ import java.awt.event.ActionListener;
  *
  * @author icout
  */
-public class MenuActionListener implements ActionListener {
+public class MenuFileActionListener implements ActionListener {
 
     View view;
 
-    public MenuActionListener(View view) {
+    public MenuFileActionListener(View view) {
         this.view = view;
     }
 

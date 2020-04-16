@@ -18,6 +18,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 public final class View extends JFrame {
 
+    private JFrame chooserFrame;
+    private JFrame optionFrame;
     private JPanel leftPanel;
     private JPanel rightPanel;
     private JScrollPane treePane;
@@ -25,12 +27,12 @@ public final class View extends JFrame {
     private JTextArea textArea;
     private JFileChooser chooser;
     private JProgressBar progressBar;
-    JMenuBar menuBarFile;
+    JMenuBar menuBar;
     private JMenu menuFile;
+    private JMenu menuOptions;
     private JMenuItem submenu;
     private InitProject initProject;
     private Project project;
-    private JFrame chooserFrame;
     private JTree tree;
     private int screenWidth;
     private int screenHight;
@@ -42,14 +44,16 @@ public final class View extends JFrame {
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
         this.chooser = new JFileChooser();
-        this.menuBarFile = new JMenuBar();
+        this.menuBar = new JMenuBar();
         this.menuFile = new JMenu();
+        this.menuOptions = new JMenu();
         this.textArea = new JTextArea();
         this.progressBar = new JProgressBar();
         this.submenu = new JMenuItem();
         this.initProject = new InitProject();
         this.project = new Project();
         this.chooserFrame = new JFrame();
+        this.optionFrame = new JFrame();
         this.screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
         this.screenHight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
     }
@@ -61,7 +65,7 @@ public final class View extends JFrame {
     }
 
     private void paintLeftPanel() {
-        int menuBarHight = (int) this.menuBarFile.getPreferredSize().getHeight();
+        int menuBarHight = (int) this.menuBar.getPreferredSize().getHeight();
         this.leftPanel.setLayout(new BorderLayout());
         this.leftPanel.setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
         this.leftPanel.setVisible(false);
@@ -126,13 +130,16 @@ public final class View extends JFrame {
         this.table.setModel(model);
     }
 
-    private void paintMenuBarFile() {
-        this.menuBarFile.setPreferredSize(new Dimension(getScreenWidth(), 30));
-        this.submenu.addActionListener(new MenuActionListener(this));
+    private void paintMenuBar() {
+        this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
+        this.submenu.addActionListener(new MenuFileActionListener(this));
         this.submenu.setText("Open Repository");
         this.menuFile.add(this.submenu);
         this.menuFile.setText("File");
-        this.menuBarFile.add(this.menuFile);
+        this.menuBar.add(this.menuFile);
+        this.menuOptions.addMouseListener(new MenuOptionsActionListener(this));
+        this.menuOptions.setText("Options");
+        this.menuBar.add(this.menuOptions);
     }
 
     private void paintTextArea() {
@@ -145,11 +152,11 @@ public final class View extends JFrame {
         this.progressBar.setStringPainted(true);
         this.progressBar.setVisible(false);
     }
-    
+
     private void paintPanel() {
         this.add(this.leftPanel, BorderLayout.WEST);
         this.add(this.rightPanel, BorderLayout.CENTER);
-        this.add(menuBarFile, BorderLayout.NORTH);
+        this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
         this.leftPanel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -163,7 +170,7 @@ public final class View extends JFrame {
     }
 
     private void paintMainPanel() {
-        paintMenuBarFile();
+        paintMenuBar();
         paintLeftPanel();
         paintRightPanel();
         paintTreePane();
@@ -179,6 +186,7 @@ public final class View extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
+        frame.setResizable(false);
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));
         frame.paintMainPanel();
         frame.setVisible(true);
@@ -392,5 +400,33 @@ public final class View extends JFrame {
      */
     public void setTreePane(JScrollPane treeScrollPane) {
         this.treePane = treeScrollPane;
+    }
+
+    /**
+     * @return the menuOptions
+     */
+    public JMenu getMenuOptions() {
+        return menuOptions;
+    }
+
+    /**
+     * @param menuOptions the menuOptions to set
+     */
+    public void setMenuOptions(JMenu menuOptions) {
+        this.menuOptions = menuOptions;
+    }
+
+    /**
+     * @return the optionFrame
+     */
+    public JFrame getOptionFrame() {
+        return optionFrame;
+    }
+
+    /**
+     * @param optionFrame the optionFrame to set
+     */
+    public void setOptionFrame(JFrame optionFrame) {
+        this.optionFrame = optionFrame;
     }
 }
