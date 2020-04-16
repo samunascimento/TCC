@@ -16,7 +16,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-
 public final class View extends JFrame {
 
     private JPanel leftPanel;
@@ -26,8 +25,8 @@ public final class View extends JFrame {
     private JTextArea textArea;
     private JFileChooser chooser;
     private JProgressBar progressBar;
-    JMenuBar menuBar;
-    private JMenu menu;
+    JMenuBar menuBarFile;
+    private JMenu menuFile;
     private JMenuItem submenu;
     private InitProject initProject;
     private Project project;
@@ -43,16 +42,16 @@ public final class View extends JFrame {
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
         this.chooser = new JFileChooser();
-        this.menuBar = new JMenuBar();
-        this.menu = new JMenu();
+        this.menuBarFile = new JMenuBar();
+        this.menuFile = new JMenu();
         this.textArea = new JTextArea();
         this.progressBar = new JProgressBar();
         this.submenu = new JMenuItem();
         this.initProject = new InitProject();
         this.project = new Project();
         this.chooserFrame = new JFrame();
-        this.screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
-        this.screenHight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
+        this.screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
+        this.screenHight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
     }
 
     private void paintTreePane() {
@@ -62,17 +61,17 @@ public final class View extends JFrame {
     }
 
     private void paintLeftPanel() {
-        int menuBarHight = (int) menuBar.getPreferredSize().getHeight();
+        int menuBarHight = (int) this.menuBarFile.getPreferredSize().getHeight();
         this.leftPanel.setLayout(new BorderLayout());
-        getLeftPanel().setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
-        getLeftPanel().setVisible(false);
+        this.leftPanel.setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
+        this.leftPanel.setVisible(false);
     }
 
     private void paintRightPanel() {
         this.rightPanel.setLayout(new BorderLayout());
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        int leftPanelWidth = (int) getLeftPanel().getPreferredSize().getWidth();
-        getRightPanel().setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
+        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
+        int leftPanelWidth = (int) this.leftPanel.getPreferredSize().getWidth();
+        this.rightPanel.setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
     }
 
     public void paintTree(Version version) {
@@ -80,30 +79,30 @@ public final class View extends JFrame {
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
             DefaultTreeModel model = new DefaultTreeModel(shaTree);
-            getTree().setModel(model);
-            getTree().addMouseListener(new JTreeMouseListener(this, version));
-            getTree().setShowsRootHandles(true);
+            this.tree.setModel(model);
+            this.tree.addMouseListener(new JTreeMouseListener(this, version));
+            this.tree.setShowsRootHandles(true);
             for (MyFile file : files) {
                 shaTree.add(createNodes(file));
             }
-            getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+            this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
             DefaultTreeModel model = new DefaultTreeModel(emptyNode);
-            getTree().setModel(model);
+            this.tree.setModel(model);
         }
-        getTree().setVisible(true);
-        int leftPanelHight = (int) getLeftPanel().getPreferredSize().getHeight();
-        getLeftPanel().setPreferredSize(new Dimension(500, leftPanelHight));
-        getTreeScrollPane().setVisible(true);
-        getTreeScrollPane().updateUI();
-        getLeftPanel().updateUI();
+        this.tree.setVisible(true);
+        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
+        this.leftPanel.setPreferredSize(new Dimension(500, leftPanelHight));
+        this.treePane.setVisible(true);
+        this.treePane.updateUI();
+        this.leftPanel.updateUI();
     }
-    
+
     private DefaultMutableTreeNode createNodes(MyFile file) {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());//encontrar caminho relativo
-        
-        for (int i = 0; i < file.getChuncks().size(); i++) { 
+
+        for (int i = 0; i < file.getChuncks().size(); i++) {
             Chunk chunk = file.getChuncks().get(i);
             DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(chunk);
             fileTree.add(chunkTree);
@@ -112,70 +111,59 @@ public final class View extends JFrame {
     }
 
     private void paintChooser() {
-        getChooser().setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        getChooser().setCurrentDirectory(new java.io.File(""));
-        getChooser().setRequestFocusEnabled(false);
-        getChooser().addActionListener(new ChooserActionPerformed(this));
-        getChooser().setVisible(false);
+        this.chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        this.chooser.setCurrentDirectory(new java.io.File(""));
+        this.chooser.setRequestFocusEnabled(false);
+        this.chooser.addActionListener(new ChooserActionPerformed(this));
+        this.chooser.setVisible(false);
     }
 
     private void paintTable() {
-        getTable().addMouseListener(new TableMouseListener(this));
-        DefaultTableModel model = (DefaultTableModel) getTable().getModel();
+        this.table.addMouseListener(new TableMouseListener(this));
+        DefaultTableModel model = (DefaultTableModel) this.table.getModel();
         model.addColumn("sha");
         model.addColumn("status");
-        getTable().setModel(model);
+        this.table.setModel(model);
     }
 
-    @SuppressWarnings("empty-statement")
-    private void clearTable(JTable table) {
-        for (DefaultTableModel model = (DefaultTableModel) table.getModel(); table.getRowCount() > 0; model.removeRow(table.getRowCount() - 1));
-    }
-
-    private void paintMenuBar() {
-        menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
-        getSubmenu().addActionListener(this::openRepository);
-        getSubmenu().setText("Open Repository");
-        getMenu().add(getSubmenu());
-        getMenu().setText("File");
-        menuBar.add(getMenu());
+    private void paintMenuBarFile() {
+        this.menuBarFile.setPreferredSize(new Dimension(getScreenWidth(), 30));
+        this.submenu.addActionListener(new MenuActionListener(this));
+        this.submenu.setText("Open Repository");
+        this.menuFile.add(this.submenu);
+        this.menuFile.setText("File");
+        this.menuBarFile.add(this.menuFile);
     }
 
     private void paintTextArea() {
         this.textArea.setLayout(new BorderLayout());
-        getTextArea().setEditable(false);
+        this.textArea.setEditable(false);
     }
 
     private void paintProgressBar() {
-        getProgressBar().setPreferredSize(new Dimension(getScreenWidth(), 50));
-        getProgressBar().setStringPainted(true);
-        getProgressBar().setVisible(false);
+        this.progressBar.setPreferredSize(new Dimension(getScreenWidth(), 50));
+        this.progressBar.setStringPainted(true);
+        this.progressBar.setVisible(false);
     }
-
-    private void openRepository(java.awt.event.ActionEvent evt) {
-        getChooserFrame().setExtendedState(MAXIMIZED_BOTH);
-        getChooser().setVisible(true);
-        getChooserFrame().setVisible(true);
-    }
-
+    
     private void paintPanel() {
-        this.add(getLeftPanel(), BorderLayout.WEST);
-        this.add(getRightPanel(), BorderLayout.CENTER);
-        this.add(menuBar, BorderLayout.NORTH);
-        this.add(getProgressBar(), BorderLayout.SOUTH);
+        this.add(this.leftPanel, BorderLayout.WEST);
+        this.add(this.rightPanel, BorderLayout.CENTER);
+        this.add(menuBarFile, BorderLayout.NORTH);
+        this.add(this.progressBar, BorderLayout.SOUTH);
 
-        getLeftPanel().add(new JScrollPane(table), BorderLayout.CENTER);
-        getLeftPanel().add(getTreeScrollPane(), BorderLayout.EAST);
+        this.leftPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        this.leftPanel.add(getTreePane(), BorderLayout.EAST);
 
-        getRightPanel().add(getTextArea(), BorderLayout.CENTER);
+        this.rightPanel.add(getTextArea(), BorderLayout.CENTER);
 
-        getChooserFrame().add(getChooser(), BorderLayout.CENTER);
+        this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
         this.setVisible(true);
     }
 
     private void paintMainPanel() {
-        paintMenuBar();
+        paintMenuBarFile();
         paintLeftPanel();
         paintRightPanel();
         paintTreePane();
@@ -225,10 +213,10 @@ public final class View extends JFrame {
     }
 
     /**
-     * @return the menu
+     * @return the menuFile
      */
-    public JMenu getMenu() {
-        return menu;
+    public JMenu getMenuFile() {
+        return menuFile;
     }
 
     /**
@@ -269,7 +257,7 @@ public final class View extends JFrame {
     /**
      * @return the submenu
      */
-    public JMenuItem getSubmenu() {
+    public JMenuItem getSubmenuFile() {
         return submenu;
     }
 
@@ -297,7 +285,7 @@ public final class View extends JFrame {
     /**
      * @return the treePane
      */
-    public JScrollPane getTreeScrollPane() {
+    public JScrollPane getTreePane() {
         return treePane;
     }
 
@@ -330,10 +318,10 @@ public final class View extends JFrame {
     }
 
     /**
-     * @param menu the menu to set
+     * @param menu the menuFile to set
      */
-    public void setMenu(JMenu menu) {
-        this.menu = menu;
+    public void setMenuFile(JMenu menu) {
+        this.menuFile = menu;
     }
 
     /**
@@ -374,7 +362,7 @@ public final class View extends JFrame {
     /**
      * @param submenu the submenu to set
      */
-    public void setSubmenu(JMenuItem submenu) {
+    public void setSubmenuFile(JMenuItem submenu) {
         this.submenu = submenu;
     }
 
@@ -402,7 +390,7 @@ public final class View extends JFrame {
     /**
      * @param treeScrollPane the treePane to set
      */
-    public void setTreeScrollPane(JScrollPane treeScrollPane) {
+    public void setTreePane(JScrollPane treeScrollPane) {
         this.treePane = treeScrollPane;
     }
 }

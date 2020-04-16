@@ -33,6 +33,48 @@ import javax.swing.JProgressBar;
 public class ProgressBarAction implements Runnable{
 
     /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the progressBar
+     */
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    /**
+     * @return the projectPath
+     */
+    public String getProjectPath() {
+        return projectPath;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @param progressBar the progressBar to set
+     */
+    public void setProgressBar(JProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    /**
+     * @param projectPath the projectPath to set
+     */
+    public void setProjectPath(String projectPath) {
+        this.projectPath = projectPath;
+    }
+
+    /**
      * @return the project
      */
     public Project getProject() {
@@ -58,7 +100,7 @@ public class ProgressBarAction implements Runnable{
     @Override
     public void run() {
         try {
-            project = InitProject.createProject(name, projectPath);
+            setProject(InitProject.createProject(getName(), getProjectPath()));
         } catch (IOException | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | AlreadyUpToDate | ThereIsNoMergeInProgress ex) {
             Logger.getLogger(ProgressBarAction.class.getName()).log(Level.SEVERE, null, ex);
         }
