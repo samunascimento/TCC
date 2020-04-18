@@ -1,3 +1,7 @@
+DROP TABLE tb_project_version;
+DROP TABLE tb_version_package;
+DROP TABLE tb_package_class;
+DROP TABLE tb_class_method;
 DROP TABLE tb_methodMetrics;
 DROP TABLE tb_classMetrics;
 DROP TABLE tb_packageMetrics;
@@ -54,8 +58,7 @@ CREATE TABLE tb_packageMetrics (
     FOREIGN KEY (noiID) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgRCiD) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgTCiID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (versionID) REFERENCES tb_versionMetrics(ID)
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
 
 
@@ -140,8 +143,7 @@ CREATE TABLE tb_classMetrics (
     FOREIGN KEY (rtlocID) REFERENCES tb_metric(ID),
     FOREIGN KEY (sixID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (packageID) REFERENCES tb_packageMetrics(ID)
+    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID)
 );
 
 CREATE TABLE tb_methodMetrics (
@@ -173,8 +175,7 @@ CREATE TABLE tb_methodMetrics (
     FOREIGN KEY (nvarID) REFERENCES tb_metric(ID),
     FOREIGN KEY (siID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (vgID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (classID) REFERENCES tb_classMetrics(ID)
+    FOREIGN KEY (vgID) REFERENCES tb_metric(ID)
 );
 
 CREATE TABLE tb_project_version (
