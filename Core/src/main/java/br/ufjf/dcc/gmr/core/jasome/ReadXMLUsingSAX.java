@@ -19,6 +19,8 @@ import br.ufjf.dcc.jasome.jdbc.dao.VersionPackageDao;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -66,6 +68,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     VersionPackageDao VersionPackage = new VersionPackageDao();
     PackageClassDao packageClass = new PackageClassDao();
     ClassMethodDao classMethod = new ClassMethodDao();
+    
+    List<MethodMetrics> listMethod = new ArrayList<>();
     
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
@@ -528,7 +532,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             throws SAXException {
         
         tagAtual = qName;
-       // try {
+        try {
             if (tagAtual.equals("Project")) {
                 versionMetrics.setProjectID(projectMetrics.getId());
                 //int versionId = versionMetricDao.insert(versionMetrics);
@@ -543,22 +547,25 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 
             } else if (tagAtual.equals("Class")) {
                 classMetrics.setPackageId(packageMetrics.getId());
-               // int classId = classMetricDao.insert(classMetrics);
-                //classMetrics.setId(classId);
+                int classId = classMetricDao.insert(classMetrics);
+                classMetrics.setId(classId);
+                for (int i = 0; i < classMetrics.getListMethodsMetrics().size(); i++) {
+                classMetrics.getListMethodsMetrics().get(i).setClassId(classMetrics.getId());
+                methodMetricDao.updateClassId(classMetrics.getListMethodsMetrics().get(i));
+                }
                 packageMetrics.getListClassMetrics().add(classMetrics);
                 clazz = false;
                 
             } else if (tagAtual.equals("Method")) {
-                methodMetrics.setClassId(classMetrics.getId());
-               // int methodId = methodMetricDao.insert(methodMetrics);
-                //methodMetrics.setId(methodId);
+                int methodId = methodMetricDao.insert(methodMetrics);
+                methodMetrics.setId(methodId);
                 classMetrics.getListMethodsMetrics().add(methodMetrics);
                 method = false;
                 
             }
             
-        //} catch (SQLException ex) {
-        //    Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
-       // }
+        } catch (SQLException ex) {
+            Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

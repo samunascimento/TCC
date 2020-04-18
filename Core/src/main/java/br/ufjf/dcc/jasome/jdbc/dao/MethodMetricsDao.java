@@ -33,8 +33,8 @@ public class MethodMetricsDao {
 
     public int insert(MethodMetrics methodMetrics) {
         String sql = "INSERT INTO tb_methodMetrics "
-                + "(ciID,diID,finID,foutID,iovarsID,mclcID,nbdID,ncompID,nopID,nvarID,siID,tlocID,vgID,classID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "(ciID,diID,finID,foutID,iovarsID,mclcID,nbdID,ncompID,nopID,nvarID,siID,tlocID,vgID)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -56,7 +56,7 @@ public class MethodMetricsDao {
             stmt.setInt(11, methodMetrics.getSi().getId());
             stmt.setInt(12, methodMetrics.getTloc().getId());
             stmt.setInt(13, methodMetrics.getVg().getId());
-            stmt.setInt(14, methodMetrics.getClassId());
+            //   stmt.setInt(14, methodMetrics.getClassId());
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
@@ -204,14 +204,41 @@ public class MethodMetricsDao {
         }
     }
 
-    public void update(MethodMetrics methodMetric, int id) {
-        String sql =null; // "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() + "' WHERE ID = '" + id + "';";
+    public void update(MethodMetrics methodMetric) throws SQLException {
+        String sql = null; // "UPDATE tb_methodMetrics SET classID = ? WHERE ID = ? ;";
+        System.out.println(sql);
+
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1,methodMetric.getClassId());
+            stmt.setInt(2, methodMetric.getId());
             stmt.executeUpdate();
-            stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public void updateClassId(MethodMetrics methodMetric) throws SQLException {
+        String sql = "UPDATE tb_methodMetrics SET classID = ? WHERE ID = ? ;";
+        System.out.println(sql);
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1,methodMetric.getClassId());
+            stmt.setInt(2, methodMetric.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
         }
     }
 }

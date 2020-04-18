@@ -36,8 +36,8 @@ public class ClassMetricsDao {
         String sql = "INSERT INTO tb_classMetrics "
                 + "(aaID,adID,aiID,aitID,aoID,avID,clrciID,cltciID,ditID,hmdID,hmiID,mhfID,mifID,maID,mdID,"
                 + "miID,mitID,moID,nfID,nmID,nmaID,nmiID,noaID,nochID,nodID,nolID,nopaID,normID,npfID,npmID,nsfID,"
-                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID,packageID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
         
         PreparedStatement stmt = null;
@@ -85,7 +85,7 @@ public class ClassMetricsDao {
             stmt.setInt(37, classMetrics.getSix().getId());
             stmt.setInt(38, classMetrics.getTloc().getId());
             stmt.setInt(39, classMetrics.getWmc().getId());
-            stmt.setInt(40, classMetrics.getPackageId());
+            //stmt.setInt(40, classMetrics.getPackageId());
             
             tableKeys = stmt.executeQuery();
             
