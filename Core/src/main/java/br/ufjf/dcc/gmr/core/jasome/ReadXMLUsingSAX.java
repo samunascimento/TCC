@@ -6,12 +6,16 @@ import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
+import br.ufjf.dcc.jasome.jdbc.dao.ClassMethodDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ClassMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
+import br.ufjf.dcc.jasome.jdbc.dao.PackageClassDao;
 import br.ufjf.dcc.jasome.jdbc.dao.PackageMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.ProjectVersionDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.VersionPackageDao;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
@@ -58,6 +62,11 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     ClassMetricsDao classMetricDao = new ClassMetricsDao();
     MethodMetricsDao methodMetricDao = new MethodMetricsDao();
     
+    ProjectVersionDao projectVersion = new ProjectVersionDao();
+    VersionPackageDao VersionPackage = new VersionPackageDao();
+    PackageClassDao packageClass = new PackageClassDao();
+    ClassMethodDao classMethod = new ClassMethodDao();
+    
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
     }
@@ -93,6 +102,11 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     public void startDocument() {
         
         ProjectMetricsDao projectDao =  new ProjectMetricsDao();
+        try {
+            projectDao.insert(projectMetrics);
+        } catch (SQLException ex) {
+            Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         
     }
