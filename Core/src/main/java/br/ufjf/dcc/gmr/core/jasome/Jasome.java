@@ -23,7 +23,7 @@ public class Jasome {
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException {
         try {
 
-            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\TrabOO\\TrabalhoOO\\TrabalhoOO", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
 
             ProjectMetrics project = new ProjectMetrics();
 

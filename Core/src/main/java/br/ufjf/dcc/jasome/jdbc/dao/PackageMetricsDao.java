@@ -29,8 +29,8 @@ public class PackageMetricsDao {
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,dmsID,iID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID,versionID) " //adicionar nocId, iId
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
+                + "(aID,ccrcID,caID,ceID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) " //adicionar dmsId, iId
+                + "VALUES (?,?,?,?,?,?,?,?,?) " //adicionar ?,?
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -43,14 +43,14 @@ public class PackageMetricsDao {
             stmt.setInt(2, packageMetrics.getCcrc().getId());
             stmt.setInt(3, packageMetrics.getCa().getId());
             stmt.setInt(4, packageMetrics.getCe().getId());
-            stmt.setInt(5, packageMetrics.getDms().getId());
-            stmt.setInt(6, packageMetrics.getI().getId());
-            stmt.setInt(7, packageMetrics.getNoc().getId());
-            stmt.setInt(8, packageMetrics.getNoi().getId());
-            stmt.setInt(9, packageMetrics.getPkgRCi().getId());
-            stmt.setInt(10, packageMetrics.getPkgTCi().getId());
-            stmt.setInt(11, packageMetrics.getTloc().getId());
-            stmt.setInt(12, packageMetrics.getVersionId());
+            //stmt.setInt(5, packageMetrics.getDms().getId());
+            //stmt.setInt(6, packageMetrics.getI().getId());
+            stmt.setInt(5, packageMetrics.getNoc().getId());
+            stmt.setInt(6, packageMetrics.getNoi().getId());
+            stmt.setInt(7, packageMetrics.getPkgRCi().getId());
+            stmt.setInt(8, packageMetrics.getPkgTCi().getId());
+            stmt.setInt(9, packageMetrics.getTloc().getId());
+          //  stmt.setInt(12, packageMetrics.getVersionId());
 
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
@@ -215,6 +215,25 @@ public class PackageMetricsDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
 
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public void updateVersionId(PackageMetrics packageMetric) throws SQLException {
+        String sql = "UPDATE tb_packageMetrics SET versionID = ? WHERE ID = ? ;";
+        System.out.println(sql);
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1,packageMetric.getVersionId());
+            stmt.setInt(2,packageMetric.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
                 stmt.close();

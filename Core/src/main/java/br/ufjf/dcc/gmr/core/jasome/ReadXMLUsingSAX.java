@@ -199,12 +199,12 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                         metric.setId(insert);
                         packageMetrics.setCe(metric);
                     } else if (metric.getName().equals("DMS")) {
-                        //int insert = metricDao.insert(metric);
-                        //metric.setId(insert);
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         packageMetrics.setDms(metric);
                     } else if (metric.getName().equals("I")) {
-                        //int insert = metricDao.insert(metric);
-                        //metric.setId(insert);
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
                         packageMetrics.setI(metric);
                     } else if (metric.getName().equals("NOC")) {
                         int insert = metricDao.insert(metric);
@@ -534,14 +534,23 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         tagAtual = qName;
         try {
             if (tagAtual.equals("Project")) {
-                versionMetrics.setProjectID(projectMetrics.getId());
-                //int versionId = versionMetricDao.insert(versionMetrics);
+                versionMetrics.setProjectID(projectMetrics.getId()); 
+                int versionId = versionMetricDao.insert(versionMetrics);
+                versionMetrics.setId(versionId);
+                for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
+                versionMetrics.getListPackageMetric().get(i).setVersionId(versionMetrics.getId());
+                packageMetricDao.updateVersionId(versionMetrics.getListPackageMetric().get(i));
+                }
                 project = false;
             } else if (tagAtual.equals("Package")) {
                 
                 packageMetrics.setVersionId(versionMetrics.getId());
-               // int packageId = packageMetricDao.insert(packageMetrics);
-               // packageMetrics.setId(packageId);
+                int packageId = packageMetricDao.insert(packageMetrics);
+                packageMetrics.setId(packageId);
+                for (int i = 0; i < packageMetrics.getListClassMetrics().size(); i++) {
+                packageMetrics.getListClassMetrics().get(i).setPackageId(packageMetrics.getId());
+                classMetricDao.updatePackageId(packageMetrics.getListClassMetrics().get(i));
+                }
                 versionMetrics.getListPackageMetric().add(packageMetrics);
                 pacckage = false;
                 
