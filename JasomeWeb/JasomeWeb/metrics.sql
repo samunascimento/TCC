@@ -28,9 +28,9 @@ CREATE TABLE tb_projectMetrics(
 CREATE TABLE tb_versionMetrics (
     ID serial NOT NULL,
     tlocID serial NOT NULL,
-	projectID serial NOT NULL,
+    projectID serial NOT NULL,
     PRIMARY KEY (ID),
-    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
 
 
@@ -59,7 +59,7 @@ CREATE TABLE tb_packageMetrics (
     FOREIGN KEY (noiID) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgRCiD) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgTCiID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
 
 
@@ -144,7 +144,7 @@ CREATE TABLE tb_classMetrics (
     FOREIGN KEY (rtlocID) REFERENCES tb_metric(ID),
     FOREIGN KEY (sixID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID)
 );
 
 CREATE TABLE tb_methodMetrics (
@@ -176,7 +176,7 @@ CREATE TABLE tb_methodMetrics (
     FOREIGN KEY (nvarID) REFERENCES tb_metric(ID),
     FOREIGN KEY (siID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (vgID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (vgID) REFERENCES tb_metric(ID)
 );
 
 CREATE TABLE tb_project_version (
