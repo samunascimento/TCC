@@ -47,7 +47,7 @@ public class ClassMetricsDao {
             stmt = connection.prepareStatement(sql);
             
             stmt.setInt(1, classMetrics.getAa().getId());
-            /*stmt.setInt(2, classMetrics.getAd().getId());
+            stmt.setInt(2, classMetrics.getAd().getId());
             stmt.setInt(3, classMetrics.getAi().getId());
             stmt.setInt(4, classMetrics.getAit().getId());
             stmt.setInt(5, classMetrics.getAo().getId());
@@ -84,7 +84,7 @@ public class ClassMetricsDao {
             stmt.setInt(36, classMetrics.getRtloc().getId());
             stmt.setInt(37, classMetrics.getSix().getId());
             stmt.setInt(38, classMetrics.getTloc().getId());
-            stmt.setInt(39, classMetrics.getWmc().getId());*/
+            stmt.setInt(39, classMetrics.getWmc().getId());
             //stmt.setInt(40, classMetrics.getPackageId());
             
             tableKeys = stmt.executeQuery();
