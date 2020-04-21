@@ -26,7 +26,7 @@ public class ReturnNewLineNumber {
      *
      */
     public static final int REMOVED_FILE = Integer.MAX_VALUE;
-   
+
     /**
      * This method goes trough the diffs between the commit source and the
      * commit target and salve all the information on a created type "FileDiff"
@@ -87,19 +87,9 @@ public class ReturnNewLineNumber {
 
         FileDiff aux = new FileDiff();
         int currentLine = 0;
-        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);  
-        if(output.isEmpty()){
-            output.set(0,Git.deletedFile(directory, pathSource, pathTarget));
-           
-            if(output.get(0).equals("The file was deleted")){
-               aux.setFilePathSource(output.get(0));
-               chunks.add(aux);
-               return chunks;
-            }
-            else {
-                throw new EmptyOutput();
-            }
-           
+        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);
+        if (output == null) {
+            return null;
         }
         String line;
         for (int i = 0; i < output.size(); i++) {
@@ -287,12 +277,12 @@ public class ReturnNewLineNumber {
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput {
 
         List<FileDiff> chunks = fillOneFileDiff(directory, pathSource, pathTarget);
-        
-        if(chunks.get(0).getFilePathSource().equals("The file was deleted")){
+
+        if (chunks == null) {
             return REMOVED_FILE;
         }
         int i;
-    
+
         i = processingChunkModifiedLine(chunks, originalLineNumber, pathSource.replace(directory, ""));
 
         if (i == REMOVED_LINE) {

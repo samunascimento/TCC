@@ -1256,7 +1256,7 @@ public class Git {
 
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget;
         CLIExecution execution = CLIExecute.execute(command, directory);
-
+        
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
@@ -1265,6 +1265,9 @@ public class Git {
                 }
                 if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidCommitHash();
+                }
+                if (line.contains("error: Could not access")){
+                    return null;
                 }
             }
         }
@@ -1275,7 +1278,7 @@ public class Git {
     public static List<String> auxiliarDiffstat(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        String command = "git diff --unified=0 " + fileSource + " " + fileTarget + "--name-status";
+        String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
@@ -1294,26 +1297,26 @@ public class Git {
 
     }
     
-    public static String deletedFile(String directory, String fileSource, String fileTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash{
+    public static boolean deletedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash{
         
         List<String> output;
         String line;
-        output= Git.auxiliarDiffstat(directory, fileSource, fileTarget);
+        output= Git.auxiliarDiffstat(directory, parent, merge);
         
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
             
             if( line.startsWith("D")){
                 String c;
-                c=line.substring(8);
-                if(c.equals(fileSource)){
-                   return "The file was deleted";
+                c=line.substring(2);
+                if(fileSource.contains(c)){
+                   return true;
                 }
             }
            
             
 
         }
-      return "Unknow error";
+      return false;
     }
 }

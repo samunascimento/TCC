@@ -93,6 +93,7 @@ public class RepositoryAnalysis {
         return content;
     }
 
+
     /*---------------------------------------------------------------------------------------
                                         ANTLR4
     ---------------------------------------------------------------------------------------*/
@@ -125,7 +126,7 @@ public class RepositoryAnalysis {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
-            
+
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 return null;
             }
@@ -147,11 +148,11 @@ public class RepositoryAnalysis {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();
-            
+
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 return null;
             }
-            
+
             Python3Visitor visitor = new Python3Visitor();
             visitor.visit(tree);
 
@@ -198,7 +199,7 @@ public class RepositoryAnalysis {
     /*---------------------------------------------------------------------------------------
                                         Main function
     ---------------------------------------------------------------------------------------*/
-    public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException{
+    public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException {
 
         //Main list
         List<MergeEvent> list = new ArrayList<>();
@@ -237,6 +238,7 @@ public class RepositoryAnalysis {
         double analysed = 0.0;
         double analysedPercentage = 0.0;
         File sandbox = RepositoryAnalysis.createSandbox(repositoryPath);
+        boolean auxBool;
 
         //Start
         try {
@@ -339,7 +341,19 @@ public class RepositoryAnalysis {
                                     } else {
                                         solutionFinalLine = 0;
                                     }
-                                    if (solutionFirstLine == 0 && solutionFinalLine == 0) {
+                                    if (solutionFirstLine == Integer.MAX_VALUE || solutionFinalLine == Integer.MAX_VALUE) {
+                                        auxBool = Git.deletedFile(sandbox.getPath(), filePath, parents.get(0).getCommitHash(), hash.getCommitHash());
+                                        if (auxBool == false) {
+                                            auxBool = Git.deletedFile(sandbox.getPath(), filePath, parents.get(1).getCommitHash(), hash.getCommitHash());
+                                            if (auxBool == false) {
+                                                throw new EmptyOutput();
+                                            } else {
+                                                solution = null;
+                                            }
+                                        } else {
+                                            solution = null;
+                                        }
+                                    } else if (solutionFirstLine == 0 && solutionFinalLine == 0) {
                                         solution = getFileContent(sandbox.getPath() + insideFilePath);
                                         solution.add(0, "<SOF>");
                                         solution.add("<EOF>");
@@ -355,15 +369,23 @@ public class RepositoryAnalysis {
                                     Git.checkout("master", sandbox.getPath());
 
                                     //Adding a new conflict region
-                                    conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
-                                            new ArrayList<>(v2), new ArrayList<>(solution), beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
-
+                                    if (solution != null) {
+                                        conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
+                                                new ArrayList<>(v2), new ArrayList<>(solution), beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
+                                    } else {
+                                        conflictRegion.add(new ConflictRegion(new ArrayList<>(beforeContext), new ArrayList<>(afterContext), new ArrayList<>(v1),
+                                                new ArrayList<>(v2), null, beginLine, separatorLine, endLine, originalV1FirstLine, originalV2FirstLine));
+                                    }
                                     //Reseting variables
                                     beforeContext.clear();
                                     afterContext.clear();
                                     v1.clear();
                                     v2.clear();
-                                    solution.clear();
+                                    if (solution == null) {
+                                        solution = new ArrayList<>();
+                                    } else {
+                                        solution.clear();
+                                    }
                                 }
                             }
 

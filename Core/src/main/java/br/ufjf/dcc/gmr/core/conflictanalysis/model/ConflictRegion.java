@@ -164,8 +164,12 @@ public class ConflictRegion {
             str = str + line + "\n";
         }
         str = str + "\nSOLUTION:\n";
-        for (String line : this.solution) {
-            str = str + line + "\n";
+        if (solution == null) {
+            str = str + "The file was deleted!\n";
+        } else {
+            for (String line : this.solution) {
+                str = str + line + "\n";
+            }
         }
         return str;
     }
@@ -208,7 +212,9 @@ public class ConflictRegion {
     }
 
     private DeveloperDecision generateDeveloperDecision() {
-        if (solution.isEmpty()) {
+        if (solution == null ) {
+            return DeveloperDecision.DELETED;
+        } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {
             return DeveloperDecision.NONE;
