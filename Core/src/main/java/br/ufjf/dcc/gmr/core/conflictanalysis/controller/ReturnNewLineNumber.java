@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
+import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
@@ -21,6 +22,11 @@ public class ReturnNewLineNumber {
 
     public static final int REMOVED_LINE = -Integer.MAX_VALUE;
 
+    /**
+     *
+     */
+    public static final int REMOVED_FILE = Integer.MAX_VALUE;
+   
     /**
      * This method goes trough the diffs between the commit source and the
      * commit target and salve all the information on a created type "FileDiff"
@@ -74,14 +80,27 @@ public class ReturnNewLineNumber {
         return chunks;
     }
 
-    private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+    private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
 
         List<FileDiff> chunks = new ArrayList<>();
         List<String> output = new ArrayList<>();
 
         FileDiff aux = new FileDiff();
         int currentLine = 0;
-        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);
+        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);  
+        if(output.isEmpty()){
+            output.set(0,Git.deletedFile(directory, pathSource, pathTarget));
+           
+            if(output.get(0).equals("The file was deleted")){
+               aux.setFilePathSource(output.get(0));
+               chunks.add(aux);
+               return chunks;
+            }
+            else {
+                throw new EmptyOutput();
+            }
+           
+        }
         String line;
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
@@ -265,11 +284,15 @@ public class ReturnNewLineNumber {
 
     public int initReturnNewLineNumberFile(String directory, String pathSource,
             String pathTarget, int originalLineNumber)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput {
 
         List<FileDiff> chunks = fillOneFileDiff(directory, pathSource, pathTarget);
+        
+        if(chunks.get(0).getFilePathSource().equals("The file was deleted")){
+            return REMOVED_FILE;
+        }
         int i;
-
+    
         i = processingChunkModifiedLine(chunks, originalLineNumber, pathSource.replace(directory, ""));
 
         if (i == REMOVED_LINE) {
@@ -279,7 +302,7 @@ public class ReturnNewLineNumber {
         return originalLineNumber + i;
     }
 
-    private boolean isWindows() {
+    private static boolean isWindows() {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             return true;

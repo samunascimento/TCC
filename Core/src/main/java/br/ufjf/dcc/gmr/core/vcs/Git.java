@@ -1272,4 +1272,48 @@ public class Git {
         return execution.getOutput();
 
     }
+    public static List<String> auxiliarDiffstat(String directory, String fileSource, String fileTarget)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        String command = "git diff --unified=0 " + fileSource + " " + fileTarget + "--name-status";
+        CLIExecution execution = CLIExecute.execute(command, directory);
+
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("not a git repository")) {
+                    throw new LocalRepositoryNotAGitRepository();
+
+                }
+                if (line.contains("fatal: ambiguous argument")) {
+                    throw new InvalidCommitHash();
+                }
+            }
+        }
+
+        return execution.getOutput();
+
+    }
+    
+    public static String deletedFile(String directory, String fileSource, String fileTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash{
+        
+        List<String> output;
+        String line;
+        output= Git.auxiliarDiffstat(directory, fileSource, fileTarget);
+        
+        for (int i = 0; i < output.size(); i++) {
+            line = output.get(i);
+            
+            if( line.startsWith("D")){
+                String c;
+                c=line.substring(8);
+                if(c.equals(fileSource)){
+                   return "The file was deleted";
+                }
+            }
+           
+            
+
+        }
+      return "Unknow error";
+    }
 }

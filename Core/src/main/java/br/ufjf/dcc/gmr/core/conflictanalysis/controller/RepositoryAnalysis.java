@@ -14,6 +14,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -197,7 +198,7 @@ public class RepositoryAnalysis {
     /*---------------------------------------------------------------------------------------
                                         Main function
     ---------------------------------------------------------------------------------------*/
-    public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException {
+    public static List<MergeEvent> searchAllMerges(String repositoryPath, int linesContext) throws IOException{
 
         //Main list
         List<MergeEvent> list = new ArrayList<>();
@@ -475,6 +476,10 @@ public class RepositoryAnalysis {
             deleteDirectory(sandbox);
             throw new IOException();
         } catch (IOException ex) {
+            deleteDirectory(sandbox);
+            throw new IOException();
+        } catch (EmptyOutput ex) {
+            System.out.println("ERROR: we are looking into it");
             deleteDirectory(sandbox);
             throw new IOException();
         }
