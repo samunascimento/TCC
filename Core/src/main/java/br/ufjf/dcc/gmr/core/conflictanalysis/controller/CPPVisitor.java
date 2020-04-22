@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14BaseVisitor;
@@ -19,13 +14,15 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
-
+    private boolean warning;
+    
     public List<SyntaxStructure> getList() {
         return list;
     }
 
-    public CPPVisitor() {
+    public CPPVisitor(boolean warning) {
         list = new ArrayList<>();
+        this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
@@ -33,11 +30,8 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
 
-        //Get text
-        String strAux = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
-
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), strAux, aux[0]));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],warning));
     }
 
     /**

@@ -13,14 +13,16 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class JavaVisitor extends JavaParserBaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
+    private boolean warning;
     
 
     public List<SyntaxStructure> getList() {
         return list;
     }
     
-    public JavaVisitor(){
+    public JavaVisitor(boolean warning){
         list = new ArrayList<>();
+        this.warning = warning;
     }
     
     public void process(ParserRuleContext ctx) {
@@ -29,11 +31,8 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
         
-        //Get text
-        String strAux = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
-        
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),strAux,aux[0]));
+        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),aux[0],warning));
     }
 
     @Override

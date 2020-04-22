@@ -14,18 +14,18 @@ public class SyntaxStructure {
     private int startLineStopColumn;
     private int stopLineStartColumn;
     private int stopLineStopColumn;
-    private String text;
     private String structureType;
+    private boolean warning;
 
-    public SyntaxStructure(Token start, Token stop, String text, String structureType) {
+    public SyntaxStructure(Token start, Token stop, String structureType, boolean warning) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startLineStartColumn = start.getStartIndex();
         this.startLineStopColumn = start.getStopIndex();
         this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
-        this.text = text;
         this.structureType = structureType;
+        this.warning = warning;
     }
 
     public int getStartLine() {
@@ -52,9 +52,6 @@ public class SyntaxStructure {
         return stopLineStopColumn;
     }
 
-    public String getText() {
-        return text;
-    }
 
     public String getStructureType() {
         return structureType;
@@ -64,6 +61,10 @@ public class SyntaxStructure {
         if(startLine == stopLine)
             return true;
         return false;
+    }
+    
+    public boolean getWarning(){
+        return this.warning;
     }
     
 }

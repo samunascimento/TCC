@@ -105,12 +105,12 @@ public class RepositoryAnalysis {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
+            JavaVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                System.out.println("ParserError!");
-                return null;
+                visitor = new JavaVisitor(true);
+            } else {
+                visitor = new JavaVisitor(false);
             }
-
-            JavaVisitor visitor = new JavaVisitor();
             visitor.visit(tree);
 
             return visitor.getList();
@@ -127,11 +127,12 @@ public class RepositoryAnalysis {
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
 
+            CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                return null;
+                visitor = new CPPVisitor(true);
+            } else {
+                visitor = new CPPVisitor(false);
             }
-
-            CPPVisitor visitor = new CPPVisitor();
             visitor.visit(tree);
 
             return visitor.getList();
@@ -149,11 +150,12 @@ public class RepositoryAnalysis {
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();
 
+            Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                return null;
+                visitor = new Python3Visitor(true);
+            } else {
+                visitor = new Python3Visitor(false);
             }
-
-            Python3Visitor visitor = new Python3Visitor();
             visitor.visit(tree);
 
             return visitor.getList();
@@ -213,6 +215,7 @@ public class RepositoryAnalysis {
         //ConflictFile's field
         String fileName;
         String filePath;
+        String insideFilePath;
         List<ConflictRegion> conflictRegion = new ArrayList<>();
 
         //ConflictRegion's field
@@ -232,7 +235,6 @@ public class RepositoryAnalysis {
         //Assistants
         ReturnNewLineNumber rnln = new ReturnNewLineNumber();
         String[] auxArray;
-        String insideFilePath;
         List<String> allFile;
         double progress;
         double analysed = 0.0;
@@ -390,7 +392,7 @@ public class RepositoryAnalysis {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName, filePath, new ArrayList<>(conflictRegion)));
+                            conflictFiles.add(new ConflictFile(fileName, filePath, insideFilePath, new ArrayList<>(conflictRegion)));
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -401,7 +403,7 @@ public class RepositoryAnalysis {
                         for (String line : fileDiff.getAllMessage()) {
                             if (line.startsWith("* Unmerged path")) {
                                 auxArray = line.split("/");
-                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1], null, null));
+                                conflictFiles.add(new ConflictFile(auxArray[auxArray.length - 1], null, null, null));
                             }
                         }
 
@@ -435,10 +437,12 @@ public class RepositoryAnalysis {
             }
             deleteDirectory(sandbox);
             for (MergeEvent merge : list) {
-                for (ConflictFile file : merge.getConflictFiles()) {
-                    if (!file.getConflictRegion().isEmpty()) {
-                        for (ConflictRegion region : file.getConflictRegion()) {
-                            region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                if (merge.getConflictFiles() != null) {
+                    for (ConflictFile file : merge.getConflictFiles()) {
+                        if (file.getConflictRegion() != null) {
+                            for (ConflictRegion region : file.getConflictRegion()) {
+                                region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                            }
                         }
                     }
                 }

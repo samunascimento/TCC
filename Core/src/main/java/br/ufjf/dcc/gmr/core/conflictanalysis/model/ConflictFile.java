@@ -6,11 +6,13 @@ public class ConflictFile {
 
     private final String fileName;
     private final String filePath;
+    private final String insideFilePath;
     private final List<ConflictRegion> conflictRegion;
     
-    public ConflictFile(String fileName, String filePath, List<ConflictRegion> conflictRegion) {
+    public ConflictFile(String fileName, String filePath,String insideFilePath ,List<ConflictRegion> conflictRegion) {
         this.fileName = fileName;
         this.filePath = filePath;
+        this.insideFilePath = insideFilePath;
         this.conflictRegion = conflictRegion;
     }
 

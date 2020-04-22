@@ -127,21 +127,29 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                try {
+                    this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                } catch (IOException ex) {
+                    this.syntaxV1 = null;
+                }
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                try {
+                    this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                } catch (IOException ex) {
+                    this.syntaxV2 = null;
+                }
                 Git.checkout("master", repositoryPath);
             }
-        } catch (IOException ex) {
-            throw new IOException();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
         } catch (CheckoutError ex) {
             System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        } catch (IOException ex) {
             throw new IOException();
         }
     }
@@ -176,9 +184,16 @@ public class ConflictRegion {
 
     public String getV1StructureTypes() {
         if (syntaxV1 == null) {
-            return "Not compilable file ,or extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble, impossible to get syntax structures!";
         } else {
             String str = "";
+            if (!syntaxV1.isEmpty()) {
+                if (syntaxV1.get(0).getWarning()) {
+                    str = str + ", " + ", WARNING!";
+                }
+            } else {
+                return "V1 doesn't has any structure type!";
+            }
             for (SyntaxStructure ss : this.syntaxV1) {
                 if (!str.contains(ss.getStructureType())) {
                     str = str + ", " + ss.getStructureType();
@@ -194,9 +209,16 @@ public class ConflictRegion {
 
     public String getV2StructureTypes() {
         if (syntaxV2 == null) {
-            return "Not compilable file ,or extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble, impossible to get syntax structures!";
         } else {
             String str = "";
+            if (!syntaxV2.isEmpty()) {
+                if (syntaxV2.get(0).getWarning()) {
+                    str = str + ", " + ", WARNING!";
+                }
+            } else {
+                return "V2 doesn't has any structure type!";
+            }
             for (SyntaxStructure ss : this.syntaxV2) {
                 if (!str.contains(ss.getStructureType())) {
                     str = str + ", " + ss.getStructureType();
@@ -212,7 +234,7 @@ public class ConflictRegion {
     }
 
     private DeveloperDecision generateDeveloperDecision() {
-        if (solution == null ) {
+        if (solution == null) {
             return DeveloperDecision.DELETED;
         } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
