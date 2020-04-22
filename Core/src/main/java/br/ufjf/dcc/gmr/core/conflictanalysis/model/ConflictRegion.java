@@ -184,12 +184,12 @@ public class ConflictRegion {
 
     public String getV1StructureTypes() {
         if (syntaxV1 == null) {
-            return "Extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble,or file don't exists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV1.isEmpty()) {
                 if (syntaxV1.get(0).getWarning()) {
-                    str = str + ", " + ", WARNING!";
+                    str = str + ", WARNING!";
                 }
             } else {
                 return "V1 doesn't has any structure type!";
@@ -209,12 +209,12 @@ public class ConflictRegion {
 
     public String getV2StructureTypes() {
         if (syntaxV2 == null) {
-            return "Extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble,or file don't exists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV2.isEmpty()) {
                 if (syntaxV2.get(0).getWarning()) {
-                    str = str + ", " + ", WARNING!";
+                    str = str + ", WARNING!";
                 }
             } else {
                 return "V2 doesn't has any structure type!";
@@ -240,29 +240,26 @@ public class ConflictRegion {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {
             return DeveloperDecision.NONE;
+        } else if (containsNewCode()) {
+            return DeveloperDecision.NEWCODE;
         } else {
 
             String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
             String rawV1 = ListUtils.getRawStringForm(this.v1);
             String rawV2 = ListUtils.getRawStringForm(this.v2);
-            boolean containsNewCode = containsNewCode();
-            boolean containsV1OrV2 = containsV1OrV2();
-
-            if (containsNewCode && containsV1OrV2) {
-                return DeveloperDecision.NEWCODE;
-            } else if (rawSolution.contains(rawV1) && rawSolution.contains(rawV2)) {
-                return DeveloperDecision.CONCATENATION;
-            } else if (rawSolution.contains(rawV1)) {
+            
+            if(rawSolution.equals(rawV1)){
                 return DeveloperDecision.VERSION1;
-            } else if (rawSolution.contains(rawV2)) {
+            } else if (rawSolution.equals(rawV2)){
                 return DeveloperDecision.VERSION2;
-            } else if (containsV1OrV2) {
-                return DeveloperDecision.COMBINATION;
+            } else if (rawSolution.equals(rawV1+rawV2) ||rawSolution.equals(rawV2+rawV1)){
+                return DeveloperDecision.CONCATENATION;
             } else {
-                return DeveloperDecision.NONE;
-            }
+                return DeveloperDecision.COMBINATION;
+            } 
 
         }
+
     }
 
     private boolean containsNewCode() {
@@ -273,22 +270,6 @@ public class ConflictRegion {
 
         for (String line : rawSolution) {
             if (!(rawV1.contains(line) || rawV2.contains(line))) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    private boolean containsV1OrV2() {
-
-        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
-        List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
-        List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
-
-        for (String line : rawSolution) {
-            if (rawV1.contains(line) || rawV2.contains(line)) {
                 return true;
             }
         }
