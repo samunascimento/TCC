@@ -36,7 +36,7 @@ public class ProjectVersionDao {
 
             stmt.setInt(1, projectMetrics.getId());
             stmt.setInt(2, versionMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

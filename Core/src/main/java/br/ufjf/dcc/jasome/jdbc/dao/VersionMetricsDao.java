@@ -28,8 +28,8 @@ public class VersionMetricsDao {
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tlocID, projectID) "
-                + "VALUES (?,?) "
+                + "(tlocID) "
+                + "VALUES (?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -40,7 +40,6 @@ public class VersionMetricsDao {
             stmt = connection.prepareStatement(sql);
             //set values
             stmt.setInt(1, versionMetrics.getTloc().getId());
-            stmt.setInt(2, versionMetrics.getProjectID());
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             tableKeys.next();

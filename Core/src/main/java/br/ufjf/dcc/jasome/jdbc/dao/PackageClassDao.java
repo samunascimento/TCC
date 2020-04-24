@@ -39,10 +39,9 @@ public class PackageClassDao {
 
         try {
             stmt = connection.prepareStatement(sql);
-
             stmt.setInt(1, packageMetrics.getId());
             stmt.setInt(2, classMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

@@ -41,7 +41,7 @@ public class VersionPackageDao {
 
             stmt.setInt(1, versionMetrics.getId());
             stmt.setInt(2, packageMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

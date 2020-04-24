@@ -42,7 +42,7 @@ public class ClassMethodDao {
 
             stmt.setInt(1, classMetrics.getId());
             stmt.setInt(2, methodMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
