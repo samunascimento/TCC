@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
@@ -9,7 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -58,6 +61,7 @@ public class MergePanel extends JPanel {
     private JTextArea subPanelV1StructureTypeTextArea = new JTextArea("V1:");
     private JTextArea subPanelV2StructureTypeTextArea = new JTextArea("V2:");
     private JTextArea subPanelDeveloperDecisionTextArea = new JTextArea("DEVELOPER DECISION:");
+    private JButton subPanelSaveAnalysisButton = new JButton("Save Analysis(not working)");
     //Block Panel
     private JPanel panel1 = new JPanel();
     private JPanel panel2 = new JPanel();
@@ -189,16 +193,21 @@ public class MergePanel extends JPanel {
         gbc.gridx = 5;
         this.subPanel.add(this.subPanelNextConflictButton, gbc);
         gbc.gridwidth = 7;
+        gbc.gridheight = 2;
         gbc.gridx = 0;
         gbc.gridy = 2;
         this.subPanel.add(this.subPanelV1StructureTypeTextAreaScrollPane, gbc);
         gbc.gridy = 3;
         this.subPanel.add(this.subPanelV2StructureTypeTextAreaScrollPane, gbc);
         gbc.gridy = 4;
-        this.subPanel.add(this.subPanelDeveloperDecisionTextArea,gbc);
+        gbc.gridheight = 1;
+        this.subPanel.add(this.subPanelDeveloperDecisionTextArea, gbc);
+        gbc.gridwidth = 1;
+        gbc.gridy = 5;
+        this.subPanel.add(this.subPanelSaveAnalysisButton, gbc);
     }
-    
-    private void customizeSubPanelTextArea(){
+
+    private void customizeSubPanelTextArea() {
         this.subPanelV1StructureTypeTextArea.setEditable(false);
         this.subPanelV1StructureTypeTextArea.setBackground(this.subPanel.getBackground());
         this.subPanelV1StructureTypeTextAreaScrollPane.setViewportView(this.subPanelV1StructureTypeTextArea);
@@ -209,7 +218,7 @@ public class MergePanel extends JPanel {
         this.subPanelDeveloperDecisionTextArea.setBackground(this.subPanel.getBackground());
         this.subPanelDeveloperDecisionTextAreaScrollPane.setViewportView(this.subPanelDeveloperDecisionTextArea);
     }
-    
+
     private void customizeButtons() {
         subPanelPreviousFileButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -234,6 +243,22 @@ public class MergePanel extends JPanel {
                 previousConflictButtonMouseClicked(evt);
             }
         });
+        /*subPanelSaveAnalysisButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                String fileName = JOptionPane.showInternalInputDialog(null, "Choose the filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                while (fileName.length() > 20) {
+                    fileName = JOptionPane.showInternalInputDialog(null, "Limit of characters overpast, please, choose another filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                }
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int check = jfc.showOpenDialog(null);
+                if (check == JFileChooser.APPROVE_OPTION) {
+                    String savePath = jfc.getSelectedFile().getPath();
+                    GSONClass.createGson();
+                }
+            }
+        });
+        */
     }
 
     private void nextFileButtonMouseClicked(java.awt.event.MouseEvent evt) {
@@ -363,7 +388,7 @@ public class MergePanel extends JPanel {
             this.subPanelV1StructureTypeTextArea.setText("V1: " + file.getConflictRegion().get(0).getV1StructureTypes());
             this.subPanelV2StructureTypeTextArea.setText("V2: " + file.getConflictRegion().get(0).getV2StructureTypes());
             this.subPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
-            
+
         } else {
             this.subPanelConflictIndexLabel.setText("0/0");
             this.currentConflictIndex = 0;
