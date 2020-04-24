@@ -21,9 +21,9 @@ import java.text.ParseException;
 public class Jasome {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException {
-        try {
+//        try {
 
-            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\TrabOO\\TrabalhoOO\\TrabalhoOO", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+            JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projeto-test-jasome\\projeto-exemplo", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
 
             ProjectMetrics project = new ProjectMetrics();
 
@@ -33,6 +33,7 @@ public class Jasome {
             project.setOrganization("organization");
 
             jasome.runProject(project);
+            
             /*jasome.getArchiveType().add("java");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
@@ -45,11 +46,11 @@ public class Jasome {
                 jasome.javaArchivesCount();        
                 jasome.runJasome(jasome.GetRepositoryPath(), jasome.getFileNames(), jasome.getArchiveType(), i);
             }*/
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("Não é um repositório válido");
-        } catch (IOException ex) {
-            System.out.println("Não é um repositório válido");
-        }
+//        } catch (LocalRepositoryNotAGitRepository ex) {
+//            System.out.println("Não é um repositório válido");
+//        } catch (IOException ex) {
+//            System.out.println("Não é um repositório válido");
+//        }
     }
 
 }

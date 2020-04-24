@@ -36,63 +36,57 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author antonio henrique
  */
 public class ReadXMLUsingSAX extends DefaultHandler {
-    
+
     private String tagAtual;
     private String siglaAtual;
-    
+
     private boolean project = false;
     private boolean pacckage = false;
     private boolean clazz = false;
     private boolean method = false;
 
-    /*
-    public List<Metric> listMetric = new ArrayList<>();
-    public List<Metric> methodsMetrics = new ArrayList<>();
-    public List<Metric> classMetrics = new ArrayList<>();
-    public List<Metric> packagesMetrics = new ArrayList<>();
-    public Metric projectMetric;
-     */
     private MethodMetrics methodMetrics;
     private ClassMetrics classMetrics;
     private PackageMetrics packageMetrics;
     private VersionMetrics versionMetrics;
     private ProjectMetrics projectMetrics;
-    
+
     MetricDao metricDao = new MetricDao();
     PackageMetricsDao packageMetricDao = new PackageMetricsDao();
     VersionMetricsDao versionMetricDao = new VersionMetricsDao();
     ClassMetricsDao classMetricDao = new ClassMetricsDao();
     MethodMetricsDao methodMetricDao = new MethodMetricsDao();
     
-    ProjectVersionDao projectVersion = new ProjectVersionDao();
-    VersionPackageDao VersionPackage = new VersionPackageDao();
-    PackageClassDao packageClass = new PackageClassDao();
-    ClassMethodDao classMethod = new ClassMethodDao();
-    
+
+    ProjectVersionDao projectVersionDao = new ProjectVersionDao();
+    VersionPackageDao versionPackageDao = new VersionPackageDao();
+    PackageClassDao packageClassDao = new PackageClassDao();
+    ClassMethodDao classMethodDao = new ClassMethodDao();
+
     List<MethodMetrics> listMethod = new ArrayList<>();
-    
+
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
     }
-    
+
     Metric metric = new Metric();
-    
+
     public ReadXMLUsingSAX(ProjectMetrics project) {
         super();
         versionMetrics = new VersionMetrics();
         this.projectMetrics = project;
-        
+
     }
-    
+
     public void fazerParsing(String xml) {
-        
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser;
         try {
             saxParser = factory.newSAXParser();
 //            saxParser.parse(pathArq, this);
             saxParser.parse(new InputSource(new StringReader(xml)), this);
-            
+
         } catch (ParserConfigurationException | SAXException | IOException e) {
             StringBuffer msg = new StringBuffer();
             msg.append("Erro:\n");
@@ -101,23 +95,19 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             System.out.println(msg);
         }
     }
-    
+
     @Override
     public void startDocument() {
-        
-        ProjectMetricsDao projectDao =  new ProjectMetricsDao();
+
+    }
+
+    @Override
+    public void endDocument() {
         try {
-            projectDao.insert(projectMetrics);
+            projectVersionDao.insert(projectMetrics, versionMetrics);
         } catch (SQLException ex) {
             Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-    }
-    
-    @Override
-    public void endDocument() {
-        
     }
 
     /**
@@ -133,7 +123,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         // recupera o nome da tag atual
         tagAtual = qName;
-        
+
         if (tagAtual.equals("Project")) {
             project = true;
             versionMetrics = new VersionMetrics();
@@ -158,29 +148,29 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             methodMetrics.setName(atts.getValue(3));
         } else if (tagAtual.equals("Metric")) {
             metric = new Metric();
-            
+
             String value0 = atts.getValue(0);
             String value1 = atts.getValue(1);
             String value2 = atts.getValue(2);
-            
+
             metric.setDescription(value0);
             metric.setName(value1);
-            
+
             if (value2.contains(",")) {
                 value2 = value2.replace(",", ".");
                 metric.setValue(Double.parseDouble(value2));
             } else {
-                
+
                 metric.setValue(Double.parseDouble(value2));
             }
-            
+
             try {
                 if (project && !pacckage && !clazz && !method) {
-                    
+
                     int insert = metricDao.insert(metric);
                     metric.setId(insert);
                     versionMetrics.setTloc(metric);
-                    
+
                 } else if (project && pacckage && !clazz && !method) {
                     if (metric.getName().equals("A")) {
                         int insert = metricDao.insert(metric);
@@ -227,244 +217,244 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                         metric.setId(insert);
                         packageMetrics.setTloc(metric);
                     }
-                    
+
                 } else if (project && pacckage && clazz && !method) {
                     if (metric.getName().equals("Aa")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAa(metric);
-                        
+
                     } else if (metric.getName().equals("Ad")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAd(metric);
-                        
+
                     } else if (metric.getName().equals("Ai")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAi(metric);
-                        
+
                     } else if (metric.getName().equals("Ait")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAit(metric);
-                        
+
                     } else if (metric.getName().equals("Ao")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAo(metric);
-                        
+
                     } else if (metric.getName().equals("Av")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setAv(metric);
-                        
+
                     } else if (metric.getName().equals("ClRCi")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setClrci(metric);
-                        
+
                     } else if (metric.getName().equals("ClTCi")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setCltci(metric);
-                        
+
                     } else if (metric.getName().equals("DIT")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setDit(metric);
-                        
+
                     } else if (metric.getName().equals("HMd")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setHmd(metric);
-                        
+
                     } else if (metric.getName().equals("HMi")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setHmi(metric);
-                        
+
                     } else if (metric.getName().equals("MHF")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMhf(metric);
-                        
+
                     } else if (metric.getName().equals("MIF")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMif(metric);
-                        
+
                     } else if (metric.getName().equals("Ma")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMa(metric);
-                        
+
                     } else if (metric.getName().equals("Md")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMd(metric);
-                        
+
                     } else if (metric.getName().equals("Mi")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMi(metric);
-                        
+
                     } else if (metric.getName().equals("Mit")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMit(metric);
-                        
+
                     } else if (metric.getName().equals("Mo")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setMo(metric);
-                        
+
                     } else if (metric.getName().equals("NF")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNf(metric);
-                        
+
                     } else if (metric.getName().equals("NM")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNm(metric);
-                        
+
                     } else if (metric.getName().equals("NMA")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNma(metric);
-                        
+
                     } else if (metric.getName().equals("NMI")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNmi(metric);
-                        
+
                     } else if (metric.getName().equals("NOA")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNoa(metric);
-                        
+
                     } else if (metric.getName().equals("NOCh")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNoch(metric);
-                        
+
                     } else if (metric.getName().equals("NOD")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNod(metric);
-                        
+
                     } else if (metric.getName().equals("NOL")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNol(metric);
-                        
+
                     } else if (metric.getName().equals("NOPa")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNopa(metric);
-                        
+
                     } else if (metric.getName().equals("NORM")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNorm(metric);
-                        
+
                     } else if (metric.getName().equals("NPF")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNpf(metric);
-                        
+
                     } else if (metric.getName().equals("NPM")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNpm(metric);
-                        
+
                     } else if (metric.getName().equals("NSF")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNsf(metric);
-                        
+
                     } else if (metric.getName().equals("NSM")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setNsm(metric);
-                        
+
                     } else if (metric.getName().equals("PMR")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setPmr(metric);
-                        
+
                     } else if (metric.getName().equals("PMd")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setPmd(metric);
-                        
+
                     } else if (metric.getName().equals("PMi")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setPmi(metric);
-                        
+
                     } else if (metric.getName().equals("RTLOC")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setRtloc(metric);
-                        
+
                     } else if (metric.getName().equals("SIX")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setSix(metric);
-                        
+
                     } else if (metric.getName().equals("TLOC")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setTloc(metric);
-                        
+
                     } else if (metric.getName().equals("WMC")) {
-                        
+
                         int insert = metricDao.insert(metric);
                         metric.setId(insert);
                         classMetrics.setWmc(metric);
-                        
+
                     }
-                    
+
                 } else if (project && pacckage && clazz && method) {
                     if (metric.getName().equals("Ci")) {
                         int insert = metricDao.insert(metric);
@@ -519,60 +509,57 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                         metric.setId(insert);
                         methodMetrics.setVg(metric);
                     }
-                    
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
+
     @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
-        
+
         tagAtual = qName;
         try {
             if (tagAtual.equals("Project")) {
-                versionMetrics.setProjectID(projectMetrics.getId()); 
+                versionMetrics.setProjectID(projectMetrics.getId());
                 int versionId = versionMetricDao.insert(versionMetrics);
                 versionMetrics.setId(versionId);
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
-                versionMetrics.getListPackageMetric().get(i).setVersionId(versionMetrics.getId());
-                packageMetricDao.updateVersionId(versionMetrics.getListPackageMetric().get(i));
+                    versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }
                 project = false;
             } else if (tagAtual.equals("Package")) {
-                
+
                 packageMetrics.setVersionId(versionMetrics.getId());
                 int packageId = packageMetricDao.insert(packageMetrics);
                 packageMetrics.setId(packageId);
                 for (int i = 0; i < packageMetrics.getListClassMetrics().size(); i++) {
-                packageMetrics.getListClassMetrics().get(i).setPackageId(packageMetrics.getId());
-                classMetricDao.updatePackageId(packageMetrics.getListClassMetrics().get(i));
+                    packageClassDao.insert(packageMetrics, packageMetrics.getListClassMetrics().get(i));
                 }
                 versionMetrics.getListPackageMetric().add(packageMetrics);
                 pacckage = false;
-                
+
             } else if (tagAtual.equals("Class")) {
                 classMetrics.setPackageId(packageMetrics.getId());
                 int classId = classMetricDao.insert(classMetrics);
                 classMetrics.setId(classId);
                 for (int i = 0; i < classMetrics.getListMethodsMetrics().size(); i++) {
-                classMetrics.getListMethodsMetrics().get(i).setClassId(classMetrics.getId());
-                methodMetricDao.updateClassId(classMetrics.getListMethodsMetrics().get(i));
+                    classMethodDao.insert(classMetrics, classMetrics.getListMethodsMetrics().get(i));
                 }
                 packageMetrics.getListClassMetrics().add(classMetrics);
                 clazz = false;
-                
+
             } else if (tagAtual.equals("Method")) {
                 int methodId = methodMetricDao.insert(methodMetrics);
                 methodMetrics.setId(methodId);
                 classMetrics.getListMethodsMetrics().add(methodMetrics);
                 method = false;
-                
+
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
         }
