@@ -127,10 +127,33 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
+                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+            if (this.originalV2StartLine > 0) {
+                Git.checkout(v2Commit, repositoryPath);
+                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
+        } catch (CheckoutError ex) {
+            System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        } catch (IOException ex) {
+            throw new IOException();
+        }
+    }
+
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit) throws IOException {
+        try {
+            if (this.originalV1StartLine > 0) {
+                Git.checkout(v1Commit, repositoryPath);
                 try {
                     this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV1 = null;
+                    this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
@@ -139,7 +162,7 @@ public class ConflictRegion {
                 try {
                     this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV2 = null;
+                    this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
@@ -247,16 +270,16 @@ public class ConflictRegion {
             String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
             String rawV1 = ListUtils.getRawStringForm(this.v1);
             String rawV2 = ListUtils.getRawStringForm(this.v2);
-            
-            if(rawSolution.equals(rawV1)){
+
+            if (rawSolution.equals(rawV1)) {
                 return DeveloperDecision.VERSION1;
-            } else if (rawSolution.equals(rawV2)){
+            } else if (rawSolution.equals(rawV2)) {
                 return DeveloperDecision.VERSION2;
-            } else if (rawSolution.equals(rawV1+rawV2) ||rawSolution.equals(rawV2+rawV1)){
+            } else if (rawSolution.equals(rawV1 + rawV2) || rawSolution.equals(rawV2 + rawV1)) {
                 return DeveloperDecision.CONCATENATION;
             } else {
                 return DeveloperDecision.COMBINATION;
-            } 
+            }
 
         }
 
