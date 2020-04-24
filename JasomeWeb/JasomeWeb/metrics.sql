@@ -28,7 +28,6 @@ CREATE TABLE tb_projectMetrics(
 CREATE TABLE tb_versionMetrics (
     ID serial NOT NULL,
     tlocID serial NOT NULL,
-    projectID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
@@ -47,7 +46,6 @@ CREATE TABLE tb_packageMetrics (
     pkgRCiD serial NOT NULL,
     pkgTCiID serial NOT NULL,
     tlocID serial NOT NULL,
-    versionID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (aID) REFERENCES tb_metric(ID),
     FOREIGN KEY (ccrcID) REFERENCES tb_metric(ID),
@@ -104,7 +102,6 @@ CREATE TABLE tb_classMetrics (
     sixID serial NOT NULL,
     tlocID serial NOT NULL,
     wmcID serial NOT NULL,
-    packageID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (aaID) REFERENCES tb_metric(ID),
     FOREIGN KEY (adID) REFERENCES tb_metric(ID),
@@ -162,7 +159,6 @@ CREATE TABLE tb_methodMetrics (
     siID serial NOT NULL,
     tlocID serial NOT NULL,
     vgID serial NOT NULL,
-    classID serial NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (ciID) REFERENCES tb_metric(ID),
     FOREIGN KEY (diID) REFERENCES tb_metric(ID),
