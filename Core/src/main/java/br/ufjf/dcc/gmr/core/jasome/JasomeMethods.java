@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
@@ -17,6 +18,7 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -68,7 +70,7 @@ public class JasomeMethods {
         return repositoryPath;
     }
 
-    public void runProject(ProjectMetrics project) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
+    public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         try {
@@ -78,14 +80,13 @@ public class JasomeMethods {
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
             
-            ProjectMetricsDao projectDao = projectDao = new ProjectMetricsDao();
+            ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
             int projectId = projectDao.insert(project);
             project.setId(projectId);
             
             for (Formats revision : log) {
-                projectMetrics = analyzeVersion(revision, project, i); 
+                projectMetrics = analyzeVersion(revision, project, i, connection); 
                 System.out.println(new Date());
-
             }
         } catch (NullPointerException ex) {
             System.out.println("Fim do arquivo");
@@ -104,7 +105,7 @@ public class JasomeMethods {
         }
     }
 
-    public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
+    public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i, Connection connection) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         System.out.println("======================" + revision.getCommitHash() + "==================");
@@ -115,7 +116,7 @@ public class JasomeMethods {
         CLIExecution extractMetrics = extractMetrics(project);
         System.out.println(new Date());
         System.out.println("==============================================");
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project);
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection);
         readXml.fazerParsing(extractMetrics.getOutputString());
         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
         if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {

@@ -5,11 +5,13 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.test;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,11 @@ import java.util.List;
 public class TestSelect {
     public static void main(String[] args) throws SQLException {
         
+        Connection connection = ConnectionFactory.getConnection();
+        
         List<Metric> listMetrics = new ArrayList();
         Metric metric = new Metric();
-        MetricDao dao = new MetricDao();
+        MetricDao dao = new MetricDao(connection);
         
         metric = dao.selectID(3);
         

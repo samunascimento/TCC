@@ -22,8 +22,8 @@ public class PackageMetricsDao {
 
     private final Connection connection;
 
-    public PackageMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public PackageMetricsDao(Connection connection){
+        this.connection = connection;
     }
 
     public int insert(PackageMetrics packageMetrics) throws SQLException {
@@ -86,10 +86,9 @@ public class PackageMetricsDao {
     }
 
     public List<PackageMetrics> select() throws SQLException {
-        MetricDao metrics = new MetricDao();
+        MetricDao metrics = new MetricDao(connection);
         List<PackageMetrics> listPackageMetrics = new ArrayList<>();
         PackageMetrics packageMetrics = null;
-        MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_packageMetrics";
 
@@ -149,7 +148,7 @@ public class PackageMetricsDao {
     }
 
     public PackageMetrics selectID(int id) throws SQLException {
-        MetricDao metrics = new MetricDao();
+        MetricDao metrics = new MetricDao(connection);
         PackageMetrics packageMetrics = null;
 
         String sql = "SELECT * FROM tb_packageMetrics WHERE ID = " + id;

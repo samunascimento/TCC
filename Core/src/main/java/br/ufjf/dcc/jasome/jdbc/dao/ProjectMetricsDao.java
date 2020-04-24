@@ -21,8 +21,8 @@ public class ProjectMetricsDao {
 
     private final Connection connection;
 
-    public ProjectMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public ProjectMetricsDao(Connection connection){
+        this.connection = connection;
     }
 
     public int insert(ProjectMetrics projectMetrics) throws SQLException {
@@ -77,7 +77,7 @@ public class ProjectMetricsDao {
 
     public List<ProjectMetrics> select() throws SQLException {
         List<ProjectMetrics> listProjectMetrics = new ArrayList<>();
-        MetricDao metrics = new MetricDao();
+        MetricDao metrics = new MetricDao(connection);
         ProjectMetrics projectMetrics;
         projectMetrics = new ProjectMetrics();
 

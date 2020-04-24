@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.test;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
@@ -13,6 +14,7 @@ import br.ufjf.dcc.jasome.jdbc.dao.ClassMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.List;
 public class TestInsert {
 
     public static void main(String[] args) throws SQLException {
+        
+        Connection connection = ConnectionFactory.getConnection();
 
         Metric a = new Metric();
         a.setName("metric geral 999");
@@ -111,7 +115,7 @@ public class TestInsert {
 
         //insert method
         
-        MethodMetricsDao methodMetricsDao = new MethodMetricsDao();
+        MethodMetricsDao methodMetricsDao = new MethodMetricsDao(connection);
         MethodMetrics methodMetrics = new MethodMetrics();
         
         Metric a1 = new Metric();
@@ -121,7 +125,7 @@ public class TestInsert {
         a1.setId(10);
         
         for(int i=1;i<=13;i++){
-            MetricDao metricDao = new MetricDao();
+            MetricDao metricDao = new MetricDao(connection);
             int insertMetric = metricDao.insert(a1);
             
             methodMetrics.setCi(a1);

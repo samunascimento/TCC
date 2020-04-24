@@ -5,12 +5,14 @@
  */
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,12 +23,14 @@ import java.util.List;
 public class TestConnection {
 
     public static void main(String[] args) throws SQLException {
+        
+        Connection connection = ConnectionFactory.getConnection();
 
-        VersionMetricsDao versionDao = new VersionMetricsDao();
+        VersionMetricsDao versionDao = new VersionMetricsDao(connection);
 
         VersionMetrics versionMetric = new VersionMetrics();
         
-        ProjectMetricsDao projectDao =  new ProjectMetricsDao();
+        ProjectMetricsDao projectDao =  new ProjectMetricsDao(connection);
         
         ProjectMetrics project =  new ProjectMetrics();
         
@@ -46,7 +50,7 @@ public class TestConnection {
         metric.setDescription("description");
         metric.setValue(0);
 
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
 
         int insert = metricDao.insert(metric);
 

@@ -24,8 +24,8 @@ public class VersionPackageDao {
     public static final String VERSION_ID = "version_id";
     public static final String PACKAGE_ID = "package_id";
 
-    public VersionPackageDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public VersionPackageDao(Connection connection){
+        this.connection = connection;
     }
 
     public void insert(VersionMetrics versionMetrics, PackageMetrics packageMetrics) throws SQLException {

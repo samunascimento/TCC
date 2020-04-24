@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.MethodMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -18,6 +19,7 @@ import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionPackageDao;
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,17 +53,18 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     private VersionMetrics versionMetrics;
     private ProjectMetrics projectMetrics;
 
-    MetricDao metricDao = new MetricDao();
-    PackageMetricsDao packageMetricDao = new PackageMetricsDao();
-    VersionMetricsDao versionMetricDao = new VersionMetricsDao();
-    ClassMetricsDao classMetricDao = new ClassMetricsDao();
-    MethodMetricsDao methodMetricDao = new MethodMetricsDao();
-    
+    MetricDao metricDao;
+    PackageMetricsDao packageMetricDao;
+    VersionMetricsDao versionMetricDao;
+    ClassMetricsDao classMetricDao;
+    MethodMetricsDao methodMetricDao;
 
-    ProjectVersionDao projectVersionDao = new ProjectVersionDao();
-    VersionPackageDao versionPackageDao = new VersionPackageDao();
-    PackageClassDao packageClassDao = new PackageClassDao();
-    ClassMethodDao classMethodDao = new ClassMethodDao();
+    ProjectVersionDao projectVersionDao;
+    VersionPackageDao versionPackageDao;
+    PackageClassDao packageClassDao;
+    ClassMethodDao classMethodDao;
+    
+    Connection connection;
 
     List<MethodMetrics> listMethod = new ArrayList<>();
 
@@ -71,10 +74,22 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     Metric metric = new Metric();
 
-    public ReadXMLUsingSAX(ProjectMetrics project) {
+    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection) {
         super();
         versionMetrics = new VersionMetrics();
         this.projectMetrics = project;
+        this.connection = connection;
+        metricDao = new MetricDao(connection);
+
+        packageMetricDao = new PackageMetricsDao(connection);
+        versionMetricDao = new VersionMetricsDao(connection);
+        classMetricDao = new ClassMetricsDao(connection);
+        methodMetricDao = new MethodMetricsDao(connection);
+        
+        projectVersionDao = new ProjectVersionDao(connection);
+        versionPackageDao = new VersionPackageDao(connection);
+        packageClassDao = new PackageClassDao(connection);
+        classMethodDao = new ClassMethodDao(connection);
 
     }
 

@@ -22,8 +22,8 @@ public class VersionMetricsDao {
 
     private final Connection connection;
 
-    public VersionMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public VersionMetricsDao(Connection connection){
+        this.connection = connection;
     }
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
@@ -79,7 +79,7 @@ public class VersionMetricsDao {
 
         List<VersionMetrics> listVersionMetrics = new ArrayList<>();
         
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
 
         String sql = "SELECT * FROM tb_versionmetrics ";
 
@@ -119,7 +119,7 @@ public class VersionMetricsDao {
     public VersionMetrics selectID(int id) throws SQLException {
         VersionMetrics versionMetrics;
         versionMetrics = new VersionMetrics();
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
 
         String sql = "SELECT * FROM tb_versionmetrics WHERE ID = " + id;
 

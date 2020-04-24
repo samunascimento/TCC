@@ -26,8 +26,8 @@ public class ClassMetricsDao {
     ClassMetrics classMetrics;
     ResultSet tableKeys;
 
-    public ClassMetricsDao(){
-        this.connection = ConnectionFactory.getConnection();
+    public ClassMetricsDao(Connection connection){
+        this.connection = connection;
         listClassMetrics = new ArrayList<>();
     }
     
@@ -116,7 +116,7 @@ public class ClassMetricsDao {
         
         ClassMetrics classMetrics = null;
         List<ClassMetrics> listClassMetrics = new ArrayList<>();
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
         
         String sql = "SELECT * FROM tb_classMetrics";
         

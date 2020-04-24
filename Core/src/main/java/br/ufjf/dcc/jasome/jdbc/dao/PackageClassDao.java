@@ -25,8 +25,8 @@ public class PackageClassDao {
     public static final String PACKAGE_ID = "package_id";
     public static final String CLASS_ID = "class_id";
 
-    public PackageClassDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public PackageClassDao(Connection connection){
+        this.connection = connection;
     }
 
     public void insert(PackageMetrics packageMetrics, ClassMetrics classMetrics) throws SQLException {

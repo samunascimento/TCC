@@ -26,8 +26,8 @@ public class MethodMetricsDao {
     MethodMetrics methodMetrics;
     ResultSet tableKeys;
 
-    public MethodMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public MethodMetricsDao(Connection connection){
+        this.connection = connection;
         listMethodMetrics = new ArrayList<>();
     }
 
@@ -73,7 +73,7 @@ public class MethodMetricsDao {
 
         MethodMetrics methodMetrics = null;
         List<MethodMetrics> listMethodMetrics = new ArrayList<>();
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
@@ -139,7 +139,7 @@ public class MethodMetricsDao {
     }
 
     public MethodMetrics selectID(int id) throws SQLException {
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
         MethodMetrics methodMetrics = null;
         String sql = "SELECT * FROM tb_methodMetrics WHERE ID = " + id;
 
