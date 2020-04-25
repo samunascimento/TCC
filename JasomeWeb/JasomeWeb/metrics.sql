@@ -11,41 +11,41 @@ DROP TABLE tb_metric;
 
 
 CREATE TABLE tb_metric (
-    ID serial NOT NULL,
-    description varchar(255) NOT NULL,
+    ID serial Not Null,
+    description varchar(255) ,
     name varchar(255),
     value REAL,
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE tb_projectMetrics(
-    ID serial NOT NULL,
-    sourceDir varchar(256) NOT NULL,
+    ID serial Not Null,
+    sourceDir varchar(256) ,
     PRIMARY KEY (ID)
 );
 
 
 CREATE TABLE tb_versionMetrics (
-    ID serial NOT NULL,
-    tlocID serial NOT NULL,
+    ID serial Not Null,
+    tlocID serial ,
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
 
 
 CREATE TABLE tb_packageMetrics (
-    ID serial NOT NULL,
-    aID serial NOT NULL,
-    ccrcID serial NOT NULL,
-    caID serial NOT NULL,
-    ceID serial NOT NULL,
-    dmsID serial NOT NULL,
-    iID serial NOT NULL,
-    nocID serial NOT NULL,
-    noiID serial NOT NULL,
-    pkgRCiD serial NOT NULL,
-    pkgTCiID serial NOT NULL,
-    tlocID serial NOT NULL,
+    ID serial NOT Null,
+    aID serial,
+    ccrcID serial,
+    caID serial,
+    ceID serial,
+    dmsID serial,
+    iID serial,
+    nocID serial,
+    noiID serial,
+    pkgRCiD serial,
+    pkgTCiID serial,
+    tlocID serial,
     PRIMARY KEY (ID),
     FOREIGN KEY (aID) REFERENCES tb_metric(ID),
     FOREIGN KEY (ccrcID) REFERENCES tb_metric(ID),
@@ -62,46 +62,46 @@ CREATE TABLE tb_packageMetrics (
 
 
 CREATE TABLE tb_classMetrics (
-    ID serial NOT NULL,
-    aaID serial NOT NULL,
-    adID serial NOT NULL,
-    aiID serial NOT NULL,
-    aitID serial NOT NULL,
-    aoID serial NOT NULL,
-    avID serial NOT NULL,
-    clrciID serial NOT NULL,
-    cltciID serial NOT NULL,
-    ditID serial NOT NULL,
-    hmdID serial NOT NULL,
-    hmiID serial NOT NULL,
-    mhfID serial NOT NULL,
-    mifID serial NOT NULL,
-    maID serial NOT NULL,
-    mdID serial NOT NULL,
-    miID serial NOT NULL,
-    mitID serial NOT NULL,
-    moID serial NOT NULL,
-    nfID serial NOT NULL,
-    nmID serial NOT NULL,
-    nmaID serial NOT NULL,
-    nmiID serial NOT NULL,
-    noaID serial NOT NULL,
-    nochID serial NOT NULL,
-    nodID serial NOT NULL,
-    nolID serial NOT NULL,
-    nopaID serial NOT NULL,
-    normID serial NOT NULL,
-    npfID serial NOT NULL,
-    npmID serial NOT NULL,
-    nsfID serial NOT NULL,
-    nsmID serial NOT NULL,
-    pmrID serial NOT NULL,
-    pmdID serial NOT NULL,
-    pmiID serial NOT NULL,
-    rtlocID serial NOT NULL,
-    sixID serial NOT NULL,
-    tlocID serial NOT NULL,
-    wmcID serial NOT NULL,
+    ID serial NOT Null,
+    aaID serial,
+    adID serial,
+    aiID serial,
+    aitID serial,
+    aoID serial,
+    avID serial,
+    clrciID serial,
+    cltciID serial,
+    ditID serial,
+    hmdID serial,
+    hmiID serial,
+    mhfID serial,
+    mifID serial,
+    maID serial,
+    mdID serial,
+    miID serial,
+    mitID serial ,
+    moID serial,
+    nfID serial,
+    nmID serial,
+    nmaID serial,
+    nmiID serial,
+    noaID serial,
+    nochID serial ,
+    nodID serial ,
+    nolID serial ,
+    nopaID serial ,
+    normID serial ,
+    npfID serial ,
+    npmID serial ,
+    nsfID serial ,
+    nsmID serial ,
+    pmrID serial ,
+    pmdID serial ,
+    pmiID serial ,
+    rtlocID serial ,
+    sixID serial ,
+    tlocID serial ,
+    wmcID serial ,
     PRIMARY KEY (ID),
     FOREIGN KEY (aaID) REFERENCES tb_metric(ID),
     FOREIGN KEY (adID) REFERENCES tb_metric(ID),
@@ -145,20 +145,20 @@ CREATE TABLE tb_classMetrics (
 );
 
 CREATE TABLE tb_methodMetrics (
-    ID serial NOT NULL,
-    ciID serial NOT NULL,
-    diID serial NOT NULL,
-    finID serial NOT NULL,
-    foutID serial NOT NULL,
-    iovarsID serial NOT NULL,
-    mclcID serial NOT NULL,
-    nbdID serial NOT NULL,
-    ncompID serial NOT NULL,
-    nopID serial NOT NULL,
-    nvarID serial NOT NULL,
-    siID serial NOT NULL,
-    tlocID serial NOT NULL,
-    vgID serial NOT NULL,
+    ID serial NOT Null,
+    ciID serial ,
+    diID serial ,
+    finID serial ,
+    foutID serial ,
+    iovarsID serial ,
+    mclcID serial ,
+    nbdID serial ,
+    ncompID serial ,
+    nopID serial ,
+    nvarID serial ,
+    siID serial ,
+    tlocID serial ,
+    vgID serial ,
     PRIMARY KEY (ID),
     FOREIGN KEY (ciID) REFERENCES tb_metric(ID),
     FOREIGN KEY (diID) REFERENCES tb_metric(ID),
@@ -176,29 +176,29 @@ CREATE TABLE tb_methodMetrics (
 );
 
 CREATE TABLE tb_project_version (
-    project_id serial NOT NULL,
-    version_id serial NOT NULL,
+    project_id serial NOT Null,
+    version_id serial NOT Null,
     FOREIGN KEY (project_id) REFERENCES tb_projectMetrics(ID),
     FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
 );
 
 CREATE TABLE tb_version_package (
-    version_id serial NOT NULL,
-    package_id serial NOT NULL,
+    version_id serial NOT Null,
+    package_id serial NOT Null,
     FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID)
 );
 
 CREATE TABLE tb_package_class (
-    package_id serial NOT NULL,
-    class_id serial NOT NULL,
+    package_id serial NOT Null,
+    class_id serial NOT Null,
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID),
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID)
 );
 
 CREATE TABLE tb_class_method (
-    class_id serial NOT NULL,
-    method_id serial NOT NULL,
+    class_id serial NOT Null,
+    method_id serial NOT Null,
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID),
     FOREIGN KEY (method_id) REFERENCES tb_methodMetrics(ID)
 );
