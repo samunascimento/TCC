@@ -11,23 +11,23 @@ DROP TABLE tb_metric;
 
 
 CREATE TABLE tb_metric (
-    ID serial Not Null,
-    description varchar(255) ,
-    name varchar(255),
-    value REAL,
+    ID serial NOT NULL,
+    description varchar(255) NOT NULL,
+    name varchar(255) NOT NULL,
+    value REAL NOT NULL,
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE tb_projectMetrics(
-    ID serial Not Null,
-    sourceDir varchar(256) ,
+    ID serial NOT NULL,
+    sourceDir varchar(256) NOT NULL ,
     PRIMARY KEY (ID)
 );
 
 
 CREATE TABLE tb_versionMetrics (
-    ID serial Not Null,
-    tlocID serial ,
+    ID serial NOT NULL,
+    tlocID serial,
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
