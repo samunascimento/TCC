@@ -177,7 +177,7 @@ public class ConflictRegion {
         }
     }
 
-    public String getForm() {
+    public String getConflictForm() {
         String str = "";
         for (String line : this.beforeContext) {
             str = str + line + "\n";
@@ -194,66 +194,84 @@ public class ConflictRegion {
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
-        str = str + "\nSOLUTION:\n";
+        return str;
+    }
+
+    public String getSolutionForm() {
+        String str = "";
         if (solution == null) {
-            str = str + "The file was deleted!\n";
+            str = str + "The file was deleted!";
         } else {
             for (String line : this.solution) {
-                str = str + line + "\n";
+                str = str + "\n" + line;
             }
         }
-        return str;
+
+        return str.replaceFirst("\n", "");
     }
 
     public String getV1StructureTypes() {
         if (syntaxV1 == null) {
-            return "Extension not parseble,or file don't exists in this version,impossible to get syntax structures!";
+            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV1.isEmpty()) {
                 if (syntaxV1.get(0).getWarning()) {
-                    str = str + ", WARNING!";
+                    str = str + "WARNING!\n";
                 }
             } else {
                 return "V1 doesn't has any structure type!";
             }
+            int i = 0;
             for (SyntaxStructure ss : this.syntaxV1) {
                 if (!str.contains(ss.getStructureType())) {
-                    str = str + ", " + ss.getStructureType();
+                    if (i == 2) {
+                        str = str + ", " + ss.getStructureType() + "\n";
+                        i = 0;
+                    } else {
+                        str = str + ", " + ss.getStructureType();
+                        i++;
+                    }
                 }
             }
             if (str == "") {
                 return "V1 doesn't has any structure type!";
             } else {
-                return str.replaceFirst(", ", "");
+                return str.replaceFirst(", ", "").replaceAll("\n,", "\n");
             }
         }
     }
 
     public String getV2StructureTypes() {
         if (syntaxV2 == null) {
-            return "Extension not parseble,or file don't exists in this version,impossible to get syntax structures!";
+            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV2.isEmpty()) {
                 if (syntaxV2.get(0).getWarning()) {
-                    str = str + ", WARNING!";
+                    str = str + "WARNING!\n";
                 }
             } else {
                 return "V2 doesn't has any structure type!";
             }
+            int i = 0;
             for (SyntaxStructure ss : this.syntaxV2) {
                 if (!str.contains(ss.getStructureType())) {
-                    str = str + ", " + ss.getStructureType();
+                    if (i == 2) {
+                        str = str + ", " + ss.getStructureType() + "\n";
+                        i = 0;
+                    } else {
+                        str = str + ", " + ss.getStructureType();
+                        i++;
+                    }
                 }
             }
             if (str == "") {
                 return "V2 doesn't has any structure type!";
             } else {
-                return str.replaceFirst(", ", "");
+                return str.replaceFirst(", ", "").replaceAll("\n,", "\n");
             }
         }
-
     }
 
     private DeveloperDecision generateDeveloperDecision() {
