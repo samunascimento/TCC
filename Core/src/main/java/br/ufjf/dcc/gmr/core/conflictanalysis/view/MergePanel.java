@@ -9,7 +9,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -264,23 +267,27 @@ public class MergePanel extends JPanel {
                 previousConflictButtonMouseClicked(evt);
             }
         });
-        /*
+        
         subPanelSaveAnalysisButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                String fileName = JOptionPane.showInternalInputDialog(null, "Choose the filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                String fileName = JOptionPane.showInputDialog(null, "Choose the filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
                 while (fileName.length() > 20) {
-                    fileName = JOptionPane.showInternalInputDialog(null, "Limit of characters overpast, please, choose another filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                    fileName = JOptionPane.showInputDialog(null, "Limit of characters overpast, please, choose another filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
                 }
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int check = jfc.showOpenDialog(null);
                 if (check == JFileChooser.APPROVE_OPTION) {
                     String savePath = jfc.getSelectedFile().getPath();
-                    GSONClass.createGson();
+                    try {
+                        GSONClass.save(savePath + "/" + fileName + ".gson", list);
+                    } catch (IOException ex) {
+                        System.out.println("Deu merda");
+                    }
                 }
             }
         });
-         */
+         
     }
     
     private void nextFileButtonMouseClicked(java.awt.event.MouseEvent evt) {
