@@ -20,12 +20,8 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineType;
  */
 public class ReturnNewLineNumber {
 
-    public static final int REMOVED_LINE = -Integer.MAX_VALUE;
-
-    /**
-     *
-     */
-    public static final int REMOVED_FILE = Integer.MAX_VALUE;
+    public static final int REMOVED_LINE = -Integer.MAX_VALUE; // Constant used to indentify when a line was removed
+    public static final int REMOVED_FILE = -(Integer.MAX_VALUE - 1); // Constant used to indentify when a file was removed
 
     /**
      * This method goes trough the diffs between the commit source and the

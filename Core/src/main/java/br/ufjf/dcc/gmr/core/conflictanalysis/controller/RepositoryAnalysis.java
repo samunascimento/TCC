@@ -375,7 +375,7 @@ public class RepositoryAnalysis {
                                     } else {
                                         solutionFinalLine = 0;
                                     }
-                                    if (solutionFirstLine == Integer.MAX_VALUE || solutionFinalLine == Integer.MAX_VALUE) {
+                                    if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                                         auxBool = Git.deletedFile(sandbox.getPath(), filePath, parents.get(0).getCommitHash(), hash.getCommitHash());
                                         if (auxBool == false) {
                                             auxBool = Git.deletedFile(sandbox.getPath(), filePath, parents.get(1).getCommitHash(), hash.getCommitHash());

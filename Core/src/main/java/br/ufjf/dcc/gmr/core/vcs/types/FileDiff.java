@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Type used in the command diff
+ * Object created to analyze the diff command output
  *
  * @author Luan and Gleiph
  */
@@ -16,9 +16,6 @@ public class FileDiff {
     private List<String> arroba;
     private List<String> allMessage;
 
-    /**
-     * Constructor
-     */
     public FileDiff() {
         this.allMessage = new ArrayList<>();
         this.lines = new ArrayList<>();
@@ -27,94 +24,53 @@ public class FileDiff {
         this.filePathTarget = "";
     }
 
-    /**
-     * Getter
-     *
-     * @return
-     */
     public String getFilePathSource() {
         return filePathSource;
     }
 
-    /**
-     * Setter
-     *
-     * @param filePathSource
-     */
     public void setFilePathSource(String filePathSource) {
         this.filePathSource = filePathSource;
     }
 
-    /**
-     * Getter
-     *
-     * @return
-     */
     public String getFilePathTarget() {
         return filePathTarget;
     }
 
-    /**
-     * Setter
-     *
-     * @param filePathTarget
-     */
     public void setFilePathTarget(String filePathTarget) {
         this.filePathTarget = filePathTarget;
     }
 
-    /**
-     * Getter
-     *
-     * @return
-     */
     public List<LineInformation> getLines() {
         return lines;
     }
 
-    /**
-     * Setter
-     *
-     * @param lines
-     */
     public void setLines(List<LineInformation> lines) {
         this.lines = lines;
     }
 
-    /**
-     * Getter
-     *
-     * @return
-     */
     public List<String> getArroba() {
         return arroba;
     }
 
-    /**
-     * Setter
-     *
-     * @param arroba
-     */
     public void setArroba(String arroba) {
         this.arroba.add(arroba);
     }
 
-    /**
-     * Getter
-     *
-     * @return
-     */
     public List<String> getAllMessage() {
         return allMessage;
     }
 
-    /**
-     * Setter
-     *
-     * @param allMessage
-     */
     public void setAllMessage(List<String> allMessage) {
         this.allMessage = allMessage;
+    }
+
+    /**
+     * Function to verify if the file was renamed
+     *
+     * @return true if the file was renamed and false otherwise.
+     */
+    public boolean isRenamed() {
+        return !this.filePathSource.equals(this.filePathTarget);
     }
 
 }

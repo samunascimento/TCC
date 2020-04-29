@@ -6,5 +6,5 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  * @author Gleiph and Luan
  */
 public enum LineType {
-    ADDED, MODIFIED, UNTRACKED, RENAMED, DELETED, COPIED, UNMERGED, IGNORED;
+    ADDED, DELETED;
 }
