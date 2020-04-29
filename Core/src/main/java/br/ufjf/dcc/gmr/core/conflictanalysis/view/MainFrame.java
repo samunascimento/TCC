@@ -24,6 +24,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -61,12 +62,24 @@ public class MainFrame extends JFrame {
         "10 Lines"
     });
 
+    //Progress Bar
+    private JProgressBar progressBar;
+
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(JProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
     public MainFrame() {
         initComponents();
     }
 
     private void initComponents() {
         this.customizeMainFrame();
+        this.customizeProgressBar();
         this.customizeMenu();
         this.customizeTabbedPane();
         this.setVisible(true);
@@ -77,14 +90,14 @@ public class MainFrame extends JFrame {
         this.setTitle("Analysis of Merge Conflicts in Git Repositories");
         this.setResizable(true);
         this.setExtendedState(MAXIMIZED_BOTH);
-        this.setMaximumSize(new Dimension(1600,900));
-        this.setMinimumSize(new Dimension(1600,900));
+        this.setMaximumSize(new Dimension(1600, 900));
+        this.setMinimumSize(new Dimension(1600, 900));
     }
 
     private void customizeMenu() {
         this.readSavedAnalysisButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent evt)  {
+            public void actionPerformed(ActionEvent evt) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 int check = jfc.showOpenDialog(null);
@@ -94,7 +107,7 @@ public class MainFrame extends JFrame {
                         mainTabbedPane.addTab(auxArray[auxArray.length - 1], new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())));
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    } 
+                    }
                 }
             }
         });
@@ -134,6 +147,10 @@ public class MainFrame extends JFrame {
         gbc.gridy = 2;
         gbc.weightx = 0;
         this.homePanel.add(this.homePanelAnalyseButton, gbc);
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        this.homePanel.add(this.progressBar, gbc);
     }
 
     private void customizePanel() {
@@ -147,6 +164,11 @@ public class MainFrame extends JFrame {
 
     private void customizeTextField() {
         this.homePanelTextField.setEditable(false);
+    }
+
+    private void customizeProgressBar() {
+        this.progressBar = new JProgressBar();
+        this.progressBar.setVisible(true);
     }
 
     private void customizeButtons() {
@@ -165,23 +187,25 @@ public class MainFrame extends JFrame {
         this.homePanelAnalyseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                if (homePanelTextField.getText() == null) {
-                    JOptionPane.showMessageDialog(null, "Repository Path text field is empty!", "ERROR!", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(homePanelTextField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                        try {
-                            String auxStr = homePanelTextField.getText();
-                            int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
-                            resetHomePanel();
-                            mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(RepositoryAnalysis.searchAllMerges(auxStr, auxInt)));
-                        } catch (IOException ex) {
-                            JOptionPane.showMessageDialog(null, "The selected directory is not a git repository.\nPlease, choose a new directory!", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
+                homePanelAnalyseButtonActionPerformed();
             }
-
         });;
+    }
+
+    private void homePanelAnalyseButtonActionPerformed() {
+        if (homePanelTextField.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Repository Path text field is empty!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(homePanelTextField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                String auxStr = homePanelTextField.getText();
+                int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
+                resetHomePanel();
+                RepositoryAnalysis repositoryAnalysis = new RepositoryAnalysis(auxStr, auxInt, this);
+                Thread newMergePanel = new Thread(repositoryAnalysis);
+                newMergePanel.start();
+                mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(repositoryAnalysis.getMergeEventList()));
+            }
+        }
     }
 
     private String getProjectName(String project) {
