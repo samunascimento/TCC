@@ -151,5 +151,39 @@ public class MetricDao {
             }
         }
     }
+    
+    public List<Metric> selectAllTlocVersionMetrics() throws SQLException{
+        List<Metric> listMetrics = new ArrayList<>();
+        
+        Metric metric = null;
+        
+        PreparedStatement stmt = null;
+        
+        ResultSet resultSet = null;
+        
+        String sql =   "select a.tlocid, b.id,b.description,b.name,b.value "
+                      +"from tb_versionmetrics as a "
+                      +"inner join tb_metric as b "
+                      +"on a.tlocid = b.id";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                metric = new Metric();
+                metric.setId(resultSet.getInt("id"));
+                metric.setName(resultSet.getString("name"));
+                metric.setDescription(resultSet.getString("description"));
+                metric.setValue(resultSet.getDouble("value"));
+                listMetrics.add(metric);
+            }
+            return listMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
 }
