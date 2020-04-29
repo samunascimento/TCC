@@ -270,9 +270,26 @@ public class MergePanel extends JPanel {
         
         subPanelSaveAnalysisButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                String fileName = JOptionPane.showInputDialog(null, "Choose the filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
-                while (fileName.length() > 20) {
-                    fileName = JOptionPane.showInputDialog(null, "Limit of characters overpast, please, choose another filename\nMax: 20 characters", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                String fileName = JOptionPane.showInputDialog(null, "Choose the filename\nMax Characters: 20\nForbidden Character: \"/\"", "Save Analysis", JOptionPane.QUESTION_MESSAGE);
+                boolean error = true;
+                String messageErrors = "";
+                while (error) {
+                    if(fileName.length() > 20){
+                        messageErrors = messageErrors + ".Character limit overdated (" + fileName.length() + " characters)\n";
+                    }
+                    if(fileName.equals("")){
+                        messageErrors = messageErrors + ".File Name cannot be empty\n";
+                    }
+                    if(fileName.contains("/")){
+                        messageErrors = messageErrors + ".Forbidden character \"/\" used\n"; 
+                    }
+                    if(!messageErrors.equals("")){
+                        fileName = JOptionPane.showInputDialog(null,messageErrors + "Choose another filename\nMax Characters: 20\nForbidden Character: \"/\"", "Save Analysis (ERROR)", JOptionPane.ERROR_MESSAGE);
+                        messageErrors = "";
+                    } else {
+                        error = false;
+                    }
+                    
                 }
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -282,7 +299,7 @@ public class MergePanel extends JPanel {
                     try {
                         GSONClass.save(savePath + "/" + fileName + ".gson", list);
                     } catch (IOException ex) {
-                        System.out.println("Deu merda");
+                        JOptionPane.showMessageDialog(null, "Don't have permission to save in this directory", "ERORR", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

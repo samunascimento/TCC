@@ -92,9 +92,9 @@ public class MainFrame extends JFrame {
                     String[] auxArray = jfc.getSelectedFile().getPath().split("/");
                     try {
                         mainTabbedPane.addTab(auxArray[auxArray.length - 1], new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())));
-                    } catch (FileNotFoundException ex) {
-                        System.out.println("Deu merda");
-                    }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    } 
                 }
             }
         });
