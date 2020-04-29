@@ -29,26 +29,26 @@ import javax.swing.table.DefaultTableModel;
  *
  */
 public class InitProject implements Runnable {
-    
+
     JProgressBar progressBar = new JProgressBar();
     int progress;
     String name;
     String projectPath;
     View view;
-    
-    public InitProject(View view, String name, String projectPath){
+
+    public InitProject(View view, String name, String projectPath) {
         this.progressBar = view.getProgressBar();
         this.progressBar.setMinimum(1);
         this.progressBar.setVisible(true);
-        
+
         this.progress = 0;
         this.name = name;
         this.projectPath = projectPath;
         this.view = view;
     }
-    
-    public InitProject(){
-        
+
+    public InitProject() {
+
     }
 
     private static List<Chunk> createConflictChunksList(String filePath) {
@@ -142,23 +142,25 @@ public class InitProject implements Runnable {
 
         return result;
     }
-    
+
     @Override
     public void run() {
-        
+
         Project result = new Project();
         result.setName(this.name);
         result.setPath(this.projectPath);
 
         List<Version> versions = null;
         try {
+            progressBar.setIndeterminate(true);
             versions = Git.logAllVersion(this.projectPath);
+            progressBar.setIndeterminate(false);
         } catch (IOException | RepositoryNotFound | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist ex) {
             Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.progressBar.setMaximum(versions.size());
-        
+
         for (Version version : versions) {
 
             try {
@@ -166,11 +168,11 @@ public class InitProject implements Runnable {
             } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | AlreadyUpToDate ex) {
                 Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             this.view.getProgressBar().setValue(this.progress++);
 
         }
-        
+
         result.setVersions(versions);
         view.setProject(result);
         DefaultTableModel model = (DefaultTableModel) this.view.getTable().getModel();
@@ -178,8 +180,7 @@ public class InitProject implements Runnable {
             Version version = versions.get(i);
             model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
         }
-        
-        
+
         this.view.getTable().setModel(model);
         if (this.view.getProject().getVersions().size() > 0) {
             this.view.getLeftPanel().setVisible(true);
@@ -191,7 +192,7 @@ public class InitProject implements Runnable {
         }
         this.view.getProgressBar().setVisible(false);
         this.view.getLeftPanel().setVisible(true);
-        
+
     }
 
 }
