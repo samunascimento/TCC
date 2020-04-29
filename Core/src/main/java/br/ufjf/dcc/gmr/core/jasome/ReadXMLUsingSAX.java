@@ -63,7 +63,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     VersionPackageDao versionPackageDao;
     PackageClassDao packageClassDao;
     ClassMethodDao classMethodDao;
-    
+
     Connection connection;
 
     List<MethodMetrics> listMethod = new ArrayList<>();
@@ -85,7 +85,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         versionMetricDao = new VersionMetricsDao(connection);
         classMetricDao = new ClassMetricsDao(connection);
         methodMetricDao = new MethodMetricsDao(connection);
-        
+
         projectVersionDao = new ProjectVersionDao(connection);
         versionPackageDao = new VersionPackageDao(connection);
         packageClassDao = new PackageClassDao(connection);
@@ -468,6 +468,59 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                         metric.setId(insert);
                         classMetrics.setWmc(metric);
 
+                    } else if (metric.getName().equals("NMIR")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setNmir(metric);
+
+                    } else if (metric.getName().equals("CF")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setCf(metric);
+
+                    } else if (metric.getName().equals("PF")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setPf(metric);
+
+                    } else if (metric.getName().equals("AIF")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setAif(metric);
+
+                    } else if (metric.getName().equals("Ah")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setAh(metric);
+
+                    } else if (metric.getName().equals("AHF")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setAhf(metric);
+
+                    } else if (metric.getName().equals("LCOM")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setLcom(metric);
+
+                    } else if (metric.getName().equals("NODe")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setNode(metric);
+
+                    } else if (metric.getName().equals("NODa")) {
+
+                        int insert = metricDao.insert(metric);
+                        metric.setId(insert);
+                        classMetrics.setNoda(metric);
                     }
 
                 } else if (project && pacckage && clazz && method) {
