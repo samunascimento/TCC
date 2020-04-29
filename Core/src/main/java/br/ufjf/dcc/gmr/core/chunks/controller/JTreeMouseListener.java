@@ -1,4 +1,4 @@
-    package br.ufjf.dcc.gmr.core.chunks.controller;
+package br.ufjf.dcc.gmr.core.chunks.controller;
 
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
@@ -24,9 +24,11 @@ public class JTreeMouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent me) {
         getTextArea().setText("");
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) getView().getTree().getLastSelectedPathComponent();
-        Chunk chunk = (Chunk) selectedNode.getUserObject();
-        for (String content : chunk.getContent()) {
-            getTextArea().setText(getTextArea().getText() + content + "\n");
+        if (selectedNode != null) {
+            Chunk chunk = (Chunk) selectedNode.getUserObject();
+            for (String content : chunk.getContent()) {
+                getTextArea().setText(getTextArea().getText() + content + "\n");
+            }
         }
     }
 

@@ -643,7 +643,8 @@ public class Git {
         CLIExecution execution = null;
 
         execution = CLIExecute.execute(command, repositoryPath);
-
+        System.out.println(command);
+        
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("unknown switch")) {
@@ -731,6 +732,7 @@ public class Git {
         }
 
         command = command + revision;
+        System.out.println(command);
 
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
 
@@ -959,6 +961,7 @@ public class Git {
         CLIExecution cliE = null;
         boolean check = true;
         cliE = CLIExecute.execute("git checkout " + entity, repositoryPath);
+        System.out.println("git checkout " + entity);
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
@@ -1127,7 +1130,7 @@ public class Git {
         }
 
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-
+        System.out.println(command);
         if (!execution.getError().isEmpty()) {
 
             for (String line : execution.getError()) {

@@ -24,10 +24,15 @@ public class MenuOptionsActionListener extends MouseAdapter {
     public void mouseClicked(MouseEvent me) {
         String aux = JOptionPane.showInputDialog("Context lines:");
         int contextLines;
-        if(aux.matches("[^0-9]"))
-            System.out.println("erro");
-        else
-            contextLines = Integer.parseInt(aux);
+        while (true) {
+            try {
+                contextLines = Integer.parseInt(aux);
+                break;
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(view, "Type only numbers.");
+                aux = JOptionPane.showInputDialog("Context lines:");
+            }
+        }
     }
 
     /**

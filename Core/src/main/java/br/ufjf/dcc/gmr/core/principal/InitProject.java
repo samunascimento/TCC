@@ -105,7 +105,7 @@ public class InitProject implements Runnable {
     public static Version updateVersion(String pathProject, Version version) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = version;
-
+        
         if (result.getParent().size() == 2) {
 
             String firstParent = result.getParent().get(0);
@@ -114,7 +114,11 @@ public class InitProject implements Runnable {
             Git.reset(pathProject, true, false, false, null);
             Git.clean(pathProject, true, 0);
             Git.checkout(firstParent, pathProject);
-
+            
+            if(result.getSHA().startsWith("21da4207")){
+                System.out.println("");
+            }
+            
             if (Git.isFailedMerge(pathProject, firstParent, secondParent)) {
 
                 List<MyFile> statusUnmerged = Git.statusUnmerged(pathProject);
