@@ -102,6 +102,15 @@ CREATE TABLE tb_classMetrics (
     sixID Integer,
     tlocID Integer,
     wmcID Integer,
+    nmirID Integer,
+    cfID Integer,
+    pfID Integer,
+    aifID Integer,
+    ahID Integer,
+    ahfID Integer,
+    lcomID Integer,
+    nodeID Integer,
+    nodaID Integer,
     PRIMARY KEY (ID),
     FOREIGN KEY (aaID) REFERENCES tb_metric(ID),
     FOREIGN KEY (adID) REFERENCES tb_metric(ID),
@@ -141,7 +150,16 @@ CREATE TABLE tb_classMetrics (
     FOREIGN KEY (rtlocID) REFERENCES tb_metric(ID),
     FOREIGN KEY (sixID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID)
+    FOREIGN KEY (wmcID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (nmirID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (cfID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (pfID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (aifID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (ahID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (ahfID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (lcomID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (nodeID) REFERENCES tb_metric(ID),
+    FOREIGN KEY (nodaID) REFERENCES tb_metric(ID)
 );
 
 CREATE TABLE tb_methodMetrics (
