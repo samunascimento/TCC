@@ -22,7 +22,12 @@ public class MenuOptionsActionListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent me) {
-     
+        String aux = JOptionPane.showInputDialog("Context lines:");
+        int contextLines;
+        if(aux.matches("[^0-9]"))
+            System.out.println("erro");
+        else
+            contextLines = Integer.parseInt(aux);
     }
 
     /**
