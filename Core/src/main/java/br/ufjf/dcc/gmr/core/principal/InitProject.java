@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.*;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,13 +18,38 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JProgressBar;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author felip
  *
  */
-public class InitProject {
+public class InitProject implements Runnable {
+    
+    JProgressBar progressBar = new JProgressBar();
+    int progress;
+    String name;
+    String projectPath;
+    View view;
+    
+    public InitProject(View view, String name, String projectPath){
+        this.progressBar = view.getProgressBar();
+        this.progressBar.setMinimum(1);
+        this.progressBar.setVisible(true);
+        
+        this.progress = 0;
+        this.name = name;
+        this.projectPath = projectPath;
+        this.view = view;
+    }
+    
+    public InitProject(){
+        
+    }
 
     private static List<Chunk> createConflictChunksList(String filePath) {
 
@@ -43,7 +69,7 @@ public class InitProject {
             }
 
             for (int i = 0; i < str.size(); i++) {
-                
+
                 if (str.get(i).startsWith("<<<<<<<")) {
                     chunk = new Chunk();
                     chunk.setBegin(new Line(ListUtils.getSubList(str, i, i), i + 1));
@@ -67,8 +93,6 @@ public class InitProject {
         return result;
     }
 
-
-
     private static MyFile updateFile(MyFile file) {
 
         MyFile result = file;
@@ -78,68 +102,96 @@ public class InitProject {
         return result;
     }
 
-    private static Version updateVersion(String pathProject, Version version) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
+    public static Version updateVersion(String pathProject, Version version) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
-        Version result = version;     
-      
+        Version result = version;
+
         if (result.getParent().size() == 2) {
-            
+
             String firstParent = result.getParent().get(0);
             String secondParent = result.getParent().get(1);
-            
+
             Git.reset(pathProject, true, false, false, null);
             Git.clean(pathProject, true, 0);
             Git.checkout(firstParent, pathProject);
 
-            
-            
             if (Git.isFailedMerge(pathProject, firstParent, secondParent)) {
-                
+
                 List<MyFile> statusUnmerged = Git.statusUnmerged(pathProject);
 
                 for (MyFile file : statusUnmerged) {
-                    while (file.getPath().startsWith(" ")) {                        
+                    while (file.getPath().startsWith(" ")) {
                         file.setPath(file.getPath().replaceFirst(" ", ""));
                     }
                     file.setPath(pathProject.concat(File.separator).concat(file.getPath()));
                     result.getFile().add(updateFile(file));
                 }
-                
+
                 result.setStatus(MergeStatus.CONFLICT);
-                
-            }else result.setStatus(MergeStatus.NON_CONFLICT);
-            
-           
-        } else{
+
+            } else {
+                result.setStatus(MergeStatus.NON_CONFLICT);
+            }
+
+        } else {
             result.setMerge(false);
             result.setStatus(MergeStatus.NON_CONFLICT);
         }
-        
-      
-       
-        
+
         result.setCommiter(null);
-         
+
         return result;
     }
-
-    public static Project createProject(String name, String projectPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, AlreadyUpToDate, ThereIsNoMergeInProgress {
-
+    
+    @Override
+    public void run() {
+        
         Project result = new Project();
-        result.setName(name);
-        result.setPath(projectPath);
-        
-        List<Version> versions = Git.logAllVersion(projectPath);
-             
-        
-        for (Version version : versions) {            
-          
-            version = updateVersion(projectPath, version);            
-          
-        }
-        result.setVersions(versions);
+        result.setName(this.name);
+        result.setPath(this.projectPath);
 
-        return result;
+        List<Version> versions = null;
+        try {
+            versions = Git.logAllVersion(this.projectPath);
+        } catch (IOException | RepositoryNotFound | LocalRepositoryNotAGitRepository | ParseException | OptionNotExist ex) {
+            Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.progressBar.setMaximum(versions.size());
+        
+        for (Version version : versions) {
+
+            try {
+                version = updateVersion(this.projectPath, version);
+            } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | AlreadyUpToDate ex) {
+                Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            this.view.getProgressBar().setValue(this.progress++);
+
+        }
+        
+        result.setVersions(versions);
+        view.setProject(result);
+        DefaultTableModel model = (DefaultTableModel) this.view.getTable().getModel();
+        for (int i = 0; i < versions.size(); i++) {
+            Version version = versions.get(i);
+            model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
+        }
+        
+        
+        this.view.getTable().setModel(model);
+        if (this.view.getProject().getVersions().size() > 0) {
+            this.view.getLeftPanel().setVisible(true);
+            this.view.getRightPanel().setVisible(true);
+        } else {
+            this.view.getRightPanel().setVisible(true);
+            this.view.getTextArea().setText("Empty Project");
+            this.view.getTextArea().setFont(new Font(null, 1, 15));
+        }
+        this.view.getProgressBar().setVisible(false);
+        this.view.getLeftPanel().setVisible(true);
+        
     }
 
 }

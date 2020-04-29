@@ -19,7 +19,6 @@ import javax.swing.tree.TreeSelectionModel;
 public final class View extends JFrame {
 
     private JFrame chooserFrame;
-    private JFrame optionFrame;
     private JPanel leftPanel;
     private JPanel rightPanel;
     private JScrollPane treePane;
@@ -53,7 +52,6 @@ public final class View extends JFrame {
         this.initProject = new InitProject();
         this.project = new Project();
         this.chooserFrame = new JFrame();
-        this.optionFrame = new JFrame();
         this.screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
         this.screenHight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
     }
@@ -186,7 +184,7 @@ public final class View extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
-        frame.setResizable(false);
+        
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));
         frame.paintMainPanel();
         frame.setVisible(true);
@@ -414,19 +412,5 @@ public final class View extends JFrame {
      */
     public void setMenuOptions(JMenu menuOptions) {
         this.menuOptions = menuOptions;
-    }
-
-    /**
-     * @return the optionFrame
-     */
-    public JFrame getOptionFrame() {
-        return optionFrame;
-    }
-
-    /**
-     * @param optionFrame the optionFrame to set
-     */
-    public void setOptionFrame(JFrame optionFrame) {
-        this.optionFrame = optionFrame;
     }
 }
