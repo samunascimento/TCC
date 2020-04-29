@@ -122,7 +122,7 @@ public class Git {
 
         return list;
     }
-    
+
     private static List<Version> logVersion(String repositoryPath, boolean merge, boolean all) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
         CLIExecution execution = null;
         String command = "git log ";
@@ -159,7 +159,7 @@ public class Git {
             List<String> parent = Git.parent(repositoryPath, commitHash);
             List<MyFile> file = new ArrayList<>();
             boolean versionIsMerge = false;
-            if( parent.size() == 2){
+            if (parent.size() == 2) {
                 versionIsMerge = true;
             }
             //Split Date
@@ -173,7 +173,7 @@ public class Git {
             Date dateFormat = new SimpleDateFormat(formato).parse(text);
             //end
 
-            model = new Version(commitHash, authorName, dateFormat, versionIsMerge, parent, commitDescription, MergeStatus.NON_CONFLICT);            
+            model = new Version(commitHash, authorName, dateFormat, versionIsMerge, parent, commitDescription, MergeStatus.NON_CONFLICT);
             model.setFile(file);
             list.add(model);
             i++;
@@ -181,7 +181,6 @@ public class Git {
 
         return list;
     }
-
 
     /**
      * @param repositoryPath
@@ -212,7 +211,7 @@ public class Git {
     public static List<Formats> logAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
         return Git.log(repositoryPath, false, true);
     }
-    
+
     public static List<Version> logAllVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist {
         return Git.logVersion(repositoryPath, false, true);
     }
@@ -312,10 +311,10 @@ public class Git {
     }
 
     public static List<MyFile> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
-        
+
         List<FileStatus> status = status(repositoryPath);
-         
-        List<MyFile> result = new ArrayList<>();       
+
+        List<MyFile> result = new ArrayList<>();
 
         for (FileStatus file : status) {
             if (file.getType() == Status.UNMERGED) {
@@ -643,8 +642,7 @@ public class Git {
         CLIExecution execution = null;
 
         execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println(command);
-        
+
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("unknown switch")) {
@@ -720,7 +718,7 @@ public class Git {
     }
 
     public static List<String> merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-        
+
         String command = "git merge ";
 
         if (!commit) {
@@ -732,7 +730,6 @@ public class Git {
         }
 
         command = command + revision;
-        System.out.println(command);
 
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
 
@@ -769,10 +766,10 @@ public class Git {
 
     public static boolean isConflict(List<String> mergeMessage) {
         String MERGE_FAIL_MESSAGE = "Automatic merge failed";
-        if(mergeMessage == null){
+        if (mergeMessage == null) {
             return false;
         }
-        
+
         for (String line : mergeMessage) {
             if (line.contains(MERGE_FAIL_MESSAGE)) {
                 return true;
@@ -961,7 +958,6 @@ public class Git {
         CLIExecution cliE = null;
         boolean check = true;
         cliE = CLIExecute.execute("git checkout " + entity, repositoryPath);
-        System.out.println("git checkout " + entity);
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
@@ -1130,7 +1126,6 @@ public class Git {
         }
 
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println(command);
         if (!execution.getError().isEmpty()) {
 
             for (String line : execution.getError()) {
@@ -1232,6 +1227,22 @@ public class Git {
         return result;
     }
 
+    /**
+     * This method receive two commitHash and returns the difference between
+     * them, using the unified command as 0, and returns the output.
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param commitSource This parameter is the commit we want to compare
+     * @param commitTarget This parameter is the commit we want to compare to.
+     * @return List of Strings
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repository is not a git repository
+     * @throws IOException exception that occurs when the repositorypath is
+     * wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
+     * wrong commit hash
+     */
     public static List<String> auxiliarDiff(String directory, String commitSource, String commitTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
@@ -1254,12 +1265,28 @@ public class Git {
 
     }
 
+    /**
+     * This method receive two files and returns the difference between them,
+     * using the unified command as 0, and returns the output.
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to compare
+     * @param fileTarget This parameter is the file we want to compare to.
+     * @return List of Strings
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repository is not a git repository
+     * @throws IOException exception that occurs when the repositorypath is
+     * wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
+     * wrong commit hash
+     */
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget;
         CLIExecution execution = CLIExecute.execute(command, directory);
-        
+
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
@@ -1269,7 +1296,7 @@ public class Git {
                 if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidCommitHash();
                 }
-                if (line.contains("error: Could not access")){
+                if (line.contains("error: Could not access")) {
                     return null;
                 }
             }
@@ -1278,7 +1305,24 @@ public class Git {
         return execution.getOutput();
 
     }
-    public static List<String> auxiliarDiffstat(String directory, String fileSource, String fileTarget)
+
+    /**
+     * This method receive two files and returns the difference between them,
+     * using the "name-status" command, and returns the output.
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to compare
+     * @param fileTarget This parameter is the file we want to compare to.
+     * @return List of Strings
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repository is not a git repository
+     * @throws IOException exception that occurs when the repositorypath is
+     * wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
+     * wrong commit hash
+     */
+    public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";
@@ -1299,27 +1343,42 @@ public class Git {
         return execution.getOutput();
 
     }
-    
-    public static boolean deletedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash{
-        
+
+    /**
+     * Function that verify if the selected file source was deleted in the given
+     * merge
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to verify the status
+     * @param parent This parameter is the hash of one parent of the merg
+     * @param merge This parameter is the merge commit hash
+     * @return boolean
+     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
+     * exception that occurs when the repository is not a git repository
+     * @throws IOException exception that occurs when the repositorypath is
+     * wrong
+     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
+     * wrong commit hash
+     */
+    public static boolean deletedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
         List<String> output;
         String line;
-        output= Git.auxiliarDiffstat(directory, parent, merge);
-        
+        output = Git.auxiliarDiffStat(directory, parent, merge);
+
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
-            
-            if( line.startsWith("D")){
+
+            if (line.startsWith("D")) {
                 String c;
-                c=line.substring(2);
-                if(fileSource.contains(c)){
-                   return true;
+                c = line.substring(2);
+                if (fileSource.contains(c)) {
+                    return true;
                 }
             }
-           
-            
 
         }
-      return false;
+        return false;
     }
 }

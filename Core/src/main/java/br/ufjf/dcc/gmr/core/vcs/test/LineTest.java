@@ -24,10 +24,10 @@ public class LineTest {
     public static void main(String[] args) throws IOException, EmptyOutput {
 
         File directory = new File("/Users/gleiph/Desktop/sandbox/left");
-        if(!directory.isDirectory())
+        if (!directory.isDirectory()) {
             directory.mkdir();
-        
-        
+        }
+
         ReturnNewLineNumber newLine = new ReturnNewLineNumber();
         try {
             int initReturnNewLineNumberFile = newLine.initReturnNewLineNumberFile("/Users/gleiph/Dropbox/UFJF/repositorios/UFJFCopy2",
@@ -36,11 +36,7 @@ public class LineTest {
 
             System.out.println("initReturnNewLineNumberFile = " + initReturnNewLineNumberFile);
 
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            Logger.getLogger(LineTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidCommitHash ex) {
-            Logger.getLogger(LineTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PathDontExist ex) {
+        } catch (LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist ex) {
             Logger.getLogger(LineTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 

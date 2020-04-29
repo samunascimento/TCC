@@ -5,19 +5,20 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  * @author Beatr
  */
 public class FileStatus {
+
     private Status type;
     private String path;
-    
-    
-    public FileStatus(Status tipo, String line){
+
+    public FileStatus(Status tipo, String line) {
         type = tipo;
         path = line;
     }
 
-    public FileStatus(){
+    public FileStatus() {
         type = null;
         path = " ";
     }
+
     /**
      * @return the type
      */
@@ -45,6 +46,5 @@ public class FileStatus {
     public void setPath(String path) {
         this.path = path;
     }
-    
-    
+
 }

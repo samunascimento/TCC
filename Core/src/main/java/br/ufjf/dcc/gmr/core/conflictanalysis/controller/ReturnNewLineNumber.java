@@ -80,6 +80,20 @@ public class ReturnNewLineNumber {
         return chunks;
     }
 
+    /**
+     * This method goes trough the diffs between the pathSource and the
+     * pathTarget and salve all the information on a created type "FileDiff"
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param pathSource This parameter is the file we want to compare
+     * @param pathTarget This parameter is the file we want to compare to.
+     * @return returns a created type "FileDiff" that contains all the
+     * information of the diff command.
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws InvalidCommitHash
+     */
     private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
 
         List<FileDiff> chunks = new ArrayList<>();
@@ -240,7 +254,7 @@ public class ReturnNewLineNumber {
     }
 
     /**
-     * Public method that call the private ones and return the final number
+     * Function that runs all the class and returns the original number
      *
      * @param directory This parameter tells the command the path to the
      * repository we are dealing with
@@ -261,6 +275,9 @@ public class ReturnNewLineNumber {
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
 
         List<FileDiff> chunks = fillFileDiff(directory, commitSource, commitTarget);
+        if (chunks == null) {
+            return REMOVED_FILE;
+        }
         int i;
 
         i = processingChunkModifiedLine(chunks, originalLineNumber, filePath);
@@ -272,6 +289,23 @@ public class ReturnNewLineNumber {
         return originalLineNumber + i;
     }
 
+    /**
+     * Function that runs all the class and returns the original number, but it
+     * uses the files instead of commits.
+     *
+     * @param directory This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param pathSource This parameter is the file we want to compare
+     * @param pathTarget This parameter is the file we want to compare to.
+     * @param originalLineNumber Number of the original line that you want to
+     * know in the new
+     * @return The number of the "originalLineNumber" on the new file
+     * @throws IOException
+     * @throws LocalRepositoryNotAGitRepository
+     * @throws InvalidCommitHash
+     * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
+     * @throws br.ufjf.dcc.gmr.core.exception.EmptyOutput
+     */
     public int initReturnNewLineNumberFile(String directory, String pathSource,
             String pathTarget, int originalLineNumber)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput {

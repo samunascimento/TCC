@@ -6,11 +6,6 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import java.io.IOException;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
-import com.google.gson.Gson;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +23,15 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        List<MergeEvent> test= new ArrayList<>();
-        
-        test=RepositoryAnalysis.searchAllMerges("/home/luan/Github/UFJFTestes", 1);
+        List<MergeEvent> test = new ArrayList<>();
+
+        test = RepositoryAnalysis.searchAllMerges("/home/luan/Github/UFJFTestes", 1);
         GSONClass.save("/home/luan/Github/teste.json", test);
         List<MergeEvent> read = GSONClass.read("/home/luan/Github/teste.json");
         for (MergeEvent mergeEvent : read) {
-            
-            System.out.println(mergeEvent.getParents()); 
+
+            System.out.println(mergeEvent.getParents());
         }
     }
-  
+
 }

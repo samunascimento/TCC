@@ -7,13 +7,15 @@ package br.ufjf.dcc.gmr.core.exception;
 
 /**
  *
- * @author luand
+ * @author Luan
  */
 public class EmptyOutput extends Exception {
-   
-    public EmptyOutput(){
+
+    /**
+     * Exception throwed when the diff output is empty.
+     */
+    public EmptyOutput() {
         super("The Diff was blank but the selected class was not empty");
     }
-    
 
 }
