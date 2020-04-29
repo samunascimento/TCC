@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,7 +10,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -31,7 +35,8 @@ public class MainFrame extends JFrame {
 
     //Menu
     private JMenuBar menuBar = new JMenuBar();
-    private JMenu toolsMenu = new JMenu("Tools(Not Working)");
+    private JMenu toolsMenu = new JMenu("Tools");
+    private JMenuItem readSavedAnalysisButton = new JMenuItem("Read saved analysis");
 
     //Tabbed Pane
     private JTabbedPane mainTabbedPane = new JTabbedPane();
@@ -77,6 +82,23 @@ public class MainFrame extends JFrame {
     }
 
     private void customizeMenu() {
+        this.readSavedAnalysisButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt)  {
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int check = jfc.showOpenDialog(null);
+                if (check == JFileChooser.APPROVE_OPTION) {
+                    String[] auxArray = jfc.getSelectedFile().getPath().split("/");
+                    try {
+                        mainTabbedPane.addTab(auxArray[auxArray.length - 1], new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())));
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    } 
+                }
+            }
+        });
+        this.toolsMenu.add(this.readSavedAnalysisButton);
         this.menuBar.add(this.toolsMenu);
         this.setJMenuBar(this.menuBar);
     }

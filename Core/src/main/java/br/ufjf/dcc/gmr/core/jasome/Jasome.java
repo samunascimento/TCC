@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.jasome;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -11,6 +12,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 
@@ -19,11 +21,13 @@ import java.text.ParseException;
  * @author Principal
  */
 public class Jasome {
+    
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException {
-        try {
-
-            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\TrabOO\\TrabalhoOO\\TrabalhoOO", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+//        try {
+            Connection connection = ConnectionFactory.getConnection();
+            
+            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\OrientacaoAObjetos", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
 
             ProjectMetrics project = new ProjectMetrics();
 
@@ -32,7 +36,8 @@ public class Jasome {
             project.setName("testname");
             project.setOrganization("organization");
 
-            jasome.runProject(project);
+            jasome.runProject(project, connection);
+            
             /*jasome.getArchiveType().add("java");
             List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
             System.out.println(log.size());
@@ -45,11 +50,11 @@ public class Jasome {
                 jasome.javaArchivesCount();        
                 jasome.runJasome(jasome.GetRepositoryPath(), jasome.getFileNames(), jasome.getArchiveType(), i);
             }*/
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("Não é um repositório válido");
-        } catch (IOException ex) {
-            System.out.println("Não é um repositório válido");
-        }
+//        } catch (LocalRepositoryNotAGitRepository ex) {
+//            System.out.println("Não é um repositório válido");
+//        } catch (IOException ex) {
+//            System.out.println("Não é um repositório válido");
+//        }
     }
 
 }

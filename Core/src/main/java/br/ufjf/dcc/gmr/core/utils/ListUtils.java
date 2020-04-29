@@ -20,11 +20,19 @@ public class ListUtils {
         return result;
 
     }
-    
+
     public static String getRawStringForm(List<String> list) {
         String raw = "";
         for (String line : list) {
-            raw = raw + (line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+            if (line.replaceAll("\n", "").equals("")) {
+                raw = raw + line;
+            } else if (line.replaceAll("\t", "").equals("")) {
+                raw = raw + line;
+            } else if (line.replaceAll(" ", "").equals("")) {
+                raw = raw + line;
+            } else {
+                raw = raw + (line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+            }
         }
         return raw;
     }
@@ -32,9 +40,17 @@ public class ListUtils {
     public static List<String> getRawListStringForm(List<String> list) {
         List<String> raw = new ArrayList<>();
         for (String line : list) {
-            raw.add(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+            if (line.replaceAll("\n", "").equals("")) {
+                raw.add(line);
+            } else if (line.replaceAll("\t", "").equals("")) {
+                raw.add(line);
+            } else if (line.replaceAll(" ", "").equals("")) {
+                raw.add(line);
+            } else {
+                raw.add(line.replaceAll("\n", "").replaceAll(" ", "").replaceAll("\t", ""));
+            }
         }
         return raw;
     }
-    
+
 }

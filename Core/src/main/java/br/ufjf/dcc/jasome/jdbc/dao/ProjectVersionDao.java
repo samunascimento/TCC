@@ -19,8 +19,8 @@ public class ProjectVersionDao {
     public static final String PROJECT_ID = "project_id";
     public static final String VERSION_ID = "version_id";
 
-    public ProjectVersionDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public ProjectVersionDao(Connection connection){
+        this.connection = connection;
     }
 
     public void insert(ProjectMetrics projectMetrics, VersionMetrics versionMetrics) throws SQLException {
@@ -36,7 +36,7 @@ public class ProjectVersionDao {
 
             stmt.setInt(1, projectMetrics.getId());
             stmt.setInt(2, versionMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

@@ -22,8 +22,8 @@ public class MetricDao {
 
     private Connection connection;
 
-    public MetricDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public MetricDao(Connection connection){
+        this.connection = connection;
 
     }
 

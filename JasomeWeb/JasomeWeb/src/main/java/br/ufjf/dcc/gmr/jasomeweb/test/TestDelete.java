@@ -5,9 +5,11 @@
  */
 package br.ufjf.dcc.gmr.jasomeweb.test;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,10 @@ import java.util.List;
 public class TestDelete {
 
     public static void main(String[] args) throws SQLException {
+        
+        Connection connection = ConnectionFactory.getConnection();
 
-       MetricDao dao = new MetricDao();
+       MetricDao dao = new MetricDao(connection);
         List<Metric> listMetrics = new ArrayList();
         
         dao.delete(6);

@@ -25,8 +25,8 @@ public class ClassMethodDao {
     public static final String CLASS_ID = "class_id";
     public static final String METHOD_ID = "method_id";
 
-    public ClassMethodDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public ClassMethodDao(Connection connection){
+        this.connection = connection;
     }
 
     public void insert(ClassMetrics classMetrics, MethodMetrics methodMetrics) throws SQLException {
@@ -42,12 +42,12 @@ public class ClassMethodDao {
 
             stmt.setInt(1, classMetrics.getId());
             stmt.setInt(2, methodMetrics.getId());
-
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
             if (stmt != null) {
-                stmt.close();
+             //   stmt.close();
             }
         }
     }

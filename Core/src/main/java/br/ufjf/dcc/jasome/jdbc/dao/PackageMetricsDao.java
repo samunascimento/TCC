@@ -22,15 +22,15 @@ public class PackageMetricsDao {
 
     private final Connection connection;
 
-    public PackageMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public PackageMetricsDao(Connection connection) {
+        this.connection = connection;
     }
 
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) " //adicionar dmsId, iId
-                + "VALUES (?,?,?,?,?,?,?,?,?) " //adicionar ?,?
+                + "(aID,ccrcID,caID,ceID,dmsId,iId,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) " //adicionar dmsId, iId
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -39,18 +39,63 @@ public class PackageMetricsDao {
 
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, packageMetrics.getA().getId());
-            stmt.setInt(2, packageMetrics.getCcrc().getId());
-            stmt.setInt(3, packageMetrics.getCa().getId());
-            stmt.setInt(4, packageMetrics.getCe().getId());
-            //stmt.setInt(5, packageMetrics.getDms().getId());
-            //stmt.setInt(6, packageMetrics.getI().getId());
-            stmt.setInt(5, packageMetrics.getNoc().getId());
-            stmt.setInt(6, packageMetrics.getNoi().getId());
-            stmt.setInt(7, packageMetrics.getPkgRCi().getId());
-            stmt.setInt(8, packageMetrics.getPkgTCi().getId());
-            stmt.setInt(9, packageMetrics.getTloc().getId());
-          //  stmt.setInt(12, packageMetrics.getVersionId());
+
+            if (packageMetrics.getA() == null) {
+                stmt.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(1, packageMetrics.getA().getId());
+            }
+            if (packageMetrics.getCcrc() == null) {
+                stmt.setNull(2, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(2, packageMetrics.getCcrc().getId());
+            }
+            if (packageMetrics.getCa() == null) {
+                stmt.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(3, packageMetrics.getCa().getId());
+            }
+            if (packageMetrics.getCe() == null) {
+                stmt.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(4, packageMetrics.getCe().getId());
+            }
+            if (packageMetrics.getDms() == null) {
+                stmt.setNull(5, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(5, packageMetrics.getDms().getId());
+            }
+            if (packageMetrics.getI() == null) {
+                stmt.setNull(6, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(6, packageMetrics.getI().getId());
+            }
+            if (packageMetrics.getNoc() == null) {
+                stmt.setNull(7, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(7, packageMetrics.getNoc().getId());
+            }
+            if (packageMetrics.getNoi() == null) {
+                stmt.setNull(8, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(8, packageMetrics.getNoi().getId());
+            }
+            if (packageMetrics.getPkgRCi() == null) {
+                stmt.setNull(9, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(9, packageMetrics.getPkgRCi().getId());
+            }
+            if (packageMetrics.getPkgTCi() == null) {
+                stmt.setNull(10, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(10, packageMetrics.getPkgTCi().getId());
+            }
+            if (packageMetrics.getTloc() == null) {
+                stmt.setNull(11, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(11, packageMetrics.getTloc().getId());
+            }
+            //  stmt.setInt(12, packageMetrics.getVersionId());
 
             tableKeys = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
@@ -86,10 +131,9 @@ public class PackageMetricsDao {
     }
 
     public List<PackageMetrics> select() throws SQLException {
-        MetricDao metrics = new MetricDao();
+        MetricDao metrics = new MetricDao(connection);
         List<PackageMetrics> listPackageMetrics = new ArrayList<>();
         PackageMetrics packageMetrics = null;
-        MetricDao metricDao = new MetricDao();
 
         String sql = "SELECT * FROM tb_packageMetrics";
 
@@ -105,9 +149,9 @@ public class PackageMetricsDao {
             resultSet = stmt.executeQuery();
             //tableKeys = stmt.getGeneratedKeys();
             while (resultSet.next()) {
-                
+
                 packageMetrics = new PackageMetrics();
-                
+
                 int aID = resultSet.getInt("aID");
                 int ccrcID = resultSet.getInt("ccrcID");
                 int caID = resultSet.getInt("caID");
@@ -149,7 +193,7 @@ public class PackageMetricsDao {
     }
 
     public PackageMetrics selectID(int id) throws SQLException {
-        MetricDao metrics = new MetricDao();
+        MetricDao metrics = new MetricDao(connection);
         PackageMetrics packageMetrics = null;
 
         String sql = "SELECT * FROM tb_packageMetrics WHERE ID = " + id;
@@ -193,7 +237,7 @@ public class PackageMetricsDao {
 
             int packageId = resultSet.getInt("id");
             packageMetrics.setId(packageId);
-            
+
             return packageMetrics;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -221,7 +265,7 @@ public class PackageMetricsDao {
             }
         }
     }
-    
+
     public void updateVersionId(PackageMetrics packageMetric) throws SQLException {
         String sql = "UPDATE tb_packageMetrics SET versionID = ? WHERE ID = ? ;";
         System.out.println(sql);
@@ -229,8 +273,8 @@ public class PackageMetricsDao {
         PreparedStatement stmt = null;
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setInt(1,packageMetric.getVersionId());
-            stmt.setInt(2,packageMetric.getId());
+            stmt.setInt(1, packageMetric.getVersionId());
+            stmt.setInt(2, packageMetric.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

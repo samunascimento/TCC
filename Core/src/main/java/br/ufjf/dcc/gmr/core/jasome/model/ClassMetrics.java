@@ -49,6 +49,16 @@ public class ClassMetrics {
     Metric six;
     Metric tloc;
     Metric wmc;
+    private Metric nmir;
+    private Metric cf;
+    private Metric pf;
+    private Metric aif;
+    private Metric ah;
+    private Metric ahf;
+    private Metric node;
+    private Metric noda;
+    private Metric lcom;
+    
 
     List<MethodMetrics> listMethodsMetrics = new ArrayList<>();
     
@@ -384,6 +394,132 @@ public class ClassMetrics {
 
     public void setWmc(Metric wmc) {
         this.wmc = wmc;
+    }
+    
+    /**
+     * @return the nmir
+     */
+    public Metric getNmir() {
+        return nmir;
+    }
+
+    /**
+     * @param nmir the nmir to set
+     */
+    public void setNmir(Metric nmir) {
+        this.nmir = nmir;
+    }
+
+    /**
+     * @return the cf
+     */
+    public Metric getCf() {
+        return cf;
+    }
+
+    /**
+     * @param cf the cf to set
+     */
+    public void setCf(Metric cf) {
+        this.cf = cf;
+    }
+
+    /**
+     * @return the pf
+     */
+    public Metric getPf() {
+        return pf;
+    }
+
+    /**
+     * @param pf the pf to set
+     */
+    public void setPf(Metric pf) {
+        this.pf = pf;
+    }
+
+    /**
+     * @return the aif
+     */
+    public Metric getAif() {
+        return aif;
+    }
+
+    /**
+     * @param aif the aif to set
+     */
+    public void setAif(Metric aif) {
+        this.aif = aif;
+    }
+
+    /**
+     * @return the ah
+     */
+    public Metric getAh() {
+        return ah;
+    }
+
+    /**
+     * @param ah the ah to set
+     */
+    public void setAh(Metric ah) {
+        this.ah = ah;
+    }
+
+    /**
+     * @return the ahf
+     */
+    public Metric getAhf() {
+        return ahf;
+    }
+
+    /**
+     * @param ahf the ahf to set
+     */
+    public void setAhf(Metric ahf) {
+        this.ahf = ahf;
+    }
+
+    /**
+     * @return the node
+     */
+    public Metric getNode() {
+        return node;
+    }
+
+    /**
+     * @param node the node to set
+     */
+    public void setNode(Metric node) {
+        this.node = node;
+    }
+
+    /**
+     * @return the noda
+     */
+    public Metric getNoda() {
+        return noda;
+    }
+
+    /**
+     * @param noda the noda to set
+     */
+    public void setNoda(Metric noda) {
+        this.noda = noda;
+    }
+
+    /**
+     * @return the lcom
+     */
+    public Metric getLcom() {
+        return lcom;
+    }
+
+    /**
+     * @param lcom the lcom to set
+     */
+    public void setLcom(Metric lcom) {
+        this.lcom = lcom;
     }
     
     public String getLineEnd() {

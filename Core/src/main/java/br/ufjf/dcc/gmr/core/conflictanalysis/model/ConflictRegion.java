@@ -127,10 +127,33 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
+                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+            if (this.originalV2StartLine > 0) {
+                Git.checkout(v2Commit, repositoryPath);
+                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                Git.checkout("master", repositoryPath);
+            }
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
+            throw new IOException();
+        } catch (CheckoutError ex) {
+            System.out.println("ERROR: CheckoutError error!");
+            throw new IOException();
+        } catch (IOException ex) {
+            throw new IOException();
+        }
+    }
+
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit) throws IOException {
+        try {
+            if (this.originalV1StartLine > 0) {
+                Git.checkout(v1Commit, repositoryPath);
                 try {
                     this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV1 = null;
+                    this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
@@ -139,7 +162,7 @@ public class ConflictRegion {
                 try {
                     this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV2 = null;
+                    this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
@@ -154,7 +177,7 @@ public class ConflictRegion {
         }
     }
 
-    public String getForm() {
+    public String getConflictForm() {
         String str = "";
         for (String line : this.beforeContext) {
             str = str + line + "\n";
@@ -171,66 +194,84 @@ public class ConflictRegion {
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
-        str = str + "\nSOLUTION:\n";
+        return str;
+    }
+
+    public String getSolutionForm() {
+        String str = "";
         if (solution == null) {
-            str = str + "The file was deleted!\n";
+            str = str + "The file was deleted!";
         } else {
             for (String line : this.solution) {
-                str = str + line + "\n";
+                str = str + "\n" + line;
             }
         }
-        return str;
+
+        return str.replaceFirst("\n", "");
     }
 
     public String getV1StructureTypes() {
         if (syntaxV1 == null) {
-            return "Extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV1.isEmpty()) {
                 if (syntaxV1.get(0).getWarning()) {
-                    str = str + ", " + ", WARNING!";
+                    str = str + "WARNING!\n";
                 }
             } else {
                 return "V1 doesn't has any structure type!";
             }
+            int i = 0;
             for (SyntaxStructure ss : this.syntaxV1) {
                 if (!str.contains(ss.getStructureType())) {
-                    str = str + ", " + ss.getStructureType();
+                    if (i == 2) {
+                        str = str + ", " + ss.getStructureType() + "\n";
+                        i = 0;
+                    } else {
+                        str = str + ", " + ss.getStructureType();
+                        i++;
+                    }
                 }
             }
             if (str == "") {
                 return "V1 doesn't has any structure type!";
             } else {
-                return str.replaceFirst(", ", "");
+                return str.replaceFirst(", ", "").replaceAll("\n,", "\n");
             }
         }
     }
 
     public String getV2StructureTypes() {
         if (syntaxV2 == null) {
-            return "Extension not parseble, impossible to get syntax structures!";
+            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
         } else {
             String str = "";
             if (!syntaxV2.isEmpty()) {
                 if (syntaxV2.get(0).getWarning()) {
-                    str = str + ", " + ", WARNING!";
+                    str = str + "WARNING!\n";
                 }
             } else {
                 return "V2 doesn't has any structure type!";
             }
+            int i = 0;
             for (SyntaxStructure ss : this.syntaxV2) {
                 if (!str.contains(ss.getStructureType())) {
-                    str = str + ", " + ss.getStructureType();
+                    if (i == 2) {
+                        str = str + ", " + ss.getStructureType() + "\n";
+                        i = 0;
+                    } else {
+                        str = str + ", " + ss.getStructureType();
+                        i++;
+                    }
                 }
             }
             if (str == "") {
                 return "V2 doesn't has any structure type!";
             } else {
-                return str.replaceFirst(", ", "");
+                return str.replaceFirst(", ", "").replaceAll("\n,", "\n");
             }
         }
-
     }
 
     private DeveloperDecision generateDeveloperDecision() {
@@ -240,29 +281,26 @@ public class ConflictRegion {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {
             return DeveloperDecision.NONE;
+        } else if (containsNewCode()) {
+            return DeveloperDecision.NEWCODE;
         } else {
 
             String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
             String rawV1 = ListUtils.getRawStringForm(this.v1);
             String rawV2 = ListUtils.getRawStringForm(this.v2);
-            boolean containsNewCode = containsNewCode();
-            boolean containsV1OrV2 = containsV1OrV2();
 
-            if (containsNewCode && containsV1OrV2) {
-                return DeveloperDecision.NEWCODE;
-            } else if (rawSolution.contains(rawV1) && rawSolution.contains(rawV2)) {
-                return DeveloperDecision.CONCATENATION;
-            } else if (rawSolution.contains(rawV1)) {
+            if (rawSolution.equals(rawV1)) {
                 return DeveloperDecision.VERSION1;
-            } else if (rawSolution.contains(rawV2)) {
+            } else if (rawSolution.equals(rawV2)) {
                 return DeveloperDecision.VERSION2;
-            } else if (containsV1OrV2) {
-                return DeveloperDecision.COMBINATION;
+            } else if (rawSolution.equals(rawV1 + rawV2) || rawSolution.equals(rawV2 + rawV1)) {
+                return DeveloperDecision.CONCATENATION;
             } else {
-                return DeveloperDecision.NONE;
+                return DeveloperDecision.COMBINATION;
             }
 
         }
+
     }
 
     private boolean containsNewCode() {
@@ -273,22 +311,6 @@ public class ConflictRegion {
 
         for (String line : rawSolution) {
             if (!(rawV1.contains(line) || rawV2.contains(line))) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    private boolean containsV1OrV2() {
-
-        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
-        List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
-        List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
-
-        for (String line : rawSolution) {
-            if (rawV1.contains(line) || rawV2.contains(line)) {
                 return true;
             }
         }

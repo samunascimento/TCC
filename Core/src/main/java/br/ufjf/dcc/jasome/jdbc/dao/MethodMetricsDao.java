@@ -26,8 +26,8 @@ public class MethodMetricsDao {
     MethodMetrics methodMetrics;
     ResultSet tableKeys;
 
-    public MethodMetricsDao() {
-        this.connection = ConnectionFactory.getConnection();
+    public MethodMetricsDao(Connection connection) {
+        this.connection = connection;
         listMethodMetrics = new ArrayList<>();
     }
 
@@ -43,19 +43,71 @@ public class MethodMetricsDao {
         try {
             stmt = connection.prepareStatement(sql);
 
-            stmt.setInt(1, methodMetrics.getCi().getId());
-            stmt.setInt(2, methodMetrics.getDi().getId());
-            stmt.setInt(3, methodMetrics.getFin().getId());
-            stmt.setInt(4, methodMetrics.getFout().getId());
-            stmt.setInt(5, methodMetrics.getIovars().getId());
-            stmt.setInt(6, methodMetrics.getMclc().getId());
-            stmt.setInt(7, methodMetrics.getNbd().getId());
-            stmt.setInt(8, methodMetrics.getNcomp().getId());
-            stmt.setInt(9, methodMetrics.getNop().getId());
-            stmt.setInt(10, methodMetrics.getNvar().getId());
-            stmt.setInt(11, methodMetrics.getSi().getId());
-            stmt.setInt(12, methodMetrics.getTloc().getId());
-            stmt.setInt(13, methodMetrics.getVg().getId());
+            if (methodMetrics.getCi() == null) {
+                stmt.setNull(1, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(1, methodMetrics.getCi().getId());
+            }
+            if (methodMetrics.getDi() == null) {
+                stmt.setNull(2, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(2, methodMetrics.getDi().getId());
+            }
+            if (methodMetrics.getFin() == null) {
+                stmt.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(3, methodMetrics.getFin().getId());
+            }
+            if (methodMetrics.getFout() == null) {
+                stmt.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(4, methodMetrics.getFout().getId());
+            }
+            if (methodMetrics.getIovars() == null) {
+                stmt.setNull(5, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(5, methodMetrics.getIovars().getId());
+            }
+            if (methodMetrics.getMclc() == null) {
+                stmt.setNull(6, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(6, methodMetrics.getMclc().getId());
+            }
+            if (methodMetrics.getNbd() == null) {
+                stmt.setNull(7, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(7, methodMetrics.getNbd().getId());
+            }
+            if (methodMetrics.getNcomp() == null) {
+                stmt.setNull(8, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(8, methodMetrics.getNcomp().getId());
+            }
+            if (methodMetrics.getNop() == null) {
+                stmt.setNull(9, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(9, methodMetrics.getNop().getId());
+            }
+            if (methodMetrics.getNvar() == null) {
+                stmt.setNull(10, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(10, methodMetrics.getNvar().getId());
+            }
+            if (methodMetrics.getSi() == null) {
+                stmt.setNull(11, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(11, methodMetrics.getSi().getId());
+            }
+            if (methodMetrics.getTloc() == null) {
+                stmt.setNull(12, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(12, methodMetrics.getTloc().getId());
+            }
+            if (methodMetrics.getVg() == null) {
+                stmt.setNull(13, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(13, methodMetrics.getVg().getId());
+            }
             //   stmt.setInt(14, methodMetrics.getClassId());
 
             tableKeys = stmt.executeQuery();
@@ -73,7 +125,7 @@ public class MethodMetricsDao {
 
         MethodMetrics methodMetrics = null;
         List<MethodMetrics> listMethodMetrics = new ArrayList<>();
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
@@ -139,7 +191,7 @@ public class MethodMetricsDao {
     }
 
     public MethodMetrics selectID(int id) throws SQLException {
-        MetricDao metricDao = new MetricDao();
+        MetricDao metricDao = new MetricDao(connection);
         MethodMetrics methodMetrics = null;
         String sql = "SELECT * FROM tb_methodMetrics WHERE ID = " + id;
 
@@ -211,7 +263,7 @@ public class MethodMetricsDao {
         PreparedStatement stmt = null;
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setInt(1,methodMetric.getClassId());
+            stmt.setInt(1, methodMetric.getClassId());
             stmt.setInt(2, methodMetric.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -222,7 +274,7 @@ public class MethodMetricsDao {
             }
         }
     }
-    
+
     public void updateClassId(MethodMetrics methodMetric) throws SQLException {
         String sql = "UPDATE tb_methodMetrics SET classID = ? WHERE ID = ? ;";
         System.out.println(sql);
@@ -230,7 +282,7 @@ public class MethodMetricsDao {
         PreparedStatement stmt = null;
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setInt(1,methodMetric.getClassId());
+            stmt.setInt(1, methodMetric.getClassId());
             stmt.setInt(2, methodMetric.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {

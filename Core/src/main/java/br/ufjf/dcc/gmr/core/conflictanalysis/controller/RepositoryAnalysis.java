@@ -216,6 +216,9 @@ public class RepositoryAnalysis {
         String fileName;
         String filePath;
         String insideFilePath;
+        String extraFileName = "";
+        String extraFilePath = "";
+        String extraInsideFilePath = "";
         List<ConflictRegion> conflictRegion = new ArrayList<>();
 
         //ConflictRegion's field
@@ -241,6 +244,7 @@ public class RepositoryAnalysis {
         double analysedPercentage = 0.0;
         File sandbox = RepositoryAnalysis.createSandbox(repositoryPath);
         boolean auxBool;
+        boolean extraFileInV1 = false;
 
         //Start
         try {
@@ -290,6 +294,17 @@ public class RepositoryAnalysis {
                             //Geting conflict regions from conflict file
                             for (int i = 0; i < allFile.size(); i++) {
                                 if (allFile.get(i).contains("<<<<<<")) {
+                                    if (allFile.get(i).contains(":") && extraFileName == "") {
+                                        auxArray = allFile.get(i).split("/");
+                                        if (auxArray[auxArray.length - 1] != fileName) {
+                                            extraFileName = auxArray[auxArray.length - 1];
+                                            auxArray = allFile.get(i).split(":");
+                                            extraInsideFilePath = auxArray[auxArray.length - 1];
+                                            extraFilePath = repositoryPath + "/" + extraInsideFilePath;
+                                            extraFileInV1 = true;
+                                        }
+                                        extraFileInV1 = false;
+                                    }
                                     beginLine = i + 1;
                                     for (int j = i - linesContext; j < i; j++) {
                                         if (j < 0) {
@@ -310,6 +325,15 @@ public class RepositoryAnalysis {
                                         i++;
                                     }
                                     endLine = i + 1;
+                                    if (allFile.get(i).contains(":") && extraFileName == "") {
+                                        auxArray = allFile.get(i).split("/");
+                                        if (auxArray[auxArray.length - 1] != fileName) {
+                                            extraFileName = auxArray[auxArray.length - 1];
+                                            auxArray = allFile.get(i).split(":");
+                                            extraInsideFilePath = auxArray[auxArray.length - 1];
+                                            extraFilePath = repositoryPath + "/" + extraInsideFilePath;
+                                        }
+                                    }
                                     for (int j = i + 1; j < i + 1 + linesContext; j++) {
                                         if (j >= allFile.size()) {
                                             break;
@@ -322,12 +346,20 @@ public class RepositoryAnalysis {
                                     originalV2FirstLine = -1;
                                     if (!v1.isEmpty()) {
                                         Git.checkout(parents.get(0).getCommitHash(), sandbox.getPath());
-                                        originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
+                                        if (extraFileName != "" && extraFileInV1 == true) {
+                                            originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), extraFilePath, sandbox.getPath() + extraInsideFilePath, beginLine + 1);
+                                        } else {
+                                            originalV1FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, beginLine + 1);
+                                        }
                                         Git.checkout("master", sandbox.getPath());
                                     }
                                     if (!v2.isEmpty()) {
                                         Git.checkout(parents.get(1).getCommitHash(), sandbox.getPath());
-                                        originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
+                                        if (extraFileName != "" && extraFileInV1 == false) {
+                                            originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), extraFilePath, sandbox.getPath() + extraInsideFilePath, separatorLine + 1);
+                                        } else {
+                                            originalV2FirstLine = rnln.initReturnNewLineNumberFile(sandbox.getPath(), filePath, sandbox.getPath() + insideFilePath, separatorLine + 1);
+                                        }
                                         Git.checkout("master", sandbox.getPath());
                                     }
 
@@ -392,7 +424,16 @@ public class RepositoryAnalysis {
                             }
 
                             //Adding a new list of conflcit regions
-                            conflictFiles.add(new ConflictFile(fileName, filePath, insideFilePath, new ArrayList<>(conflictRegion)));
+                            if (extraFileName == "") {
+                                conflictFiles.add(new ConflictFile(fileName, filePath, insideFilePath, new ArrayList<>(conflictRegion)));
+                            } else {
+                                conflictFiles.add(new ConflictFile(fileName, filePath, insideFilePath, extraFileName, extraFilePath, extraInsideFilePath, new ArrayList<>(conflictRegion)));
+                            }
+
+                            //Reseting "extra" file infomation
+                            extraFileName = "";
+                            extraFilePath = "";
+                            extraInsideFilePath = "";
 
                             //Reseting conflictRegion
                             conflictRegion.clear();
@@ -441,7 +482,11 @@ public class RepositoryAnalysis {
                     for (ConflictFile file : merge.getConflictFiles()) {
                         if (file.getConflictRegion() != null) {
                             for (ConflictRegion region : file.getConflictRegion()) {
-                                region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                if (file.getExtraFileName() != null) {
+                                    region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), file.getExtraFilePath(),merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                } else {
+                                    region.setSyntaxV1SyntaxV2(repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                }
                             }
                         }
                     }
