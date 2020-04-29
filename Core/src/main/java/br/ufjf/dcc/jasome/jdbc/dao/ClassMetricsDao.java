@@ -36,8 +36,8 @@ public class ClassMetricsDao {
         String sql = "INSERT INTO tb_classMetrics "
                 + "(aaID,adID,aiID,aitID,aoID,avID,clrciID,cltciID,ditID,hmdID,hmiID,mhfID,mifID,maID,mdID,"
                 + "miID,mitID,moID,nfID,nmID,nmaID,nmiID,noaID,nochID,nodID,nolID,nopaID,normID,npfID,npmID,nsfID,"
-                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID,nmirID,cfID,pfID,aifID,ahID,ahfID,lcomID,nodeID,nodaID)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
         
         PreparedStatement stmt = null;
@@ -88,7 +88,7 @@ public class ClassMetricsDao {
             if (classMetrics.getDit() == null) {
                 stmt.setNull(9, java.sql.Types.INTEGER);
             } else {
-                stmt.setInt(9, classMetrics.getHmd().getId());
+                stmt.setInt(9, classMetrics.getDit().getId());
             }
             if (classMetrics.getAa() == null) {
                 stmt.setNull(10, java.sql.Types.INTEGER);
@@ -203,7 +203,7 @@ public class ClassMetricsDao {
             if (classMetrics.getNsm() == null) {
                 stmt.setNull(32, java.sql.Types.INTEGER);
             } else {
-                stmt.setInt(32, classMetrics.getNsf().getId());
+                stmt.setInt(32, classMetrics.getNsm().getId());
             }
             if (classMetrics.getPmr() == null) {
                 stmt.setNull(33, java.sql.Types.INTEGER);
@@ -239,6 +239,51 @@ public class ClassMetricsDao {
                 stmt.setNull(39, java.sql.Types.INTEGER);
             } else {
                 stmt.setInt(39, classMetrics.getWmc().getId());
+            }
+            if (classMetrics.getNmir() == null) {
+                stmt.setNull(40, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(40, classMetrics.getNmir().getId());
+            }
+            if (classMetrics.getCf() == null) {
+                stmt.setNull(41, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(41, classMetrics.getCf().getId());
+            }
+            if (classMetrics.getPf() == null) {
+                stmt.setNull(42, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(42, classMetrics.getPf().getId());
+            }
+            if (classMetrics.getAif() == null) {
+                stmt.setNull(43, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(43, classMetrics.getAif().getId());
+            }
+            if (classMetrics.getAh() == null) {
+                stmt.setNull(44, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(44, classMetrics.getAh().getId());
+            }
+            if (classMetrics.getAhf() == null) {
+                stmt.setNull(45, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(45, classMetrics.getAhf().getId());
+            }
+            if (classMetrics.getLcom() == null) {
+                stmt.setNull(46, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(46, classMetrics.getLcom().getId());
+            }
+            if (classMetrics.getNode() == null) {
+                stmt.setNull(47, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(47, classMetrics.getNode().getId());
+            }
+            if (classMetrics.getNoda() == null) {
+                stmt.setNull(48, java.sql.Types.INTEGER);
+            } else {
+                stmt.setInt(48, classMetrics.getNoda().getId());
             }
             //stmt.setInt(40, classMetrics.getPackageId());
             
