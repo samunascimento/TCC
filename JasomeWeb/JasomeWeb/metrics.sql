@@ -28,6 +28,10 @@ CREATE TABLE tb_projectMetrics(
 CREATE TABLE tb_versionMetrics (
     ID Serial NOT NULL,
     tlocID Integer,
+    Sha varchar(255),
+    authorName varchar(255),
+    versionDate date,
+    parentsSha varchar(255),
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
