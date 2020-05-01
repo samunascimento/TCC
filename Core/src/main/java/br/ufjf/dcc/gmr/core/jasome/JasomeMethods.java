@@ -116,7 +116,7 @@ public class JasomeMethods {
         CLIExecution extractMetrics = extractMetrics(project);
         System.out.println(new Date());
         System.out.println("==============================================");
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection);
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision);
         readXml.fazerParsing(extractMetrics.getOutputString());
         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
         if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {

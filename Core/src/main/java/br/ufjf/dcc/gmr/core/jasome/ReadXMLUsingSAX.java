@@ -7,6 +7,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.jasome.jdbc.dao.ClassMethodDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ClassMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
@@ -63,6 +64,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     VersionPackageDao versionPackageDao;
     PackageClassDao packageClassDao;
     ClassMethodDao classMethodDao;
+    
+    Formats version;
 
     Connection connection;
 
@@ -74,7 +77,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     Metric metric = new Metric();
 
-    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection) {
+    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection, Formats version) {
         super();
         versionMetrics = new VersionMetrics();
         this.projectMetrics = project;
@@ -90,7 +93,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         versionPackageDao = new VersionPackageDao(connection);
         packageClassDao = new PackageClassDao(connection);
         classMethodDao = new ClassMethodDao(connection);
-
+        
+        this.version = version;
     }
 
     public void fazerParsing(String xml) {
@@ -142,6 +146,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         if (tagAtual.equals("Project")) {
             project = true;
             versionMetrics = new VersionMetrics();
+            versionMetrics.setAuthorName(this.version.getAuthorName());
+            versionMetrics.setCommitDate(version.getAuthorDate());
+            versionMetrics.setHash(version.getCommitHash());
             projectMetrics.setSourceDir(atts.getValue(0));
         } else if (tagAtual.equals("Package")) {
             pacckage = true;
