@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.jasome.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,15 +10,22 @@ import java.util.List;
  */
 public class VersionMetrics {
 
-    
     private Metric tloc;
-    
+
     private int id;
-    
+
+    private String hash;
+
+    private Date commitDate;
+
+    private String authorName;
+
+    private String parentsHash;
+
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
-    
+
     private boolean error = false;
-    
+
     private int projectID;
 
     public Metric getTloc() {
@@ -35,11 +43,12 @@ public class VersionMetrics {
     public void setListPackageMetric(List<PackageMetrics> listPackageMetric) {
         this.listPackageMetric = listPackageMetric;
     }
-    
-    public void setError(boolean error){
-        this.error=error;
+
+    public void setError(boolean error) {
+        this.error = error;
     }
-    public boolean getError(){
+
+    public boolean getError() {
         return this.error;
     }
 
@@ -59,9 +68,9 @@ public class VersionMetrics {
 
     @Override
     public String toString() {
-        return "VersionMetrics{" + "tloc=" + tloc + ", id=" + id + ", listPackageMetric=" + listPackageMetric +'}';
+        return "VersionMetrics{" + "tloc=" + tloc + ", id=" + id + ", listPackageMetric=" + listPackageMetric + '}';
     }
-    
+
     /**
      * @return the projectID
      */
@@ -76,5 +85,60 @@ public class VersionMetrics {
         this.projectID = projectID;
     }
     
-    
+     /**
+     * @return the hash
+     */
+    public String getHash() {
+        return hash;
+    }
+
+    /**
+     * @param hash the hash to set
+     */
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    /**
+     * @return the commitDate
+     */
+    public Date getCommitDate() {
+        return commitDate;
+    }
+
+    /**
+     * @param commitDate the commitDate to set
+     */
+    public void setCommitDate(Date commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    /**
+     * @return the authorName
+     */
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    /**
+     * @param authorName the authorName to set
+     */
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    /**
+     * @return the parentsHash
+     */
+    public String getParentsHash() {
+        return parentsHash;
+    }
+
+    /**
+     * @param parentsHash the parentsHash to set
+     */
+    public void setParentsHash(String parentsHash) {
+        this.parentsHash = parentsHash;
+    }
+
 }

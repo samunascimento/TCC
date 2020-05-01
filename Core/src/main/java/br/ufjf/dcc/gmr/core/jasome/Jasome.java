@@ -27,7 +27,7 @@ public class Jasome {
 //        try {
             Connection connection = ConnectionFactory.getConnection();
             
-            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\teste\\UFJF", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+            JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
 
             ProjectMetrics project = new ProjectMetrics();
 
