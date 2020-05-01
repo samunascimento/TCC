@@ -37,7 +37,7 @@ public class ReturnNewLineNumber {
      * @throws LocalRepositoryNotAGitRepository
      * @throws InvalidCommitHash
      */
-    private List<FileDiff> fillFileDiff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+    private static List<FileDiff> fillFileDiff(String directory, String commitSource, String commitTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<FileDiff> chunks = new ArrayList<>();
         List<String> output = new ArrayList<>();
@@ -90,7 +90,7 @@ public class ReturnNewLineNumber {
      * @throws LocalRepositoryNotAGitRepository
      * @throws InvalidCommitHash
      */
-    private List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
+    private static List<FileDiff> fillOneFileDiff(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
 
         List<FileDiff> chunks = new ArrayList<>();
         List<String> output = new ArrayList<>();
@@ -140,7 +140,7 @@ public class ReturnNewLineNumber {
      * @param a Line of the diff with the required starting line information.
      * @return The starting line of the diff chunk
      */
-    private int startingLine(String a) {
+    private static int startingLine(String a) {
 
         if (a.contains("-")) {
             String c[];
@@ -191,7 +191,7 @@ public class ReturnNewLineNumber {
      * @return the difference between added and removed lines on the archive
      * before the original line.
      */
-    private int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
+    private static int processingChunkModifiedLine(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
 
         int cont = 0;
         int j = 0;
@@ -241,7 +241,7 @@ public class ReturnNewLineNumber {
         return cont;
     }
 
-    private String windowsPath(String stringPath) {
+    private static String windowsPath(String stringPath) {
         String path;
         String[] splitC = stringPath.split(":");
         path = splitC[0].charAt(splitC[0].length() - 1) + ":" + splitC[1];
@@ -266,7 +266,7 @@ public class ReturnNewLineNumber {
      * @throws InvalidCommitHash
      * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
      */
-    public int initReturnNewLineNumber(String directory, String commitSource,
+    public static int initReturnNewLineNumber(String directory, String commitSource,
             String commitTarget, int originalLineNumber, String filePath)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist {
 
@@ -302,7 +302,7 @@ public class ReturnNewLineNumber {
      * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
      * @throws br.ufjf.dcc.gmr.core.exception.EmptyOutput
      */
-    public int initReturnNewLineNumberFile(String directory, String pathSource,
+    public static int initReturnNewLineNumberFile(String directory, String pathSource,
             String pathTarget, int originalLineNumber)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput {
 

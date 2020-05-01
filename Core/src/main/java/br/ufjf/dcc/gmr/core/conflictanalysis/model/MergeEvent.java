@@ -84,5 +84,19 @@ public class MergeEvent {
         System.out.println("***********************************************************************************");
 
     }
+    
+    public int getNumberOfConflictRegions(){
+        if(this.isConflict){
+            int i = 0;
+            for(ConflictFile file : this.conflictFiles){
+                if(file.getConflictRegion() != null){
+                    i += file.getConflictRegion().size();
+                }
+            }
+            return i;
+        } else {
+            return 0;
+        }
+    }
 
 }

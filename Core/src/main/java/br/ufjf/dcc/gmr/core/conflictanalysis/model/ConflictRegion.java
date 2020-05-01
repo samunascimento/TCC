@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
@@ -127,12 +127,12 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 Git.checkout("master", repositoryPath);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -151,18 +151,18 @@ public class ConflictRegion {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
                 try {
-                    this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV1 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV1StartLine, this.originalV1StopLine);
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
                 try {
-                    this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV2 = RepositoryAnalysis.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }

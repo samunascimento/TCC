@@ -1,7 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.RepositoryAnalysis;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.Thread.State;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -62,24 +64,12 @@ public class MainFrame extends JFrame {
         "10 Lines"
     });
 
-    //Progress Bar
-    private JProgressBar progressBar;
-
-    public JProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public void setProgressBar(JProgressBar progressBar) {
-        this.progressBar = progressBar;
-    }
-
     public MainFrame() {
         initComponents();
     }
 
     private void initComponents() {
         this.customizeMainFrame();
-        this.customizeProgressBar();
         this.customizeMenu();
         this.customizeTabbedPane();
         this.setVisible(true);
@@ -147,10 +137,6 @@ public class MainFrame extends JFrame {
         gbc.gridy = 2;
         gbc.weightx = 0;
         this.homePanel.add(this.homePanelAnalyseButton, gbc);
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        this.homePanel.add(this.progressBar, gbc);
     }
 
     private void customizePanel() {
@@ -164,11 +150,6 @@ public class MainFrame extends JFrame {
 
     private void customizeTextField() {
         this.homePanelTextField.setEditable(false);
-    }
-
-    private void customizeProgressBar() {
-        this.progressBar = new JProgressBar();
-        this.progressBar.setVisible(true);
     }
 
     private void customizeButtons() {
@@ -197,13 +178,30 @@ public class MainFrame extends JFrame {
             JOptionPane.showMessageDialog(null, "Repository Path text field is empty!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
             if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(homePanelTextField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                String auxStr = homePanelTextField.getText();
-                int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
-                resetHomePanel();
-                RepositoryAnalysis repositoryAnalysis = new RepositoryAnalysis(auxStr, auxInt, this);
-                Thread newMergePanel = new Thread(repositoryAnalysis);
-                newMergePanel.start();
-                mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(repositoryAnalysis.getMergeEventList()));
+                new Thread() {
+                    public void run() {
+                        String auxStr = homePanelTextField.getText();
+                        int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
+                        resetHomePanel();
+                        ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(auxStr, auxInt);
+                        mainTabbedPane.addTab(getProjectName(auxStr), progressBarPanel);
+                        Thread newMergePanel = new Thread(progressBarPanel);
+                        newMergePanel.start();
+                        try {
+                            newMergePanel.join();
+                        } catch (InterruptedException ex) {
+                           
+                            System.out.println("Deu ruim");
+                        }
+                        mainTabbedPane.remove(mainTabbedPane.getTabCount() - 1);
+                        if (progressBarPanel.getMergeEventList() == null) {
+                            JOptionPane.showMessageDialog(null, "The the repository path is not a git repotory!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(progressBarPanel.getMergeEventList()));
+                        }
+                        
+                    }
+                }.start();
             }
         }
     }
