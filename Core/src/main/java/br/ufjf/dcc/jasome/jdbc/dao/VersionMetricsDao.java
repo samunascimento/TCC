@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -23,15 +25,19 @@ public class VersionMetricsDao {
 
     private final Connection connection;
 
+    Timestamp timestamp;
+
     public VersionMetricsDao(Connection connection) {
         this.connection = connection;
     }
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tlocID,sha,authorname) "
-                + "VALUES (?,?,?) "
+                + "(tlocID,sha,authorname,versiondate) "
+                + "VALUES (?,?,?,?) "
                 + "RETURNING id;";
+        
+        timestamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
 
         PreparedStatement stmt = null;
 
@@ -48,6 +54,8 @@ public class VersionMetricsDao {
             stmt.setString(2, versionMetrics.getHash());
 
             stmt.setString(3, versionMetrics.getAuthorName());
+
+            stmt.setTimestamp(4, timestamp);
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
