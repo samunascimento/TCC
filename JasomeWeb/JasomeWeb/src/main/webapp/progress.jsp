@@ -19,6 +19,7 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="css/responsive.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
     </head>
     <body>
         <!-- Start Left menu area -->
@@ -173,15 +174,17 @@
             </div>
             <!-- Panel -->
             <div>
-                <h1>Progress</h1>
+                <h1>Progress/Version Metrics</h1>
+                <div id="chart"></div>
+                <script src="visualization/visualization.js" />
             </div>
-                <!-- End Panel -->
-                <script src="js/vendor/jquery-1.12.4.min.js"></script>
-                <script src="js/bootstrap.min.js"></script>
-                <script src="js/jquery.meanmenu.js"></script>
-                <script src="js/jquery.sticky.js"></script>
-                <script src="js/metisMenu/metisMenu.min.js"></script>
-                <script src="js/metisMenu/metisMenu-active.js"></script>
-                <script src="js/main.js"></script>
-                </body>
-                </html>
+            <!-- End Panel -->
+            <script src="js/vendor/jquery-1.12.4.min.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script src="js/jquery.meanmenu.js"></script>
+            <script src="js/jquery.sticky.js"></script>
+            <script src="js/metisMenu/metisMenu.min.js"></script>
+            <script src="js/metisMenu/metisMenu-active.js"></script>
+            <script src="js/main.js"></script>
+    </body>
+</html>
