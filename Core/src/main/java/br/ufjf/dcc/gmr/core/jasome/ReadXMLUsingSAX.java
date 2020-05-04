@@ -14,6 +14,7 @@ import br.ufjf.dcc.jasome.jdbc.dao.MethodMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.PackageClassDao;
 import br.ufjf.dcc.jasome.jdbc.dao.PackageMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.ParentsHashDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectVersionDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
@@ -65,6 +66,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     PackageClassDao packageClassDao;
     ClassMethodDao classMethodDao;
     
+    ParentsHashDao parentsHashDao;
+    
     Formats version;
     
     List<String> parents;
@@ -97,6 +100,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         versionPackageDao = new VersionPackageDao(connection);
         packageClassDao = new PackageClassDao(connection);
         classMethodDao = new ClassMethodDao(connection);
+        
+        parentsHashDao = new ParentsHashDao(connection);
         
         this.version = version;
         this.parents = parents;
@@ -608,11 +613,13 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 versionMetrics.setProjectID(projectMetrics.getId());
                 int versionId = versionMetricDao.insert(versionMetrics);
                 versionMetrics.setId(versionId);
-                for(int i = 0; i < versionMetrics.getParentsHash().size(); i++){
-                    System.out.println(versionMetrics.getParentsHash().get(i));
-                }
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
+                }
+                for(int i = 0; i < versionMetrics.getParentsHash().size(); i++){
+                    System.out.println(versionMetrics.getParentsHash().get(i));
+                    parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i));
+                    
                 }
                 project = false;
             } else if (tagAtual.equals("Package")) {

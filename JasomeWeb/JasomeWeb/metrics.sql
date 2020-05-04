@@ -1,3 +1,4 @@
+DROP TABLE tb_parents_hash;
 DROP TABLE tb_project_version;
 DROP TABLE tb_version_package;
 DROP TABLE tb_package_class;
@@ -223,4 +224,11 @@ CREATE TABLE tb_class_method (
     method_id Serial NOT Null,
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID),
     FOREIGN KEY (method_id) REFERENCES tb_methodMetrics(ID)
+);
+
+CREATE TABLE tb_parents_hash (
+	version_id Serial,
+	commit_hash varchar(255),
+	parent_hash varchar(255),
+	FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
 );
