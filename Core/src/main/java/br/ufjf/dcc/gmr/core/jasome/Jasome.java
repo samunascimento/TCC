@@ -5,6 +5,7 @@ import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
@@ -23,7 +24,7 @@ import java.text.ParseException;
 public class Jasome {
     
 
-    public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException {
+    public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException, NullPointerException, OptionNotExist {
 //        try {
             Connection connection = ConnectionFactory.getConnection();
             

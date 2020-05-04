@@ -66,10 +66,14 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     ClassMethodDao classMethodDao;
     
     Formats version;
+    
+    List<String> parents;
 
     Connection connection;
 
     List<MethodMetrics> listMethod = new ArrayList<>();
+    
+   
 
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
@@ -77,7 +81,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     Metric metric = new Metric();
 
-    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection, Formats version) {
+    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection, Formats version, List<String> parents) {
         super();
         versionMetrics = new VersionMetrics();
         this.projectMetrics = project;
@@ -95,6 +99,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         classMethodDao = new ClassMethodDao(connection);
         
         this.version = version;
+        this.parents = parents;
     }
 
     public void fazerParsing(String xml) {
@@ -149,6 +154,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             versionMetrics.setAuthorName(this.version.getAuthorName());
             versionMetrics.setCommitDate(version.getAuthorDate());
             versionMetrics.setHash(version.getCommitHash());
+            versionMetrics.setParentsHash(parents);
             projectMetrics.setSourceDir(atts.getValue(0));
         } else if (tagAtual.equals("Package")) {
             pacckage = true;
@@ -602,6 +608,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 versionMetrics.setProjectID(projectMetrics.getId());
                 int versionId = versionMetricDao.insert(versionMetrics);
                 versionMetrics.setId(versionId);
+                for(int i = 0; i < versionMetrics.getParentsHash().size(); i++){
+                    System.out.println(versionMetrics.getParentsHash().get(i));
+                }
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }

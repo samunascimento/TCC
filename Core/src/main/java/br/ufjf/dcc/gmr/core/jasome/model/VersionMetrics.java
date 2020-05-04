@@ -20,7 +20,7 @@ public class VersionMetrics {
 
     private String authorName;
 
-    private String parentsHash;
+    private List<String> parentsHash;
 
     private List<PackageMetrics> listPackageMetric = new ArrayList<>();
 
@@ -130,14 +130,14 @@ public class VersionMetrics {
     /**
      * @return the parentsHash
      */
-    public String getParentsHash() {
+    public List<String> getParentsHash() {
         return parentsHash;
     }
 
     /**
      * @param parentsHash the parentsHash to set
      */
-    public void setParentsHash(String parentsHash) {
+    public void setParentsHash(List<String> parentsHash) {
         this.parentsHash = parentsHash;
     }
 
