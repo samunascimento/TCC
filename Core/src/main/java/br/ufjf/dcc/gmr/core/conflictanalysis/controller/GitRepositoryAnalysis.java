@@ -6,7 +6,6 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.RepositoryAnalysisProcessData;
 import br.ufjf.dcc.gmr.core.conflictanalysis.view.ConflictAnalysisProgressBarPanel;
-import br.ufjf.dcc.gmr.core.conflictanalysis.view.MergePanel;
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
@@ -29,8 +28,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
@@ -48,6 +45,7 @@ public class GitRepositoryAnalysis {
     private JProgressBar progressBar;
     private JLabel processLabel;
     private boolean analysisDone;
+    private String projectName;
 
     public GitRepositoryAnalysis(String repositoryPath, int linesContext) {
         this.mergeEventList = new ArrayList<>();
@@ -58,6 +56,8 @@ public class GitRepositoryAnalysis {
         this.progressBar = null;
         this.processLabel = null;
         this.analysisDone = false;
+        String[] auxArray = this.repositoryPath.split("/");
+        this.projectName = auxArray[auxArray.length - 1];
     }
 
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel) {
@@ -69,6 +69,8 @@ public class GitRepositoryAnalysis {
         this.progressBar = this.progressBarPanel.getProgressBar();
         this.processLabel = this.progressBarPanel.getProcessLabel();
         this.analysisDone = false;
+        String[] auxArray = this.repositoryPath.split("/");
+        this.projectName = auxArray[auxArray.length - 1];
     }
 
     public List<MergeEvent> getMergeEventList() {
@@ -146,11 +148,10 @@ public class GitRepositoryAnalysis {
         List<String> allMerges = Git.giveAllMerges(this.repositoryPath);
         mergeNumber = allMerges.size();
         this.prepareAnalysis();
-        this.processData.sandbox = ConflictAnalysisTools.createSandbox(repositoryPath);
+        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath,this.projectName);
         this.progressBar.setIndeterminate(false);
         this.progressBar.setMinimum(1);
         this.progressBar.setMaximum(allMerges.size());
-        this.progressBar.setStringPainted(true);
         this.processLabel.setText("Main Process...");
         System.out.println(status + "/" + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
@@ -178,7 +179,7 @@ public class GitRepositoryAnalysis {
         List<String> allMerges = Git.giveAllMerges(this.repositoryPath);
         mergeNumber = allMerges.size();
         this.prepareAnalysis();
-        this.processData.sandbox = ConflictAnalysisTools.createSandbox(repositoryPath);
+        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath,this.projectName);
         System.out.println(status + "/" + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
             this.catchCommits(merge);
@@ -216,7 +217,7 @@ public class GitRepositoryAnalysis {
     }
 
     private void prepareAnalysis() {
-        ConflictAnalysisTools.deleteDirectory(new File(Paths.get(this.repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox"));
+        ConflictAnalysisTools.deleteDirectory(new File(Paths.get(this.repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox_" + this.projectName));
         try {
             Git.reset(this.repositoryPath, true, false, false, null);
         } catch (IOException ex) {

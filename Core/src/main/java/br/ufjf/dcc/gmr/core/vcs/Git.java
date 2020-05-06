@@ -361,7 +361,6 @@ public class Git {
                     }
                 }
             }
-            System.out.println(execution);
 
         } catch (IOException ex) {
             Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);

@@ -27,15 +27,15 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public interface ConflictAnalysisTools {
 
-    public static File createSandbox(String repositoryPath) throws IOException {
+    public static File createSandbox(String repositoryPath, String projectName) throws IOException {
         File sandbox;
         if (repositoryPath.contains("\\")) {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\RepositoryAnalysisSandbox");
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\RepositoryAnalysisSandbox_" + projectName);
         } else {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox");
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox_" + projectName);
         }
         try {
-            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), "RepositoryAnalysisSandbox");
+            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), "RepositoryAnalysisSandbox_" + projectName);
         } catch (RepositoryNotFound ex) {
             System.out.println("ERROR: RepositoryNotFound error!");
             throw new IOException();

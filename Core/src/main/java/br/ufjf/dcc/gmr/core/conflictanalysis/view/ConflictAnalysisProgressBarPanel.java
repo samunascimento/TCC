@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GitRepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
@@ -14,41 +15,28 @@ import javax.swing.JProgressBar;
  *
  * @author joao_lima
  */
-public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable{
-    
-    private JProgressBar progressBar;
-    private JLabel processLabel;
-    private String repositoryPath;
-    private int lineContext;
+public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable {
+
+    private final JProgressBar progressBar;
+    private final JLabel processLabel;
+    private final String repositoryPath;
+    private final int lineContext;
     private List<MergeEvent> mergeEventList;
-    
-    public ConflictAnalysisProgressBarPanel(String repositoryPath, int lineContext){
+
+    public ConflictAnalysisProgressBarPanel(String repositoryPath, int lineContext) {
         this.repositoryPath = repositoryPath;
         this.lineContext = lineContext;
         this.mergeEventList = null;
         this.progressBar = new JProgressBar();
         this.processLabel = new JLabel("Starting");
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        progressBar.setIndeterminate(true);
-        this.add(this.processLabel,gbc);
-        gbc.gridy = 1;
-        this.add(this.progressBar,gbc);      
-    }
+        configure();
 
-    @Override
-    public void run() {
-        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath,lineContext,this);
-        try {
-            repositoryAnalysis.startAnalysis();
-        }catch(IOException ex) {}
-        this.mergeEventList = repositoryAnalysis.getMergeEventList();
     }
-
+    
     public List<MergeEvent> getMergeEventList() {
         return mergeEventList;
     }
-    
+
     public JProgressBar getProgressBar() {
         return progressBar;
     }
@@ -57,5 +45,29 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
         return processLabel;
     }
     
-    
+    private void configure() {
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        
+        this.progressBar.setStringPainted(true);
+        progressBar.setIndeterminate(true);
+        progressBar.setPreferredSize(new Dimension(800,25));
+        
+        this.add(this.processLabel, gbc);
+        gbc.gridy = 1;
+        this.add(this.progressBar, gbc);
+    }
+
+    @Override
+    public void run() {
+        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this);
+        try {
+            repositoryAnalysis.startAnalysis();
+        } catch (IOException ex) {
+        }
+        this.mergeEventList = repositoryAnalysis.getMergeEventList();
+    }
+
+
+
 }

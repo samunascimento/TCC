@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -82,6 +83,7 @@ public class MainFrame extends JFrame {
         this.setExtendedState(MAXIMIZED_BOTH);
         this.setMaximumSize(new Dimension(1600, 900));
         this.setMinimumSize(new Dimension(1600, 900));
+        this.setLocationRelativeTo(null);
     }
 
     private void customizeMenu() {
@@ -184,23 +186,21 @@ public class MainFrame extends JFrame {
                         int auxInt = homePanelNumContextComboBox.getSelectedIndex() + 1;
                         resetHomePanel();
                         ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(auxStr, auxInt);
-                        mainTabbedPane.addTab(getProjectName(auxStr), progressBarPanel);
-                        Thread newMergePanel = new Thread(progressBarPanel);
-                        newMergePanel.start();
+                        mainTabbedPane.addTab(getProjectName(auxStr + "(processing...)"), progressBarPanel);
+                        Thread progressBarPanelThread = new Thread(progressBarPanel);
+                        progressBarPanelThread.start();
                         try {
-                            newMergePanel.join();
+                            progressBarPanelThread.join();
                         } catch (InterruptedException ex) {
-                           
                             System.out.println("Deu ruim");
                         }
-                        mainTabbedPane.remove(mainTabbedPane.getTabCount() - 1);
+                        mainTabbedPane.remove(progressBarPanel);
                         if (progressBarPanel.getMergeEventList() == null) {
                             JOptionPane.showMessageDialog(null, "The the repository path is not a git repotory!", "ERROR!", JOptionPane.ERROR_MESSAGE);
                         } else {
                             mainTabbedPane.addTab(getProjectName(auxStr), new MergePanel(progressBarPanel.getMergeEventList()));
-                        }
-                        
-                    }
+                        }   
+                    }      
                 }.start();
             }
         }
