@@ -40,7 +40,9 @@ public class JasomeResource {
     }
 
     /**
-     * Retrieves representation of an instance of br.ufjf.dcc.gmr.jasomeweb.controller.JasomeResource
+     * Retrieves representation of an instance of
+     * br.ufjf.dcc.gmr.jasomeweb.controller.JasomeResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -53,32 +55,21 @@ public class JasomeResource {
     @GET
     @Path("usuario/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsuario() throws SQLException{
-//        
-        List<Metric> list = new ArrayList<>();
+    public String getUsuario() throws SQLException {
         
-        
-        Metric metric = new Metric();
-        metric.setId(10);
-        metric.setDescription("descricao");
-        metric.setName("metric");
-        metric.setValue(10.0);
-        
-        list.add(metric);
-        Metric metric1 = new Metric();
-        
-        metric1.setId(10);
-        metric1.setDescription("descricao");
-        metric1.setName("metric");
-        metric1.setValue(10.0);
-        list.add(metric1);
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
-        
-        return g.toJson(list);
+        List<Metric> list = new ArrayList<>();
+        list = dao.selectAllTlocVersionMetrics();
+        String listJ = g.toJson(list);
+        System.out.println("entrou aqui");
+        return listJ;
     }
-    
+
     /**
      * PUT method for updating or creating an instance of JasomeResource
+     *
      * @param content representation for the resource
      */
     @PUT
