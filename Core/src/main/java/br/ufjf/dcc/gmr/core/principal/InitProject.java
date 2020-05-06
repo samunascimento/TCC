@@ -51,54 +51,63 @@ public class InitProject implements Runnable {
 
     }
 
+    private static List<String> readFile(String filePath){
+
+        List<String> content = new ArrayList<>();
+        String linha;
+
+        try {
+
+            FileReader fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr);          
+
+
+            while ((linha = br.readLine()) != null) {
+                content.add(linha);
+            }} catch (IOException e) {
+            System.out.println("filePath: " + filePath);
+            e.printStackTrace();
+        }
+
+        return content;
+    }
+    
+    
+
     private static List<Chunk> createConflictChunksList(String filePath) {
 
         List<Chunk> result = new ArrayList<>();
         Chunk chunk = new Chunk();
 
-        try {
+        List<String> content = readFile(filePath);
 
-            FileReader fr = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(fr);
+            for (int i = 0; i < content.size(); i++) {
 
-            String linha;
-            List<String> str = new ArrayList<>();
-
-            while ((linha = br.readLine()) != null) {
-                str.add(linha);
-            }
-
-            for (int i = 0; i < str.size(); i++) {
-
-                if (str.get(i).startsWith("<<<<<<<")) {
+                if (content.get(i).startsWith("<<<<<<<")) {
                     chunk = new Chunk();
-                    chunk.setBegin(new Line(ListUtils.getSubList(str, i, i), i + 1));
+                    chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i + 1));
                 }
 
-                if (str.get(i).startsWith("=======")) {
-                    chunk.setSeparator(new Line(ListUtils.getSubList(str, i, i), i + 1));
+                if (content.get(i).startsWith("=======")) {
+                    chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i + 1));
                 }
 
-                if (str.get(i).startsWith(">>>>>>>")) {
-                    chunk.setEnd(new Line(ListUtils.getSubList(str, i, i), i + 1));
-                    chunk.setContent(ListUtils.getSubList(str, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                if (content.get(i).startsWith(">>>>>>>")) {
+                    chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
+                    chunk.setContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
                     result.add(chunk);
                 }
             }
-
-        } catch (IOException e) {
-            System.out.println("filePath: " + filePath);
-            e.printStackTrace();
-        }
         return result;
     }
+
 
     private static MyFile updateFile(MyFile file) {
 
         MyFile result = file;
         result.setType(null);
         result.setChuncks(createConflictChunksList(result.getPath()));
-
+        result.setContent(readFile(result.getPath()));
         return result;
     }
 

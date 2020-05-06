@@ -13,6 +13,7 @@ public class MyFile {
     private String type;
     private boolean renamed;
     private List<Chunk> chuncks;
+    private List<String> content;
     
     public MyFile() {
         path = new String();
@@ -94,6 +95,20 @@ public class MyFile {
      */
     public void setChuncks(List<Chunk> chuncks) {
         this.chuncks = chuncks;
+    }
+
+    /**
+     * @return the content
+     */
+    public List<String> getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(List<String> content) {
+        this.content = content;
     }
 
 
