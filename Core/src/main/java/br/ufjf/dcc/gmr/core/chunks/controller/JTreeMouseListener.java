@@ -25,7 +25,13 @@ public class JTreeMouseListener extends MouseAdapter {
         getTextArea().setText("");
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) getView().getTree().getLastSelectedPathComponent();
         if (selectedNode != null) {
-            Chunk chunk = (Chunk) selectedNode.getUserObject();
+            Chunk chunk = null;
+            try {
+                chunk = (Chunk) selectedNode.getUserObject();
+            } catch (Exception e) {
+                //when the selected node is not a chunck
+            }
+
             for (String content : chunk.getContent()) {
                 getTextArea().setText(getTextArea().getText() + content + "\n");
             }
