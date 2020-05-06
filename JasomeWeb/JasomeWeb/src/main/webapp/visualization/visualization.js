@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+$.ajax({
+   url: 'localhost/user',
+   success: function (response) {
+       console.log(response);
+   }
+});
 
 //data
 var data = [
