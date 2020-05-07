@@ -23,8 +23,8 @@ function getData(str){
 const svg = d3
   .select("#chart")
   .append("svg")
-  .attr("height", 300)
-  .attr("width", 600);
+  .attr("height", 400)
+  .attr("width", 700);
 
 const margin = { top: 0, bottom: 20, left: 30, right: 20 };
 const chart = svg.append("g").attr("transform", `translate(${margin.left},0)`);

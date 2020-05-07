@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="css/responsive.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
         <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
     <body>
         <!-- Start Left menu area -->
@@ -175,6 +176,8 @@
             <!-- Panel -->
             <div>
                 <h1>Progress/Version Metrics</h1>
+                <br>
+                <br>
                 <div id="chart"></div>
                 <script src="visualization/visualization.js" />
             </div>
