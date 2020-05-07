@@ -1,59 +1,23 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-$.ajax({
-   url: 'localhost/user',
-   success: function (response) {
-       console.log(response);
-   }
-});
+var data;
 
-//data
-var data = [
-  {
-    year: 1,
-    popularity: 50
-  },
-  {
-    year: 2,
-    popularity: 150
-  },
-  {
-    year: 3,
-    popularity: 200
-  },
-  {
-    year: 4,
-    popularity: 130
-  },
-  {
-    year: 5,
-    popularity: 240
-  },
-  {
-    year: 6,
-    popularity: 380
-  },
-  {
-    year: 7,
-    popularity: 420
-  },
-  {
-    year: 8,
-    popularity: 50
-  },
-  {
-    year: 9,
-    popularity: 150
-  },
-  {
-    year: 10,
-    popularity: 200
-  }
-];
+function getData(str){
+    $.ajax({
+   url: 'http://localhost:8080/JasomeWeb/webresources/jasome/tlocversion',
+   dataType: 'json',
+   async: false,
+   success: function(json){
+      data = $.map(json, function(el) { return el; }).slice(0).reverse();
+      var cont = data.length;
+      for (var i = data.length - 1; i >= 0; i--) {
+        data[i].id = cont;
+        cont--;
+        console.log(data[i].id);
+      }
+
+    },
+  });
+}
 
 
 const svg = d3
@@ -70,10 +34,11 @@ const grp = chart
   .append("g")
   .attr("transform", `translate(-${margin.left},-${margin.top})`);
 
+// Add empty scales group for the scales to be attatched to on update 
 chart.append("g").attr("class", "x-axis");
 chart.append("g").attr("class", "y-axis");
 
-
+// Add empty path
 const path = grp
   .append("path")
   .attr("transform", `translate(${margin.left},0)`)
@@ -90,19 +55,19 @@ function updateScales(data) {
   const yScale = d3
     .scaleLinear()
     .range([height, 0])
-    .domain([0, d3.max(data, dataPoint => dataPoint.popularity)]);
+    .domain([0, d3.max(data, dataPoint => dataPoint.value)]);
   const xScale = d3
     .scaleLinear()
     .range([0, width])
-    .domain(d3.extent(data, dataPoint => dataPoint.year));
+    .domain(d3.extent(data, dataPoint => dataPoint.id));
   return { yScale, xScale };
 }
 
 function createLine(xScale, yScale) {
   return line = d3
   .line()
-  .x(dataPoint => xScale(dataPoint.year))
-  .y(dataPoint => yScale(dataPoint.popularity))
+  .x(dataPoint => xScale(dataPoint.id))
+  .y(dataPoint => yScale(dataPoint.value))
   .curve(d3.curveMonotoneX);
 }
 
@@ -144,4 +109,13 @@ function updateChart(data) {
     updatePath(data, line);
 }
 
+getData("test");
 updateChart(data);
+// Update chart when button is clicked
+// d3.select("button").on("click", () => {
+// Create new fake data
+//   const newData = data.map(row => {
+//     return { ...row, value: row.value * Math.random() };
+//   });
+//   updateChart(newData);
+// });

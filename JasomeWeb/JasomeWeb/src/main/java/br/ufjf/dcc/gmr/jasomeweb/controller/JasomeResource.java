@@ -53,9 +53,9 @@ public class JasomeResource {
     }
 
     @GET
-    @Path("usuario/get")
+    @Path("tlocversion")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsuario() throws SQLException {
+    public String getTlocVersion() throws SQLException {
         
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -65,6 +65,13 @@ public class JasomeResource {
         String listJ = g.toJson(list);
         System.out.println("entrou aqui");
         return listJ;
+    }
+    
+    @GET
+    @Path("versionPackage")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getVersionPackage(){
+        return null;
     }
 
     /**
