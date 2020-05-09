@@ -109,9 +109,10 @@ public class Git {
             array = array[2].split(" ", 3);
             String dateForm = array[0];
             String time = array[1];
-            String text = dateForm + " " + time;
+            String timeZone = array[2];
+            String text = dateForm + " " + time + " " + timeZone;
             String localization = array[2];
-            String formato = "yyyy-MM-dd HH:mm:ss";
+            String formato = "yyyy-MM-dd HH:mm:ss Z";
             Date dateFormat = new SimpleDateFormat(formato).parse(text);
             //end
 

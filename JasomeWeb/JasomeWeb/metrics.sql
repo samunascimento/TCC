@@ -31,7 +31,7 @@ CREATE TABLE tb_versionMetrics (
     tlocID Integer,
     Sha varchar(255),
     authorName varchar(255),
-    versionDate date,
+    versionDate timeStamptz,
     parentsSha varchar(255),
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)

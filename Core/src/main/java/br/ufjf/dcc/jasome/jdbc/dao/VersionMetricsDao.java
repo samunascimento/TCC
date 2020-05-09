@@ -25,7 +25,7 @@ public class VersionMetricsDao {
 
     private final Connection connection;
 
-    Timestamp timestamp;
+    Timestamp timeStamp;
 
     public VersionMetricsDao(Connection connection) {
         this.connection = connection;
@@ -37,7 +37,7 @@ public class VersionMetricsDao {
                 + "VALUES (?,?,?,?) "
                 + "RETURNING id;";
         
-        timestamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
+        timeStamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
 
         PreparedStatement stmt = null;
 
@@ -54,8 +54,8 @@ public class VersionMetricsDao {
             stmt.setString(2, versionMetrics.getHash());
 
             stmt.setString(3, versionMetrics.getAuthorName());
-
-            stmt.setTimestamp(4, timestamp);
+            
+            stmt.setTimestamp(4, timeStamp);
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
