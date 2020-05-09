@@ -65,18 +65,16 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     VersionPackageDao versionPackageDao;
     PackageClassDao packageClassDao;
     ClassMethodDao classMethodDao;
-    
+
     ParentsHashDao parentsHashDao;
-    
+
     Formats version;
-    
+
     List<String> parents;
 
     Connection connection;
 
     List<MethodMetrics> listMethod = new ArrayList<>();
-    
-   
 
     public VersionMetrics getVersionMetrics() {
         return versionMetrics;
@@ -100,9 +98,9 @@ public class ReadXMLUsingSAX extends DefaultHandler {
         versionPackageDao = new VersionPackageDao(connection);
         packageClassDao = new PackageClassDao(connection);
         classMethodDao = new ClassMethodDao(connection);
-        
+
         parentsHashDao = new ParentsHashDao(connection);
-        
+
         this.version = version;
         this.parents = parents;
     }
@@ -616,10 +614,21 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }
-                for(int i = 0; i < versionMetrics.getParentsHash().size(); i++){
+
+                List<VersionMetrics> versionParents = new ArrayList<>();
+                versionParents = versionMetricDao.select();
+                System.out.println(versionParents.size());
+
+                for (int i = 0; i < versionMetrics.getParentsHash().size(); i++) {
                     System.out.println(versionMetrics.getParentsHash().get(i));
-                    parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i));
-                    
+                    if(versionMetrics.getParentsHash().get(i).equals("")){
+                            parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i), null);
+                        }
+                    for (int k = 0; k < versionParents.size(); k++) {                        
+                        if (versionMetrics.getParentsHash().get(i).equals(versionParents.get(k).getHash())) {
+                            parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i), versionParents.get(k));
+                        }
+                    }
                 }
                 project = false;
             } else if (tagAtual.equals("Package")) {

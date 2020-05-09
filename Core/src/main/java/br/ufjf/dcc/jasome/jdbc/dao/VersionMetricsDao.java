@@ -113,10 +113,14 @@ public class VersionMetricsDao {
                 versionMetrics = new VersionMetrics();
 
                 int tlocID = resultSet.getInt("tlocID");
+                
+                String hash = resultSet.getString("sha");
 
                 Metric metric = metricDao.selectID(tlocID);
 
                 versionMetrics.setTloc(metric);
+                
+                versionMetrics.setHash(hash);
 
                 versionMetrics.setId(resultSet.getInt("id"));
 

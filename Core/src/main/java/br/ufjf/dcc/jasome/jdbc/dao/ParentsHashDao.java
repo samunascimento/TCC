@@ -23,11 +23,10 @@ public class ParentsHashDao {
         this.connection = connection;
     }
 
-    public void insert(VersionMetrics versionMetrics, String parentsHash) throws SQLException {
+    public void insert(VersionMetrics versionMetrics, String parentsHash, VersionMetrics parentsId) throws SQLException {
         String sql = "INSERT INTO tb_parents_hash "
-                + "(version_id, commit_hash, parent_hash) "
+                + "(version_id, parent_id, parent_hash) "
                 + "VALUES (?,?,?); ";
-        
 
         PreparedStatement stmt = null;
 
@@ -38,13 +37,16 @@ public class ParentsHashDao {
 
             stmt.setInt(1, versionMetrics.getId());
 
-            stmt.setString(2, versionMetrics.getHash());
+            if (parentsId != null) {
+                stmt.setInt(2, parentsId.getId());
+            } else {
+                stmt.setNull(2, java.sql.Types.INTEGER);
+            }
 
             stmt.setString(3, parentsHash);
 
             stmt.executeUpdate();
-            
-            
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

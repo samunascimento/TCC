@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -78,6 +79,7 @@ public class JasomeMethods {
             int i = 0;
             System.out.println(project.getSourceDir());
             List<Formats> log = Git.logAll(project.getSourceDir());
+            Collections.reverse(log);
             List<String>parents;
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
