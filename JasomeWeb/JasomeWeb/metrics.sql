@@ -32,7 +32,6 @@ CREATE TABLE tb_versionMetrics (
     Sha varchar(255),
     authorName varchar(255),
     versionDate timeStamptz,
-    parentsSha varchar(255),
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
@@ -228,7 +227,7 @@ CREATE TABLE tb_class_method (
 
 CREATE TABLE tb_parents_hash (
 	version_id Serial,
-	commit_hash varchar(255),
+	parent_id Integer,
 	parent_hash varchar(255),
 	FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
 );
