@@ -229,5 +229,6 @@ CREATE TABLE tb_parents_hash (
 	version_id Serial,
 	parent_id Integer,
 	parent_hash varchar(255),
-	FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID)
+	FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
+    	FOREIGN KEY (parent_id) REFERENCES tb_versionMetrics(ID)
 );

@@ -36,7 +36,7 @@ public class VersionMetricsDao {
                 + "(tlocID,sha,authorname,versiondate) "
                 + "VALUES (?,?,?,?) "
                 + "RETURNING id;";
-        
+
         timeStamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
 
         PreparedStatement stmt = null;
@@ -54,7 +54,7 @@ public class VersionMetricsDao {
             stmt.setString(2, versionMetrics.getHash());
 
             stmt.setString(3, versionMetrics.getAuthorName());
-            
+
             stmt.setTimestamp(4, timeStamp);
 
             tableKeys = stmt.executeQuery();
@@ -113,14 +113,24 @@ public class VersionMetricsDao {
                 versionMetrics = new VersionMetrics();
 
                 int tlocID = resultSet.getInt("tlocID");
-                
+
                 String hash = resultSet.getString("sha");
+
+                String authorName = resultSet.getString("authorname");
+
+                Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+
+                Date versionDate = new Date(versionTimestamp.getTime());
 
                 Metric metric = metricDao.selectID(tlocID);
 
                 versionMetrics.setTloc(metric);
-                
+
                 versionMetrics.setHash(hash);
+
+                versionMetrics.setAuthorName(authorName);
+
+                versionMetrics.setCommitDate(versionDate);
 
                 versionMetrics.setId(resultSet.getInt("id"));
 
@@ -155,9 +165,23 @@ public class VersionMetricsDao {
 
             int tlocID = resultSet.getInt("tlocID");
 
+            String hash = resultSet.getString("sha");
+
+            String authorName = resultSet.getString("authorname");
+
+            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+
+            Date versionDate = new Date(versionTimestamp.getTime());
+
             Metric metric = metricDao.selectID(tlocID);
 
             versionMetrics.setTloc(metric);
+
+            versionMetrics.setHash(hash);
+
+            versionMetrics.setAuthorName(authorName);
+
+            versionMetrics.setCommitDate(versionDate);
 
             versionMetrics.setId(resultSet.getInt("id"));
 
