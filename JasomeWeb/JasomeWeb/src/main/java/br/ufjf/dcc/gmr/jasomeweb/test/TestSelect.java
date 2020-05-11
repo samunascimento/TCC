@@ -25,27 +25,27 @@ public class TestSelect {
         
         Connection connection = ConnectionFactory.getConnection();
         
-        List<Metric> listMetrics = new ArrayList();
-        Metric metric = new Metric();
+//        List<Metric> listMetrics = new ArrayList();
+//        Metric metric = new Metric();
         MetricDao dao = new MetricDao(connection);
         
-        metric = dao.selectID(3);
-        
-        System.out.println(metric.getName());
-        System.out.println(metric.getValue());
-        System.out.println(metric.getDescription());      
-        
-        listMetrics = dao.select();
-        
-        System.out.println(listMetrics.size());
-        
-        for (Metric listMetric : listMetrics) {
-            
-            System.out.println(listMetric.getName());
-            System.out.println(listMetric.getValue());
-            System.out.println(listMetric.getDescription());      
-            System.out.println(listMetric.getId());
-        }
+//        metric = dao.selectID(3);
+//        
+//        System.out.println(metric.getName());
+//        System.out.println(metric.getValue());
+//        System.out.println(metric.getDescription());
+//        
+//        listMetrics = dao.select();
+//        
+//        System.out.println(listMetrics.size());
+//        for (Metric listMetric : listMetrics) {
+//            
+//            System.out.println(listMetric.getName());
+//            System.out.println(listMetric.getValue());
+//            System.out.println(listMetric.getDescription());      
+//            System.out.println(listMetric.getId());
+//        }
+        List<Metric> selectMetricPackage = dao.selectMetricPackage();
        
     }
 }
