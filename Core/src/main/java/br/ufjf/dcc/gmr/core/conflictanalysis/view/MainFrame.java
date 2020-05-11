@@ -1,11 +1,17 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -18,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 /**
  *
@@ -218,7 +225,7 @@ public class MainFrame extends JFrame {
         if (check == JFileChooser.APPROVE_OPTION) {
             String[] auxArray = jfc.getSelectedFile().getPath().split("/");
             try {
-                mainTabbedPane.addTab(auxArray[auxArray.length - 1], new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())));
+                this.addPanelWithX(new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -255,6 +262,7 @@ public class MainFrame extends JFrame {
 
     private void analyseThread() {
         String projectPath = this._textField.getText();
+        String projectName = getProjectName(projectPath);
         int numContextLines = this._numContextComboBox.getSelectedIndex() + 1;
         resetHomePanel();
         ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(projectPath, numContextLines);
@@ -270,7 +278,7 @@ public class MainFrame extends JFrame {
         if (progressBarPanel.getMergeEventList() == null) {
             JOptionPane.showMessageDialog(null, "The the repository path is not a git repotory!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
-            mainTabbedPane.addTab(getProjectName(projectPath), new MergePanel(progressBarPanel.getMergeEventList()));
+            this.addPanelWithX(new MergePanel(progressBarPanel.getMergeEventList()), projectName);
         }
     }
 
@@ -285,6 +293,47 @@ public class MainFrame extends JFrame {
     private void resetHomePanel() {
         this._numContextComboBox.setSelectedIndex(0);
         this._textField.setText("");
+    }
+
+    private void addPanelWithX(MergePanel panel, String projectName) {
+        mainTabbedPane.addTab(projectName, panel);
+        mainTabbedPane.setTabComponentAt(mainTabbedPane.indexOfComponent(panel), this.getTitlePanel(mainTabbedPane, panel, projectName));
+    }
+
+    private JPanel getTitlePanel(JTabbedPane tabbedPane, JPanel panel, String title) {
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        titlePanel.setOpaque(false);
+        
+        JLabel titleLbl = new JLabel(title);
+        titleLbl.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        titlePanel.add(titleLbl);
+        
+        JButton closeButton = new JButton("x");
+        closeButton.setPreferredSize(new Dimension(12, 12));
+        closeButton.setToolTipText("Close");
+        closeButton.setContentAreaFilled(false);
+        closeButton.setBorder(new EtchedBorder());
+        closeButton.setBorderPainted(false);
+        closeButton.setFocusable(false);
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                tabbedPane.remove(panel);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                closeButton.setForeground(Color.RED);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                closeButton.setForeground(Color.BLACK);
+            }
+        }
+        );
+        titlePanel.add(closeButton);
+        return titlePanel;
     }
 
 }
