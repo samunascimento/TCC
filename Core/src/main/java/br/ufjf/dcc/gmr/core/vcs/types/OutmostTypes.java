@@ -16,7 +16,7 @@ public enum OutmostTypes {
     Comment,
     ForStatement,
     IfStatement,
-    Ifcall,
+    IfCall,
     Import,
     MethodInvocation,
     MethodSignature,
@@ -24,5 +24,6 @@ public enum OutmostTypes {
     ReturnStatement,
     TryStatement,
     Variable,
-    WhileStatement;
+    WhileStatement,
+    Error;
 }

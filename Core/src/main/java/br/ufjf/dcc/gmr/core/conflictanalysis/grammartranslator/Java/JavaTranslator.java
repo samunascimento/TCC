@@ -11,5 +11,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.grammartranslator.Java;
  * @author luan
  */
 public class JavaTranslator {
-    
+ 
+    // Traduzir o antlr pra usar no outmost
 }

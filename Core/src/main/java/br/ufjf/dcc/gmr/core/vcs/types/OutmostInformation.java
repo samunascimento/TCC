@@ -10,21 +10,12 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  * @author luan
  */
 public class OutmostInformation {
-    private String content;
+
     private OutmostTypes type;
-    
 
-    public OutmostInformation(String content, OutmostTypes type) {
-        this.content = content;
+    public OutmostInformation(OutmostTypes type) {
+
         this.type = type;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public OutmostTypes getType() {
@@ -34,5 +25,5 @@ public class OutmostInformation {
     public void setType(OutmostTypes type) {
         this.type = type;
     }
-    
+
 }
