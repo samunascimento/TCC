@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -36,6 +37,11 @@ public class MergePanel extends JPanel {
 //  *** West Panel ***************************************
     private JTable mainTable;
     private JScrollPane mainTableScrollPane;
+//  === Filters Buttons Panel ============================
+    private JPanel filtersButtonsPanel;
+    private JButton setFilterButton;
+    private JButton resetFilterButton;
+//  ======================================================    
 //  ******************************************************
 
 //  *** Center Panel *************************************    
@@ -137,14 +143,14 @@ public class MergePanel extends JPanel {
         prototype.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Hash", "Conflict"
+                    "Hash", "Conflict Regions", "Conflict"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.String.class, java.lang.Boolean.class
+                String.class, Integer.class, Boolean.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -155,10 +161,13 @@ public class MergePanel extends JPanel {
                 return canEdit[columnIndex];
             }
         });
+        prototype.getColumnModel().getColumn(0).setPreferredWidth(300);
+        prototype.getColumnModel().getColumn(2).setPreferredWidth(30);
         DefaultTableModel model = (DefaultTableModel) prototype.getModel();
         for (MergeEvent merge : this.mergeEventList) {
             model.addRow(new Object[]{
                 merge.getHash().getCommitHash(),
+                merge.getNumberOfConflictRegions(),
                 merge.isConflict()
             });
         }
@@ -271,6 +280,7 @@ public class MergePanel extends JPanel {
     private JTextArea generateControlPanelV1StructureTypeTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
+        prototype.setMinimumSize(new Dimension(500,100));
         prototype.setEditable(false);
         return prototype;
     }
@@ -278,6 +288,7 @@ public class MergePanel extends JPanel {
     private JTextArea generateControlPanelV2StructureTypeTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
+        prototype.setMinimumSize(new Dimension(500,100));
         prototype.setEditable(false);
         return prototype;
     }
@@ -292,6 +303,7 @@ public class MergePanel extends JPanel {
     private JScrollPane generateControlPanelV1StructureTypeTextAreaScrollPane() {
         JScrollPane prototype = new JScrollPane();
         prototype.setBackground(this.getBackground());
+        prototype.setMinimumSize(new Dimension(500,100));
         prototype.setBorder(BorderFactory.createTitledBorder("V1"));
         return prototype;
     }
@@ -299,6 +311,7 @@ public class MergePanel extends JPanel {
     private JScrollPane generateControlPanelV2StructureTypeTextAreaScrollPane() {
         JScrollPane prototype = new JScrollPane();
         prototype.setBackground(this.getBackground());
+        prototype.setMinimumSize(new Dimension(500,100));
         prototype.setBorder(BorderFactory.createTitledBorder("V2"));
         return prototype;
     }
@@ -352,8 +365,8 @@ public class MergePanel extends JPanel {
 
     private void controlPanelCoupler() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(8, 8, 5, 5);
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.gridwidth = 6;
         this.controlPanel.add(this.controlPanelFileNameLabel, gbc);
         gbc.gridwidth = 1;
