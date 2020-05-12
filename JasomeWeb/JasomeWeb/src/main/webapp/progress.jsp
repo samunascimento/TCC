@@ -23,6 +23,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
     <body>
+        <style>
+		.dot {
+		    fill: #ffab00;
+		    stroke: #fff;
+}
+	</style>
         <!-- Start Left menu area -->
         <div class="left-sidebar-pro">
             <nav id="sidebar">

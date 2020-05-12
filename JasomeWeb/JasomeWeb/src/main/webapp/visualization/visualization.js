@@ -7,14 +7,7 @@ function getData(str){
    dataType: 'json',
    async: false,
    success: function(json){
-      data = $.map(json, function(el) { return el; }).slice(0).reverse();
-      var cont = data.length;
-      for (var i = data.length - 1; i >= 0; i--) {
-        data[i].id = cont;
-        cont--;
-        console.log(data[i].id);
-      }
-
+      data = $.map(json, function(el) { return el; });
     },
   });
 }
@@ -23,13 +16,14 @@ function getData(str){
 const svg = d3
   .select("#chart")
   .append("svg")
-  .attr("height", 400)
-  .attr("width", 700);
+  .attr("height", 600)
+  .attr("width", 900);
 
 const margin = { top: 0, bottom: 20, left: 30, right: 20 };
 const chart = svg.append("g").attr("transform", `translate(${margin.left},0)`);
 const width = +svg.attr("width") - margin.left - margin.right;
 const height = +svg.attr("height") - margin.top - margin.bottom;
+
 const grp = chart
   .append("g")
   .attr("transform", `translate(-${margin.left},-${margin.top})`);
@@ -55,19 +49,19 @@ function updateScales(data) {
   const yScale = d3
     .scaleLinear()
     .range([height, 0])
-    .domain([0, d3.max(data, dataPoint => dataPoint.value)]);
+    .domain([0, d3.max(data, dataPoint => dataPoint.y)]);
   const xScale = d3
     .scaleLinear()
     .range([0, width])
-    .domain(d3.extent(data, dataPoint => dataPoint.id));
+    .domain(d3.extent(data, dataPoint => dataPoint.x));
   return { yScale, xScale };
 }
 
 function createLine(xScale, yScale) {
   return line = d3
   .line()
-  .x(dataPoint => xScale(dataPoint.id))
-  .y(dataPoint => yScale(dataPoint.value))
+  .x(dataPoint => xScale(dataPoint.x))
+  .y(dataPoint => yScale(dataPoint.y))
   .curve(d3.curveMonotoneX);
 }
 
@@ -88,6 +82,7 @@ function updatePath(data, line) {
     .interrupt()
     .datum(data)
     .attr("d", line);
+    console.log(line);
 
   const pathLength = updatedPath.node().getTotalLength();
 
@@ -115,7 +110,7 @@ updateChart(data);
 // d3.select("button").on("click", () => {
 // Create new fake data
 //   const newData = data.map(row => {
-//     return { ...row, value: row.value * Math.random() };
+//     return { ...row, y: row.y * Math.random() };
 //   });
 //   updateChart(newData);
 // });

@@ -8,6 +8,7 @@ package br.ufjf.dcc.gmr.jasomeweb.controller;
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
+import br.ufjf.gmr.jasomeweb.model.Point;
 import com.google.gson.Gson;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -60,10 +61,16 @@ public class JasomeResource {
         
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
+        List<Point> listPoints = new ArrayList<>();
+        int count = 0;
         Gson g = new Gson();
         List<Metric> list = new ArrayList<>();
         list = dao.selectAllTlocVersionMetrics();
-        String listJ = g.toJson(list);
+        for (Metric metric : list) {
+            listPoints.add(new  Point(count++, metric.getValue()));
+        }
+        String listJ = g.toJson(listPoints);
+        
         System.out.println("entrou aqui");
         return listJ;
     }
