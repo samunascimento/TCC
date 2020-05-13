@@ -21,7 +21,8 @@ CREATE TABLE tb_metric (
 
 CREATE TABLE tb_projectMetrics(
     ID Serial NOT NULL,
-    sourceDir varchar(256) NOT NULL ,
+    sourceDir varchar(256) NOT NULL,
+	ProjectName varchar(255) NOT NULL,
     PRIMARY KEY (ID)
 );
 

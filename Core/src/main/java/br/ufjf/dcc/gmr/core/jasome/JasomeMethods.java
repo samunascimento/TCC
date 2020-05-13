@@ -35,9 +35,9 @@ import java.util.logging.Logger;
  */
 public class JasomeMethods {
 
-    private String repositoryUrl = null; //url do repositório remoto
+    private String repositoryUrl = null;
     private String repositoryPath = null;
-    private String repositoryName = null;  //nome da pasta a ser criada e não pode ter espaço no nome
+    private String repositoryName = null;
     private String user = null; //usuario github
     private String password = null; //senha github
 
@@ -52,10 +52,12 @@ public class JasomeMethods {
             .concat("jasome").concat(File.separator).concat("build").concat(File.separator).concat("distributions")
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
             .concat("jasome");
-    
+
     public JasomeMethods(String repository, String jasome) {
         repositoryPath = repository;
         jasomePath = jasome;
+        File projectName = new File(repositoryPath);
+        this.repositoryName = projectName.getName();
     }
 
     public void checkRepository() throws RepositoryNotFound, UrlNotFound {
@@ -68,10 +70,6 @@ public class JasomeMethods {
         }
     }
 
-    public String GetRepositoryPath() {
-        return repositoryPath;
-    }
-
     public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
@@ -80,17 +78,17 @@ public class JasomeMethods {
             System.out.println(project.getSourceDir());
             List<Formats> log = Git.logAll(project.getSourceDir());
             Collections.reverse(log);
-            List<String>parents;
+            List<String> parents;
             System.out.println(log.size());
             System.out.println("=================REVs=======================");
-            
+
             ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
             int projectId = projectDao.insert(project);
             project.setId(projectId);
-            
+
             for (Formats revision : log) {
-                parents = Git.parent(project.getSourceDir(),revision.getCommitHash());
-                projectMetrics = analyzeVersion(revision, project, i, connection,parents); 
+                parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                projectMetrics = analyzeVersion(revision, project, i, connection, parents);
                 System.out.println(new Date());
             }
         } catch (NullPointerException ex) {
@@ -131,7 +129,7 @@ public class JasomeMethods {
             //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
             //    System.out.println("temos um erro nesta versão");
             //}
-            
+
             List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
             jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
             jasomeExtract.extractMetricClass(projectMetrics, listPackage);
@@ -142,7 +140,7 @@ public class JasomeMethods {
         }
         return projectMetrics;
     }
-    
+
     public void listJavaArchives(String repositoryPath, File directory, List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
         try {
             int k = 0;
@@ -202,6 +200,14 @@ public class JasomeMethods {
         } else {
             return CLIExecute.executeParallel(pathJasome.concat(" ").concat(path), ".");
         }
+    }
+
+    public String GetRepositoryPath() {
+        return repositoryPath;
+    }
+
+    public String GetRepositoryName() {
+        return repositoryName;
     }
 
     /**
