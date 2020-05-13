@@ -1,20 +1,22 @@
 package br.ufjf.dcc.gmr.core.vcs.types;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author icout
  */
 public class MyFile {
-    
+
     private String path;
     private Status status;
     private String type;
     private boolean renamed;
     private List<Chunk> chuncks;
     private List<String> content;
-    
+
     public MyFile() {
         path = new String();
         status = Status.UNTRACKED;
@@ -22,7 +24,8 @@ public class MyFile {
         renamed = false;
         chuncks = new ArrayList<>();
     }
-    public MyFile(String path, Status status){
+
+    public MyFile(String path, Status status) {
         this.path = path;
         this.status = status;
     }
@@ -68,7 +71,7 @@ public class MyFile {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     /**
      * @return the renamed
      */
@@ -111,5 +114,30 @@ public class MyFile {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        String javaClassName = "";
+        String[] aux = this.path.split("java", 2);
+        if (aux.length == 2) {
+            aux = aux[1].split(File.separator);
+
+            for (String string : aux) {
+                if (string.equals("")) {
+                    continue;
+                }
+
+                javaClassName = javaClassName.concat(string);
+
+                if (!aux[aux.length - 1].equals(string)) {
+                    javaClassName = javaClassName.concat(".");
+                }
+            }
+
+        } else {
+            javaClassName = this.path;
+        }
+
+        return javaClassName;
+    }
 
 }

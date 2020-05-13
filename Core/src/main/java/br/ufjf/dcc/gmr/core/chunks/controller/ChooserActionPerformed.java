@@ -6,16 +6,9 @@
 package br.ufjf.dcc.gmr.core.chunks.controller;
 
 import br.ufjf.dcc.gmr.core.chunks.view.View;
-import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
-import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 

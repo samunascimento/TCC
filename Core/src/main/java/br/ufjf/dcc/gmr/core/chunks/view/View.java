@@ -102,7 +102,7 @@ public final class View extends JFrame {
     }
 
     private DefaultMutableTreeNode createNodes(MyFile file) {
-        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file.getPath());//encontrar caminho relativo
+        DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file);//encontrar caminho relativo
 
         for (int i = 0; i < file.getChuncks().size(); i++) {
             Chunk chunk = file.getChuncks().get(i);
