@@ -11,6 +11,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,8 +37,8 @@ public class MainFrame extends JFrame {
 //  *** Menus ********************************************
     private JMenuBar menuBar;
     private JMenu toolsMenu;
-    private JMenu filtersMenu;
-    private JMenuItem readSavedAnalysisButton;
+    private JMenuItem readSavedAnalysisMenuItem;
+    private JMenuItem saveAnalysisMenuItem;
 //  ******************************************************
     private JTabbedPane mainTabbedPane;
 
@@ -69,8 +71,8 @@ public class MainFrame extends JFrame {
     private void startGenerators() {
         this.menuBar = this.generateMenuBar();
         this.toolsMenu = this.generateToolsMenu();
-        this.filtersMenu = this.generateFiltersMenu();
-        this.readSavedAnalysisButton = this.generateReadSavedAnalysisButton();
+        this.readSavedAnalysisMenuItem = this.generateReadSavedAnalysisMenuItem();
+        this.saveAnalysisMenuItem = this.generateSaveAnalysisMenuItem();
         this.mainTabbedPane = this.generateMainTabbedPane();
         this.homePanel = this.generateHomePanel();
         this._repositoryPathLabel = this.generate_repositoryPathLabel();
@@ -96,10 +98,18 @@ public class MainFrame extends JFrame {
         return prototype;
     }
 
-    private JMenuItem generateReadSavedAnalysisButton() {
+    private JMenuItem generateReadSavedAnalysisMenuItem() {
         JMenuItem prototype = new JMenuItem("Read Saved Analysis");
         prototype.addActionListener((ActionEvent evt) -> {
             readSavedAnalysisMenuItemActionPerformed();
+        });
+        return prototype;
+    }
+
+    private JMenuItem generateSaveAnalysisMenuItem() {
+        JMenuItem prototype = new JMenuItem("Save Analysis");
+        prototype.addActionListener((ActionEvent evt) -> {
+            saveAnalysisMenuItemActionPerformed();
         });
         return prototype;
     }
@@ -199,9 +209,9 @@ public class MainFrame extends JFrame {
     }
 
     private void menuCoupler() {
-        this.toolsMenu.add(this.readSavedAnalysisButton);
+        this.toolsMenu.add(this.readSavedAnalysisMenuItem);
+        this.toolsMenu.add(this.saveAnalysisMenuItem);
         this.menuBar.add(this.toolsMenu);
-        this.menuBar.add(this.filtersMenu);
     }
 
     private void mainTabbedPaneCoupler() {
@@ -228,6 +238,26 @@ public class MainFrame extends JFrame {
                 this.addPanelWithX(new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveAnalysisMenuItemActionPerformed() {
+        if (this.mainTabbedPane.getTabCount() == 1) {
+            JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
+        } else {
+            List<MergePanel> mergePanels = new ArrayList<>();
+            String projectNames = "";
+            for (int i = 1; i < this.mainTabbedPane.getTabCount(); i++) {
+                if (this.mainTabbedPane.getComponentAt(i).getClass() == MergePanel.class) {
+                    mergePanels.add((MergePanel)this.mainTabbedPane.getComponentAt(i));
+                    projectNames = projectNames + this.mainTabbedPane.getTitleAt(i) + ",";
+                }
+            }
+            if (mergePanels.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
+            } else {
+                SaveAnalysisFrame saveFrame = new SaveAnalysisFrame(projectNames.split(","),mergePanels);
             }
         }
     }
@@ -303,11 +333,11 @@ public class MainFrame extends JFrame {
     private JPanel getTitlePanel(JTabbedPane tabbedPane, JPanel panel, String title) {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         titlePanel.setOpaque(false);
-        
+
         JLabel titleLbl = new JLabel(title);
         titleLbl.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         titlePanel.add(titleLbl);
-        
+
         JButton closeButton = new JButton("x");
         closeButton.setPreferredSize(new Dimension(12, 12));
         closeButton.setToolTipText("Close");
@@ -335,5 +365,6 @@ public class MainFrame extends JFrame {
         titlePanel.add(closeButton);
         return titlePanel;
     }
+    
 
 }

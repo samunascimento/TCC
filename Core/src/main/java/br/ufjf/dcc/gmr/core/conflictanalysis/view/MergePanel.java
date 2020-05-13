@@ -87,6 +87,10 @@ public class MergePanel extends JPanel {
         this.startGenerator();
         this.startCouplers();
     }
+    
+    public List<MergeEvent> getMergeEventList(){
+        return this.mergeEventList;
+    }
 
 //  ******************************************************************
 //  *                                                                *
@@ -365,7 +369,7 @@ public class MergePanel extends JPanel {
 
     private void controlPanelCoupler() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 5, 5);
+        gbc.insets = new Insets(2, 2, 1, 1);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridwidth = 6;
         this.controlPanel.add(this.controlPanelFileNameLabel, gbc);
