@@ -80,6 +80,8 @@ public class InitProject implements Runnable {
         Chunk chunk = new Chunk();
 
         List<String> content = readFile(filePath);
+        
+        int chunkNumber = 0;
 
             for (int i = 0; i < content.size(); i++) {
 
@@ -95,6 +97,7 @@ public class InitProject implements Runnable {
                 if (content.get(i).startsWith(">>>>>>>")) {
                     chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
                     chunk.setContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                    chunk.setLabel("CC"+(++chunkNumber));
                     result.add(chunk);
                 }
             }

@@ -28,13 +28,13 @@ public class JTreeMouseListener extends MouseAdapter {
             Chunk chunk = null;
             try {
                 chunk = (Chunk) selectedNode.getUserObject();
+                for (String content : chunk.getContent()) {
+                    getTextArea().setText(getTextArea().getText() + content + "\n");
+                }
             } catch (Exception e) {
                 //when the selected node is not a chunck
             }
 
-            for (String content : chunk.getContent()) {
-                getTextArea().setText(getTextArea().getText() + content + "\n");
-            }
         }
     }
 

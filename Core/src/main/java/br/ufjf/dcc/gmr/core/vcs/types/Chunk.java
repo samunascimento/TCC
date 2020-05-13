@@ -15,6 +15,8 @@ public class Chunk {
     private Line separator;
     private Line end;
     private List<String> content;
+    private String label;
+    
 
     public Chunk() {
         conflict = false;
@@ -23,6 +25,8 @@ public class Chunk {
         separator = new Line();
         content = new ArrayList<>();
     }
+    
+    
     
         /**
      * @return the conflict
@@ -94,10 +98,26 @@ public class Chunk {
         this.separator = separator;
     }
 
+    /**
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
     @Override
     public String toString() {
-        return  begin.getLineNumber() + "";
+        return  this.label;
     }
+
+    
     
     
 }
