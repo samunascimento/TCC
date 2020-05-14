@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Analysis of Merge Conflicts in Git Repositories");
         this.setResizable(false);
-        this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth())-35, (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()-35));
         this.setLocationRelativeTo(null);
         this.startGenerators();
         this.startCouplers();
@@ -235,7 +235,7 @@ public class MainFrame extends JFrame {
         if (check == JFileChooser.APPROVE_OPTION) {
             String[] auxArray = jfc.getSelectedFile().getPath().split("/");
             try {
-                this.addPanelWithX(new MergePanel(GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
+                this.addPanelWithX(new MergePanel(auxArray[auxArray.length - 1],GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -308,7 +308,7 @@ public class MainFrame extends JFrame {
         if (progressBarPanel.getMergeEventList() == null) {
             JOptionPane.showMessageDialog(null, "The the repository path is not a git repotory!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
-            this.addPanelWithX(new MergePanel(progressBarPanel.getMergeEventList()), projectName);
+            this.addPanelWithX(new MergePanel(projectName,progressBarPanel.getMergeEventList()), projectName);
         }
     }
 

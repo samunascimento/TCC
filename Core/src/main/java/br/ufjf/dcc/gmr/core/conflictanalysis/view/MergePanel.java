@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,11 +12,16 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -28,7 +34,9 @@ import javax.swing.table.DefaultTableModel;
 public class MergePanel extends JPanel {
 
 //  *** Merge Panel **************************************  
+    private String projectName;
     private List<MergeEvent> mergeEventList;
+    private List<MergeEvent> filteredMergeEventList;
     private JPanel westPanel;
     private JPanel centerPanel;
     private JPanel eastPanel;
@@ -81,14 +89,16 @@ public class MergePanel extends JPanel {
     private int currentMaxConflictIndex = 0;
 //  ******************************************************
 
-    public MergePanel(List<MergeEvent> mergeEventList) {
+    public MergePanel(String projectName, List<MergeEvent> mergeEventList) {
+        this.projectName = projectName;
         this.mergeEventList = mergeEventList;
-        this.setLayout(new GridLayout(1,3,3,3));
+        this.filteredMergeEventList = mergeEventList;
+        this.setLayout(new GridLayout(1, 3, 3, 3));
         this.startGenerator();
         this.startCouplers();
     }
-    
-    public List<MergeEvent> getMergeEventList(){
+
+    public List<MergeEvent> getMergeEventList() {
         return this.mergeEventList;
     }
 
@@ -103,6 +113,9 @@ public class MergePanel extends JPanel {
         this.eastPanel = generateEastPanel();
         this.mainTable = generateMainTable();
         this.mainTableScrollPane = generateMainTableScrollPane();
+        this.filtersButtonsPanel = generateFiltersButtonsPanel();
+        this.setFilterButton = generateSetFilterButton();
+        this.resetFilterButton = generateResetFilterButton();
         this.mergeInfoTextArea = generateMergeInfoTextArea();
         this.mergeInfoTextAreaScrollPane = generateMergeInfoTextAreaScrollPane();
         this.controlPanel = generateControlPanel();
@@ -126,7 +139,7 @@ public class MergePanel extends JPanel {
 
     private JPanel generateWestPanel() {
         JPanel prototype = new JPanel();
-        prototype.setLayout(new GridLayout(1, 1, 3, 3));
+        prototype.setLayout(new BorderLayout());
         return prototype;
     }
 
@@ -188,6 +201,28 @@ public class MergePanel extends JPanel {
 
     private JScrollPane generateMainTableScrollPane() {
         JScrollPane prototype = new JScrollPane();
+        return prototype;
+    }
+
+    private JPanel generateFiltersButtonsPanel() {
+        JPanel prototype = new JPanel();
+        prototype.setLayout(new GridLayout(1, 2));
+        return prototype;
+    }
+
+    private JButton generateSetFilterButton() {
+        JButton prototype = new JButton("Set Filter");
+        prototype.addActionListener((ActionEvent evt) -> {
+            setFilterActionPerformed();
+        });
+        return prototype;
+    }
+
+    private JButton generateResetFilterButton() {
+        JButton prototype = new JButton("Reset Filter");
+        prototype.addActionListener((ActionEvent evt) -> {
+            resetFilterButtonActionPerformed();
+        });
         return prototype;
     }
 
@@ -284,7 +319,7 @@ public class MergePanel extends JPanel {
     private JTextArea generateControlPanelV1StructureTypeTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500,100));
+        prototype.setMinimumSize(new Dimension(500, 100));
         prototype.setEditable(false);
         return prototype;
     }
@@ -292,7 +327,7 @@ public class MergePanel extends JPanel {
     private JTextArea generateControlPanelV2StructureTypeTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500,100));
+        prototype.setMinimumSize(new Dimension(500, 100));
         prototype.setEditable(false);
         return prototype;
     }
@@ -307,7 +342,7 @@ public class MergePanel extends JPanel {
     private JScrollPane generateControlPanelV1StructureTypeTextAreaScrollPane() {
         JScrollPane prototype = new JScrollPane();
         prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500,100));
+        prototype.setMinimumSize(new Dimension(500, 100));
         prototype.setBorder(BorderFactory.createTitledBorder("V1"));
         return prototype;
     }
@@ -315,7 +350,7 @@ public class MergePanel extends JPanel {
     private JScrollPane generateControlPanelV2StructureTypeTextAreaScrollPane() {
         JScrollPane prototype = new JScrollPane();
         prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500,100));
+        prototype.setMinimumSize(new Dimension(500, 100));
         prototype.setBorder(BorderFactory.createTitledBorder("V2"));
         return prototype;
     }
@@ -352,12 +387,13 @@ public class MergePanel extends JPanel {
     private void startCouplers() {
         this.scrollPanesCoupler();
         this.controlPanelCoupler();
+        this.filtersButtonsCoupler();
         this.westPanelCoupler();
         this.centerPanelCoupler();
         this.eastPanelCoupler();
         this.mergePanelCoupler();
     }
-    
+
     private void scrollPanesCoupler() {
         this.mainTableScrollPane.setViewportView(this.mainTable);
         this.mergeInfoTextAreaScrollPane.setViewportView(this.mergeInfoTextArea);
@@ -397,8 +433,14 @@ public class MergePanel extends JPanel {
         this.controlPanel.add(this.controlPanelDeveloperDecisionTextArea, gbc);
     }
 
+    private void filtersButtonsCoupler() {
+        this.filtersButtonsPanel.add(this.setFilterButton);
+        this.filtersButtonsPanel.add(this.resetFilterButton);
+    }
+
     private void westPanelCoupler() {
-        this.westPanel.add(this.mainTableScrollPane);
+        this.westPanel.add(this.mainTableScrollPane, BorderLayout.CENTER);
+        this.westPanel.add(this.filtersButtonsPanel, BorderLayout.SOUTH);
     }
 
     private void centerPanelCoupler() {
@@ -410,7 +452,7 @@ public class MergePanel extends JPanel {
         this.eastPanel.add(this.conflictTextAreaScrollPane);
         this.eastPanel.add(this.solutionTextAreaScrollPane);
     }
-    
+
     private void mergePanelCoupler() {
         this.add(this.westPanel);
         this.add(this.centerPanel);
@@ -423,10 +465,25 @@ public class MergePanel extends JPanel {
 //  *                                                                     *
 //  ***********************************************************************
     private void mainTableMouseClicked() {
-        MergeEvent merge = mergeEventList.get(mainTable.getSelectedRow());
+        MergeEvent merge = this.filteredMergeEventList.get(mainTable.getSelectedRow());
         changeInfo(merge);
         updateFileChangeByMerge(merge);
         currentMerge = merge;
+    }
+
+    private void setFilterActionPerformed() {
+        JButton applyButton = new JButton("Apply Filter");
+        SetFilterFrame setFilterFrame = new SetFilterFrame(applyButton, this.projectName);
+        applyButton.addActionListener((ActionEvent evt) -> {
+            filterTable(setFilterFrame.getFirstChoice(), setFilterFrame.getSecondChoice(), setFilterFrame.getThirdChoice());
+            setFilterFrame.dispose();
+        });
+        setFilterFrame.setVisible(true);
+    }
+
+    private void resetFilterButtonActionPerformed() {
+        this.filteredMergeEventList = this.mergeEventList;
+        this.updateTable();
     }
 
     private void controlPanelPreviousFileButtonActionPerformed() {
@@ -585,5 +642,105 @@ public class MergePanel extends JPanel {
         this.controlPanelV2StructureTypeTextArea.setText(region.getV2StructureTypes() + "\n");
         this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 
+    }
+
+    private void filterTable(int f, int s, int t) {
+        if (t == 0) {
+            this.filteredMergeEventList = this.mergeEventList;
+        } else {
+            this.filteredMergeEventList = new ArrayList<>();
+            for (MergeEvent merge : this.mergeEventList) {
+                if (merge.isConflict()) {
+                    this.filteredMergeEventList.add(merge);
+                }
+            }
+        }
+        if (!this.filteredMergeEventList.isEmpty()) {
+            if (s == 1) {
+                this.conflictRegionsOrderFilterType();
+            } else if (s == 2) {
+                this.conflictFilesOrderFilterType();
+            } else if (s == 3) {
+                this.chronologicalOrderFilterType();
+            }
+            if (f == 0) {
+                Collections.reverse(this.filteredMergeEventList);
+            }
+        }
+        this.updateTable();
+
+    }
+
+    private void conflictRegionsOrderFilterType() {
+        boolean check;
+        List<MergeEvent> newList = new ArrayList<>();
+        newList.add(this.filteredMergeEventList.get(0));
+        for (int i = 1; i < this.filteredMergeEventList.size(); i++) {
+            check = false;
+            for (int j = 0; j < newList.size(); j++) {
+                if (this.filteredMergeEventList.get(i).getNumberOfConflictRegions() >= newList.get(j).getNumberOfConflictRegions()) {
+                    newList.add(j, this.filteredMergeEventList.get(i));
+                    check = true;
+                    j = newList.size();
+                }
+            }
+            if (!check) {
+                newList.add(this.filteredMergeEventList.get(i));
+            }
+        }
+        this.filteredMergeEventList = newList;
+    }
+
+    private void conflictFilesOrderFilterType() {
+        boolean check;
+        List<MergeEvent> newList = new ArrayList<>();
+        newList.add(this.filteredMergeEventList.get(0));
+        for (int i = 1; i < this.filteredMergeEventList.size(); i++) {
+            check = false;
+            for (int j = 0; j < newList.size(); j++) {
+                if (this.filteredMergeEventList.get(i).getConflictFiles().size() >= newList.get(j).getConflictFiles().size()) {
+                    newList.add(j, this.filteredMergeEventList.get(i));
+                    check = true;
+                    j = newList.size();
+                }
+            }
+            if (!check) {
+                newList.add(this.filteredMergeEventList.get(i));
+            }
+        }
+        this.filteredMergeEventList = newList;
+    }
+    
+    private void chronologicalOrderFilterType() {
+        boolean check;
+        List<MergeEvent> newList = new ArrayList<>();
+        newList.add(this.filteredMergeEventList.get(0));
+        for (int i = 1; i < this.filteredMergeEventList.size(); i++) {
+            check = false;
+            for (int j = 0; j < newList.size(); j++) {
+                if (this.filteredMergeEventList.get(i).getHash().getCommitterDate().getTime()>= newList.get(j).getHash().getCommitterDate().getTime()){
+                    newList.add(j, this.filteredMergeEventList.get(i));
+                    check = true;
+                    j = newList.size();
+                }
+            }
+            if (!check) {
+                newList.add(this.filteredMergeEventList.get(i));
+            }
+        }
+        this.filteredMergeEventList = newList;
+    }
+
+    private void updateTable() {
+        DefaultTableModel model = (DefaultTableModel) this.mainTable.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        for (MergeEvent merge : this.filteredMergeEventList) {
+            model.addRow(new Object[]{
+                merge.getHash().getCommitHash(),
+                merge.getNumberOfConflictRegions(),
+                merge.isConflict()
+            });
+        }
     }
 }
