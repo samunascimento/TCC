@@ -24,6 +24,10 @@ public class SyntaxStructure {
         this.startLineStopColumn = start.getStopIndex();
         this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
+//        this.startLineStartColumn = start.getCharPositionInLine()+1;
+//        this.startLineStopColumn = start.getCharPositionInLine()+start.getText().length();
+//        this.stopLineStartColumn = stop.getCharPositionInLine()+1;
+//        this.stopLineStopColumn = stop.getCharPositionInLine()+stop.getText().length();
         this.structureType = structureType;
         this.warning = warning;
     }
