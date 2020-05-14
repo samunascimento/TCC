@@ -5,9 +5,12 @@
  */
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJavaSyntaxTree;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.vcs.types.OutmostInformation;
-import br.ufjf.dcc.gmr.core.vcs.types.OutmostTypes;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,48 +21,65 @@ import java.util.List;
  */
 public class OutmostJava {
 
-    List<OutmostInformation> save;
-
     public OutmostJava() {
-
-        save = new ArrayList<>();
 
     }
 
-    public List<OutmostInformation> process(ConflictRegion output) {
+    public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+        try {
+            int currentLine = beginLine;
+            int currentColumn = 0;
+            List<SyntaxStructure> rawList = null;
+            List<SyntaxStructure> list = new ArrayList();
+            SyntaxStructure auxStructure = null;
 
-        String[] structureTypesV1 = null, structureTypesV2 = null;
-        if (!output.getV1StructureTypes().contains("V1 doesn't has any structure type!") && !output.getV1StructureTypes().contains("Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!")) {
-            structureTypesV1 = output.getV1StructureTypes().split(", ");
-        }
-        if (!output.getV2StructureTypes().contains("V2 doesn't has any structure type!") && !output.getV2StructureTypes().contains("Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!")) {
-            structureTypesV2 = output.getV2StructureTypes().split(", ");
-        }
+            if (filePath.endsWith(".java")) {
+                rawList = analyzeJavaSyntaxTree(filePath);
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                rawList = analyzeCPPSyntaxTree(filePath);
+            } else if (filePath.endsWith(".py")) {
+                rawList = analyzePythonSyntaxTree(filePath);
+            } else {
+                return null;
+            }
 
-        if (null == structureTypesV1) {
-            OutmostInformation aux;
-            aux = new OutmostInformation(OutmostTypes.Error);
-            save.add(aux);
-        } else {
-            for (String string : structureTypesV1) {
+            if (rawList != null) {
+                while (currentLine <= endLine) {
+                    auxStructure = null;
+                    for (SyntaxStructure ss : rawList) {
 
-                if (string.equals("variable")) {
-                    OutmostInformation aux;
-                    aux = new OutmostInformation(OutmostTypes.Variable);
-                    save.add(aux);
+                        if (ss.getStartLine() >= currentLine && ss.getStartLineStartColumn() >= currentColumn && ss.getStopLine() <= endLine) {
+                            if (auxStructure == null) {
+                                auxStructure = ss;
+                            } else {
+                                if (auxStructure.getStartLine() > ss.getStartLine()) {
+                                    auxStructure = ss;
+                                } else {
+                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartLineStartColumn() > ss.getStartLineStartColumn()) {
+                                        auxStructure = ss;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    if (auxStructure != null) {
+                        list.add(auxStructure);
+                        currentLine = auxStructure.getStopLine();
+                        currentColumn = auxStructure.getStopLineStopColumn();
+                    } else {
+                        currentLine++;
+                        currentColumn = 0;
+                    }
                 }
 
+            } else {
+                return null;
             }
+            return list;
+        } catch (IOException ex) {
+            System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
+            throw new IOException();
         }
-        if (null == structureTypesV2) {
-            OutmostInformation aux;
-            aux = new OutmostInformation(OutmostTypes.Error);
-            save.add(aux);
-        } else {
-            for (String string : structureTypesV2) {
-
-            }
-        }
-        return save;
     }
 }
