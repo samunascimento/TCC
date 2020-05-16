@@ -30,8 +30,6 @@ public class Jasome {
             Connection connection = ConnectionFactory.getConnection();
             
             JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-
-            //File file = new File("C:\\Users\\Principal\\Desktop\\teste\\UFJF");
             
             ProjectMetrics project = new ProjectMetrics();
 
