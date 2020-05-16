@@ -48,7 +48,7 @@ CREATE TABLE tb_packageMetrics (
     iID Integer,
     nocID Integer,
     noiID Integer,
-    pkgRCiD Integer,
+    pkgRCiID Integer,
     pkgTCiID Integer,
     tlocID Integer,
     PRIMARY KEY (ID),
@@ -60,7 +60,7 @@ CREATE TABLE tb_packageMetrics (
     FOREIGN KEY (iID) REFERENCES tb_metric(ID),
     FOREIGN KEY (nocID) REFERENCES tb_metric(ID),
     FOREIGN KEY (noiID) REFERENCES tb_metric(ID),
-    FOREIGN KEY (pkgRCiD) REFERENCES tb_metric(ID),
+    FOREIGN KEY (pkgRCiID) REFERENCES tb_metric(ID),
     FOREIGN KEY (pkgTCiID) REFERENCES tb_metric(ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );

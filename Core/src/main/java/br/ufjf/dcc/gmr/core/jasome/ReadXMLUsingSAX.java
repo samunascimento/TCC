@@ -638,7 +638,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 packageMetrics.setId(packageId);
                 for (int i = 0; i < packageMetrics.getListClassMetrics().size(); i++) {
                     packageClassDao.insert(packageMetrics, packageMetrics.getListClassMetrics().get(i));
-                }
+                }                
                 versionMetrics.getListPackageMetric().add(packageMetrics);
                 pacckage = false;
 
@@ -648,15 +648,13 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 classMetrics.setId(classId);
                 for (int i = 0; i < classMetrics.getListMethodsMetrics().size(); i++) {
                     classMethodDao.insert(classMetrics, classMetrics.getListMethodsMetrics().get(i));
-                }
-                
-                List<ClassMetrics> select = classMetricDao.select();
+                }              
                 clazz = false;
 
             } else if (tagAtual.equals("Method")) {
                 int methodId = methodMetricDao.insert(methodMetrics);
                 methodMetrics.setId(methodId);
-                classMetrics.getListMethodsMetrics().add(methodMetrics);
+                classMetrics.getListMethodsMetrics().add(methodMetrics);            
                 method = false;
 
             }

@@ -136,47 +136,19 @@ public class MethodMetricsDao {
 
                 methodMetrics = new MethodMetrics();
 
-                int ciID = resultSet.getInt("ciID");
-                int diID = resultSet.getInt("diID");
-                int finID = resultSet.getInt("finID");
-                int foutID = resultSet.getInt("foutID");
-                int iovarsID = resultSet.getInt("iovarsID");
-                int mclcID = resultSet.getInt("mclcID");
-                int nbdID = resultSet.getInt("nbdID");
-                int ncompID = resultSet.getInt("ncompID");
-                int nopID = resultSet.getInt("nopID");
-                int nvarID = resultSet.getInt("nvarID");
-                int siID = resultSet.getInt("siID");
-                int tlocID = resultSet.getInt("tlocID");
-                int vgID = resultSet.getInt("vgID");
-
-                Metric ciIDMetric = metricDao.selectID(ciID);
-                Metric diIDMetric = metricDao.selectID(diID);
-                Metric finIDMetric = metricDao.selectID(finID);
-                Metric foutIDMetric = metricDao.selectID(foutID);
-                Metric iovarsIDMetric = metricDao.selectID(iovarsID);
-                Metric mclcIDMetric = metricDao.selectID(mclcID);
-                Metric nbdIDMetric = metricDao.selectID(nbdID);
-                Metric ncompIDMetric = metricDao.selectID(ncompID);
-                Metric nopIDMetric = metricDao.selectID(nopID);
-                Metric nvarIDMetric = metricDao.selectID(nvarID);
-                Metric siIDMetric = metricDao.selectID(siID);
-                Metric tlocIDMetric = metricDao.selectID(tlocID);
-                Metric vgIDMetric = metricDao.selectID(vgID);
-
-                methodMetrics.setCi(ciIDMetric);
-                methodMetrics.setDi(diIDMetric);
-                methodMetrics.setFin(finIDMetric);
-                methodMetrics.setFout(foutIDMetric);
-                methodMetrics.setIovars(iovarsIDMetric);
-                methodMetrics.setMclc(mclcIDMetric);
-                methodMetrics.setNbd(nbdIDMetric);
-                methodMetrics.setNcomp(ncompIDMetric);
-                methodMetrics.setNop(nopIDMetric);
-                methodMetrics.setNvar(nvarIDMetric);
-                methodMetrics.setSi(siIDMetric);
-                methodMetrics.setTloc(tlocIDMetric);
-                methodMetrics.setVg(vgIDMetric);
+                methodMetrics.setCi(insert(resultSet, metricDao, "ciID"));
+                methodMetrics.setDi(insert(resultSet, metricDao, "diID"));
+                methodMetrics.setFin(insert(resultSet, metricDao, "finID"));
+                methodMetrics.setFout(insert(resultSet, metricDao, "foutID"));
+                methodMetrics.setIovars(insert(resultSet, metricDao, "iovarsID"));
+                methodMetrics.setMclc(insert(resultSet, metricDao, "mclcID"));
+                methodMetrics.setNbd(insert(resultSet, metricDao, "nbdID"));
+                methodMetrics.setNcomp(insert(resultSet, metricDao, "ncompID"));
+                methodMetrics.setNop(insert(resultSet, metricDao, "nopID"));
+                methodMetrics.setNvar(insert(resultSet, metricDao, "nvarID"));
+                methodMetrics.setSi(insert(resultSet, metricDao, "siID"));
+                methodMetrics.setTloc(insert(resultSet, metricDao, "tlocID"));
+                methodMetrics.setVg(insert(resultSet, metricDao, "vgID"));
 
                 methodMetrics.setId(resultSet.getInt("id"));
 
@@ -205,33 +177,19 @@ public class MethodMetricsDao {
             resultSet.next();
             methodMetrics = new MethodMetrics();
 
-            int ciID = resultSet.getInt("ciID");
-            int diID = resultSet.getInt("diID");
-            int finID = resultSet.getInt("finID");
-            int foutID = resultSet.getInt("foutID");
-            int iovarsID = resultSet.getInt("iovarsID");
-            int mclcID = resultSet.getInt("mclcID");
-            int nbdID = resultSet.getInt("nbdID");
-            int ncompID = resultSet.getInt("ncompID");
-            int nopID = resultSet.getInt("nopID");
-            int nvarID = resultSet.getInt("nvarID");
-            int siID = resultSet.getInt("siID");
-            int tlocID = resultSet.getInt("tlocID");
-            int vgID = resultSet.getInt("vgID");
-
-            methodMetrics.setCi(metricDao.selectID(ciID));
-            methodMetrics.setDi(metricDao.selectID(diID));
-            methodMetrics.setFin(metricDao.selectID(finID));
-            methodMetrics.setFout(metricDao.selectID(foutID));
-            methodMetrics.setIovars(metricDao.selectID(iovarsID));
-            methodMetrics.setMclc(metricDao.selectID(mclcID));
-            methodMetrics.setNbd(metricDao.selectID(nbdID));
-            methodMetrics.setNcomp(metricDao.selectID(ncompID));
-            methodMetrics.setNop(metricDao.selectID(nopID));
-            methodMetrics.setNvar(metricDao.selectID(nvarID));
-            methodMetrics.setSi(metricDao.selectID(siID));
-            methodMetrics.setTloc(metricDao.selectID(tlocID));
-            methodMetrics.setVg(metricDao.selectID(vgID));
+            methodMetrics.setCi(insert(resultSet, metricDao, "ciID"));
+            methodMetrics.setDi(insert(resultSet, metricDao, "diID"));
+            methodMetrics.setFin(insert(resultSet, metricDao, "finID"));
+            methodMetrics.setFout(insert(resultSet, metricDao, "foutID"));
+            methodMetrics.setIovars(insert(resultSet, metricDao, "iovarsID"));
+            methodMetrics.setMclc(insert(resultSet, metricDao, "mclcID"));
+            methodMetrics.setNbd(insert(resultSet, metricDao, "nbdID"));
+            methodMetrics.setNcomp(insert(resultSet, metricDao, "ncompID"));
+            methodMetrics.setNop(insert(resultSet, metricDao, "nopID"));
+            methodMetrics.setNvar(insert(resultSet, metricDao, "nvarID"));
+            methodMetrics.setSi(insert(resultSet, metricDao, "siID"));
+            methodMetrics.setTloc(insert(resultSet, metricDao, "tlocID"));
+            methodMetrics.setVg(insert(resultSet, metricDao, "vgID"));
 
             int methodId = resultSet.getInt("id");
             methodMetrics.setId(methodId);
@@ -239,6 +197,17 @@ public class MethodMetricsDao {
             return methodMetrics;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public Metric insert(ResultSet resultSet, MetricDao metricDao, String name) throws SQLException {
+
+        if (resultSet.getInt(name) == 0) {
+            return null;
+        } else {
+            int ID = resultSet.getInt(name);
+            Metric metric = metricDao.selectID(ID);
+            return metric;
         }
     }
 
