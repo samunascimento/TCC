@@ -19,16 +19,12 @@
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="css/responsive.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <link href="css/graph/style.css" rel="stylesheet" type="text/css"/>
+</head>
     </head>
     <body>
-        <style>
-		.dot {
-		    fill: #ffab00;
-		    stroke: #fff;
-}
-	</style>
         <!-- Start Left menu area -->
         <div class="left-sidebar-pro">
             <nav id="sidebar">
@@ -185,6 +181,7 @@
                 <br>
                 <br>
                 <div id="chart"></div>
+                <script src="https://d3js.org/d3.v4.min.js"></script>
                 <script src="visualization/visualization.js" />
             </div>
             <!-- End Panel -->

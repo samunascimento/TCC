@@ -83,9 +83,30 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<Metric> list = new ArrayList<>();
+        List<Point> listPoints1 = new ArrayList<>();
+        List<Point> listPoints2 = new ArrayList<>();
+        List<Point> listPoints3 = new ArrayList<>();
+        ArrayList<List<Point>> arrayList = new ArrayList<>();
+        int cont1 = 0;
+        int cont2 = 0;
+        int cont3 = 0;
         list = dao.selectMetricPackage();
-        String listJ = g.toJson(list);
-        System.out.println("entrou aqui");
+
+        for (Metric metric : list) {
+            if(metric.getName().equals("A")){
+                listPoints1.add(new Point(cont1++, metric.getValue()));
+            }else if(metric.getName().equals("CCRC")){
+                listPoints2.add(new Point(cont2++, metric.getValue()));
+            }else if(metric.getName().equals("Ca")){
+                listPoints3.add(new Point(cont3++, metric.getValue()));
+            }
+        }
+        arrayList.add(listPoints1);
+        arrayList.add(listPoints2);
+        arrayList.add(listPoints3);
+        
+        
+        String listJ = g.toJson(arrayList);
         return listJ;
     }
 
