@@ -33,8 +33,8 @@ public class MethodMetricsDao {
 
     public int insert(MethodMetrics methodMetrics) {
         String sql = "INSERT INTO tb_methodMetrics "
-                + "(ciID,diID,finID,foutID,iovarsID,mclcID,nbdID,ncompID,nopID,nvarID,siID,tlocID,vgID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "(ciID,diID,finID,foutID,iovarsID,mclcID,nbdID,ncompID,nopID,nvarID,siID,tlocID,vgID,methodName)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -108,6 +108,7 @@ public class MethodMetricsDao {
             } else {
                 stmt.setInt(13, methodMetrics.getVg().getId());
             }
+            stmt.setString(14, methodMetrics.getName());
             //   stmt.setInt(14, methodMetrics.getClassId());
 
             tableKeys = stmt.executeQuery();

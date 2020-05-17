@@ -40,6 +40,7 @@ CREATE TABLE tb_versionMetrics (
 
 CREATE TABLE tb_packageMetrics (
     ID Serial NOT Null,
+	packageName varchar(255),
     aID Integer,
     ccrcID Integer,
     caID Integer,
@@ -68,6 +69,7 @@ CREATE TABLE tb_packageMetrics (
 
 CREATE TABLE tb_classMetrics (
     ID Serial NOT Null,
+	className varchar(255),
 	ahfID Integer,
 	aifID Integer,
     aaID Integer,
@@ -169,6 +171,7 @@ CREATE TABLE tb_classMetrics (
 
 CREATE TABLE tb_methodMetrics (
     ID Serial NOT Null,
+	methodName varchar(255),
     ciID Integer,
     diID Integer,
     finID Integer,

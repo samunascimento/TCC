@@ -35,8 +35,8 @@ public class ClassMetricsDao {
         String sql = "INSERT INTO tb_classMetrics "
                 + "(aaID,adID,aiID,aitID,aoID,avID,clrciID,cltciID,ditID,hmdID,hmiID,mhfID,mifID,maID,mdID,"
                 + "miID,mitID,moID,nfID,nmID,nmaID,nmiID,noaID,nochID,nodID,nolID,nopaID,normID,npfID,npmID,nsfID,"
-                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID,nmirID,cfID,pfID,aifID,ahID,ahfID,lcomID,nodeID,nodaID)"
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
+                + "nsmID,pmrID,pmdID,pmiID,rtlocID,sixID,tlocID,wmcID,nmirID,cfID,pfID,aifID,ahID,ahfID,lcomID,nodeID,nodaID,className)"
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -284,6 +284,8 @@ public class ClassMetricsDao {
             } else {
                 stmt.setInt(48, classMetrics.getNoda().getId());
             }
+            
+            stmt.setString(49, classMetrics.getName());
             //stmt.setInt(40, classMetrics.getPackageId());
 
             tableKeys = stmt.executeQuery();

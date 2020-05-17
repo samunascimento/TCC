@@ -29,8 +29,8 @@ public class PackageMetricsDao {
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,dmsId,iId,nocID,noiID,pkgRCiID,pkgTCiID,tlocID) " //adicionar dmsId, iId
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
+                + "(aID,ccrcID,caID,ceID,dmsId,iId,nocID,noiID,pkgRCiID,pkgTCiID,tlocID,packageName) " //adicionar dmsId, iId
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -39,7 +39,7 @@ public class PackageMetricsDao {
 
         try {
             stmt = connection.prepareStatement(sql);
-
+                       
             if (packageMetrics.getA() == null) {
                 stmt.setNull(1, java.sql.Types.INTEGER);
             } else {
@@ -95,6 +95,8 @@ public class PackageMetricsDao {
             } else {
                 stmt.setInt(11, packageMetrics.getTloc().getId());
             }
+            
+            stmt.setString(12, packageMetrics.getName());
             //  stmt.setInt(12, packageMetrics.getVersionId());
 
             tableKeys = stmt.executeQuery();

@@ -250,6 +250,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                     }
 
                 } else if (project && pacckage && clazz && !method) {
+                                     
                     if (metric.getName().equals("Aa")) {
 
                         int insert = metricDao.insert(metric);
