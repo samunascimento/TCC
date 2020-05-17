@@ -29,7 +29,13 @@ public class Jasome {
 //        try {
             Connection connection = ConnectionFactory.getConnection();
             
+<<<<<<< HEAD
+            JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+
+            //File file = new File("C:\\Users\\Principal\\Desktop\\teste\\UFJF");
+=======
             JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+>>>>>>> 3f0e697f1ccad35f65f1c55941321a31d88cec4f
             
             ProjectMetrics project = new ProjectMetrics();
 
