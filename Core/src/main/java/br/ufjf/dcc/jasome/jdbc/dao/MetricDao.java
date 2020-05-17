@@ -226,5 +226,86 @@ public class MetricDao {
         }
     }
     
+    public List<Metric> selectVersionMetrics(String nameProject) throws SQLException{
+        
+        List<Metric> listMetrics = new ArrayList<>();
+        
+        Metric metric = null;
+        
+        PreparedStatement stmt = null;
+        
+        ResultSet resultSet = null;
+        
+        String sql =    "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value "
+                        + "from tb_projectmetrics as a "
+                        + "inner join tb_project_version as b "
+                        + "on a.id = b.project_id "
+                        + "inner join tb_versionmetrics as c "
+                        + "on b.version_id = c.id "
+                        + "inner join tb_metric  as d "
+                        + "on c.tlocid = d.id "
+                        + "where a.projectname = " +  "\'" + nameProject + "\'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                metric = new Metric();
+                metric.setId(resultSet.getInt("id"));
+                metric.setName(resultSet.getString("name"));
+                metric.setDescription(resultSet.getString("description"));
+                metric.setValue(resultSet.getDouble("value"));
+                listMetrics.add(metric);
+            }
+            return listMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public List<Metric> selectPackageMetrics(String nameProject) throws SQLException{
+        List<Metric> listMetrics = new ArrayList<>();
+        
+        Metric metric = null;
+        
+        PreparedStatement stmt = null;
+        
+        ResultSet resultSet = null;
+        
+        String sql =    "select a.id,a.projectname,b.project_id,b.version_id,c.package_id,d.id,e.id,e.name,e.description,e.value "
+                        + "from tb_projectmetrics as a "
+                        + "inner join tb_project_version as b "
+                        + "on a.id = b.project_id "
+                        + "inner join tb_version_package as c "
+                        + "on b.version_id = c.version_id "
+                        + "inner join tb_packagemetrics as d "
+                        + "on c.package_id = d.id "
+                        + "inner join tb_metric as e "
+                        + "on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id "
+                        + "where a.projectname = " +  "\'" + nameProject + "\'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                metric = new Metric();
+                metric.setId(resultSet.getInt("id"));
+                metric.setName(resultSet.getString("name"));
+                metric.setDescription(resultSet.getString("description"));
+                metric.setValue(resultSet.getDouble("value"));
+                listMetrics.add(metric);
+            }
+            return listMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
 
 }
