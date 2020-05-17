@@ -56,9 +56,9 @@ public class JasomeResource {
     }
 
     @GET
-    @Path("tlocversion")
+    @Path("metric/version/{nameProject}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTlocVersion() throws SQLException {
+    public String getTlocVersion(@PathParam("nameProject") String nameProject) throws SQLException {
         
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -66,7 +66,7 @@ public class JasomeResource {
         int count = 0;
         Gson g = new Gson();
         List<Metric> list = new ArrayList<>();
-        list = dao.selectAllTlocVersionMetrics();
+        list = dao.selectVersionMetrics(nameProject);
         for (Metric metric : list) {
             listPoints.add(new  Point(count++, metric.getValue()));
         }
@@ -76,10 +76,11 @@ public class JasomeResource {
         return listJ;
     }
     
+    
     @GET
-    @Path("metrics/package")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMetricsPackage() throws SQLException{
+    @Path("metric/package/{nameProject}")
+    public String getMetricPackage(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
@@ -91,14 +92,17 @@ public class JasomeResource {
         int cont1 = 0;
         int cont2 = 0;
         int cont3 = 0;
-        list = dao.selectMetricPackage();
-
+        list = dao.selectPackageMetrics(nameProject);
+        
         for (Metric metric : list) {
             if(metric.getName().equals("A")){
+                System.out.println("entrou em A");
                 listPoints1.add(new Point(cont1++, metric.getValue()));
-            }else if(metric.getName().equals("CCRC")){
+            }if(metric.getName().equals("TLOC")){
+                System.out.println("entrou em TLOC");
                 listPoints2.add(new Point(cont2++, metric.getValue()));
-            }else if(metric.getName().equals("Ca")){
+            }if(metric.getName().equals("CCRC")){
+                System.out.println("entrou em CCRC");
                 listPoints3.add(new Point(cont3++, metric.getValue()));
             }
         }
@@ -110,26 +114,7 @@ public class JasomeResource {
         String listJ = g.toJson(arrayList);
         return listJ;
     }
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/package/{nameProject}")
-    public String getMetricPackage(@PathParam("nameProject") String nameProject) throws SQLException{
-        Connection connection = ConnectionFactory.getConnection();
-        MetricDao dao = new MetricDao(connection);
-        //List<Point> listPoints = new ArrayList<>();
-        //int count = 0;
-        Gson g = new Gson();
-        List<Metric> list = new ArrayList<>();
-        list = dao.selectVersionMetrics(nameProject);
-//        for (Metric metric : list) {
-//            listPoints.add(new  Point(count++, metric.getValue()));
-//        }
-        String listJ = g.toJson(list);
-        
-        System.out.println("entrou aqui");
-        return listJ;
-    }
-
+    
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *
