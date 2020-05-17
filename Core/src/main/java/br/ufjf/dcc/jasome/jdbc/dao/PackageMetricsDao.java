@@ -29,7 +29,7 @@ public class PackageMetricsDao {
     public int insert(PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_packageMetrics "
-                + "(aID,ccrcID,caID,ceID,dmsId,iId,nocID,noiID,pkgRCiD,pkgTCiID,tlocID) " //adicionar dmsId, iId
+                + "(aID,ccrcID,caID,ceID,dmsId,iId,nocID,noiID,pkgRCiID,pkgTCiID,tlocID) " //adicionar dmsId, iId
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?) " //adicionar ?,?
                 + "RETURNING id;";
 
@@ -152,29 +152,17 @@ public class PackageMetricsDao {
 
                 packageMetrics = new PackageMetrics();
 
-                int aID = resultSet.getInt("aID");
-                int ccrcID = resultSet.getInt("ccrcID");
-                int caID = resultSet.getInt("caID");
-                int ceID = resultSet.getInt("ceID");
-                int dmsID = resultSet.getInt("dmsID");
-                int iID = resultSet.getInt("iID");
-                int nocID = resultSet.getInt("nocID");
-                int noiID = resultSet.getInt("noiID");
-                int pkgrcID = resultSet.getInt("pkgRCiD");
-                int pkgtciID = resultSet.getInt("pkgTCiID");
-                int tlocID = resultSet.getInt("tlocID");
-
-                packageMetrics.setA(metrics.selectID(aID));
-                packageMetrics.setCcrc(metrics.selectID(ccrcID));
-                packageMetrics.setCa(metrics.selectID(caID));
-                packageMetrics.setCe(metrics.selectID(ceID));
-                packageMetrics.setDms(metrics.selectID(dmsID));
-                packageMetrics.setI(metrics.selectID(iID));
-                packageMetrics.setNoc(metrics.selectID(nocID));
-                packageMetrics.setNoi(metrics.selectID(noiID));
-                packageMetrics.setPkgRCi(metrics.selectID(pkgrcID));
-                packageMetrics.setPkgTCi(metrics.selectID(pkgtciID));
-                packageMetrics.setTloc(metrics.selectID(tlocID));
+                packageMetrics.setA(insert(resultSet, metrics, "aID"));
+                packageMetrics.setCcrc(insert(resultSet, metrics, "ccrcID"));
+                packageMetrics.setCa(insert(resultSet, metrics, "caID"));
+                packageMetrics.setCe(insert(resultSet, metrics, "ceID"));
+                packageMetrics.setDms(insert(resultSet, metrics, "dmsID"));
+                packageMetrics.setI(insert(resultSet, metrics, "iID"));
+                packageMetrics.setNoc(insert(resultSet, metrics, "nocID"));
+                packageMetrics.setNoi(insert(resultSet, metrics, "noiID"));
+                packageMetrics.setPkgRCi(insert(resultSet, metrics, "pkgRCiID"));
+                packageMetrics.setPkgTCi(insert(resultSet, metrics, "pkgTCiID"));
+                packageMetrics.setTloc(insert(resultSet, metrics, "tlocID"));
 
                 int packageId = resultSet.getInt("id");
                 packageMetrics.setId(packageId);
@@ -211,29 +199,17 @@ public class PackageMetricsDao {
 
             packageMetrics = new PackageMetrics();
 
-            int aID = resultSet.getInt("aID");
-            int ccrcID = resultSet.getInt("ccrcID");
-            int caID = resultSet.getInt("caID");
-            int ceID = resultSet.getInt("ceID");
-            int dmsID = resultSet.getInt("dmsID");
-            int iID = resultSet.getInt("iID");
-            int nocID = resultSet.getInt("nocID");
-            int noiID = resultSet.getInt("noiID");
-            int pkgrcID = resultSet.getInt("pkgRCiD");
-            int pkgtciID = resultSet.getInt("pkgTCiID");
-            int tlocID = resultSet.getInt("tlocID");
-
-            packageMetrics.setA(metrics.selectID(aID));
-            packageMetrics.setCcrc(metrics.selectID(ccrcID));
-            packageMetrics.setCa(metrics.selectID(caID));
-            packageMetrics.setCe(metrics.selectID(ceID));
-            packageMetrics.setDms(metrics.selectID(dmsID));
-            packageMetrics.setI(metrics.selectID(iID));
-            packageMetrics.setNoc(metrics.selectID(nocID));
-            packageMetrics.setNoi(metrics.selectID(noiID));
-            packageMetrics.setPkgRCi(metrics.selectID(pkgrcID));
-            packageMetrics.setPkgTCi(metrics.selectID(pkgtciID));
-            packageMetrics.setTloc(metrics.selectID(tlocID));
+            packageMetrics.setA(insert(resultSet, metrics, "aID"));
+            packageMetrics.setCcrc(insert(resultSet, metrics, "ccrcID"));
+            packageMetrics.setCa(insert(resultSet, metrics, "caID"));
+            packageMetrics.setCe(insert(resultSet, metrics, "ceID"));
+            packageMetrics.setDms(insert(resultSet, metrics, "dmsID"));
+            packageMetrics.setI(insert(resultSet, metrics, "iID"));
+            packageMetrics.setNoc(insert(resultSet, metrics, "nocID"));
+            packageMetrics.setNoi(insert(resultSet, metrics, "noiID"));
+            packageMetrics.setPkgRCi(insert(resultSet, metrics, "pkgRCiID"));
+            packageMetrics.setPkgTCi(insert(resultSet, metrics, "pkgTCiID"));
+            packageMetrics.setTloc(insert(resultSet, metrics, "tlocID"));
 
             int packageId = resultSet.getInt("id");
             packageMetrics.setId(packageId);
@@ -245,6 +221,17 @@ public class PackageMetricsDao {
             if (stmt != null) {
                 stmt.close();
             }
+        }
+    }
+
+    public Metric insert(ResultSet resultSet, MetricDao metricDao, String name) throws SQLException {
+
+        if (resultSet.getInt(name) == 0) {
+            return null;
+        } else {
+            int ID = resultSet.getInt(name);
+            Metric metric = metricDao.selectID(ID);
+            return metric;
         }
     }
 

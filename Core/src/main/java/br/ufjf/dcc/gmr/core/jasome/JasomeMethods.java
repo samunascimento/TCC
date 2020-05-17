@@ -85,6 +85,7 @@ public class JasomeMethods {
             ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
             int projectId = projectDao.insert(project);
             project.setId(projectId);
+            List<ProjectMetrics> select = projectDao.select();
 
             for (Formats revision : log) {
                 parents = Git.parent(project.getSourceDir(), revision.getCommitHash());

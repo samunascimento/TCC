@@ -21,7 +21,7 @@ public class ProjectMetricsDao {
 
     private final Connection connection;
 
-    public ProjectMetricsDao(Connection connection){
+    public ProjectMetricsDao(Connection connection) {
         this.connection = connection;
     }
 
@@ -84,16 +84,19 @@ public class ProjectMetricsDao {
 
         String sql = "SELECT * FROM tb_projectMetrics ";
 
-        ResultSet tableKeys = null;
+        ResultSet resultSet = null;
 
         PreparedStatement stmt = null;
         try {
             stmt = connection.prepareStatement(sql);
-            tableKeys = stmt.executeQuery();
-            //tableKeys = stmt.getGeneratedKeys();
-            while (tableKeys.next()) {
-                int ID = tableKeys.getInt("ID");
-                projectMetrics.setId(ID);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID");
+                String repositoryPath = resultSet.getString("sourceDir");
+                String projectName = resultSet.getString("projectname");
+                projectMetrics.setId(id);
+                projectMetrics.setSourceDir(repositoryPath);
+                projectMetrics.setName(projectName);
                 listProjectMetrics.add(projectMetrics);
             }
             return listProjectMetrics;
@@ -114,18 +117,21 @@ public class ProjectMetricsDao {
 
         PreparedStatement stmt = null;
 
-        ResultSet tableKeys = null;
+        ResultSet resultSet = null;
 
         try {
             stmt = connection.prepareStatement(sql);
-            tableKeys = stmt.executeQuery();
-            //tableKeys = stmt.getGeneratedKeys();
-            tableKeys.next();
-            
-            int projectId = tableKeys.getInt(1);
-            projectMetrics.setId(projectId);
+            resultSet = stmt.executeQuery();
+            resultSet.next();
+
+            int projectId = resultSet.getInt("ID");
+            String repositoryPath = resultSet.getString("sourceDir");
+            String projectName = resultSet.getString("projectname");
+            projectMetrics.setId(id);
+            projectMetrics.setSourceDir(repositoryPath);
+            projectMetrics.setName(projectName);
             return projectMetrics;
-            
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
