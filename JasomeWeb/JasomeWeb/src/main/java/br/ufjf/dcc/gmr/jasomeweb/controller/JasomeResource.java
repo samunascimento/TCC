@@ -115,6 +115,19 @@ public class JasomeResource {
         return listJ;
     }
     
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("nameProject")
+    public String getNameProject() throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        List<String> listNameProject = new ArrayList<>();
+        Gson g = new Gson();
+        listNameProject = dao.selectNameProject();
+        String listJ = g.toJson(listNameProject);
+        return listJ;
+    }
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *
