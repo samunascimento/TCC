@@ -307,5 +307,31 @@ public class MetricDao {
         }
     }
     
+    public List<String> selectNameProject() throws SQLException{
+        List<String> listNameProject = new ArrayList<>();
+        
+        Metric metric = null;
+        
+        PreparedStatement stmt = null;
+        
+        ResultSet resultSet = null;
+        
+        String sql =    "select projectname from tb_projectmetrics";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                listNameProject.add(resultSet.getString("projectname"));
+            }
+            return listNameProject;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
 
 }
