@@ -1,3 +1,5 @@
+SELECT * FROM tb_versionMetrics
+
 DROP TABLE tb_parents_hash;
 DROP TABLE tb_project_version;
 DROP TABLE tb_version_package;
@@ -33,6 +35,7 @@ CREATE TABLE tb_versionMetrics (
     Sha varchar(255),
     authorName varchar(255),
     versionDate timeStamptz,
+    analyzed boolean,
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
