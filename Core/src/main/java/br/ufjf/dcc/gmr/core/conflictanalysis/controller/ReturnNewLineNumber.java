@@ -22,6 +22,7 @@ public class ReturnNewLineNumber {
 
     public static final int REMOVED_LINE = -Integer.MAX_VALUE; // Constant used to indentify when a line was removed
     public static final int REMOVED_FILE = -(Integer.MAX_VALUE - 1); // Constant used to indentify when a file was removed
+    public static final int POSTPONED = -(Integer.MAX_VALUE - 2); 
 
     /**
      * This method goes trough the diffs between the commit source and the
@@ -100,6 +101,9 @@ public class ReturnNewLineNumber {
         output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);
         if (output == null) {
             return null;
+        }
+        if(output.isEmpty()){
+            return new ArrayList<>();
         }
         String line;
         for (int i = 0; i < output.size(); i++) {
@@ -274,6 +278,9 @@ public class ReturnNewLineNumber {
         if (chunks == null) {
             return REMOVED_FILE;
         }
+        if(chunks.isEmpty()){
+            return POSTPONED;
+        }
         int i;
 
         i = processingChunkModifiedLine(chunks, originalLineNumber, filePath);
@@ -310,6 +317,9 @@ public class ReturnNewLineNumber {
 
         if (chunks == null) {
             return REMOVED_FILE;
+        }
+        if(chunks.isEmpty()){
+            return POSTPONED;
         }
         int i;
 

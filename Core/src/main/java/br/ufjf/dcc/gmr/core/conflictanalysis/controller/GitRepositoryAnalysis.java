@@ -148,7 +148,7 @@ public class GitRepositoryAnalysis {
         List<String> allMerges = Git.giveAllMerges(this.repositoryPath);
         mergeNumber = allMerges.size();
         this.prepareAnalysis();
-        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath,this.projectName);
+        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath, this.projectName);
         this.progressBar.setIndeterminate(false);
         this.progressBar.setMinimum(1);
         this.progressBar.setMaximum(allMerges.size());
@@ -179,7 +179,7 @@ public class GitRepositoryAnalysis {
         List<String> allMerges = Git.giveAllMerges(this.repositoryPath);
         mergeNumber = allMerges.size();
         this.prepareAnalysis();
-        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath,this.projectName);
+        this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath, this.projectName);
         System.out.println(status + "/" + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
             this.catchCommits(merge);
@@ -320,7 +320,7 @@ public class GitRepositoryAnalysis {
         this.processData.originalV2FirstLine = -1;
         if (!this.processData.v1.isEmpty()) {
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.processData.sandbox.getPath());
-            if (this.processData.extraFileName != "" && this.processData.extraFileInV1 == true) {
+            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == true) {
                 this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                         this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
                         this.processData.beginLine + 1);
@@ -332,7 +332,7 @@ public class GitRepositoryAnalysis {
         }
         if (!this.processData.v2.isEmpty()) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
-            if (this.processData.extraFileName != "" && this.processData.extraFileInV1 == false) {
+            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == false) {
                 this.processData.originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                         this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
                         this.processData.separatorLine + 1);
@@ -382,6 +382,10 @@ public class GitRepositoryAnalysis {
             } else {
                 this.processData.solution = null;
             }
+        } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.POSTPONED || this.processData.solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
+            List<String> listAux = new ArrayList<>();
+            listAux.add("POSTPONED");
+            this.processData.solution = listAux;
         } else if (this.processData.solutionFirstLine == 0 && this.processData.solutionFinalLine == 0) {
             this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath);
             this.processData.solution.add(0, "<SOF>");
@@ -518,7 +522,7 @@ public class GitRepositoryAnalysis {
             }
         }
     }
-    
+
     private void startANTLRProcessGUI() throws IOException {
         int conflictsNumber = 0;
         int status = 0;

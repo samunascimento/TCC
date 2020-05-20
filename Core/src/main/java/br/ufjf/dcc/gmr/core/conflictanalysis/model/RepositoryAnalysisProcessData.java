@@ -62,6 +62,15 @@ public class RepositoryAnalysisProcessData {
         this.v1 = new ArrayList<>();
         this.v2 = new ArrayList<>();
         this.solution = new ArrayList<>();
+        this.extraFileName = "";
+        this.extraFilePath = "";
+        this.extraInsideFilePath = "";
+    }
+    
+    public boolean extraIsEmpty(){
+        if(this.extraFileName == "" || this.extraFilePath == "" || this.extraInsideFilePath == "" || this.extraFileName == null || this.extraFilePath == null || this.extraInsideFilePath == null)
+            return true;
+        return false;
     }
 
 }

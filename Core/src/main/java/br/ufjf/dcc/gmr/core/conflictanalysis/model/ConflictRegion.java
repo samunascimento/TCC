@@ -283,6 +283,10 @@ public class ConflictRegion {
             return DeveloperDecision.NONE;
         } else if (containsNewCode()) {
             return DeveloperDecision.NEWCODE;
+        } else if(solution.contains("POSTPONED")) {
+            this.solution.clear();
+            this.solution.add(this.getConflictForm());
+            return DeveloperDecision.POSTPONED;
         } else {
 
             String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
