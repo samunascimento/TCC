@@ -15,8 +15,10 @@ import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -70,11 +72,15 @@ public class JasomeMethods {
         }
     }
 
-    public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist {
+    public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist, RefusingToClean, UnknownSwitch, IsOutsideRepository {
+        VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);
+        VersionMetrics versionMetrics = new VersionMetrics();
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
+        List<Integer> idList = new ArrayList<>();
         try {
             int i = 0;
+            int idPosition = 0;
             System.out.println(project.getSourceDir());
             List<Formats> log = Git.logAll(project.getSourceDir());
             Collections.reverse(log);
@@ -89,8 +95,19 @@ public class JasomeMethods {
 
             for (Formats revision : log) {
                 parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-                projectMetrics = analyzeVersion(revision, project, i, connection, parents);
+                versionMetrics.setAuthorName(revision.getAuthorName());
+                versionMetrics.setCommitDate(revision.getAuthorDate());
+                versionMetrics.setHash(revision.getCommitHash());
+                versionMetrics.setParentsHash(parents);
+                int id = versionMetricsDao.insert(versionMetrics);
+                idList.add(id);
+            }
+
+            for (Formats revision : log) {
+                parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
                 System.out.println(new Date());
+                idPosition++;
             }
         } catch (NullPointerException ex) {
             System.out.println("Fim do arquivo");
@@ -98,18 +115,12 @@ public class JasomeMethods {
             System.out.println("Não é um repositório válido");
         } catch (IOException ex) {
             System.out.println("Diretorio não existe");
-        } catch (UnknownSwitch ex) {
-            System.out.println("UnknownSwitch");
-        } catch (RefusingToClean ex) {
-            System.out.println(ex.getMessage());
-        } catch (IsOutsideRepository ex) {
-            System.out.println(ex.getMessage());
         } catch (SQLException ex) {
             Logger.getLogger(JasomeMethods.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i, Connection connection, List<String> parents) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
+    public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i, Connection connection, List<String> parents, int idPosition) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
         ProjectMetrics projectMetrics = new ProjectMetrics();
         JasomeExtract jasomeExtract = new JasomeExtract();
         System.out.println("======================" + revision.getCommitHash() + "==================");
@@ -120,7 +131,7 @@ public class JasomeMethods {
         CLIExecution extractMetrics = extractMetrics(project);
         System.out.println(new Date());
         System.out.println("==============================================");
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision, parents);
+        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision, parents, idPosition);
         readXml.fazerParsing(extractMetrics.getOutputString());
         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
         if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
