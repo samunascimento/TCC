@@ -91,58 +91,6 @@ public class VersionMetricsDao {
         }
     }
     
-    public List<VersionMetrics> selectAnalyze() throws SQLException {
-
-        VersionMetrics versionMetrics = null;
-
-        List<VersionMetrics> listVersionMetrics = new ArrayList<>();
-
-        MetricDao metricDao = new MetricDao(connection);
-
-        String sql = "SELECT * FROM tb_versionmetrics ";
-
-        PreparedStatement stmt = null;
-
-        ResultSet resultSet = null;
-
-        try {
-            stmt = connection.prepareStatement(sql);
-
-            resultSet = stmt.executeQuery();
-
-            while (resultSet.next()) {
-
-                versionMetrics = new VersionMetrics();
-
-                int tlocID = resultSet.getInt("tlocID");
-
-                String hash = resultSet.getString("sha");
-
-                String authorName = resultSet.getString("authorname");
-
-                Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-
-                Date versionDate = new Date(versionTimestamp.getTime());
-
-                versionMetrics.setHash(hash);
-
-                versionMetrics.setAuthorName(authorName);
-
-                versionMetrics.setCommitDate(versionDate);
-
-                versionMetrics.setId(resultSet.getInt("id"));
-
-                listVersionMetrics.add(versionMetrics);
-            }
-            return listVersionMetrics;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-        }
-    }
 
     public List<VersionMetrics> select() throws SQLException {
 

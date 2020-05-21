@@ -611,6 +611,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         tagAtual = qName;
         try {
+            
+            // atualizando o valor de analyzed  e inserindo id da métrica
             if (tagAtual.equals("Project")) {
                 versionMetrics.setProjectID(projectMetrics.getId());
                 versionMetrics.setId(this.versionId);
@@ -618,11 +620,18 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }
+                
+                //buscando os pais e atualizando na tabela
 
-                List<VersionMetrics> versionParents = new ArrayList<>();
-                versionParents = versionMetricDao.selectAnalyze();
-                System.out.println(versionParents.size());
-
+                List<VersionMetrics> versionParents = new ArrayList<>();                                            
+                List<Integer> listVersionId = projectVersionDao.selectProjectId(versionMetrics.getProjectID());
+                
+                for(int i = 0; i < listVersionId.size(); i++){
+                    
+                    versionParents.add(versionMetricDao.selectID(listVersionId.get(i)));
+                    
+                }
+                                     
                 for (int i = 0; i < versionMetrics.getParentsHash().size(); i++) {
                     System.out.println(versionMetrics.getParentsHash().get(i));
                     if(versionMetrics.getParentsHash().get(i).equals("")){
