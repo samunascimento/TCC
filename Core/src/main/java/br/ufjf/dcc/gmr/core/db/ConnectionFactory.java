@@ -24,6 +24,7 @@ public class ConnectionFactory {
     public static Connection getConnection(){
         Connection con= null;
         try {
+           // DriverManager.registerDriver(new org.postgresql.Driver());
             Class.forName(DRIVER);
             con = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Conexao com sucesso");
