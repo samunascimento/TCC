@@ -69,12 +69,12 @@ class Layout extends Component {
           <MenuItem component={Link} to="/metric" selected={'/metric' === pathname}>
             Metric
           </MenuItem>
-          <MenuItem component={Link} to="/writers" selected={'/writers' === pathname}>
+          <MenuItem component={Link} to="/projects" selected={'/projects' === pathname}>
             Projects
           </MenuItem>
           <MenuList>
             {writers.map(({ id, name }) => {
-              const to = `/writers/${id}`
+              const to = `/projects/${id}`
 
               return <MenuItem
                 to={to}

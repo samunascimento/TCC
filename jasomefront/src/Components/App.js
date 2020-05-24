@@ -1,31 +1,31 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { NotFound } from './Errors'
-import Writers from './Writers'
+import Writers from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
 
 export default class extends Component {
   state = {
-    writers: []
+    projects: []
   }
 
   async componentDidMount() {
-    const writers = await (await fetch('URL - criar um arquivo de configuraçã depois')).json()
+    const projects = await (await fetch('http://localhost:8080/JasomeWeb/webresources/jasome/nameProject')).json()
 
-    this.setState({ writers })
+    this.setState({ projects })
   }
 
   render() {
-    const { writers } = this.state
+    const { projects } = this.state
 
     return <BrowserRouter>
-      <Layout writers={writers}>
+      <Layout writers={projects}>
         <Switch>
           <Route exact path="/" render={() => <div>Home</div>} />
           <Route exact path="/metric" component={ListMetric} />
-          <Route path="/writers" render={
-            props => <Writers {...props} writers={writers} />
+          <Route path="/projects" render={
+            props => <Writers {...props} projects={projects} />
           } />
           <Route component={NotFound} />
         </Switch>

@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import { Link, Route } from 'react-router-dom'
 import { NotFound } from '../Errors'
-import Writer from './Writer'
+import Writer from './Project'
 
-export default ({ match: { url }, writers }) =>
+export default ({ match: { url }, projects }) =>
   <Fragment>
     <ul>
-      {writers.map(({ id, name }) =>
+      {projects.map(({ id, name }) =>
         <li key={id}>
           <Link to={`${url}/${id}`}>{name}</Link>
         </li>
@@ -16,7 +16,7 @@ export default ({ match: { url }, writers }) =>
     <Route exact path={url} render={
       () => <h3>List Projects</h3>
     }/>
-    <Route path={`${url}/:writerId`} render={      
+    {/* <Route path={`${url}/:writerId`} render={      
       props => {
         const writer = writers.find(({ id }) => id === props.match.params.writerId)
 
@@ -26,5 +26,5 @@ export default ({ match: { url }, writers }) =>
 
         return <Writer {...props} {...writer}/>
       }
-    } />
+    } /> */}
   </Fragment>
