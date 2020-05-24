@@ -46,7 +46,7 @@ public class TestSelect {
 //            System.out.println(listMetric.getId());
 //        }
         //List<Metric> selectMetricPackage = dao.selectPackageMetrics("minecrowdcontrol");
-        List<String> listNameProject = dao.selectNameProject();
+        List<ProjectMetrics> listProject = dao.selectNameProject();
        
     }
 }

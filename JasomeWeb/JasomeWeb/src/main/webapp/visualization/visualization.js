@@ -6,9 +6,10 @@
 var point;
 var data;
 var convertida
+
 function getData(){
     $.ajax({
-   url: 'http://localhost:8080/JasomeWeb/webresources/jasome/metrics/package',
+   url: 'http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/minecrowdcontrol',
    dataType: 'json',
    async: false,
    success: function(json){
@@ -60,7 +61,7 @@ var yAxis = d3.svg.axis()
 var zoom = d3.behavior.zoom()
     .x(x)
     .y(y)
-    .scaleExtent([1, 10])
+    .scaleExtent([0, 30])
     .on("zoom", () =>  {
 		svg.select(".x.axis").call(xAxis);
 		svg.select(".y.axis").call(yAxis);   
