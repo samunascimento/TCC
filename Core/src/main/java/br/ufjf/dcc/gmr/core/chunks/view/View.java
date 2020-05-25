@@ -9,6 +9,7 @@ import javax.swing.*;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -152,16 +153,20 @@ public final class View extends JFrame {
     }
 
     private void paintPanel() {
-        this.add(this.leftPanel, BorderLayout.WEST);
-        this.add(this.rightPanel, BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT ,leftPanel, rightPanel);
+        splitPane.setResizeWeight(1);
+        
+        JSplitPane splitPaneInside = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(table),this.treePane);
+        
+        this.add(splitPane);
+        
         this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
-        this.leftPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-        this.leftPanel.add(getTreePane(), BorderLayout.EAST);
 
-        this.rightPanel.add(getTextArea(), BorderLayout.CENTER);
-
+        this.rightPanel.add(new JScrollPane(getTextArea()), BorderLayout.CENTER);
+        this.leftPanel.add(splitPaneInside);
+                
         this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
         this.setVisible(true);
