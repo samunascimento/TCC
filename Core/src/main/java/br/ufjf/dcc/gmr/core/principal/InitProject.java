@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -51,7 +53,7 @@ public class InitProject implements Runnable {
 
     }
 
-    private static List<String> readFile(String filePath){
+    private static List<String> readFile(String filePath) {
 
         List<String> content = new ArrayList<>();
         String linha;
@@ -59,20 +61,18 @@ public class InitProject implements Runnable {
         try {
 
             FileReader fr = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(fr);          
-
+            BufferedReader br = new BufferedReader(fr);
 
             while ((linha = br.readLine()) != null) {
                 content.add(linha);
-            }} catch (IOException e) {
+            }
+        } catch (IOException e) {
             System.out.println("filePath: " + filePath);
             e.printStackTrace();
         }
 
         return content;
     }
-    
-    
 
     private static List<Chunk> createConflictChunksList(String filePath) {
 
@@ -80,30 +80,29 @@ public class InitProject implements Runnable {
         Chunk chunk = new Chunk();
 
         List<String> content = readFile(filePath);
-        
+
         int chunkNumber = 0;
 
-            for (int i = 0; i < content.size(); i++) {
+        for (int i = 0; i < content.size(); i++) {
 
-                if (content.get(i).startsWith("<<<<<<<")) {
-                    chunk = new Chunk();
-                    chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i + 1));
-                }
-
-                if (content.get(i).startsWith("=======")) {
-                    chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i + 1));
-                }
-
-                if (content.get(i).startsWith(">>>>>>>")) {
-                    chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
-                    chunk.setContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
-                    chunk.setLabel("CC"+(++chunkNumber));
-                    result.add(chunk);
-                }
+            if (content.get(i).startsWith("<<<<<<<")) {
+                chunk = new Chunk();
+                chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i + 1));
             }
+
+            if (content.get(i).startsWith("=======")) {
+                chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i + 1));
+            }
+
+            if (content.get(i).startsWith(">>>>>>>")) {
+                chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
+                chunk.setContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                chunk.setLabel("CC" + (++chunkNumber));
+                result.add(chunk);
+            }
+        }
         return result;
     }
-
 
     private static MyFile updateFile(MyFile file) {
 
@@ -117,7 +116,7 @@ public class InitProject implements Runnable {
     public static Version updateVersion(String pathProject, Version version) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, ThereIsNoMergeToAbort, ThereIsNoMergeToAbort, NotSomethingWeCanMerge, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, AlreadyUpToDate, NotSomethingWeCanMerge {
 
         Version result = version;
-        
+
         if (result.getParent().size() == 2) {
 
             String firstParent = result.getParent().get(0);
@@ -126,11 +125,11 @@ public class InitProject implements Runnable {
             Git.reset(pathProject, true, false, false, null);
             Git.clean(pathProject, true, 0);
             Git.checkout(firstParent, pathProject);
-            
-            if(result.getSHA().startsWith("21da4207")){
+
+            if (result.getSHA().startsWith("21da4207")) {
                 System.out.println("");
             }
-            
+
             if (Git.isFailedMerge(pathProject, firstParent, secondParent)) {
 
                 List<MyFile> statusUnmerged = Git.statusUnmerged(pathProject);
@@ -198,6 +197,20 @@ public class InitProject implements Runnable {
         }
 
         this.view.getTable().setModel(model);
+        
+        this.view.getSplitPane().setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        this.view.getSplitPane().setLeftComponent(this.view.getLeftPanel());
+        this.view.getSplitPane().setRightComponent(this.view.getRightPanel());
+        this.view.add(this.view.getSplitPane());
+        this.view.getSplitPane().setDividerSize(5);
+
+        this.view.getSplitPaneInside().setOrientation(JSplitPane.VERTICAL_SPLIT);
+        this.view.getSplitPaneInside().setLeftComponent(new JScrollPane(this.view.getTable()));
+        this.view.getSplitPaneInside().setRightComponent(this.view.getTreePane());
+        this.view.getLeftPanel().add(this.view.getSplitPaneInside());
+        this.view.getSplitPaneInside().setDividerSize(5);
+        this.view.getSplitPaneInside().setDividerLocation(750);
+
         if (this.view.getProject().getVersions().size() > 0) {
             this.view.getLeftPanel().setVisible(true);
             this.view.getRightPanel().setVisible(true);

@@ -9,7 +9,6 @@ import javax.swing.*;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +22,8 @@ public final class View extends JFrame {
     private JPanel leftPanel;
     private JPanel rightPanel;
     private JScrollPane treePane;
+    private JSplitPane splitPane;
+    private JSplitPane splitPaneInside;
     private JTable table;
     private JTextArea textArea;
     private JFileChooser chooser;
@@ -43,6 +44,8 @@ public final class View extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
+        this.splitPane = new JSplitPane();
+        this.splitPaneInside = new JSplitPane();
         this.chooser = new JFileChooser();
         this.menuBar = new JMenuBar();
         this.menuFile = new JMenu();
@@ -153,20 +156,11 @@ public final class View extends JFrame {
     }
 
     private void paintPanel() {
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT ,leftPanel, rightPanel);
-        splitPane.setResizeWeight(1);
-        
-        JSplitPane splitPaneInside = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(table),this.treePane);
-        
-        this.add(splitPane);
-        
         this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
-
         this.rightPanel.add(new JScrollPane(getTextArea()), BorderLayout.CENTER);
-        this.leftPanel.add(splitPaneInside);
-                
+
         this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
         this.setVisible(true);
@@ -189,10 +183,38 @@ public final class View extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
-        
+
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));
         frame.paintMainPanel();
         frame.setVisible(true);
+    }
+
+    /**
+     * @return the splitPane
+     */
+    public JSplitPane getSplitPane() {
+        return splitPane;
+    }
+
+    /**
+     * @param splitPane the splitPane to set
+     */
+    public void setSplitPane(JSplitPane splitPane) {
+        this.splitPane = splitPane;
+    }
+
+    /**
+     * @return the splitPaneInside
+     */
+    public JSplitPane getSplitPaneInside() {
+        return splitPaneInside;
+    }
+
+    /**
+     * @param splitPaneInside the splitPaneInside to set
+     */
+    public void setSplitPaneInside(JSplitPane splitPaneInside) {
+        this.splitPaneInside = splitPaneInside;
     }
 
     /**
