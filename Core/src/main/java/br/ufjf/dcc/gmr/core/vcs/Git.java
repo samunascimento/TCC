@@ -1336,7 +1336,7 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
-    public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
+   public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";

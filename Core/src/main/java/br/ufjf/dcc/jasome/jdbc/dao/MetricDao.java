@@ -7,6 +7,7 @@ package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -307,23 +308,27 @@ public class MetricDao {
         }
     }
     
-    public List<String> selectNameProject() throws SQLException{
-        List<String> listNameProject = new ArrayList<>();
-        
+    public List<ProjectMetrics> selectNameProject() throws SQLException{
+        List<ProjectMetrics> listProject = new ArrayList<>();
         Metric metric = null;
+        ProjectMetrics projectMetrics;
         
         PreparedStatement stmt = null;
         
         ResultSet resultSet = null;
         
-        String sql =    "select projectname from tb_projectmetrics";
+        String sql =    "select * from tb_projectmetrics";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                listNameProject.add(resultSet.getString("projectname"));
+                projectMetrics = new ProjectMetrics();
+                projectMetrics.setId(resultSet.getInt("id"));
+                projectMetrics.setName(resultSet.getString("projectname"));
+                projectMetrics.setSourceDir(resultSet.getString("sourcedir"));
+                listProject.add(projectMetrics);
             }
-            return listNameProject;
+            return listProject;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

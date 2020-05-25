@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.jasomeweb.controller;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.gmr.jasomeweb.model.Point;
 import com.google.gson.Gson;
@@ -122,10 +123,10 @@ public class JasomeResource {
     public String getNameProject() throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
-        List<String> listNameProject = new ArrayList<>();
+        List<ProjectMetrics> listProject = new ArrayList<>();
         Gson g = new Gson();
-        listNameProject = dao.selectNameProject();
-        String listJ = g.toJson(listNameProject);
+        listProject = dao.selectNameProject();
+        String listJ = g.toJson(listProject);
         return listJ;
     }
     /**

@@ -33,8 +33,8 @@ public class VersionMetricsDao {
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tlocID,sha,authorname,versiondate) "
-                + "VALUES (?,?,?,?) "
+                + "(tlocID,sha,authorname,versiondate, analyzed) "
+                + "VALUES (?,?,?,?,?) "
                 + "RETURNING id;";
 
         timeStamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
@@ -56,6 +56,8 @@ public class VersionMetricsDao {
             stmt.setString(3, versionMetrics.getAuthorName());
 
             stmt.setTimestamp(4, timeStamp);
+            
+            stmt.setBoolean(5, false);
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
@@ -88,6 +90,7 @@ public class VersionMetricsDao {
             }
         }
     }
+    
 
     public List<VersionMetrics> select() throws SQLException {
 
@@ -186,6 +189,26 @@ public class VersionMetricsDao {
             versionMetrics.setId(resultSet.getInt("id"));
 
             return versionMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public void updateAnalyze(VersionMetrics versionMetric) throws SQLException {
+        String sql = "UPDATE tb_versionMetrics SET tlocid = ? , analyzed = ?  WHERE ID = ? ";
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, versionMetric.getTloc().getId());
+            stmt.setBoolean(2, true);
+            stmt.setInt(3, versionMetric.getId());
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

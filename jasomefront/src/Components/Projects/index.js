@@ -1,0 +1,30 @@
+import React, { Fragment } from 'react'
+import { Link, Route } from 'react-router-dom'
+import { NotFound } from '../Errors'
+import Writer from './Project'
+
+export default ({ match: { url }, projects }) =>
+  <Fragment>
+    <ul>
+      {projects.map(({ id, name }) =>
+        <li key={id}>
+          <Link to={`${url}/${id}`}>{name}</Link>
+        </li>
+      )}
+    </ul>
+      
+    <Route exact path={url} render={
+      () => <h3>List Projects</h3>
+    }/>
+    {/* <Route path={`${url}/:writerId`} render={      
+      props => {
+        const writer = writers.find(({ id }) => id === props.match.params.writerId)
+
+        if (!writer) {
+          return <NotFound />
+        }
+
+        return <Writer {...props} {...writer}/>
+      }
+    } /> */}
+  </Fragment>

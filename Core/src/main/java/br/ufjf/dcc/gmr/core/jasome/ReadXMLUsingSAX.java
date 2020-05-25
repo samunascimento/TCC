@@ -69,6 +69,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
     ParentsHashDao parentsHashDao;
 
     Formats version;
+    int versionId;
 
     List<String> parents;
 
@@ -82,7 +83,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     Metric metric = new Metric();
 
-    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection, Formats version, List<String> parents) {
+    public ReadXMLUsingSAX(ProjectMetrics project, Connection connection, Formats version, List<String> parents, int idPosition) {
         super();
         versionMetrics = new VersionMetrics();
         this.projectMetrics = project;
@@ -103,6 +104,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         this.version = version;
         this.parents = parents;
+        
+        versionId = idPosition;
     }
 
     public void fazerParsing(String xml) {
@@ -155,8 +158,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             project = true;
             versionMetrics = new VersionMetrics();
             versionMetrics.setAuthorName(this.version.getAuthorName());
-            versionMetrics.setCommitDate(version.getAuthorDate());
-            versionMetrics.setHash(version.getCommitHash());
+            versionMetrics.setCommitDate(this.version.getAuthorDate());
+            versionMetrics.setHash(this.version.getCommitHash());
             versionMetrics.setParentsHash(parents);
             projectMetrics.setSourceDir(atts.getValue(0));
         } else if (tagAtual.equals("Package")) {
@@ -608,18 +611,27 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         tagAtual = qName;
         try {
+            
+            // atualizando o valor de analyzed  e inserindo id da métrica
             if (tagAtual.equals("Project")) {
                 versionMetrics.setProjectID(projectMetrics.getId());
-                int versionId = versionMetricDao.insert(versionMetrics);
-                versionMetrics.setId(versionId);
+                versionMetrics.setId(this.versionId);
+                versionMetricDao.updateAnalyze(versionMetrics);
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }
+                
+                //buscando os pais e atualizando na tabela
 
-                List<VersionMetrics> versionParents = new ArrayList<>();
-                versionParents = versionMetricDao.select();
-                System.out.println(versionParents.size());
-
+                List<VersionMetrics> versionParents = new ArrayList<>();                                            
+                List<Integer> listVersionId = projectVersionDao.selectProjectId(versionMetrics.getProjectID());
+                
+                for(int i = 0; i < listVersionId.size(); i++){
+                    
+                    versionParents.add(versionMetricDao.selectID(listVersionId.get(i)));
+                    
+                }
+                                     
                 for (int i = 0; i < versionMetrics.getParentsHash().size(); i++) {
                     System.out.println(versionMetrics.getParentsHash().get(i));
                     if(versionMetrics.getParentsHash().get(i).equals("")){

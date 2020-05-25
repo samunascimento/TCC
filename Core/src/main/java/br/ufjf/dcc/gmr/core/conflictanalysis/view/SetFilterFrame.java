@@ -131,18 +131,18 @@ public class SetFilterFrame extends JFrame {
 
     private JPanel generateWithNoConflictsPanel() {
         JPanel prototype = new JPanel();
-        prototype.setBorder(BorderFactory.createTitledBorder("With or without Not Conflict Merges"));
+        prototype.setBorder(BorderFactory.createTitledBorder("Show or don't show Conflicting Merges"));
         prototype.setLayout(new GridBagLayout());
         return prototype;
     }
 
     private JRadioButton generateWithNoConflict() {
-        JRadioButton prototype = new JRadioButton("With Not Conflict Merges           ");
+        JRadioButton prototype = new JRadioButton("Show all Merges            ");
         return prototype;
     }
 
     private JRadioButton generateWithoutNoConflict() {
-        JRadioButton prototype = new JRadioButton("Without Not Conflict Merges        ");
+        JRadioButton prototype = new JRadioButton("Show only Conflicting Merges        ");
         return prototype;
     }
 
