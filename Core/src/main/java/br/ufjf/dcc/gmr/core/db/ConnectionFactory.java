@@ -23,11 +23,24 @@ public class ConnectionFactory {
     private static final String PASS = "mortrius";
     
     
-    public static Connection getConnection(CommandLine commandLine){
+    public static Connection getConnection(String urlDB, String userNameDB,String passwordDB){
         Connection con= null;
         try {
             Class.forName(DRIVER);
-            con = DriverManager.getConnection(URL, USER, commandLine.getOptionValue("p"));
+            con = DriverManager.getConnection(urlDB, userNameDB, passwordDB);
+            System.out.println("Conexao com sucesso");
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("Erro - conexão" + ex);
+        }
+        
+        return con;
+    }   
+    
+    public static Connection getConnection(){
+        Connection con= null;
+        try {
+            Class.forName(DRIVER);
+            con = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Conexao com sucesso");
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Erro - conexão" + ex);

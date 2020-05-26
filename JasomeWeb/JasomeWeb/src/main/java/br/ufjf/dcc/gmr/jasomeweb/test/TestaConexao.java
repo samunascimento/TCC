@@ -14,6 +14,6 @@ import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
  */
 public class TestaConexao {
     public static void main(String[] args) {
-       ConnectionFactory.getConnection(null);
+       ConnectionFactory.getConnection();
     }
 }

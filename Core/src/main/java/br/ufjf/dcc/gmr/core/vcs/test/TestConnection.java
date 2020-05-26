@@ -24,7 +24,7 @@ public class TestConnection {
 
     public static void main(String[] args) throws SQLException {
         
-        Connection connection = ConnectionFactory.getConnection(null);
+        Connection connection = ConnectionFactory.getConnection();
         
         VersionMetricsDao versionDao = new VersionMetricsDao(connection);
 

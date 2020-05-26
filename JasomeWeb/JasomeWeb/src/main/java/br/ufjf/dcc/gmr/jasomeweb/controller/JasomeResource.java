@@ -62,7 +62,7 @@ public class JasomeResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getTlocVersion(@PathParam("nameProject") String nameProject) throws SQLException {
         
-        Connection connection = ConnectionFactory.getConnection(null);
+        Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         List<Point> listPoints = new ArrayList<>();
         int count = 0;
@@ -83,7 +83,7 @@ public class JasomeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("metric/package/{nameProject}")
     public String getMetricPackage(@PathParam("nameProject") String nameProject) throws SQLException{
-        Connection connection = ConnectionFactory.getConnection(null);
+        Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<Metric> list = new ArrayList<>();
@@ -122,7 +122,7 @@ public class JasomeResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("nameProject")
     public String getNameProject() throws SQLException{
-        Connection connection = ConnectionFactory.getConnection(null);
+        Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         List<ProjectMetrics> listProject = new ArrayList<>();
         Gson g = new Gson();

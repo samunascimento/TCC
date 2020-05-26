@@ -34,11 +34,16 @@ public class Jasome {
         options.addOption(new Option("j", "jasome", true, "jasome path"));
         //options.addOption(new Option("n", "name", true, "DB name"));
         
+        
         CommandLine commandLine = null;
 
         try {
 
             commandLine = parser.parse(options, args);
+            
+            System.out.println(commandLine.getOptionValue("r"));
+            System.out.println(commandLine.getOptionValue("j"));
+            
             
             /*if (commandLine.hasOption("h")) {
                 HelpFormatter formatter = new HelpFormatter();
@@ -58,9 +63,14 @@ public class Jasome {
         
         CommandLine commandLine = commandLineArguments(args);
         
-        Connection connection = ConnectionFactory.getConnection(commandLine);
+        analyze(commandLine.getOptionValue("usernameDB"),commandLine.getOptionValue("passwordDB"),commandLine.getOptionValue("n"),commandLine.getOptionValue("j"),commandLine.getOptionValue("r"));
+    }
+
+    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
         
-        JasomeMethods jasome = new JasomeMethods(commandLine.getOptionValue("r"), commandLine.getOptionValue("j"));
+        Connection connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
+        
+        JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
         
         
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
@@ -74,17 +84,17 @@ public class Jasome {
         jasome.runProject(project, connection);
 
         /*jasome.getArchiveType().add("java");
-            List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
-            System.out.println(log.size());
-            for (int i = 0; i < log.size(); i++) {
-                jasome.getFileNames().clear();
-                jasome.gitCommands(jasome, log, i);
-                System.out.println("");
-                System.out.println("");
-                jasome.listJavaArchives(jasome.GetRepositoryPath(),directory,jasome.getArchiveType());
-                jasome.javaArchivesCount();        
-                jasome.runJasome(jasome.GetRepositoryPath(), jasome.getFileNames(), jasome.getArchiveType(), i);
-            }*/
+        List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
+        System.out.println(log.size());
+        for (int i = 0; i < log.size(); i++) {
+        jasome.getFileNames().clear();
+        jasome.gitCommands(jasome, log, i);
+        System.out.println("");
+        System.out.println("");
+        jasome.listJavaArchives(jasome.GetRepositoryPath(),directory,jasome.getArchiveType());
+        jasome.javaArchivesCount();
+        jasome.runJasome(jasome.GetRepositoryPath(), jasome.getFileNames(), jasome.getArchiveType(), i);
+        }*/
 //        } catch (LocalRepositoryNotAGitRepository ex) {
 //            System.out.println("Não é um repositório válido");
 //        } catch (IOException ex) {
