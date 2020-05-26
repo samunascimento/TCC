@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.cli.*;
+
 
 /**
  *
@@ -21,42 +23,16 @@ public class ConnectionFactory {
     private static final String PASS = "mortrius";
     
     
-    public static Connection getConnection(){
+    public static Connection getConnection(CommandLine commandLine){
         Connection con= null;
         try {
-           // DriverManager.registerDriver(new org.postgresql.Driver());
             Class.forName(DRIVER);
-            con = DriverManager.getConnection(URL, USER, PASS);
+            con = DriverManager.getConnection(URL, USER, commandLine.getOptionValue("p"));
             System.out.println("Conexao com sucesso");
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Erro - conexão" + ex);
         }
         
         return con;
-    }
-    
-    public int executeSql(String sql) throws SQLException{
-        Connection con= null;
-        try{
-            Statement stm = con.createStatement();
-            int res = stm.executeUpdate(sql);
-            con.close();
-            return res;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-//    
-//    public static void closeConnection(Connection con){
-//        try {
-//           if(con!=null){
-//               con.close();
-//           } 
-//        }catch (SQLException ex) {
-//               System.out.println("Erroo " + ex);
-//        }
-//   }
-    
-   
+    }   
 }

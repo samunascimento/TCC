@@ -23,7 +23,7 @@ import java.util.List;
 public class TestSelect {
     public static void main(String[] args) throws SQLException {
         
-        Connection connection = ConnectionFactory.getConnection();
+        Connection connection = ConnectionFactory.getConnection(null);
         
 //        List<Metric> listMetrics = new ArrayList();
 //        Metric metric = new Metric();

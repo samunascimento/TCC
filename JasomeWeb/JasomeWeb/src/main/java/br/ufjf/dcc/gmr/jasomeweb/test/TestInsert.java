@@ -27,7 +27,7 @@ public class TestInsert {
 
     public static void main(String[] args) throws SQLException {
         
-        Connection connection = ConnectionFactory.getConnection();
+        Connection connection = ConnectionFactory.getConnection(null);
 
         Metric a = new Metric();
         a.setName("metric geral 999");

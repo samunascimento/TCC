@@ -29,9 +29,10 @@ public class Jasome {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
+        options.addOption(new Option("p", "password", true, "DB password"));
         options.addOption(new Option("r", "repo", true, "repository path"));
-        options.addOption(new Option("b", "bcd", true, "Second Parameter"));
-        options.addOption(new Option("h", "help", false, "Shows this help"));
+        options.addOption(new Option("j", "jasome", true, "jasome path"));
+        //options.addOption(new Option("n", "name", true, "DB name"));
         
         CommandLine commandLine = null;
 
@@ -39,11 +40,11 @@ public class Jasome {
 
             commandLine = parser.parse(options, args);
             
-            if (commandLine.hasOption("h")) {
+            /*if (commandLine.hasOption("h")) {
                 HelpFormatter formatter = new HelpFormatter();
 
                 formatter.printHelp("CommandLineParameters", options);
-            }
+            }*/
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -54,14 +55,12 @@ public class Jasome {
 
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException, NullPointerException, OptionNotExist, ParseException, java.text.ParseException {
 //        try {
-
-        Connection connection = ConnectionFactory.getConnection();
         
         CommandLine commandLine = commandLineArguments(args);
         
-        System.out.println(commandLine.getOptionValue("r"));
-
-        JasomeMethods jasome = new JasomeMethods(commandLine.getOptionValue("r"), "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+        Connection connection = ConnectionFactory.getConnection(commandLine);
+        
+        JasomeMethods jasome = new JasomeMethods(commandLine.getOptionValue("r"), commandLine.getOptionValue("j"));
         
         
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");

@@ -22,7 +22,7 @@ public class TestDelete {
 
     public static void main(String[] args) throws SQLException {
         
-        Connection connection = ConnectionFactory.getConnection();
+        Connection connection = ConnectionFactory.getConnection(null);
 
        MetricDao dao = new MetricDao(connection);
         List<Metric> listMetrics = new ArrayList();
