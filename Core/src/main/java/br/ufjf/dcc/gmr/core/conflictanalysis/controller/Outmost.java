@@ -19,9 +19,9 @@ import java.util.List;
  *
  * @author luan
  */
-public class OutmostJava {
+public class Outmost {
 
-    public OutmostJava() {
+    public Outmost() {
 
     }
 

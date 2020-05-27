@@ -25,7 +25,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  *
  * @author joao_lima
  */
-public interface ConflictAnalysisTools {
+public class ConflictAnalysisTools {
 
     public static File createSandbox(String repositoryPath, String projectName) throws IOException {
         File sandbox;
