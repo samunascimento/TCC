@@ -75,7 +75,7 @@ public class Cli {
             analysis.startAnalysis();
             name=analysis.getProjectName();
             if(analysis.getMergeEventList()!=null)
-            GSONClass.save("/home/luan/Github"+ name + ".gson", analysis.getMergeEventList());
+            GSONClass.save("/home/joao_lima/Git/"+ name + ".gson", analysis.getMergeEventList());
             else
                 System.out.println("Deu ruim");
         } catch (ParseException e) {
