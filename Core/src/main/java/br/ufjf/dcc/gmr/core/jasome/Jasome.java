@@ -9,8 +9,10 @@ import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import org.apache.commons.cli.ParseException;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
@@ -24,55 +26,34 @@ import org.apache.commons.cli.*;
  */
 public class Jasome {
 
-    public static CommandLine commandLineArguments(String[] args) {
-
-        CommandLineParser parser = new DefaultParser();
-        Options options = new Options();
-
-        options.addOption(new Option("p", "password", true, "DB password"));
-        options.addOption(new Option("r", "repo", true, "repository path"));
-        options.addOption(new Option("j", "jasome", true, "jasome path"));
-        //options.addOption(new Option("n", "name", true, "DB name"));
-        
-        
-        CommandLine commandLine = null;
-
-        try {
-
-            commandLine = parser.parse(options, args);
-            
-            System.out.println(commandLine.getOptionValue("r"));
-            System.out.println(commandLine.getOptionValue("j"));
-            
-            
-            /*if (commandLine.hasOption("h")) {
-                HelpFormatter formatter = new HelpFormatter();
-
-                formatter.printHelp("CommandLineParameters", options);
-            }*/
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return commandLine;
-    }
-
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException, NullPointerException, OptionNotExist, ParseException, java.text.ParseException {
 //        try {
-        
-        CommandLine commandLine = commandLineArguments(args);
-        
-        analyze(commandLine.getOptionValue("usernameDB"),commandLine.getOptionValue("passwordDB"),commandLine.getOptionValue("n"),commandLine.getOptionValue("j"),commandLine.getOptionValue("r"));
+
+        analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\calculadora-1");
+    }
+
+    public static void checkRepository(String repositoryUrl, String repositoryPath, String repositoryName, String user, String password) throws RepositoryNotFound, UrlNotFound {
+        if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
+            Git.clone(repositoryUrl, repositoryPath, repositoryName);
+            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
+        } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
+            Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
+            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
+        }
     }
 
     public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
-        
-        Connection connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
-        
+
+        Connection connection = null;
+        if (urlDB == null && userNameDB == null && passwordDB == null) {
+            connection = ConnectionFactory.getConnection();
+        } 
+        else {
+            connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
+        }
+
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
-        
-        
+
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
         ProjectMetrics project = new ProjectMetrics();
 
