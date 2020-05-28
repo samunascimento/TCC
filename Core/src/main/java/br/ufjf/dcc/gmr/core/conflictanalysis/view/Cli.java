@@ -36,6 +36,8 @@ public class Cli {
     public static final String OUTMOST_SHORT = "o";
     public static final String CONTEXT_LINE_NUMBER = "context_line_number";
     public static final String CONTEXT_LINE_NUMBER_SHORT = "c";
+     public static final String SAVE_PATH = "save_path";
+    public static final String SAVE_PATH_SHORT = "s";
 
     public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
 
@@ -43,6 +45,7 @@ public class Cli {
         Options options = new Options();
 
         options.addOption(new Option(DIRECTORY_PATH_SHORT, DIRECTORY_PATH, true, "Directory"));
+        options.addOption(new Option(SAVE_PATH_SHORT, SAVE_PATH, true, "Save path"));
         options.addOption(new Option(OUTMOST_SHORT, OUTMOST_SHORT, false, "Outmost"));
         //options.addOption(new Option(CONTEXT_LINE_NUMBER_SHORT, CONTEXT_LINE_NUMBER, true, "Context Line Number"));
         
@@ -51,7 +54,7 @@ public class Cli {
                 .withDescription("Number of context lines")
                 .create("c");
         options.addOption(CONTEXT_LINE_NUMBER_SHORT);
-
+        
         CommandLine commandLine = null;
 
         try {
@@ -61,6 +64,7 @@ public class Cli {
             String directoryPath = cmd.getOptionValue(DIRECTORY_PATH);
             int cln = 3;
             boolean OutmostBool = false;
+            String savePath=cmd.getOptionValue(SAVE_PATH);
             String name;
 
             if (cmd.hasOption("o")) {
@@ -75,7 +79,7 @@ public class Cli {
             analysis.startAnalysis();
             name=analysis.getProjectName();
             if(analysis.getMergeEventList()!=null)
-            GSONClass.save("/home/joao_lima/Git/"+ name + ".gson", analysis.getMergeEventList());
+            GSONClass.save(savePath + "/" + name + ".gson", analysis.getMergeEventList());
             else
                 System.out.println("Deu ruim");
         } catch (ParseException e) {
