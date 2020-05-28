@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
@@ -30,6 +31,7 @@ public class ConflictRegion {
     private List<SyntaxStructure> syntaxV2;
 
     private DeveloperDecision developerDecision;
+    
 
     public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
@@ -123,16 +125,22 @@ public class ConflictRegion {
         return developerDecision.name();
     }
 
-    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                if(useOutmost)
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                else
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                if(useOutmost)
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                else
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 Git.checkout("master", repositoryPath);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -146,23 +154,35 @@ public class ConflictRegion {
         }
     }
 
-    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit) throws IOException {
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
             if (this.originalV1StartLine > 0) {
                 Git.checkout(v1Commit, repositoryPath);
                 try {
+                    if(useOutmost)
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                else
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV1StartLine, this.originalV1StopLine);
+                    if(useOutmost)
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                else
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
                 try {
+                    if(useOutmost)
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                else
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 } catch (IOException ex) {
-                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                    if(useOutmost)
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                else
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }

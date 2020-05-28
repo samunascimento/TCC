@@ -46,11 +46,13 @@ public class GitRepositoryAnalysis {
     private JLabel processLabel;
     private boolean analysisDone;
     private String projectName;
+    private boolean useOutmost;
 
-    public GitRepositoryAnalysis(String repositoryPath, int linesContext) {
+    public GitRepositoryAnalysis(String repositoryPath, int linesContext, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
         this.repositoryPath = repositoryPath;
         this.linesContext = linesContext;
+        this.useOutmost = useOutmost;
         this.processData = new RepositoryAnalysisProcessData();
         this.progressBarPanel = null;
         this.progressBar = null;
@@ -60,10 +62,11 @@ public class GitRepositoryAnalysis {
         this.projectName = auxArray[auxArray.length - 1];
     }
 
-    public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel) {
+    public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
         this.repositoryPath = repositoryPath;
         this.linesContext = linesContext;
+        this.useOutmost = useOutmost;
         this.processData = new RepositoryAnalysisProcessData();
         this.progressBarPanel = progressBarPanel;
         this.progressBar = this.progressBarPanel.getProgressBar();
@@ -510,9 +513,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             }
                             status++;
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
@@ -539,9 +542,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash());
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             }
                             this.progressBar.setValue(++status);
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
