@@ -526,6 +526,10 @@ public class GitRepositoryAnalysis {
         }
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
     private void startANTLRProcessGUI() throws IOException {
         int conflictsNumber = 0;
         int status = 0;
