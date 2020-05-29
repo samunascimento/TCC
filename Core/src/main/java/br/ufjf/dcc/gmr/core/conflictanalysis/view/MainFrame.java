@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -50,6 +51,7 @@ public class MainFrame extends JFrame {
     private JButton _analyseButton;
     private JComboBox _numContextComboBox;
     private JTextField _textField;
+    private JCheckBox _outmostCheckBox;
 //  *******************************************************
 
     public MainFrame() {
@@ -81,6 +83,7 @@ public class MainFrame extends JFrame {
         this._analyseButton = this.generate_analyseButton();
         this._numContextComboBox = this.generate_numContextComboBox();
         this._textField = this.generate_textField();
+        this._outmostCheckBox = this.generate_outmostCheckBox();
     }
 
     private JMenuBar generateMenuBar() {
@@ -172,6 +175,11 @@ public class MainFrame extends JFrame {
         prototype.setEditable(false);
         return prototype;
     }
+    
+    private JCheckBox generate_outmostCheckBox() {
+        JCheckBox prototype = new JCheckBox("Change to outmost");
+        return prototype;
+    }
 
 //  ****************************************************************
 //  *                                                              *
@@ -206,6 +214,10 @@ public class MainFrame extends JFrame {
         gbc.gridy = 2;
         gbc.weightx = 0;
         this.homePanel.add(this._analyseButton, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        this.homePanel.add(this._outmostCheckBox,gbc);
     }
 
     private void menuCoupler() {
@@ -294,8 +306,9 @@ public class MainFrame extends JFrame {
         String projectPath = this._textField.getText();
         String projectName = getProjectName(projectPath);
         int numContextLines = this._numContextComboBox.getSelectedIndex() + 1;
+        boolean outmost = this._outmostCheckBox.isSelected();
         resetHomePanel();
-        ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(projectPath, numContextLines);
+        ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(projectPath, numContextLines,outmost);
         this.mainTabbedPane.addTab(getProjectName(projectPath + "(processing...)"), progressBarPanel);
         Thread progressBarPanelThread = new Thread(progressBarPanel);
         progressBarPanelThread.start();
@@ -323,6 +336,7 @@ public class MainFrame extends JFrame {
     private void resetHomePanel() {
         this._numContextComboBox.setSelectedIndex(0);
         this._textField.setText("");
+        this._outmostCheckBox.setSelected(false);
     }
 
     private void addPanelWithX(MergePanel panel, String projectName) {

@@ -13,7 +13,7 @@
         <antlr4.visitor>true</antlr4.visitor>
         <antlr4.listener>true</antlr4.listener>
     </properties>
-    <dependencies>
+    <dependencies>    
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -74,7 +74,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -84,7 +84,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
