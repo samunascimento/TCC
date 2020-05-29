@@ -32,7 +32,19 @@ public class Jasome {
         analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\calculadora-1");
     }
 
-    public static void checkRepository(String repositoryUrl, String repositoryPath, String repositoryName, String user, String password) throws RepositoryNotFound, UrlNotFound {
+    /**
+     *
+     * @param repositoryUrl
+     * @param repositoryPath
+     * @param repositoryName
+     * @param user
+     * @param password
+     * @return
+     * @throws RepositoryNotFound
+     * @throws UrlNotFound
+     */
+    public static String cloneRepository(String repositoryUrl, String repositoryPath, String repositoryName, String user, String password) throws RepositoryNotFound, UrlNotFound {
+        System.out.println("Clonando Projeto...");
         if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
             Git.clone(repositoryUrl, repositoryPath, repositoryName);
             repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
@@ -40,6 +52,8 @@ public class Jasome {
             Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
             repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
         }
+        
+        return repositoryPath;
     }
 
     public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
@@ -51,7 +65,7 @@ public class Jasome {
         else {
             connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
         }
-
+       
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
 
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");

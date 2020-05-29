@@ -13,6 +13,7 @@ import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.Jasome;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
@@ -34,13 +35,18 @@ public class CLIParameters {
     public static final String USERNAME_DB_SHORT = "u";
     public static final String PASSWORD_DB = "password_db";
     public static final String PASSWORD_DB_SHORT = "p";
+    public static final String GITHUB_PROJECT = "github_project";
+    public static final String GITHUB_PROJECT_SHORT = "g";
+    public static final String GITHUB_PROJECT_PATH = "project_path";
+    public static final String GITHUB_PROJECT_PATH_SHORT = "gp";
+    public static final String PROJECT_NAME = "repository_name";
+    public static final String PROJECT_NAME_SHORT = "n";
     public static final String REPOSITORY_PATH = "repository_path";
     public static final String REPOSITORY_PATH_SHORT = "r";
     public static final String JASOME_PATH = "jasome_path";
     public static final String JASOME_PATH_SHORT = "j";
-    
 
-    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
+    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, UrlNotFound {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -50,6 +56,9 @@ public class CLIParameters {
         options.addOption(new Option(PASSWORD_DB_SHORT, PASSWORD_DB, true, "DB password"));
         options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path"));
         options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path"));
+        options.addOption(new Option(GITHUB_PROJECT_SHORT, GITHUB_PROJECT, true, "link to clone github project"));
+        options.addOption(new Option(GITHUB_PROJECT_PATH_SHORT, GITHUB_PROJECT_PATH, true, "directory to clone github project"));
+        options.addOption(new Option(PROJECT_NAME_SHORT, PROJECT_NAME, true, "directory name to clone the github project (without accent and space)"));
 
         CommandLine commandLine = null;
 
@@ -57,21 +66,24 @@ public class CLIParameters {
 
             commandLine = parser.parse(options, args);
 
-           
-
             String url = commandLine.getOptionValue(URL_DB);
             String username = commandLine.getOptionValue(USERNAME_DB_SHORT);
             String password = commandLine.getOptionValue(PASSWORD_DB_SHORT);
+            String gitHubProject = commandLine.getOptionValue(GITHUB_PROJECT_SHORT);
+            String projectPath = commandLine.getOptionValue(GITHUB_PROJECT_PATH_SHORT);
+            String projectName = commandLine.getOptionValue(PROJECT_NAME_SHORT);
             String repositoryPath = commandLine.getOptionValue(REPOSITORY_PATH_SHORT);
             String jasomePath = commandLine.getOptionValue(JASOME_PATH_SHORT);
-            
-            System.out.println(url);
-            System.out.println(username);
-            System.out.println(password);
-            System.out.println(repositoryPath);
-            System.out.println(jasomePath);
-            
-            Jasome.analyze(url, username, password, jasomePath, repositoryPath);
+
+            if (gitHubProject != null) {
+
+                projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, null, null);
+                Jasome.analyze(url, username, password, jasomePath, projectPath);
+
+            } else {
+                Jasome.analyze(url, username, password, jasomePath, repositoryPath);
+            }
+
         } catch (ParseException e) {
             System.out.println("Argumentos inválidos!");
             e.printStackTrace();
