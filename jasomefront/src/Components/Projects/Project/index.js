@@ -39,88 +39,93 @@ export default function Project() {
 
   return (
     <div>
-      <Grid container spacing={10}>
-        <Grid item xs={2}>
-          <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
-            Version
+      <div>
+        <Grid container spacing={10}>
+          <Grid item xs={2}>
+            <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
+              Version
           </Button>
-          <Menu
-            id="fade-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
-                label="tloc"
-              />
-            </FormGroup>
-          </Menu>
-        </Grid>
-        <Grid item xs={2}>
-          <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
-            Package
+            <Menu
+              id="fade-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={open}
+              onClose={handleClose}
+              TransitionComponent={Fade}
+            >
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
+                  label="tloc"
+                />
+              </FormGroup>
+            </Menu>
+          </Grid>
+          <Grid item xs={2}>
+            <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
+              Package
           </Button>
-          <Menu
-            id="fade-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
-                label="tloc"
-              />
-            </FormGroup>
-          </Menu>
-        </Grid>
-        <Grid item xs={2}>
-          <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
-            Class
+            <Menu
+              id="fade-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={open}
+              onClose={handleClose}
+              TransitionComponent={Fade}
+            >
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
+                  label="tloc"
+                />
+              </FormGroup>
+            </Menu>
+          </Grid>
+          <Grid item xs={2}>
+            <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
+              Class
           </Button>
-          <Menu
-            id="fade-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
-                label="tloc"
-              />
-            </FormGroup>
-          </Menu>
-        </Grid>
-        <Grid item xs={2}>
-          <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
-            Method
+            <Menu
+              id="fade-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={open}
+              onClose={handleClose}
+              TransitionComponent={Fade}
+            >
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
+                  label="tloc"
+                />
+              </FormGroup>
+            </Menu>
+          </Grid>
+          <Grid item xs={2}>
+            <Button aria-controls="fade-menu" variant="contained" color="primary" aria-haspopup="true" onClick={handleClick}>
+              Method
           </Button>
-          <Menu
-            id="fade-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
-                label="tloc"
-              />
-            </FormGroup>
-          </Menu>
+            <Menu
+              id="fade-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={open}
+              onClose={handleClose}
+              TransitionComponent={Fade}
+            >
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={state.checkedA} onChange={handleChange} name="checkedA" color="primary" />}
+                  label="tloc"
+                />
+              </FormGroup>
+            </Menu>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
+      <div>
+        <h1>GRÁFICO</h1>
+      </div>
     </div>
   );
 }
