@@ -2,8 +2,11 @@ package br.ufjf.dcc.gmr.core.chunks.controller;
 
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 public class TableMouseListener extends MouseAdapter {
     
@@ -21,7 +24,7 @@ public class TableMouseListener extends MouseAdapter {
         }
         Version version = getView().getProject().getVersions().get(row);
         getView().paintTree(version);
-
+        this.view.getTree().setVisible(true);
     }
 
     /**

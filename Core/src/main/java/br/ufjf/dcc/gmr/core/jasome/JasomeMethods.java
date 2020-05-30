@@ -62,15 +62,7 @@ public class JasomeMethods {
         this.repositoryName = projectName.getName();
     }
 
-    public void checkRepository() throws RepositoryNotFound, UrlNotFound {
-        if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
-            Git.clone(repositoryUrl, repositoryPath, repositoryName);
-            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
-        } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
-            Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
-            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
-        }
-    }
+    
 
     public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist, RefusingToClean, UnknownSwitch, IsOutsideRepository {
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);

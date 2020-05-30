@@ -6,6 +6,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 /**
  *
  * @author joao
@@ -276,12 +278,39 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
         return super.visitLocalTypeDeclaration(ctx);
     }
 
-    @Override
+  @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
+        
+        
+        Token startDeclaration = null, stopDeclaration = null;
+        for (Object object : ctx.children) {
+            if(object instanceof JavaParser.TypeTypeContext){
+                JavaParser.TypeTypeContext token = (JavaParser.TypeTypeContext) object;
+                startDeclaration = token.getStart();
+            }else if(object instanceof JavaParser.VariableDeclaratorsContext){
+                JavaParser.VariableDeclaratorsContext token = (JavaParser.VariableDeclaratorsContext) object;
+                JavaParser.VariableDeclaratorContext child = (JavaParser.VariableDeclaratorContext) token.getChild(0);
+                
+                for (ParseTree parseTree : child.children) {
+                    if(parseTree instanceof JavaParser.VariableDeclaratorIdContext){
+                        JavaParser.VariableDeclaratorIdContext identifier = (JavaParser.VariableDeclaratorIdContext) parseTree;
+                        stopDeclaration = identifier.getStop();
+                        this.list.add(new SyntaxStructure(startDeclaration, stopDeclaration, "LocalVariableDeclaration", warning));
+                    }
+                    else if(parseTree instanceof JavaParser.VariableInitializerContext){
+                        
+                        JavaParser.VariableInitializerContext initializer = (JavaParser.VariableInitializerContext) parseTree;
+                        this.list.add(new SyntaxStructure(initializer.getStart(), initializer.getStop(), "LocalVariableInitializer", warning));
+                    }
+                }
+                
+            }
+            
+        }
+                
         process(ctx);
         return super.visitLocalVariableDeclaration(ctx);
     }
-
     @Override
     public Object visitBlockStatement(JavaParser.BlockStatementContext ctx) {
 //        process(ctx);

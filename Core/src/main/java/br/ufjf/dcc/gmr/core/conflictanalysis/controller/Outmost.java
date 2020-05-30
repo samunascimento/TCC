@@ -8,7 +8,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJavaSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,9 +18,9 @@ import java.util.List;
  *
  * @author luan
  */
-public class OutmostJava {
+public class Outmost {
 
-    public OutmostJava() {
+    public Outmost() {
 
     }
 

@@ -23,8 +23,15 @@ public class MenuOptionsActionListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent me) {
         String aux = JOptionPane.showInputDialog("Context lines:");
-        int contextLines;
+        int contextLines = 0;
         while (true) {
+            try {
+                if(aux.equals(JOptionPane.CANCEL_OPTION)){
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
             try {
                 contextLines = Integer.parseInt(aux);
                 break;

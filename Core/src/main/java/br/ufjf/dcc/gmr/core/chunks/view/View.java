@@ -22,6 +22,8 @@ public final class View extends JFrame {
     private JPanel leftPanel;
     private JPanel rightPanel;
     private JScrollPane treePane;
+    private JSplitPane splitPane;
+    private JSplitPane splitPaneInside;
     private JTable table;
     private JTextArea textArea;
     private JFileChooser chooser;
@@ -42,6 +44,8 @@ public final class View extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
+        this.splitPane = new JSplitPane();
+        this.splitPaneInside = new JSplitPane();
         this.chooser = new JFileChooser();
         this.menuBar = new JMenuBar();
         this.menuFile = new JMenu();
@@ -152,15 +156,10 @@ public final class View extends JFrame {
     }
 
     private void paintPanel() {
-        this.add(this.leftPanel, BorderLayout.WEST);
-        this.add(this.rightPanel, BorderLayout.CENTER);
         this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
-        this.leftPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-        this.leftPanel.add(getTreePane(), BorderLayout.EAST);
-
-        this.rightPanel.add(getTextArea(), BorderLayout.CENTER);
+        this.rightPanel.add(new JScrollPane(getTextArea()), BorderLayout.CENTER);
 
         this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
@@ -184,10 +183,38 @@ public final class View extends JFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
-        
+
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));
         frame.paintMainPanel();
         frame.setVisible(true);
+    }
+
+    /**
+     * @return the splitPane
+     */
+    public JSplitPane getSplitPane() {
+        return splitPane;
+    }
+
+    /**
+     * @param splitPane the splitPane to set
+     */
+    public void setSplitPane(JSplitPane splitPane) {
+        this.splitPane = splitPane;
+    }
+
+    /**
+     * @return the splitPaneInside
+     */
+    public JSplitPane getSplitPaneInside() {
+        return splitPaneInside;
+    }
+
+    /**
+     * @param splitPaneInside the splitPaneInside to set
+     */
+    public void setSplitPaneInside(JSplitPane splitPaneInside) {
+        this.splitPaneInside = splitPaneInside;
     }
 
     /**
