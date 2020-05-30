@@ -1,30 +1,53 @@
 import React, { Fragment } from 'react'
 import { Link, Route } from 'react-router-dom'
 import { NotFound } from '../Errors'
-import Writer from './Project'
+import Project from './Project'
+
 
 export default ({ match: { url }, projects }) =>
-  <Fragment>
-    <ul>
+  
+
+<Fragment>
+
+{/* <ul>
+  {projects.map(({id,name}) =>
+    <li>
+      <Link to={`${url}/${id}`}>{name}</Link>
+    </li>
+  )}
+</ul> */}
+
+<Route path={`${url}/:id`} render={() => <Project/>} />
+
+</Fragment>
+
+
+
+
+
+{/* <Fragment>
+    <Route exact path={url} render={
+      () => <ul>
       {projects.map(({ id, name }) =>
         <li key={id}>
           <Link to={`${url}/${id}`}>{name}</Link>
         </li>
       )}
     </ul>
-      
-    <Route exact path={url} render={
-      () => <h3>List Projects</h3>
     }/>
-    {/* <Route path={`${url}/:writerId`} render={      
-      props => {
-        const writer = writers.find(({ id }) => id === props.match.params.writerId)
 
-        if (!writer) {
-          return <NotFound />
-        }
+  <Route path={`${url}/${projects.id}`} render={() => <h1>testeee</h1> } />
 
-        return <Writer {...props} {...writer}/>
-      }
-    } /> */}
-  </Fragment>
+
+  </Fragment> */}
+
+
+
+
+
+
+
+
+  
+
+  

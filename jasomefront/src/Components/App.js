@@ -4,6 +4,7 @@ import { NotFound } from './Errors'
 import Writers from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
+import Charts from '../Components/Charts'
 
 export default class extends Component {
   state = {
@@ -23,6 +24,7 @@ export default class extends Component {
       <Layout writers={projects}>
         <Switch>
           <Route exact path="/" render={() => <div>Home</div>} />
+          {/* <Route exact path="/" component={Charts}/> */}
           <Route exact path="/metric" component={ListMetric} />
           <Route path="/projects" render={
             props => <Writers {...props} projects={projects} />
