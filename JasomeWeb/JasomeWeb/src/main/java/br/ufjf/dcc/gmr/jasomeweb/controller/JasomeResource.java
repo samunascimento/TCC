@@ -56,6 +56,8 @@ public class JasomeResource {
         throw new UnsupportedOperationException();
     }
 
+    //retornando versão de um dado projeto
+    //só existe uma única métrica = {TLOC}
     @GET
     @Path("metric/version/{nameProject}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,7 +79,7 @@ public class JasomeResource {
         return listJ;
     }
     
-    
+    //retornando metricas de pacotes de um dado projeto = {nameProject}
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("metric/package/{nameProject}")
@@ -116,7 +118,8 @@ public class JasomeResource {
         return listJ;
     }
     
-    
+    //retornando nome de cada projeto para ser usado na barra lateral
+    //da aplicação front-end
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("nameProject")
@@ -134,6 +137,7 @@ public class JasomeResource {
      *
      * @param content representation for the resource
      */
+    
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
