@@ -52,12 +52,12 @@ public class CLIParameters {
         Options options = new Options();
 
         options.addOption(new Option(URL_DB_SHORT, URL_DB, true, "DB URL"));
-        options.addOption(new Option(USERNAME_DB_SHORT, USERNAME_DB, true, "DB username"));
-        options.addOption(new Option(PASSWORD_DB_SHORT, PASSWORD_DB, true, "DB password"));
-        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path"));
-        options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path"));
+        options.addOption(new Option(USERNAME_DB_SHORT, USERNAME_DB, true, "DataBase username"));
+        options.addOption(new Option(PASSWORD_DB_SHORT, PASSWORD_DB, true, "DataBase password"));
+        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path with a java project in your computer "));
+        options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path in your computer"));
         options.addOption(new Option(GITHUB_PROJECT_SHORT, GITHUB_PROJECT, true, "link to clone github project"));
-        options.addOption(new Option(GITHUB_PROJECT_PATH_SHORT, GITHUB_PROJECT_PATH, true, "directory to clone github project"));
+        options.addOption(new Option(GITHUB_PROJECT_PATH_SHORT, GITHUB_PROJECT_PATH, true, "directory path to clone github project"));
         options.addOption(new Option(PROJECT_NAME_SHORT, PROJECT_NAME, true, "directory name to clone the github project (without accent and space)"));
 
         CommandLine commandLine = null;
@@ -74,11 +74,17 @@ public class CLIParameters {
             String projectName = commandLine.getOptionValue(PROJECT_NAME_SHORT);
             String repositoryPath = commandLine.getOptionValue(REPOSITORY_PATH_SHORT);
             String jasomePath = commandLine.getOptionValue(JASOME_PATH_SHORT);
+                       
+            /*System.out.println(username);
+            System.out.println(url);
+            System.out.println(password);
+            System.out.println(repositoryPath);
+            System.out.println(jasomePath);*/
 
             if (gitHubProject != null) {
 
                 projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, null, null);
-                Jasome.analyze(url, username, password, jasomePath, projectPath);
+                Jasome.analyze(url, username, password,jasomePath , projectPath);
 
             } else {
                 Jasome.analyze(url, username, password, jasomePath, repositoryPath);

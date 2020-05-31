@@ -31,7 +31,7 @@ public class Jasome {
 
             Connection connection = ConnectionFactory.getConnection();
             
-            JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+          //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
 
 
         analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\calculadora-1");
@@ -77,6 +77,7 @@ public class Jasome {
         ProjectMetrics project = new ProjectMetrics();
 
         project.setSourceDir(jasome.GetRepositoryPath());
+        //System.out.println(jasome.GetRepositoryPath());
         project.setUrl("testeUrl");
         project.setName(jasome.GetRepositoryName());
         project.setOrganization("organization");
