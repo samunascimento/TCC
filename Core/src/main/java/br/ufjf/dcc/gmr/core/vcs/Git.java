@@ -974,7 +974,7 @@ public class Git {
 
     /**
      * Give all commits that is merges and their parents in the form:
-     *  HASH[space]PARENT1[space]PARENT2 
+     * HASH[space]PARENT1[space]PARENT2
      *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
@@ -1091,7 +1091,7 @@ public class Git {
         }
         return cliE.getOutput().toString().replace("[", "").replace("]", "");
     }
-    
+
     public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException, LocalRepositoryNotAGitRepository {
         String command = "git merge-base " + parent1 + " " + parent2;
         CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
@@ -1336,7 +1336,7 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
-   public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
+    public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";

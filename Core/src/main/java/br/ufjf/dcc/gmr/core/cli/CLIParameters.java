@@ -35,10 +35,14 @@ public class CLIParameters {
     public static final String USERNAME_DB_SHORT = "u";
     public static final String PASSWORD_DB = "password_db";
     public static final String PASSWORD_DB_SHORT = "p";
+    public static final String GITHUB_USERNAME = "github_username";
+    public static final String GITHUB_USERNAME_SHORT = "gu";
+    public static final String GITHUB_PASSWORD = "github_password";
+    public static final String GITHUB_PASSWORD_SHORT = "gp";
     public static final String GITHUB_PROJECT = "github_project";
     public static final String GITHUB_PROJECT_SHORT = "g";
-    public static final String GITHUB_PROJECT_PATH = "project_path";
-    public static final String GITHUB_PROJECT_PATH_SHORT = "gp";
+    public static final String GITHUB_PROJECT_PATH = "project_path_git";
+    public static final String GITHUB_PROJECT_PATH_SHORT = "ppg";
     public static final String PROJECT_NAME = "repository_name";
     public static final String PROJECT_NAME_SHORT = "n";
     public static final String REPOSITORY_PATH = "repository_path";
@@ -54,11 +58,13 @@ public class CLIParameters {
         options.addOption(new Option(URL_DB_SHORT, URL_DB, true, "DB URL"));
         options.addOption(new Option(USERNAME_DB_SHORT, USERNAME_DB, true, "DataBase username"));
         options.addOption(new Option(PASSWORD_DB_SHORT, PASSWORD_DB, true, "DataBase password"));
-        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path with a java project in your computer "));
-        options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path in your computer"));
         options.addOption(new Option(GITHUB_PROJECT_SHORT, GITHUB_PROJECT, true, "link to clone github project"));
         options.addOption(new Option(GITHUB_PROJECT_PATH_SHORT, GITHUB_PROJECT_PATH, true, "directory path to clone github project"));
         options.addOption(new Option(PROJECT_NAME_SHORT, PROJECT_NAME, true, "directory name to clone the github project (without accent and space)"));
+        options.addOption(new Option(GITHUB_USERNAME_SHORT, GITHUB_USERNAME, true, "directory name to clone the github project (without accent and space)"));
+        options.addOption(new Option(GITHUB_PASSWORD_SHORT, GITHUB_PASSWORD, true, "directory name to clone the github project (without accent and space)"));
+        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path with a java project in your computer "));
+        options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path in your computer"));
 
         CommandLine commandLine = null;
 
@@ -74,17 +80,18 @@ public class CLIParameters {
             String projectName = commandLine.getOptionValue(PROJECT_NAME_SHORT);
             String repositoryPath = commandLine.getOptionValue(REPOSITORY_PATH_SHORT);
             String jasomePath = commandLine.getOptionValue(JASOME_PATH_SHORT);
-                       
+            String gitHubUsername = commandLine.getOptionValue(GITHUB_USERNAME_SHORT);
+            String gitHubPassword = commandLine.getOptionValue(GITHUB_PASSWORD_SHORT);
+
             /*System.out.println(username);
             System.out.println(url);
             System.out.println(password);
             System.out.println(repositoryPath);
             System.out.println(jasomePath);*/
-
             if (gitHubProject != null) {
 
-                projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, null, null);
-                Jasome.analyze(url, username, password,jasomePath , projectPath);
+                projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, gitHubUsername, gitHubPassword);
+                Jasome.analyze(url, username, password, jasomePath, projectPath);
 
             } else {
                 Jasome.analyze(url, username, password, jasomePath, repositoryPath);
