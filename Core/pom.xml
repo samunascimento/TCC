@@ -49,14 +49,14 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/python</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/python</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/java9</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/java9</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python</argument>
+                        <argument>br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9</argument>
                     </arguments>
                     <includes>
-                        <include>Python3.g4</include>
+                        <include>Java9.g4</include>
                     </includes>
                 </configuration>
                 <executions>

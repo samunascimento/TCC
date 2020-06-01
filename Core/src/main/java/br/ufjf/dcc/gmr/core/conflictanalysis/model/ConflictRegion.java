@@ -138,9 +138,9 @@ public class ConflictRegion {
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
                 if(useOutmost)
-                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 else
-                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 Git.checkout("master", repositoryPath);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {

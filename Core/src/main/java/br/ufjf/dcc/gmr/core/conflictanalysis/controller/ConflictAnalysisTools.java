@@ -4,6 +4,10 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java8.Java8Lexer;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java8.Java8Parser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Lexer;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
@@ -83,6 +87,48 @@ public class ConflictAnalysisTools {
                 visitor = new JavaVisitor(true);
             } else {
                 visitor = new JavaVisitor(false);
+            }
+            visitor.visit(tree);
+
+            return visitor.getList();
+        } else {
+            throw new IOException();
+        }
+    }
+    public static List<SyntaxStructure> analyzeJava9SyntaxTree(String filePath) throws IOException {
+        if (filePath.endsWith(".java")) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            Java9Lexer lexer = new Java9Lexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            Java9Parser parser = new Java9Parser(tokens);
+            ParseTree tree = parser.compilationUnit();
+
+            Java9Visitor visitor;
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                visitor = new Java9Visitor(true);
+            } else {
+                visitor = new Java9Visitor(false);
+            }
+            visitor.visit(tree);
+
+            return visitor.getList();
+        } else {
+            throw new IOException();
+        }
+    }
+    public static List<SyntaxStructure> analyzeJava8SyntaxTree(String filePath) throws IOException {
+        if (filePath.endsWith(".java")) {
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            Java8Lexer lexer = new Java8Lexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            Java8Parser parser = new Java8Parser(tokens);
+            ParseTree tree = parser.compilationUnit();
+
+            Java8Visitor visitor;
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                visitor = new Java8Visitor(true);
+            } else {
+                visitor = new Java8Visitor(false);
             }
             visitor.visit(tree);
 
