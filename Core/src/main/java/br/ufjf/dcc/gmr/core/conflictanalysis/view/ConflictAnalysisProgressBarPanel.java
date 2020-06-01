@@ -62,7 +62,7 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
 
     @Override
     public void run() {
-        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this.useOutmost);
+        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this,this.useOutmost);
         try {
             repositoryAnalysis.startAnalysis();
         } catch (IOException ex) {
