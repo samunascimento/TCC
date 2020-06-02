@@ -29,11 +29,9 @@ public class Jasome {
     public static void main(String[] args) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, UnknownSwitch, RefusingToClean, IsOutsideRepository, SQLException, NullPointerException, OptionNotExist, ParseException, java.text.ParseException {
 //        try {
 
-            Connection connection = ConnectionFactory.getConnection();
-            
-          //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+        Connection connection = ConnectionFactory.getConnection();
 
-
+        //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
         analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\calculadora-1");
     }
 
@@ -41,23 +39,30 @@ public class Jasome {
      *
      * @param repositoryUrl
      * @param repositoryPath
-     * @param repositoryName
+     * @param projectName
      * @param user
      * @param password
      * @return
      * @throws RepositoryNotFound
      * @throws UrlNotFound
      */
-    public static String cloneRepository(String repositoryUrl, String repositoryPath, String repositoryName, String user, String password) throws RepositoryNotFound, UrlNotFound {
+    public static String cloneRepository(String repositoryUrl, String repositoryPath, String projectName, String user, String password) throws RepositoryNotFound, UrlNotFound {
         System.out.println("Clonando Projeto...");
-        if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && (user == null || password == null)) {
-            Git.clone(repositoryUrl, repositoryPath, repositoryName);
-            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
-        } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (repositoryName != null && !repositoryName.contains(" ")) && user != null && password != null) {
-            Git.clone(repositoryUrl, repositoryPath, repositoryName, user, password);
-            repositoryPath = repositoryPath.concat("\\").concat(repositoryName);
+        if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (user == null || password == null)) {
+            Git.clone(repositoryUrl, repositoryPath, projectName);
+        } else if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (user != null && password != null)) {
+            Git.clone(repositoryUrl, repositoryPath, projectName, user, password);
         }
-        
+        if (projectName == null) {
+            String[] url = repositoryUrl.split("/");
+            String name = url[url.length - 1];
+            name = name.replaceFirst(".git", "");
+            System.out.println(name);
+            repositoryPath = repositoryPath.concat(File.separator).concat(name);
+        } else {
+            repositoryPath = repositoryPath.concat(File.separator).concat(projectName);
+        }
+
         return repositoryPath;
     }
 
@@ -66,11 +71,10 @@ public class Jasome {
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {
             connection = ConnectionFactory.getConnection();
-        } 
-        else {
+        } else {
             connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
         }
-       
+
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
 
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");

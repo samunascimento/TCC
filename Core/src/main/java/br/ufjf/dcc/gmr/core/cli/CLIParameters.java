@@ -15,6 +15,7 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.Jasome;
+import java.io.File;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -88,6 +89,9 @@ public class CLIParameters {
             System.out.println(password);
             System.out.println(repositoryPath);
             System.out.println(jasomePath);*/
+            
+            System.out.println(projectName);
+            System.out.println((new File(".")).getAbsolutePath());
             if (gitHubProject != null) {
 
                 projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, gitHubUsername, gitHubPassword);
