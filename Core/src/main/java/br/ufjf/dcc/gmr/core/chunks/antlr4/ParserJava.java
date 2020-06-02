@@ -25,7 +25,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ParserJava {
       public static void main(String[] args) throws IOException {
-        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/JavaExample.java";
+        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java";
 
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
