@@ -4,7 +4,6 @@ import { NotFound } from './Errors'
 import Writers from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
-import Charts from '../Components/Charts'
 
 export default class extends Component {
   state = {

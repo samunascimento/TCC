@@ -1,10 +1,53 @@
-// import React, { Fragment } from 'react'
-// import Button from '@material-ui/core/Button';
-// import { Link, Route } from 'react-router-dom'
-// import { NotFound } from '../../Errors'
-// import Text from './Text'
+// App.js
+/*
+import React, { useEffect, useState } from 'react';
+import BarChart from './../../Charts/chart';
 
-import React from 'react';
+// const data = 	[
+// 	[{'x':1,'y':6},{'x':2,'y':5},{'x':3,'y':18},{'x':4,'y':10},{'x':5,'y':2},{'x':6,'y':24},{'x':7,'y':13},{'x':8,'y':3}],
+//   [{'x':1,'y':7},{'x':2,'y':5},{'x':3,'y':9},{'x':4,'y':5},{'x':5,'y':1},{'x':6,'y':11},{'x':7,'y':8},{'x':8,'y':6}],
+//   [{'x':1,'y':2},{'x':2,'y':3},{'x':3,'y':1},{'x':4,'y':3},{'x':5,'y':0},{'x':6,'y':5},{'x':7,'y':3},{'x':8,'y':3}],
+//   [{'x':1,'y':2},{'x':2,'y':0},{'x':3,'y':2},{'x':4,'y':2},{'x':5,'y':1},{'x':6,'y':2},{'x':7,'y':5},{'x':8,'y':1}],
+//   [{'x':1,'y':0},{'x':2,'y':0},{'x':3,'y':0},{'x':4,'y':0},{'x':5,'y':1},{'x':6,'y':1},{'x':7,'y':0},{'x':8,'y':1}]
+// ];
+var i = 0;
+
+function App() {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        changeData();
+    }, []);
+
+    const changeData = () => {
+      const data = 	[
+        [{'x':1,'y':6},{'x':2,'y':5},{'x':3,'y':18},{'x':4,'y':10},{'x':5,'y':2},{'x':6,'y':24},{'x':7,'y':13},{'x':8,'y':3}],
+        [{'x':1,'y':7},{'x':2,'y':5},{'x':3,'y':9},{'x':4,'y':5},{'x':5,'y':1},{'x':6,'y':11},{'x':7,'y':8},{'x':8,'y':6}],
+        [{'x':1,'y':2},{'x':2,'y':3},{'x':3,'y':1},{'x':4,'y':3},{'x':5,'y':0},{'x':6,'y':5},{'x':7,'y':3},{'x':8,'y':3}],
+        [{'x':1,'y':2},{'x':2,'y':0},{'x':3,'y':2},{'x':4,'y':2},{'x':5,'y':1},{'x':6,'y':2},{'x':7,'y':5},{'x':8,'y':1}],
+        [{'x':1,'y':0},{'x':2,'y':0},{'x':3,'y':0},{'x':4,'y':0},{'x':5,'y':1},{'x':6,'y':1},{'x':7,'y':0},{'x':8,'y':1}]
+      ];
+    }
+
+
+    return (
+
+      <div>
+        <div className="App">
+            <BarChart width={600} height={400} data={data} />
+        </div>
+        </div>
+    );
+}
+
+export default App;
+
+
+*/
+
+
+
+import React, { useEffect , useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,14 +56,24 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import BarChart from './../../Charts/chart';
 
 
 export default function Project() {
+
+  //const [data, setData] = useState([]);
 
   const [state, setState] = React.useState({
     checkedA: false
   });
 
+  const data = 	[
+    [{'x':1,'y':6},{'x':2,'y':5},{'x':3,'y':18},{'x':4,'y':10},{'x':5,'y':2},{'x':6,'y':24},{'x':7,'y':13},{'x':8,'y':3}],
+    [{'x':1,'y':7},{'x':2,'y':5},{'x':3,'y':9},{'x':4,'y':5},{'x':5,'y':1},{'x':6,'y':11},{'x':7,'y':8},{'x':8,'y':6}],
+    [{'x':1,'y':2},{'x':2,'y':3},{'x':3,'y':1},{'x':4,'y':3},{'x':5,'y':0},{'x':6,'y':5},{'x':7,'y':3},{'x':8,'y':3}],
+    [{'x':1,'y':2},{'x':2,'y':0},{'x':3,'y':2},{'x':4,'y':2},{'x':5,'y':1},{'x':6,'y':2},{'x':7,'y':5},{'x':8,'y':1}],
+    [{'x':1,'y':0},{'x':2,'y':0},{'x':3,'y':0},{'x':4,'y':0},{'x':5,'y':1},{'x':6,'y':1},{'x':7,'y':0},{'x':8,'y':1}]
+  ];
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -121,10 +174,18 @@ export default function Project() {
               </FormGroup>
             </Menu>
           </Grid>
+          <Grid item xs={2}>
+          <Button variant="contained">
+            Gerar gráfico
+          </Button>
+          </Grid>
         </Grid>
       </div>
       <div>
         <h1>GRÁFICO</h1>
+        <div className="App">
+            <BarChart width={600} height={400} data={data} />
+        </div>
       </div>
     </div>
   );
@@ -137,8 +198,7 @@ export default function Project() {
 
 
 
-
-
+/*
 
 // export default ({ match: { url}, name, born, deceased, description, image, texts }) =>
 //   <Fragment>
@@ -183,3 +243,4 @@ export default function Project() {
 //     } />
 
 //   </Fragment>
+*/
