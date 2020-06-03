@@ -15,6 +15,7 @@ import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import java.io.File;
 import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -36,7 +37,7 @@ public class Cli {
     public static final String OUTMOST_SHORT = "o";
     public static final String CONTEXT_LINE_NUMBER = "context_line_number";
     public static final String CONTEXT_LINE_NUMBER_SHORT = "c";
-     public static final String SAVE_PATH = "save_path";
+    public static final String SAVE_PATH = "save_path";
     public static final String SAVE_PATH_SHORT = "s";
 
     public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
@@ -47,13 +48,13 @@ public class Cli {
         options.addOption(new Option(DIRECTORY_PATH_SHORT, DIRECTORY_PATH, true, "Directory"));
         options.addOption(new Option(SAVE_PATH_SHORT, SAVE_PATH, true, "Save path"));
         options.addOption(new Option(OUTMOST_SHORT, OUTMOST_SHORT, false, "Outmost"));
-        //options.addOption(new Option(CONTEXT_LINE_NUMBER_SHORT, CONTEXT_LINE_NUMBER, true, "Context Line Number"));
-        
-        Option CONTEXT_LINE_NUMBER_SHORT = OptionBuilder.withArgName("c")
+
+        Option context_Line_Number_Short = OptionBuilder.withArgName("c")
                 .hasArg()
                 .withDescription("Number of context lines")
                 .create("c");
-        options.addOption(CONTEXT_LINE_NUMBER_SHORT);
+        options.addOption(context_Line_Number_Short);
+
         
         CommandLine commandLine = null;
 
@@ -64,10 +65,12 @@ public class Cli {
             String directoryPath = cmd.getOptionValue(DIRECTORY_PATH);
             int cln = 3;
             boolean OutmostBool = false;
-            String savePath=cmd.getOptionValue(SAVE_PATH);
+
+            String savePath = cmd.getOptionValue(SAVE_PATH);
+
             String name;
 
-            if (cmd.hasOption("o")) {
+            if (cmd.hasOption("o") || cmd.hasOption("outmost")) {
                 OutmostBool = true;
             }
 
@@ -77,13 +80,27 @@ public class Cli {
 
             GitRepositoryAnalysis analysis = new GitRepositoryAnalysis(directoryPath, cln, OutmostBool);
             analysis.startAnalysis();
-            name=analysis.getProjectName();
-            if(analysis.getMergeEventList()!=null)
-            GSONClass.save(savePath + "/" + name + ".gson", analysis.getMergeEventList());
-            else
-                System.out.println("Deu ruim");
+            name = analysis.getProjectName();
+
+            if (!savePath.endsWith(".gson")) {
+
+                File directory = new File(savePath);
+
+                if (!directory.isDirectory()) {
+                    directory.mkdirs();
+                }
+                savePath = savePath + File.separator + name + ".gson";
+            }
+
+            if (analysis.getMergeEventList() != null) {
+                GSONClass.save(savePath, analysis.getMergeEventList());
+            } else {
+                System.out.println("Ops, it was not suposed to happen!");
+            }
         } catch (ParseException e) {
-            System.out.println("Argumentos inválidos!");
+            System.out.println("Invalid arguments!");
+        } catch (NumberFormatException e) {
+            System.out.println("Context line number must be a number");
         }
 
     }
