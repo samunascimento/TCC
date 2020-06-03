@@ -666,7 +666,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitCompilationUnit(ctx); 
     }
 

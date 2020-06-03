@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
@@ -19,13 +14,12 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-/**
- *
- * @author ian
- */
+
 public class ParserJava {
       public static void main(String[] args) throws IOException {
-        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java";
+        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/JavaExample.java";
+        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/DiaSemana.java";
+        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/Rectangle.java";
 
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);

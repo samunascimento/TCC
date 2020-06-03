@@ -1,22 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.example;
 
-/**
- *
- * @author ian
- */
+import java.io.Serializable;
+
 public class JavaExample {
+    
+    @RectangleElement()
     private int age;
     public int one, two;
+    public String str;
 
     public static String getMethodName() {
         return Thread.currentThread().getStackTrace()[2].toString();
     }
 
+    public <E extends Serializable> JavaExample(E element) {
+        int aux = 0;
+        this.str = element.toString();
+    }
+    
+    /**
+     * constructor
+     */
+    public JavaExample() {
+        this.age = 0;
+        this.one = 1;
+        this.two = 2;
+        this.str = null;
+    }
+
+    
+    
     /**
      * @return the age
      */
@@ -38,7 +51,7 @@ public class JavaExample {
         int year;
 
         year = 2018;
-        
+
         for (int i = 0; i < 10; i++) {
             System.out.println("bla");
         }
