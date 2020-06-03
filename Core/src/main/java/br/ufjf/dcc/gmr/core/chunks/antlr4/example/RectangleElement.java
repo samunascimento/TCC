@@ -5,11 +5,15 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.example;
 
-/**
- *
- * @author ian
- */
+
 public @interface RectangleElement {
+    
+    int[] array = {1,2,3};
+    
+    public boolean isRun() default true;
+    
+    public int[] array() default {1,2,3};
+    
     public double width() default 10;
-    public double height() default 5;
+    
 }

@@ -1,9 +1,13 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.example;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.function.Function;
 
 public class JavaExample {
-    
+
     @RectangleElement()
     private int age;
     public int one, two;
@@ -17,7 +21,7 @@ public class JavaExample {
         int aux = 0;
         this.str = element.toString();
     }
-    
+
     /**
      * constructor
      */
@@ -28,8 +32,14 @@ public class JavaExample {
         this.str = null;
     }
 
-    
-    
+    public int sum(int... values) {
+        int sum = 0;
+        for (int value : values) {
+            sum += value;
+        }
+        return sum;
+    }
+
     /**
      * @return the age
      */
@@ -46,7 +56,23 @@ public class JavaExample {
         this.age = age;
     }
 
+    @RectangleElement(isRun = true, array = {1, 5, 3})
     public static void main(String[] args) {
+        
+        //lambda expression
+        Function<Integer, Integer> function = (x) -> x * 3 + 2;
+        Integer resultado = function.apply(2);
+        System.out.println(resultado);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("d:\\myfile.txt"))) {
+            String str;
+            while ((str = br.readLine()) != null) {
+                System.out.println(str);
+            }
+        } catch (IOException ie) {
+            System.out.println("exception");
+        }
+
         System.out.println(getMethodName());
         int year;
 
@@ -59,5 +85,6 @@ public class JavaExample {
         System.out.println("You were born in " + year);
         JavaExample je = new JavaExample();
         je.setAge(1999);
+        System.out.println(je.sum(1, 2, 3, 4, 5, 6));
     }
 }
