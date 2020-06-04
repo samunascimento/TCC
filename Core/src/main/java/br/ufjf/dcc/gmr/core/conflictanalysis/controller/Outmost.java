@@ -8,6 +8,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJava9SyntaxTree;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJavaSyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Outmost {
             SyntaxStructure auxStructure = null;
 
             if (filePath.endsWith(".java")) {
-                rawList = analyzeJava9SyntaxTree(filePath);
+                rawList = analyzeJavaSyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 rawList = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {

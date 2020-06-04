@@ -5,7 +5,6 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,10 +13,7 @@ import java.util.List;
  */
 public class TestLuan {
 
-    /*
-    lalala lelele
-    */
-    
+
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -27,15 +23,15 @@ public class TestLuan {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<SyntaxStructure> analyzeJava9SyntaxTree = ConflictAnalysisTools.
-                analyzeJava9SyntaxTree(
+                analyzeJava9SyntaxTree/*(
                         "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF/Core/src/"
-                                + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
-        
+                                + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")*/
+        ("/home/luan/Github/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
+
         for (SyntaxStructure syntaxStructure : analyzeJava9SyntaxTree) {
             System.out.println(syntaxStructure);
         }
-        
-      
+
     }
 
 }
