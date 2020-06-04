@@ -1475,6 +1475,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCastExpression(Java9Parser.CastExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#comment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComment(Java9Parser.CommentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

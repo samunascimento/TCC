@@ -70,5 +70,12 @@ public class SyntaxStructure {
     public boolean getWarning(){
         return this.warning;
     }
+
+    @Override
+    public String toString() {
+        return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", startLineStopColumn=" + startLineStopColumn + ", stopLineStartColumn=" + stopLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
+    }
+    
+    
     
 }

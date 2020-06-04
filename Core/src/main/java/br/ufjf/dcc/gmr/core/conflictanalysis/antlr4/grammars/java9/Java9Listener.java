@@ -2448,6 +2448,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitCastExpression(Java9Parser.CastExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void enterComment(Java9Parser.CommentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void exitComment(Java9Parser.CommentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#identifier}.
 	 * @param ctx the parse tree
 	 */

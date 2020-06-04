@@ -20,8 +20,8 @@ import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -31,12 +31,15 @@ import org.apache.commons.cli.ParseException;
  */
 public class Cli {
 
-    public static final String DIRECTORY_PATH = "directory_path";
-    public static final String DIRECTORY_PATH_SHORT = "d";
+    public static final String REPOSITORY_PATH = "repository_path";
+    public static final String REPOSITORY_PATH_SHORT = "r";
+
     public static final String OUTMOST = "outmost";
     public static final String OUTMOST_SHORT = "o";
+
     public static final String CONTEXT_LINE_NUMBER = "context_line_number";
     public static final String CONTEXT_LINE_NUMBER_SHORT = "c";
+
     public static final String SAVE_PATH = "save_path";
     public static final String SAVE_PATH_SHORT = "s";
 
@@ -45,37 +48,44 @@ public class Cli {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
-        options.addOption(new Option(DIRECTORY_PATH_SHORT, DIRECTORY_PATH, true, "Directory"));
-        options.addOption(new Option(SAVE_PATH_SHORT, SAVE_PATH, true, "Save path"));
-        options.addOption(new Option(OUTMOST_SHORT, OUTMOST_SHORT, false, "Outmost"));
+        Option repositoryOption = new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "Repository");
+        repositoryOption.setRequired(true);
+        options.addOption(repositoryOption);
 
-        Option context_Line_Number_Short = OptionBuilder.withArgName("c")
-                .hasArg()
-                .withDescription("Number of context lines")
-                .create("c");
-        options.addOption(context_Line_Number_Short);
+        Option saveOption = new Option(SAVE_PATH_SHORT, SAVE_PATH, true, "Save path");
+        saveOption.setRequired(true);
+        options.addOption(saveOption);
 
-        
-        CommandLine commandLine = null;
+        Option outmostOption = new Option(OUTMOST_SHORT, OUTMOST, false, "Outmost");
+        options.addOption(outmostOption);
+
+        Option contextLineOption = new Option(CONTEXT_LINE_NUMBER_SHORT, CONTEXT_LINE_NUMBER, true, "Number of context lines");
+        options.addOption(contextLineOption);
+
+        HelpFormatter formatter = new HelpFormatter();
 
         try {
 
             CommandLine cmd = parser.parse(options, args);
 
-            String directoryPath = cmd.getOptionValue(DIRECTORY_PATH);
+            //Default options
+            String directoryPath = cmd.getOptionValue(REPOSITORY_PATH);
             int cln = 3;
             boolean OutmostBool = false;
-
             String savePath = cmd.getOptionValue(SAVE_PATH);
 
             String name;
 
-            if (cmd.hasOption("o") || cmd.hasOption("outmost")) {
+            if (cmd.hasOption("o")) {
                 OutmostBool = true;
             }
 
             if (cmd.hasOption("c")) {
                 cln = Integer.parseInt(cmd.getOptionValue("c"));
+                if (cln <= 0) {
+                    System.out.println("Context line number must be a positive number");
+                    return;
+                }
             }
 
             GitRepositoryAnalysis analysis = new GitRepositoryAnalysis(directoryPath, cln, OutmostBool);
@@ -97,11 +107,14 @@ public class Cli {
             } else {
                 System.out.println("Ops, it was not suposed to happen!");
             }
-        } catch (ParseException e) {
-            System.out.println("Invalid arguments!");
-        } catch (NumberFormatException e) {
-            System.out.println("Context line number must be a number");
-        }
+        } catch (ParseException| NumberFormatException e ) {
+            
+            if(e instanceof NumberFormatException){
+                System.out.println("Context line number must be a number");
+            }
+            
+            formatter.printHelp("help", options);
+        } 
 
     }
 
