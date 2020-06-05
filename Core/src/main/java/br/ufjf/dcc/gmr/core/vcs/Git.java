@@ -338,8 +338,9 @@ public class Git {
      * @return
      * @throws RepositoryNotFound
      * @throws br.ufjf.dcc.gmr.core.exception.UrlNotFound
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
      */
-    public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound {
+    public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
         
         System.out.println(directory);
 
@@ -363,7 +364,7 @@ public class Git {
                     if (line.contains("does not exist")) {
                         throw new RepositoryNotFound();
                     } else if (line.contains("already exists and is not an empty directory")) {
-                        System.out.println("Repository already exists.");
+                        throw new RepositoryAlreadyExist();
                     }
                 }
             }
@@ -375,7 +376,7 @@ public class Git {
         return true;
     }
 
-    public static boolean clone(String url, String directory, String name, String username, String password) throws RepositoryNotFound, UrlNotFound {
+    public static boolean clone(String url, String directory, String name, String username, String password) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
         String[] split = url.split("//");
 
         String command = split[0].concat("//").concat(username).concat(":").concat(password).concat("@").concat(split[1]);
