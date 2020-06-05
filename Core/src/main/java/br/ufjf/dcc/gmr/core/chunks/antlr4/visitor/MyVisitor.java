@@ -15,7 +15,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     PackageBinding packageBinding;
     TypeBinding typeBinding;
-
+    
     public MyVisitor() {
         this.languageConstructs = new ArrayList<LanguageConstruct>();
         this.packageBinding = new PackageBinding();
@@ -645,8 +645,14 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
-        //log(ctx);
-        return super.visitImportDeclaration(ctx);
+        for (ParseTree parserTree : ctx.children){
+            if(parserTree instanceof JavaParser.QualifiedNameContext){
+                packageBinding.setName(parserTree.getText());
+            }
+        }
+        System.out.println(packageBinding.getName());
+        Object visitImportDeclaration = super.visitImportDeclaration(ctx);
+        return visitImportDeclaration;
     }
 
     @Override
@@ -657,11 +663,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             }
         }
-
         System.out.println(packageBinding.getName());
-        //log(ctx);
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
-
         return visitPackageDeclaration;
     }
 
