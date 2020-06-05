@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -50,22 +51,25 @@ public class CLIParameters {
     public static final String REPOSITORY_PATH_SHORT = "r";
     public static final String JASOME_PATH = "jasome_path";
     public static final String JASOME_PATH_SHORT = "j";
+    public static final String HELP = "help";
+    public static final String HELP_SHORT = "h";
 
     public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, UrlNotFound {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
-        options.addOption(new Option(URL_DB_SHORT, URL_DB, true, "DB URL"));
+        options.addOption(new Option(URL_DB_SHORT, URL_DB, true, "DataBase URL"));
         options.addOption(new Option(USERNAME_DB_SHORT, USERNAME_DB, true, "DataBase username"));
         options.addOption(new Option(PASSWORD_DB_SHORT, PASSWORD_DB, true, "DataBase password"));
         options.addOption(new Option(GITHUB_PROJECT_SHORT, GITHUB_PROJECT, true, "link to clone github project"));
         options.addOption(new Option(GITHUB_PROJECT_PATH_SHORT, GITHUB_PROJECT_PATH, true, "directory path to clone github project"));
         options.addOption(new Option(PROJECT_NAME_SHORT, PROJECT_NAME, true, "directory name to clone the github project (without accent and space)"));
-        options.addOption(new Option(GITHUB_USERNAME_SHORT, GITHUB_USERNAME, true, "directory name to clone the github project (without accent and space)"));
-        options.addOption(new Option(GITHUB_PASSWORD_SHORT, GITHUB_PASSWORD, true, "directory name to clone the github project (without accent and space)"));
-        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path with a java project in your computer "));
+        options.addOption(new Option(GITHUB_USERNAME_SHORT, GITHUB_USERNAME, true, "github username to access private repositories"));
+        options.addOption(new Option(GITHUB_PASSWORD_SHORT, GITHUB_PASSWORD, true, "github password to access private repositories"));
+        options.addOption(new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "repository path with a java project in your computer"));
         options.addOption(new Option(JASOME_PATH_SHORT, JASOME_PATH, true, "jasome path in your computer"));
+        options.addOption(HELP_SHORT, HELP, false, "Shows this help");
 
         CommandLine commandLine = null;
 
@@ -84,15 +88,12 @@ public class CLIParameters {
             String gitHubUsername = commandLine.getOptionValue(GITHUB_USERNAME_SHORT);
             String gitHubPassword = commandLine.getOptionValue(GITHUB_PASSWORD_SHORT);
 
-            /*System.out.println(username);
-            System.out.println(url);
-            System.out.println(password);
-            System.out.println(repositoryPath);
-            System.out.println(jasomePath);*/
-            
-            System.out.println(projectName);
-            System.out.println((new File(".")).getAbsolutePath());
-            if (gitHubProject != null) {
+            if (commandLine.hasOption("h")) {
+                HelpFormatter formatter = new HelpFormatter();
+
+                formatter.printHelp("CommandLineParameters", options);
+            }
+            else if (gitHubProject != null) {
 
                 projectPath = Jasome.cloneRepository(gitHubProject, projectPath, projectName, gitHubUsername, gitHubPassword);
                 Jasome.analyze(url, username, password, jasomePath, projectPath);
@@ -105,7 +106,6 @@ public class CLIParameters {
             System.out.println("Argumentos inválidos!");
             e.printStackTrace();
         }
-
     }
 
 }
