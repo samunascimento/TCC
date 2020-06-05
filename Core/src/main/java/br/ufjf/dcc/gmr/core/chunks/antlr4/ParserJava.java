@@ -16,10 +16,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
       public static void main(String[] args) throws IOException {
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/JavaExample.java";
+        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/JavaExample.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/DiaSemana.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/Rectangle.java";
-        String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/RectangleElement.java";
+        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/RectangleElement.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/GFG.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/vcs/Git.java";
 
