@@ -38,25 +38,25 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitArguments(JavaParser.ArgumentsContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitArguments(ctx);
     }
 
     @Override
     public Object visitExplicitGenericInvocationSuffix(JavaParser.ExplicitGenericInvocationSuffixContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitExplicitGenericInvocationSuffix(ctx);
     }
 
     @Override
     public Object visitSuperSuffix(JavaParser.SuperSuffixContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitSuperSuffix(ctx);
     }
 
     @Override
     public Object visitTypeArguments(JavaParser.TypeArgumentsContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeArguments(ctx);
     }
 
@@ -74,31 +74,31 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitTypeList(JavaParser.TypeListContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeList(ctx);
     }
 
     @Override
     public Object visitNonWildcardTypeArguments(JavaParser.NonWildcardTypeArgumentsContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitNonWildcardTypeArguments(ctx);
     }
 
     @Override
     public Object visitNonWildcardTypeArgumentsOrDiamond(JavaParser.NonWildcardTypeArgumentsOrDiamondContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitNonWildcardTypeArgumentsOrDiamond(ctx);
     }
 
     @Override
     public Object visitTypeArgumentsOrDiamond(JavaParser.TypeArgumentsOrDiamondContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeArgumentsOrDiamond(ctx);
     }
 
     @Override
     public Object visitExplicitGenericInvocation(JavaParser.ExplicitGenericInvocationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitExplicitGenericInvocation(ctx);
     }
 
@@ -110,13 +110,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitArrayCreatorRest(JavaParser.ArrayCreatorRestContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitArrayCreatorRest(ctx);
     }
 
     @Override
     public Object visitInnerCreator(JavaParser.InnerCreatorContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitInnerCreator(ctx);
     }
 
@@ -128,7 +128,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitCreator(JavaParser.CreatorContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitCreator(ctx);
     }
 
@@ -140,25 +140,25 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPrimary(JavaParser.PrimaryContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitPrimary(ctx);
     }
 
     @Override
     public Object visitLambdaBody(JavaParser.LambdaBodyContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLambdaBody(ctx);
     }
 
     @Override
     public Object visitLambdaParameters(JavaParser.LambdaParametersContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLambdaParameters(ctx);
     }
 
     @Override
     public Object visitLambdaExpression(JavaParser.LambdaExpressionContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLambdaExpression(ctx);
     }
 
@@ -170,67 +170,67 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitMethodCall(ctx);
     }
 
     @Override
     public Object visitExpressionList(JavaParser.ExpressionListContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitExpressionList(ctx);
     }
 
     @Override
     public Object visitParExpression(JavaParser.ParExpressionContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitParExpression(ctx);
     }
 
     @Override
     public Object visitEnhancedForControl(JavaParser.EnhancedForControlContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitEnhancedForControl(ctx);
     }
 
     @Override
     public Object visitForInit(JavaParser.ForInitContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitForInit(ctx);
     }
 
     @Override
     public Object visitForControl(JavaParser.ForControlContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitForControl(ctx);
     }
 
     @Override
     public Object visitSwitchLabel(JavaParser.SwitchLabelContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitSwitchLabel(ctx);
     }
 
     @Override
     public Object visitSwitchBlockStatementGroup(JavaParser.SwitchBlockStatementGroupContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitSwitchBlockStatementGroup(ctx);
     }
 
     @Override
     public Object visitResource(JavaParser.ResourceContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitResource(ctx);
     }
 
     @Override
     public Object visitResources(JavaParser.ResourcesContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitResources(ctx);
     }
 
     @Override
     public Object visitResourceSpecification(JavaParser.ResourceSpecificationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitResourceSpecification(ctx);
     }
 
@@ -248,13 +248,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitCatchClause(JavaParser.CatchClauseContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitCatchClause(ctx);
     }
 
     @Override
     public Object visitStatement(JavaParser.StatementContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitStatement(ctx);
     }
 
@@ -266,19 +266,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLocalVariableDeclaration(ctx);
     }
 
     @Override
     public Object visitBlockStatement(JavaParser.BlockStatementContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitBlockStatement(ctx);
     }
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitBlock(ctx);
     }
 
@@ -296,7 +296,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitAnnotationMethodRest(JavaParser.AnnotationMethodRestContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitAnnotationMethodRest(ctx);
     }
 
@@ -320,13 +320,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitAnnotationTypeBody(JavaParser.AnnotationTypeBodyContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitAnnotationTypeBody(ctx);
     }
 
     @Override
     public Object visitAnnotationTypeDeclaration(JavaParser.AnnotationTypeDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitAnnotationTypeDeclaration(ctx);
     }
 
@@ -356,61 +356,61 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitAnnotation(JavaParser.AnnotationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitAnnotation(ctx);
     }
 
     @Override
     public Object visitFloatLiteral(JavaParser.FloatLiteralContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitFloatLiteral(ctx);
     }
 
     @Override
     public Object visitIntegerLiteral(JavaParser.IntegerLiteralContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitIntegerLiteral(ctx);
     }
 
     @Override
     public Object visitLiteral(JavaParser.LiteralContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLiteral(ctx);
     }
 
     @Override
     public Object visitQualifiedName(JavaParser.QualifiedNameContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitQualifiedName(ctx);
     }
 
     @Override
     public Object visitLastFormalParameter(JavaParser.LastFormalParameterContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitLastFormalParameter(ctx);
     }
 
     @Override
     public Object visitFormalParameter(JavaParser.FormalParameterContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitFormalParameter(ctx);
     }
 
     @Override
     public Object visitFormalParameterList(JavaParser.FormalParameterListContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitFormalParameterList(ctx);
     }
 
     @Override
     public Object visitFormalParameters(JavaParser.FormalParametersContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitFormalParameters(ctx);
     }
 
     @Override
     public Object visitQualifiedNameList(JavaParser.QualifiedNameListContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitQualifiedNameList(ctx);
     }
 
@@ -422,37 +422,37 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassOrInterfaceType(JavaParser.ClassOrInterfaceTypeContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitClassOrInterfaceType(ctx);
     }
 
     @Override
     public Object visitArrayInitializer(JavaParser.ArrayInitializerContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitArrayInitializer(ctx);
     }
 
     @Override
     public Object visitVariableInitializer(JavaParser.VariableInitializerContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitVariableInitializer(ctx);
     }
 
     @Override
     public Object visitVariableDeclaratorId(JavaParser.VariableDeclaratorIdContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitVariableDeclaratorId(ctx);
     }
 
     @Override
     public Object visitVariableDeclarator(JavaParser.VariableDeclaratorContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitVariableDeclarator(ctx);
     }
 
     @Override
     public Object visitVariableDeclarators(JavaParser.VariableDeclaratorsContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitVariableDeclarators(ctx);
     }
 
@@ -470,61 +470,62 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitInterfaceMethodDeclaration(JavaParser.InterfaceMethodDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitInterfaceMethodDeclaration(ctx);
     }
 
     @Override
     public Object visitConstantDeclarator(JavaParser.ConstantDeclaratorContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitConstantDeclarator(ctx);
     }
 
     @Override
     public Object visitConstDeclaration(JavaParser.ConstDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitConstDeclaration(ctx);
     }
 
     @Override
     public Object visitInterfaceMemberDeclaration(JavaParser.InterfaceMemberDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitInterfaceMemberDeclaration(ctx);
     }
 
     @Override
     public Object visitInterfaceBodyDeclaration(JavaParser.InterfaceBodyDeclarationContext ctx) {
+        //log(ctx);
         System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitInterfaceBodyDeclaration(ctx);
     }
 
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitFieldDeclaration(ctx);
     }
 
     @Override
     public Object visitConstructorDeclaration(JavaParser.ConstructorDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitConstructorDeclaration(ctx);
     }
 
     @Override
     public Object visitGenericConstructorDeclaration(JavaParser.GenericConstructorDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitGenericConstructorDeclaration(ctx);
     }
 
     @Override
     public Object visitGenericMethodDeclaration(JavaParser.GenericMethodDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitGenericMethodDeclaration(ctx);
     }
 
     @Override
     public Object visitTypeTypeOrVoid(JavaParser.TypeTypeOrVoidContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeTypeOrVoid(ctx);
     }
 
@@ -536,19 +537,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitMethodDeclaration(ctx);
     }
 
     @Override
     public Object visitMemberDeclaration(JavaParser.MemberDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitMemberDeclaration(ctx);
     }
 
     @Override
     public Object visitClassBodyDeclaration(JavaParser.ClassBodyDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitClassBodyDeclaration(ctx);
     }
 
@@ -560,13 +561,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassBody(JavaParser.ClassBodyContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitClassBody(ctx);
     }
 
     @Override
     public Object visitInterfaceDeclaration(JavaParser.InterfaceDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitInterfaceDeclaration(ctx);
     }
 
@@ -578,25 +579,25 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnumConstant(JavaParser.EnumConstantContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitEnumConstant(ctx);
     }
 
     @Override
     public Object visitEnumConstants(JavaParser.EnumConstantsContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitEnumConstants(ctx);
     }
 
     @Override
     public Object visitEnumDeclaration(JavaParser.EnumDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitEnumDeclaration(ctx);
     }
 
     @Override
     public Object visitTypeBound(JavaParser.TypeBoundContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeBound(ctx);
     }
 
@@ -614,37 +615,37 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitClassDeclaration(ctx);
     }
 
     @Override
     public Object visitVariableModifier(JavaParser.VariableModifierContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitVariableModifier(ctx);
     }
 
     @Override
     public Object visitClassOrInterfaceModifier(JavaParser.ClassOrInterfaceModifierContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitClassOrInterfaceModifier(ctx);
     }
 
     @Override
     public Object visitModifier(JavaParser.ModifierContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitModifier(ctx);
     }
 
     @Override
     public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitTypeDeclaration(ctx);
     }
 
     @Override
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
-        log(ctx);
+        //log(ctx);
         return super.visitImportDeclaration(ctx);
     }
 
@@ -658,7 +659,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         System.out.println(packageBinding.getName());
-        log(ctx);
+        //log(ctx);
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
 
         return visitPackageDeclaration;
