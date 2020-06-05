@@ -342,15 +342,13 @@ public class Git {
      */
     public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
         
-        System.out.println(directory);
+
 
         String command = "git clone " + url;
-        System.out.println(name);
         if (name != null) {
             command = command.concat(" ").concat(name);
         } 
 
-        System.out.println("comando:" + command);
         
         if (url == null || url.isEmpty()) {
             throw new UrlNotFound();

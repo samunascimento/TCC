@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GitRepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,7 +35,7 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
         configure();
 
     }
-    
+
     public List<MergeEvent> getMergeEventList() {
         return mergeEventList;
     }
@@ -46,30 +47,33 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
     public JLabel getProcessLabel() {
         return processLabel;
     }
-    
+
     private void configure() {
         this.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        
+
         this.progressBar.setStringPainted(true);
         progressBar.setIndeterminate(true);
-        progressBar.setPreferredSize(new Dimension(800,25));
-        
+        progressBar.setPreferredSize(new Dimension(800, 25));
+
         this.add(this.processLabel, gbc);
         gbc.gridy = 1;
         this.add(this.progressBar, gbc);
     }
 
+    /**
+     *
+     * @throws RepositoryAlreadyExist
+     */
     @Override
     public void run() {
-        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this,this.useOutmost);
+        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this, this.useOutmost);
         try {
             repositoryAnalysis.startAnalysis();
         } catch (IOException ex) {
+        } catch (RepositoryAlreadyExist ex) {
         }
         this.mergeEventList = repositoryAnalysis.getMergeEventList();
     }
-
-
 
 }
