@@ -10,11 +10,13 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
  * @author icout
  */
 public class Employee extends Person {
-    private String office, registration;
+
+    private String office;
+    private String registration;
     private float salary;
     private boolean active;
 
-    public Employee(String office, String registration, float salary, boolean active, String name, String CPF, String Adress, String Age) {
+    public Employee(String office, String registration, float salary, boolean active, String name, String CPF, String Adress, int Age) {
         super(name, CPF, Adress, Age);
         this.office = office;
         this.registration = registration;
@@ -53,11 +55,12 @@ public class Employee extends Person {
     public void setActive(boolean active) {
         this.active = active;
     }
-    
-    public void increaseSalary(float increase){
+
+    public void increaseSalary(float increase) {
         this.salary += increase;
     }
-    public void dismiss(){
+
+    public void dismiss() {
         this.active = false;
     }
 }

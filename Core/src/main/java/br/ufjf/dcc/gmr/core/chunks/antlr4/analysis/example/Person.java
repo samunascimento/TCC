@@ -5,9 +5,9 @@ public class Person {
     private String name;
     private String CPF;
     private String Adress;
-    private String Age;
+    private int Age;
 
-    public Person(String name, String CPF, String Adress, String Age) {
+    public Person(String name, String CPF, String Adress, int Age) {
         this.name = name;
         this.CPF = CPF;
         this.Adress = Adress;
@@ -27,7 +27,7 @@ public class Person {
     /**
      * @return the Age
      */
-    public String getAge() {
+    public int getAge() {
         return Age;
     }
 
@@ -55,7 +55,7 @@ public class Person {
     /**
      * @param Age the Age to set
      */
-    public void setAge(String Age) {
+    public void setAge(int Age) {
         this.Age = Age;
     }
 
