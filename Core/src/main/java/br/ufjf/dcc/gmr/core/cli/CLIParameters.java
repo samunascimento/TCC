@@ -11,6 +11,7 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
@@ -105,6 +106,8 @@ public class CLIParameters {
         } catch (ParseException e) {
             System.out.println("Argumentos inválidos!");
             e.printStackTrace();
+        } catch (RepositoryAlreadyExist ex){
+            System.out.println(ex.getMessage());
         }
     }
 

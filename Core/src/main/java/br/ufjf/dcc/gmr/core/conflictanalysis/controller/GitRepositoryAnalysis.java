@@ -17,6 +17,7 @@ import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
@@ -84,7 +85,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    public void startAnalysis() throws IOException {
+    public void startAnalysis() throws IOException, RepositoryAlreadyExist{
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
@@ -144,7 +145,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
 
         int status = 0;
         int mergeNumber;
@@ -175,7 +176,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
 
         int status = 0;
         int mergeNumber;

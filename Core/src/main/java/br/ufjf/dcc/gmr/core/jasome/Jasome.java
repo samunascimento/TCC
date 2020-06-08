@@ -7,6 +7,7 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
@@ -45,8 +46,9 @@ public class Jasome {
      * @return
      * @throws RepositoryNotFound
      * @throws UrlNotFound
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
      */
-    public static String cloneRepository(String repositoryUrl, String repositoryPath, String projectName, String user, String password) throws RepositoryNotFound, UrlNotFound {
+    public static String cloneRepository(String repositoryUrl, String repositoryPath, String projectName, String user, String password) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
         System.out.println("Clonando Projeto...");
         if ((repositoryUrl != null && repositoryUrl.startsWith("https://github.com/")) && (user == null || password == null)) {
             Git.clone(repositoryUrl, repositoryPath, projectName);

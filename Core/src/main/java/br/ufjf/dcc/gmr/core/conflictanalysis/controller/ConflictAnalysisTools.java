@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -29,7 +30,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ConflictAnalysisTools {
 
-    public static File createSandbox(String repositoryPath, String projectName) throws IOException {
+    public static File createSandbox(String repositoryPath, String projectName) throws IOException, RepositoryAlreadyExist {
         File sandbox;
         if (repositoryPath.contains("\\")) {
             sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\RepositoryAnalysisSandbox_" + projectName);
