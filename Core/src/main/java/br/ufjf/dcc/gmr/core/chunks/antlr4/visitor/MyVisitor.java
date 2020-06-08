@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser.ExpressionListContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     PackageBinding packageBinding;
     TypeBinding typeBinding;
-    
+
     public MyVisitor() {
         this.languageConstructs = new ArrayList<LanguageConstruct>();
         this.packageBinding = new PackageBinding();
@@ -62,13 +63,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPrimitiveType(JavaParser.PrimitiveTypeContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitPrimitiveType(ctx);
     }
 
     @Override
     public Object visitTypeType(JavaParser.TypeTypeContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitTypeType(ctx);
     }
 
@@ -104,7 +105,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassCreatorRest(JavaParser.ClassCreatorRestContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitClassCreatorRest(ctx);
     }
 
@@ -122,7 +123,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitCreatedName(JavaParser.CreatedNameContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitCreatedName(ctx);
     }
 
@@ -134,7 +135,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassType(JavaParser.ClassTypeContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitClassType(ctx);
     }
 
@@ -164,14 +165,21 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitExpression(JavaParser.ExpressionContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitExpression(ctx);
     }
 
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
-        //log(ctx);
-        return super.visitMethodCall(ctx);
+        packageBinding.setName("");
+        for (ParseTree parserTree : ctx.children) {
+            if (parserTree instanceof TerminalNodeImpl) {
+                packageBinding.setName(packageBinding.getName() + parserTree.getText());
+            }
+        }
+        //System.out.println(packageBinding.getName());
+        Object visitMethodCall = super.visitMethodCall(ctx);
+        return visitMethodCall;
     }
 
     @Override
@@ -236,13 +244,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitFinallyBlock(JavaParser.FinallyBlockContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitFinallyBlock(ctx);
     }
 
     @Override
     public Object visitCatchType(JavaParser.CatchTypeContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitCatchType(ctx);
     }
 
@@ -260,7 +268,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalTypeDeclaration(JavaParser.LocalTypeDeclarationContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitLocalTypeDeclaration(ctx);
     }
 
@@ -284,13 +292,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitDefaultValue(JavaParser.DefaultValueContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitDefaultValue(ctx);
     }
 
     @Override
     public Object visitAnnotationConstantRest(JavaParser.AnnotationConstantRestContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitAnnotationConstantRest(ctx);
     }
 
@@ -302,19 +310,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitAnnotationMethodOrConstantRest(JavaParser.AnnotationMethodOrConstantRestContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitAnnotationMethodOrConstantRest(ctx);
     }
 
     @Override
     public Object visitAnnotationTypeElementRest(JavaParser.AnnotationTypeElementRestContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitAnnotationTypeElementRest(ctx);
     }
 
     @Override
     public Object visitAnnotationTypeElementDeclaration(JavaParser.AnnotationTypeElementDeclarationContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitAnnotationTypeElementDeclaration(ctx);
     }
 
@@ -332,25 +340,25 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitElementValueArrayInitializer(JavaParser.ElementValueArrayInitializerContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitElementValueArrayInitializer(ctx);
     }
 
     @Override
     public Object visitElementValue(JavaParser.ElementValueContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitElementValue(ctx);
     }
 
     @Override
     public Object visitElementValuePair(JavaParser.ElementValuePairContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitElementValuePair(ctx);
     }
 
     @Override
     public Object visitElementValuePairs(JavaParser.ElementValuePairsContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitElementValuePairs(ctx);
     }
 
@@ -416,7 +424,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitTypeArgument(JavaParser.TypeArgumentContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitTypeArgument(ctx);
     }
 
@@ -458,13 +466,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitGenericInterfaceMethodDeclaration(JavaParser.GenericInterfaceMethodDeclarationContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitGenericInterfaceMethodDeclaration(ctx);
     }
 
     @Override
     public Object visitInterfaceMethodModifier(JavaParser.InterfaceMethodModifierContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitInterfaceMethodModifier(ctx);
     }
 
@@ -495,7 +503,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitInterfaceBodyDeclaration(JavaParser.InterfaceBodyDeclarationContext ctx) {
         //log(ctx);
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitInterfaceBodyDeclaration(ctx);
     }
 
@@ -531,14 +539,20 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodBody(JavaParser.MethodBodyContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitMethodBody(ctx);
     }
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        //log(ctx);
-        return super.visitMethodDeclaration(ctx);
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof TerminalNodeImpl) {
+                packageBinding.setName(parseTree.getText());
+            }
+        }
+        System.out.println(packageBinding.getName());
+        Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
+        return visitMethodDeclaration;
     }
 
     @Override
@@ -555,7 +569,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitInterfaceBody(JavaParser.InterfaceBodyContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitInterfaceBody(ctx);
     }
 
@@ -573,7 +587,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnumBodyDeclarations(JavaParser.EnumBodyDeclarationsContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitEnumBodyDeclarations(ctx);
     }
 
@@ -603,13 +617,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitTypeParameter(JavaParser.TypeParameterContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitTypeParameter(ctx);
     }
 
     @Override
     public Object visitTypeParameters(JavaParser.TypeParametersContext ctx) {
-        System.out.println("====================================== NAO TRATADO  ======================================");
+        //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitTypeParameters(ctx);
     }
 
@@ -645,8 +659,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
-        for (ParseTree parserTree : ctx.children){
-            if(parserTree instanceof JavaParser.QualifiedNameContext){
+        for (ParseTree parserTree : ctx.children) {
+            if (parserTree instanceof JavaParser.QualifiedNameContext) {
                 packageBinding.setName(parserTree.getText());
             }
         }
@@ -660,7 +674,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         for (ParseTree parseTree : ctx.children) {
             if (parseTree instanceof JavaParser.QualifiedNameContext) {
                 packageBinding.setName(parseTree.getText());
-
             }
         }
         System.out.println(packageBinding.getName());

@@ -739,4 +739,8 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitArguments(JavaParser.ArgumentsContext ctx) { return visitChildren(ctx); }
+
+    public Object MethodCallContext(JavaParser.MethodCallContext ctx) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
