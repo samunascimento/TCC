@@ -10,21 +10,21 @@ import BarChart from './../../Charts/chart';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 
-export default ({ match: { url}, name}) =>
-  <Fragment>
+// export default ({ match: { url}, name}) =>
+//   <Fragment>
   
 
-    <h1>{name}</h1>
-    <h1>{url}</h1>
+//     <h1>{name}</h1>
+//     <h1>{url}</h1>
 
     
-  </Fragment>
+//   </Fragment>
 
 
 
 
-/*
-class Project extends Component {
+
+export default class Project extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -41,7 +41,7 @@ class Project extends Component {
   };
   
   async componentDidMount(){
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/CalculadoraJava`)
+    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
     .then(res => {
       const data = res.data;
       this.setState({ data });
@@ -54,7 +54,6 @@ class Project extends Component {
         <div>
           <h1>GRÁFICO</h1>
           <div>
-          {this.props.nameProject}
           </div>
           <div className="App">
               <BarChart width={600} height={400} data={this.state.data} />
@@ -65,5 +64,4 @@ class Project extends Component {
   }
 }
 
-export default Project;
-*/
+

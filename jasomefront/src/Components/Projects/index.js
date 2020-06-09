@@ -17,7 +17,7 @@ export default ({ match: { url }, projects }) =>
 </ul>
   
 <Route exact path={url} render={
-  () => <h3>Please select a writer from above.</h3>
+  () => <h3>Projects</h3>
 }/>
 <Route path={`${url}/:id`} render={      
   props => {
@@ -27,7 +27,8 @@ export default ({ match: { url }, projects }) =>
       return <NotFound />
     }
 
-    return <Project {...props} {...project}/>
+    // return <Project {...props} {...project}/>
+    return <Project nameProject={project} />
   }
 } />
 </Fragment>
