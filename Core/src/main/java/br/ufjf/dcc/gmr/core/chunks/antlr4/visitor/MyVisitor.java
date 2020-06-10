@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser.ClassDeclarationContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -640,6 +641,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
         //log(ctx);
+        String name = new String();
+        for(ParseTree parseTree: ctx.children ){
+            if (parseTree instanceof JavaParser.ClassOrInterfaceModifierContext) {
+                name = parseTree.getText();
+            }
+            if (parseTree instanceof JavaParser.ClassDeclarationContext) {
+                
+            }
+
+        }
+            
+        
+        System.out.println(name);
         return super.visitTypeDeclaration(ctx);
     }
 

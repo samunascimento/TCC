@@ -39,8 +39,8 @@ public class ParserJava {
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
+        viewer.open();
         
-
         
 
         MyVisitor visitor = new MyVisitor();
