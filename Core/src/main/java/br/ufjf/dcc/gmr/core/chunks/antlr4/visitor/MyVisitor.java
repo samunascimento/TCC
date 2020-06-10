@@ -172,10 +172,29 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
         MethodCallBinding mcb = new MethodCallBinding();
+        List<TypeBinding> parameters = new ArrayList<>();
+
         mcb.setName(ctx.IDENTIFIER().getText());
         mcb.setCtx(ctx);
         methodCallBidingList.add(mcb);
         Object visitMethodCall = super.visitMethodCall(ctx);
+
+        JavaParser.ExpressionListContext expressionList
+                = (JavaParser.ExpressionListContext) ctx.expressionList();
+
+        for (ParseTree parseTree : expressionList.children) {
+            if (parseTree instanceof JavaParser.ExpressionContext) {
+                TypeBinding aux = new TypeBinding();
+                JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
+                if(expressionContext.primary() != null) {
+                    aux.setIdentifier(expressionContext.primary().literal().getText());
+                    parameters.add(aux);
+                } 
+
+            }
+        }
+
+        mcb.setParameters(parameters);
         return visitMethodCall;
     }
 
@@ -542,11 +561,29 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
+        List<TypeBinding> parameters = new ArrayList<>();
         MethodDeclarationBinding mdb = new MethodDeclarationBinding();
+
         mdb.setPackageBinding(packageBinding);
         mdb.setTypeBinding(typeBinding);
         mdb.setName(ctx.IDENTIFIER().getText());
         mdb.setCtx(ctx);
+
+        JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
+        if(ctx.formalParameters().formalParameterList() != null) {
+            for (ParseTree parseTree : formalParameters.children) {
+                if (parseTree instanceof JavaParser.FormalParameterContext) {
+                    JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
+                    TypeBinding parameter = new TypeBinding();
+                    if(aux.typeType().classOrInterfaceType() != null){
+                        parameter.setIdentifier(aux.typeType().classOrInterfaceType().getText());
+                    }
+                    parameters.add(parameter);
+                }
+            }
+        }
+        
+        mdb.setParameters(parameters);
         methodDeclarationBindingList.add(mdb);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;

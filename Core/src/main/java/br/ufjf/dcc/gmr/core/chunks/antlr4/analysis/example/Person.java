@@ -72,5 +72,12 @@ public class Person {
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    /**
+     * @param name1 the name to set
+     * @param name2
+     */
+    public void setName(String name1, String name2) {
+        this.name = name1;
+    }
 }

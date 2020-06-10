@@ -7,7 +7,7 @@ import java.util.List;
 public class MethodCallBinding {
 
     private String name;
-    private List<String> parameters;
+    private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodCallContext ctx;
@@ -52,7 +52,7 @@ public class MethodCallBinding {
     /**
      * @return the parameters
      */
-    public List<String> getParameters() {
+    public List<TypeBinding> getParameters() {
         return parameters;
     }
 
@@ -66,7 +66,7 @@ public class MethodCallBinding {
     /**
      * @param parameters the parameters to set
      */
-    public void setParameters(List<String> parameters) {
+    public void setParameters(List<TypeBinding> parameters) {
         this.parameters = parameters;
     }
 
