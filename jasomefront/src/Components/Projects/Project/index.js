@@ -11,14 +11,23 @@ import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 
 // export default ({ match: { url}, name}) =>
-//   <Fragment>
+
+  // useEffect (() => {
+  //   axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + {name}
+  //   .then(res => {
+  //     const data = res.data;
+  //     this.setState({ data });
+  //   })
+  // )
+
+  // <Fragment>
   
 
-//     <h1>{name}</h1>
-//     <h1>{url}</h1>
+  //   <h1>{name}</h1>
+  //   <h1>{url}</h1>
 
     
-//   </Fragment>
+  // </Fragment>
 
 
 
@@ -56,7 +65,7 @@ export default class Project extends Component {
           <div>
           </div>
           <div className="App">
-              <BarChart width={600} height={400} data={this.state.data} />
+              <BarChart width={800} height={600} data={this.state.data} />
           </div>
         </div>
       </div>

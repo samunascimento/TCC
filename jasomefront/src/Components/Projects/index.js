@@ -8,13 +8,13 @@ export default ({ match: { url }, projects }) =>
 
 
 <Fragment>
-<ul>
+{/* <ul>
   {projects.map(({ id, name }) =>
     <li key={id}>
       <Link to={`${url}/${id}`}>{name}</Link>
     </li>
   )}
-</ul>
+</ul> */}
   
 <Route exact path={url} render={
   () => <h3>Projects</h3>
