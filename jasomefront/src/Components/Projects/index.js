@@ -5,41 +5,35 @@ import Project from './Project'
 
 
 export default ({ match: { url }, projects }) =>
-  
+
 
 <Fragment>
-
 {/* <ul>
-  {projects.map(({id,name}) =>
-    <li>
+  {projects.map(({ id, name }) =>
+    <li key={id}>
       <Link to={`${url}/${id}`}>{name}</Link>
     </li>
   )}
 </ul> */}
+  
+<Route exact path={url} render={
+  () => <h3>Projects</h3>
+}/>
+<Route path={`${url}/:id`} render={      
+  props => {
+    const project = projects.find(({ id }) => id == props.match.params.id)
+    console.log(project);
+    if (!project) {
+      return <NotFound />
+    }
 
-<Route path={`${url}/:id`} render={() => <Project/>} />
-
+    // return <Project {...props} {...project}/>
+    return <Project nameProject={project} />
+  }
+} />
 </Fragment>
 
 
-
-
-
-{/* <Fragment>
-    <Route exact path={url} render={
-      () => <ul>
-      {projects.map(({ id, name }) =>
-        <li key={id}>
-          <Link to={`${url}/${id}`}>{name}</Link>
-        </li>
-      )}
-    </ul>
-    }/>
-
-  <Route path={`${url}/${projects.id}`} render={() => <h1>testeee</h1> } />
-
-
-  </Fragment> */}
 
 
 

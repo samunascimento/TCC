@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
-
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -13,8 +12,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
+import br.ufjf.dcc.gmr.core.jasome.model.Point;
 /**
  *
  * @author anton
@@ -267,8 +268,14 @@ public class MetricDao {
         }
     }
     
-    public List<Metric> selectPackageMetrics(String nameProject) throws SQLException{
-        List<Metric> listMetrics = new ArrayList<>();
+
+    
+    public List<List<Point>> selectPackageMetrics(String nameProject) throws SQLException{
+        
+        List<List<Point>> chartLines = new ArrayList<>();
+        
+        Set<String> packageNames = new HashSet<>();
+        Set<String> metricNames = new HashSet<>();
         
         Metric metric = null;
         
@@ -276,29 +283,44 @@ public class MetricDao {
         
         ResultSet resultSet = null;
         
-        String sql =    "select a.id,a.projectname,b.project_id,b.version_id,c.package_id,d.id,e.id,e.name,e.description,e.value "
-                        + "from tb_projectmetrics as a "
-                        + "inner join tb_project_version as b "
-                        + "on a.id = b.project_id "
-                        + "inner join tb_version_package as c "
-                        + "on b.version_id = c.version_id "
-                        + "inner join tb_packagemetrics as d "
-                        + "on c.package_id = d.id "
-                        + "inner join tb_metric as e "
-                        + "on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id "
-                        + "where a.projectname = " +  "\'" + nameProject + "\'";
+        String sql =  "select v.versiondate,d.packagename,e.name,e.value " +
+"                        from tb_projectmetrics as a" +
+"                        inner join tb_project_version as b " +
+"                        on a.id = b.project_id " +
+"                        inner join tb_version_package as c " +
+"                        on b.version_id = c.version_id " +
+"                        inner join tb_versionmetrics as v " +
+"                        on v.id = c.version_id " +
+"                        inner join tb_packagemetrics as d " +
+"                        on c.package_id = d.id " +
+"                        inner join tb_metric as e " +
+"                        on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id " +
+"                        where a.projectname = " + "\'" + nameProject + "\'";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                metric = new Metric();
-                metric.setId(resultSet.getInt("id"));
-                metric.setName(resultSet.getString("name"));
-                metric.setDescription(resultSet.getString("description"));
-                metric.setValue(resultSet.getDouble("value"));
-                listMetrics.add(metric);
+                packageNames.add(resultSet.getString("packagename"));
+                metricNames.add(resultSet.getString("name"));
             }
-            return listMetrics;
+
+            for (String packageName : packageNames) {
+                
+                for (String metricName : metricNames) {
+                    resultSet = stmt.executeQuery();
+                    int cont = 0;
+                    List<Point> listPoints = new ArrayList<>();
+                    while (resultSet.next()) {
+                        if(resultSet.getString("packageName").equals(packageName) && resultSet.getString("name").equals(metricName)){
+                            listPoints.add(new Point(cont++,resultSet.getDouble("value")));
+                        }
+                    }
+                    chartLines.add(listPoints);
+                }
+            }
+            
+
+            return chartLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

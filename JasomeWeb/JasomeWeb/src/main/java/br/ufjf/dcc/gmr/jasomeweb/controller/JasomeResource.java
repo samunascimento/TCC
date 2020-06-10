@@ -10,12 +10,14 @@ import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
-import br.ufjf.gmr.jasomeweb.model.Point;
+import br.ufjf.dcc.gmr.core.jasome.model.Point;
 import com.google.gson.Gson;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -87,37 +89,10 @@ public class JasomeResource {
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
-        List<Metric> list = new ArrayList<>();
-        List<Point> listPoints1 = new ArrayList<>();
-        List<Point> listPoints2 = new ArrayList<>();
-        List<Point> listPoints3 = new ArrayList<>();
-        ArrayList<List<Point>> arrayList = new ArrayList<>();
-        int cont1 = 0;
-        int cont2 = 0;
-        int cont3 = 0;
-        list = dao.selectPackageMetrics(nameProject);
-        
-        for (Metric metric : list) {
-            if(metric.getName().equals("A")){
-                System.out.println("entrou em A");
-                listPoints1.add(new Point(cont1++, metric.getValue()));
-            }if(metric.getName().equals("TLOC")){
-                System.out.println("entrou em TLOC");
-                listPoints2.add(new Point(cont2++, metric.getValue()));
-            }if(metric.getName().equals("CCRC")){
-                System.out.println("entrou em CCRC");
-                listPoints3.add(new Point(cont3++, metric.getValue()));
-            }
-        }
-        arrayList.add(listPoints1);
-        arrayList.add(listPoints2);
-        arrayList.add(listPoints3);
-        
-        
-        String listJ = g.toJson(arrayList);
+        List<List<Point>> selectPackageMetrics = dao.selectPackageMetrics(nameProject);
+        String listJ = g.toJson(selectPackageMetrics);
         return listJ;
     }
-    
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)

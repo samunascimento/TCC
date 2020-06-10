@@ -54,7 +54,7 @@ class Layout extends Component {
   }
 
   render() {
-    const { classes, location: { pathname }, children, writers } = this.props
+    const { classes, location: { pathname }, children, projects } = this.props
     const { mobileOpen } = this.state
 
     const drawer = (
@@ -73,9 +73,8 @@ class Layout extends Component {
             Projects
           </MenuItem>
           <MenuList>
-            {writers.map(({ id, name }) => {
+            {projects.map(({ id, name }) => {
               const to = `/projects/${id}`
-
               return <MenuItem
                 to={to}
                 key={id}
