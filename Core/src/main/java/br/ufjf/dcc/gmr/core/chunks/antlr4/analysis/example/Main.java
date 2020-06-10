@@ -22,6 +22,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        Person person = new Person();
+        person.setName("Felippe");
         Employee employee = new Employee("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", "", 23);
         Main main = new Main("Office", "Felippe", 23);
         System.out.println(main.name + " " + main.office + " " + main.age);

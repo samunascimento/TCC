@@ -5,22 +5,22 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser.ExpressionListContext;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
-    List<LanguageConstruct> languageConstructs;
+    private List<MethodDeclarationBinding> methodDeclarationBindingList;
+    private List<MethodCallBinding> methodCallBidingList;
 
-    PackageBinding packageBinding;
-    TypeBinding typeBinding;
+    private PackageBinding packageBinding;
+    private TypeBinding typeBinding;
 
     public MyVisitor() {
-        this.languageConstructs = new ArrayList<LanguageConstruct>();
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
+        this.methodCallBidingList = new ArrayList<>();
+        this.methodDeclarationBindingList = new ArrayList<>();
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -171,13 +171,10 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
-        packageBinding.setName("");
-        for (ParseTree parserTree : ctx.children) {
-            if (parserTree instanceof TerminalNodeImpl) {
-                packageBinding.setName(packageBinding.getName() + parserTree.getText());
-            }
-        }
-        //System.out.println(packageBinding.getName());
+        MethodCallBinding mcb = new MethodCallBinding();
+        mcb.setName(ctx.IDENTIFIER().getText());
+        mcb.setCtx(ctx);
+        methodCallBidingList.add(mcb);
         Object visitMethodCall = super.visitMethodCall(ctx);
         return visitMethodCall;
     }
@@ -545,12 +542,12 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        for (ParseTree parseTree : ctx.children) {
-            if (parseTree instanceof TerminalNodeImpl) {
-                packageBinding.setName(parseTree.getText());
-            }
-        }
-        System.out.println(packageBinding.getName());
+        MethodDeclarationBinding mdb = new MethodDeclarationBinding();
+        mdb.setPackageBinding(packageBinding);
+        mdb.setTypeBinding(typeBinding);
+        mdb.setName(ctx.IDENTIFIER().getText());
+        mdb.setCtx(ctx);
+        methodDeclarationBindingList.add(mdb);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
     }
@@ -746,6 +743,62 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    /**
+     * @return the methodCallBidingList
+     */
+    public List<MethodCallBinding> getMethodCallBiding() {
+        return methodCallBidingList;
+    }
+
+    /**
+     * @return the methodDeclarationBindingList
+     */
+    public List<MethodDeclarationBinding> getMethodDeclarationBinding() {
+        return methodDeclarationBindingList;
+    }
+
+    /**
+     * @return the packageBinding
+     */
+    public PackageBinding getPackageBinding() {
+        return packageBinding;
+    }
+
+    /**
+     * @return the typeBinding
+     */
+    public TypeBinding getTypeBinding() {
+        return typeBinding;
+    }
+
+    /**
+     * @param methodCallBiding the methodCallBidingList to set
+     */
+    public void setMethodCallBiding(List<MethodCallBinding> methodCallBiding) {
+        this.methodCallBidingList = methodCallBiding;
+    }
+
+    /**
+     * @param methodDeclarationBinding the methodDeclarationBindingList to set
+     */
+    public void setMethodDeclarationBinding(List<MethodDeclarationBinding> methodDeclarationBinding) {
+        this.methodDeclarationBindingList = methodDeclarationBinding;
+    }
+
+    /**
+     * @param packageBinding the packageBinding to set
+     */
+    public void setPackageBinding(PackageBinding packageBinding) {
+        this.packageBinding = packageBinding;
+    }
+
+    /**
+     * @param typeBinding the typeBinding to set
+     */
+    public void setTypeBinding(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
     }
 
 }
