@@ -61,23 +61,31 @@ public class JasomeResource {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("nameProject")
+    public String getNameProject() throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        List<ProjectMetrics> listProject = new ArrayList<>();
+        Gson g = new Gson();
+        listProject = dao.selectNameProject();
+        String listJ = g.toJson(listProject);
+        return listJ;
+    }
+    
+    
+    @GET
     @Path("metric/version/{nameProject}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTlocVersion(@PathParam("nameProject") String nameProject) throws SQLException {
+    public String getMetricVersion(@PathParam("nameProject") String nameProject) throws SQLException {
         
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
-        List<Point> listPoints = new ArrayList<>();
-        int count = 0;
         Gson g = new Gson();
+        List<Point> listPoints = new ArrayList<>();
         List<Metric> list = new ArrayList<>();
-        list = dao.selectVersionMetrics(nameProject);
-        for (Metric metric : list) {
-            listPoints.add(new  Point(count++, metric.getValue()));
-        }
-        String listJ = g.toJson(listPoints);
-        
-        System.out.println("entrou aqui");
+        List<List<Point>> selectVersionMetrics = dao.selectVersionMetrics(nameProject);
+        String listJ = g.toJson(selectVersionMetrics);
         return listJ;
     }
     
@@ -94,18 +102,6 @@ public class JasomeResource {
         return listJ;
     }
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("nameProject")
-    public String getNameProject() throws SQLException{
-        Connection connection = ConnectionFactory.getConnection();
-        MetricDao dao = new MetricDao(connection);
-        List<ProjectMetrics> listProject = new ArrayList<>();
-        Gson g = new Gson();
-        listProject = dao.selectNameProject();
-        String listJ = g.toJson(listProject);
-        return listJ;
-    }
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *
