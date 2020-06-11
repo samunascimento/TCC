@@ -1,0 +1,102 @@
+package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
+
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MethodDeclarationBinding {
+
+    private String name;
+    private List<String> parameters;
+    private PackageBinding packageBinding;
+    private TypeBinding typeBinding;
+    private JavaParser.MethodDeclarationContext ctx;
+
+    public MethodDeclarationBinding() {
+        this.name = "";
+        this.parameters = new ArrayList<>();
+        this.packageBinding = new PackageBinding();
+        this.typeBinding = new TypeBinding();
+    }
+
+    public boolean equalsTo(MethodCallBinding mcb) {
+        return this.getName().equals(mcb.getName());
+    }
+
+    @Override
+    public String toString() {
+        return this.getName().concat("(").concat(ctx.getStart().getLine() + "").concat(",").
+                concat(ctx.getStop().getLine() + "").concat(")");
+    }
+
+    /**
+     * @return the ctx
+     */
+    public JavaParser.MethodDeclarationContext getCtx() {
+        return ctx;
+    }
+
+    /**
+     * @param ctx the ctx to set
+     */
+    public void setCtx(JavaParser.MethodDeclarationContext ctx) {
+        this.ctx = ctx;
+    }
+
+    /**
+     * @return the packageBinding
+     */
+    public PackageBinding getPackageBinding() {
+        return packageBinding;
+    }
+
+    /**
+     * @return the typeBinding
+     */
+    public TypeBinding getTypeBinding() {
+        return typeBinding;
+    }
+
+    /**
+     * @param packageBinding the packageBinding to set
+     */
+    public void setPackageBinding(PackageBinding packageBinding) {
+        this.packageBinding = packageBinding;
+    }
+
+    /**
+     * @param typeBinding the typeBinding to set
+     */
+    public void setTypeBinding(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the parameters
+     */
+    public List<String> getParameters() {
+        return parameters;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @param parameters the parameters to set
+     */
+    public void setParameters(List<String> parameters) {
+        this.parameters = parameters;
+    }
+
+}

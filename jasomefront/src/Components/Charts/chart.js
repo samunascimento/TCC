@@ -37,11 +37,11 @@ function BarChart({ width, height, data }){
 
 
         const x = d3.scaleLinear()
-        .domain([0, 12])
+        .domain([0, 50])
         .range([0, width]);
 
         const y = d3.scaleLinear()
-        .domain([ 0, 30])
+        .domain([0, 1000])
         .range([height, 0]);
 
 

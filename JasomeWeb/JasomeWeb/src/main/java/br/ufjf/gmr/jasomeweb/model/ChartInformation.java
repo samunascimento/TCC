@@ -5,6 +5,7 @@
  */
 package br.ufjf.gmr.jasomeweb.model;
 
+import br.ufjf.dcc.gmr.core.jasome.model.Point;
 import java.util.ArrayList;
 import java.util.List;
 

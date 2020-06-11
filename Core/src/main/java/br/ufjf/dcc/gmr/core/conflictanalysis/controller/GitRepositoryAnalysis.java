@@ -17,6 +17,7 @@ import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
 import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
 import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
@@ -84,7 +85,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    public void startAnalysis() throws IOException {
+    public void startAnalysis() throws IOException, RepositoryAlreadyExist{
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
@@ -144,7 +145,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
 
         int status = 0;
         int mergeNumber;
@@ -168,7 +169,6 @@ public class GitRepositoryAnalysis {
             this.resetMergeEventData();
             this.progressBar.setValue(++status);
             System.out.println(status + "/" + mergeNumber + " merges processed...");
-
         }
         ConflictAnalysisTools.deleteDirectory(this.processData.sandbox);
         System.out.println("Starting ANTLR analysis...");
@@ -176,7 +176,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
 
         int status = 0;
         int mergeNumber;
@@ -264,6 +264,17 @@ public class GitRepositoryAnalysis {
     private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError {
         for (int i = 0; i < fileContent.size(); i++) {
             if (fileContent.get(i).contains("<<<<<<")) {
+                if (fileContent.get(i).contains(":") && this.processData.extraFileName == "") {
+                    this.processData.auxArray = fileContent.get(i).split("/");
+                    if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
+                        this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
+                        this.processData.auxArray = fileContent.get(i).split(":");
+                        this.processData.extraInsideFilePath = this.processData.auxArray[this.processData.auxArray.length - 1];
+                        this.processData.extraFilePath = repositoryPath + "/" + this.processData.extraInsideFilePath;
+                        this.processData.extraFileInV1 = true;
+                    }
+                    this.processData.extraFileInV1 = false;
+                }
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -289,7 +300,7 @@ public class GitRepositoryAnalysis {
                     if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
                         this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
                         this.processData.auxArray = fileContent.get(i).split(":");
-                        this.processData.extraInsideFilePath = "/" + this.processData.auxArray[this.processData.auxArray.length - 1];
+                        this.processData.extraInsideFilePath = this.processData.auxArray[this.processData.auxArray.length - 1];
                         this.processData.extraFilePath = repositoryPath + "/" + this.processData.extraInsideFilePath;
                     }
                 }
@@ -301,7 +312,7 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 this.catchOriginalLines();
-                this.normalCatchSolutionLines();
+                this.catchSolutionLines();
                 this.addConflictRegion();
                 this.resetConflictRegionData();
             }
@@ -313,13 +324,19 @@ public class GitRepositoryAnalysis {
         this.processData.originalV2FirstLine = -1;
         if (!this.processData.v1.isEmpty()) {
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.processData.sandbox.getPath());
-            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
-                    + this.processData.insideFilePath, this.processData.beginLine + 1);
+            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == true) {
+                this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
+                        this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                        this.processData.beginLine + 1);
+            } else {
+                this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
+                        + this.processData.insideFilePath, this.processData.beginLine + 1);
+            }
             Git.checkout("master", this.processData.sandbox.getPath());
         }
         if (!this.processData.v2.isEmpty()) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
-            if (!this.processData.extraIsEmpty()) {
+            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == false) {
                 this.processData.originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                         this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
                         this.processData.separatorLine + 1);
@@ -332,7 +349,8 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void normalCatchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException {
+    private void catchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException {
+
         Git.checkout(this.processData.hash.getCommitHash(), this.processData.sandbox.getPath());
         if (!this.processData.beforeContext.isEmpty()) {
             this.processData.solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
@@ -361,32 +379,12 @@ public class GitRepositoryAnalysis {
                         this.processData.parents.get(1).getCommitHash(),
                         this.processData.hash.getCommitHash());
                 if (this.processData.auxBool == false) {
-                    this.processData.auxBool = Git.renamedFile(this.processData.sandbox.getPath(),
-                            this.processData.filePath,
-                            this.processData.parents.get(0).getCommitHash(),
-                            this.processData.hash.getCommitHash());
-                    if (this.processData.auxBool == false) {
-                        this.processData.auxBool = Git.renamedFile(this.processData.sandbox.getPath(),
-                                this.processData.filePath,
-                                this.processData.parents.get(1).getCommitHash(),
-                                this.processData.hash.getCommitHash());
-                        if (this.processData.auxBool == false) {
-                            throw new EmptyOutput();
-                        } else {
-                            this.extraCatchSolutionLines();
-                        }
-                    } else {
-                        this.extraCatchSolutionLines();
-                    }
+                    throw new EmptyOutput();
                 } else {
-                    List<String> listAux = new ArrayList<>();
-                    listAux.add("DELETED");
-                    this.processData.solution = listAux;
+                    this.processData.solution = null;
                 }
             } else {
-                List<String> listAux = new ArrayList<>();
-                listAux.add("DELETED");
-                this.processData.solution = listAux;
+                this.processData.solution = null;
             }
         } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.POSTPONED || this.processData.solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
             List<String> listAux = new ArrayList<>();
@@ -412,90 +410,6 @@ public class GitRepositoryAnalysis {
         }
         Git.checkout("master", this.processData.sandbox.getPath());
 
-    }
-
-    private void extraCatchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException {
-        if (!this.processData.beforeContext.isEmpty()) {
-            this.processData.solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
-                    this.processData.extraFilePath,
-                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
-                    this.processData.beginLine - 1);
-        } else {
-            this.processData.solutionFirstLine = 0;
-        }
-        if (!this.processData.afterContext.isEmpty()) {
-            this.processData.solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
-                    this.processData.extraFilePath,
-                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
-                    this.processData.endLine + 1);
-        } else {
-            this.processData.solutionFinalLine = 0;
-        }
-        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
-            this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
-                    this.processData.extraFilePath,
-                    this.processData.parents.get(0).getCommitHash(),
-                    this.processData.hash.getCommitHash());
-            if (this.processData.auxBool == false) {
-                this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
-                        this.processData.extraFilePath,
-                        this.processData.parents.get(1).getCommitHash(),
-                        this.processData.hash.getCommitHash());
-                if (this.processData.auxBool == false) {
-                    this.processData.auxBool = Git.renamedFile(this.processData.sandbox.getPath(),
-                            this.processData.extraFilePath,
-                            this.processData.parents.get(0).getCommitHash(),
-                            this.processData.hash.getCommitHash());
-                    if (this.processData.auxBool == false) {
-                        this.processData.auxBool = Git.renamedFile(this.processData.sandbox.getPath(),
-                                this.processData.extraFilePath,
-                                this.processData.parents.get(1).getCommitHash(),
-                                this.processData.hash.getCommitHash());
-                        if (this.processData.auxBool == false) {
-                            throw new EmptyOutput();
-                        } else {
-                            List<String> listAux = new ArrayList<>();
-                            listAux.add("RENAMED");
-                            this.processData.solution = listAux;
-                        }
-                    } else {
-                        List<String> listAux = new ArrayList<>();
-                        listAux.add("RENAMED");
-                        this.processData.solution = listAux;
-                    }
-                } else {
-                    List<String> listAux = new ArrayList<>();
-                    listAux.add("DELETED");
-                    this.processData.solution = listAux;
-                }
-            } else {
-                List<String> listAux = new ArrayList<>();
-                listAux.add("DELETED");
-                this.processData.solution = listAux;
-            }
-        } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.POSTPONED || this.processData.solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
-            List<String> listAux = new ArrayList<>();
-            listAux.add("POSTPONED");
-            this.processData.solution = listAux;
-        } else if (this.processData.solutionFirstLine == 0 && this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath);
-            this.processData.solution.add(0, "<SOF>");
-            this.processData.solution.add("<EOF>");
-        } else if (this.processData.solutionFirstLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
-                    0,
-                    this.processData.solutionFinalLine - 1);
-            this.processData.solution.add(0, "<SOF>");
-        } else if (this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
-                    this.processData.solutionFirstLine - 1,
-                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath).size() - 1);
-            this.processData.solution.add("<EOF>");
-        } else if (this.processData.solutionFirstLine > 0 && this.processData.solutionFinalLine > 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
-                    this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
-
-        }
     }
 
     private void addConflictRegion() {
@@ -600,9 +514,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             }
                             status++;
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
@@ -633,9 +547,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
                             }
                             this.progressBar.setValue(++status);
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
