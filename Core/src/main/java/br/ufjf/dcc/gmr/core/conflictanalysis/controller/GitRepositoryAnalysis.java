@@ -158,16 +158,14 @@ public class GitRepositoryAnalysis {
         this.processLabel.setText("Main Process...");
         System.out.println(status + "/" + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
-            if (status == 443) {
-                this.catchCommits(merge);
-                Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
-                if (Git.mergeIsConflicting(this.processData.parents.get(1).getCommitHash(), repositoryPath, false, false)) {
-                    this.secondProcessingLayer();
-                }
-                this.resetRepository();
-                this.addMergeEvent();
-                this.resetMergeEventData();
+            this.catchCommits(merge);
+            Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
+            if (Git.mergeIsConflicting(this.processData.parents.get(1).getCommitHash(), repositoryPath, false, false)) {
+                this.secondProcessingLayer();
             }
+            this.resetRepository();
+            this.addMergeEvent();
+            this.resetMergeEventData();
             this.progressBar.setValue(++status);
             System.out.println(status + "/" + mergeNumber + " merges processed...");
 
@@ -499,6 +497,7 @@ public class GitRepositoryAnalysis {
 
         }
     }
+
     private void addConflictRegion() {
         if (this.processData.solution != null) {
             this.processData.conflictRegion.add(new ConflictRegion(new ArrayList<>(this.processData.beforeContext),
