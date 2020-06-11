@@ -62,7 +62,7 @@ public class MergePanel extends JPanel {
     private JButton controlPanelNextFileButton;
     private JButton controlPanelPreviousConflictButton;
     private JButton controlPanelNextConflictButton;
-    private JLabel controlPanelFileNameLabel;
+    private JTextArea controlPanelFileNameTextArea;
     private JLabel controlPanelFileIndexLabel;
     private JLabel controlPanelConflictIndexLabel;
     private JTextArea controlPanelV1StructureTypeTextArea;
@@ -123,7 +123,7 @@ public class MergePanel extends JPanel {
         this.controlPanelNextFileButton = generateControlPanelNextFileButton();
         this.controlPanelPreviousConflictButton = generateControlPanelPreviousConflictButton();
         this.controlPanelNextConflictButton = generateControlPanelNextConflictButton();
-        this.controlPanelFileNameLabel = generateControlPanelFileNameLabel();
+        this.controlPanelFileNameTextArea = generateControlPanelFileNameLabel();
         this.controlPanelFileIndexLabel = generateControlPanelFileIndexLabel();
         this.controlPanelConflictIndexLabel = generateControlPanelConflictIndexLabel();
         this.controlPanelV1StructureTypeTextArea = generateControlPanelV1StructureTypeTextArea();
@@ -301,8 +301,10 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
-    private JLabel generateControlPanelFileNameLabel() {
-        JLabel prototype = new JLabel("File Name:");
+    private JTextArea generateControlPanelFileNameLabel() {
+        JTextArea prototype = new JTextArea();
+        prototype.setBorder(BorderFactory.createTitledBorder("FILE NAME"));
+        prototype.setBackground(this.getBackground());
         return prototype;
     }
 
@@ -408,7 +410,7 @@ public class MergePanel extends JPanel {
         gbc.insets = new Insets(2, 2, 1, 1);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.gridwidth = 6;
-        this.controlPanel.add(this.controlPanelFileNameLabel, gbc);
+        this.controlPanel.add(this.controlPanelFileNameTextArea, gbc);
         gbc.gridwidth = 1;
         gbc.gridy = 1;
         this.controlPanel.add(this.controlPanelPreviousFileButton, gbc);
@@ -560,10 +562,10 @@ public class MergePanel extends JPanel {
                 + " Committer Date: " + merge.getParents().get(1).getCommitterDate() + "\n"
         );
     }
-
+        
     private void updateFileChangeByMerge(MergeEvent merge) {
         if (merge.isConflict()) {
-            this.controlPanelFileNameLabel.setText("File Name: " + merge.getConflictFiles().get(0).getFileName());
+            this.controlPanelFileNameTextArea.setText(merge.getConflictFiles().get(0).getFormedFileName());
             this.currentFile = merge.getConflictFiles().get(0);
             this.controlPanelFileIndexLabel.setText("1/" + merge.getConflictFiles().size());
             this.currentFileIndex = 1;
@@ -589,7 +591,7 @@ public class MergePanel extends JPanel {
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
             }
         } else {
-            this.controlPanelFileNameLabel.setText("File Name: ");
+            this.controlPanelFileNameTextArea.setText("");
             this.currentFile = null;
 
             this.controlPanelFileIndexLabel.setText("0/0");
@@ -609,7 +611,7 @@ public class MergePanel extends JPanel {
     }
 
     private void updateFile(ConflictFile file) {
-        this.controlPanelFileNameLabel.setText("File Name: " + file.getFileName());
+        this.controlPanelFileNameTextArea.setText(file.getFormedFileName());
         this.controlPanelFileIndexLabel.setText(this.currentFileIndex + "/" + this.currentMaxFileIndex);
         this.currentFile = file;
         if (file.getConflictRegion() != null) {
