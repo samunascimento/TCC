@@ -18,6 +18,7 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.jasome.Jasome;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -55,7 +56,7 @@ public class CLIParameters {
     public static final String HELP = "help";
     public static final String HELP_SHORT = "h";
 
-    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, UrlNotFound {
+    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, UrlNotFound, SQLException {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -105,7 +106,6 @@ public class CLIParameters {
 
         } catch (ParseException e) {
             System.out.println("Argumentos inválidos!");
-            e.printStackTrace();
         } catch (RepositoryAlreadyExist ex){
             System.out.println(ex.getMessage());
         }

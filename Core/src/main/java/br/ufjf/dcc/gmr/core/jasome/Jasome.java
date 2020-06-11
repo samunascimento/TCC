@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import org.apache.commons.cli.*;
 
 /**
@@ -68,15 +69,22 @@ public class Jasome {
         return repositoryPath;
     }
 
-    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch {
+    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException {
 
+        
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {
             connection = ConnectionFactory.getConnection();
         } else {
             connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
         }
-
+        
+        ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
+        List<ProjectMetrics> select = projectDao.select();
+        
+        Boolean equalProjects = false;
+        
+        
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
 
         //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
@@ -87,8 +95,26 @@ public class Jasome {
         project.setUrl("testeUrl");
         project.setName(jasome.GetRepositoryName());
         project.setOrganization("organization");
+        
+        for(int i =0 ; i< select.size(); i++){
+            System.out.println(select.get(i).getName());
+        }
+                
+        for (ProjectMetrics projectMetrics : select) {
+                     
+            if(projectMetrics.getName().equals(project.getName())){
+                equalProjects = true;
+                break;
+            }
+            
+        }
+        
+        if(equalProjects == false){
+            jasome.runProject(project, connection);
+        } else {
+            System.out.println("Projeto ja existe");
+        }
 
-        jasome.runProject(project, connection);
 
         /*jasome.getArchiveType().add("java");
         List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
