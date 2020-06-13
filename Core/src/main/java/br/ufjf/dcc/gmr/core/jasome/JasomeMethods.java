@@ -133,10 +133,10 @@ public class JasomeMethods {
             //    System.out.println("temos um erro nesta versão");
             //}
 
-            List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-            jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
-            jasomeExtract.extractMetricClass(projectMetrics, listPackage);
-            jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
+//            List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
+//            jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
+//            jasomeExtract.extractMetricClass(projectMetrics, listPackage);
+//            jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
         } finally {
             System.out.println("Commit numero :" + i);
             i++;

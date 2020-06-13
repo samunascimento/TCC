@@ -3220,11 +3220,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         return visitChildren(ctx);
     }
 
-    @Override
-    public Object visitComment(Java9Parser.CommentContext ctx) {
-        process(ctx);
-        return super.visitComment(ctx); //To change body of generated methods, choose Tools | Templates.
-    }
+  
     
     
 }

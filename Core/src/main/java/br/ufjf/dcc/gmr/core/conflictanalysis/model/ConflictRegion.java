@@ -175,14 +175,14 @@ public class ConflictRegion {
                 Git.checkout(v2Commit, repositoryPath);
                 try {
                     if(useOutmost)
-                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 else
-                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 } catch (IOException ex) {
                     if(useOutmost)
-                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 else
-                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
                 Git.checkout("master", repositoryPath);
             }
@@ -295,7 +295,7 @@ public class ConflictRegion {
     }
 
     private DeveloperDecision generateDeveloperDecision() {
-        if (solution == null) {
+        if (solution.contains("DELETED")) {
             return DeveloperDecision.DELETED;
         } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
@@ -308,7 +308,6 @@ public class ConflictRegion {
             this.solution.add(this.getConflictForm());
             return DeveloperDecision.POSTPONED;
         } else {
-
             String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
             String rawV1 = ListUtils.getRawStringForm(this.v1);
             String rawV2 = ListUtils.getRawStringForm(this.v2);
@@ -322,9 +321,7 @@ public class ConflictRegion {
             } else {
                 return DeveloperDecision.COMBINATION;
             }
-
         }
-
     }
 
     private boolean containsNewCode() {
@@ -332,15 +329,12 @@ public class ConflictRegion {
         List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
         List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
         List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
-
         for (String line : rawSolution) {
             if (!(rawV1.contains(line) || rawV2.contains(line))) {
                 return true;
             }
         }
-
         return false;
-
     }
 
 }

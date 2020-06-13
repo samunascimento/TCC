@@ -39,7 +39,7 @@ public class PackageMetricsDao {
 
         try {
             stmt = connection.prepareStatement(sql);
-                       
+
             if (packageMetrics.getA() == null) {
                 stmt.setNull(1, java.sql.Types.INTEGER);
             } else {
@@ -95,7 +95,7 @@ public class PackageMetricsDao {
             } else {
                 stmt.setInt(11, packageMetrics.getTloc().getId());
             }
-            
+
             stmt.setString(12, packageMetrics.getName());
             //  stmt.setInt(12, packageMetrics.getVersionId());
 
@@ -169,6 +169,9 @@ public class PackageMetricsDao {
                 int packageId = resultSet.getInt("id");
                 packageMetrics.setId(packageId);
 
+                String name = resultSet.getString("packageName");
+                packageMetrics.setName(name);
+
                 listPackageMetrics.add(packageMetrics);
             }
 
@@ -211,10 +214,12 @@ public class PackageMetricsDao {
             packageMetrics.setNoi(insert(resultSet, metrics, "noiID"));
             packageMetrics.setPkgRCi(insert(resultSet, metrics, "pkgRCiID"));
             packageMetrics.setPkgTCi(insert(resultSet, metrics, "pkgTCiID"));
-            packageMetrics.setTloc(insert(resultSet, metrics, "tlocID"));
 
             int packageId = resultSet.getInt("id");
             packageMetrics.setId(packageId);
+
+            String name = resultSet.getString("packageName");
+            packageMetrics.setName(name);
 
             return packageMetrics;
         } catch (SQLException e) {

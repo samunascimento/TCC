@@ -11,8 +11,8 @@ public class ConflictFile {
     private final String extraFilePath;
     private final String extraInsideFilePath;
     private final List<ConflictRegion> conflictRegion;
-    
-    public ConflictFile(String fileName, String filePath,String insideFilePath ,List<ConflictRegion> conflictRegion) {
+
+    public ConflictFile(String fileName, String filePath, String insideFilePath, List<ConflictRegion> conflictRegion) {
         this.fileName = fileName;
         this.filePath = filePath;
         this.insideFilePath = insideFilePath;
@@ -35,12 +35,23 @@ public class ConflictFile {
     public String getFileName() {
         return fileName;
     }
+
+    public String getFormedFileName() {
+        if (this.extraIsEmpty()) {
+            return fileName;
+        } else {
+            return fileName + " &\n" + extraFileName;
+        }
+    }
+
     public String getFilePath() {
         return filePath;
     }
+
     public List<ConflictRegion> getConflictRegion() {
         return conflictRegion;
     }
+
     public String getExtraFileName() {
         return extraFileName;
     }
@@ -48,5 +59,12 @@ public class ConflictFile {
     public String getExtraFilePath() {
         return extraFilePath;
     }
-        
+
+    public boolean extraIsEmpty() {
+        if (this.extraFileName == "" || this.extraFilePath == "" || this.extraInsideFilePath == "" || this.extraFileName == null || this.extraFilePath == null || this.extraInsideFilePath == null) {
+            return true;
+        }
+        return false;
+    }
+
 }
