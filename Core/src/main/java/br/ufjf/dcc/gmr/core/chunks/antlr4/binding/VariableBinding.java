@@ -10,9 +10,12 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
  * @author felip
  */
 public class VariableBinding {
+
+    
     private String Modifier;
     private String type;
     private String name;
+    private PackageBinding packageBinding;
 
     public VariableBinding(String Modifier, String type, String name) {
         this.Modifier = Modifier;
@@ -48,5 +51,18 @@ public class VariableBinding {
         this.name = name;
     }
     
+    /**
+     * @return the packageBinding
+     */
+    public PackageBinding getPackageBinding() {
+        return packageBinding;
+    }
+
+    /**
+     * @param packageBinding the packageBinding to set
+     */
+    public void setPackageBinding(PackageBinding packageBinding) {
+        this.packageBinding = packageBinding;
+    }
     
 }

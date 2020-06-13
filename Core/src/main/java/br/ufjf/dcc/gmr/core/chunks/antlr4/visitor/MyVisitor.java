@@ -310,8 +310,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 variable.setName(name);
             }
         }
-        
+        variable.setPackageBinding(packageBinding);
         getVariableBindingList().add(variable);
+            
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -556,6 +557,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 variable.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
+        variable.setPackageBinding(packageBinding);
         getVariableBindingList().add(variable);
         return super.visitFieldDeclaration(ctx);
     }
