@@ -71,9 +71,8 @@ public class ParserJava {
         System.out.println(tree.toStringTree(parser));
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.setSize(new Dimension(500, 600));
-     
-        //viewer.open();
+        viewer.setSize(new Dimension(500, 600));     
+        viewer.open();
 
         MyVisitor visitor = new MyVisitor();
 
