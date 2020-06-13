@@ -7,11 +7,11 @@ import java.util.List;
 public class MethodDeclarationBinding {
 
     private String name;
-    private List<String> parameters;
+    private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
-
+    
     public MethodDeclarationBinding() {
         this.name = "";
         this.parameters = new ArrayList<>();
@@ -20,7 +20,14 @@ public class MethodDeclarationBinding {
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
-        return this.getName().equals(mcb.getName());
+        if(!this.getName().equals(mcb.getName()))
+            return false;
+        else if(this.getParameters() != null && mcb.getParameters() != null){
+            if(this.getParameters().size() != mcb.getParameters().size()){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -81,7 +88,7 @@ public class MethodDeclarationBinding {
     /**
      * @return the parameters
      */
-    public List<String> getParameters() {
+    public List<TypeBinding> getParameters() {
         return parameters;
     }
 
@@ -95,7 +102,7 @@ public class MethodDeclarationBinding {
     /**
      * @param parameters the parameters to set
      */
-    public void setParameters(List<String> parameters) {
+    public void setParameters(List<TypeBinding> parameters) {
         this.parameters = parameters;
     }
 
