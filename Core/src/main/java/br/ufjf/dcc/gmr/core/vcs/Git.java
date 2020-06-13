@@ -341,15 +341,12 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
      */
     public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
-        
 
 
         String command = "git clone " + url;
         if (name != null) {
             command = command.concat(" ").concat(name);
-        } 
-
-        
+        }
         if (url == null || url.isEmpty()) {
             throw new UrlNotFound();
         }
@@ -1210,7 +1207,6 @@ public class Git {
         } else {
             aux.setAllMessage(execution.getOutput());
             for (String line : execution.getOutput()) {
-
                 if (line.startsWith("diff --")) {
 
                     if (i != 0) {
@@ -1219,11 +1215,14 @@ public class Git {
                     i++;
                     aux = new FileDiff();
                 }
-
+                
+                if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
+                    continue;
+                }
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
                     String c = line.substring(5);
                     aux.setFilePathTarget(c);
-                } else if (line.charAt(0) == '+' || line.charAt(1) == '+') {
+                } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                     String c = line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
@@ -1239,9 +1238,7 @@ public class Git {
             }
             result.add(aux);
             aux = new FileDiff();
-
         }
-
         return result;
     }
 
@@ -1342,10 +1339,8 @@ public class Git {
      */
     public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
         String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";
         CLIExecution execution = CLIExecute.execute(command, directory);
-
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
@@ -1396,6 +1391,26 @@ public class Git {
                 }
             }
 
+        }
+        return false;
+    }
+    
+    public static boolean renamedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+
+        List<String> output;
+        String line;
+        output = Git.auxiliarDiffStat(directory, parent, merge);
+
+        for (int i = 0; i < output.size(); i++) {
+            line = output.get(i);
+            if(i == 176)
+                System.out.println("");
+            if (line.startsWith("R")) {
+                String[] c = line.split("\t");   
+                if (fileSource.contains(c[1])) {
+                    return true;
+                }
+            }
         }
         return false;
     }

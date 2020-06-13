@@ -50,7 +50,7 @@ export default class Project extends Component {
   };
   
   async componentDidMount(){
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
+    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/versionAtualizada/` + this.props.nameProject.name)
     .then(res => {
       const data = res.data;
       this.setState({ data });

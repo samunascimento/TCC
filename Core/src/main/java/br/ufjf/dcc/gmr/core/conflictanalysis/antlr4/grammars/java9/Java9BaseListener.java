@@ -2944,18 +2944,6 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComment(Java9Parser.CommentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitComment(Java9Parser.CommentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterIdentifier(Java9Parser.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}

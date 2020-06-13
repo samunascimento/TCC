@@ -250,7 +250,7 @@ compilationUnit
 	;
 
 ordinaryCompilation
-	:	packageDeclaration? importDeclaration* comment* typeDeclaration* EOF
+	:	packageDeclaration? importDeclaration* typeDeclaration* EOF
 	;
 
 modularCompilation
@@ -371,7 +371,6 @@ classMemberDeclaration
 	|	methodDeclaration
 	|	classDeclaration
 	|	interfaceDeclaration
-        |       comment
 	|	';'
 	;
 
@@ -1423,13 +1422,6 @@ castExpression
 	|	'(' referenceType additionalBound* ')' lambdaExpression
 	;
 
-comment 
-        : COMMENT
-        | JAVADOC
-        | LINE_COMMENT
-        ;
-
-
 // LEXER
 
 identifier : Identifier | 'to' | 'module' | 'open' | 'with' | 'provides' | 'uses' | 'opens' | 'requires' | 'exports';
@@ -1862,13 +1854,9 @@ WS  :  [ \t\r\n\u000C]+ -> skip
     ;
 
 COMMENT
-    :   '/*' .*? '*/' 
-    ;
-
-JAVADOC
-    :   '/**' .*? '**/' 
+    :   '/*' .*? '*/' -> channel(HIDDEN)
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* 
+    :   '//' ~[\r\n]* -> channel(HIDDEN)
     ;

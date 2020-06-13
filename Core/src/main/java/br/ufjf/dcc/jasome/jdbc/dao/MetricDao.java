@@ -228,37 +228,46 @@ public class MetricDao {
         }
     }
     
-    public List<Metric> selectVersionMetrics(String nameProject) throws SQLException{
+    public List<List<Point>> selectVersionMetrics (String nameProject) throws SQLException{
+        List<List<Point>> chartLines = new ArrayList<>();
         
-        List<Metric> listMetrics = new ArrayList<>();
-        
-        Metric metric = null;
+        Set<String> metricNames = new HashSet<>();
         
         PreparedStatement stmt = null;
         
         ResultSet resultSet = null;
         
-        String sql =    "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value "
-                        + "from tb_projectmetrics as a "
-                        + "inner join tb_project_version as b "
-                        + "on a.id = b.project_id "
-                        + "inner join tb_versionmetrics as c "
-                        + "on b.version_id = c.id "
-                        + "inner join tb_metric  as d "
-                        + "on c.tlocid = d.id "
-                        + "where a.projectname = " +  "\'" + nameProject + "\'";
+        String sql = "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value " +
+                    "from tb_projectmetrics as a " +
+                    "inner join tb_project_version as b " +
+                    "on a.id = b.project_id " +
+                    "inner join tb_versionmetrics as c " +
+                    "on b.version_id = c.id " +
+                    "inner join tb_metric  as d " +
+                    "on c.tlocid = d.id " +
+                    "where a.projectname = " + "\'" + nameProject + "\'";
+        
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                metric = new Metric();
-                metric.setId(resultSet.getInt("id"));
-                metric.setName(resultSet.getString("name"));
-                metric.setDescription(resultSet.getString("description"));
-                metric.setValue(resultSet.getDouble("value"));
-                listMetrics.add(metric);
+                metricNames.add(resultSet.getString("name"));
             }
-            return listMetrics;
+                
+                for (String metricName : metricNames) {
+                    resultSet = stmt.executeQuery();
+                    int cont = 0;
+                    List<Point> listPoints = new ArrayList<>();
+                    while (resultSet.next()) {
+                        if(resultSet.getString("name").equals(metricName)){
+                            listPoints.add(new Point(cont++,resultSet.getDouble("value")));
+                        }
+                    }
+                    chartLines.add(listPoints);
+                }
+            
+
+            return chartLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -268,16 +277,12 @@ public class MetricDao {
         }
     }
     
-
-    
     public List<List<Point>> selectPackageMetrics(String nameProject) throws SQLException{
         
         List<List<Point>> chartLines = new ArrayList<>();
         
         Set<String> packageNames = new HashSet<>();
         Set<String> metricNames = new HashSet<>();
-        
-        Metric metric = null;
         
         PreparedStatement stmt = null;
         
@@ -339,7 +344,7 @@ public class MetricDao {
         
         ResultSet resultSet = null;
         
-        String sql =    "select * from tb_projectmetrics";
+        String sql =  "select * from tb_projectmetrics";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();

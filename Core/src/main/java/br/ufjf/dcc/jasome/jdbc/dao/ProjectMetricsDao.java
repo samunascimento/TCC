@@ -91,6 +91,7 @@ public class ProjectMetricsDao {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
+                projectMetrics = new ProjectMetrics();
                 int id = resultSet.getInt("ID");
                 String repositoryPath = resultSet.getString("sourceDir");
                 String projectName = resultSet.getString("projectname");
