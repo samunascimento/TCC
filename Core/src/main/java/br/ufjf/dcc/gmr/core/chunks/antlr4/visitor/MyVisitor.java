@@ -17,15 +17,18 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     private List<MethodDeclarationBinding> methodDeclarationBindingList;
     private List<MethodCallBinding> methodCallBidingList;
+    private List<VariableBinding> variableBindingList;
 
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
+      
 
     public MyVisitor() {
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.methodCallBidingList = new ArrayList<>();
         this.methodDeclarationBindingList = new ArrayList<>();
+        this.variableBindingList = new ArrayList<>();
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -295,7 +298,20 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-        //log(ctx);
+       
+        VariableBinding variable = new VariableBinding();
+        String name = "";
+        if(ctx.typeType().classOrInterfaceType() != null){
+            variable.setType(ctx.typeType().classOrInterfaceType().getText());
+        }
+        if(ctx.variableDeclarators().variableDeclarator() != null){
+            for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
+                name = variableDeclarator.variableDeclaratorId().getText();
+                variable.setName(name);
+            }
+        }
+        
+        getVariableBindingList().add(variable);
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -530,7 +546,17 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
-        //log(ctx);
+        VariableBinding variable = new VariableBinding();
+        if(ctx.typeType() != null){
+            variable.setType(ctx.typeType().getText());
+        }
+        
+        for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
+            if(variableDeclarator.variableDeclaratorId() != null){
+                variable.setName(variableDeclarator.variableDeclaratorId().getText());
+            }
+        }
+        getVariableBindingList().add(variable);
         return super.visitFieldDeclaration(ctx);
     }
 
@@ -855,5 +881,20 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
+    
+        /**
+     * @return the variableBindingList
+     */
+    public List<VariableBinding> getVariableBindingList() {
+        return variableBindingList;
+    }
+
+    /**
+     * @param variableBindingList the variableBindingList to set
+     */
+    public void setVariableBindingList(List<VariableBinding> variableBindingList) {
+        this.variableBindingList = variableBindingList;
+    }
+
 
 }

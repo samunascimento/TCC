@@ -20,6 +20,10 @@ public class VariableBinding {
         this.name = name;
     }
 
+    public VariableBinding() {
+      
+    }
+
     public String getModifier() {
         return Modifier;
     }
