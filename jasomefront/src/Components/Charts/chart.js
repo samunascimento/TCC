@@ -3,18 +3,10 @@ import * as d3 from 'd3';
 import React, { useRef, useEffect } from 'react';
 import './Style.css'
 
-function BarChart({ width, height, data }){
+function BarChart({data }){
 
     const ref = useRef();
-
-    useEffect(() => {
-        
-        const svg = d3.select(ref.current)
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-    }, []);
-
+    
     useEffect(() => {
         draw();
     }, [data]);
@@ -29,9 +21,30 @@ function BarChart({ width, height, data }){
           'black'
         ]
 
+        const margin = {top: 20, right: 30, bottom: 30, left: 50}
+        const width = 960 - margin.left - margin.right
+        const height = 500 - margin.top - margin.bottom
 
-        const svg = d3.select(ref.current);
-        var selection = svg.selectAll("rect").data(data);
+        const zoom = () => d3.zoom()
+        .x(x)
+        .y(y)
+        .scaleExtent([0, 30])
+        .on("zoom", () =>  {
+            svg.select(".x.axis").call(xAxis);
+            svg.select(".y.axis").call(yAxis);   
+            svg.selectAll('path.line').attr('d', line);  
+        
+            points.selectAll('circle').attr("transform", function(d) { 
+                return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")"; }
+            );  
+        });
+
+
+        const svg = d3.select(ref.current)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+	    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         //CREATE MARGINS AND AXIS
 
@@ -45,17 +58,17 @@ function BarChart({ width, height, data }){
         .range([height, 0]);
 
 
-        const xAxis = d3.axisBottom(x)
+        const xAxis = d3
+        .axisBottom(x)
         .tickSize(-height)
-        .tickPadding(10);
-        //.tickSubdivide(true)
-        //.orient("bottom");	
-
-        const yAxis = d3.axisLeft(y)
-        .tickPadding(10)
+        .ticks(10)	
+        //  .tickSubdivide(true)
+        
+        const yAxis = d3
+        .axisLeft(y)
+        .ticks(10)
         .tickSize(-width);
-        //.tickSubdivide(true)	
-        //.orient("left");
+        // .tickSubdivide(true)	
 
         
         //GENERATE SVG OBJECT
@@ -65,53 +78,45 @@ function BarChart({ width, height, data }){
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
-
+    
         svg.append("g")
         .attr("class", "y axis")
-        .call(yAxis);
-
+        .call(yAxis)
+    
         svg.append("g")
         .attr("class", "y axis")
         .append("text")
         .attr("class", "axis-label")
         .attr("transform", "rotate(-90)")
-        .attr("y", (-width) + 10)
+        .attr("y", (-margin.left) + 10)
         .attr("x", -height/2)
         .text('value');	
+        
 
+        svg.append("g")
+        .attr("class", "x axis")
+        .append("text")
+        .attr("class", "axis-label")
+        .attr("y", (height + 30))
+        .attr("x", width/2)
+        .text('date');	
+
+
+    
         svg.append("clipPath")
         .attr("id", "clip")
         .append("rect")
         .attr("width", width)
-        .attr("height", height);
-
-
-        
-
-        
-
-        // const zoom = d3.zoom()
-        // .x(x)
-        // .y(y)
-        // .scaleExtent([0, 30])
-        // .on("zoom", () =>  {
-        //     svg.select(".x.axis").call(xAxis);
-        //     svg.select(".y.axis").call(yAxis);   
-        //     svg.selectAll('path.line').attr('d', line);  
-        
-        //     points.selectAll('circle').attr("transform", function(d) { 
-        //         return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")"; }
-        //     );  
-        // });
+        .attr("height", height)
 
 
         //CREATE LINE
 
         const line = d3.line()
+        //.interpolate("linear")	
         .x(function(d) { return x(d.x); })
-        .y(function(d) { return y(d.y); })
-        .curve(d3.curveLinear);
-
+        .y(function(d) { return y(d.y); });		
+        
         svg.selectAll('.line')
         .data(data)
         .enter()
@@ -121,7 +126,7 @@ function BarChart({ width, height, data }){
         .attr('stroke', function(d,i){ 			
             return colors[i%colors.length];
         })
-        .attr("d", line);	
+        .attr("d", line);		
 
         //CREATE POINTS
 
