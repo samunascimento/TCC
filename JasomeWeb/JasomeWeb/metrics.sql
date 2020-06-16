@@ -1,5 +1,3 @@
-SELECT * FROM tb_versionMetrics
-
 DROP TABLE tb_parents_hash;
 DROP TABLE tb_project_version;
 DROP TABLE tb_version_package;
