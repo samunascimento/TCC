@@ -4,31 +4,41 @@ public class Person {
 
     private String name;
     private String CPF;
-    private String Adress;
-    private int Age;
+    private String adress;
+    private int age;
 
     public Person(String name, String CPF, String Adress, int Age) {
         this.name = name;
         this.CPF = CPF;
-        this.Adress = Adress;
-        this.Age = Age;
+        this.adress = Adress;
+        this.age = Age;
     }
 
+    public void setInfo(String name, int age){
+        this.name = name;
+        this.age = age;
+    }
+    
+    public void setInfo(int age, String name){
+        this.age = age;
+        this.name = name;
+    }
+    
     public Person() {
     }
 
     /**
-     * @return the Adress
+     * @return the adress
      */
     public String getAdress() {
-        return Adress;
+        return adress;
     }
 
     /**
-     * @return the Age
+     * @return the age
      */
     public int getAge() {
-        return Age;
+        return age;
     }
 
     /**
@@ -46,17 +56,17 @@ public class Person {
     }
 
     /**
-     * @param Adress the Adress to set
+     * @param Adress the adress to set
      */
     public void setAdress(String Adress) {
-        this.Adress = Adress;
+        this.adress = Adress;
     }
 
     /**
-     * @param Age the Age to set
+     * @param Age the age to set
      */
     public void setAge(int Age) {
-        this.Age = Age;
+        this.age = Age;
     }
 
     /**

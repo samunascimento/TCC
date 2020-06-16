@@ -27,9 +27,20 @@ public class Main {
         Employee employee = new Employee("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", "", 23);
         Main main = new Main("Office", "Felippe", 23);
         System.out.println(main.name + " " + main.office + " " + main.age);
+        if(true){
+            int a = 0;
+        }else{
+            float b = 2;
+        }
         employee.increaseSalary(50);
         employee.setAdress("Rua ABC, Bairro, DEF");
         employee.setActive(false);
+        
+        employee.getName();
+        person.getName();
+        
+        person.setInfo("name", 20);
+        person.setInfo(20, "name");
     }
 
     /**
