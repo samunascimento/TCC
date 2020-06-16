@@ -661,7 +661,8 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 classMetrics.setId(classId);
                 for (int i = 0; i < classMetrics.getListMethodsMetrics().size(); i++) {
                     classMethodDao.insert(classMetrics, classMetrics.getListMethodsMetrics().get(i));
-                }              
+                } 
+                packageMetrics.getListClassMetrics().add(classMetrics);
                 clazz = false;
 
             } else if (tagAtual.equals("Method")) {

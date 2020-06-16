@@ -6,7 +6,8 @@ import Fade from '@material-ui/core/Fade';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import BarChart from './../../Charts/chart';
+import Chart from './../../Charts/chart';
+import BarChart from './../../Charts/BarChart'
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 
@@ -50,7 +51,7 @@ export default class Project extends Component {
   };
   
   async componentDidMount(){
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/versionAtualizada/` + this.props.nameProject.name)
+    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
     .then(res => {
       const data = res.data;
       this.setState({ data });
@@ -65,7 +66,8 @@ export default class Project extends Component {
           <div>
           </div>
           <div className="App">
-              <BarChart width={800} height={600} data={this.state.data} />
+              <Chart data={this.state.data} />
+              {/* <BarChart /> */}
           </div>
         </div>
       </div>

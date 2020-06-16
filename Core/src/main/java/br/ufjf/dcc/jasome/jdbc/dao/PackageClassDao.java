@@ -24,6 +24,7 @@ public class PackageClassDao {
 
     public static final String PACKAGE_ID = "package_id";
     public static final String CLASS_ID = "class_id";
+    public static final String CLASS_NAME = "class_name";
 
     public PackageClassDao(Connection connection){
         this.connection = connection;
@@ -32,8 +33,8 @@ public class PackageClassDao {
     public void insert(PackageMetrics packageMetrics, ClassMetrics classMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_package_class "
-                + "(" + PACKAGE_ID + ", " + CLASS_ID + ") "
-                + "VALUES (?,?)";
+                + "(" + PACKAGE_ID + ", " + CLASS_ID + ", " + CLASS_NAME + ") "
+                + "VALUES (?,?,?)";
 
         PreparedStatement stmt = null;
 
@@ -41,6 +42,7 @@ public class PackageClassDao {
             stmt = connection.prepareStatement(sql);
             stmt.setInt(1, packageMetrics.getId());
             stmt.setInt(2, classMetrics.getId());
+            stmt.setString(3, classMetrics.getName());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

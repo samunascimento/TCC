@@ -23,6 +23,7 @@ public class VersionPackageDao {
 
     public static final String VERSION_ID = "version_id";
     public static final String PACKAGE_ID = "package_id";
+    public static final String PACKAGE_NAME = "package_name";
 
     public VersionPackageDao(Connection connection){
         this.connection = connection;
@@ -31,16 +32,16 @@ public class VersionPackageDao {
     public void insert(VersionMetrics versionMetrics, PackageMetrics packageMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_version_package "
-                + "(" + VERSION_ID + ", " + PACKAGE_ID + ") "
-                + "VALUES (?,?)";
+                + "(" + VERSION_ID + ", " + PACKAGE_ID + ", " + PACKAGE_NAME + ") "
+                + "VALUES (?,?,?)";
 
         PreparedStatement stmt = null;
 
         try {
             stmt = connection.prepareStatement(sql);
-
             stmt.setInt(1, versionMetrics.getId());
             stmt.setInt(2, packageMetrics.getId());
+            stmt.setString(3, packageMetrics.getName());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

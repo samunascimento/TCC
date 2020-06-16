@@ -24,6 +24,7 @@ public class ClassMethodDao {
 
     public static final String CLASS_ID = "class_id";
     public static final String METHOD_ID = "method_id";
+    public static final String METHOD_NAME = "method_name";
 
     public ClassMethodDao(Connection connection){
         this.connection = connection;
@@ -32,8 +33,8 @@ public class ClassMethodDao {
     public void insert(ClassMetrics classMetrics, MethodMetrics methodMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_class_method "
-                + "(" + CLASS_ID + ", " + METHOD_ID + ") "
-                + "VALUES (?,?)";
+                + "(" + CLASS_ID + ", " + METHOD_ID + ", " + METHOD_NAME + ") "
+                + "VALUES (?,?,?)";
 
         PreparedStatement stmt = null;
 
@@ -42,6 +43,7 @@ public class ClassMethodDao {
 
             stmt.setInt(1, classMetrics.getId());
             stmt.setInt(2, methodMetrics.getId());
+            stmt.setString(3, methodMetrics.getName());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -19,4 +19,9 @@ public class Dependencies {
         return mdb.equalsTo(mcb);
     }
     
+    private static void variablePrintOut(VariableBinding variable){
+        System.out.println("Package = "+variable.getPackageBinding().getName());
+        System.out.println(variable.getModifier()+" "+variable.getType()+" "+variable.getName());
+    }
+    
 }
