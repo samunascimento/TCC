@@ -212,6 +212,7 @@ CREATE TABLE tb_project_version (
 CREATE TABLE tb_version_package (
     version_id Serial NOT Null,
     package_id Serial NOT Null,
+	package_name varchar (255) null,
     FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID)
 );
@@ -219,6 +220,7 @@ CREATE TABLE tb_version_package (
 CREATE TABLE tb_package_class (
     package_id Serial NOT Null,
     class_id Serial NOT Null,
+	class_name varchar (255),
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID),
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID)
 );
@@ -226,6 +228,7 @@ CREATE TABLE tb_package_class (
 CREATE TABLE tb_class_method (
     class_id Serial NOT Null,
     method_id Serial NOT Null,
+	method_name varchar (255),
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID),
     FOREIGN KEY (method_id) REFERENCES tb_methodMetrics(ID)
 );
@@ -235,5 +238,5 @@ CREATE TABLE tb_parents_hash (
 	parent_id Integer,
 	parent_hash varchar(255),
 	FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
-    	FOREIGN KEY (parent_id) REFERENCES tb_versionMetrics(ID)
+    FOREIGN KEY (parent_id) REFERENCES tb_versionMetrics(ID)
 );
