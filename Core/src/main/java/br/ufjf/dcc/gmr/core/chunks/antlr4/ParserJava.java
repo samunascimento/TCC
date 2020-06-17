@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Dependencies;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodCallBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.VariableBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
@@ -31,7 +32,8 @@ public class ParserJava {
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/vcs/Git.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
-
+            
+        
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding.getName());

@@ -27,7 +27,7 @@ public class MethodDeclarationBinding {
                 return false;
             }else{
                 for (int i = 0; i < parameters.size(); i++) {
-                    if(parameters.get(i) != mcb.getParameters().get(i)){
+                    if(!parameters.get(i).getIdentifier().equals(mcb.getParameters().get(i).getIdentifier())){                        
                         return false;
                     }
                 }

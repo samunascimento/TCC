@@ -54,6 +54,7 @@ public class Person {
     public String getName() {
         return name;
     }
+   
 
     /**
      * @param Adress the adress to set

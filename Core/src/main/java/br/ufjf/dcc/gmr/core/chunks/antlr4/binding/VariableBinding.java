@@ -13,11 +13,11 @@ public class VariableBinding {
 
     
     private String Modifier;
-    private String type;
+    private TypeBinding type;
     private String name;
     private PackageBinding packageBinding;
 
-    public VariableBinding(String Modifier, String type, String name) {
+    public VariableBinding(String Modifier, TypeBinding type, String name) {
         this.Modifier = Modifier;
         this.type = type;
         this.name = name;
@@ -35,11 +35,11 @@ public class VariableBinding {
         this.Modifier = Modifier;
     }
 
-    public String getType() {
+    public TypeBinding getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TypeBinding type) {
         this.type = type;
     }
 

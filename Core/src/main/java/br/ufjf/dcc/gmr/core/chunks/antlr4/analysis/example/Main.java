@@ -35,12 +35,14 @@ public class Main {
         employee.increaseSalary(50);
         employee.setAdress("Rua ABC, Bairro, DEF");
         employee.setActive(false);
-        
+        int x =4;
+        String y = "kkk";
         employee.getName();
         person.getName();
+        main.getName();
         
-        person.setInfo("name", 20);
-        person.setInfo(20, "name");
+        person.setInfo(y, x);
+        person.setInfo(x, y);
     }
 
     /**
