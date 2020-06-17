@@ -11,14 +11,15 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
  */
 public class VariableBinding {
 
-    
-    private String Modifier;
+    /**
+     * used to store de modifier
+     */
+    private String modifier;
     private TypeBinding type;
     private String name;
-    private PackageBinding packageBinding;
-
+    
     public VariableBinding(String Modifier, TypeBinding type, String name) {
-        this.Modifier = Modifier;
+        this.modifier = Modifier;
         this.type = type;
         this.name = name;
     }
@@ -28,11 +29,11 @@ public class VariableBinding {
     }
 
     public String getModifier() {
-        return Modifier;
+        return modifier;
     }
 
     public void setModifier(String Modifier) {
-        this.Modifier = Modifier;
+        this.modifier = Modifier;
     }
 
     public TypeBinding getType() {
@@ -49,20 +50,6 @@ public class VariableBinding {
 
     public void setName(String name) {
         this.name = name;
-    }
-    
-    /**
-     * @return the packageBinding
-     */
-    public PackageBinding getPackageBinding() {
-        return packageBinding;
-    }
-
-    /**
-     * @param packageBinding the packageBinding to set
-     */
-    public void setPackageBinding(PackageBinding packageBinding) {
-        this.packageBinding = packageBinding;
     }
     
 }

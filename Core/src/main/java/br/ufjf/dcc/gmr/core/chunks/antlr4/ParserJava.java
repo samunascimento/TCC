@@ -36,22 +36,22 @@ public class ParserJava {
         
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
-            System.out.println(methodDeclarationBinding.getName());
+            System.out.println(methodDeclarationBinding);
         }
 
         System.out.println("=============MethodCallAST1=============");
         for (MethodCallBinding methodCallBinding : AST1.getMethodCallBiding()) {
-            System.out.println(methodCallBinding.getName());
+            System.out.println(methodCallBinding);
         }
 
         System.out.println("=============MethodDeclarationAST2=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodDeclarationBinding()) {
-            System.out.println(methodDeclarationBinding.getName());
+            System.out.println(methodDeclarationBinding);
         }
 
         System.out.println("=============MethodCallAST2=============");
         for (MethodCallBinding methodCallBinding : AST2.getMethodCallBiding()) {
-            System.out.println(methodCallBinding.getName());
+            System.out.println(methodCallBinding);
         }
 
         System.out.println("=============Dependencies=============");

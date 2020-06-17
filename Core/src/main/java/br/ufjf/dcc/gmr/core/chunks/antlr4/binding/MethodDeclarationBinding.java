@@ -11,7 +11,7 @@ public class MethodDeclarationBinding {
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
-    
+
     public MethodDeclarationBinding() {
         this.name = "";
         this.parameters = new ArrayList<>();
@@ -20,26 +20,37 @@ public class MethodDeclarationBinding {
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
-        if(!this.getName().equals(mcb.getName()))
+        if (!this.getName().equals(mcb.getName())) {
             return false;
-        else if(this.getParameters() != null && mcb.getParameters() != null){
-            if(this.getParameters().size() != mcb.getParameters().size()){
+        } else if (this.getParameters() != null && mcb.getParameters() != null) {
+            if (this.getParameters().size() != mcb.getParameters().size()) {
                 return false;
-            }else{
-                for (int i = 0; i < parameters.size(); i++) {
-                    if(!parameters.get(i).getIdentifier().equals(mcb.getParameters().get(i).getIdentifier())){                        
+            } else {
+                for (int i = 0; i < this.parameters.size(); i++) {
+                    if (!this.parameters.get(i).getIdentifier().equals(mcb.getParameters().get(i).getIdentifier())) {
                         return false;
                     }
                 }
             }
-            }
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return this.getName().concat("(").concat(ctx.getStart().getLine() + "").concat(",").
-                concat(ctx.getStop().getLine() + "").concat(")");
+
+        String output = "";
+
+        output = output.concat(this.getName()).concat("(");
+        for (TypeBinding parameter : this.parameters) {
+            output = output.concat(parameter.getIdentifier() + ",");
+        }
+        output = output.concat(")");
+
+        output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
+                concat(ctx.getStop().getLine() + "").concat("]");
+
+        return output;
     }
 
     /**

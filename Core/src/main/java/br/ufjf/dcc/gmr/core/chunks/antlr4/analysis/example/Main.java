@@ -41,6 +41,7 @@ public class Main {
         person.getName();
         main.getName();
         
+        employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
     }

@@ -17,17 +17,27 @@ public class MethodCallBinding {
         this.parameters = new ArrayList<>();
     }
 
-    public boolean equalsTo(MethodDeclarationBinding mdb){
+    public boolean equalsTo(MethodDeclarationBinding mdb) {
         return this.getName().equals(mdb.getName());
     }
 
     @Override
     public String toString() {
-        return this.getName().concat("(").concat(ctx.getStart().getLine()+"").concat(",").
-                concat(ctx.getStop().getLine()+"").concat(")");
+
+        String output = "";
+
+        output = output.concat(this.getName()).concat("(");
+        for (TypeBinding parameter : this.parameters) {
+            output = output.concat(parameter.getIdentifier() + ",");
+        }
+        output = output.concat(")");
+
+        output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
+                concat(ctx.getStop().getLine() + "").concat("]");
+
+        return output;
     }
-    
-    
+
     /**
      * @return the ctx
      */
