@@ -11,7 +11,7 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    const projects = await (await fetch('http://localhost:8080/JasomeWeb/webresources/jasome/nameProject')).json()
+    const projects = await (await fetch('http://localhost:23575/JasomeWeb/webresources/jasome/nameProject')).json()
     console.log(projects);
     this.setState({ projects })
   }

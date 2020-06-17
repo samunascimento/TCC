@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
+
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -16,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
+
 /**
  *
  * @author anton
@@ -24,7 +26,7 @@ public class MetricDao {
 
     private Connection connection;
 
-    public MetricDao(Connection connection){
+    public MetricDao(Connection connection) {
         this.connection = connection;
 
     }
@@ -45,7 +47,6 @@ public class MetricDao {
             stmt.setString(2, metric.getDescription());
             stmt.setDouble(3, metric.getValue());
 
-
             ResultSet result = stmt.executeQuery();
 
             result.next();
@@ -62,7 +63,7 @@ public class MetricDao {
 
     public List<Metric> select() throws SQLException {
         Metric metric;
- 
+
         List<Metric> listMetrics = new ArrayList<>();
 
         PreparedStatement stmt = null;
@@ -116,12 +117,12 @@ public class MetricDao {
             }
         }
     }
-    
+
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM tb_metric WHERE ID = ?";
-        
-        PreparedStatement stmt = null; 
-                
+
+        PreparedStatement stmt = null;
+
         try {
             stmt = connection.prepareStatement(sql);
             //set values
@@ -135,12 +136,12 @@ public class MetricDao {
             }
         }
     }
-    
+
     public void update(Metric metric, int id) throws SQLException {
-        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() +  "' WHERE ID = '" + id + "';";
-        
+        String sql = "UPDATE tb_metric SET name = '" + metric.getName() + "', description = '" + metric.getDescription() + "', value = '" + metric.getValue() + "' WHERE ID = '" + id + "';";
+
         PreparedStatement stmt = null;
-                
+
         try {
             stmt = connection.prepareStatement(sql);
             stmt.executeUpdate();
@@ -153,20 +154,20 @@ public class MetricDao {
             }
         }
     }
-    
-    public List<Metric> selectAllTlocVersionMetrics() throws SQLException{
+
+    public List<Metric> selectAllTlocVersionMetrics() throws SQLException {
         List<Metric> listMetrics = new ArrayList<>();
-        
+
         Metric metric = null;
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet resultSet = null;
-        
-        String sql =   "select a.tlocid, b.id,b.description,b.name,b.value "
-                      +"from tb_versionmetrics as a "
-                      +"inner join tb_metric as b "
-                      +"on a.tlocid = b.id";
+
+        String sql = "select a.tlocid, b.id,b.description,b.name,b.value "
+                + "from tb_versionmetrics as a "
+                + "inner join tb_metric as b "
+                + "on a.tlocid = b.id";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
@@ -187,26 +188,26 @@ public class MetricDao {
             }
         }
     }
-    
-    public List<Metric> selectMetricPackage() throws SQLException{
+
+    public List<Metric> selectMetricPackage() throws SQLException {
         //de inicio irei returnar somente três métricas
         //a,ca, ccrc
         //sql não está considerando que exista mais
         //de um projeto no banco de dados
         List<Metric> listMetrics = new ArrayList<>();
-        
+
         Metric metric = null;
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet resultSet = null;
-        
-        String sql =   "select b.id,b.description,b.name,b.value "
-                        +"from tb_packagemetrics as a "
-                        +"inner join tb_metric as b "
-                        +"on a.aid = b.id "
-                        +"or a.caid = b.id "
-                        +"or a.ccrcid = b.id ";
+
+        String sql = "select b.id,b.description,b.name,b.value "
+                + "from tb_packagemetrics as a "
+                + "inner join tb_metric as b "
+                + "on a.aid = b.id "
+                + "or a.caid = b.id "
+                + "or a.ccrcid = b.id ";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
@@ -227,45 +228,44 @@ public class MetricDao {
             }
         }
     }
-    
-    public List<List<Point>> selectVersionMetrics (String nameProject) throws SQLException{
+
+    public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
         List<List<Point>> chartLines = new ArrayList<>();
-        
+
         Set<String> metricNames = new HashSet<>();
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet resultSet = null;
-        
-        String sql = "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value " +
-                    "from tb_projectmetrics as a " +
-                    "inner join tb_project_version as b " +
-                    "on a.id = b.project_id " +
-                    "inner join tb_versionmetrics as c " +
-                    "on b.version_id = c.id " +
-                    "inner join tb_metric  as d " +
-                    "on c.tlocid = d.id " +
-                    "where a.projectname = " + "\'" + nameProject + "\'";
-        
+
+        String sql = "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value "
+                + "from tb_projectmetrics as a "
+                + "inner join tb_project_version as b "
+                + "on a.id = b.project_id "
+                + "inner join tb_versionmetrics as c "
+                + "on b.version_id = c.id "
+                + "inner join tb_metric  as d "
+                + "on c.tlocid = d.id "
+                + "where a.projectname = " + "\'" + nameProject + "\'";
+
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 metricNames.add(resultSet.getString("name"));
             }
-                
-                for (String metricName : metricNames) {
-                    resultSet = stmt.executeQuery();
-                    int cont = 0;
-                    List<Point> listPoints = new ArrayList<>();
-                    while (resultSet.next()) {
-                        if(resultSet.getString("name").equals(metricName)){
-                            listPoints.add(new Point(cont++,resultSet.getDouble("value")));
-                        }
+
+            for (String metricName : metricNames) {
+                resultSet = stmt.executeQuery();
+                int cont = 0;
+                List<Point> listPoints = new ArrayList<>();
+                while (resultSet.next()) {
+                    if (resultSet.getString("name").equals(metricName)) {
+                        listPoints.add(new Point(cont++, resultSet.getDouble("value")));
                     }
-                    chartLines.add(listPoints);
                 }
-            
+                chartLines.add(listPoints);
+            }
 
             return chartLines;
         } catch (SQLException e) {
@@ -276,54 +276,68 @@ public class MetricDao {
             }
         }
     }
-    
-    public List<List<Point>> selectPackageMetrics(String nameProject) throws SQLException{
-        
+
+    public List<List<Point>> selectPackageMetrics(String nameProject) throws SQLException {
+
         List<List<Point>> chartLines = new ArrayList<>();
-        
+
         Set<String> packageNames = new HashSet<>();
         Set<String> metricNames = new HashSet<>();
-        
+        List<Integer> versionIDs = new ArrayList<>();
+
         PreparedStatement stmt = null;
-        
+
         ResultSet resultSet = null;
-        
-        String sql =  "select v.versiondate,d.packagename,e.name,e.value " +
-"                        from tb_projectmetrics as a" +
-"                        inner join tb_project_version as b " +
-"                        on a.id = b.project_id " +
-"                        inner join tb_version_package as c " +
-"                        on b.version_id = c.version_id " +
-"                        inner join tb_versionmetrics as v " +
-"                        on v.id = c.version_id " +
-"                        inner join tb_packagemetrics as d " +
-"                        on c.package_id = d.id " +
-"                        inner join tb_metric as e " +
-"                        on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id " +
-"                        where a.projectname = " + "\'" + nameProject + "\'";
+
+        String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value "
+                + "                        from tb_projectmetrics as a"
+                + "                        inner join tb_project_version as b "
+                + "                        on a.id = b.project_id "
+                + "                        inner join tb_version_package as c "
+                + "                        on b.version_id = c.version_id "
+                + "                        inner join tb_versionmetrics as v "
+                + "                        on v.id = c.version_id "
+                + "                        inner join tb_packagemetrics as d "
+                + "                        on c.package_id = d.id "
+                + "                        inner join tb_metric as e "
+                + "                        on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id "
+                + "                        where a.projectname = " + "\'" + nameProject + "\'";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
+            int id;
             while (resultSet.next()) {
                 packageNames.add(resultSet.getString("packagename"));
                 metricNames.add(resultSet.getString("name"));
+                id = resultSet.getInt("id");
+                if (!versionIDs.contains(id)) {
+                    versionIDs.add(id);
+                }
             }
 
             for (String packageName : packageNames) {
-                
+
                 for (String metricName : metricNames) {
                     resultSet = stmt.executeQuery();
                     int cont = 0;
                     List<Point> listPoints = new ArrayList<>();
+                    int idAux;
+                    int idIndex = 0;
                     while (resultSet.next()) {
-                        if(resultSet.getString("packageName").equals(packageName) && resultSet.getString("name").equals(metricName)){
-                            listPoints.add(new Point(cont++,resultSet.getDouble("value")));
+                        if (resultSet.getString("packageName").equals(packageName) && resultSet.getString("name").equals(metricName)) {
+                            idAux = resultSet.getInt("id");
+                            while (versionIDs.get(idIndex) < idAux) {
+                                listPoints.add(null);
+                                cont++;
+                                idIndex++;
+                            }
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value")));
+                            idIndex++;
                         }
                     }
                     chartLines.add(listPoints);
                 }
             }
-            
 
             return chartLines;
         } catch (SQLException e) {
@@ -334,17 +348,17 @@ public class MetricDao {
             }
         }
     }
-    
-    public List<ProjectMetrics> selectNameProject() throws SQLException{
+
+    public List<ProjectMetrics> selectNameProject() throws SQLException {
         List<ProjectMetrics> listProject = new ArrayList<>();
         Metric metric = null;
         ProjectMetrics projectMetrics;
-        
+
         PreparedStatement stmt = null;
-        
+
         ResultSet resultSet = null;
-        
-        String sql =  "select * from tb_projectmetrics";
+
+        String sql = "select * from tb_projectmetrics";
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
@@ -364,6 +378,5 @@ public class MetricDao {
             }
         }
     }
-    
 
 }
