@@ -7,7 +7,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Chart from './../../Charts/chart';
-import BarChart from './../../Charts/BarChart'
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 
@@ -51,7 +50,7 @@ export default class Project extends Component {
   };
   
   async componentDidMount(){
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
+    axios.get(`http://localhost:23575/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
     .then(res => {
       const data = res.data;
       this.setState({ data });
