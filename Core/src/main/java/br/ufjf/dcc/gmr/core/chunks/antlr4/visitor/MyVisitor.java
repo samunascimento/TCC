@@ -21,7 +21,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
-      
 
     public MyVisitor() {
         this.packageBinding = new PackageBinding();
@@ -190,15 +189,17 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
 
-        for (ParseTree parseTree : expressionList.children) {
-            if (parseTree instanceof JavaParser.ExpressionContext) {
-                TypeBinding aux = new TypeBinding();
-                JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
-                if(expressionContext.primary() != null) {
-                    aux.setIdentifier(expressionContext.primary().literal().getText());
-                    parameters.add(aux);
-                } 
+        if (expressionList != null) {
+            for (ParseTree parseTree : expressionList.children) {
+                if (parseTree instanceof JavaParser.ExpressionContext) {
+                    TypeBinding aux = new TypeBinding();
+                    JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
+                    if (expressionContext.primary() != null) {
+                        aux.setIdentifier(expressionContext.primary().literal().getText());
+                        parameters.add(aux);
+                    }
 
+                }
             }
         }
 
@@ -298,13 +299,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-       
+
         VariableBinding variable = new VariableBinding();
         String name = "";
-        if(ctx.typeType().classOrInterfaceType() != null){
+        if (ctx.typeType().classOrInterfaceType() != null) {
             variable.setType(ctx.typeType().classOrInterfaceType().getText());
         }
-        if(ctx.variableDeclarators().variableDeclarator() != null){
+        if (ctx.variableDeclarators().variableDeclarator() != null) {
             for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
                 name = variableDeclarator.variableDeclaratorId().getText();
                 variable.setName(name);
@@ -312,7 +313,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
         variable.setPackageBinding(packageBinding);
         getVariableBindingList().add(variable);
-            
+
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -548,12 +549,12 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
         VariableBinding variable = new VariableBinding();
-        if(ctx.typeType() != null){
+        if (ctx.typeType() != null) {
             variable.setType(ctx.typeType().getText());
         }
-        
+
         for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
-            if(variableDeclarator.variableDeclaratorId() != null){
+            if (variableDeclarator.variableDeclaratorId() != null) {
                 variable.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
@@ -603,19 +604,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         mdb.setCtx(ctx);
 
         JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
-        if(ctx.formalParameters().formalParameterList() != null) {
+        if (ctx.formalParameters().formalParameterList() != null) {
             for (ParseTree parseTree : formalParameters.children) {
                 if (parseTree instanceof JavaParser.FormalParameterContext) {
                     JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
                     TypeBinding parameter = new TypeBinding();
-                    if(aux.typeType().classOrInterfaceType() != null){
+                    if (aux.typeType().classOrInterfaceType() != null) {
                         parameter.setIdentifier(aux.typeType().classOrInterfaceType().getText());
                     }
                     parameters.add(parameter);
                 }
             }
         }
-        
+
         mdb.setParameters(parameters);
         methodDeclarationBindingList.add(mdb);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
@@ -722,17 +723,16 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
         //log(ctx);
         String name = new String();
-        for(ParseTree parseTree: ctx.children ){
+        for (ParseTree parseTree : ctx.children) {
             if (parseTree instanceof JavaParser.ClassOrInterfaceModifierContext) {
                 name = parseTree.getText();
             }
             if (parseTree instanceof JavaParser.ClassDeclarationContext) {
-                
+
             }
 
         }
-            
-        
+
         System.out.println(name);
         return super.visitTypeDeclaration(ctx);
     }
@@ -883,8 +883,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-    
-        /**
+
+    /**
      * @return the variableBindingList
      */
     public List<VariableBinding> getVariableBindingList() {
@@ -897,6 +897,5 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public void setVariableBindingList(List<VariableBinding> variableBindingList) {
         this.variableBindingList = variableBindingList;
     }
-
 
 }

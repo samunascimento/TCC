@@ -25,8 +25,14 @@ public class MethodDeclarationBinding {
         else if(this.getParameters() != null && mcb.getParameters() != null){
             if(this.getParameters().size() != mcb.getParameters().size()){
                 return false;
+            }else{
+                for (int i = 0; i < parameters.size(); i++) {
+                    if(parameters.get(i) != mcb.getParameters().get(i)){
+                        return false;
+                    }
+                }
             }
-        }
+            }
         return true;
     }
 
