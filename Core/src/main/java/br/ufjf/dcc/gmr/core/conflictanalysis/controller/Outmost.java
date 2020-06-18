@@ -8,7 +8,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
 import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJava9SyntaxTree;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJavaSyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.io.IOException;
 import java.util.ArrayList;
