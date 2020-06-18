@@ -88,8 +88,8 @@ public class GitRepositoryAnalysis {
      *
      * @param repositoryPath Is the path of root of project on PC.
      * @param linesContext This integer is the number of lines that will be
-     * catch after and before the conflict, this lines is called context, 
-     * cannot be less than 1.
+     * catch after and before the conflict, this lines is called context, cannot
+     * be less than 1.
      * @param useOutmost If is necessary filter the ANTLR structures to the
      * outmost structures, input true.
      */
@@ -111,11 +111,12 @@ public class GitRepositoryAnalysis {
      *
      * @param repositoryPath Is the path of root of project on PC.
      * @param linesContext This integer is the number of lines that will be
-     * catch after and before the conflict, this lines is called context,
-     * cannot be less than 1.
+     * catch after and before the conflict, this lines is called context, cannot
+     * be less than 1.
      * @param useOutmost If is necessary filter the ANTLR structures to the
      * outmost structures, input true.
-     * @param progressBar Input a ConflictAnalysisProgressBar if its use in a GUI
+     * @param progressBar Input a ConflictAnalysisProgressBar if its use in a
+     * GUI
      */
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
@@ -130,10 +131,10 @@ public class GitRepositoryAnalysis {
         String[] auxArray = this.repositoryPath.split("/");
         this.projectName = auxArray[auxArray.length - 1];
     }
-    
+
     /**
-     * 
-     * @return The analysis 
+     *
+     * @return The analysis
      */
     public List<MergeEvent> getMergeEventList() {
         if (analysisDone) {
@@ -142,19 +143,19 @@ public class GitRepositoryAnalysis {
             return null;
         }
     }
-    
+
     /**
      * Iniciate the analysis.
-     * @throws IOException Any error is returned like an 
-     * IOException, but the expected errors is the a 
-     * negative number in the linesContext or a path 
+     *
+     * @throws IOException Any error is returned like an IOException, but the
+     * expected errors is the a negative number in the linesContext or a path
      * that isn't a Git Repository in repositoryPath
      */
-    public void startAnalysis() throws IOException{
+    public void startAnalysis() throws IOException {
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
-            if(this.linesContext < 1){
+            if (this.linesContext < 1) {
                 this.exceptionProtocol("ERROR: IOException error!");
                 throw new IOException();
             }
@@ -301,12 +302,6 @@ public class GitRepositoryAnalysis {
         } catch (InvalidDocument ex) {
         }
         try {
-            Git.checkout("master", this.repositoryPath);
-        } catch (IOException ex) {
-        } catch (LocalRepositoryNotAGitRepository ex) {
-        } catch (CheckoutError ex) {
-        }
-        try {
             Git.clean(this.repositoryPath, true, 0);
         } catch (IOException ex) {
         } catch (UnknownSwitch ex) {
@@ -404,7 +399,6 @@ public class GitRepositoryAnalysis {
                 this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
                         + this.processData.insideFilePath, this.processData.beginLine + 1);
             }
-            Git.checkout("master", this.processData.sandbox.getPath());
         }
         if (!this.processData.v2.isEmpty()) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
@@ -417,7 +411,6 @@ public class GitRepositoryAnalysis {
                         this.processData.filePath, this.processData.sandbox.getPath() + this.processData.insideFilePath,
                         this.processData.separatorLine + 1);
             }
-            Git.checkout("master", this.processData.sandbox.getPath());
         }
     }
 
@@ -480,7 +473,6 @@ public class GitRepositoryAnalysis {
             this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath),
                     this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
         }
-        Git.checkout("master", this.processData.sandbox.getPath());
 
     }
 
@@ -556,7 +548,6 @@ public class GitRepositoryAnalysis {
     }
 
     private void resetRepository() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository {
-        Git.checkout("master", this.repositoryPath);
         Git.reset(this.repositoryPath, true, false, false, null);
         Git.clean(this.repositoryPath, true, 0);
     }
@@ -598,10 +589,10 @@ public class GitRepositoryAnalysis {
             }
         }
     }
-    
+
     /**
-     * 
-     * @return The name of Project 
+     *
+     * @return The name of Project
      */
     public String getProjectName() {
         return projectName;

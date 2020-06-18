@@ -133,7 +133,6 @@ public class ConflictRegion {
                     this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 else
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
@@ -141,7 +140,6 @@ public class ConflictRegion {
                     this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 else
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                Git.checkout("master", repositoryPath);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
@@ -169,7 +167,6 @@ public class ConflictRegion {
                 else
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
-                Git.checkout("master", repositoryPath);
             }
             if (this.originalV2StartLine > 0) {
                 Git.checkout(v2Commit, repositoryPath);
@@ -184,7 +181,6 @@ public class ConflictRegion {
                 else
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
-                Git.checkout("master", repositoryPath);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
