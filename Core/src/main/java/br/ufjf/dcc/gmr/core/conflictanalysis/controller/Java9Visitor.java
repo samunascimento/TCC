@@ -39,7 +39,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -52,7 +52,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -65,7 +65,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -78,7 +78,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -91,7 +91,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -104,7 +104,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -117,7 +117,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -130,7 +130,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -143,7 +143,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -156,7 +156,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -169,7 +169,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -182,7 +182,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -195,7 +195,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -208,7 +208,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -221,7 +221,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -234,7 +234,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -247,7 +247,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -260,7 +260,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -273,7 +273,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -286,7 +286,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -299,7 +299,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -312,7 +312,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -325,7 +325,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -338,7 +338,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -351,7 +351,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -364,7 +364,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -377,7 +377,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -390,7 +390,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -403,7 +403,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -416,7 +416,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -429,7 +429,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -442,7 +442,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -455,7 +455,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -468,7 +468,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -481,7 +481,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -494,7 +494,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -507,7 +507,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -520,7 +520,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -533,7 +533,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -546,7 +546,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -559,7 +559,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -572,7 +572,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -585,7 +585,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -598,7 +598,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -611,7 +611,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -624,7 +624,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -637,7 +637,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -650,7 +650,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -663,7 +663,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -676,7 +676,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -689,7 +689,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -702,7 +702,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -715,7 +715,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -728,7 +728,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -741,7 +741,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -754,12 +754,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitClassBodyDeclaration(Java9Parser.ClassBodyDeclarationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -767,12 +767,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitClassMemberDeclaration(Java9Parser.ClassMemberDeclarationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -780,7 +780,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -793,7 +793,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -806,7 +806,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -819,7 +819,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -832,7 +832,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -845,7 +845,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -858,7 +858,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -871,7 +871,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -884,7 +884,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -897,7 +897,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -910,7 +910,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -923,7 +923,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -936,7 +936,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -949,7 +949,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -962,7 +962,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -975,7 +975,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -988,7 +988,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1001,7 +1001,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1014,7 +1014,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1027,7 +1027,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1040,7 +1040,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1053,7 +1053,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1066,7 +1066,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1079,7 +1079,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1092,7 +1092,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1105,7 +1105,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1118,7 +1118,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1131,7 +1131,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1144,7 +1144,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1157,7 +1157,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1170,7 +1170,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1183,7 +1183,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1196,7 +1196,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1209,7 +1209,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1222,7 +1222,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1235,7 +1235,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1248,7 +1248,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1261,7 +1261,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1274,7 +1274,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1287,7 +1287,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1300,7 +1300,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1313,7 +1313,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1326,7 +1326,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1339,7 +1339,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1352,7 +1352,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1365,7 +1365,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1378,7 +1378,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1391,7 +1391,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1404,7 +1404,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1417,7 +1417,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1430,7 +1430,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1443,7 +1443,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1456,7 +1456,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1469,7 +1469,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1482,7 +1482,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1495,7 +1495,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1508,7 +1508,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1521,7 +1521,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1534,7 +1534,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1547,7 +1547,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1560,7 +1560,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1573,7 +1573,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1586,7 +1586,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1599,7 +1599,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1612,7 +1612,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1625,7 +1625,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1638,7 +1638,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1651,7 +1651,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1664,7 +1664,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1677,7 +1677,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1690,7 +1690,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1703,7 +1703,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1716,7 +1716,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1729,7 +1729,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1742,12 +1742,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitBlock(Java9Parser.BlockContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1755,12 +1755,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitBlockStatements(Java9Parser.BlockStatementsContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1768,12 +1768,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitBlockStatement(Java9Parser.BlockStatementContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1781,7 +1781,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1794,7 +1794,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1807,13 +1807,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitStatement(Java9Parser.StatementContext ctx) {
-
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1821,7 +1820,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1834,12 +1833,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitStatementWithoutTrailingSubstatement(Java9Parser.StatementWithoutTrailingSubstatementContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1847,7 +1846,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1860,7 +1859,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1873,7 +1872,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1886,12 +1885,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitExpressionStatement(Java9Parser.ExpressionStatementContext ctx) {
-//        process(ctx); 
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1899,12 +1898,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitStatementExpression(Java9Parser.StatementExpressionContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1912,7 +1911,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1925,7 +1924,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1938,7 +1937,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1951,7 +1950,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1964,7 +1963,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1977,7 +1976,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -1990,7 +1989,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2003,7 +2002,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2016,7 +2015,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2029,7 +2028,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2042,7 +2041,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2055,7 +2054,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2068,7 +2067,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2081,7 +2080,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2094,7 +2093,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2107,7 +2106,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2120,7 +2119,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2133,7 +2132,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2146,7 +2145,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2159,7 +2158,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2172,7 +2171,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2185,7 +2184,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2198,7 +2197,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2211,7 +2210,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2224,7 +2223,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2237,7 +2236,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2250,7 +2249,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2263,7 +2262,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2276,7 +2275,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2289,7 +2288,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2302,7 +2301,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2315,7 +2314,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2328,7 +2327,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2341,7 +2340,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2354,7 +2353,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2367,7 +2366,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2380,7 +2379,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2393,7 +2392,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2406,7 +2405,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2419,7 +2418,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2432,7 +2431,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2445,7 +2444,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2458,7 +2457,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2471,7 +2470,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2484,7 +2483,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2497,7 +2496,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2510,7 +2509,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2523,7 +2522,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2536,7 +2535,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2549,7 +2548,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2562,7 +2561,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2575,7 +2574,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2588,7 +2587,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2601,7 +2600,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2614,7 +2613,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2627,7 +2626,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2640,7 +2639,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2653,7 +2652,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2666,7 +2665,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2679,7 +2678,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2692,7 +2691,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2705,7 +2704,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2718,7 +2717,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2731,7 +2730,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2744,7 +2743,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2757,7 +2756,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2770,7 +2769,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2783,7 +2782,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2796,7 +2795,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2809,7 +2808,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2822,12 +2821,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
     public Object visitExpression(Java9Parser.ExpressionContext ctx) {
-//        process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -2835,7 +2834,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2848,7 +2847,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2861,7 +2860,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2874,7 +2873,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2887,7 +2886,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2900,7 +2899,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2913,7 +2912,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2926,7 +2925,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2939,7 +2938,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2952,7 +2951,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2965,7 +2964,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2978,7 +2977,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -2991,7 +2990,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3004,7 +3003,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3017,7 +3016,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3030,7 +3029,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3043,7 +3042,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3056,7 +3055,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3069,7 +3068,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3082,7 +3081,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3095,7 +3094,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3108,7 +3107,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3121,7 +3120,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3134,7 +3133,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3147,7 +3146,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3160,7 +3159,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3173,7 +3172,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3186,7 +3185,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3199,7 +3198,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3212,7 +3211,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@inheritDoc}
      *
      * <p>
-     * The default implementation returns the result of calling
+     * The default implementation process(ctx); returns the result of calling
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
@@ -3220,5 +3219,4 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         process(ctx);
         return visitChildren(ctx);
     }
-
 }

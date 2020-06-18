@@ -102,7 +102,7 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-
+            
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
