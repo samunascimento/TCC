@@ -14,7 +14,7 @@ import javax.swing.JProgressBar;
 
 /**
  *
- * @author joao_lima
+ * @author João Pedro Lima
  */
 public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable {
 

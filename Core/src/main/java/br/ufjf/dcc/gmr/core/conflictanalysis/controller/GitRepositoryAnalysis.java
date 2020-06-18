@@ -34,21 +34,65 @@ import javax.swing.JProgressBar;
 
 /**
  *
- * @author joao_lima
+ * This is the main class of Conflict Analysis, here is analysed all the project
+ * and generate a List of MergeEvent. If the mergeEventList is null, the
+ * repositoryPath is not a Git Repository or the project can content a not
+ * treated type of conflict, caused by a Git update (this version was created
+ * based in version 2.27.0 of Git). An instace of this class can anlyze only one
+ * directory.
+ *
+ * ATENCION: The global username and the global e-mail of Git must defined, if
+ * not is, use these commands:
+ *
+ * git config --global user.name "Your Name" git config --global user.email
+ * "youremail@yourdomain.com"
+ *
+ * ATENCION: This class can only use in Linux,
+ *
+ * To make an analysis, just use startAnalysis method after the instace.
+ *
+ * @author João Pedro Lima
+ * @version 1.0
+ * @since 17-06-2020
  */
 public class GitRepositoryAnalysis {
 
+    /**
+     * The result of Analysis, before the analysis, is null.
+     *
+     * @see br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent
+     */
     private List<MergeEvent> mergeEventList;
+    /**
+     * Is the path of root of project on PC.
+     */
     private final String repositoryPath;
+    /**
+     * This integer is the number of lines that will be catch after and before
+     * the conflict, this lines is called context, cannot be less than 1.
+     */
     private final int linesContext;
+    /**
+     * If is necessary filter the ANTLR structures to the outmost structures,
+     * input true.
+     */
+    private boolean useOutmost;
     private RepositoryAnalysisProcessData processData;
     private ConflictAnalysisProgressBarPanel progressBarPanel;
     private JProgressBar progressBar;
     private JLabel processLabel;
     private boolean analysisDone;
     private String projectName;
-    private boolean useOutmost;
 
+    /**
+     *
+     * @param repositoryPath Is the path of root of project on PC.
+     * @param linesContext This integer is the number of lines that will be
+     * catch after and before the conflict, this lines is called context, 
+     * cannot be less than 1.
+     * @param useOutmost If is necessary filter the ANTLR structures to the
+     * outmost structures, input true.
+     */
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
         this.repositoryPath = repositoryPath;
@@ -63,6 +107,16 @@ public class GitRepositoryAnalysis {
         this.projectName = auxArray[auxArray.length - 1];
     }
 
+    /**
+     *
+     * @param repositoryPath Is the path of root of project on PC.
+     * @param linesContext This integer is the number of lines that will be
+     * catch after and before the conflict, this lines is called context,
+     * cannot be less than 1.
+     * @param useOutmost If is necessary filter the ANTLR structures to the
+     * outmost structures, input true.
+     * @param progressBar Input a ConflictAnalysisProgressBar if its use in a GUI
+     */
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
         this.repositoryPath = repositoryPath;
@@ -76,7 +130,11 @@ public class GitRepositoryAnalysis {
         String[] auxArray = this.repositoryPath.split("/");
         this.projectName = auxArray[auxArray.length - 1];
     }
-
+    
+    /**
+     * 
+     * @return The analysis 
+     */
     public List<MergeEvent> getMergeEventList() {
         if (analysisDone) {
             return mergeEventList;
@@ -84,11 +142,22 @@ public class GitRepositoryAnalysis {
             return null;
         }
     }
-
-    public void startAnalysis() throws IOException, RepositoryAlreadyExist{
+    
+    /**
+     * Iniciate the analysis.
+     * @throws IOException Any error is returned like an 
+     * IOException, but the expected errors is the a 
+     * negative number in the linesContext or a path 
+     * that isn't a Git Repository in repositoryPath
+     */
+    public void startAnalysis() throws IOException{
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
+            if(this.linesContext < 1){
+                this.exceptionProtocol("ERROR: IOException error!");
+                throw new IOException();
+            }
             try {
                 if (progressBar == null) {
                     this.firstProcessingLayer();
@@ -139,7 +208,10 @@ public class GitRepositoryAnalysis {
                 throw new IOException();
             } catch (IOException ex) {
                 this.exceptionProtocol("ERROR: IOException error!");
-                throw ex;
+                throw new IOException();
+            } catch (RepositoryAlreadyExist ex) {
+                this.exceptionProtocol("ERROR: RepositoryAlreadyExist error!");
+                throw new IOException();
             }
             this.analysisDone = true;
         }
@@ -514,9 +586,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             }
                             status++;
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
@@ -526,7 +598,11 @@ public class GitRepositoryAnalysis {
             }
         }
     }
-
+    
+    /**
+     * 
+     * @return The name of Project 
+     */
     public String getProjectName() {
         return projectName;
     }
@@ -547,9 +623,9 @@ public class GitRepositoryAnalysis {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
                             if (file.getExtraFileName() != null) {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             } else {
-                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(),this.useOutmost);
+                                region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             }
                             this.progressBar.setValue(++status);
                             System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
