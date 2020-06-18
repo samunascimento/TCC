@@ -26,12 +26,20 @@ public class TestLuan {
                 analyzeJava9SyntaxTree/*(
                         "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF/Core/src/"
                                 + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")*/
-        ("/home/luan/Github/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
+        ("src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
 
         for (SyntaxStructure syntaxStructure : analyzeJava9SyntaxTree) {
             System.out.println(syntaxStructure);
         }
 
+        
+        int i = 0;
+        
+        while (i < 10 ) {
+            System.out.println(i++);
+        }
+             
+        
     }
 
 }
