@@ -1812,7 +1812,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitStatement(Java9Parser.StatementContext ctx) {
-        System.out.println(ctx.getText());
+
         //process(ctx);
         return visitChildren(ctx);
     }
@@ -2047,7 +2047,6 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitWhileStatement(Java9Parser.WhileStatementContext ctx) {
-        System.out.println("Estou no while");
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3222,7 +3221,4 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         return visitChildren(ctx);
     }
 
-  
-    
-    
 }

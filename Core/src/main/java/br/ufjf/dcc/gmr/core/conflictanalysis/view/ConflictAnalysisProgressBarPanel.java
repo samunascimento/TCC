@@ -71,7 +71,6 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
         try {
             repositoryAnalysis.startAnalysis();
         } catch (IOException ex) {
-        } catch (RepositoryAlreadyExist ex) {
         }
         this.mergeEventList = repositoryAnalysis.getMergeEventList();
     }

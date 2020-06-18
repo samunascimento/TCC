@@ -319,7 +319,7 @@ public class MainFrame extends JFrame {
         }
         mainTabbedPane.remove(progressBarPanel);
         if (progressBarPanel.getMergeEventList() == null) {
-            JOptionPane.showMessageDialog(null, "The the repository path is not a git repotory!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The repository path isn't a git repository!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
             this.addPanelWithX(new MergePanel(projectName,progressBarPanel.getMergeEventList()), projectName);
         }
