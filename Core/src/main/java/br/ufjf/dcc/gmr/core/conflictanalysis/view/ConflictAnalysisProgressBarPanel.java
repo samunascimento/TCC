@@ -2,15 +2,12 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GitRepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
-import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -74,8 +71,6 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
         try {
             repositoryAnalysis.startAnalysis();
         } catch (IOException ex) {
-        } catch (ImpossibleLineNumber ex) {
-            Logger.getLogger(ConflictAnalysisProgressBarPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.mergeEventList = repositoryAnalysis.getMergeEventList();
     }

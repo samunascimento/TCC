@@ -27,7 +27,7 @@ public class Outmost {
             List<SyntaxStructure> list = new ArrayList();
             SyntaxStructure auxStructure = null;
             if (filePath.endsWith(".java")) {
-                rawList = ConflictAnalysisTools.analyzeJavaSyntaxTree(filePath);
+                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {

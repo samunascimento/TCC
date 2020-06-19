@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
@@ -152,7 +154,7 @@ public class GitRepositoryAnalysis {
      * expected errors is the a negative number in the linesContext or a path
      * that isn't a Git Repository in repositoryPath
      */
-    public void startAnalysis() throws IOException, ImpossibleLineNumber {
+    public void startAnalysis() throws IOException {
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
@@ -213,6 +215,9 @@ public class GitRepositoryAnalysis {
                 throw new IOException();
             } catch (RepositoryAlreadyExist ex) {
                 this.exceptionProtocol("ERROR: RepositoryAlreadyExist error!");
+                throw new IOException();
+            } catch (ImpossibleLineNumber ex) {
+                this.exceptionProtocol("ERROR: ImpossibleLineNumber error!");
                 throw new IOException();
             }
             this.analysisDone = true;
@@ -331,7 +336,7 @@ public class GitRepositoryAnalysis {
 
     private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
-            if (fileContent.get(i).contains("<<<<<<")) {
+            if (fileContent.get(i).equals("<<<<<<< HEAD")) {
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -341,13 +346,13 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 i++;
-                while (!fileContent.get(i).contains("=====")) {
+                while (!fileContent.get(i).equals("=======")) {
                     this.processData.v1.add(fileContent.get(i));
                     i++;
                 }
                 this.processData.separatorLine = i + 1;
                 i++;
-                while (!fileContent.get(i).contains(">>>>>")) {
+                while (!fileContent.get(i).equals(">>>>>>> " + this.processData.parents.get(1).getCommitHash())) {
                     this.processData.v2.add(fileContent.get(i));
                     i++;
                 }
@@ -597,9 +602,6 @@ public class GitRepositoryAnalysis {
                 for (ConflictFile file : merge.getConflictFiles()) {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
-                            if (merge.getHash().getCommitHash().equals("d8d5835b680bfececf00ce44b332e399c7488b15")) {
-                                System.out.println("");
-                            }
                             if (file.getExtraFileName() != null) {
                                 region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), file.getExtraFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             } else {
