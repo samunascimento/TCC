@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3BaseVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;

@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9BaseVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Parser;

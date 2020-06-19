@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;

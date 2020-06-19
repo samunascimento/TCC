@@ -17,6 +17,9 @@ public class Outmost {
     }
 
     public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+        if(beginLine < 1 || endLine < 1){
+            return null;
+        }
         try {
             int currentLine = beginLine;
             int currentColumn = 0;
