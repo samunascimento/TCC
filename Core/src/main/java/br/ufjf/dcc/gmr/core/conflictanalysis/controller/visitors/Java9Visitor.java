@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  *
- * @author joao_lima
+ * @authors Gleiph, João e Luan
  */
 public class Java9Visitor extends Java9BaseVisitor<Object> {
 
