@@ -17,7 +17,7 @@ public class Outmost {
     }
 
     public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
-        if(beginLine < 1 || endLine < 1){
+        if (beginLine < 1 || endLine < 1) {
             return null;
         }
         try {
@@ -27,7 +27,7 @@ public class Outmost {
             List<SyntaxStructure> list = new ArrayList();
             SyntaxStructure auxStructure = null;
             if (filePath.endsWith(".java")) {
-                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
+                rawList = ConflictAnalysisTools.analyzeJavaSyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {

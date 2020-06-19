@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.view.ConflictAnalysisProgressBarPan
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -151,7 +152,7 @@ public class GitRepositoryAnalysis {
      * expected errors is the a negative number in the linesContext or a path
      * that isn't a Git Repository in repositoryPath
      */
-    public void startAnalysis() throws IOException {
+    public void startAnalysis() throws IOException, ImpossibleLineNumber {
         if (analysisDone == true) {
             System.out.println("The repository has already been analyzed!");
         } else {
@@ -218,7 +219,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
+    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist, ImpossibleLineNumber {
 
         int status = 0;
         int mergeNumber;
@@ -249,7 +250,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
+    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist, ImpossibleLineNumber {
 
         int status = 0;
         int mergeNumber;
@@ -276,7 +277,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void secondProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, PathDontExist, EmptyOutput, CheckoutError {
+    private void secondProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (FileDiff fileDiff : Git.diff(this.repositoryPath, "", "", false)) {
             if (!fileDiff.getLines().isEmpty()) {
                 this.catchMainConflictFileInfo(fileDiff.getFilePathSource());
@@ -289,7 +290,7 @@ public class GitRepositoryAnalysis {
         Git.mergeAbort(repositoryPath);
     }
 
-    private void thirdProcessingLayer(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError {
+    private void thirdProcessingLayer(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         this.processFileContent(fileContent);
     }
 
@@ -328,7 +329,7 @@ public class GitRepositoryAnalysis {
         this.processData.fileName = this.processData.auxArray[this.processData.auxArray.length - 1];
     }
 
-    private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError {
+    private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
             if (fileContent.get(i).contains("<<<<<<")) {
                 this.processData.beginLine = i + 1;
@@ -375,7 +376,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void catchOriginalLines() throws CheckoutError, EmptyOutput, PathDontExist, InvalidCommitHash, LocalRepositoryNotAGitRepository, IOException {
+    private void catchOriginalLines() throws CheckoutError, EmptyOutput, PathDontExist, InvalidCommitHash, LocalRepositoryNotAGitRepository, IOException, ImpossibleLineNumber {
         this.processData.originalV1FirstLine = 0;
         this.processData.originalV2FirstLine = 0;
         if (this.processData.beginLine + 1 != this.processData.separatorLine) {
@@ -397,7 +398,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void catchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException {
+    private void catchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException, ImpossibleLineNumber {
 
         Git.checkout(this.processData.hash.getCommitHash(), this.processData.sandbox.getPath());
         if (!this.processData.beforeContext.isEmpty()) {
@@ -596,7 +597,7 @@ public class GitRepositoryAnalysis {
                 for (ConflictFile file : merge.getConflictFiles()) {
                     if (file.getConflictRegion() != null) {
                         for (ConflictRegion region : file.getConflictRegion()) {
-                            if(merge.getHash().getCommitHash().equals("d8d5835b680bfececf00ce44b332e399c7488b15")){
+                            if (merge.getHash().getCommitHash().equals("d8d5835b680bfececf00ce44b332e399c7488b15")) {
                                 System.out.println("");
                             }
                             if (file.getExtraFileName() != null) {

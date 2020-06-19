@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
@@ -22,7 +23,7 @@ public class ReturnNewLineNumber {
 
     public static final int REMOVED_LINE = -Integer.MAX_VALUE; // Constant used to indentify when a line was removed
     public static final int REMOVED_FILE = -(Integer.MAX_VALUE - 1); // Constant used to indentify when a file was removed
-    public static final int POSTPONED = -(Integer.MAX_VALUE - 2); 
+    public static final int POSTPONED = -(Integer.MAX_VALUE - 2);
 
     /**
      * This method goes trough the diffs between the commit source and the
@@ -54,22 +55,22 @@ public class ReturnNewLineNumber {
                 chunks.add(aux);
                 aux = new FileDiff();
             }
-            
-                if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
-                    continue;
-                }
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                    String c = line.substring(5);
-                    aux.setFilePathTarget(c);
-                } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                    String c = line.substring(5);
-                    aux.setFilePathSource(c);
-                } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
+
+            /*  if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
+                continue;
+            }*/
+            if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                String c = line.substring(5);
+                aux.setFilePathTarget(c);
+            } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                String c = line.substring(5);
+                aux.setFilePathSource(c);
+            } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
             } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                 currentLine = startingLine(line);
             }
@@ -105,7 +106,7 @@ public class ReturnNewLineNumber {
         if (output == null) {
             return null;
         }
-        if(output.isEmpty()){
+        if (output.isEmpty()) {
             return new ArrayList<>();
         }
         String line;
@@ -116,22 +117,22 @@ public class ReturnNewLineNumber {
                 chunks.add(aux);
                 aux = new FileDiff();
             }
-            
-                if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
-                    continue;
-                }
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
-                    String c = line.substring(5);
-                    aux.setFilePathTarget(c);
-                } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
-                    String c = line.substring(5);
-                    aux.setFilePathSource(c);
-                } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
+
+            /* if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
+                continue;
+            }*/
+            if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+') {
+                String c = line.substring(5);
+                aux.setFilePathTarget(c);
+            } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-') {
+                String c = line.substring(5);
+                aux.setFilePathSource(c);
+            } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
             } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                 currentLine = startingLine(line);
             }
@@ -283,7 +284,7 @@ public class ReturnNewLineNumber {
         if (chunks == null) {
             return REMOVED_FILE;
         }
-        if(chunks.isEmpty()){
+        if (chunks.isEmpty()) {
             return POSTPONED;
         }
         int i;
@@ -313,17 +314,21 @@ public class ReturnNewLineNumber {
      * @throws InvalidCommitHash
      * @throws br.ufjf.dcc.gmr.core.exception.PathDontExist
      * @throws br.ufjf.dcc.gmr.core.exception.EmptyOutput
+     * @throws br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber
      */
     public static int initReturnNewLineNumberFile(String directory, String pathSource,
             String pathTarget, int originalLineNumber)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput {
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, ImpossibleLineNumber {
 
+        if (originalLineNumber < 0) {
+            throw new ImpossibleLineNumber();
+        }
         List<FileDiff> chunks = fillOneFileDiff(directory, pathSource, pathTarget);
 
         if (chunks == null) {
             return REMOVED_FILE;
         }
-        if(chunks.isEmpty()){
+        if (chunks.isEmpty()) {
             return POSTPONED;
         }
         int i;
@@ -334,16 +339,12 @@ public class ReturnNewLineNumber {
             return REMOVED_LINE;
         }
 
-        return originalLineNumber + i;
+        return (originalLineNumber + i);
     }
 
     private static boolean isWindows() {
         String os = System.getProperty("os.name");
-        if (os.startsWith("Windows")) {
-            return true;
-        } else {
-            return false;
-        }
+        return os.startsWith("Windows");
     }
 
 }
