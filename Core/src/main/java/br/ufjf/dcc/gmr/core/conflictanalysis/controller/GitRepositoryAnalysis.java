@@ -336,7 +336,7 @@ public class GitRepositoryAnalysis {
 
     private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
-            if (fileContent.get(i).equals("<<<<<<< HEAD")) {
+            if (fileContent.get(i).contains("<<<<"+"<<<")) {
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -346,13 +346,13 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 i++;
-                while (!fileContent.get(i).equals("=======")) {
+                while (!fileContent.get(i).contains("===="+"===")) {
                     this.processData.v1.add(fileContent.get(i));
                     i++;
                 }
                 this.processData.separatorLine = i + 1;
                 i++;
-                while (!fileContent.get(i).equals(">>>>>>> " + this.processData.parents.get(1).getCommitHash())) {
+                while (!fileContent.get(i).contains(">>>>" + ">>>")) {
                     this.processData.v2.add(fileContent.get(i));
                     i++;
                 }
