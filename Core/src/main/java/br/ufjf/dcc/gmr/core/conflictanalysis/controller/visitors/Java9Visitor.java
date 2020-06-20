@@ -30,9 +30,13 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
-
+        
+        //Adding texte
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
+        
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],ctxText,warning));
+        
     }
 
     /**
@@ -1812,7 +1816,6 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitStatement(Java9Parser.StatementContext ctx) {
-        System.out.println(ctx.getText());
         //process(ctx);
         return visitChildren(ctx);
     }
@@ -1826,7 +1829,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitStatementNoShortIf(Java9Parser.StatementNoShortIfContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -2047,7 +2050,6 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitWhileStatement(Java9Parser.WhileStatementContext ctx) {
-        System.out.println("Estou no while");
         process(ctx);
         return visitChildren(ctx);
     }

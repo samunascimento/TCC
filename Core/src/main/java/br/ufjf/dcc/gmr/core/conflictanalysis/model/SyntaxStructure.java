@@ -16,8 +16,9 @@ public class SyntaxStructure {
     private final int stopLineStopColumn;
     private final String structureType;
     private final boolean warning;
+    private final String text;
 
-    public SyntaxStructure(Token start, Token stop, String structureType, boolean warning) {
+    public SyntaxStructure(Token start, Token stop, String structureType, String text, boolean warning) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startLineStartColumn = start.getStartIndex();
@@ -25,6 +26,7 @@ public class SyntaxStructure {
         this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
         this.structureType = structureType;
+        this.text = text;
         this.warning = warning;
     }
 
@@ -48,22 +50,26 @@ public class SyntaxStructure {
         return stopLineStartColumn;
     }
 
+    public String getText() {
+        return text;
+    }
+
     public int getStopLineStopColumn() {
         return stopLineStopColumn;
     }
 
-
     public String getStructureType() {
         return structureType;
     }
-    
-    public boolean isOneLine(){
-        if(startLine == stopLine)
+
+    public boolean isOneLine() {
+        if (startLine == stopLine) {
             return true;
+        }
         return false;
     }
-    
-    public boolean getWarning(){
+
+    public boolean getWarning() {
         return this.warning;
     }
 
@@ -71,7 +77,5 @@ public class SyntaxStructure {
     public String toString() {
         return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", startLineStopColumn=" + startLineStopColumn + ", stopLineStartColumn=" + stopLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
     }
-    
-    
-    
+
 }

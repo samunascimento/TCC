@@ -33,8 +33,11 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
         
+        //Adding texte
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
+        
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),aux[0],warning));
+        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),aux[0],ctxText,warning));
     }
 
     @Override
@@ -295,12 +298,12 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
                     if(parseTree instanceof JavaParser.VariableDeclaratorIdContext){
                         JavaParser.VariableDeclaratorIdContext identifier = (JavaParser.VariableDeclaratorIdContext) parseTree;
                         stopDeclaration = identifier.getStop();
-                        this.list.add(new SyntaxStructure(startDeclaration, stopDeclaration, "LocalVariableDeclaration", warning));
+                        this.list.add(new SyntaxStructure(startDeclaration, stopDeclaration, "LocalVariableDeclaration", "",warning));
                     }
                     else if(parseTree instanceof JavaParser.VariableInitializerContext){
                         
                         JavaParser.VariableInitializerContext initializer = (JavaParser.VariableInitializerContext) parseTree;
-                        this.list.add(new SyntaxStructure(initializer.getStart(), initializer.getStop(), "LocalVariableInitializer", warning));
+                        this.list.add(new SyntaxStructure(initializer.getStart(), initializer.getStop(), "LocalVariableInitializer","" ,warning));
                     }
                 }
                 

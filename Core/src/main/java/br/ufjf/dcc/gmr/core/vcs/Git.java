@@ -406,8 +406,6 @@ public class Git {
         }
 
         execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println("execution");
-
 //        if (quiet && !remotePull && !verbose) {
 //            command = "git pull --quiet";
 //        } else if (!quiet && !remotePull && verbose) {
@@ -418,7 +416,6 @@ public class Git {
 //            command = "git pull";
 //        }
         execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println("execution");
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
@@ -464,7 +461,6 @@ public class Git {
         }
 
         execution = CLIExecute.execute(command, repositoryPath);
-        System.out.println("execution");
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
@@ -1403,8 +1399,6 @@ public class Git {
 
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
-            if(i == 176)
-                System.out.println("");
             if (line.startsWith("R")) {
                 String[] c = line.split("\t");   
                 if (fileSource.contains(c[1])) {

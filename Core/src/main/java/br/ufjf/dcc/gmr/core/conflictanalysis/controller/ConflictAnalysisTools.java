@@ -173,7 +173,7 @@ public class ConflictAnalysisTools {
             List<SyntaxStructure> list = new ArrayList();
 
             if (filePath.endsWith(".java")) {
-                rawList = analyzeJavaSyntaxTree(filePath);
+                rawList = analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 rawList = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
