@@ -169,45 +169,44 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitExpression(JavaParser.ExpressionContext ctx) {
         //System.out.println("====================================== NAO TRATADO  ======================================");
-        
+
         return super.visitExpression(ctx);
     }
 
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
         MethodCallBinding methodCallBinding = new MethodCallBinding();
-      
-        
+
         List<TypeBinding> parameters = new ArrayList<>();
-        
-      
+
         ParserRuleContext parent = ctx.getParent();
-        
-        if(parent != null && parent instanceof JavaParser.ExpressionContext){
-              VariableBinding variableOrigin = new VariableBinding();
-              
-                for (int i = 0; i < variableBindingList.size(); i++) {
-                    if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
-                        variableOrigin.setName(variableBindingList.get(i).getName());
-                        variableOrigin.setType(variableBindingList.get(i).getType());
-                    }
+
+        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
+            VariableBinding variableOrigin = new VariableBinding();
+
+            for (int i = 0; i < variableBindingList.size(); i++) {
+                if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
+                    variableOrigin.setName(variableBindingList.get(i).getName());
+                    variableOrigin.setType(variableBindingList.get(i).getType());
                 }
-     
-                   
-              System.out.println(variableOrigin.getType().getIdentifier());
-              System.out.println("=========================");
-              methodCallBinding.setVariableOrigin(variableOrigin);
             }
-        
+            if (variableOrigin.getType() != null) {
+                System.out.println(variableOrigin.getType().getIdentifier());
+            }else{
+                System.out.println("null");
+            }
+            System.out.println("=========================");
+            methodCallBinding.setVariableOrigin(variableOrigin);
+        }
+
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
         methodCallBidingList.add(methodCallBinding);
         Object visitMethodCall = super.visitMethodCall(ctx);
-       
-         
+
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
-        
+
         if (expressionList != null) {
             for (ParseTree parseTree : expressionList.children) {
                 if (parseTree instanceof JavaParser.ExpressionContext) {
@@ -218,7 +217,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                     JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
 
                     /**
-                     * TODO: treat expression in expression 
+                     * TODO: treat expression in expression
                      */
                     if (expressionContext.primary() != null) {
 
@@ -643,7 +642,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 variable.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
-        
+
         this.getVariableBindingList().add(variable);
         return super.visitFieldDeclaration(ctx);
     }

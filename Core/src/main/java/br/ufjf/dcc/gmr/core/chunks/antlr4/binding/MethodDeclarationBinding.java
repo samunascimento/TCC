@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodDeclarationBinding {
-    
-    
+ 
     private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
