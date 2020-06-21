@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodDeclarationBinding {
-
+ 
     private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
@@ -32,6 +32,8 @@ public class MethodDeclarationBinding {
                     }
                 }
             }
+        } else if ( !this.name.equals(mcb.getTypeBinding().getIdentifier())){
+            return false;
         }
         return true;
     }

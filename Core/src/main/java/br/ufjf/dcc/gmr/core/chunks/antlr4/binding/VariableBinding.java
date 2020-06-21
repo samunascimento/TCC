@@ -28,6 +28,14 @@ public class VariableBinding {
       
     }
 
+    @Override
+    public String toString() {
+        String output = null;
+        output = "MODIFIER:" + modifier + " TYPE:" + type.getIdentifier() + " NAME:" + name;
+        return output;
+    }
+
+    
     public String getModifier() {
         return modifier;
     }

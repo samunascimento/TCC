@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3BaseVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;
@@ -34,9 +34,12 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
+        
+        //Adding texte
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],ctxText,warning));
     }
 
     @Override

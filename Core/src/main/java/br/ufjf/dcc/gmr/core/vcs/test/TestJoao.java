@@ -7,9 +7,9 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.view.MainFrame;
  * @author gleiph
  */
 public class TestJoao {
-
+    
     public static void main(String[] args) {
-        MainFrame frame = new MainFrame();
+        MainFrame mainFrame = new MainFrame();
     }
 
 }

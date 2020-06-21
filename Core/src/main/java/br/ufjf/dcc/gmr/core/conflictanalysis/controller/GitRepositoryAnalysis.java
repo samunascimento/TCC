@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.view.ConflictAnalysisProgressBarPan
 import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
@@ -213,12 +216,15 @@ public class GitRepositoryAnalysis {
             } catch (RepositoryAlreadyExist ex) {
                 this.exceptionProtocol("ERROR: RepositoryAlreadyExist error!");
                 throw new IOException();
+            } catch (ImpossibleLineNumber ex) {
+                this.exceptionProtocol("ERROR: ImpossibleLineNumber error!");
+                throw new IOException();
             }
             this.analysisDone = true;
         }
     }
 
-    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
+    private void firstProcessingLayerGUI() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist, ImpossibleLineNumber {
 
         int status = 0;
         int mergeNumber;
@@ -249,7 +255,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist {
+    private void firstProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, InvalidCommitHash, PathDontExist, EmptyOutput, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, RepositoryAlreadyExist, ImpossibleLineNumber {
 
         int status = 0;
         int mergeNumber;
@@ -276,7 +282,7 @@ public class GitRepositoryAnalysis {
 
     }
 
-    private void secondProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, PathDontExist, EmptyOutput, CheckoutError {
+    private void secondProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (FileDiff fileDiff : Git.diff(this.repositoryPath, "", "", false)) {
             if (!fileDiff.getLines().isEmpty()) {
                 this.catchMainConflictFileInfo(fileDiff.getFilePathSource());
@@ -289,7 +295,7 @@ public class GitRepositoryAnalysis {
         Git.mergeAbort(repositoryPath);
     }
 
-    private void thirdProcessingLayer(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError {
+    private void thirdProcessingLayer(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         this.processFileContent(fileContent);
     }
 
@@ -328,20 +334,9 @@ public class GitRepositoryAnalysis {
         this.processData.fileName = this.processData.auxArray[this.processData.auxArray.length - 1];
     }
 
-    private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError {
+    private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
-            if (fileContent.get(i).contains("<<<<<<")) {
-                if (fileContent.get(i).contains(":") && this.processData.extraFileName == "") {
-                    this.processData.auxArray = fileContent.get(i).split("/");
-                    if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
-                        this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
-                        this.processData.auxArray = fileContent.get(i).split(":");
-                        this.processData.extraInsideFilePath = this.processData.auxArray[this.processData.auxArray.length - 1];
-                        this.processData.extraFilePath = repositoryPath + "/" + this.processData.extraInsideFilePath;
-                        this.processData.extraFileInV1 = true;
-                    }
-                    this.processData.extraFileInV1 = false;
-                }
+            if (fileContent.get(i).contains("<<<<"+"<<<")) {
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -351,18 +346,18 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 i++;
-                while (!fileContent.get(i).contains("=====")) {
+                while (!fileContent.get(i).contains("===="+"===")) {
                     this.processData.v1.add(fileContent.get(i));
                     i++;
                 }
                 this.processData.separatorLine = i + 1;
                 i++;
-                while (!fileContent.get(i).contains(">>>>>")) {
+                while (!fileContent.get(i).contains(">>>>" + ">>>")) {
                     this.processData.v2.add(fileContent.get(i));
                     i++;
                 }
                 this.processData.endLine = i + 1;
-                if (fileContent.get(i).contains(":") && this.processData.extraFileName == "") {
+                if (fileContent.get(i).contains(":")) {
                     this.processData.auxArray = fileContent.get(i).split("/");
                     if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
                         this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
@@ -386,23 +381,17 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void catchOriginalLines() throws CheckoutError, EmptyOutput, PathDontExist, InvalidCommitHash, LocalRepositoryNotAGitRepository, IOException {
-        this.processData.originalV1FirstLine = -1;
-        this.processData.originalV2FirstLine = -1;
-        if (!this.processData.v1.isEmpty()) {
+    private void catchOriginalLines() throws CheckoutError, EmptyOutput, PathDontExist, InvalidCommitHash, LocalRepositoryNotAGitRepository, IOException, ImpossibleLineNumber {
+        this.processData.originalV1FirstLine = 0;
+        this.processData.originalV2FirstLine = 0;
+        if (this.processData.beginLine + 1 != this.processData.separatorLine) {
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.processData.sandbox.getPath());
-            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == true) {
-                this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
-                        this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
-                        this.processData.beginLine + 1);
-            } else {
-                this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
-                        + this.processData.insideFilePath, this.processData.beginLine + 1);
-            }
+            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
+                    + this.processData.insideFilePath, this.processData.beginLine + 1);
         }
-        if (!this.processData.v2.isEmpty()) {
+        if (this.processData.separatorLine + 1 != this.processData.endLine) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
-            if (!this.processData.extraIsEmpty() && this.processData.extraFileInV1 == false) {
+            if (!this.processData.extraIsEmpty()) {
                 this.processData.originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                         this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
                         this.processData.separatorLine + 1);
@@ -414,7 +403,7 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void catchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException {
+    private void catchSolutionLines() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException, ImpossibleLineNumber {
 
         Git.checkout(this.processData.hash.getCommitHash(), this.processData.sandbox.getPath());
         if (!this.processData.beforeContext.isEmpty()) {
@@ -515,7 +504,7 @@ public class GitRepositoryAnalysis {
     }
 
     private void addConflictFile() {
-        if (this.processData.extraFileName == "") {
+        if (this.processData.extraIsEmpty()) {
             this.processData.conflictFiles.add(new ConflictFile(this.processData.fileName,
                     this.processData.filePath,
                     this.processData.insideFilePath,

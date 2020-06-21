@@ -8,6 +8,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.view;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GitRepositoryAnalysis;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -44,7 +45,7 @@ public class Cli {
     public static final String SAVE_PATH = "save_path";
     public static final String SAVE_PATH_SHORT = "s";
 
-    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, RepositoryAlreadyExist {
+    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, RepositoryAlreadyExist, ImpossibleLineNumber {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -108,14 +109,14 @@ public class Cli {
             } else {
                 System.out.println("Ops, it was not suposed to happen!");
             }
-        } catch (ParseException| NumberFormatException e ) {
-            
-            if(e instanceof NumberFormatException){
+        } catch (ParseException | NumberFormatException e) {
+
+            if (e instanceof NumberFormatException) {
                 System.out.println("Context line number must be a number");
             }
-            
+
             formatter.printHelp("help", options);
-        } 
+        }
 
     }
 

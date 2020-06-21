@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class LineTest {
 
-    public static void main(String[] args) throws IOException, EmptyOutput {
+    public static void main(String[] args) throws IOException, EmptyOutput, ImpossibleLineNumber {
 
         File directory = new File("/Users/gleiph/Desktop/sandbox/left");
         if (!directory.isDirectory()) {

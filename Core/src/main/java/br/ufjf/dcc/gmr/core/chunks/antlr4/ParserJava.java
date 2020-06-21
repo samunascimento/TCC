@@ -10,9 +10,13 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -22,17 +26,19 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class ParserJava {
 
     public static void main(String[] args) throws IOException {
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/JavaExample.java";
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/DiaSemana.java";
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/Rectangle.java";
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/RectangleElement.java";
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/GFG.java";
         String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
         String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
-        //String path = "src/main/java/br/ufjf/dcc/gmr/core/vcs/Git.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
-            
+        
+        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
+        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for (Path file : stream) {
+                MyVisitor AST = ASTExtractor(dir.toString().concat(file.getFileName().toString()));
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
         
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
@@ -59,6 +65,11 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST1.getMethodDeclarationBinding(), AST2.getMethodCallBiding());
         System.out.println("============= AST2 --> AST1 =============");
         Dependencies.methodDeclarationCallList(AST2.getMethodDeclarationBinding(), AST1.getMethodCallBiding());
+
+        System.out.println("=============Variables=============");
+        for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
+            System.out.println(variableBinding.toString());
+        }
     }
 
     private static MyVisitor ASTExtractor(String path) throws IOException, HeadlessException, RecognitionException {
@@ -73,8 +84,13 @@ public class ParserJava {
         System.out.println(tree.toStringTree(parser));
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.setSize(new Dimension(500, 600));     
-        viewer.open();
+        viewer.setSize(new Dimension(500, 600));
+        String[] aux = path.split("/");
+        String fileName = aux[aux.length - 1];
+        Object message = "Want to open the view dialog for the file: " + fileName + "?";
+        if (JOptionPane.showConfirmDialog(null, message) == 0) {
+            viewer.open();
+        }
 
         MyVisitor visitor = new MyVisitor();
 

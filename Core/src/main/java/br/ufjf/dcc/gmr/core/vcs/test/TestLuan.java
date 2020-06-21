@@ -23,7 +23,7 @@ public class TestLuan {
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<SyntaxStructure> analyzeJava9SyntaxTree = ConflictAnalysisTools.
-                analyzeJava9SyntaxTree/*(
+                analyzeJavaSyntaxTree/*(
                         "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF/Core/src/"
                                 + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")*/
         ("src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");

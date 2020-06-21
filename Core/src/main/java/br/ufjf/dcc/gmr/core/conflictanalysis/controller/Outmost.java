@@ -1,13 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJava9SyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,19 +17,21 @@ public class Outmost {
     }
 
     public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+        if (beginLine < 1 || endLine < 1) {
+            return null;
+        }
         try {
             int currentLine = beginLine;
             int currentColumn = 0;
             List<SyntaxStructure> rawList = null;
             List<SyntaxStructure> list = new ArrayList();
             SyntaxStructure auxStructure = null;
-
             if (filePath.endsWith(".java")) {
-                rawList = analyzeJava9SyntaxTree(filePath);
+                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-                rawList = analyzeCPPSyntaxTree(filePath);
+                rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
-                rawList = analyzePythonSyntaxTree(filePath);
+                rawList = ConflictAnalysisTools.analyzePythonSyntaxTree(filePath);
             } else {
                 return null;
             }

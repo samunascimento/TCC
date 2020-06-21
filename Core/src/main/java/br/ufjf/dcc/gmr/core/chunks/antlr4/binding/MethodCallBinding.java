@@ -6,15 +6,21 @@ import java.util.List;
 
 public class MethodCallBinding {
 
+
     private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
+    private VariableBinding variableOrigin;
     private JavaParser.MethodCallContext ctx;
 
     public MethodCallBinding() {
         this.name = "";
         this.parameters = new ArrayList<>();
+        this.packageBinding = new PackageBinding();
+        this.typeBinding = new TypeBinding();
+        this.ctx = null;
+        this.variableOrigin = new VariableBinding();
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
@@ -34,6 +40,8 @@ public class MethodCallBinding {
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
+        
+        output = output.concat(" IDENTIFIER:" + typeBinding.getIdentifier());
 
         return output;
     }
@@ -107,4 +115,19 @@ public class MethodCallBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
+    
+        /**
+     * @return the variableOrigin
+     */
+    public VariableBinding getVariableOrigin() {
+        return variableOrigin;
+    }
+
+    /**
+     * @param variableOrigin the variableOrigin to set
+     */
+    public void setVariableOrigin(VariableBinding variableOrigin) {
+        this.variableOrigin = variableOrigin;
+    }
+
 }

@@ -1,5 +1,9 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors.CPPVisitor;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors.Python3Visitor;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors.JavaVisitor;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
@@ -102,7 +106,7 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-
+            
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
@@ -165,12 +169,11 @@ public class ConflictAnalysisTools {
 
     public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
         try {
-
             List<SyntaxStructure> rawList = null;
             List<SyntaxStructure> list = new ArrayList();
 
             if (filePath.endsWith(".java")) {
-                rawList = analyzeJavaSyntaxTree(filePath);
+                rawList = analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 rawList = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
@@ -178,7 +181,6 @@ public class ConflictAnalysisTools {
             } else {
                 return null;
             }
-
             if (rawList != null) {
                 for (SyntaxStructure ss : rawList) {
                     if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {

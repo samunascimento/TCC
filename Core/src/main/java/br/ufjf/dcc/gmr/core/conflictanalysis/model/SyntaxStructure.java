@@ -4,31 +4,29 @@ import org.antlr.v4.runtime.Token;
 
 /**
  *
- * @author joao
+ * @author João Pedro Lima
  */
 public class SyntaxStructure {
 
-    private int startLine;
-    private int stopLine;
-    private int startLineStartColumn;
-    private int startLineStopColumn;
-    private int stopLineStartColumn;
-    private int stopLineStopColumn;
-    private String structureType;
-    private boolean warning;
+    private final int startLine;
+    private final int stopLine;
+    private final int startLineStartColumn;
+    private final int startLineStopColumn;
+    private final int stopLineStartColumn;
+    private final int stopLineStopColumn;
+    private final String structureType;
+    private final boolean warning;
+    private final String text;
 
-    public SyntaxStructure(Token start, Token stop, String structureType, boolean warning) {
+    public SyntaxStructure(Token start, Token stop, String structureType, String text, boolean warning) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startLineStartColumn = start.getStartIndex();
         this.startLineStopColumn = start.getStopIndex();
         this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
-//        this.startLineStartColumn = start.getCharPositionInLine()+1;
-//        this.startLineStopColumn = start.getCharPositionInLine()+start.getText().length();
-//        this.stopLineStartColumn = stop.getCharPositionInLine()+1;
-//        this.stopLineStopColumn = stop.getCharPositionInLine()+stop.getText().length();
         this.structureType = structureType;
+        this.text = text;
         this.warning = warning;
     }
 
@@ -52,22 +50,26 @@ public class SyntaxStructure {
         return stopLineStartColumn;
     }
 
+    public String getText() {
+        return text;
+    }
+
     public int getStopLineStopColumn() {
         return stopLineStopColumn;
     }
 
-
     public String getStructureType() {
         return structureType;
     }
-    
-    public boolean isOneLine(){
-        if(startLine == stopLine)
+
+    public boolean isOneLine() {
+        if (startLine == stopLine) {
             return true;
+        }
         return false;
     }
-    
-    public boolean getWarning(){
+
+    public boolean getWarning() {
         return this.warning;
     }
 
@@ -75,7 +77,5 @@ public class SyntaxStructure {
     public String toString() {
         return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", startLineStopColumn=" + startLineStopColumn + ", stopLineStartColumn=" + stopLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
     }
-    
-    
-    
+
 }

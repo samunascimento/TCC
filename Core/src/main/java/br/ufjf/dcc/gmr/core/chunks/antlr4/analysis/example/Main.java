@@ -22,26 +22,32 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Person person = new Person();
-        person.setName("Felippe");
-        Employee employee = new Employee("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", "", 23);
         Main main = new Main("Office", "Felippe", 23);
+        
+        //find which class each method call belongs to
+        Person person = new Person();
+        person.setName("name of a person");
+        EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", "", 23);
+        employeeExtends.setName("name of a employeeExtends");
+        Employee employee = new Employee();
+        employee.setName("name of a employee");
+        
         System.out.println(main.name + " " + main.office + " " + main.age);
         if(true){
             int a = 0;
         }else{
             float b = 2;
         }
-        employee.increaseSalary(50);
-        employee.setAdress("Rua ABC, Bairro, DEF");
-        employee.setActive(false);
+        employeeExtends.increaseSalary(50);
+        employeeExtends.setAdress("Rua ABC, Bairro, DEF");
+        employeeExtends.setActive(false);
         int x =4;
         String y = "kkk";
-        employee.getName();
+        employeeExtends.getName();
         person.getName();
         main.getName();
         
-        employee.setInfo(y, x);
+        employeeExtends.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
     }

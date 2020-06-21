@@ -43,18 +43,17 @@ public class ConflictRegion {
         this.separatorLine = separatorLine;
         this.endLine = endLine;
         this.originalV1StartLine = originalV1StartLine;
-        if (originalV1StartLine > 0) {
-            this.originalV1StopLine = originalV1StartLine + (separatorLine - beginLine - 2);
+        if (this.originalV1StartLine == 0) {
+            this.originalV1StopLine = 0;
         } else {
-            this.originalV1StopLine = -1;
+            this.originalV1StopLine = originalV1StartLine + (separatorLine - beginLine - 2);
         }
         this.originalV2StartLine = originalV2StartLine;
-        if (originalV2StartLine > 0) {
-            this.originalV2StopLine = originalV2StartLine + (endLine - separatorLine - 2);
+        if (this.originalV2StartLine == 0) {
+            this.originalV2StopLine = 0;
         } else {
-            this.originalV2StopLine = -1;
+            this.originalV2StopLine = originalV2StartLine + (endLine - separatorLine - 2);
         }
-
         this.developerDecision = generateDeveloperDecision();
 
     }
@@ -125,23 +124,27 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine > 0) {
+            if (this.originalV1StartLine == this.originalV1StopLine) {
+                this.syntaxV1 = new ArrayList<>();
+            } else {
                 Git.checkout(v1Commit, repositoryPath);
                 if (useOutmost) {
                     this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } else {
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-
                 }
-                if (this.originalV2StartLine > 0) {
-                    Git.checkout(v2Commit, repositoryPath);
-                    if (useOutmost) {
-                        this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                    } else {
-                        this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                    }
 
+            }
+            if (this.originalV2StartLine == this.originalV2StopLine) {
+                this.syntaxV2 = new ArrayList<>();
+            } else {
+                Git.checkout(v2Commit, repositoryPath);
+                if (useOutmost) {
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                } else {
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
+
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
@@ -156,7 +159,9 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine > 0) {
+            if (this.originalV1StartLine == this.originalV1StopLine) {
+                this.syntaxV1 = new ArrayList<>();
+            } else {
                 Git.checkout(v1Commit, repositoryPath);
                 try {
                     if (useOutmost) {
@@ -172,7 +177,9 @@ public class ConflictRegion {
                     }
                 }
             }
-            if (this.originalV2StartLine > 0) {
+            if (this.originalV2StartLine == this.originalV2StopLine) {
+                this.syntaxV2 = new ArrayList<>();
+            } else {
                 Git.checkout(v2Commit, repositoryPath);
                 try {
                     if (useOutmost) {
@@ -216,6 +223,18 @@ public class ConflictRegion {
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
+        str = str + "\n\n\n\n";
+        if (this.syntaxV1 != null) {
+            for (SyntaxStructure v1 : this.syntaxV1) {
+                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+            }
+        }
+        if (this.syntaxV2 != null) {
+            for (SyntaxStructure v2 : this.syntaxV2) {
+                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+            }
+        }
+
         return str;
     }
 
@@ -248,9 +267,9 @@ public class ConflictRegion {
 
     public String getV1StructureTypes() {
         if (this.syntaxV1 == null) {
-            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
-        } else if (this.syntaxV1.isEmpty()) {
-            return "V1 doesn't has any structure type!";
+            return "Extension not parseble!";
+        } else if (this.originalV1StartLine == this.originalV1StopLine || this.syntaxV1.isEmpty()) {
+            return "Nothing";
         } else {
             String result = "";
             for (String str : this.getSortedStructureType(syntaxV1)) {
@@ -263,9 +282,9 @@ public class ConflictRegion {
 
     public String getV2StructureTypes() {
         if (this.syntaxV2 == null) {
-            return "Extension not parseble,or file don't\nexists in this version,impossible to get syntax structures!";
-        } else if (this.syntaxV2.isEmpty()) {
-            return "V2 doesn't has any structure type!";
+            return "Extension not parseble!";
+        } else if (this.originalV2StartLine == this.originalV2StopLine || this.syntaxV2.isEmpty()) {
+            return "Nothing";
         } else {
             String result = "";
             for (String str : this.getSortedStructureType(syntaxV2)) {

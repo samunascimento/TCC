@@ -1,7 +1,7 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9BaseVisitor;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Parser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14BaseVisitor;
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,30 +9,32 @@ import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  *
- * @author joao_lima
+ * @author luand
  */
-public class Java9Visitor extends Java9BaseVisitor<Object> {
+public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
     private boolean warning;
-
+    
     public List<SyntaxStructure> getList() {
         return list;
     }
 
-    public Java9Visitor(boolean warning) {
+    public CPPVisitor(boolean warning) {
         list = new ArrayList<>();
         this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
-
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
+        
+        //Adding texte
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],ctxText,warning));
     }
 
     /**
@@ -43,7 +45,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLiteral(Java9Parser.LiteralContext ctx) {
+    public Object visitTranslationunit(CPP14Parser.TranslationunitContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -56,7 +58,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimitiveType(Java9Parser.PrimitiveTypeContext ctx) {
+    public Object visitPrimaryexpression(CPP14Parser.PrimaryexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -69,7 +71,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitNumericType(Java9Parser.NumericTypeContext ctx) {
+    public Object visitIdexpression(CPP14Parser.IdexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -82,7 +84,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitIntegralType(Java9Parser.IntegralTypeContext ctx) {
+    public Object visitUnqualifiedid(CPP14Parser.UnqualifiedidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -95,7 +97,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFloatingPointType(Java9Parser.FloatingPointTypeContext ctx) {
+    public Object visitQualifiedid(CPP14Parser.QualifiedidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -108,7 +110,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitReferenceType(Java9Parser.ReferenceTypeContext ctx) {
+    public Object visitNestednamespecifier(CPP14Parser.NestednamespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -121,7 +123,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassOrInterfaceType(Java9Parser.ClassOrInterfaceTypeContext ctx) {
+    public Object visitLambdaexpression(CPP14Parser.LambdaexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -134,7 +136,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassType(Java9Parser.ClassTypeContext ctx) {
+    public Object visitLambdaintroducer(CPP14Parser.LambdaintroducerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -147,7 +149,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassType_lf_classOrInterfaceType(Java9Parser.ClassType_lf_classOrInterfaceTypeContext ctx) {
+    public Object visitLambdacapture(CPP14Parser.LambdacaptureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -160,7 +162,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassType_lfno_classOrInterfaceType(Java9Parser.ClassType_lfno_classOrInterfaceTypeContext ctx) {
+    public Object visitCapturedefault(CPP14Parser.CapturedefaultContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -173,7 +175,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceType(Java9Parser.InterfaceTypeContext ctx) {
+    public Object visitCapturelist(CPP14Parser.CapturelistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -186,7 +188,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceType_lf_classOrInterfaceType(Java9Parser.InterfaceType_lf_classOrInterfaceTypeContext ctx) {
+    public Object visitCapture(CPP14Parser.CaptureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -199,7 +201,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceType_lfno_classOrInterfaceType(Java9Parser.InterfaceType_lfno_classOrInterfaceTypeContext ctx) {
+    public Object visitSimplecapture(CPP14Parser.SimplecaptureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -212,7 +214,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeVariable(Java9Parser.TypeVariableContext ctx) {
+    public Object visitInitcapture(CPP14Parser.InitcaptureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -225,7 +227,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayType(Java9Parser.ArrayTypeContext ctx) {
+    public Object visitLambdadeclarator(CPP14Parser.LambdadeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -238,7 +240,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitDims(Java9Parser.DimsContext ctx) {
+    public Object visitPostfixexpression(CPP14Parser.PostfixexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -251,7 +253,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeParameter(Java9Parser.TypeParameterContext ctx) {
+    public Object visitTypeidofexpr(CPP14Parser.TypeidofexprContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -264,7 +266,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeParameterModifier(Java9Parser.TypeParameterModifierContext ctx) {
+    public Object visitTypeidofthetypeid(CPP14Parser.TypeidofthetypeidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -277,7 +279,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeBound(Java9Parser.TypeBoundContext ctx) {
+    public Object visitExpressionlist(CPP14Parser.ExpressionlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -290,7 +292,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAdditionalBound(Java9Parser.AdditionalBoundContext ctx) {
+    public Object visitPseudodestructorname(CPP14Parser.PseudodestructornameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -303,7 +305,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeArguments(Java9Parser.TypeArgumentsContext ctx) {
+    public Object visitUnaryexpression(CPP14Parser.UnaryexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -316,7 +318,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeArgumentList(Java9Parser.TypeArgumentListContext ctx) {
+    public Object visitUnaryoperator(CPP14Parser.UnaryoperatorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -329,7 +331,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeArgument(Java9Parser.TypeArgumentContext ctx) {
+    public Object visitNewexpression(CPP14Parser.NewexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -342,7 +344,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitWildcard(Java9Parser.WildcardContext ctx) {
+    public Object visitNewplacement(CPP14Parser.NewplacementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -355,7 +357,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitWildcardBounds(Java9Parser.WildcardBoundsContext ctx) {
+    public Object visitNewtypeid(CPP14Parser.NewtypeidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -368,7 +370,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitModuleName(Java9Parser.ModuleNameContext ctx) {
+    public Object visitNewdeclarator(CPP14Parser.NewdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -381,7 +383,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPackageName(Java9Parser.PackageNameContext ctx) {
+    public Object visitNoptrnewdeclarator(CPP14Parser.NoptrnewdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -394,7 +396,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeName(Java9Parser.TypeNameContext ctx) {
+    public Object visitNewinitializer(CPP14Parser.NewinitializerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -407,7 +409,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPackageOrTypeName(Java9Parser.PackageOrTypeNameContext ctx) {
+    public Object visitDeleteexpression(CPP14Parser.DeleteexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -420,7 +422,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExpressionName(Java9Parser.ExpressionNameContext ctx) {
+    public Object visitNoexceptexpression(CPP14Parser.NoexceptexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -433,7 +435,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodName(Java9Parser.MethodNameContext ctx) {
+    public Object visitCastexpression(CPP14Parser.CastexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -446,7 +448,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAmbiguousName(Java9Parser.AmbiguousNameContext ctx) {
+    public Object visitPmexpression(CPP14Parser.PmexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -459,7 +461,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCompilationUnit(Java9Parser.CompilationUnitContext ctx) {
+    public Object visitMultiplicativeexpression(CPP14Parser.MultiplicativeexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -472,7 +474,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitOrdinaryCompilation(Java9Parser.OrdinaryCompilationContext ctx) {
+    public Object visitAdditiveexpression(CPP14Parser.AdditiveexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -485,7 +487,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitModularCompilation(Java9Parser.ModularCompilationContext ctx) {
+    public Object visitShiftexpression(CPP14Parser.ShiftexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -498,7 +500,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPackageDeclaration(Java9Parser.PackageDeclarationContext ctx) {
+    public Object visitShiftoperator(CPP14Parser.ShiftoperatorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -511,7 +513,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPackageModifier(Java9Parser.PackageModifierContext ctx) {
+    public Object visitRelationalexpression(CPP14Parser.RelationalexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -524,7 +526,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitImportDeclaration(Java9Parser.ImportDeclarationContext ctx) {
+    public Object visitEqualityexpression(CPP14Parser.EqualityexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -537,7 +539,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSingleTypeImportDeclaration(Java9Parser.SingleTypeImportDeclarationContext ctx) {
+    public Object visitAndexpression(CPP14Parser.AndexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -550,7 +552,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeImportOnDemandDeclaration(Java9Parser.TypeImportOnDemandDeclarationContext ctx) {
+    public Object visitExclusiveorexpression(CPP14Parser.ExclusiveorexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -563,7 +565,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSingleStaticImportDeclaration(Java9Parser.SingleStaticImportDeclarationContext ctx) {
+    public Object visitInclusiveorexpression(CPP14Parser.InclusiveorexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -576,7 +578,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitStaticImportOnDemandDeclaration(Java9Parser.StaticImportOnDemandDeclarationContext ctx) {
+    public Object visitLogicalandexpression(CPP14Parser.LogicalandexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -589,7 +591,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeDeclaration(Java9Parser.TypeDeclarationContext ctx) {
+    public Object visitLogicalorexpression(CPP14Parser.LogicalorexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -602,7 +604,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitModuleDeclaration(Java9Parser.ModuleDeclarationContext ctx) {
+    public Object visitConditionalexpression(CPP14Parser.ConditionalexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -615,7 +617,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitModuleDirective(Java9Parser.ModuleDirectiveContext ctx) {
+    public Object visitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -628,7 +630,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitRequiresModifier(Java9Parser.RequiresModifierContext ctx) {
+    public Object visitAssignmentoperator(CPP14Parser.AssignmentoperatorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -641,7 +643,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassDeclaration(Java9Parser.ClassDeclarationContext ctx) {
+    public Object visitExpression(CPP14Parser.ExpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -654,7 +656,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitNormalClassDeclaration(Java9Parser.NormalClassDeclarationContext ctx) {
+    public Object visitConstantexpression(CPP14Parser.ConstantexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -667,7 +669,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassModifier(Java9Parser.ClassModifierContext ctx) {
+    public Object visitStatement(CPP14Parser.StatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -680,7 +682,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeParameters(Java9Parser.TypeParametersContext ctx) {
+    public Object visitLabeledstatement(CPP14Parser.LabeledstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -693,7 +695,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeParameterList(Java9Parser.TypeParameterListContext ctx) {
+    public Object visitExpressionstatement(CPP14Parser.ExpressionstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -706,7 +708,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSuperclass(Java9Parser.SuperclassContext ctx) {
+    public Object visitCompoundstatement(CPP14Parser.CompoundstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -719,7 +721,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSuperinterfaces(Java9Parser.SuperinterfacesContext ctx) {
+    public Object visitStatementseq(CPP14Parser.StatementseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -732,7 +734,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceTypeList(Java9Parser.InterfaceTypeListContext ctx) {
+    public Object visitSelectionstatement(CPP14Parser.SelectionstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -745,7 +747,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassBody(Java9Parser.ClassBodyContext ctx) {
+    public Object visitCondition(CPP14Parser.ConditionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -758,306 +760,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassBodyDeclaration(Java9Parser.ClassBodyDeclarationContext ctx) {
-        //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitClassMemberDeclaration(Java9Parser.ClassMemberDeclarationContext ctx) {
-        //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitFieldDeclaration(Java9Parser.FieldDeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitFieldModifier(Java9Parser.FieldModifierContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitVariableDeclaratorList(Java9Parser.VariableDeclaratorListContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitVariableDeclarator(Java9Parser.VariableDeclaratorContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitVariableDeclaratorId(Java9Parser.VariableDeclaratorIdContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitVariableInitializer(Java9Parser.VariableInitializerContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannType(Java9Parser.UnannTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannPrimitiveType(Java9Parser.UnannPrimitiveTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannReferenceType(Java9Parser.UnannReferenceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannClassOrInterfaceType(Java9Parser.UnannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannClassType(Java9Parser.UnannClassTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannClassType_lf_unannClassOrInterfaceType(Java9Parser.UnannClassType_lf_unannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannClassType_lfno_unannClassOrInterfaceType(Java9Parser.UnannClassType_lfno_unannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannInterfaceType(Java9Parser.UnannInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannInterfaceType_lf_unannClassOrInterfaceType(Java9Parser.UnannInterfaceType_lf_unannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannInterfaceType_lfno_unannClassOrInterfaceType(Java9Parser.UnannInterfaceType_lfno_unannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannTypeVariable(Java9Parser.UnannTypeVariableContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitUnannArrayType(Java9Parser.UnannArrayTypeContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitMethodDeclaration(Java9Parser.MethodDeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitMethodModifier(Java9Parser.MethodModifierContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitMethodHeader(Java9Parser.MethodHeaderContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitResult(Java9Parser.ResultContext ctx) {
+    public Object visitIterationstatement(CPP14Parser.IterationstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1070,7 +773,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodDeclarator(Java9Parser.MethodDeclaratorContext ctx) {
+    public Object visitForinitstatement(CPP14Parser.ForinitstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1083,7 +786,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFormalParameterList(Java9Parser.FormalParameterListContext ctx) {
+    public Object visitForrangedeclaration(CPP14Parser.ForrangedeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1096,7 +799,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFormalParameters(Java9Parser.FormalParametersContext ctx) {
+    public Object visitForrangeinitializer(CPP14Parser.ForrangeinitializerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1109,7 +812,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFormalParameter(Java9Parser.FormalParameterContext ctx) {
+    public Object visitJumpstatement(CPP14Parser.JumpstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1122,7 +825,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitVariableModifier(Java9Parser.VariableModifierContext ctx) {
+    public Object visitDeclarationstatement(CPP14Parser.DeclarationstatementContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1135,7 +838,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLastFormalParameter(Java9Parser.LastFormalParameterContext ctx) {
+    public Object visitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1148,7 +851,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitReceiverParameter(Java9Parser.ReceiverParameterContext ctx) {
+    public Object visitDeclaration(CPP14Parser.DeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1161,7 +864,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitThrows_(Java9Parser.Throws_Context ctx) {
+    public Object visitBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1174,7 +877,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExceptionTypeList(Java9Parser.ExceptionTypeListContext ctx) {
+    public Object visitAliasdeclaration(CPP14Parser.AliasdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1187,7 +890,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExceptionType(Java9Parser.ExceptionTypeContext ctx) {
+    public Object visitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1200,7 +903,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodBody(Java9Parser.MethodBodyContext ctx) {
+    public Object visitStatic_assertdeclaration(CPP14Parser.Static_assertdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1213,7 +916,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInstanceInitializer(Java9Parser.InstanceInitializerContext ctx) {
+    public Object visitEmptydeclaration(CPP14Parser.EmptydeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1226,7 +929,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitStaticInitializer(Java9Parser.StaticInitializerContext ctx) {
+    public Object visitAttributedeclaration(CPP14Parser.AttributedeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1239,7 +942,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstructorDeclaration(Java9Parser.ConstructorDeclarationContext ctx) {
+    public Object visitDeclspecifier(CPP14Parser.DeclspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1252,7 +955,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstructorModifier(Java9Parser.ConstructorModifierContext ctx) {
+    public Object visitDeclspecifierseq(CPP14Parser.DeclspecifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1265,7 +968,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstructorDeclarator(Java9Parser.ConstructorDeclaratorContext ctx) {
+    public Object visitStorageclassspecifier(CPP14Parser.StorageclassspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1278,7 +981,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSimpleTypeName(Java9Parser.SimpleTypeNameContext ctx) {
+    public Object visitFunctionspecifier(CPP14Parser.FunctionspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1291,7 +994,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstructorBody(Java9Parser.ConstructorBodyContext ctx) {
+    public Object visitTypedefname(CPP14Parser.TypedefnameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1304,7 +1007,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExplicitConstructorInvocation(Java9Parser.ExplicitConstructorInvocationContext ctx) {
+    public Object visitTypespecifier(CPP14Parser.TypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1317,7 +1020,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumDeclaration(Java9Parser.EnumDeclarationContext ctx) {
+    public Object visitTrailingtypespecifier(CPP14Parser.TrailingtypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1330,7 +1033,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumBody(Java9Parser.EnumBodyContext ctx) {
+    public Object visitTypespecifierseq(CPP14Parser.TypespecifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1343,7 +1046,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumConstantList(Java9Parser.EnumConstantListContext ctx) {
+    public Object visitTrailingtypespecifierseq(CPP14Parser.TrailingtypespecifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1356,7 +1059,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumConstant(Java9Parser.EnumConstantContext ctx) {
+    public Object visitSimpletypespecifier(CPP14Parser.SimpletypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1369,7 +1072,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumConstantModifier(Java9Parser.EnumConstantModifierContext ctx) {
+    public Object visitThetypename(CPP14Parser.ThetypenameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1382,7 +1085,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumBodyDeclarations(Java9Parser.EnumBodyDeclarationsContext ctx) {
+    public Object visitDecltypespecifier(CPP14Parser.DecltypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1395,7 +1098,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceDeclaration(Java9Parser.InterfaceDeclarationContext ctx) {
+    public Object visitElaboratedtypespecifier(CPP14Parser.ElaboratedtypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1408,7 +1111,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitNormalInterfaceDeclaration(Java9Parser.NormalInterfaceDeclarationContext ctx) {
+    public Object visitEnumname(CPP14Parser.EnumnameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1421,7 +1124,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceModifier(Java9Parser.InterfaceModifierContext ctx) {
+    public Object visitEnumspecifier(CPP14Parser.EnumspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1434,7 +1137,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExtendsInterfaces(Java9Parser.ExtendsInterfacesContext ctx) {
+    public Object visitEnumhead(CPP14Parser.EnumheadContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1447,7 +1150,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceBody(Java9Parser.InterfaceBodyContext ctx) {
+    public Object visitOpaqueenumdeclaration(CPP14Parser.OpaqueenumdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1460,7 +1163,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceMemberDeclaration(Java9Parser.InterfaceMemberDeclarationContext ctx) {
+    public Object visitEnumkey(CPP14Parser.EnumkeyContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1473,7 +1176,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstantDeclaration(Java9Parser.ConstantDeclarationContext ctx) {
+    public Object visitEnumbase(CPP14Parser.EnumbaseContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1486,7 +1189,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstantModifier(Java9Parser.ConstantModifierContext ctx) {
+    public Object visitEnumeratorlist(CPP14Parser.EnumeratorlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1499,7 +1202,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceMethodDeclaration(Java9Parser.InterfaceMethodDeclarationContext ctx) {
+    public Object visitEnumeratordefinition(CPP14Parser.EnumeratordefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1512,7 +1215,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInterfaceMethodModifier(Java9Parser.InterfaceMethodModifierContext ctx) {
+    public Object visitEnumerator(CPP14Parser.EnumeratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1525,7 +1228,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotationTypeDeclaration(Java9Parser.AnnotationTypeDeclarationContext ctx) {
+    public Object visitNamespacename(CPP14Parser.NamespacenameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1538,7 +1241,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotationTypeBody(Java9Parser.AnnotationTypeBodyContext ctx) {
+    public Object visitOriginalnamespacename(CPP14Parser.OriginalnamespacenameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1551,7 +1254,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotationTypeMemberDeclaration(Java9Parser.AnnotationTypeMemberDeclarationContext ctx) {
+    public Object visitNamespacedefinition(CPP14Parser.NamespacedefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1564,7 +1267,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotationTypeElementDeclaration(Java9Parser.AnnotationTypeElementDeclarationContext ctx) {
+    public Object visitNamednamespacedefinition(CPP14Parser.NamednamespacedefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1577,7 +1280,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotationTypeElementModifier(Java9Parser.AnnotationTypeElementModifierContext ctx) {
+    public Object visitOriginalnamespacedefinition(CPP14Parser.OriginalnamespacedefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1590,7 +1293,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitDefaultValue(Java9Parser.DefaultValueContext ctx) {
+    public Object visitExtensionnamespacedefinition(CPP14Parser.ExtensionnamespacedefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1603,7 +1306,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAnnotation(Java9Parser.AnnotationContext ctx) {
+    public Object visitUnnamednamespacedefinition(CPP14Parser.UnnamednamespacedefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1616,7 +1319,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitNormalAnnotation(Java9Parser.NormalAnnotationContext ctx) {
+    public Object visitNamespacebody(CPP14Parser.NamespacebodyContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1629,7 +1332,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitElementValuePairList(Java9Parser.ElementValuePairListContext ctx) {
+    public Object visitNamespacealias(CPP14Parser.NamespacealiasContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1642,7 +1345,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitElementValuePair(Java9Parser.ElementValuePairContext ctx) {
+    public Object visitNamespacealiasdefinition(CPP14Parser.NamespacealiasdefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1655,7 +1358,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitElementValue(Java9Parser.ElementValueContext ctx) {
+    public Object visitQualifiednamespacespecifier(CPP14Parser.QualifiednamespacespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1668,7 +1371,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitElementValueArrayInitializer(Java9Parser.ElementValueArrayInitializerContext ctx) {
+    public Object visitUsingdeclaration(CPP14Parser.UsingdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1681,7 +1384,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitElementValueList(Java9Parser.ElementValueListContext ctx) {
+    public Object visitUsingdirective(CPP14Parser.UsingdirectiveContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1694,7 +1397,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMarkerAnnotation(Java9Parser.MarkerAnnotationContext ctx) {
+    public Object visitAsmdefinition(CPP14Parser.AsmdefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1707,7 +1410,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSingleElementAnnotation(Java9Parser.SingleElementAnnotationContext ctx) {
+    public Object visitLinkagespecification(CPP14Parser.LinkagespecificationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1720,7 +1423,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayInitializer(Java9Parser.ArrayInitializerContext ctx) {
+    public Object visitAttributespecifierseq(CPP14Parser.AttributespecifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1733,7 +1436,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitVariableInitializerList(Java9Parser.VariableInitializerListContext ctx) {
+    public Object visitAttributespecifier(CPP14Parser.AttributespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1746,281 +1449,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitBlock(Java9Parser.BlockContext ctx) {
-//        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitBlockStatements(Java9Parser.BlockStatementsContext ctx) {
-//        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitBlockStatement(Java9Parser.BlockStatementContext ctx) {
-//        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitLocalVariableDeclarationStatement(Java9Parser.LocalVariableDeclarationStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitLocalVariableDeclaration(Java9Parser.LocalVariableDeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitStatement(Java9Parser.StatementContext ctx) {
-
-        //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitStatementNoShortIf(Java9Parser.StatementNoShortIfContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitStatementWithoutTrailingSubstatement(Java9Parser.StatementWithoutTrailingSubstatementContext ctx) {
-//        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitEmptyStatement(Java9Parser.EmptyStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitLabeledStatement(Java9Parser.LabeledStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitLabeledStatementNoShortIf(Java9Parser.LabeledStatementNoShortIfContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitExpressionStatement(Java9Parser.ExpressionStatementContext ctx) {
-//        process(ctx); 
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitStatementExpression(Java9Parser.StatementExpressionContext ctx) {
-//        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitIfThenStatement(Java9Parser.IfThenStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitIfThenElseStatement(Java9Parser.IfThenElseStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitIfThenElseStatementNoShortIf(Java9Parser.IfThenElseStatementNoShortIfContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitAssertStatement(Java9Parser.AssertStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitSwitchStatement(Java9Parser.SwitchStatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitSwitchBlock(Java9Parser.SwitchBlockContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitSwitchBlockStatementGroup(Java9Parser.SwitchBlockStatementGroupContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitSwitchLabels(Java9Parser.SwitchLabelsContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitSwitchLabel(Java9Parser.SwitchLabelContext ctx) {
+    public Object visitAlignmentspecifier(CPP14Parser.AlignmentspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2033,7 +1462,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnumConstantName(Java9Parser.EnumConstantNameContext ctx) {
+    public Object visitAttributelist(CPP14Parser.AttributelistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2046,7 +1475,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitWhileStatement(Java9Parser.WhileStatementContext ctx) {
+    public Object visitAttribute(CPP14Parser.AttributeContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2059,7 +1488,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitWhileStatementNoShortIf(Java9Parser.WhileStatementNoShortIfContext ctx) {
+    public Object visitAttributetoken(CPP14Parser.AttributetokenContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2072,7 +1501,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitDoStatement(Java9Parser.DoStatementContext ctx) {
+    public Object visitAttributescopedtoken(CPP14Parser.AttributescopedtokenContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2085,7 +1514,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitForStatement(Java9Parser.ForStatementContext ctx) {
+    public Object visitAttributenamespace(CPP14Parser.AttributenamespaceContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2098,7 +1527,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitForStatementNoShortIf(Java9Parser.ForStatementNoShortIfContext ctx) {
+    public Object visitAttributeargumentclause(CPP14Parser.AttributeargumentclauseContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2111,7 +1540,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitBasicForStatement(Java9Parser.BasicForStatementContext ctx) {
+    public Object visitBalancedtokenseq(CPP14Parser.BalancedtokenseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2124,7 +1553,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitBasicForStatementNoShortIf(Java9Parser.BasicForStatementNoShortIfContext ctx) {
+    public Object visitBalancedtoken(CPP14Parser.BalancedtokenContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2137,7 +1566,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitForInit(Java9Parser.ForInitContext ctx) {
+    public Object visitInitdeclaratorlist(CPP14Parser.InitdeclaratorlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2150,7 +1579,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitForUpdate(Java9Parser.ForUpdateContext ctx) {
+    public Object visitInitdeclarator(CPP14Parser.InitdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2163,7 +1592,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitStatementExpressionList(Java9Parser.StatementExpressionListContext ctx) {
+    public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2176,7 +1605,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnhancedForStatement(Java9Parser.EnhancedForStatementContext ctx) {
+    public Object visitPtrdeclarator(CPP14Parser.PtrdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2189,7 +1618,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEnhancedForStatementNoShortIf(Java9Parser.EnhancedForStatementNoShortIfContext ctx) {
+    public Object visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2202,7 +1631,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitBreakStatement(Java9Parser.BreakStatementContext ctx) {
+    public Object visitParametersandqualifiers(CPP14Parser.ParametersandqualifiersContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2215,7 +1644,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitContinueStatement(Java9Parser.ContinueStatementContext ctx) {
+    public Object visitTrailingreturntype(CPP14Parser.TrailingreturntypeContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2228,7 +1657,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitReturnStatement(Java9Parser.ReturnStatementContext ctx) {
+    public Object visitPtroperator(CPP14Parser.PtroperatorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2241,7 +1670,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitThrowStatement(Java9Parser.ThrowStatementContext ctx) {
+    public Object visitCvqualifierseq(CPP14Parser.CvqualifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2254,7 +1683,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitSynchronizedStatement(Java9Parser.SynchronizedStatementContext ctx) {
+    public Object visitCvqualifier(CPP14Parser.CvqualifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2267,7 +1696,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTryStatement(Java9Parser.TryStatementContext ctx) {
+    public Object visitRefqualifier(CPP14Parser.RefqualifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2280,7 +1709,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCatches(Java9Parser.CatchesContext ctx) {
+    public Object visitDeclaratorid(CPP14Parser.DeclaratoridContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2293,7 +1722,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCatchClause(Java9Parser.CatchClauseContext ctx) {
+    public Object visitThetypeid(CPP14Parser.ThetypeidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2306,7 +1735,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCatchFormalParameter(Java9Parser.CatchFormalParameterContext ctx) {
+    public Object visitAbstractdeclarator(CPP14Parser.AbstractdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2319,7 +1748,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCatchType(Java9Parser.CatchTypeContext ctx) {
+    public Object visitPtrabstractdeclarator(CPP14Parser.PtrabstractdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2332,7 +1761,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFinally_(Java9Parser.Finally_Context ctx) {
+    public Object visitNoptrabstractdeclarator(CPP14Parser.NoptrabstractdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2345,7 +1774,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTryWithResourcesStatement(Java9Parser.TryWithResourcesStatementContext ctx) {
+    public Object visitAbstractpackdeclarator(CPP14Parser.AbstractpackdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2358,7 +1787,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitResourceSpecification(Java9Parser.ResourceSpecificationContext ctx) {
+    public Object visitNoptrabstractpackdeclarator(CPP14Parser.NoptrabstractpackdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2371,7 +1800,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitResourceList(Java9Parser.ResourceListContext ctx) {
+    public Object visitParameterdeclarationclause(CPP14Parser.ParameterdeclarationclauseContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2384,7 +1813,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitResource(Java9Parser.ResourceContext ctx) {
+    public Object visitParameterdeclarationlist(CPP14Parser.ParameterdeclarationlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2397,7 +1826,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitVariableAccess(Java9Parser.VariableAccessContext ctx) {
+    public Object visitParameterdeclaration(CPP14Parser.ParameterdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2410,7 +1839,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimary(Java9Parser.PrimaryContext ctx) {
+    public Object visitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2423,7 +1852,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray(Java9Parser.PrimaryNoNewArrayContext ctx) {
+    public Object visitFunctionbody(CPP14Parser.FunctionbodyContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2436,7 +1865,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lf_arrayAccess(Java9Parser.PrimaryNoNewArray_lf_arrayAccessContext ctx) {
+    public Object visitInitializer(CPP14Parser.InitializerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2449,7 +1878,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lfno_arrayAccess(Java9Parser.PrimaryNoNewArray_lfno_arrayAccessContext ctx) {
+    public Object visitBraceorequalinitializer(CPP14Parser.BraceorequalinitializerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2462,7 +1891,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lf_primary(Java9Parser.PrimaryNoNewArray_lf_primaryContext ctx) {
+    public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2475,7 +1904,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary(Java9Parser.PrimaryNoNewArray_lf_primary_lf_arrayAccess_lf_primaryContext ctx) {
+    public Object visitInitializerlist(CPP14Parser.InitializerlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2488,7 +1917,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary(Java9Parser.PrimaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primaryContext ctx) {
+    public Object visitBracedinitlist(CPP14Parser.BracedinitlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2501,7 +1930,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lfno_primary(Java9Parser.PrimaryNoNewArray_lfno_primaryContext ctx) {
+    public Object visitClassname(CPP14Parser.ClassnameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2514,7 +1943,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary(Java9Parser.PrimaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primaryContext ctx) {
+    public Object visitClassspecifier(CPP14Parser.ClassspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2527,7 +1956,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPrimaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary(Java9Parser.PrimaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primaryContext ctx) {
+    public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2540,7 +1969,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassLiteral(Java9Parser.ClassLiteralContext ctx) {
+    public Object visitClassheadname(CPP14Parser.ClassheadnameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2553,7 +1982,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassInstanceCreationExpression(Java9Parser.ClassInstanceCreationExpressionContext ctx) {
+    public Object visitClassvirtspecifier(CPP14Parser.ClassvirtspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2566,7 +1995,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassInstanceCreationExpression_lf_primary(Java9Parser.ClassInstanceCreationExpression_lf_primaryContext ctx) {
+    public Object visitClasskey(CPP14Parser.ClasskeyContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2579,7 +2008,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitClassInstanceCreationExpression_lfno_primary(Java9Parser.ClassInstanceCreationExpression_lfno_primaryContext ctx) {
+    public Object visitMemberspecification(CPP14Parser.MemberspecificationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2592,7 +2021,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitTypeArgumentsOrDiamond(Java9Parser.TypeArgumentsOrDiamondContext ctx) {
+    public Object visitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2605,7 +2034,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFieldAccess(Java9Parser.FieldAccessContext ctx) {
+    public Object visitMemberdeclaratorlist(CPP14Parser.MemberdeclaratorlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2618,7 +2047,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFieldAccess_lf_primary(Java9Parser.FieldAccess_lf_primaryContext ctx) {
+    public Object visitMemberdeclarator(CPP14Parser.MemberdeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2631,7 +2060,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitFieldAccess_lfno_primary(Java9Parser.FieldAccess_lfno_primaryContext ctx) {
+    public Object visitVirtspecifierseq(CPP14Parser.VirtspecifierseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2644,7 +2073,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayAccess(Java9Parser.ArrayAccessContext ctx) {
+    public Object visitVirtspecifier(CPP14Parser.VirtspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2657,7 +2086,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayAccess_lf_primary(Java9Parser.ArrayAccess_lf_primaryContext ctx) {
+    public Object visitPurespecifier(CPP14Parser.PurespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2670,7 +2099,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayAccess_lfno_primary(Java9Parser.ArrayAccess_lfno_primaryContext ctx) {
+    public Object visitBaseclause(CPP14Parser.BaseclauseContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2683,7 +2112,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodInvocation(Java9Parser.MethodInvocationContext ctx) {
+    public Object visitBasespecifierlist(CPP14Parser.BasespecifierlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2696,7 +2125,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodInvocation_lf_primary(Java9Parser.MethodInvocation_lf_primaryContext ctx) {
+    public Object visitBasespecifier(CPP14Parser.BasespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2709,7 +2138,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodInvocation_lfno_primary(Java9Parser.MethodInvocation_lfno_primaryContext ctx) {
+    public Object visitClassordecltype(CPP14Parser.ClassordecltypeContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2722,7 +2151,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArgumentList(Java9Parser.ArgumentListContext ctx) {
+    public Object visitBasetypespecifier(CPP14Parser.BasetypespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2735,7 +2164,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodReference(Java9Parser.MethodReferenceContext ctx) {
+    public Object visitAccessspecifier(CPP14Parser.AccessspecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2748,7 +2177,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodReference_lf_primary(Java9Parser.MethodReference_lf_primaryContext ctx) {
+    public Object visitConversionfunctionid(CPP14Parser.ConversionfunctionidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2761,7 +2190,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMethodReference_lfno_primary(Java9Parser.MethodReference_lfno_primaryContext ctx) {
+    public Object visitConversiontypeid(CPP14Parser.ConversiontypeidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2774,7 +2203,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitArrayCreationExpression(Java9Parser.ArrayCreationExpressionContext ctx) {
+    public Object visitConversiondeclarator(CPP14Parser.ConversiondeclaratorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2787,7 +2216,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitDimExprs(Java9Parser.DimExprsContext ctx) {
+    public Object visitCtorinitializer(CPP14Parser.CtorinitializerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2800,7 +2229,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitDimExpr(Java9Parser.DimExprContext ctx) {
+    public Object visitMeminitializerlist(CPP14Parser.MeminitializerlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2813,21 +2242,8 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConstantExpression(Java9Parser.ConstantExpressionContext ctx) {
+    public Object visitMeminitializer(CPP14Parser.MeminitializerContext ctx) {
         process(ctx);
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>
-     * The default implementation returns the result of calling
-     * {@link #visitChildren} on {@code ctx}.</p>
-     */
-    @Override
-    public Object visitExpression(Java9Parser.ExpressionContext ctx) {
-//        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -2839,7 +2255,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLambdaExpression(Java9Parser.LambdaExpressionContext ctx) {
+    public Object visitMeminitializerid(CPP14Parser.MeminitializeridContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2852,7 +2268,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLambdaParameters(Java9Parser.LambdaParametersContext ctx) {
+    public Object visitOperatorfunctionid(CPP14Parser.OperatorfunctionidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2865,7 +2281,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInferredFormalParameterList(Java9Parser.InferredFormalParameterListContext ctx) {
+    public Object visitLiteraloperatorid(CPP14Parser.LiteraloperatoridContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2878,7 +2294,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLambdaBody(Java9Parser.LambdaBodyContext ctx) {
+    public Object visitTemplatedeclaration(CPP14Parser.TemplatedeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2891,7 +2307,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAssignmentExpression(Java9Parser.AssignmentExpressionContext ctx) {
+    public Object visitTemplateparameterlist(CPP14Parser.TemplateparameterlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2904,7 +2320,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAssignment(Java9Parser.AssignmentContext ctx) {
+    public Object visitTemplateparameter(CPP14Parser.TemplateparameterContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2917,7 +2333,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitLeftHandSide(Java9Parser.LeftHandSideContext ctx) {
+    public Object visitTypeparameter(CPP14Parser.TypeparameterContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2930,7 +2346,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAssignmentOperator(Java9Parser.AssignmentOperatorContext ctx) {
+    public Object visitSimpletemplateid(CPP14Parser.SimpletemplateidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2943,7 +2359,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConditionalExpression(Java9Parser.ConditionalExpressionContext ctx) {
+    public Object visitTemplateid(CPP14Parser.TemplateidContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2956,7 +2372,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConditionalOrExpression(Java9Parser.ConditionalOrExpressionContext ctx) {
+    public Object visitTemplatename(CPP14Parser.TemplatenameContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2969,7 +2385,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitConditionalAndExpression(Java9Parser.ConditionalAndExpressionContext ctx) {
+    public Object visitTemplateargumentlist(CPP14Parser.TemplateargumentlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2982,7 +2398,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitInclusiveOrExpression(Java9Parser.InclusiveOrExpressionContext ctx) {
+    public Object visitTemplateargument(CPP14Parser.TemplateargumentContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -2995,7 +2411,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitExclusiveOrExpression(Java9Parser.ExclusiveOrExpressionContext ctx) {
+    public Object visitTypenamespecifier(CPP14Parser.TypenamespecifierContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3008,7 +2424,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAndExpression(Java9Parser.AndExpressionContext ctx) {
+    public Object visitExplicitinstantiation(CPP14Parser.ExplicitinstantiationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3021,7 +2437,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitEqualityExpression(Java9Parser.EqualityExpressionContext ctx) {
+    public Object visitExplicitspecialization(CPP14Parser.ExplicitspecializationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3034,7 +2450,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitRelationalExpression(Java9Parser.RelationalExpressionContext ctx) {
+    public Object visitTryblock(CPP14Parser.TryblockContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3047,7 +2463,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitShiftExpression(Java9Parser.ShiftExpressionContext ctx) {
+    public Object visitFunctiontryblock(CPP14Parser.FunctiontryblockContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3060,7 +2476,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitAdditiveExpression(Java9Parser.AdditiveExpressionContext ctx) {
+    public Object visitHandlerseq(CPP14Parser.HandlerseqContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3073,7 +2489,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitMultiplicativeExpression(Java9Parser.MultiplicativeExpressionContext ctx) {
+    public Object visitHandler(CPP14Parser.HandlerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3086,7 +2502,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitUnaryExpression(Java9Parser.UnaryExpressionContext ctx) {
+    public Object visitExceptiondeclaration(CPP14Parser.ExceptiondeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3099,7 +2515,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPreIncrementExpression(Java9Parser.PreIncrementExpressionContext ctx) {
+    public Object visitThrowexpression(CPP14Parser.ThrowexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3112,7 +2528,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPreDecrementExpression(Java9Parser.PreDecrementExpressionContext ctx) {
+    public Object visitExceptionspecification(CPP14Parser.ExceptionspecificationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3125,7 +2541,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitUnaryExpressionNotPlusMinus(Java9Parser.UnaryExpressionNotPlusMinusContext ctx) {
+    public Object visitDynamicexceptionspecification(CPP14Parser.DynamicexceptionspecificationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3138,7 +2554,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPostfixExpression(Java9Parser.PostfixExpressionContext ctx) {
+    public Object visitTypeidlist(CPP14Parser.TypeidlistContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3151,7 +2567,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPostIncrementExpression(Java9Parser.PostIncrementExpressionContext ctx) {
+    public Object visitNoexceptspecification(CPP14Parser.NoexceptspecificationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3164,7 +2580,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPostIncrementExpression_lf_postfixExpression(Java9Parser.PostIncrementExpression_lf_postfixExpressionContext ctx) {
+    public Object visitTheoperator(CPP14Parser.TheoperatorContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3177,7 +2593,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPostDecrementExpression(Java9Parser.PostDecrementExpressionContext ctx) {
+    public Object visitLiteral(CPP14Parser.LiteralContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3190,7 +2606,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitPostDecrementExpression_lf_postfixExpression(Java9Parser.PostDecrementExpression_lf_postfixExpressionContext ctx) {
+    public Object visitBooleanliteral(CPP14Parser.BooleanliteralContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3203,7 +2619,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitCastExpression(Java9Parser.CastExpressionContext ctx) {
+    public Object visitPointerliteral(CPP14Parser.PointerliteralContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -3216,7 +2632,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      * {@link #visitChildren} on {@code ctx}.</p>
      */
     @Override
-    public Object visitIdentifier(Java9Parser.IdentifierContext ctx) {
+    public Object visitUserdefinedliteral(CPP14Parser.UserdefinedliteralContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
