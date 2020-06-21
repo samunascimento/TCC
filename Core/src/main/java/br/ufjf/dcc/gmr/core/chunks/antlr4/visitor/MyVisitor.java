@@ -185,8 +185,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         if(parent != null && parent instanceof JavaParser.ExpressionContext){
               methodType.setPackageBinding(packageBinding);
               methodType.setIdentifier(parent.children.get(0).getText());     
-              
-              methodCallBinding.setTypeBinding(typeBinding);
+              System.out.println(methodType.getIdentifier());
+              System.out.println("=========================");
+              methodCallBinding.setTypeBinding(methodType);
             }
         
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
