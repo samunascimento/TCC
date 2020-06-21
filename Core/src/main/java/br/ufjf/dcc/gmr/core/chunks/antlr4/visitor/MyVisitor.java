@@ -176,18 +176,27 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
         MethodCallBinding methodCallBinding = new MethodCallBinding();
-        TypeBinding methodType = new TypeBinding();
+      
+        
         List<TypeBinding> parameters = new ArrayList<>();
         
       
         ParserRuleContext parent = ctx.getParent();
         
         if(parent != null && parent instanceof JavaParser.ExpressionContext){
-              methodType.setPackageBinding(packageBinding);
-              methodType.setIdentifier(parent.children.get(0).getText());     
-              System.out.println(methodType.getIdentifier());
+              VariableBinding variableOrigin = new VariableBinding();
+              
+                for (int i = 0; i < variableBindingList.size(); i++) {
+                    if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
+                        variableOrigin.setName(variableBindingList.get(i).getName());
+                        variableOrigin.setType(variableBindingList.get(i).getType());
+                    }
+                }
+     
+                   
+              System.out.println(variableOrigin.getType().getIdentifier());
               System.out.println("=========================");
-              methodCallBinding.setTypeBinding(methodType);
+              methodCallBinding.setVariableOrigin(variableOrigin);
             }
         
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
