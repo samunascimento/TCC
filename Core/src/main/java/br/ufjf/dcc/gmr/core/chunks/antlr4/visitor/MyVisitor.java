@@ -176,21 +176,26 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
         MethodCallBinding methodCallBinding = new MethodCallBinding();
+        TypeBinding methodType = new TypeBinding();
         List<TypeBinding> parameters = new ArrayList<>();
-
+        
+      
         ParserRuleContext parent = ctx.getParent();
         
         if(parent != null && parent instanceof JavaParser.ExpressionContext){
-            
-        }
+              methodType.setPackageBinding(packageBinding);
+              methodType.setIdentifier(parent.children.get(0).getText());                
+            }
         
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
         methodCallBidingList.add(methodCallBinding);
         Object visitMethodCall = super.visitMethodCall(ctx);
-
+       
+         
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
+        
         if (expressionList != null) {
             for (ParseTree parseTree : expressionList.children) {
                 if (parseTree instanceof JavaParser.ExpressionContext) {
