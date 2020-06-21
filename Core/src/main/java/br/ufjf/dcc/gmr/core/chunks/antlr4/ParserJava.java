@@ -59,6 +59,11 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST1.getMethodDeclarationBinding(), AST2.getMethodCallBiding());
         System.out.println("============= AST2 --> AST1 =============");
         Dependencies.methodDeclarationCallList(AST2.getMethodDeclarationBinding(), AST1.getMethodCallBiding());
+    
+        System.out.println("=============Variables=============");
+        for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
+            System.out.println(variableBinding.toString());
+        }
     }
 
     private static MyVisitor ASTExtractor(String path) throws IOException, HeadlessException, RecognitionException {
