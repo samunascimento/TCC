@@ -4,7 +4,6 @@ import React, { useRef, useEffect } from 'react';
 import './Style.css'
 
 function BarChart({ data }) {
-
     const ref = useRef();
 
     useEffect(() => {
@@ -12,6 +11,8 @@ function BarChart({ data }) {
     }, [data]);
 
     const draw = () => {
+
+        console.log(data);
 
         const colors = [
             'steelblue',
@@ -124,11 +125,8 @@ function BarChart({ data }) {
             })
             .x(function (d) { return x(d.x); })
             .y(function (d) { return y(d.y); });
-        //.interpolate("linear")	
-        //.x(function (d) { return x(d.x); })
-        //.y(function (d) { return y(d.y); });
 
-        svg.selectAll('.line')
+             svg.selectAll('.line')
             .data(data)
             .enter()
             .append("path")
@@ -137,7 +135,11 @@ function BarChart({ data }) {
             .attr('stroke', function (d, i) {
                 return colors[i % colors.length];
             })
-            .attr("d", line);
+            .attr("d", line)
+            
+           // svg.exit() 
+           // .remove
+        
 
         //CREATE POINTS
 
@@ -163,10 +165,13 @@ function BarChart({ data }) {
             .attr('fill', function (d, i) {
                 return colors[d.index % colors.length];
             })
-            //.attr("transform", function (d) {
-            //    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
-           // }
-           // );
+
+           // svg.exit() 
+           // .remove
+        //.attr("transform", function (d) {
+        //    return "translate(" + x(d.point.x) + "," + y(d.point.y) + ")";
+        // }
+        // );
 
 
 
