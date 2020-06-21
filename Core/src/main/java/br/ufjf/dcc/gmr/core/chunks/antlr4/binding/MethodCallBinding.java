@@ -15,6 +15,9 @@ public class MethodCallBinding {
     public MethodCallBinding() {
         this.name = "";
         this.parameters = new ArrayList<>();
+        this.packageBinding = new PackageBinding();
+        this.typeBinding = new TypeBinding();
+        this.ctx = null;
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
