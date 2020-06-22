@@ -321,7 +321,7 @@ public class ConflictRegion {
 
         }
         for (String str : v2SS) {
-            if (!tof.contains(str)) {
+            if (!tof.contains(str + " [V1 & V2]") && !tof.contains(str + " [V1]")) {
                 tof.add(str + " [V2]");
             }
         }
