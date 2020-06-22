@@ -8,6 +8,7 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -226,12 +227,12 @@ public class ConflictRegion {
         str = str + "\n\n\n\n";
         if (this.syntaxV1 != null) {
             for (SyntaxStructure v1 : this.syntaxV1) {
-                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
             }
         }
         if (this.syntaxV2 != null) {
             for (SyntaxStructure v2 : this.syntaxV2) {
-                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
             }
         }
 
@@ -293,6 +294,42 @@ public class ConflictRegion {
             result = result.replaceFirst("\n", "");
             return result;
         }
+    }
+
+    public String getTypeOfConflict() {
+        List<String> v1SS = Arrays.asList(this.getV1StructureTypes().split("\n"));
+        List<String> v2SS = Arrays.asList(this.getV2StructureTypes().split("\n"));
+        List<String> tof = new ArrayList<>();
+        String result = "";
+        if (v1SS.contains("WARNING!") && v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1 & V2]";
+            v1SS.remove("WARNING");
+            v2SS.remove("WARNING");
+        } else if (v1SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1]";
+            v1SS.remove("WARNING");
+        } else if (v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V2]";
+            v2SS.remove("WARNING");
+        }
+        for (String str : v1SS) {
+            if (v2SS.contains(str)) {
+                tof.add(str + " [V1 & V2]");
+            } else {
+                tof.add(str + " [V1]");
+            }
+
+        }
+        for (String str : v2SS) {
+            if (!tof.contains(str)) {
+                tof.add(str + " [V2]");
+            }
+        }
+        Collections.sort(tof);
+        for(String str : tof){
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
     }
 
     private DeveloperDecision generateDeveloperDecision() {
