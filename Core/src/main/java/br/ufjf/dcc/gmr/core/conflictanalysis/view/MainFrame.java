@@ -317,6 +317,9 @@ public class MainFrame extends JFrame {
         } catch (InterruptedException ex) {
             System.out.println("Deu ruim");
         }
+        if(mainTabbedPane.getSelectedComponent().equals(progressBarPanel)){
+            mainTabbedPane.setSelectedIndex(0);
+        }
         mainTabbedPane.remove(progressBarPanel);
         if (progressBarPanel.getMergeEventList() == null) {
             JOptionPane.showMessageDialog(null, "The repository path isn't a git repository!", "ERROR!", JOptionPane.ERROR_MESSAGE);

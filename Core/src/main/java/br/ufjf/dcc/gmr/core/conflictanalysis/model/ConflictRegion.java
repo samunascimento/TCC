@@ -124,7 +124,7 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
@@ -135,7 +135,7 @@ public class ConflictRegion {
                 }
 
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
@@ -159,7 +159,7 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
@@ -177,7 +177,7 @@ public class ConflictRegion {
                     }
                 }
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
@@ -226,12 +226,12 @@ public class ConflictRegion {
         str = str + "\n\n\n\n";
         if (this.syntaxV1 != null) {
             for (SyntaxStructure v1 : this.syntaxV1) {
-                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
             }
         }
         if (this.syntaxV2 != null) {
             for (SyntaxStructure v2 : this.syntaxV2) {
-                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
             }
         }
 
@@ -268,7 +268,7 @@ public class ConflictRegion {
     public String getV1StructureTypes() {
         if (this.syntaxV1 == null) {
             return "Extension not parseble!";
-        } else if (this.originalV1StartLine == this.originalV1StopLine || this.syntaxV1.isEmpty()) {
+        } else if (this.originalV1StartLine == 0 || this.syntaxV1.isEmpty()) {
             return "Nothing";
         } else {
             String result = "";
@@ -283,7 +283,7 @@ public class ConflictRegion {
     public String getV2StructureTypes() {
         if (this.syntaxV2 == null) {
             return "Extension not parseble!";
-        } else if (this.originalV2StartLine == this.originalV2StopLine || this.syntaxV2.isEmpty()) {
+        } else if (this.originalV2StartLine == 0 || this.syntaxV2.isEmpty()) {
             return "Nothing";
         } else {
             String result = "";
