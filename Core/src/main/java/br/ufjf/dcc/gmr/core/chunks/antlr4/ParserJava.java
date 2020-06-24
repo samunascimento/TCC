@@ -119,13 +119,13 @@ public class ParserJava {
         String[] aux = path.split("/");
         String fileName = aux[aux.length - 1];
         Object message = "Want to open the view dialog for the file: " + fileName + "?";
-        if (JOptionPane.showConfirmDialog(null, message) == 0) {
+       
             viewer.open();
-        }
-
+       
         MyVisitor visitor = new MyVisitor();
-
-        visitor.visit(tree);
+        
+        visitor.visitFirst(tree);
+        visitor.visitSecond(tree);
 
         return visitor;
     }

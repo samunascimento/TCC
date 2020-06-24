@@ -4,16 +4,18 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassBinding {
+public class ClassBinding {    
 
-    
+    private ClassBinding extendClass;
     private List<MethodDeclarationBinding> mdbList;
     private TypeBinding modifier;
     private String name;
     
     public ClassBinding(){
+        this.extendClass = null;
         this.mdbList = new ArrayList<>();
         this.modifier = new TypeBinding();
+        this.name = "";
     }
     
     /**
@@ -58,5 +60,18 @@ public class ClassBinding {
      */
     public void setName(String name) {
         this.name = name;
+    }
+    /**
+     * @return the extendClass
+     */
+    public ClassBinding getExtendClass() {
+        return extendClass;
+    }
+
+    /**
+     * @param extendClass the extendClass to set
+     */
+    public void setExtendClass(ClassBinding extendClass) {
+        this.extendClass = extendClass;
     }
 }
