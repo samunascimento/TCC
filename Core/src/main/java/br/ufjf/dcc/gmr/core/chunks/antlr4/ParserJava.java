@@ -31,21 +31,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class ParserJava {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        /*String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
+        String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
         String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
-        /*
-        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
-        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
-            for (Path file : stream) {
-                MyVisitor AST = ASTExtractor(dir.toString().concat(file.getFileName().toString()));
-            }
-        } catch (IOException | DirectoryIteratorException x) {
-            System.err.println(x);
-        }*/
 
- /*System.out.println("=============MethodDeclarationAST1=============");
+        System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
         }
@@ -74,8 +65,8 @@ public class ParserJava {
         System.out.println("=============Variables=============");
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
-        }*/
-        view();
+        }
+        //view();
     }
 
     private static Boolean[] view() throws InterruptedException {
@@ -84,7 +75,6 @@ public class ParserJava {
         List<String> list = new ArrayList<>();
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
 
-        
         try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 
             for (Path file : stream) {
