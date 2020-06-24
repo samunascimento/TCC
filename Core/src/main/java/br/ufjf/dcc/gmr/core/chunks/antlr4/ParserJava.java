@@ -1,13 +1,14 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Dependencies;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodCallBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.VariableBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import static java.awt.Frame.*;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
@@ -15,8 +16,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.JOptionPane;
+import java.util.List;
+import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -25,12 +28,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
         String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
-        
+        /*
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
         try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path file : stream) {
@@ -38,8 +41,8 @@ public class ParserJava {
             }
         } catch (IOException | DirectoryIteratorException x) {
             System.err.println(x);
-        }
-        
+        }*/
+
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
@@ -70,6 +73,55 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
+        //view();
+    }
+
+    private static Boolean[] view() throws InterruptedException {
+
+        JFrame mainFrame = new JFrame();
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        List<JCheckBox> checkBoxs = new ArrayList<>();
+
+        JPanel mainPanel = new JPanel();
+
+        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
+        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+
+            for (Path file : stream) {
+                JCheckBox checkBox = new JCheckBox(dir.toString().concat(file.getFileName().toString()));
+                checkBox.setLayout(new BorderLayout());
+                checkBox.setVisible(true);
+                checkBoxs.add(checkBox);
+            }
+
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
+
+        Boolean[] isTreeOpen = new Boolean[checkBoxs.size()];
+
+        mainPanel.updateUI();
+        mainFrame.setExtendedState(MAXIMIZED_BOTH);
+        mainFrame.setResizable(false);
+
+        mainFrame.setLayout(new BorderLayout());
+        mainPanel.setLayout(new BorderLayout());
+
+        mainPanel.setBackground(Color.red);
+
+        mainFrame.add(mainPanel, BorderLayout.CENTER);
+        mainPanel.add(checkBoxs.get(0), BorderLayout.WEST);
+        System.out.println("Size:" + checkBoxs.size());
+        mainFrame.setVisible(true);
+        for (int i = 0; i < checkBoxs.size(); i++) {
+            Thread.sleep(100l);
+            mainPanel.add(checkBoxs.get(i));
+            mainPanel.updateUI();
+        }
+
+        mainPanel.setVisible(true);
+
+        return null;
     }
 
     private static MyVisitor ASTExtractor(String path) throws IOException, HeadlessException, RecognitionException {
