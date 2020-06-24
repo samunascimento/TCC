@@ -12,16 +12,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -65,11 +62,9 @@ public class MergePanel extends JPanel {
     private JTextArea controlPanelFileNameTextArea;
     private JLabel controlPanelFileIndexLabel;
     private JLabel controlPanelConflictIndexLabel;
-    private JTextArea controlPanelV1StructureTypeTextArea;
-    private JTextArea controlPanelV2StructureTypeTextArea;
+    private JTextArea controlPanelTypeOfConflictTextArea;
     private JTextArea controlPanelDeveloperDecisionTextArea;
-    private JScrollPane controlPanelV1StructureTypeTextAreaScrollPane;
-    private JScrollPane controlPanelV2StructureTypeTextAreaScrollPane;
+    private JScrollPane controlPanelTypeOfConflictTextAreaScrollPane;
 //  ======================================================
 
 //  ******************************************************
@@ -126,11 +121,9 @@ public class MergePanel extends JPanel {
         this.controlPanelFileNameTextArea = generateControlPanelFileNameLabel();
         this.controlPanelFileIndexLabel = generateControlPanelFileIndexLabel();
         this.controlPanelConflictIndexLabel = generateControlPanelConflictIndexLabel();
-        this.controlPanelV1StructureTypeTextArea = generateControlPanelV1StructureTypeTextArea();
-        this.controlPanelV2StructureTypeTextArea = generateControlPanelV2StructureTypeTextArea();
+        this.controlPanelTypeOfConflictTextArea = generateControlPanelTypeOfConflictTextArea();
         this.controlPanelDeveloperDecisionTextArea = generateControlPanelDeveloperDecisionTextArea();
-        this.controlPanelV1StructureTypeTextAreaScrollPane = generateControlPanelV1StructureTypeTextAreaScrollPane();
-        this.controlPanelV2StructureTypeTextAreaScrollPane = generateControlPanelV2StructureTypeTextAreaScrollPane();
+        this.controlPanelTypeOfConflictTextAreaScrollPane = generateControlPanelTypeOfConflictTextAreaScrollPane();
         this.conflictTextArea = generateConflictTextArea();
         this.conflictTextAreaScrollPane = generateConflictTextAreaScrollPane();
         this.solutionTextArea = generateSolutionTextArea();
@@ -318,7 +311,7 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
-    private JTextArea generateControlPanelV1StructureTypeTextArea() {
+    private JTextArea generateControlPanelTypeOfConflictTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
         prototype.setMinimumSize(new Dimension(500, 100));
@@ -326,13 +319,6 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
-    private JTextArea generateControlPanelV2StructureTypeTextArea() {
-        JTextArea prototype = new JTextArea("\n");
-        prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500, 100));
-        prototype.setEditable(false);
-        return prototype;
-    }
 
     private JTextArea generateControlPanelDeveloperDecisionTextArea() {
         JTextArea prototype = new JTextArea("DEVELOPER DECISION:");
@@ -341,21 +327,14 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
-    private JScrollPane generateControlPanelV1StructureTypeTextAreaScrollPane() {
+    private JScrollPane generateControlPanelTypeOfConflictTextAreaScrollPane() {
         JScrollPane prototype = new JScrollPane();
         prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500, 100));
-        prototype.setBorder(BorderFactory.createTitledBorder("V1"));
+        prototype.setMinimumSize(new Dimension(500, 200));
+        prototype.setBorder(BorderFactory.createTitledBorder("Type Of Conflict"));
         return prototype;
     }
 
-    private JScrollPane generateControlPanelV2StructureTypeTextAreaScrollPane() {
-        JScrollPane prototype = new JScrollPane();
-        prototype.setBackground(this.getBackground());
-        prototype.setMinimumSize(new Dimension(500, 100));
-        prototype.setBorder(BorderFactory.createTitledBorder("V2"));
-        return prototype;
-    }
 
     private JTextArea generateConflictTextArea() {
         JTextArea prototype = new JTextArea();
@@ -399,8 +378,7 @@ public class MergePanel extends JPanel {
     private void scrollPanesCoupler() {
         this.mainTableScrollPane.setViewportView(this.mainTable);
         this.mergeInfoTextAreaScrollPane.setViewportView(this.mergeInfoTextArea);
-        this.controlPanelV1StructureTypeTextAreaScrollPane.setViewportView(this.controlPanelV1StructureTypeTextArea);
-        this.controlPanelV2StructureTypeTextAreaScrollPane.setViewportView(this.controlPanelV2StructureTypeTextArea);
+        this.controlPanelTypeOfConflictTextAreaScrollPane.setViewportView(this.controlPanelTypeOfConflictTextArea);
         this.conflictTextAreaScrollPane.setViewportView(this.conflictTextArea);
         this.solutionTextAreaScrollPane.setViewportView(this.solutionTextArea);
     }
@@ -428,10 +406,8 @@ public class MergePanel extends JPanel {
         gbc.gridwidth = 4;
         gbc.gridx = 0;
         gbc.gridy = 3;
-        this.controlPanel.add(this.controlPanelV1StructureTypeTextAreaScrollPane, gbc);
+        this.controlPanel.add(this.controlPanelTypeOfConflictTextAreaScrollPane, gbc);
         gbc.gridy = 4;
-        this.controlPanel.add(this.controlPanelV2StructureTypeTextAreaScrollPane, gbc);
-        gbc.gridy = 5;
         this.controlPanel.add(this.controlPanelDeveloperDecisionTextArea, gbc);
     }
 
@@ -577,8 +553,7 @@ public class MergePanel extends JPanel {
                 this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getConflictForm());
                 this.solutionTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getSolutionForm());
-                this.controlPanelV1StructureTypeTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1StructureTypes() + "\n");
-                this.controlPanelV2StructureTypeTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2StructureTypes() + "\n");
+                this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypeOfConflict() + "\n");
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getDeveloperDecision());
             } else {
                 this.controlPanelConflictIndexLabel.setText("0/0");
@@ -586,8 +561,7 @@ public class MergePanel extends JPanel {
                 this.currentMaxConflictIndex = 0;
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
                 this.solutionTextArea.setText("Impossible to get the solution");
-                this.controlPanelV1StructureTypeTextArea.setText("\n");
-                this.controlPanelV2StructureTypeTextArea.setText("\n");
+                this.controlPanelTypeOfConflictTextArea.setText("\n");
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
             }
         } else {
@@ -604,8 +578,7 @@ public class MergePanel extends JPanel {
 
             this.conflictTextArea.setText("");
             this.solutionTextArea.setText("");
-            this.controlPanelV1StructureTypeTextArea.setText("\n");
-            this.controlPanelV2StructureTypeTextArea.setText("\n");
+            this.controlPanelTypeOfConflictTextArea.setText("\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
     }
@@ -620,8 +593,7 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = file.getConflictRegion().size();
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getConflictForm());
             this.solutionTextArea.setText(file.getConflictRegion().get(0).getSolutionForm());
-            this.controlPanelV1StructureTypeTextArea.setText(file.getConflictRegion().get(0).getV1StructureTypes() + "\n");
-            this.controlPanelV2StructureTypeTextArea.setText(file.getConflictRegion().get(0).getV2StructureTypes() + "\n");
+            this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypeOfConflict() + "\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
 
         } else {
@@ -630,8 +602,7 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = 0;
             this.conflictTextArea.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
             this.solutionTextArea.setText("Impossible to get the solution");
-            this.controlPanelV1StructureTypeTextArea.setText("\n");
-            this.controlPanelV2StructureTypeTextArea.setText("\n");
+            this.controlPanelTypeOfConflictTextArea.setText("\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
     }
@@ -640,8 +611,7 @@ public class MergePanel extends JPanel {
         this.controlPanelConflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
         this.conflictTextArea.setText(region.getConflictForm());
         this.solutionTextArea.setText(region.getSolutionForm());
-        this.controlPanelV1StructureTypeTextArea.setText(region.getV1StructureTypes() + "\n");
-        this.controlPanelV2StructureTypeTextArea.setText(region.getV2StructureTypes() + "\n");
+        this.controlPanelTypeOfConflictTextArea.setText(region.getTypeOfConflict() + "\n");
         this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 
     }

@@ -8,6 +8,7 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
@@ -135,7 +136,7 @@ public class ConflictRegion {
                 }
 
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
@@ -159,7 +160,7 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
@@ -177,7 +178,7 @@ public class ConflictRegion {
                     }
                 }
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
@@ -268,7 +269,7 @@ public class ConflictRegion {
     public String getV1StructureTypes() {
         if (this.syntaxV1 == null) {
             return "Extension not parseble!";
-        } else if (this.originalV1StartLine == this.originalV1StopLine || this.syntaxV1.isEmpty()) {
+        } else if (this.originalV1StartLine == 0 || this.syntaxV1.isEmpty()) {
             return "Nothing";
         } else {
             String result = "";
@@ -283,7 +284,7 @@ public class ConflictRegion {
     public String getV2StructureTypes() {
         if (this.syntaxV2 == null) {
             return "Extension not parseble!";
-        } else if (this.originalV2StartLine == this.originalV2StopLine || this.syntaxV2.isEmpty()) {
+        } else if (this.originalV2StartLine == 0 || this.syntaxV2.isEmpty()) {
             return "Nothing";
         } else {
             String result = "";
@@ -293,6 +294,42 @@ public class ConflictRegion {
             result = result.replaceFirst("\n", "");
             return result;
         }
+    }
+
+    public String getTypeOfConflict() {
+        List<String> v1SS = Arrays.asList(this.getV1StructureTypes().split("\n"));
+        List<String> v2SS = Arrays.asList(this.getV2StructureTypes().split("\n"));
+        List<String> tof = new ArrayList<>();
+        String result = "";
+        if (v1SS.contains("WARNING!") && v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1 & V2]";
+            v1SS.remove("WARNING");
+            v2SS.remove("WARNING");
+        } else if (v1SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1]";
+            v1SS.remove("WARNING");
+        } else if (v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V2]";
+            v2SS.remove("WARNING");
+        }
+        for (String str : v1SS) {
+            if (v2SS.contains(str)) {
+                tof.add(str + " [V1 & V2]");
+            } else {
+                tof.add(str + " [V1]");
+            }
+
+        }
+        for (String str : v2SS) {
+            if (!tof.contains(str + " [V1 & V2]") && !tof.contains(str + " [V1]")) {
+                tof.add(str + " [V2]");
+            }
+        }
+        Collections.sort(tof);
+        for(String str : tof){
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
     }
 
     private DeveloperDecision generateDeveloperDecision() {
