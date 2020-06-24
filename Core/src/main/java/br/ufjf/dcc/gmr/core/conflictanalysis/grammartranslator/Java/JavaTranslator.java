@@ -5,7 +5,6 @@
  */
 package br.ufjf.dcc.gmr.core.conflictanalysis.grammartranslator.Java;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import br.ufjf.dcc.gmr.core.vcs.types.LanguageConstructsTypes;
@@ -20,104 +19,200 @@ public class JavaTranslator {
 
     }
 
-    public static List<String> translator(List<SyntaxStructure> list) {
+    public static List<String> translator(List<String> list) {
         List<String> mainList = new ArrayList<>();
-        if (list.contains("ifThenElseStatement")
-                || list.contains("ifThenStatement")
-                || list.contains("ifThenElseStatementNoShortIf")) {
+        if (list.contains("IfThenElseStatement")
+                || list.contains("IfThenStatement")
+                || list.contains("IfThenElseStatementNoShortIf")) {
             mainList.add(LanguageConstructsTypes.IF_STATEMENT);
-        } else if (list.contains("forStatement")
-                || list.contains("forStatementNoShortIf")
-                || list.contains("basicForStatement")
-                || list.contains("basicForStatementNoShortIf")
-                || list.contains("enhancedForStatement")
-                || list.contains("enhancedForStatementNoShortIf")) {
+            list.remove("IfThenElseStatement");
+            list.remove("IfThenStatement");
+            list.remove("IfThenElseStatementNoShortIf");
+
+        }
+        if (list.contains("ForStatement")
+                || list.contains("ForStatementNoShortIf")
+                || list.contains("BasicForStatement")
+                || list.contains("BasicForStatementNoShortIf")
+                || list.contains("EnhancedForStatement")
+                || list.contains("EnhancedForStatementNoShortIf")) {
             mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
-        } else if (list.contains("whileStatement")
-                || list.contains("whileStatementNoShortIf")) {
+            list.remove("ForStatement");
+            list.remove("ForStatementNoShortIf");
+            list.remove("BasicForStatement");
+            list.remove("BasicForStatementNoShortIf");
+            list.remove("EnhancedForStatement");
+            list.remove("EnhancedForStatementNoShortIf");
+        }
+        if (list.contains("WhileStatement")
+                || list.contains("WhileStatementNoShortIf")) {
             mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
-        } else if (list.contains("doStatement")) {
+            list.remove("WhileStatement");
+            list.remove("WhileStatementNoShortIf");
+
+        }
+        if (list.contains("DoStatement")) {
             mainList.add(LanguageConstructsTypes.DO_STATEMENT);
-        } else if (list.contains("tryStatement")
-                || list.contains("tryWithResourcesStatement")) {
+            list.remove("DoStatement");
+        }
+        if (list.contains("TryStatement")
+                || list.contains("TryWithResourcesStatement")) {
             mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
-        } else if (list.contains("catches")
-                || list.contains("catchClause")
-                || list.contains("catchFormalParameter")
-                || list.contains("catchType")) {
+            list.remove("TryStatement");
+            list.remove("TryWithResourcesStatement");
+        }
+        if (list.contains("Catches")
+                || list.contains("CatchClause")
+                || list.contains("CatchFormalParameter")
+                || list.contains("CatchType")) {
             mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
-        } else if (list.contains("arrayInitializer")) {
+            list.remove("Catches");
+            list.remove("CatchClause");
+            list.remove("CatchFormalParameter");
+            list.remove("CatchType");
+        }
+        if (list.contains("ArrayInitializer")) {
             mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
-        } else if (list.contains("arrayAccess")) {
+            list.remove("ArrayInitializer");
+        }
+        if (list.contains("ArrayAccess")) {
             mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
-        } else if (list.contains("breakStatement")) {
+            list.remove("ArrayAccess");
+        }
+        if (list.contains("BreakStatement")) {
             mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
-        } else if (list.contains("castExpression")) {
+            list.remove("BreakStatement");
+        }
+        if (list.contains("CastExpression")) {
             mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-        } else if (list.contains("classDeclaration")
-                || list.contains("normalClassDeclaration")
-                || list.contains("classBodyDeclaration")
-                || list.contains("classMemberDeclaration")) {
+            list.remove("CastExpression");
+        }
+        if (list.contains("ClassDeclaration")
+                || list.contains("NormalClassDeclaration")
+                || list.contains("ClassBodyDeclaration")
+                || list.contains("ClassMemberDeclaration")) {
             mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
+            list.remove("ClassDeclaration");
+            list.remove("NormalClassDeclaration");
+            list.remove("ClassBodyDeclaration");
+            list.remove("ClassMemberDeclaration");
             //mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
-        } else if (list.contains("continueStatement")) {
+        }
+        if (list.contains("ContinueStatement")) {
             mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
-        } else if (list.contains("importDeclaration")
-                || list.contains("singleTypeImportDeclaration")
-                || list.contains("typeImportOnDemandDeclaration")
-                || list.contains("singleStaticImportDeclaration")
-                || list.contains("staticImportOnDemandDeclaration")) {
+            list.remove("ContinueStatement");
+        }
+        if (list.contains("ImportDeclaration")
+                || list.contains("SingleTypeImportDeclaration")
+                || list.contains("TypeImportOnDemandDeclaration")
+                || list.contains("SingleStaticImportDeclaration")
+                || list.contains("StaticImportOnDemandDeclaration")) {
             mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
-        } else if (list.contains("packageDeclaration")
-                || list.contains("packageName")
-                || list.contains("packageOrTypeName")) {
+            list.remove("ImportDeclaration");
+            list.remove("SingleTypeImportDeclaration");
+            list.remove("TypeImportOnDemandDeclaration");
+            list.remove("SingleStaticImportDeclaration");
+            list.remove("StaticImportOnDemandDeclaration");
+        }
+        if (list.contains("PackageDeclaration")
+                || list.contains("PackageName")
+                || list.contains("PackageOrTypeName")) {
             mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
-        } else if (list.contains("returnStatement")) {
+            list.remove("PackageDeclaration");
+            list.remove("PackageName");
+            list.remove("PackageOrTypeName");
+        }
+        if (list.contains("ReturnStatement")) {
             mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-        } else if (list.contains("throwStatement") /*list.contains("throwsStatement")*/) {
+            list.remove("ReturnStatement");
+        }
+        if (list.contains("ThrowStatement") /*list.contains("throwsStatement")*/) {
             mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-        } else if (list.contains("returnStatement")) {
+            list.remove("ThrowStatement");
+        }
+        if (list.contains("ReturnStatement")) {
             mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-        } else if (list.contains("staticInitializer")) {
+            list.remove("ReturnStatement");
+        }
+        if (list.contains("StaticInitializer")) {
             mainList.add(LanguageConstructsTypes.STATIC_INITIALIZER);
-        } else if (list.contains("switchStatement")
-                || list.contains("switchBlock")
-                || list.contains("switchBlockStatementGroup")
-                || list.contains("switchLabels")
-                || list.contains("switchLabel")) {
+            list.remove("StaticInitializer");
+        }
+        if (list.contains("SwitchStatement")
+                || list.contains("SwitchBlock")
+                || list.contains("SwitchBlockStatementGroup")
+                || list.contains("SwitchLabels")
+                || list.contains("SwitchLabel")) {
             mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
-        } else if (list.contains("interfaceDeclaration")
-                || list.contains("normalInterfaceDeclaration")) {
+            list.remove("SwitchStatement");
+            list.remove("SwitchBlock");
+            list.remove("SwitchBlockStatementGroup");
+            list.remove("SwitchLabels");
+            list.remove("SwitchLabel");
+        }
+        if (list.contains("InterfaceDeclaration")
+                || list.contains("NormalInterfaceDeclaration")) {
             mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
-        } else if (list.contains("synchronizedStatement")) {
+            list.remove("InterfaceDeclaration");
+            list.remove("NormalInterfaceDeclaration");
+        }
+        if (list.contains("SynchronizedStatement")) {
             mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
-        } else if (list.contains("annotationTypeDeclaration")
-                || list.contains("annotationTypeMemberDeclaration")
-                || list.contains("annotationTypeElementDeclaration")) {
+            list.remove("SynchronizedStatement");
+        }
+        if (list.contains("AnnotationTypeDeclaration")
+                || list.contains("AnnotationTypeMemberDeclaration")
+                || list.contains("AnnotationTypeElementDeclaration")) {
             mainList.add(LanguageConstructsTypes.ANNOTATION_TYPE_MEMBER_DECLARATION);
-        } else if (list.contains("annotation")
-                || list.contains("normalAnnotation")
-                || list.contains("markerAnnotation")
-                || list.contains("singleElementAnnotation")
-                || list.contains("annotationTypeBody")) {
+            list.remove("AnnotationTypeDeclaration");
+            list.remove("AnnotationTypeMemberDeclaration");
+            list.remove("AnnotationTypeElementDeclaration");
+        }
+        if (list.contains("Annotation")
+                || list.contains("NormalAnnotation")
+                || list.contains("MarkerAnnotation")
+                || list.contains("SingleElementAnnotation")
+                || list.contains("AnnotationTypeBody")) {
             mainList.add(LanguageConstructsTypes.ANNOTATION);
-        } else if (list.contains("assertStatement")) {
+            list.remove("Annotation");
+            list.remove("NormalAnnotation");
+            list.remove("MarkerAnnotation");
+            list.remove("SingleElementAnnotation");
+            list.remove("AnnotationTypeBody");
+        }
+        if (list.contains("AssertStatement")) {
             mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
-        } else if (list.contains("typeVariable")
-                || list.contains("variableDeclaratorList")
-                || list.contains("variableDeclarator")
-                || list.contains("variableDeclaratorId")
-                || list.contains("variableInitializer")
-                || list.contains("unannTypeVariable")
-                || list.contains("variableModifier")
-                || list.contains("variableInitializerList")
-                || list.contains("localVariableDeclarationStatement")
-                || list.contains("localVariableDeclaration")
-                || list.contains("variableAccess")) {
+            list.remove("AssertStatement");
+        }
+        if (list.contains("TypeVariable")
+                || list.contains("VariableDeclaratorList")
+                || list.contains("VariableDeclarator")
+                || list.contains("VariableDeclaratorId")
+                || list.contains("VariableInitializer")
+                || list.contains("UnannTypeVariable")
+                || list.contains("VariableModifier")
+                || list.contains("VariableInitializerList")
+                || list.contains("LocalVariableDeclarationStatement")
+                || list.contains("LocalVariableDeclaration")
+                || list.contains("VariableAccess")) {
             mainList.add(LanguageConstructsTypes.VARIABLE);
-        } else if (list.get(0).getWarning()) {
+            list.remove("TypeVariable");
+            list.remove("VariableDeclaratorList");
+            list.remove("VariableDeclarator");
+            list.remove("VariableDeclaratorId");
+            list.remove("VariableInitializer");
+            list.remove("UnannTypeVariable");
+            list.remove("VariableModifier");
+            list.remove("VariableInitializerList");
+            list.remove("LocalVariableDeclarationStatement");
+            list.remove("LocalVariableDeclaration");
+            list.remove("VariableAccess");
+        }
+        if (list.contains("WARNING!")) {
             mainList.add(LanguageConstructsTypes.ERROR);
-        } else {
+            list.remove("WARNING!");
+        }
+        if (!list.isEmpty()) {
             mainList.add(LanguageConstructsTypes.OTHER);
         }
 

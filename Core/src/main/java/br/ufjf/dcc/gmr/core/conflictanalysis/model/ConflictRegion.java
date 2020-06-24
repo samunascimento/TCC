@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
+import br.ufjf.dcc.gmr.core.conflictanalysis.grammartranslator.Java.JavaTranslator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
@@ -29,6 +30,8 @@ public class ConflictRegion {
     private final int originalV2StopLine;
     private List<SyntaxStructure> syntaxV1;
     private List<SyntaxStructure> syntaxV2;
+
+    private List<String> typesOfConflicts;
 
     private DeveloperDecision developerDecision;
 
@@ -134,7 +137,6 @@ public class ConflictRegion {
                 } else {
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
-
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
@@ -145,8 +147,8 @@ public class ConflictRegion {
                 } else {
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
-
             }
+            this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -164,38 +166,23 @@ public class ConflictRegion {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                try {
-                    if (useOutmost) {
-                        this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    } else {
-                        this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    }
-                } catch (IOException ex) {
-                    if (useOutmost) {
-                        this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    } else {
-                        this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    }
+                if (useOutmost) {
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                } else {
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                try {
-                    if (useOutmost) {
-                        this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    } else {
-                        this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    }
-                } catch (IOException ex) {
-                    if (useOutmost) {
-                        this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    } else {
-                        this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    }
+                if (useOutmost) {
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                } else {
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
             }
+            this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -254,16 +241,35 @@ public class ConflictRegion {
 
     private List<String> getSortedStructureType(List<SyntaxStructure> list) {
         List<String> structureType = new ArrayList<>();
-        for (SyntaxStructure struc : list) {
-            if (!structureType.contains(struc.getStructureType())) {
-                structureType.add(struc.getStructureType());
+        if (list == null) {
+            structureType.add("Extension not parseble!");
+            return structureType;
+        } else if (list.isEmpty()) {
+            return structureType;
+        } else {
+            for (SyntaxStructure struc : list) {
+                if (!structureType.contains(struc.getStructureType())) {
+                    structureType.add(struc.getStructureType());
+                }
+            }
+            Collections.sort(structureType);
+            if (list.get(0).getWarning()) {
+                structureType.add(0, "WARNING!");
+            }
+            return structureType;
+        }
+    }
+
+    private void generateTypeOfConflict() {
+        List<String> rawList = this.getSortedStructureType(syntaxV1);
+        for (String str : this.getSortedStructureType(syntaxV2)) {
+            if (!rawList.contains(str)) {
+                rawList.add(str);
             }
         }
-        Collections.sort(structureType);
-        if (list.get(0).getWarning()) {
-            structureType.add(0, "WARNING!");
-        }
-        return structureType;
+        Collections.sort(rawList);
+        this.typesOfConflicts = JavaTranslator.translator(rawList);
+        Collections.sort(this.typesOfConflicts);
     }
 
     public String getV1StructureTypes() {
@@ -296,7 +302,7 @@ public class ConflictRegion {
         }
     }
 
-    public String getTypeOfConflict() {
+    /*public String getTypeOfConflict() {
         List<String> v1SS = Arrays.asList(this.getV1StructureTypes().split("\n"));
         List<String> v2SS = Arrays.asList(this.getV2StructureTypes().split("\n"));
         List<String> tof = new ArrayList<>();
@@ -326,7 +332,14 @@ public class ConflictRegion {
             }
         }
         Collections.sort(tof);
-        for(String str : tof){
+        for (String str : tof) {
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
+    }*/
+    public String getTypeOfConflict() {
+        String result = "";
+        for (String str : this.typesOfConflicts) {
             result = result + "\n" + str;
         }
         return result.replaceFirst("\n", "");
@@ -374,5 +387,4 @@ public class ConflictRegion {
         }
         return false;
     }
-
 }

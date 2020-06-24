@@ -11,12 +11,17 @@ import java.util.List;
 
 public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
+   
+
     private List<MethodDeclarationBinding> methodDeclarationBindingList;
     private List<MethodCallBinding> methodCallBidingList;
     private List<VariableBinding> variableBindingList;
-
+    private ClassBinding classBinding;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
+    private boolean firstAnalysis;
+    private boolean secondAnalysis;
+       
 
     public MyVisitor() {
         this.packageBinding = new PackageBinding();
@@ -24,7 +29,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         this.methodCallBidingList = new ArrayList<>();
         this.methodDeclarationBindingList = new ArrayList<>();
         this.variableBindingList = new ArrayList<>();
+        this.classBinding = new ClassBinding();
+        
     }
+    
+    
 
     public static void log(ParserRuleContext ctx) {
         Token start = ctx.getStart();
@@ -175,6 +184,10 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
+        
+        if(!this.secondAnalysis){
+            return super.visitMethodCall(ctx);
+        }
         MethodCallBinding methodCallBinding = new MethodCallBinding();
 
         List<TypeBinding> parameters = new ArrayList<>();
@@ -189,6 +202,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                     variableOrigin.setName(variableBindingList.get(i).getName());
                     variableOrigin.setType(variableBindingList.get(i).getType());
                 }
+     
+            
+              methodCallBinding.setVariableOrigin(variableOrigin);
             }
             if (variableOrigin.getType() != null) {
                 System.out.println(variableOrigin.getType().getIdentifier());
@@ -202,7 +218,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
         methodCallBidingList.add(methodCallBinding);
-        Object visitMethodCall = super.visitMethodCall(ctx);
+        
 
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
@@ -272,7 +288,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         methodCallBinding.setParameters(parameters);
-        return visitMethodCall;
+        
+        
+        return super.visitMethodCall(ctx);
     }
 
     @Override
@@ -626,6 +644,10 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
+        
+        if(!this.firstAnalysis){
+            return super.visitFieldDeclaration(ctx);
+        }
         VariableBinding variable = new VariableBinding();
         TypeBinding type = new TypeBinding();
 
@@ -644,6 +666,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         this.getVariableBindingList().add(variable);
+        
         return super.visitFieldDeclaration(ctx);
     }
 
@@ -679,14 +702,29 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
+        
+        if(!this.firstAnalysis){
+            return super.visitMethodDeclaration(ctx);
+        }
+        
         List<TypeBinding> parameters = new ArrayList<>();
+        TypeBinding methodType = new TypeBinding();
         MethodDeclarationBinding mdb = new MethodDeclarationBinding();
 
-        mdb.setPackageBinding(packageBinding);
-        mdb.setTypeBinding(typeBinding);
+        mdb.setPackageBinding(packageBinding);    
+        methodType.setPackageBinding(packageBinding);
         mdb.setName(ctx.IDENTIFIER().getText());
         mdb.setCtx(ctx);
-
+        
+        JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
+        if(ctx.typeTypeOrVoid().typeType() == null){
+            methodType.setIdentifier("void");
+        }else if( ctx.typeTypeOrVoid().typeType().primitiveType() != null ){
+            methodType.setIdentifier(ctx.typeTypeOrVoid().typeType().primitiveType().getText());
+        }else if( ctx.typeTypeOrVoid().typeType().classOrInterfaceType() != null){
+            methodType.setIdentifier(ctx.typeTypeOrVoid().typeType().classOrInterfaceType().getText());
+        }       
+        
         JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
         if (ctx.formalParameters().formalParameterList() != null) {
             for (ParseTree parseTree : formalParameters.children) {
@@ -702,11 +740,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-
+        mdb.setTypeBinding(methodType);
         mdb.setParameters(parameters);
         methodDeclarationBindingList.add(mdb);
-        Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
-        return visitMethodDeclaration;
+        mdb.setClassParent(classBinding.getName());
+        classBinding.addMdbList(mdb);
+       
+        return super.visitMethodDeclaration(ctx);
     }
 
     @Override
@@ -784,6 +824,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
         //log(ctx);
+        classBinding.setName(ctx.getChild(1).getText());
         return super.visitClassDeclaration(ctx);
     }
 
@@ -888,6 +929,20 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public Object visit(ParseTree tree) {
         return super.visit(tree);
     }
+    
+    public Object visitFirst(ParseTree tree) {
+        this.firstAnalysis = true;
+        this.secondAnalysis = false;
+        
+        return super.visit(tree);
+    }
+     
+     public Object visitSecond(ParseTree tree) {
+        this.firstAnalysis = false;
+        this.secondAnalysis = true;
+        
+        return super.visit(tree);
+    }
 
     @Override
     protected void finalize() throws Throwable {
@@ -983,5 +1038,46 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public void setVariableBindingList(List<VariableBinding> variableBindingList) {
         this.variableBindingList = variableBindingList;
     }
+    
+        /**
+     * @return the classBinding
+     */
+    public ClassBinding getClassBinding() {
+        return classBinding;
+    }
 
+    /**
+     * @param classBinding the classBinding to set
+     */
+    public void setClassBinding(ClassBinding classBinding) {
+        this.classBinding = classBinding;
+    }
+    
+     /**
+     * @return the firstAnalysis
+     */
+    public boolean isFirstAnalysis() {
+        return firstAnalysis;
+    }
+
+    /**
+     * @param firstAnalysis the firstAnalysis to set
+     */
+    public void setFirstAnalysis(boolean firstAnalysis) {
+        this.firstAnalysis = firstAnalysis;
+    }
+
+    /**
+     * @return the secondAnalysis
+     */
+    public boolean isSecondAnalysis() {
+        return secondAnalysis;
+    }
+
+    /**
+     * @param secondAnalysis the secondAnalysis to set
+     */
+    public void setSecondAnalysis(boolean secondAnalysis) {
+        this.secondAnalysis = secondAnalysis;
+    }
 }
