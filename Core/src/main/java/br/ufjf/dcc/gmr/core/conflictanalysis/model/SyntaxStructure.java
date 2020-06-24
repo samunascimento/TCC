@@ -11,8 +11,8 @@ public class SyntaxStructure {
     private final int startLine;
     private final int stopLine;
     private final int startLineStartColumn;
-    private final int startLineStopColumn;
-    private final int stopLineStartColumn;
+//    private final int startLineStopColumn;
+//    private final int stopLineStartColumn;
     private final int stopLineStopColumn;
     private final String structureType;
     private final boolean warning;
@@ -22,14 +22,26 @@ public class SyntaxStructure {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startLineStartColumn = start.getStartIndex();
-        this.startLineStopColumn = start.getStopIndex();
-        this.stopLineStartColumn = stop.getStartIndex();
+//        this.startLineStopColumn = start.getStopIndex();
+//        this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
         this.structureType = structureType;
         this.text = text;
         this.warning = warning;
     }
 
+    public SyntaxStructure(int startLine, int startLineStartColumn, int stopLine,  int stopLineStopColumn, String structureType, boolean warning, String text) {
+        this.startLine = startLine;
+        this.stopLine = stopLine;
+        this.startLineStartColumn = startLineStartColumn;
+        this.stopLineStopColumn = stopLineStopColumn;
+        this.structureType = structureType;
+        this.warning = warning;
+        this.text = text;
+    }
+
+
+    
     public int getStartLine() {
         return startLine;
     }
@@ -40,14 +52,6 @@ public class SyntaxStructure {
 
     public int getStartLineStartColumn() {
         return startLineStartColumn;
-    }
-
-    public int getStartLineStopColumn() {
-        return startLineStopColumn;
-    }
-
-    public int getStopLineStartColumn() {
-        return stopLineStartColumn;
     }
 
     public String getText() {
@@ -75,7 +79,7 @@ public class SyntaxStructure {
 
     @Override
     public String toString() {
-        return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", startLineStopColumn=" + startLineStopColumn + ", stopLineStartColumn=" + stopLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
+        return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
     }
 
 }
