@@ -14,7 +14,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private List<MethodDeclarationBinding> methodDeclarationBindingList;
     private List<MethodCallBinding> methodCallBidingList;
     private List<VariableBinding> variableBindingList;
-
+    private ClassBinding classBinding;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
 
@@ -24,6 +24,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         this.methodCallBidingList = new ArrayList<>();
         this.methodDeclarationBindingList = new ArrayList<>();
         this.variableBindingList = new ArrayList<>();
+        this.classBinding = new ClassBinding();
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -193,9 +194,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                     }
                 }
      
-                   
-              System.out.println(variableOrigin.getType().getIdentifier());
-              System.out.println("=========================");
+            
               methodCallBinding.setVariableOrigin(variableOrigin);
             }
         
@@ -681,13 +680,23 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
         List<TypeBinding> parameters = new ArrayList<>();
+        TypeBinding methodType = new TypeBinding();
         MethodDeclarationBinding mdb = new MethodDeclarationBinding();
 
-        mdb.setPackageBinding(packageBinding);
-        mdb.setTypeBinding(typeBinding);
+        mdb.setPackageBinding(packageBinding);    
+        methodType.setPackageBinding(packageBinding);
         mdb.setName(ctx.IDENTIFIER().getText());
         mdb.setCtx(ctx);
-
+        
+        JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
+        if(ctx.typeTypeOrVoid().typeType() == null){
+            methodType.setIdentifier("void");
+        }else if( ctx.typeTypeOrVoid().typeType().primitiveType() != null ){
+            methodType.setIdentifier(ctx.typeTypeOrVoid().typeType().primitiveType().getText());
+        }else if( ctx.typeTypeOrVoid().typeType().classOrInterfaceType() != null){
+            methodType.setIdentifier(ctx.typeTypeOrVoid().typeType().classOrInterfaceType().getText());
+        }       
+        
         JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
         if (ctx.formalParameters().formalParameterList() != null) {
             for (ParseTree parseTree : formalParameters.children) {
@@ -703,9 +712,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-
+        mdb.setTypeBinding(methodType);
         mdb.setParameters(parameters);
         methodDeclarationBindingList.add(mdb);
+        mdb.setClassParent(classBinding.getName());
+        classBinding.addMdbList(mdb);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
     }
@@ -785,6 +796,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
         //log(ctx);
+        classBinding.setName(ctx.getChild(1).getText());
         return super.visitClassDeclaration(ctx);
     }
 
@@ -984,5 +996,18 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public void setVariableBindingList(List<VariableBinding> variableBindingList) {
         this.variableBindingList = variableBindingList;
     }
+    
+        /**
+     * @return the classBinding
+     */
+    public ClassBinding getClassBinding() {
+        return classBinding;
+    }
 
+    /**
+     * @param classBinding the classBinding to set
+     */
+    public void setClassBinding(ClassBinding classBinding) {
+        this.classBinding = classBinding;
+    }
 }

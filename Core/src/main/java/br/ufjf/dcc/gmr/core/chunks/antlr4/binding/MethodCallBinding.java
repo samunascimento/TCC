@@ -41,7 +41,7 @@ public class MethodCallBinding {
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
         
-        output = output.concat(" IDENTIFIER:" + typeBinding.getIdentifier());
+        output = output.concat(" IDENTIFIER:" + variableOrigin.getType().getIdentifier());
 
         return output;
     }

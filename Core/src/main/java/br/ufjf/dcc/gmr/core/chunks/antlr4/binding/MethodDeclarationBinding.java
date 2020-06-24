@@ -4,9 +4,9 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodDeclarationBinding {
+public class MethodDeclarationBinding {    
     
-    
+    private String classParent;
     private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
@@ -14,6 +14,7 @@ public class MethodDeclarationBinding {
     private JavaParser.MethodDeclarationContext ctx;
 
     public MethodDeclarationBinding() {
+        this.classParent = "";
         this.name = "";
         this.parameters = new ArrayList<>();
         this.packageBinding = new PackageBinding();
@@ -24,6 +25,9 @@ public class MethodDeclarationBinding {
         if (!this.getName().equals(mcb.getName())) {
             return false;
         } else if (this.getParameters() != null && mcb.getParameters() != null) {
+            if ( !this.classParent.equals(mcb.getVariableOrigin().getType().getIdentifier())){
+             return false;
+            }
             if (this.getParameters().size() != mcb.getParameters().size()) {
                 return false;
             } else {
@@ -32,9 +36,7 @@ public class MethodDeclarationBinding {
                         return false;
                     }
                 }
-            }
-        } else if ( !this.name.equals(mcb.getTypeBinding().getIdentifier())){
-            return false;
+            }         
         }
         return true;
     }
@@ -125,5 +127,19 @@ public class MethodDeclarationBinding {
     public void setParameters(List<TypeBinding> parameters) {
         this.parameters = parameters;
     }
+    
+    
+    /**
+     * @return the classParent
+     */
+    public String getClassParent() {
+        return classParent;
+    }
 
+    /**
+     * @param classParent the classParent to set
+     */
+    public void setClassParent(String classParent) {
+        this.classParent = classParent;
+    }
 }

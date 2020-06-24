@@ -28,7 +28,7 @@ public class ParserJava {
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/RectangleElement.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/example/GFG.java";
         String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
-        String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
+        String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Employee.java";
         //String path = "src/main/java/br/ufjf/dcc/gmr/core/vcs/Git.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassBinding {
+
     
     private List<MethodDeclarationBinding> mdbList;
     private TypeBinding modifier;
+    private String name;
     
     public ClassBinding(){
         this.mdbList = new ArrayList<>();
@@ -34,11 +36,27 @@ public class ClassBinding {
     public void setMdbList(List<MethodDeclarationBinding> mdbList) {
         this.mdbList = mdbList;
     }
-
+    
+    public void addMdbList(MethodDeclarationBinding mdb){
+        this.mdbList.add(mdb);
+    }
     /**
      * @param modifier the modifier to set
      */
     public void setModifier(TypeBinding modifier) {
         this.modifier = modifier;
+    }
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }

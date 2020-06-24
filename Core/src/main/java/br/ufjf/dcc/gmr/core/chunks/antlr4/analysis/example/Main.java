@@ -32,7 +32,7 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         
-        System.out.println(main.name + " " + main.office + " " + main.age);
+        //System.out.println(main.name + " " + main.office + " " + main.age);
         if(true){
             int a = 0;
         }else{
@@ -47,7 +47,7 @@ public class Main {
         person.getName();
         main.getName();
         
-        employeeExtends.setInfo(y, x);
+        employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
     }
