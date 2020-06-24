@@ -8,7 +8,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import static java.awt.Frame.*;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
@@ -29,7 +31,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class ParserJava {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
+        /*String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
         String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
@@ -43,7 +45,7 @@ public class ParserJava {
             System.err.println(x);
         }*/
 
-        System.out.println("=============MethodDeclarationAST1=============");
+ /*System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
         }
@@ -72,54 +74,41 @@ public class ParserJava {
         System.out.println("=============Variables=============");
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
-        }
-        //view();
+        }*/
+        view();
     }
 
     private static Boolean[] view() throws InterruptedException {
-
         JFrame mainFrame = new JFrame();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        List<JCheckBox> checkBoxs = new ArrayList<>();
-
-        JPanel mainPanel = new JPanel();
-
+        List<String> list = new ArrayList<>();
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
+
+        
         try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 
             for (Path file : stream) {
-                JCheckBox checkBox = new JCheckBox(dir.toString().concat(file.getFileName().toString()));
-                checkBox.setLayout(new BorderLayout());
-                checkBox.setVisible(true);
-                checkBoxs.add(checkBox);
+                list.add(dir.toString().concat(file.getFileName().toString()));
+
             }
 
         } catch (IOException | DirectoryIteratorException x) {
             System.err.println(x);
         }
+        mainFrame.setLayout(new GridLayout(list.size(), 1));
 
-        Boolean[] isTreeOpen = new Boolean[checkBoxs.size()];
+        for (String path : list) {
+            JCheckBox checkBox = new JCheckBox(path);
+            checkBox.setVisible(true);
+            mainFrame.add(checkBox);
+        }
 
-        mainPanel.updateUI();
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
         mainFrame.setResizable(false);
 
-        mainFrame.setLayout(new BorderLayout());
-        mainPanel.setLayout(new BorderLayout());
+        mainFrame.setLayout(new GridLayout(ERROR, ABORT));
 
-        mainPanel.setBackground(Color.red);
-
-        mainFrame.add(mainPanel, BorderLayout.CENTER);
-        mainPanel.add(checkBoxs.get(0), BorderLayout.WEST);
-        System.out.println("Size:" + checkBoxs.size());
         mainFrame.setVisible(true);
-        for (int i = 0; i < checkBoxs.size(); i++) {
-            Thread.sleep(100l);
-            mainPanel.add(checkBoxs.get(i));
-            mainPanel.updateUI();
-        }
-
-        mainPanel.setVisible(true);
 
         return null;
     }
