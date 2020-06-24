@@ -57,8 +57,9 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Analysis of Merge Conflicts in Git Repositories");
-        this.setResizable(false);
-        this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth())-35, (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()-35));
+        this.setResizable(true);
+        this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 35, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 35));
+        this.setMinimumSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 35, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 35)));
         this.setLocationRelativeTo(null);
         this.startGenerators();
         this.startCouplers();
@@ -175,7 +176,7 @@ public class MainFrame extends JFrame {
         prototype.setEditable(false);
         return prototype;
     }
-    
+
     private JCheckBox generate_outmostCheckBox() {
         JCheckBox prototype = new JCheckBox("Change to outmost");
         return prototype;
@@ -217,7 +218,7 @@ public class MainFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        this.homePanel.add(this._outmostCheckBox,gbc);
+        this.homePanel.add(this._outmostCheckBox, gbc);
     }
 
     private void menuCoupler() {
@@ -247,7 +248,7 @@ public class MainFrame extends JFrame {
         if (check == JFileChooser.APPROVE_OPTION) {
             String[] auxArray = jfc.getSelectedFile().getPath().split("/");
             try {
-                this.addPanelWithX(new MergePanel(auxArray[auxArray.length - 1],GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
+                this.addPanelWithX(new MergePanel(auxArray[auxArray.length - 1], GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -262,14 +263,14 @@ public class MainFrame extends JFrame {
             String projectNames = "";
             for (int i = 1; i < this.mainTabbedPane.getTabCount(); i++) {
                 if (this.mainTabbedPane.getComponentAt(i).getClass() == MergePanel.class) {
-                    mergePanels.add((MergePanel)this.mainTabbedPane.getComponentAt(i));
+                    mergePanels.add((MergePanel) this.mainTabbedPane.getComponentAt(i));
                     projectNames = projectNames + this.mainTabbedPane.getTitleAt(i) + ",";
                 }
             }
             if (mergePanels.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
             } else {
-                SaveAnalysisFrame saveFrame = new SaveAnalysisFrame(projectNames.split(","),mergePanels);
+                SaveAnalysisFrame saveFrame = new SaveAnalysisFrame(projectNames.split(","), mergePanels);
             }
         }
     }
@@ -308,7 +309,7 @@ public class MainFrame extends JFrame {
         int numContextLines = this._numContextComboBox.getSelectedIndex() + 1;
         boolean outmost = this._outmostCheckBox.isSelected();
         resetHomePanel();
-        ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(projectPath, numContextLines,outmost);
+        ConflictAnalysisProgressBarPanel progressBarPanel = new ConflictAnalysisProgressBarPanel(projectPath, numContextLines, outmost);
         this.mainTabbedPane.addTab(getProjectName(projectPath + "(processing...)"), progressBarPanel);
         Thread progressBarPanelThread = new Thread(progressBarPanel);
         progressBarPanelThread.start();
@@ -317,11 +318,14 @@ public class MainFrame extends JFrame {
         } catch (InterruptedException ex) {
             System.out.println("Deu ruim");
         }
+        if (mainTabbedPane.getSelectedComponent().equals(progressBarPanel)) {
+            mainTabbedPane.setSelectedIndex(0);
+        }
         mainTabbedPane.remove(progressBarPanel);
         if (progressBarPanel.getMergeEventList() == null) {
             JOptionPane.showMessageDialog(null, "The repository path isn't a git repository!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
-            this.addPanelWithX(new MergePanel(projectName,progressBarPanel.getMergeEventList()), projectName);
+            this.addPanelWithX(new MergePanel(projectName, progressBarPanel.getMergeEventList()), projectName);
         }
     }
 
@@ -379,6 +383,5 @@ public class MainFrame extends JFrame {
         titlePanel.add(closeButton);
         return titlePanel;
     }
-    
 
 }
