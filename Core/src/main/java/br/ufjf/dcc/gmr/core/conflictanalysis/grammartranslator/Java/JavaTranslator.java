@@ -21,6 +21,9 @@ public class JavaTranslator {
 
     public static List<String> translator(List<String> list) {
         List<String> mainList = new ArrayList<>();
+        if (list.contains("Nothing")) {
+            mainList.add(LanguageConstructsTypes.BLANK);
+        }
         if (list.contains("IfThenElseStatement")
                 || list.contains("IfThenStatement")
                 || list.contains("IfThenElseStatementNoShortIf")) {
@@ -71,11 +74,16 @@ public class JavaTranslator {
             list.remove("CatchFormalParameter");
             list.remove("CatchType");
         }
-        if (list.contains("ArrayInitializer")) {
+        if (list.contains("ArrayInitializer")
+                || list.contains("elementValueArrayInitializer")
+                || list.contains("arrayCreationExpression")
+                || list.contains("arrayType")) {
             mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
             list.remove("ArrayInitializer");
         }
-        if (list.contains("ArrayAccess")) {
+        if (list.contains("ArrayAccess")
+                || list.contains("arrayAccess_lf_primary")
+                || list.contains("arrayAccess_lfno_primary")) {
             mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
             list.remove("ArrayAccess");
         }
@@ -223,23 +231,6 @@ public class JavaTranslator {
 
 
 /*
-arrayType
-unannArrayType
-elementValueArrayInitializer
-arrayInitializer
-primaryNoNewArray
-primaryNoNewArray_lf_arrayAccess
-João P. C. Lima19:41
-primaryNoNewArray_lfno_arrayAccess
-primaryNoNewArray_lf_primary
-primaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary
-primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary
-primaryNoNewArray_lfno_primary
-primaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary
-primaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary
-arrayAccess
-arrayAccess_lf_primary
-arrayAccess_lfno_primary
-arrayCreationExpression
+
 annotationTypeElementModifier
  */

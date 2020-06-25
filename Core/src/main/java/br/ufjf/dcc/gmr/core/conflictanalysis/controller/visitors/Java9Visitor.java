@@ -134,7 +134,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitClassOrInterfaceType(Java9Parser.ClassOrInterfaceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -875,7 +875,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannType(Java9Parser.UnannTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -888,7 +888,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannPrimitiveType(Java9Parser.UnannPrimitiveTypeContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -901,7 +901,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannReferenceType(Java9Parser.UnannReferenceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -914,7 +914,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannClassOrInterfaceType(Java9Parser.UnannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1937,9 +1937,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
             if (parseTree instanceof Java9Parser.StatementContext) {
                 Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
                 stop = token.start;
-            } else {
-                System.out.println(parseTree.getText());
-            }
+            } 
         }
 
         
@@ -1967,8 +1965,6 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
             if (parseTree instanceof Java9Parser.StatementContext) {
                 Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
                 stop = token.start;
-            } else {
-                System.out.println(parseTree.getText());
             }
         }
 
@@ -1994,9 +1990,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
             if (parseTree instanceof Java9Parser.StatementContext) {
                 Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
                 stop = token.start;
-            } else {
-                System.out.println(parseTree.getText());
-            }
+            } 
         }
 
         
