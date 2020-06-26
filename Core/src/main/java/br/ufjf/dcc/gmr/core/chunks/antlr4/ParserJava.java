@@ -12,6 +12,7 @@ import java.awt.FlowLayout;
 import static java.awt.Frame.*;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -33,6 +35,7 @@ public class ParserJava {
     public static void main(String[] args) throws IOException, InterruptedException {
         String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
         String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
+        //List<MyVisitor> myVisitorsList= new ArrayList<>();
         MyVisitor AST1 = ASTExtractor(path1);
         MyVisitor AST2 = ASTExtractor(path2);
 
@@ -66,32 +69,41 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
-        //view();
+        
     }
 
-    private static Boolean[] view() throws InterruptedException {
+    private static List<List> view() throws InterruptedException {
+        List<List> returnList = new ArrayList<>();
+        
         JFrame mainFrame = new JFrame();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        List<String> list = new ArrayList<>();
+        List<JCheckBox> list = new ArrayList<>();
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
 
         try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 
             for (Path file : stream) {
-                list.add(dir.toString().concat(file.getFileName().toString()));
-
+                String path = dir.toString().concat(file.getFileName().toString());
+                JCheckBox checkBox = new JCheckBox(path);
+                checkBox.setVisible(true);
+                list.add(checkBox);
             }
 
         } catch (IOException | DirectoryIteratorException x) {
             System.err.println(x);
         }
+        
         mainFrame.setLayout(new GridLayout(list.size(), 1));
 
-        for (String path : list) {
-            JCheckBox checkBox = new JCheckBox(path);
-            checkBox.setVisible(true);
+        for (JCheckBox checkBox : list) {
             mainFrame.add(checkBox);
         }
+
+        JCheckBox checkBox = new JCheckBox("Select all");
+        
+        checkBox.addMouseListener(new CheckBoxMouseListener(checkBox, list));
+        checkBox.setVisible(true);
+        mainFrame.add(checkBox);
 
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
         mainFrame.setResizable(false);
@@ -119,11 +131,11 @@ public class ParserJava {
         String[] aux = path.split("/");
         String fileName = aux[aux.length - 1];
         Object message = "Want to open the view dialog for the file: " + fileName + "?";
-       
-            viewer.open();
-       
+
+        viewer.open();
+
         MyVisitor visitor = new MyVisitor();
-        
+
         visitor.visitFirst(tree);
         visitor.visitSecond(tree);
 
