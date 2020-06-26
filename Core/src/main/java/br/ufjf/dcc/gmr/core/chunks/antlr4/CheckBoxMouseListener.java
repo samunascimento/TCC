@@ -26,6 +26,7 @@ public class CheckBoxMouseListener extends MouseAdapter{
                 jCheckBox.setSelected(false);
             }
         }
+        
     }
 
     /**

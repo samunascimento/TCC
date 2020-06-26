@@ -31,13 +31,16 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
-
+ 
+    private static boolean reachEnd = false;
+    
     public static void main(String[] args) throws IOException, InterruptedException {
-        String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
-        String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
-        //List<MyVisitor> myVisitorsList= new ArrayList<>();
-        MyVisitor AST1 = ASTExtractor(path1);
-        MyVisitor AST2 = ASTExtractor(path2);
+        List<List> pathAndOpenViewList = view();
+        List<Boolean> booleanList = pathAndOpenViewList.get(0);
+        List<String> pathsList = pathAndOpenViewList.get(1);
+        
+        MyVisitor AST1 = ASTExtractor(pathsList.get(2), booleanList.get(2));
+        MyVisitor AST2 = ASTExtractor(pathsList.get(3), booleanList.get(3));
 
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
@@ -69,53 +72,66 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
-        
+
     }
 
     private static List<List> view() throws InterruptedException {
+        final boolean reachEnd = false;
         List<List> returnList = new ArrayList<>();
-        
+        List<Boolean> booleanReturnList = new ArrayList<>();
+        List<String> pathsReturnList = new ArrayList<>();
         JFrame mainFrame = new JFrame();
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JButton closeButton = new JButton("close");
         List<JCheckBox> list = new ArrayList<>();
+        closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachEnd));
+
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
 
         try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 
             for (Path file : stream) {
-                String path = dir.toString().concat(file.getFileName().toString());
+                String path = dir.toString().concat("/").concat(file.getFileName().toString());
                 JCheckBox checkBox = new JCheckBox(path);
                 checkBox.setVisible(true);
                 list.add(checkBox);
+                pathsReturnList.add(path);
             }
 
         } catch (IOException | DirectoryIteratorException x) {
             System.err.println(x);
         }
-        
-        mainFrame.setLayout(new GridLayout(list.size(), 1));
+
+        mainFrame.setLayout(new GridLayout(list.size() + 2, 1));
 
         for (JCheckBox checkBox : list) {
             mainFrame.add(checkBox);
         }
 
         JCheckBox checkBox = new JCheckBox("Select all");
-        
         checkBox.addMouseListener(new CheckBoxMouseListener(checkBox, list));
         checkBox.setVisible(true);
+
         mainFrame.add(checkBox);
+        mainFrame.add(closeButton);
 
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
         mainFrame.setResizable(false);
 
-        mainFrame.setLayout(new GridLayout(ERROR, ABORT));
+        mainFrame.setLayout(new GridLayout(list.size(), 1));
 
         mainFrame.setVisible(true);
 
-        return null;
+        returnList.add(booleanReturnList);
+        returnList.add(pathsReturnList);
+        
+        while (ParserJava.reachEnd == false) {
+            Thread.sleep(1000);
+        }
+        ParserJava.reachEnd = false;
+        return returnList;
     }
 
-    private static MyVisitor ASTExtractor(String path) throws IOException, HeadlessException, RecognitionException {
+    private static MyVisitor ASTExtractor(String path, boolean openTree) throws IOException, HeadlessException, RecognitionException {
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -132,7 +148,9 @@ public class ParserJava {
         String fileName = aux[aux.length - 1];
         Object message = "Want to open the view dialog for the file: " + fileName + "?";
 
-        viewer.open();
+        if (openTree) {
+            viewer.open();
+        }
 
         MyVisitor visitor = new MyVisitor();
 
@@ -141,4 +159,19 @@ public class ParserJava {
 
         return visitor;
     }
+
+    /**
+     * @return the reachEnd
+     */
+    public static boolean isReachEnd() {
+        return reachEnd;
+    }
+
+    /**
+     * @param aReachEnd the reachEnd to set
+     */
+    public static void setReachEnd(boolean aReachEnd) {
+        reachEnd = aReachEnd;
+    }
+
 }
