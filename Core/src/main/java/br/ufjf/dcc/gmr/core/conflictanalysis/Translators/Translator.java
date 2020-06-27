@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.conflictanalysis.grammartranslator.Java;
+package br.ufjf.dcc.gmr.core.conflictanalysis.Translators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,13 @@ import br.ufjf.dcc.gmr.core.vcs.types.LanguageConstructsTypes;
  *
  * @author luan
  */
-public class JavaTranslator {
+public class Translator {
 
-    public JavaTranslator() {
+    public Translator() {
 
     }
 
-    public static List<String> translator(List<String> list) {
+    public static List<String> JavaTranslator(List<String> list) {
         List<String> mainList = new ArrayList<>();
         if (list.contains("Nothing")) {
             mainList.add(LanguageConstructsTypes.BLANK);

@@ -29,6 +29,7 @@ public class RepositoryAnalysisProcessData {
     public List<ConflictRegion> conflictRegion;
 
     //ConflictRegion's field
+    public List<String> rawText;
     public List<String> afterContext;
     public List<String> beforeContext;
     public List<String> v1;
@@ -66,10 +67,11 @@ public class RepositoryAnalysisProcessData {
         this.extraFilePath = "";
         this.extraInsideFilePath = "";
     }
-    
-    public boolean extraIsEmpty(){
-        if(this.extraFileName == "" || this.extraFilePath == "" || this.extraInsideFilePath == "" || this.extraFileName == null || this.extraFilePath == null || this.extraInsideFilePath == null)
+
+    public boolean extraIsEmpty() {
+        if (this.extraFileName == "" || this.extraFilePath == "" || this.extraInsideFilePath == "" || this.extraFileName == null || this.extraFilePath == null || this.extraInsideFilePath == null) {
             return true;
+        }
         return false;
     }
 

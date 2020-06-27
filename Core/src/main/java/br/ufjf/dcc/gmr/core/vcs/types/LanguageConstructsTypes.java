@@ -22,7 +22,7 @@ public class LanguageConstructsTypes {
     public static final String CATCH_CLAUSE = "CatchClause"; //Foi
     public static final String CLASS_DECLARATION = "ClassDeclaration"; //Tratar 
     public static final String CLASS_SIGNATURE = "ClassSignature"; //Tratar
-   // public static final String COMMENT = "Comment"; // Não dá (TO DO)
+    public static final String COMMENT = "Comment"; //Java não tem jeito (ainda)
     public static final String CONTINUE_STATEMENT = "ContinueStatement"; //Foi 
     public static final String DO_STATEMENT = "DoStatement"; //Foi
     public static final String ENUM_DECLARATION = "EnumDeclaration";//Tratar
