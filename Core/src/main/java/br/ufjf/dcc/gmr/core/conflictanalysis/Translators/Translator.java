@@ -60,6 +60,10 @@ public class Translator {
             mainList.add(LanguageConstructsTypes.DO_STATEMENT);
             list.remove("DoStatement");
         }
+        if (list.contains("case")) {
+            mainList.add(LanguageConstructsTypes.DO_STATEMENT);
+            list.remove("case");
+        }
         if (list.contains("TryStatement")
                 || list.contains("TryWithResourcesStatement")) {
             mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
@@ -194,7 +198,7 @@ public class Translator {
             mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
             list.remove("AssertStatement");
         }
-        if (list.contains("TypeVariable")
+      if (list.contains("TypeVariable")
                 || list.contains("VariableDeclaratorList")
                 || list.contains("VariableDeclarator")
                 || list.contains("VariableDeclaratorId")
@@ -204,6 +208,8 @@ public class Translator {
                 || list.contains("VariableInitializerList")
                 || list.contains("LocalVariableDeclarationStatement")
                 || list.contains("LocalVariableDeclaration")
+                || list.contains("VariableDeclaratorId")
+                || list.contains("VariableDeclarator")
                 || list.contains("VariableAccess")) {
             mainList.add(LanguageConstructsTypes.VARIABLE);
             list.remove("TypeVariable");
@@ -217,6 +223,8 @@ public class Translator {
             list.remove("LocalVariableDeclarationStatement");
             list.remove("LocalVariableDeclaration");
             list.remove("VariableAccess");
+            list.remove("VariableDeclaratorId");
+            list.remove("VariableDeclarator");
         }
         if (list.contains("FieldAccess")
                 || list.contains("FieldAccess_lf_primary")
@@ -230,12 +238,48 @@ public class Translator {
             list.remove("FieldDeclaration");
             list.remove("FieldModifier");
         }
+        if (list.contains("EnumDeclaration")
+                || list.contains("EnumBody")
+                || list.contains("EnumConstantList")
+                || list.contains("EnumConstant")
+                || list.contains("EnumConstantModifier")
+                || list.contains("EnumBodyDeclarations")) {
+            mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
+            list.remove("EnumDeclaration");
+            list.remove("EnumBody");
+            list.remove("EnumConstantList");
+            list.remove("EnumConstant");
+            list.remove("EnumConstantModifier");
+            list.remove("EnumBodyDeclarations");
+        }
         if (list.contains("InterfaceMethodDeclaration")
                 || list.contains("InterfaceMethodModifier")) {
             mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
             list.remove("InterfaceMethodDeclaration");
             list.remove("InterfaceMethodModifier");
         }
+        if (list.contains("MethodName")
+                || list.contains("MethodDeclaration")
+                || list.contains("MethodModifier")
+                || list.contains("MethodHeader")
+                || list.contains("MethodDeclarator")
+                || list.contains("MethodBody")
+                || list.contains("MethodInvocation")
+                || list.contains("MethodReference")
+                || list.contains("MethodInvocation_lf_primary")
+) {
+            mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
+            list.remove("MethodName");
+            list.remove("MethodDeclaration");
+            list.remove("MethodModifier");
+            list.remove("MethodHeader");
+            list.remove("MethodBody");
+            list.remove("MethodInvocation");
+            list.remove("MethodInvocation_lf_primary");
+            list.remove("MethodDeclarator");
+            list.remove("MethodReference");
+        }
+        
         if (list.contains("WARNING!")) {
             mainList.add(LanguageConstructsTypes.ERROR);
             list.remove("WARNING!");
