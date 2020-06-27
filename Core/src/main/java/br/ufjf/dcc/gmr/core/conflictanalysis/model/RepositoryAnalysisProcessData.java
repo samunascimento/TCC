@@ -29,6 +29,7 @@ public class RepositoryAnalysisProcessData {
     public List<ConflictRegion> conflictRegion;
 
     //ConflictRegion's field
+    public List<String> rawText;
     public List<String> afterContext;
     public List<String> beforeContext;
     public List<String> v1;

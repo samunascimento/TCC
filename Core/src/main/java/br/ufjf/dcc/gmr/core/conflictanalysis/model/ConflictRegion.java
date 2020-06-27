@@ -15,6 +15,7 @@ import java.util.List;
 
 public class ConflictRegion {
 
+    private final List<String> rawText;
     private final List<String> beforeContext;
     private final List<String> afterContext;
     private final List<String> v1;
@@ -35,9 +36,10 @@ public class ConflictRegion {
 
     private DeveloperDecision developerDecision;
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
+    public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
 
+        this.rawText = rawText;
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -199,15 +201,9 @@ public class ConflictRegion {
         for (String line : this.beforeContext) {
             str = str + line + "\n";
         }
-        str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        for (String line : this.v1) {
+        for (String line : this.rawText) {
             str = str + line + "\n";
         }
-        str = str + "============================== (" + this.separatorLine + ")\n";
-        for (String line : this.v2) {
-            str = str + line + "\n";
-        }
-        str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
