@@ -115,7 +115,7 @@ public class ParserJava {
         mainFrame.add(closeButton);
 
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
-        mainFrame.setResizable(false);
+       
 
         mainFrame.setLayout(new GridLayout(list.size(), 1));
 
@@ -140,7 +140,7 @@ public class ParserJava {
         ParseTree tree = parser.compilationUnit();
 
         //Console
-        System.out.println(tree.toStringTree(parser));
+        //System.out.println(tree.toStringTree(parser));
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));

@@ -33,7 +33,7 @@ public class MethodCallBinding {
 
         output = output.concat(this.getName()).concat("(");
         for (TypeBinding parameter : this.parameters) {
-            output = output.concat(parameter.getIdentifier() + ",");
+            output = output.concat(parameter.getName() + ",");
         }
         output = output.concat(")");
 
@@ -41,7 +41,7 @@ public class MethodCallBinding {
                 concat(ctx.getStop().getLine() + "").concat("]");
 
         if (variableOrigin != null && variableOrigin.getType() != null) {
-            output = output.concat(" IDENTIFIER:" + variableOrigin.getType().getIdentifier());
+            output = output.concat(" IDENTIFIER:" + variableOrigin.getType().getName());
         } else {
             output = output.concat(" IDENTIFIER: ERROR");
         }

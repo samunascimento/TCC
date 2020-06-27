@@ -4,17 +4,18 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodDeclarationBinding {    
+public class MethodDeclarationBinding {   
     
-    private String classParent;
+ 
     private String name;
+    private String modifier;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
 
     public MethodDeclarationBinding() {
-        this.classParent = "";
+        this.modifier = "";
         this.name = "";
         this.parameters = new ArrayList<>();
         this.packageBinding = new PackageBinding();
@@ -25,14 +26,14 @@ public class MethodDeclarationBinding {
         if (!this.getName().equals(mcb.getName())) {
             return false;
         } else if (this.getParameters() != null && mcb.getParameters() != null) {
-            if ( !this.classParent.equals(mcb.getVariableOrigin().getType().getIdentifier())){
+            if ( !this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())){
              return false;
             }
             if (this.getParameters().size() != mcb.getParameters().size()) {
                 return false;
             } else {
                 for (int i = 0; i < this.parameters.size(); i++) {
-                    if (!this.parameters.get(i).getIdentifier().equals(mcb.getParameters().get(i).getIdentifier())) {
+                    if (!this.parameters.get(i).getName().equals(mcb.getParameters().get(i).getName())) {
                         return false;
                     }
                 }
@@ -48,7 +49,7 @@ public class MethodDeclarationBinding {
 
         output = output.concat(this.getName()).concat("(");
         for (TypeBinding parameter : this.parameters) {
-            output = output.concat(parameter.getIdentifier() + ",");
+            output = output.concat(parameter.getName() + ",");
         }
         output = output.concat(")");
 
@@ -128,18 +129,17 @@ public class MethodDeclarationBinding {
         this.parameters = parameters;
     }
     
-    
-    /**
-     * @return the classParent
+        /**
+     * @return the modifier
      */
-    public String getClassParent() {
-        return classParent;
+    public String getModifier() {
+        return modifier;
     }
 
     /**
-     * @param classParent the classParent to set
+     * @param modifier the modifier to set
      */
-    public void setClassParent(String classParent) {
-        this.classParent = classParent;
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }
