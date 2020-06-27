@@ -101,7 +101,7 @@ public class ParserJava {
             System.err.println(x);
         }
 
-        mainFrame.setLayout(new GridLayout(list.size() + 2, 1));
+        mainFrame.setLayout(new GridLayout(list.size() + 2, 5));
 
         for (JCheckBox checkBox : list) {
             mainFrame.add(checkBox);
@@ -115,7 +115,6 @@ public class ParserJava {
         mainFrame.add(closeButton);
 
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
-        mainFrame.setResizable(false);
 
         mainFrame.setLayout(new GridLayout(list.size(), 1));
 
