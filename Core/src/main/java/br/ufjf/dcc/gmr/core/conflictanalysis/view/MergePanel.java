@@ -62,6 +62,8 @@ public class MergePanel extends JPanel {
     private JTextArea controlPanelFileNameTextArea;
     private JLabel controlPanelFileIndexLabel;
     private JLabel controlPanelConflictIndexLabel;
+    private JLabel controlPanelV1LinesLabel;
+    private JLabel controlPanelV2LinesLabel;
     private JTextArea controlPanelTypeOfConflictTextArea;
     private JTextArea controlPanelDeveloperDecisionTextArea;
     private JScrollPane controlPanelTypeOfConflictTextAreaScrollPane;
@@ -121,6 +123,8 @@ public class MergePanel extends JPanel {
         this.controlPanelFileNameTextArea = generateControlPanelFileNameLabel();
         this.controlPanelFileIndexLabel = generateControlPanelFileIndexLabel();
         this.controlPanelConflictIndexLabel = generateControlPanelConflictIndexLabel();
+        this.controlPanelV1LinesLabel = generateControlPanelV1LinesLabel();
+        this.controlPanelV2LinesLabel = generateControlPanelV2LinesLabel();
         this.controlPanelTypeOfConflictTextArea = generateControlPanelTypeOfConflictTextArea();
         this.controlPanelDeveloperDecisionTextArea = generateControlPanelDeveloperDecisionTextArea();
         this.controlPanelTypeOfConflictTextAreaScrollPane = generateControlPanelTypeOfConflictTextAreaScrollPane();
@@ -311,6 +315,16 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
+    private JLabel generateControlPanelV1LinesLabel() {
+        JLabel prototype = new JLabel("V1: ");
+        return prototype;
+    }
+
+    private JLabel generateControlPanelV2LinesLabel() {
+        JLabel prototype = new JLabel("V2: ");
+        return prototype;
+    }
+
     private JTextArea generateControlPanelTypeOfConflictTextArea() {
         JTextArea prototype = new JTextArea("\n");
         prototype.setBackground(this.getBackground());
@@ -318,7 +332,6 @@ public class MergePanel extends JPanel {
         prototype.setEditable(false);
         return prototype;
     }
-
 
     private JTextArea generateControlPanelDeveloperDecisionTextArea() {
         JTextArea prototype = new JTextArea("DEVELOPER DECISION:");
@@ -334,7 +347,6 @@ public class MergePanel extends JPanel {
         prototype.setBorder(BorderFactory.createTitledBorder("Type Of Conflict"));
         return prototype;
     }
-
 
     private JTextArea generateConflictTextArea() {
         JTextArea prototype = new JTextArea();
@@ -403,11 +415,15 @@ public class MergePanel extends JPanel {
         this.controlPanel.add(this.controlPanelConflictIndexLabel, gbc);
         gbc.gridx = 2;
         this.controlPanel.add(this.controlPanelNextConflictButton, gbc);
-        gbc.gridwidth = 4;
         gbc.gridx = 0;
         gbc.gridy = 3;
-        this.controlPanel.add(this.controlPanelTypeOfConflictTextAreaScrollPane, gbc);
+        gbc.gridwidth = 4;
+        this.controlPanel.add(this.controlPanelV1LinesLabel, gbc);
         gbc.gridy = 4;
+        this.controlPanel.add(this.controlPanelV2LinesLabel, gbc);
+        gbc.gridy = 5;
+        this.controlPanel.add(this.controlPanelTypeOfConflictTextAreaScrollPane, gbc);
+        gbc.gridy = 6;
         this.controlPanel.add(this.controlPanelDeveloperDecisionTextArea, gbc);
     }
 
@@ -538,7 +554,7 @@ public class MergePanel extends JPanel {
                 + " Committer Date: " + merge.getParents().get(1).getCommitterDate() + "\n"
         );
     }
-        
+
     private void updateFileChangeByMerge(MergeEvent merge) {
         if (merge.isConflict()) {
             this.controlPanelFileNameTextArea.setText(merge.getConflictFiles().get(0).getFormedFileName());
@@ -553,6 +569,8 @@ public class MergePanel extends JPanel {
                 this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getConflictForm());
                 this.solutionTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getSolutionForm());
+                this.controlPanelV1LinesLabel.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1().size() + " lines");
+                this.controlPanelV2LinesLabel.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2().size() + " lines");
                 this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypeOfConflict() + "\n");
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getDeveloperDecision());
             } else {
@@ -561,6 +579,8 @@ public class MergePanel extends JPanel {
                 this.currentMaxConflictIndex = 0;
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getFileName() + "has not been\nmerged as it has been renamed or deleted.");
                 this.solutionTextArea.setText("Impossible to get the solution");
+                this.controlPanelV1LinesLabel.setText("V1: ");
+                this.controlPanelV2LinesLabel.setText("V2: ");
                 this.controlPanelTypeOfConflictTextArea.setText("\n");
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
             }
@@ -578,6 +598,8 @@ public class MergePanel extends JPanel {
 
             this.conflictTextArea.setText("");
             this.solutionTextArea.setText("");
+            this.controlPanelV1LinesLabel.setText("V1: ");
+            this.controlPanelV2LinesLabel.setText("V2: ");
             this.controlPanelTypeOfConflictTextArea.setText("\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
@@ -593,6 +615,8 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = file.getConflictRegion().size();
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getConflictForm());
             this.solutionTextArea.setText(file.getConflictRegion().get(0).getSolutionForm());
+            this.controlPanelV1LinesLabel.setText("V1: " + file.getConflictRegion().get(0).getV1().size() + " lines");
+            this.controlPanelV2LinesLabel.setText("V2: " + file.getConflictRegion().get(0).getV2().size() + " lines");
             this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypeOfConflict() + "\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
 
@@ -602,6 +626,8 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = 0;
             this.conflictTextArea.setText(file.getFileName() + "has not been\nmerged as it has been renamed or deleted.");
             this.solutionTextArea.setText("Impossible to get the solution");
+            this.controlPanelV1LinesLabel.setText("V1: ");
+            this.controlPanelV2LinesLabel.setText("V2: ");
             this.controlPanelTypeOfConflictTextArea.setText("\n");
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: ");
         }
@@ -611,6 +637,8 @@ public class MergePanel extends JPanel {
         this.controlPanelConflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
         this.conflictTextArea.setText(region.getConflictForm());
         this.solutionTextArea.setText(region.getSolutionForm());
+        this.controlPanelV1LinesLabel.setText("V1: " + region.getV1().size() + " lines");
+        this.controlPanelV2LinesLabel.setText("V2: " + region.getV2().size() + " lines");
         this.controlPanelTypeOfConflictTextArea.setText(region.getTypeOfConflict() + "\n");
         this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 
@@ -682,7 +710,7 @@ public class MergePanel extends JPanel {
         }
         this.filteredMergeEventList = newList;
     }
-    
+
     private void chronologicalOrderFilterType() {
         boolean check;
         List<MergeEvent> newList = new ArrayList<>();
@@ -690,7 +718,7 @@ public class MergePanel extends JPanel {
         for (int i = 1; i < this.filteredMergeEventList.size(); i++) {
             check = false;
             for (int j = 0; j < newList.size(); j++) {
-                if (this.filteredMergeEventList.get(i).getHash().getCommitterDate().getTime()>= newList.get(j).getHash().getCommitterDate().getTime()){
+                if (this.filteredMergeEventList.get(i).getHash().getCommitterDate().getTime() >= newList.get(j).getHash().getCommitterDate().getTime()) {
                     newList.add(j, this.filteredMergeEventList.get(i));
                     check = true;
                     j = newList.size();
