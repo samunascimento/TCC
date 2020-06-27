@@ -15,10 +15,24 @@ public class Employee {
     private String registration;
     private String name;
     private String CPF;
-    private String adress;
     private float salary;
     private boolean active;
     private int age;
+    private Adress adress;
+
+    public Employee(String office, String registration, String name, String CPF, float salary, boolean active, int age, Adress adress) {
+        this.office = office;
+        this.registration = registration;
+        this.name = name;
+        this.CPF = CPF;
+        this.salary = salary;
+        this.active = active;
+        this.age = age;
+        this.adress = adress;
+    }
+
+    public Employee() {
+    }
 
     public String getOffice() {
         return office;
@@ -71,13 +85,6 @@ public class Employee {
     }
 
     /**
-     * @return the adress
-     */
-    public String getAdress() {
-        return adress;
-    }
-
-    /**
      * @return the age
      */
     public int getAge() {
@@ -96,13 +103,6 @@ public class Employee {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * @param Adress the adress to set
-     */
-    public void setAdress(String Adress) {
-        this.adress = Adress;
     }
 
     /**
@@ -132,5 +132,19 @@ public class Employee {
      */
     public void setName(String name1, String name2) {
         this.name = name1;
+    }
+
+    /**
+     * @return the adress
+     */
+    public Adress getAdress() {
+        return adress;
+    }
+
+    /**
+     * @param adress the adress to set
+     */
+    public void setAdress(Adress adress) {
+        this.adress = adress;
     }
 }
