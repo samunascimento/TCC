@@ -205,11 +205,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
               methodCallBinding.setVariableOrigin(variableOrigin);
             }
             if (variableOrigin.getType() != null) {
-                System.out.println(variableOrigin.getType().getName());
-            }else{
-                System.out.println("null");
+                System.out.println(variableOrigin);
+            } else {
+                System.out.println("NULL");
             }
-            System.out.println("=========================");
+
             methodCallBinding.setVariableOrigin(variableOrigin);
         }
 
@@ -241,24 +241,24 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                             JavaParser.LiteralContext literal = primary.literal();
 
                             if (literal.BOOL_LITERAL() != null) {
-                                System.out.println("boolean =D");
+                                
                                 parameterTypeBinding.setName("bool");
 
                             } else if (literal.CHAR_LITERAL() != null) {
-                                System.out.println("char=D");
+                               
                                 parameterTypeBinding.setName("char");
                             } else if (literal.NULL_LITERAL() != null) {
-                                System.out.println("null=D");
+                                
                                 parameterTypeBinding.setName("null");
                             } else if (literal.STRING_LITERAL() != null) {
-                                System.out.println("String=D");
+                                
                                 parameterTypeBinding.setName("String");
 
                             } else if (literal.integerLiteral() != null) {
-                                System.out.println("int=D");
+                               
                                 parameterTypeBinding.setName("int");
                             } else if (literal.floatLiteral() != null) {
-                                System.out.println("float=D");
+                                
                                 parameterTypeBinding.setName("float");
                             } else {
                                 System.out.println("ERROR: MyVisitor:217=D");
@@ -650,7 +650,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         TypeBinding type = new TypeBinding();    
         
         if (ctx.typeType() != null) {
-            System.out.println(ctx.typeType().getText());
+            
             type.setName(ctx.typeType().getText());
             type.setPackageBinding(packageBinding);
             variable.setType(type);
@@ -862,7 +862,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
         }
 
-        System.out.println(name);
+        
         return super.visitTypeDeclaration(ctx);
     }
 
@@ -873,7 +873,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 packageBinding.setName(parserTree.getText());
             }
         }
-        System.out.println(packageBinding.getName());
+        
         Object visitImportDeclaration = super.visitImportDeclaration(ctx);
         return visitImportDeclaration;
     }
@@ -885,7 +885,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 packageBinding.setName(parseTree.getText());
             }
         }
-        System.out.println(packageBinding.getName());
+        
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
     }
