@@ -23,10 +23,12 @@ public class JavaTranslator {
         List<String> mainList = new ArrayList<>();
         if (list.contains("Nothing")) {
             mainList.add(LanguageConstructsTypes.BLANK);
+            list.remove("Nothing");
         }
         if (list.contains("IfThenElseStatement")
                 || list.contains("IfThenStatement")
-                || list.contains("IfThenElseStatementNoShortIf")) {
+                || list.contains("IfThenElseStatementNoShortIf")
+                || list.contains("IfStatement")) {
             mainList.add(LanguageConstructsTypes.IF_STATEMENT);
             list.remove("IfThenElseStatement");
             list.remove("IfThenStatement");
@@ -215,6 +217,24 @@ public class JavaTranslator {
             list.remove("LocalVariableDeclarationStatement");
             list.remove("LocalVariableDeclaration");
             list.remove("VariableAccess");
+        }
+        if (list.contains("FieldAccess")
+                || list.contains("FieldAccess_lf_primary")
+                || list.contains("FieldAccess_lfno_primary")
+                || list.contains("FieldDeclaration")
+                || list.contains("FieldModifier")) {
+            mainList.add(LanguageConstructsTypes.FIELD);
+            list.remove("FieldAccess");
+            list.remove("FieldAccess_lf_primary");
+            list.remove("FieldAccess_lfno_primary");
+            list.remove("FieldDeclaration");
+            list.remove("FieldModifier");
+        }
+        if (list.contains("InterfaceMethodDeclaration")
+                || list.contains("InterfaceMethodModifier")) {
+            mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
+            list.remove("InterfaceMethodDeclaration");
+            list.remove("InterfaceMethodModifier");
         }
         if (list.contains("WARNING!")) {
             mainList.add(LanguageConstructsTypes.ERROR);
