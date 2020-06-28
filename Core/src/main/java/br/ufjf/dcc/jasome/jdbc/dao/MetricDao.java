@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  *
@@ -229,13 +231,44 @@ public class MetricDao {
         }
     }
 
+     public List<ProjectMetrics> selectNameProject() throws SQLException {
+        List<ProjectMetrics> listProject = new ArrayList<>();
+        Metric metric = null;
+        ProjectMetrics projectMetrics;
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        String sql = "select * from tb_projectmetrics";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                projectMetrics = new ProjectMetrics();
+                projectMetrics.setId(resultSet.getInt("id"));
+                projectMetrics.setName(resultSet.getString("projectname"));
+                projectMetrics.setSourceDir(resultSet.getString("sourcedir"));
+                listProject.add(projectMetrics);
+            }
+            return listProject;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    
     public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
         List<List<Point>> chartLines = new ArrayList<>();
 
         Set<String> metricNames = new HashSet<>();
 
         PreparedStatement stmt = null;
-
+        
         ResultSet resultSet = null;
 
         String sql = "select a.id,a.projectname ,b.version_id,c.id,d.id,d.name,d.description,d.value "
@@ -261,7 +294,9 @@ public class MetricDao {
                 List<Point> listPoints = new ArrayList<>();
                 while (resultSet.next()) {
                     if (resultSet.getString("name").equals(metricName)) {
-                        listPoints.add(new Point(cont++, resultSet.getDouble("value")));
+                        Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                        Date versionDate = new Date(versionTimestamp.getTime());
+                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("classname"),resultSet.getString("name"),versionDate));
                     }
                 }
                 chartLines.add(listPoints);
@@ -275,13 +310,101 @@ public class MetricDao {
                 stmt.close();
             }
         }
-    }
+    };
 
     public List<List<Point>> selectPackageMetrics(String nameProject) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
 
         Set<String> packageNames = new HashSet<>();
+        Set<String> metricNames = new HashSet<>();
+        List<Integer> versionIDs = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value \n" +
+                        "from tb_projectmetrics as a\n" +
+                        "inner join tb_project_version as b \n" +
+                        "on a.id = b.project_id \n" +
+                        "inner join tb_version_package as c \n" +
+                        "on b.version_id = c.version_id \n" +
+                        "inner join tb_versionmetrics as v \n" +
+                        "on v.id = c.version_id \n" +
+                        "inner join tb_packagemetrics as d \n" +
+                        "on c.package_id = d.id \n" +
+                        "inner join tb_metric as e \n" +
+                        "on\n" +
+                        "d.tlocid = e.id or\n" +
+                        "d.aid = e.id or\n" +
+                        "d.ccrcid = e.id or\n" +
+                        "d.caid = e.id or\n" +
+                        "d.ceid  = e.id or \n" +
+                        "d.dmsid = e.id or\n" +
+                        "d.iid = e.id or\n" +
+                        "d.nocid = e.id or\n" +
+                        "d.noiid = e.id or\n" +
+                        "d.pkgrciid = e.id or \n" +
+                        "d.pkgtciid = e.id\n" +
+                        "where a.projectname = " + "\'" + nameProject + "\'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            int id;
+            while (resultSet.next()) {
+                packageNames.add(resultSet.getString("packagename"));
+                metricNames.add(resultSet.getString("name"));
+                id = resultSet.getInt("id");
+                if (!versionIDs.contains(id)) {
+                    versionIDs.add(id);
+                }
+            }
+
+            for (String packageName : packageNames) {
+
+                for (String metricName : metricNames) {
+                    resultSet = stmt.executeQuery();
+                    int cont = 0;
+                    List<Point> listPoints = new ArrayList<>();
+                    int idAux;
+                    int idIndex = 0;
+                    while (resultSet.next()) {
+                        if (resultSet.getString("packageName").equals(packageName) && resultSet.getString("name").equals(metricName)) {
+                            idAux = resultSet.getInt("id");
+                            while (versionIDs.get(idIndex) < idAux) {
+                                listPoints.add(null);
+                                cont++;
+                                idIndex++;
+                            }
+                            
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            Date versionDate = new Date(versionTimestamp.getTime());
+                            
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("packagename"),resultSet.getString("name"),versionDate));
+                            idIndex++;
+                        }
+                    }
+                    chartLines.add(listPoints);
+                }
+            }
+
+            return chartLines;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+   /* 
+        public List<List<Point>> selectClassMetrics(String nameProject) throws SQLException {
+
+        List<List<Point>> chartLines = new ArrayList<>();
+
+        Set<String> classNames = new HashSet<>();
         Set<String> metricNames = new HashSet<>();
         List<Integer> versionIDs = new ArrayList<>();
 
@@ -307,7 +430,7 @@ public class MetricDao {
             resultSet = stmt.executeQuery();
             int id;
             while (resultSet.next()) {
-                packageNames.add(resultSet.getString("packagename"));
+                classNames.add(resultSet.getString("packagename"));
                 metricNames.add(resultSet.getString("name"));
                 id = resultSet.getInt("id");
                 if (!versionIDs.contains(id)) {
@@ -347,36 +470,8 @@ public class MetricDao {
                 stmt.close();
             }
         }
-    }
+    }*/
 
-    public List<ProjectMetrics> selectNameProject() throws SQLException {
-        List<ProjectMetrics> listProject = new ArrayList<>();
-        Metric metric = null;
-        ProjectMetrics projectMetrics;
-
-        PreparedStatement stmt = null;
-
-        ResultSet resultSet = null;
-
-        String sql = "select * from tb_projectmetrics";
-        try {
-            stmt = connection.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
-            while (resultSet.next()) {
-                projectMetrics = new ProjectMetrics();
-                projectMetrics.setId(resultSet.getInt("id"));
-                projectMetrics.setName(resultSet.getString("projectname"));
-                projectMetrics.setSourceDir(resultSet.getString("sourcedir"));
-                listProject.add(projectMetrics);
-            }
-            return listProject;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-        }
-    }
+   
 
 }
