@@ -137,9 +137,9 @@ function BarChart({ data }) {
             })
             .attr("d", line)
             
-           // svg.exit() 
-           // .remove
-        
+            if(data.length == 0){
+            d3.selectAll(".line").remove();
+            }        
 
         //CREATE POINTS
 
