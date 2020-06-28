@@ -31,7 +31,7 @@ public class VariableBinding {
     @Override
     public String toString() {
         String output = null;
-        output = "MODIFIER:" + modifier + " TYPE:" + type.getIdentifier() + " NAME:" + name;
+        output = "MODIFIER:" + modifier + " TYPE:" + type.getName() + " NAME:" + name;
         return output;
     }
 

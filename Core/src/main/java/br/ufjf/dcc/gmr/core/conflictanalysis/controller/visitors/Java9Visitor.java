@@ -6,6 +6,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
@@ -30,13 +32,19 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
-        
+
         //Adding texte
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
-        
+
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0],ctxText,warning));
-        
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+
+    }
+
+    public void process(int startLine, int startLineStartColumn, int stopLine, int stopLineStopColumn, String structureType, String text) {
+
+        list.add(new SyntaxStructure(startLine, startLineStartColumn, stopLine, stopLineStopColumn, structureType, warning, text));
+
     }
 
     /**
@@ -126,7 +134,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitClassOrInterfaceType(Java9Parser.ClassOrInterfaceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -867,7 +875,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannType(Java9Parser.UnannTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -880,7 +888,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannPrimitiveType(Java9Parser.UnannPrimitiveTypeContext ctx) {
-        process(ctx);
+        // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -893,7 +901,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannReferenceType(Java9Parser.UnannReferenceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -906,7 +914,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitUnannClassOrInterfaceType(Java9Parser.UnannClassOrInterfaceTypeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1921,6 +1929,14 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
     @Override
     public Object visitIfThenStatement(Java9Parser.IfThenStatementContext ctx) {
         process(ctx);
+        Token start = ctx.getStart(), stop = null;
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof Java9Parser.StatementContext) {
+                Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
+                stop = token.start;
+            }
+        }
+        process(start.getLine(), start.getCharPositionInLine(), stop.getLine(), stop.getCharPositionInLine(), "IfStatement", "if");
         return visitChildren(ctx);
     }
 
@@ -1934,6 +1950,14 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
     @Override
     public Object visitIfThenElseStatement(Java9Parser.IfThenElseStatementContext ctx) {
         process(ctx);
+        Token start = ctx.getStart(), stop = null;
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof Java9Parser.StatementContext) {
+                Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
+                stop = token.start;
+            }
+        }
+        process(start.getLine(), start.getCharPositionInLine(), stop.getLine(), stop.getCharPositionInLine(), "IfStatement", "if");
         return visitChildren(ctx);
     }
 
@@ -1947,6 +1971,14 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
     @Override
     public Object visitIfThenElseStatementNoShortIf(Java9Parser.IfThenElseStatementNoShortIfContext ctx) {
         process(ctx);
+        Token start = ctx.getStart(), stop = null;
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof Java9Parser.StatementContext) {
+                Java9Parser.StatementContext token = (Java9Parser.StatementContext) parseTree;
+                stop = token.start;
+            }
+        }
+        process(start.getLine(), start.getCharPositionInLine(), stop.getLine(), stop.getCharPositionInLine(), "IfStatement", "if");
         return visitChildren(ctx);
     }
 
@@ -2011,7 +2043,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
      */
     @Override
     public Object visitSwitchLabels(Java9Parser.SwitchLabelsContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 

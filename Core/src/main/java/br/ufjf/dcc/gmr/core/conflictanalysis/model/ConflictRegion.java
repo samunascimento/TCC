@@ -2,17 +2,20 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
+import br.ufjf.dcc.gmr.core.conflictanalysis.Translators.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class ConflictRegion {
 
+    private final List<String> rawText;
     private final List<String> beforeContext;
     private final List<String> afterContext;
     private final List<String> v1;
@@ -29,11 +32,14 @@ public class ConflictRegion {
     private List<SyntaxStructure> syntaxV1;
     private List<SyntaxStructure> syntaxV2;
 
+    private List<String> typesOfConflicts;
+
     private DeveloperDecision developerDecision;
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
+    public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
 
+        this.rawText = rawText;
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -124,7 +130,7 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
@@ -133,9 +139,8 @@ public class ConflictRegion {
                 } else {
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
-
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
@@ -144,8 +149,8 @@ public class ConflictRegion {
                 } else {
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
-
             }
+            this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -159,42 +164,27 @@ public class ConflictRegion {
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
         try {
-            if (this.originalV1StartLine == this.originalV1StopLine) {
+            if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                try {
-                    if (useOutmost) {
-                        this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    } else {
-                        this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    }
-                } catch (IOException ex) {
-                    if (useOutmost) {
-                        this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    } else {
-                        this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                    }
+                if (useOutmost) {
+                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                } else {
+                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
             }
-            if (this.originalV2StartLine == this.originalV2StopLine) {
+            if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                try {
-                    if (useOutmost) {
-                        this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    } else {
-                        this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    }
-                } catch (IOException ex) {
-                    if (useOutmost) {
-                        this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    } else {
-                        this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                    }
+                if (useOutmost) {
+                    this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                } else {
+                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
             }
+            this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -211,15 +201,9 @@ public class ConflictRegion {
         for (String line : this.beforeContext) {
             str = str + line + "\n";
         }
-        str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        for (String line : this.v1) {
+        for (String line : this.rawText) {
             str = str + line + "\n";
         }
-        str = str + "============================== (" + this.separatorLine + ")\n";
-        for (String line : this.v2) {
-            str = str + line + "\n";
-        }
-        str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
@@ -253,46 +237,106 @@ public class ConflictRegion {
 
     private List<String> getSortedStructureType(List<SyntaxStructure> list) {
         List<String> structureType = new ArrayList<>();
-        for (SyntaxStructure struc : list) {
-            if (!structureType.contains(struc.getStructureType())) {
-                structureType.add(struc.getStructureType());
+        if (list == null) {
+            structureType.add("Extension not parseble!");
+            return structureType;
+        } else if (list.isEmpty()) {
+            return structureType;
+        } else {
+            for (SyntaxStructure struc : list) {
+                if (!structureType.contains(struc.getStructureType())) {
+                    structureType.add(struc.getStructureType());
+                }
             }
+            Collections.sort(structureType);
+            if (list.get(0).getWarning()) {
+                structureType.add(0, "WARNING!");
+            }
+            return structureType;
         }
-        Collections.sort(structureType);
-        if (list.get(0).getWarning()) {
-            structureType.add(0, "WARNING!");
-        }
-        return structureType;
     }
 
-    public String getV1StructureTypes() {
+    private void generateTypeOfConflict() {
+        List<String> rawList = this.getV1StructureTypes();
+        for (String str : this.getV2StructureTypes()) {
+            if (!rawList.contains(str)) {
+                rawList.add(str);
+            }
+        }
+        Collections.sort(rawList);
+        this.typesOfConflicts = Translator.JavaTranslator(rawList);
+        Collections.sort(this.typesOfConflicts);
+    }
+
+    public List<String> getV1StructureTypes() {
+        List<String> result = new ArrayList<>();
         if (this.syntaxV1 == null) {
-            return "Extension not parseble!";
-        } else if (this.originalV1StartLine == this.originalV1StopLine || this.syntaxV1.isEmpty()) {
-            return "Nothing";
+            result.add("Extension not parseble!");
+        } else if (this.originalV1StartLine == 0 || this.syntaxV1.isEmpty()) {
+            result.add("Nothing");
         } else {
-            String result = "";
             for (String str : this.getSortedStructureType(syntaxV1)) {
-                result = result + "\n" + str;
+                result.add(str);
             }
-            result = result.replaceFirst("\n", "");
-            return result;
         }
+        return result;
     }
 
-    public String getV2StructureTypes() {
+    public List<String> getV2StructureTypes() {
+        List<String> result = new ArrayList<>();
         if (this.syntaxV2 == null) {
-            return "Extension not parseble!";
-        } else if (this.originalV2StartLine == this.originalV2StopLine || this.syntaxV2.isEmpty()) {
-            return "Nothing";
+            result.add("Extension not parseble!");
+        } else if (this.originalV2StartLine == 0 || this.syntaxV2.isEmpty()) {
+            result.add("Nothing");
         } else {
-            String result = "";
             for (String str : this.getSortedStructureType(syntaxV2)) {
-                result = result + "\n" + str;
+                result.add(str);
             }
-            result = result.replaceFirst("\n", "");
-            return result;
         }
+        return result;
+    }
+
+    /*public String getTypeOfConflict() {
+        List<String> v1SS = Arrays.asList(this.getV1StructureTypes().split("\n"));
+        List<String> v2SS = Arrays.asList(this.getV2StructureTypes().split("\n"));
+        List<String> tof = new ArrayList<>();
+        String result = "";
+        if (v1SS.contains("WARNING!") && v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1 & V2]";
+            v1SS.remove("WARNING");
+            v2SS.remove("WARNING");
+        } else if (v1SS.contains("WARNING!")) {
+            result = "\nWARNING! [V1]";
+            v1SS.remove("WARNING");
+        } else if (v2SS.contains("WARNING!")) {
+            result = "\nWARNING! [V2]";
+            v2SS.remove("WARNING");
+        }
+        for (String str : v1SS) {
+            if (v2SS.contains(str)) {
+                tof.add(str + " [V1 & V2]");
+            } else {
+                tof.add(str + " [V1]");
+            }
+
+        }
+        for (String str : v2SS) {
+            if (!tof.contains(str + " [V1 & V2]") && !tof.contains(str + " [V1]")) {
+                tof.add(str + " [V2]");
+            }
+        }
+        Collections.sort(tof);
+        for (String str : tof) {
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
+    }*/
+    public String getTypeOfConflict() {
+        String result = "";
+        for (String str : this.typesOfConflicts) {
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
     }
 
     private DeveloperDecision generateDeveloperDecision() {
@@ -337,5 +381,4 @@ public class ConflictRegion {
         }
         return false;
     }
-
 }

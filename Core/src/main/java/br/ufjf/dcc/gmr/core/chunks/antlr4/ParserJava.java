@@ -1,22 +1,29 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Dependencies;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodCallBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.VariableBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import static java.awt.Frame.*;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.JOptionPane;
+import java.util.List;
+import java.util.Map;
+import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -24,22 +31,17 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
+ 
+    private static boolean reachEnd = false;
+    
+    public static void main(String[] args) throws IOException, InterruptedException {
+        List<List> pathAndOpenViewList = view();
+        List<Boolean> booleanList = pathAndOpenViewList.get(0);
+        List<String> pathsList = pathAndOpenViewList.get(1);
+        
+        MyVisitor AST1 = ASTExtractor(pathsList.get(2), booleanList.get(2));
+        MyVisitor AST2 = ASTExtractor(pathsList.get(3), booleanList.get(3));
 
-    public static void main(String[] args) throws IOException {
-        String path1 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java";
-        String path2 = "src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Person.java";
-        MyVisitor AST1 = ASTExtractor(path1);
-        MyVisitor AST2 = ASTExtractor(path2);
-        
-        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
-        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
-            for (Path file : stream) {
-                MyVisitor AST = ASTExtractor(dir.toString().concat(file.getFileName().toString()));
-            }
-        } catch (IOException | DirectoryIteratorException x) {
-            System.err.println(x);
-        }
-        
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
@@ -70,9 +72,65 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
+
     }
 
-    private static MyVisitor ASTExtractor(String path) throws IOException, HeadlessException, RecognitionException {
+    private static List<List> view() throws InterruptedException {
+        final boolean reachEnd = false;
+        List<List> returnList = new ArrayList<>();
+        List<Boolean> booleanReturnList = new ArrayList<>();
+        List<String> pathsReturnList = new ArrayList<>();
+        JFrame mainFrame = new JFrame();
+        JButton closeButton = new JButton("close");
+        List<JCheckBox> list = new ArrayList<>();
+        closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachEnd));
+
+        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
+
+        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+
+            for (Path file : stream) {
+                String path = dir.toString().concat("/").concat(file.getFileName().toString());
+                JCheckBox checkBox = new JCheckBox(path);
+                checkBox.setVisible(true);
+                list.add(checkBox);
+                pathsReturnList.add(path);
+            }
+
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
+
+        mainFrame.setLayout(new GridLayout(list.size() + 2, 5));
+
+        for (JCheckBox checkBox : list) {
+            mainFrame.add(checkBox);
+        }
+
+        JCheckBox checkBox = new JCheckBox("Select all");
+        checkBox.addMouseListener(new CheckBoxMouseListener(checkBox, list));
+        checkBox.setVisible(true);
+
+        mainFrame.add(checkBox);
+        mainFrame.add(closeButton);
+
+        mainFrame.setExtendedState(MAXIMIZED_BOTH);
+
+        mainFrame.setLayout(new GridLayout(list.size(), 1));
+
+        mainFrame.setVisible(true);
+
+        returnList.add(booleanReturnList);
+        returnList.add(pathsReturnList);
+        
+        while (ParserJava.reachEnd == false) {
+            Thread.sleep(1000);
+        }
+        ParserJava.reachEnd = false;
+        return returnList;
+    }
+
+    private static MyVisitor ASTExtractor(String path, boolean openTree) throws IOException, HeadlessException, RecognitionException {
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -81,21 +139,38 @@ public class ParserJava {
         ParseTree tree = parser.compilationUnit();
 
         //Console
-        System.out.println(tree.toStringTree(parser));
+        //System.out.println(tree.toStringTree(parser));
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
         String[] aux = path.split("/");
         String fileName = aux[aux.length - 1];
         Object message = "Want to open the view dialog for the file: " + fileName + "?";
-        if (JOptionPane.showConfirmDialog(null, message) == 0) {
+
+        if (openTree) {
             viewer.open();
         }
 
         MyVisitor visitor = new MyVisitor();
 
-        visitor.visit(tree);
+        visitor.visitFirst(tree);
+        visitor.visitSecond(tree);
 
         return visitor;
     }
+
+    /**
+     * @return the reachEnd
+     */
+    public static boolean isReachEnd() {
+        return reachEnd;
+    }
+
+    /**
+     * @param aReachEnd the reachEnd to set
+     */
+    public static void setReachEnd(boolean aReachEnd) {
+        reachEnd = aReachEnd;
+    }
+
 }

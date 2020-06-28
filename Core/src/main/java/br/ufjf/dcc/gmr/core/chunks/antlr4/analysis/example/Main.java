@@ -27,11 +27,10 @@ public class Main {
         //find which class each method call belongs to
         Person person = new Person();
         person.setName("name of a person");
-        EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", "", 23);
+        EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
         employeeExtends.setName("name of a employeeExtends");
         Employee employee = new Employee();
         employee.setName("name of a employee");
-        
         System.out.println(main.name + " " + main.office + " " + main.age);
         if(true){
             int a = 0;
@@ -39,17 +38,20 @@ public class Main {
             float b = 2;
         }
         employeeExtends.increaseSalary(50);
-        employeeExtends.setAdress("Rua ABC, Bairro, DEF");
         employeeExtends.setActive(false);
         int x =4;
         String y = "kkk";
         employeeExtends.getName();
         person.getName();
         main.getName();
-        
-        employeeExtends.setInfo(y, x);
+        employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
+        
+        person.getAdress().getCity();
+        employee.getAdress().getCity();
+       
+        System.out.println(employeeExtends.getAdress().getCity());
     }
 
     /**

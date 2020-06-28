@@ -6,7 +6,6 @@ import java.util.List;
 
 public class MethodCallBinding {
 
-
     private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
@@ -34,14 +33,18 @@ public class MethodCallBinding {
 
         output = output.concat(this.getName()).concat("(");
         for (TypeBinding parameter : this.parameters) {
-            output = output.concat(parameter.getIdentifier() + ",");
+            output = output.concat(parameter.getName() + ",");
         }
         output = output.concat(")");
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
-        
-        output = output.concat(" IDENTIFIER:" + typeBinding.getIdentifier());
+
+        if (variableOrigin != null && variableOrigin.getType() != null) {
+            output = output.concat(" IDENTIFIER:" + variableOrigin.getType().getName());
+        } else {
+            output = output.concat(" IDENTIFIER: ERROR");
+        }
 
         return output;
     }
@@ -115,8 +118,8 @@ public class MethodCallBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-    
-        /**
+
+    /**
      * @return the variableOrigin
      */
     public VariableBinding getVariableOrigin() {
