@@ -76,7 +76,7 @@ public class ParserJava {
     }
 
     private static List<List> view() throws InterruptedException {
-        final boolean reachEnd = false;
+        boolean reachEnd = false;
         List<List> returnList = new ArrayList<>();
         List<Boolean> booleanReturnList = new ArrayList<>();
         List<String> pathsReturnList = new ArrayList<>();

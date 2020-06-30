@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,8 +24,6 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main("Office", "Felippe", 23);
-        
-        //find which class each method call belongs to
         Person person = new Person();
         person.setName("name of a person");
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
@@ -32,15 +31,19 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
+        
         if(true){
             int a = 0;
         }else{
             float b = 2;
         }
+        
         employeeExtends.increaseSalary(50);
         employeeExtends.setActive(false);
-        int x =4;
-        String y = "kkk";
+        
+        int x = 4;
+        String y = "kkkkk";
+        
         employeeExtends.getName();
         person.getName();
         main.getName();
