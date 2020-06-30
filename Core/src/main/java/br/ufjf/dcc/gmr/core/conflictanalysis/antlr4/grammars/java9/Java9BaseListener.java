@@ -592,6 +592,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterClassModifier(Java9Parser.ClassModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -928,6 +940,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMethodSignature(Java9Parser.MethodSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodSignature(Java9Parser.MethodSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMethodModifier(Java9Parser.MethodModifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1204,6 +1228,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterEnumSignature(Java9Parser.EnumSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnumSignature(Java9Parser.EnumSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEnumBody(Java9Parser.EnumBodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1283,6 +1319,18 @@ public class Java9BaseListener implements Java9Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNormalInterfaceDeclaration(Java9Parser.NormalInterfaceDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNormalInterfaceSignature(Java9Parser.NormalInterfaceSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNormalInterfaceSignature(Java9Parser.NormalInterfaceSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1780,6 +1828,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIfExpression(Java9Parser.IfExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfExpression(Java9Parser.IfExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssertStatement(Java9Parser.AssertStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1799,6 +1859,18 @@ public class Java9BaseListener implements Java9Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSwitchStatement(Java9Parser.SwitchStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSwitchExpression(Java9Parser.SwitchExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSwitchExpression(Java9Parser.SwitchExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1888,6 +1960,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhileExpression(Java9Parser.WhileExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileExpression(Java9Parser.WhileExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDoStatement(Java9Parser.DoStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1948,6 +2032,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBasicForExpression(Java9Parser.BasicForExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBasicForExpression(Java9Parser.BasicForExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterForInit(Java9Parser.ForInitContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -2003,6 +2099,18 @@ public class Java9BaseListener implements Java9Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEnhancedForStatementNoShortIf(Java9Parser.EnhancedForStatementNoShortIfContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEnhancedForExpression(Java9Parser.EnhancedForExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnhancedForExpression(Java9Parser.EnhancedForExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2099,6 +2207,18 @@ public class Java9BaseListener implements Java9Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCatchClause(Java9Parser.CatchClauseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCatchExpression(Java9Parser.CatchExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCatchExpression(Java9Parser.CatchExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

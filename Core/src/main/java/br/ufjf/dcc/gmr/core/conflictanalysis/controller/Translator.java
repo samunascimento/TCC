@@ -21,28 +21,35 @@ public class Translator {
 
     public static List<String> JavaTranslator(List<String> list) {
         List<String> mainList = new ArrayList<>();
-        if (list.contains("Nothing")) {
-            mainList.add(LanguageConstructsTypes.BLANK);
-            list.remove("Nothing");
-        } else if (list.contains("Extension not parseble!")) {
+        if (list.contains("Extension not parseble!")) {
             mainList.add("Extension not parseble!");
         } else {
+            if (list.contains("Nothing")) {
+                mainList.add(LanguageConstructsTypes.BLANK);
+                list.remove("Nothing");
+            }
+            //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("IfThenElseStatement")
                     || list.contains("IfThenStatement")
                     || list.contains("IfThenElseStatementNoShortIf")
-                    || list.contains("IfStatement")) {
+                    || list.contains("IfExpression")) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
                 list.remove("IfThenElseStatement");
                 list.remove("IfThenStatement");
                 list.remove("IfThenElseStatementNoShortIf");
-
+                list.remove("IfExpression");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ForStatement")
                     || list.contains("ForStatementNoShortIf")
                     || list.contains("BasicForStatement")
                     || list.contains("BasicForStatementNoShortIf")
                     || list.contains("EnhancedForStatement")
-                    || list.contains("EnhancedForStatementNoShortIf")) {
+                    || list.contains("EnhancedForStatementNoShortIf")
+                    || list.contains("BasicForExpression")
+                    || list.contains("EnhancedForExpression")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("ForStatement");
                 list.remove("ForStatementNoShortIf");
@@ -50,21 +57,25 @@ public class Translator {
                 list.remove("BasicForStatementNoShortIf");
                 list.remove("EnhancedForStatement");
                 list.remove("EnhancedForStatementNoShortIf");
+                list.remove("BasicForExpression");
+                list.remove("EnhancedForExpression");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WhileStatement")
-                    || list.contains("WhileStatementNoShortIf")) {
+                    || list.contains("WhileStatementNoShortIf")
+                    || list.contains("WhileExpression")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
                 list.remove("WhileStatement");
                 list.remove("WhileStatementNoShortIf");
-
+                list.remove("WhileExpression");
             }
             if (list.contains("DoStatement")) {
                 mainList.add(LanguageConstructsTypes.DO_STATEMENT);
                 list.remove("DoStatement");
             }
-            if (list.contains("case")) {
-                mainList.add(LanguageConstructsTypes.DO_STATEMENT);
-                list.remove("case");
+            if (list.contains("Case")) {
+                mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
+                list.remove("Case");
             }
             if (list.contains("TryStatement")
                     || list.contains("TryWithResourcesStatement")) {
@@ -75,12 +86,14 @@ public class Translator {
             if (list.contains("Catches")
                     || list.contains("CatchClause")
                     || list.contains("CatchFormalParameter")
-                    || list.contains("CatchType")) {
+                    || list.contains("CatchType")
+                    || list.contains("CatchExpression")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
                 list.remove("Catches");
                 list.remove("CatchClause");
                 list.remove("CatchFormalParameter");
                 list.remove("CatchType");
+                list.remove("CatchExpression");
             }
             if (list.contains("ArrayInitializer")
                     || list.contains("elementValueArrayInitializer")
@@ -103,17 +116,17 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
                 list.remove("CastExpression");
             }
-            if (list.contains("ClassDeclaration")
-                    || list.contains("NormalClassDeclaration")
-                    || list.contains("ClassBodyDeclaration")
-                    || list.contains("ClassMemberDeclaration")) {
+            //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("NormalClassDeclaration")) {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
-                list.remove("ClassDeclaration");
                 list.remove("NormalClassDeclaration");
-                list.remove("ClassBodyDeclaration");
-                list.remove("ClassMemberDeclaration");
-                //mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
             }
+            if (list.contains("NormalClassSignature")) {
+                mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
+                list.remove("NormalClassSignature");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
             if (list.contains("ContinueStatement")) {
                 mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
                 list.remove("ContinueStatement");
@@ -158,24 +171,26 @@ public class Translator {
                     || list.contains("SwitchBlock")
                     || list.contains("SwitchBlockStatementGroup")
                     || list.contains("SwitchLabels")
-                    || list.contains("SwitchLabel")) {
+                    || list.contains("SwitchLabel")
+                    || list.contains("SwitchExpression")) {
                 mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
                 list.remove("SwitchStatement");
                 list.remove("SwitchBlock");
                 list.remove("SwitchBlockStatementGroup");
                 list.remove("SwitchLabels");
                 list.remove("SwitchLabel");
+                list.remove("SwitchExpression");
             }
-            if (list.contains("InterfaceDeclaration")
-                    || list.contains("NormalInterfaceDeclaration")) {
+            //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("NormalInterfaceDeclaration")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
-                list.remove("InterfaceDeclaration");
                 list.remove("NormalInterfaceDeclaration");
+            } else if (list.contains("NormalInterfaceSignature")) {
+                mainList.add(LanguageConstructsTypes.INTERFACE_SIGNATURE);
+                list.remove("NormalInterfaceSignature");
             }
-            if (list.contains("SynchronizedStatement")) {
-                mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
-                list.remove("SynchronizedStatement");
-            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
             if (list.contains("AnnotationTypeDeclaration")
                     || list.contains("AnnotationTypeMemberDeclaration")
                     || list.contains("AnnotationTypeElementDeclaration")) {
@@ -200,6 +215,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
                 list.remove("AssertStatement");
             }
+            //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("TypeVariable")
                     || list.contains("VariableDeclaratorList")
                     || list.contains("VariableDeclarator")
@@ -228,6 +244,15 @@ public class Translator {
                 list.remove("VariableDeclaratorId");
                 list.remove("VariableDeclarator");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Assignment")
+                    || list.contains("AssignmentExpression")) {
+                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+                list.remove("Assignment");
+                list.remove("AssignmentExpression");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("FieldAccess")
                     || list.contains("FieldAccess_lf_primary")
                     || list.contains("FieldAccess_lfno_primary")
@@ -240,19 +265,30 @@ public class Translator {
                 list.remove("FieldDeclaration");
                 list.remove("FieldModifier");
             }
-            if (list.contains("EnumDeclaration")
-                    || list.contains("EnumBody")
-                    || list.contains("EnumConstantList")
-                    || list.contains("EnumConstant")
-                    || list.contains("EnumConstantModifier")
-                    || list.contains("EnumBodyDeclarations")) {
+
+            //ENUMS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("EnumDeclaration")) {
                 mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
                 list.remove("EnumDeclaration");
-                list.remove("EnumBody");
+            }
+            if (list.contains("EnumSignature")) {
+                mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
+                list.remove("EnumSignature");
+            }
+            if (list.contains("EnumConstantList")) {
+                mainList.add(LanguageConstructsTypes.ENUM_VALUE);
                 list.remove("EnumConstantList");
-                list.remove("EnumConstant");
-                list.remove("EnumConstantModifier");
-                list.remove("EnumBodyDeclarations");
+            }
+
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("MethodDeclaration")) {
+                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
+                list.remove("MethodDeclaration");
+            }
+            if (list.contains("MethodSignature")) {
+                mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
+                list.remove("MethodSignature");
             }
             if (list.contains("InterfaceMethodDeclaration")
                     || list.contains("InterfaceMethodModifier")) {
@@ -260,27 +296,13 @@ public class Translator {
                 list.remove("InterfaceMethodDeclaration");
                 list.remove("InterfaceMethodModifier");
             }
-            if (list.contains("MethodName")
-                    || list.contains("MethodDeclaration")
-                    || list.contains("MethodModifier")
-                    || list.contains("MethodHeader")
-                    || list.contains("MethodDeclarator")
-                    || list.contains("MethodBody")
-                    || list.contains("MethodInvocation")
-                    || list.contains("MethodReference")
-                    || list.contains("MethodInvocation_lf_primary")) {
-                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
-                list.remove("MethodName");
-                list.remove("MethodDeclaration");
-                list.remove("MethodModifier");
-                list.remove("MethodHeader");
-                list.remove("MethodBody");
+            if (list.contains("MethodInvocation")
+                    || list.contains("MethodInvocation_lf_primaryContext")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("MethodInvocation");
-                list.remove("MethodInvocation_lf_primary");
-                list.remove("MethodDeclarator");
-                list.remove("MethodReference");
+                list.remove("MethodInvocation_lf_primaryContext");
             }
-
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WARNING!")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
