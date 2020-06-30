@@ -488,6 +488,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitNormalClassDeclaration(Java9Parser.NormalClassDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#normalClassSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#normalClassSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#classModifier}.
 	 * @param ctx the parse tree
 	 */
@@ -768,6 +778,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitMethodDeclaration(Java9Parser.MethodDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#methodSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodSignature(Java9Parser.MethodSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#methodSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodSignature(Java9Parser.MethodSignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#methodModifier}.
 	 * @param ctx the parse tree
 	 */
@@ -998,6 +1018,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitEnumDeclaration(Java9Parser.EnumDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#enumSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnumSignature(Java9Parser.EnumSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#enumSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnumSignature(Java9Parser.EnumSignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#enumBody}.
 	 * @param ctx the parse tree
 	 */
@@ -1067,6 +1097,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNormalInterfaceDeclaration(Java9Parser.NormalInterfaceDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Java9Parser#normalInterfaceSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterNormalInterfaceSignature(Java9Parser.NormalInterfaceSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#normalInterfaceSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitNormalInterfaceSignature(Java9Parser.NormalInterfaceSignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Java9Parser#interfaceModifier}.
 	 * @param ctx the parse tree
@@ -1478,6 +1518,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitIfThenElseStatementNoShortIf(Java9Parser.IfThenElseStatementNoShortIfContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#ifExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfExpression(Java9Parser.IfExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#ifExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfExpression(Java9Parser.IfExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#assertStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -1497,6 +1547,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSwitchStatement(Java9Parser.SwitchStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Java9Parser#switchExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitchExpression(Java9Parser.SwitchExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#switchExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitchExpression(Java9Parser.SwitchExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Java9Parser#switchBlock}.
 	 * @param ctx the parse tree
@@ -1568,6 +1628,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitWhileStatementNoShortIf(Java9Parser.WhileStatementNoShortIfContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#whileExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileExpression(Java9Parser.WhileExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#whileExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileExpression(Java9Parser.WhileExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#doStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -1618,6 +1688,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitBasicForStatementNoShortIf(Java9Parser.BasicForStatementNoShortIfContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#basicForExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBasicForExpression(Java9Parser.BasicForExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#basicForExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBasicForExpression(Java9Parser.BasicForExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#forInit}.
 	 * @param ctx the parse tree
 	 */
@@ -1667,6 +1747,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEnhancedForStatementNoShortIf(Java9Parser.EnhancedForStatementNoShortIfContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Java9Parser#enhancedForExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnhancedForExpression(Java9Parser.EnhancedForExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#enhancedForExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnhancedForExpression(Java9Parser.EnhancedForExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Java9Parser#breakStatement}.
 	 * @param ctx the parse tree
@@ -1747,6 +1837,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCatchClause(Java9Parser.CatchClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Java9Parser#catchExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCatchExpression(Java9Parser.CatchExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#catchExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCatchExpression(Java9Parser.CatchExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Java9Parser#catchFormalParameter}.
 	 * @param ctx the parse tree

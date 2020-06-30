@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,8 +24,6 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main("Office", "Felippe", 23);
-        
-        //find which class each method call belongs to
         Person person = new Person();
         person.setName("name of a person");
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
@@ -32,25 +31,36 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
-        if(true){
-            int a = 0;
-        }else{
-            float b = 2;
+
+        for (int i = 0; i < 10; i++) {
+            float j = 3;
+            j += i;
         }
+        
+        if (employee != null) {
+            if (employee.getName().equals("name of a employee")) {
+                Person person1 = person;
+            } else if (person.getAge() == 23) {
+                EmployeeExtends employeeExtends1 = employeeExtends;
+            } else if (employeeExtends.getSalary() == 300) {
+                Employee employee1 = employee;
+            }
+        }
+        
         employeeExtends.increaseSalary(50);
         employeeExtends.setActive(false);
         int x =4;
         String y = "kkk";
-        employeeExtends.getName();
+        //employeeExtends.getname();
         person.getName();
-        main.getName();
+       // main.getname();
         employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
-        
+
         person.getAdress().getCity();
         employee.getAdress().getCity();
-       
+
         System.out.println(employeeExtends.getAdress().getCity());
     }
 

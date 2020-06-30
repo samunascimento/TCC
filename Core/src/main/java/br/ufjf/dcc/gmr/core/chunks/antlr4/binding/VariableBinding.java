@@ -18,6 +18,7 @@ public class VariableBinding {
     private TypeBinding type;
     private String name;
     
+            
     public VariableBinding(String Modifier, TypeBinding type, String name) {
         this.modifier = Modifier;
         this.type = type;

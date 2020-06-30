@@ -321,7 +321,11 @@ classDeclaration
 	;
 
 normalClassDeclaration
-	:	classModifier* 'class' identifier typeParameters? superclass? superinterfaces? classBody
+	:	normalClassSignature classBody
+	;
+
+normalClassSignature
+	:	classModifier* 'class' identifier typeParameters? superclass? superinterfaces?
 	;
 
 classModifier
@@ -473,8 +477,13 @@ unannArrayType
 	;
 
 methodDeclaration
-	:	methodModifier* methodHeader methodBody
+	:	methodSignature methodBody
 	;
+
+methodSignature
+	:	methodModifier* methodHeader
+	;
+
 
 methodModifier
 	:	annotation
@@ -589,7 +598,11 @@ explicitConstructorInvocation
 	;
 
 enumDeclaration
-	:	classModifier* 'enum' identifier superinterfaces? enumBody
+	:	enumSignature enumBody
+	;
+
+enumSignature
+	:	classModifier* 'enum' identifier superinterfaces?
 	;
 
 enumBody
@@ -622,7 +635,10 @@ interfaceDeclaration
 	;
 
 normalInterfaceDeclaration
-	:	interfaceModifier* 'interface' identifier typeParameters? extendsInterfaces? interfaceBody
+	:	normalInterfaceSignature interfaceBody
+	;
+normalInterfaceSignature
+        :	interfaceModifier* 'interface' identifier typeParameters? extendsInterfaces?
 	;
 
 interfaceModifier
@@ -843,15 +859,19 @@ statementExpression
 	;
 
 ifThenStatement
-	:	'if' '(' expression ')' statement
+	:	ifExpression statement
 	;
 
 ifThenElseStatement
-	:	'if' '(' expression ')' statementNoShortIf 'else' statement
+	:	ifExpression statementNoShortIf 'else' statement
 	;
 
 ifThenElseStatementNoShortIf
-	:	'if' '(' expression ')' statementNoShortIf 'else' statementNoShortIf
+	:	ifExpression statementNoShortIf 'else' statementNoShortIf
+	;
+
+ifExpression
+	:	'if' '(' expression ')'
 	;
 
 assertStatement
@@ -860,7 +880,11 @@ assertStatement
 	;
 
 switchStatement
-	:	'switch' '(' expression ')' switchBlock
+	:	switchExpression switchBlock
+	;
+
+switchExpression
+        :	'switch' '(' expression ')'
 	;
 
 switchBlock
@@ -886,15 +910,19 @@ enumConstantName
 	;
 
 whileStatement
-	:	'while' '(' expression ')' statement
+	:	whileExpression statement
 	;
 
 whileStatementNoShortIf
-	:	'while' '(' expression ')' statementNoShortIf
+	:	whileExpression statementNoShortIf
+	;
+
+whileExpression
+	:	'while' '(' expression ')'
 	;
 
 doStatement
-	:	'do' statement 'while' '(' expression ')' ';'
+	:	'do' statement whileExpression ';'
 	;
 
 forStatement
@@ -908,11 +936,15 @@ forStatementNoShortIf
 	;
 
 basicForStatement
-	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')' statement
+	:	basicForExpression statement
 	;
 
 basicForStatementNoShortIf
-	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')' statementNoShortIf
+	:	basicForExpression statementNoShortIf
+	;
+
+basicForExpression
+	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')'
 	;
 
 forInit
@@ -929,11 +961,15 @@ statementExpressionList
 	;
 
 enhancedForStatement
-	:	'for' '(' variableModifier* unannType variableDeclaratorId ':' expression ')' statement
+	:	enhancedForExpression statement
 	;
 
 enhancedForStatementNoShortIf
-	:	'for' '(' variableModifier* unannType variableDeclaratorId ':' expression ')' statementNoShortIf
+	:	enhancedForExpression statementNoShortIf
+	;
+
+enhancedForExpression
+	:	'for' '(' variableModifier* unannType variableDeclaratorId ':' expression ')'
 	;
 
 breakStatement
@@ -967,7 +1003,11 @@ catches
 	;
 
 catchClause
-	:	'catch' '(' catchFormalParameter ')' block
+	:	catchExpression block
+	;
+
+catchExpression
+	:	'catch' '(' catchFormalParameter ')'
 	;
 
 catchFormalParameter

@@ -397,6 +397,7 @@ statement
     | identifierLabel=IDENTIFIER ':' statement
     ;
 
+
 catchClause
     : CATCH '(' variableModifier* catchType IDENTIFIER ')' block
     ;
