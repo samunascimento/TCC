@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
-import br.ufjf.dcc.gmr.core.conflictanalysis.grammartranslator.Java.JavaTranslator;
+import br.ufjf.dcc.gmr.core.conflictanalysis.Translators.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
@@ -15,6 +15,7 @@ import java.util.List;
 
 public class ConflictRegion {
 
+    private final List<String> rawText;
     private final List<String> beforeContext;
     private final List<String> afterContext;
     private final List<String> v1;
@@ -35,9 +36,10 @@ public class ConflictRegion {
 
     private DeveloperDecision developerDecision;
 
-    public ConflictRegion(List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
+    public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
 
+        this.rawText = rawText;
         this.beforeContext = beforeContext;
         this.afterContext = afterContext;
         this.v1 = v1;
@@ -199,15 +201,9 @@ public class ConflictRegion {
         for (String line : this.beforeContext) {
             str = str + line + "\n";
         }
-        str = str + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + this.beginLine + ")\n";
-        for (String line : this.v1) {
+        for (String line : this.rawText) {
             str = str + line + "\n";
         }
-        str = str + "============================== (" + this.separatorLine + ")\n";
-        for (String line : this.v2) {
-            str = str + line + "\n";
-        }
-        str = str + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + this.endLine + ")\n";
         for (String line : this.afterContext) {
             str = str + line + "\n";
         }
@@ -261,45 +257,43 @@ public class ConflictRegion {
     }
 
     private void generateTypeOfConflict() {
-        List<String> rawList = this.getSortedStructureType(syntaxV1);
-        for (String str : this.getSortedStructureType(syntaxV2)) {
+        List<String> rawList = this.getV1StructureTypes();
+        for (String str : this.getV2StructureTypes()) {
             if (!rawList.contains(str)) {
                 rawList.add(str);
             }
         }
         Collections.sort(rawList);
-        this.typesOfConflicts = JavaTranslator.translator(rawList);
+        this.typesOfConflicts = Translator.JavaTranslator(rawList);
         Collections.sort(this.typesOfConflicts);
     }
 
-    public String getV1StructureTypes() {
+    public List<String> getV1StructureTypes() {
+        List<String> result = new ArrayList<>();
         if (this.syntaxV1 == null) {
-            return "Extension not parseble!";
+            result.add("Extension not parseble!");
         } else if (this.originalV1StartLine == 0 || this.syntaxV1.isEmpty()) {
-            return "Nothing";
+            result.add("Nothing");
         } else {
-            String result = "";
             for (String str : this.getSortedStructureType(syntaxV1)) {
-                result = result + "\n" + str;
+                result.add(str);
             }
-            result = result.replaceFirst("\n", "");
-            return result;
         }
+        return result;
     }
 
-    public String getV2StructureTypes() {
+    public List<String> getV2StructureTypes() {
+        List<String> result = new ArrayList<>();
         if (this.syntaxV2 == null) {
-            return "Extension not parseble!";
+            result.add("Extension not parseble!");
         } else if (this.originalV2StartLine == 0 || this.syntaxV2.isEmpty()) {
-            return "Nothing";
+            result.add("Nothing");
         } else {
-            String result = "";
             for (String str : this.getSortedStructureType(syntaxV2)) {
-                result = result + "\n" + str;
+                result.add(str);
             }
-            result = result.replaceFirst("\n", "");
-            return result;
         }
+        return result;
     }
 
     /*public String getTypeOfConflict() {

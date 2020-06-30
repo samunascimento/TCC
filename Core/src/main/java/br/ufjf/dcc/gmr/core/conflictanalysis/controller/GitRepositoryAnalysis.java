@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
@@ -336,7 +334,7 @@ public class GitRepositoryAnalysis {
 
     private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
-            if (fileContent.get(i).contains("<<<<"+"<<<")) {
+            if (fileContent.get(i).contains("<<<<" + "<<<")) {
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -346,7 +344,7 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 i++;
-                while (!fileContent.get(i).contains("===="+"===")) {
+                while (!fileContent.get(i).contains("====" + "===")) {
                     this.processData.v1.add(fileContent.get(i));
                     i++;
                 }
@@ -373,6 +371,7 @@ public class GitRepositoryAnalysis {
                         this.processData.afterContext.add(fileContent.get(j));
                     }
                 }
+                this.processData.rawText = ListUtils.getSubList(fileContent, this.processData.beginLine - 1, this.processData.endLine - 1);
                 this.catchOriginalLines();
                 this.catchSolutionLines();
                 this.addConflictRegion();
@@ -467,7 +466,8 @@ public class GitRepositoryAnalysis {
 
     private void addConflictRegion() {
         if (this.processData.solution != null) {
-            this.processData.conflictRegion.add(new ConflictRegion(new ArrayList<>(this.processData.beforeContext),
+            this.processData.conflictRegion.add(new ConflictRegion(new ArrayList<>(this.processData.rawText),
+                    new ArrayList<>(this.processData.beforeContext),
                     new ArrayList<>(this.processData.afterContext),
                     new ArrayList<>(this.processData.v1),
                     new ArrayList<>(this.processData.v2),
@@ -478,7 +478,8 @@ public class GitRepositoryAnalysis {
                     this.processData.originalV1FirstLine,
                     this.processData.originalV2FirstLine));
         } else {
-            this.processData.conflictRegion.add(new ConflictRegion(new ArrayList<>(this.processData.beforeContext),
+            this.processData.conflictRegion.add(new ConflictRegion(new ArrayList<>(this.processData.rawText),
+                    new ArrayList<>(this.processData.beforeContext),
                     new ArrayList<>(this.processData.afterContext),
                     new ArrayList<>(this.processData.v1),
                     new ArrayList<>(this.processData.v2),
