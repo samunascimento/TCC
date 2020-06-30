@@ -20,7 +20,17 @@ public class TypeBinding {
         this.mdbList = new ArrayList<>();
         this.name = "";
     }
+    
+    @Override
+    public String toString() {
 
+       String output;
+       
+       output = "name= "+this.name+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
+
+        return output;
+    }
+    
     /**
      * @return the mdbList
      */
@@ -40,10 +50,6 @@ public class TypeBinding {
      */
     public void setMdbList(List<MethodDeclarationBinding> mdbList) {
         this.mdbList = mdbList;
-    }
-
-    public void addMdbList(MethodDeclarationBinding mdb) {
-        this.mdbList.add(mdb);
     }
 
     /**
@@ -126,5 +132,8 @@ public class TypeBinding {
     public void setParentClass(TypeBinding parentClass) {
         this.parentClass = parentClass;
     }
+    
+   
+
 
 }

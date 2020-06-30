@@ -41,9 +41,9 @@ public class Main {
         employeeExtends.setActive(false);
         int x =4;
         String y = "kkk";
-        employeeExtends.getName();
+        //employeeExtends.getname();
         person.getName();
-        main.getName();
+        main.getname();
         employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
