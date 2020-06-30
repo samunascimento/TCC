@@ -4,9 +4,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodDeclarationBinding {   
-    
- 
+public class MethodDeclarationBinding {
+
     private String name;
     private String modifier;
     private List<TypeBinding> parameters;
@@ -26,9 +25,14 @@ public class MethodDeclarationBinding {
         if (!this.getName().equals(mcb.getName())) {
             return false;
         } else if (this.getParameters() != null && mcb.getParameters() != null) {
-            if ( !this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())){
-             return false;
-            }
+            if (!mcb.getVariableOrigin().getName().equals("Not Declared")) {
+                if (!this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())) {
+                    return false;
+                }
+            }else{
+                return false;
+            }              
+
             if (this.getParameters().size() != mcb.getParameters().size()) {
                 return false;
             } else {
@@ -37,7 +41,7 @@ public class MethodDeclarationBinding {
                         return false;
                     }
                 }
-            }         
+            }
         }
         return true;
     }
@@ -128,8 +132,8 @@ public class MethodDeclarationBinding {
     public void setParameters(List<TypeBinding> parameters) {
         this.parameters = parameters;
     }
-    
-        /**
+
+    /**
      * @return the modifier
      */
     public String getModifier() {

@@ -49,13 +49,11 @@ public class Main {
         
         employeeExtends.increaseSalary(50);
         employeeExtends.setActive(false);
-
-        int x = 4;
-        String y = "kkkkk";
-
-        employeeExtends.getName();
+        int x =4;
+        String y = "kkk";
+        //employeeExtends.getname();
         person.getName();
-        main.getName();
+        main.getname();
         employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
