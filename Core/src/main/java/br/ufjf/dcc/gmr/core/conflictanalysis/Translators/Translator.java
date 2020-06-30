@@ -198,7 +198,7 @@ public class Translator {
             mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
             list.remove("AssertStatement");
         }
-      if (list.contains("TypeVariable")
+        if (list.contains("TypeVariable")
                 || list.contains("VariableDeclaratorList")
                 || list.contains("VariableDeclarator")
                 || list.contains("VariableDeclaratorId")
@@ -266,8 +266,7 @@ public class Translator {
                 || list.contains("MethodBody")
                 || list.contains("MethodInvocation")
                 || list.contains("MethodReference")
-                || list.contains("MethodInvocation_lf_primary")
-) {
+                || list.contains("MethodInvocation_lf_primary")) {
             mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
             list.remove("MethodName");
             list.remove("MethodDeclaration");
@@ -279,7 +278,7 @@ public class Translator {
             list.remove("MethodDeclarator");
             list.remove("MethodReference");
         }
-        
+
         if (list.contains("WARNING!")) {
             mainList.add(LanguageConstructsTypes.ERROR);
             list.remove("WARNING!");
@@ -291,10 +290,35 @@ public class Translator {
         return mainList;
     }
 
+    public static List<String> PythonTranslator(List<String> list) {
+
+        List<String> mainList = new ArrayList<>();
+
+        return mainList;
+    }
+
+    public static List<String> CPPTranslator(List<String> list) {
+
+        List<String> mainList = new ArrayList<>();
+
+        if (list.contains("Nothing")) {
+            mainList.add(LanguageConstructsTypes.BLANK);
+            list.remove("Nothing");
+        } else {
+
+            if (list.contains("Forinitstatement")
+                    || list.contains("Forrangedeclaration")) {
+                mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
+                list.remove("Forinitstatement");
+                list.remove("Forrangedeclaration");
+            }
+             if (list.contains("While")) {
+                mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
+                list.remove("While");
+            }
+            
+        }
+        return mainList;
+    }
+
 }
-
-
-/*
-
-annotationTypeElementModifier
- */
