@@ -31,29 +31,38 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
+
+        for (int i = 0; i < 10; i++) {
+            float j = 3;
+            j += i;
+        }
         
-        if(true){
-            int a = 0;
-        }else{
-            float b = 2;
+        if (employee != null) {
+            if (employee.getName().equals("name of a employee")) {
+                Person person1 = person;
+            } else if (person.getAge() == 23) {
+                EmployeeExtends employeeExtends1 = employeeExtends;
+            } else if (employeeExtends.getSalary() == 300) {
+                Employee employee1 = employee;
+            }
         }
         
         employeeExtends.increaseSalary(50);
         employeeExtends.setActive(false);
-        
+
         int x = 4;
         String y = "kkkkk";
-        
+
         employeeExtends.getName();
         person.getName();
         main.getName();
         employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
-        
+
         person.getAdress().getCity();
         employee.getAdress().getCity();
-       
+
         System.out.println(employeeExtends.getAdress().getCity());
     }
 
