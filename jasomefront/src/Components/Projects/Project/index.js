@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MenuList from '@material-ui/core/MenuList';
+import { forceCenter } from 'd3';
 
 // export default ({ match: { url}, name}) =>
 
@@ -73,9 +74,10 @@ export default class Project extends Component {
       // { checked: false, name: 'iovars' }, { checked: false, name: 'mclc' }, { checked: false, name: 'nbd' }, { checked: false, name: 'ncomp' }, { checked: false, name: 'nop' },
       // { checked: false, name: 'nvar' }, { checked: false, name: 'si' }, { checked: false, name: 'vg' }],
 
-      methodtloc: false,
+      transition:0,
       maxHeight: 192,
       data: [],
+
     }
 
   };
@@ -110,14 +112,14 @@ export default class Project extends Component {
 
   handleCloseMethod = () => this.setState({ anchorE4: null })
 
-  limparChart = () => {
-    const data = [];
-    this.setState({ data });
-    this.state.ProjectTloc = false;
-    this.state.packageMetrics.forEach((metric) => (
-      console.log(metric.state)
-    ));
-  }
+  // limparChart = () => {
+  //   const data = [];
+  //   this.setState({ data });
+  //   this.state.ProjectTloc = false;
+  //   this.state.packageMetrics.forEach((metric) => (
+  //     console.log(metric.state)
+  //   ));
+  // }
 
   handleChangeProject = (event) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
@@ -256,10 +258,14 @@ export default class Project extends Component {
                 open={Boolean(anchorE2)}
                 onClose={this.handleClosePackage}
                 TransitionComponent={Fade}
+                transformOrigin={{
+                  vertical: 150,
+                  horizontal: 'left',
+                }}
                 PaperProps={{
                   style: {
                     maxHeight: maxHeight,
-                    width: '20ch',
+                    width: 200,
                   },
                 }}
               >
@@ -318,6 +324,10 @@ export default class Project extends Component {
                 open={Boolean(anchorE3)}
                 onClose={this.handleCloseClass}
                 TransitionComponent={Fade}
+                transformOrigin={{
+                  vertical: 1000,
+                  horizontal: 'left',
+                }}
                 PaperProps={{
                   style: {
                     maxHeight: maxHeight,
@@ -514,6 +524,10 @@ export default class Project extends Component {
                 open={Boolean(anchorE4)}
                 onClose={this.handleCloseMethod}
                 TransitionComponent={Fade}
+                transformOrigin={{
+                  vertical: 200,
+                  horizontal: 'left',
+                }}
                 PaperProps={{
                   style: {
                     maxHeight: maxHeight,
