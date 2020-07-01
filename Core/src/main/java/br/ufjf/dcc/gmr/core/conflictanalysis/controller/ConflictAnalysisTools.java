@@ -99,7 +99,7 @@ public class ConflictAnalysisTools {
             throw new IOException();
         }
     }
-    
+
     public static List<SyntaxStructure> analyzeJava9SyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".java")) {
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -107,7 +107,7 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-            
+
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
@@ -115,34 +115,8 @@ public class ConflictAnalysisTools {
                 visitor = new Java9Visitor(false);
             }
             visitor.visit(tree);
-  
-             for (int index = 0; index < tokens.size(); index++)
-      {
-         Token token = tokens.get(index);
-         // substitute whatever parser you have
-         if (token.getType() != parser.WS) 
-         {
-        String out = "";
-             if(token.getChannel()==2){
-                // Comments will be printed as channel 2 (configured in .g4 grammar file)
-            out += "Channel: " + token.getChannel();
-            out += " Type: " + token.getType();
-            out += " Hidden: ";
-             }
-            List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
-            for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++)
-            {
-               if (hiddenTokensToLeft.get(i).getType() != parser.WS)
-               {
-                 out += "\n\t" + i + ":";
-                  out += "\n\tChannel: " + hiddenTokensToLeft.get(i).getChannel() + "  Type: " + hiddenTokensToLeft.get(i).getType();
-                  out += hiddenTokensToLeft.get(i).getText().replaceAll("\\s", "");
-               }
-            }
-             out += token.getText().replaceAll("\\s", "");
-            System.out.println(out);
-         }
-      }
+
+            
             return visitor.getList();
         } else {
             throw new IOException();
@@ -223,6 +197,31 @@ public class ConflictAnalysisTools {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
             throw new IOException();
         }
+    }
+
+    public static List<String> getJava9Comment(String filePath) throws IOException {
+        ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+        Java9Lexer lexer = new Java9Lexer(fileStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        Java9Parser parser = new Java9Parser(tokens);
+        ParseTree tree = parser.compilationUnit();
+        List<String> comments=new ArrayList<>();
+        for (int index = 0; index < tokens.size(); index++) {
+            Token token = tokens.get(index);
+
+            if (token.getType() != parser.WS) {
+                List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
+                for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
+                    if (hiddenTokensToLeft.get(i).getType() != parser.WS) {
+                        if (token.getChannel() == 2 ) {
+                            comments.add(hiddenTokensToLeft.get(i).getText());
+                        }
+                    }
+                }
+
+            }
+        }
+        return comments;
     }
 
 }
