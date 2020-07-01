@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.view.MainFrame;
+import java.io.IOException;
 
 /**
  *
@@ -8,8 +9,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.view.MainFrame;
  */
 public class TestJoao {
     
-    public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame();
+    public static void main(String[] args) throws IOException {
+       MainFrame mainFrame = new MainFrame();
     }
 
 }

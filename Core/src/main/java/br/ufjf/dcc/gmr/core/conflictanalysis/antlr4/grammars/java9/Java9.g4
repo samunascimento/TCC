@@ -900,10 +900,14 @@ switchLabels
 	;
 
 switchLabel
-	:	'case' constantExpression ':'
-	|	'case' enumConstantName ':'
+	:	caseLine
 	|	'default' ':'
 	;
+
+caseLine
+	:	'case' constantExpression ':'
+	|	'case' enumConstantName ':'
+        ;
 
 enumConstantName
 	:	identifier

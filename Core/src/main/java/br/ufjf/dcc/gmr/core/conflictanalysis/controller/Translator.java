@@ -73,10 +73,12 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.DO_STATEMENT);
                 list.remove("DoStatement");
             }
-            if (list.contains("Case")) {
+            //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("CaseLine")) {
                 mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
-                list.remove("Case");
+                list.remove("CaseLine");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("TryStatement")
                     || list.contains("TryWithResourcesStatement")) {
                 mainList.add(LanguageConstructsTypes.TRY_STATEMENT);

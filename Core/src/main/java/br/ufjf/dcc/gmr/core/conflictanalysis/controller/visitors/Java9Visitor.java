@@ -40,6 +40,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitCaseLine(Java9Parser.CaseLineContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitCatchExpression(Java9Parser.CatchExpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);

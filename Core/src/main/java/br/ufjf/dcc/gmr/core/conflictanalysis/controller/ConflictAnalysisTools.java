@@ -107,7 +107,7 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-
+            getJava9Comment(tokens,1,1410);
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
@@ -116,7 +116,6 @@ public class ConflictAnalysisTools {
             }
             visitor.visit(tree);
 
-            
             return visitor.getList();
         } else {
             throw new IOException();
@@ -199,29 +198,100 @@ public class ConflictAnalysisTools {
         }
     }
 
-    public static List<String> getJava9Comment(String filePath) throws IOException {
-        ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-        Java9Lexer lexer = new Java9Lexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Java9Parser parser = new Java9Parser(tokens);
-        ParseTree tree = parser.compilationUnit();
-        List<String> comments=new ArrayList<>();
+    public static List<String> getJava9Comment(CommonTokenStream tokens, int startLine, int stopLine) throws IOException {
+        List<String> comments = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
-
-            if (token.getType() != parser.WS) {
-                List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
+            if (token.getType() != Java9Lexer.WS) {
+                List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
+                List<Token> leftResult = new ArrayList<>();
                 for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
-                    if (hiddenTokensToLeft.get(i).getType() != parser.WS) {
-                        if (token.getChannel() == 2 ) {
+                    if (hiddenTokensToLeft.get(i).getType() != Java9Lexer.WS
+                            && hiddenTokensToLeft.get(i).getLine() >= startLine
+                            && hiddenTokensToLeft.get(i).getLine() <= stopLine) {
+                        if (hiddenTokensToLeft.get(i).getChannel() == 2) {
+                            leftResult.add(hiddenTokensToLeft.get(i));
                             comments.add(hiddenTokensToLeft.get(i).getText());
                         }
                     }
                 }
-
+                if (!leftResult.isEmpty()) {
+                    for (Token coisa : leftResult) {
+                        System.out.println("------------------------\nBEGIN LINE: " + coisa.getLine()
+                                + "\nEND LINE: " + (coisa.getLine() + coisa.getText().split("\n").length - 1)
+                                + "\nSTART INDEX: " + coisa.getStartIndex()
+                                + "\nSTOP INDEX: " + coisa.getStopIndex()
+                                + "\nTOKEN INDEX: " + coisa.getTokenIndex()
+                                + "\nCHAR POSITION IN LINE: " + coisa.getCharPositionInLine()
+                                + "\nTYPE: " + coisa.getText()
+                                + "\nEND: " + (coisa.getCharPositionInLine() + coisa.getText().length())
+                                + "\nTEXT:\n\n" + coisa.getText() + "\n------------------------\n");
+                    }
+                }
+                
             }
         }
         return comments;
+    }
+
+    public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+        if (beginLine < 1 || endLine < 1) {
+            return null;
+        }
+        try {
+            int currentLine = beginLine;
+            int currentColumn = 0;
+            List<SyntaxStructure> rawList = null;
+            List<SyntaxStructure> list = new ArrayList();
+            SyntaxStructure auxStructure = null;
+            if (filePath.endsWith(".java")) {
+                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
+            } else if (filePath.endsWith(".py")) {
+                rawList = ConflictAnalysisTools.analyzePythonSyntaxTree(filePath);
+            } else {
+                return null;
+            }
+
+            if (rawList != null) {
+                while (currentLine <= endLine) {
+                    auxStructure = null;
+                    for (SyntaxStructure ss : rawList) {
+
+                        if (ss.getStartLine() >= currentLine && ss.getStartLineStartColumn() >= currentColumn && ss.getStopLine() <= endLine) {
+                            if (auxStructure == null) {
+                                auxStructure = ss;
+                            } else {
+                                if (auxStructure.getStartLine() > ss.getStartLine()) {
+                                    auxStructure = ss;
+                                } else {
+                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartLineStartColumn() > ss.getStartLineStartColumn()) {
+                                        auxStructure = ss;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    if (auxStructure != null) {
+                        list.add(auxStructure);
+                        currentLine = auxStructure.getStopLine();
+                        currentColumn = auxStructure.getStopLineStopColumn();
+                    } else {
+                        currentLine++;
+                        currentColumn = 0;
+                    }
+                }
+
+            } else {
+                return null;
+            }
+            return list;
+        } catch (IOException ex) {
+            System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
+            throw new IOException();
+        }
     }
 
 }

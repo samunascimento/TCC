@@ -11,8 +11,6 @@ public class SyntaxStructure {
     private final int startLine;
     private final int stopLine;
     private final int startLineStartColumn;
-//    private final int startLineStopColumn;
-//    private final int stopLineStartColumn;
     private final int stopLineStopColumn;
     private final String structureType;
     private final boolean warning;
@@ -22,8 +20,6 @@ public class SyntaxStructure {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startLineStartColumn = start.getStartIndex();
-//        this.startLineStopColumn = start.getStopIndex();
-//        this.stopLineStartColumn = stop.getStartIndex();
         this.stopLineStopColumn = stop.getStopIndex();
         this.structureType = structureType;
         this.text = text;
