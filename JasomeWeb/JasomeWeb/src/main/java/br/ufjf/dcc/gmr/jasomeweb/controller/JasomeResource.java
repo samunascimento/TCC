@@ -75,8 +75,8 @@ public class JasomeResource {
     
     
     @GET
-    @Path("metric/version/{nameProject}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("metric/version/{nameProject}")
     public String getMetricVersion(@PathParam("nameProject") String nameProject) throws SQLException {
         
         Connection connection = ConnectionFactory.getConnection();

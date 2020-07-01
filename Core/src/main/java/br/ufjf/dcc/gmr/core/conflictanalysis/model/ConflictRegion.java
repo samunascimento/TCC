@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
-import br.ufjf.dcc.gmr.core.conflictanalysis.Translators.Translator;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;

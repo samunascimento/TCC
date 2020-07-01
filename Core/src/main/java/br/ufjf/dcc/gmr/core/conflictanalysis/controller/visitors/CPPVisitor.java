@@ -735,7 +735,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
      */
     @Override
     public Object visitSelectionstatement(CPP14Parser.SelectionstatementContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -761,7 +761,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
      */
     @Override
     public Object visitIterationstatement(CPP14Parser.IterationstatementContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

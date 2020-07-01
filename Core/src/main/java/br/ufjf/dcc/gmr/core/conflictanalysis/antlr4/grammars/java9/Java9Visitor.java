@@ -299,6 +299,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNormalClassDeclaration(Java9Parser.NormalClassDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#normalClassSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#classModifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -467,6 +473,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodDeclaration(Java9Parser.MethodDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#methodSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodSignature(Java9Parser.MethodSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#methodModifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -605,6 +617,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEnumDeclaration(Java9Parser.EnumDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#enumSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnumSignature(Java9Parser.EnumSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#enumBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -646,6 +664,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNormalInterfaceDeclaration(Java9Parser.NormalInterfaceDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Java9Parser#normalInterfaceSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNormalInterfaceSignature(Java9Parser.NormalInterfaceSignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Java9Parser#interfaceModifier}.
 	 * @param ctx the parse tree
@@ -893,6 +917,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfThenElseStatementNoShortIf(Java9Parser.IfThenElseStatementNoShortIfContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#ifExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfExpression(Java9Parser.IfExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#assertStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -904,6 +934,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSwitchStatement(Java9Parser.SwitchStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Java9Parser#switchExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchExpression(Java9Parser.SwitchExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Java9Parser#switchBlock}.
 	 * @param ctx the parse tree
@@ -947,6 +983,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhileStatementNoShortIf(Java9Parser.WhileStatementNoShortIfContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#whileExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileExpression(Java9Parser.WhileExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#doStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -977,6 +1019,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBasicForStatementNoShortIf(Java9Parser.BasicForStatementNoShortIfContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#basicForExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBasicForExpression(Java9Parser.BasicForExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#forInit}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1006,6 +1054,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEnhancedForStatementNoShortIf(Java9Parser.EnhancedForStatementNoShortIfContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Java9Parser#enhancedForExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnhancedForExpression(Java9Parser.EnhancedForExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Java9Parser#breakStatement}.
 	 * @param ctx the parse tree
@@ -1054,6 +1108,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitCatchClause(Java9Parser.CatchClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Java9Parser#catchExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCatchExpression(Java9Parser.CatchExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Java9Parser#catchFormalParameter}.
 	 * @param ctx the parse tree

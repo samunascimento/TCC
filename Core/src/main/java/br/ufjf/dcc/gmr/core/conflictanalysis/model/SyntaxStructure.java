@@ -29,18 +29,6 @@ public class SyntaxStructure {
         this.text = text;
         this.warning = warning;
     }
-
-    public SyntaxStructure(int startLine, int startLineStartColumn, int stopLine,  int stopLineStopColumn, String structureType, boolean warning, String text) {
-        this.startLine = startLine;
-        this.stopLine = stopLine;
-        this.startLineStartColumn = startLineStartColumn;
-        this.stopLineStopColumn = stopLineStopColumn;
-        this.structureType = structureType;
-        this.warning = warning;
-        this.text = text;
-    }
-
-
     
     public int getStartLine() {
         return startLine;
