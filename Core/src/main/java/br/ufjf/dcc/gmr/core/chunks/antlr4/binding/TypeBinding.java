@@ -3,7 +3,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TypeBinding {
+public class TypeBinding extends BaseBinding{
     
     private TypeBinding extendClass;
     private List<TypeBinding> childrenClass;
@@ -11,17 +11,16 @@ public class TypeBinding {
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
     private String modifier;
-    private String name;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
+        super();
         this.childrenClass = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.attributes = new ArrayList<>();
         this.extendClass = null;
         this.mdbList = new ArrayList<>();
-        this.name = "";
-        this.modifier = "";
+        this.modifier = null;
     }
     
     @Override
@@ -29,7 +28,7 @@ public class TypeBinding {
 
        String output;
        
-       output = "name= "+this.name+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
+       output = "name= "+super.getName()+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
 
         return output;
     }
@@ -60,20 +59,6 @@ public class TypeBinding {
      */
     public void setModifier(String modifier) {
         this.modifier = modifier;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**

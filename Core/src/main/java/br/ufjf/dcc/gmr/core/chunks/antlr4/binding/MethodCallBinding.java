@@ -4,9 +4,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodCallBinding {
+public class MethodCallBinding extends BaseBinding{
 
-    private String name;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
@@ -14,12 +13,14 @@ public class MethodCallBinding {
     private JavaParser.MethodCallContext ctx;
 
     public MethodCallBinding() {
-        this.name = "";
+        
+        super();
         this.parameters = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.ctx = null;
         this.variableOrigin = new VariableBinding();
+        
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
@@ -63,12 +64,6 @@ public class MethodCallBinding {
         this.ctx = ctx;
     }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
 
     /**
      * @return the parameters
@@ -77,12 +72,7 @@ public class MethodCallBinding {
         return parameters;
     }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+
 
     /**
      * @param parameters the parameters to set

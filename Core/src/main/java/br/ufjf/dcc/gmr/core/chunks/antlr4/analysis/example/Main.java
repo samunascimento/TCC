@@ -53,7 +53,7 @@ public class Main {
         String y = "kkk";
         //employeeExtends.getname();
         person.getName();
-       // main.getname();
+        main.getName();
         employee.setInfo(y, x);
         person.setInfo(y, x);
         person.setInfo(x, y);
