@@ -427,7 +427,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             variable.setType(type);
         }
         
-        System.out.println(variable.getType());
+       
         
 
         if (ctx.variableDeclarators().variableDeclarator() != null) {
@@ -686,6 +686,15 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             variable.setType(type);
 
         }
+        
+        ParserRuleContext memberDeclaration = ctx.getParent();
+        ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
+        if(classBodyDeclaration.getChild(0) != null){
+          
+            String modifier = classBodyDeclaration.getChild(0).getText();
+            variable.setModifier(modifier);
+        }
+     
 
         for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
             if (variableDeclarator.variableDeclaratorId() != null) {
@@ -860,7 +869,27 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
         //log(ctx);
-        typeBinding.setName(ctx.getChild(1).getText());
+        this.typeBinding.setName(ctx.getChild(1).getText());
+        String name = "";         
+        JavaParser.ClassDeclarationContext classDeclaration = (JavaParser.ClassDeclarationContext) ctx;
+            
+        if( classDeclaration.getChild(2).getText().equals("extends")){            
+            ParseTree typeExtends = classDeclaration.getChild(3);
+            name = typeExtends.getText();
+            for (TypeBinding typeBinding1 : this.typeBindingList) {
+                if(typeBinding1.getName().equals(typeExtends)){
+                    this.typeBinding.setExtendClass(typeBinding1);
+                    typeBinding1.getChildrenClass().add(this.typeBinding);
+                }
+            }
+            if(this.typeBinding.getExtendClass() == null){
+                TypeBinding type = new TypeBinding();
+                type.setName(name);
+                this.typeBinding.setExtendClass(type);
+            }
+            
+        }
+        
         return super.visitClassDeclaration(ctx);
     }
 
@@ -885,7 +914,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
         //log(ctx);
-             
+       
+          
+        if( ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext){
+            String modifier =  ctx.getChild(0).getText();    
+            this.typeBinding.setModifier(modifier);
+        }
+        
         return super.visitTypeDeclaration(ctx);
     }
 

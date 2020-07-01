@@ -6,19 +6,22 @@ import java.util.List;
 public class TypeBinding {
     
     private TypeBinding extendClass;
+    private List<TypeBinding> childrenClass;
     private TypeBinding parentClass;
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
-    private TypeBinding modifier;
+    private String modifier;
     private String name;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
+        this.childrenClass = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.attributes = new ArrayList<>();
         this.extendClass = null;
         this.mdbList = new ArrayList<>();
         this.name = "";
+        this.modifier = "";
     }
     
     @Override
@@ -41,7 +44,7 @@ public class TypeBinding {
     /**
      * @return the modifier
      */
-    public TypeBinding getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
@@ -55,7 +58,7 @@ public class TypeBinding {
     /**
      * @param modifier the modifier to set
      */
-    public void setModifier(TypeBinding modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 
@@ -131,6 +134,20 @@ public class TypeBinding {
      */
     public void setParentClass(TypeBinding parentClass) {
         this.parentClass = parentClass;
+    }
+
+    /**
+     * @return the childrenClass
+     */
+    public List<TypeBinding> getChildrenClass() {
+        return childrenClass;
+    }
+
+    /**
+     * @param childrenClass the childrenClass to set
+     */
+    public void setChildrenClass(List<TypeBinding> childrenClass) {
+        this.childrenClass = childrenClass;
     }
     
    
