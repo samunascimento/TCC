@@ -1893,10 +1893,15 @@ JavaLetterOrDigit
 WS  :  [ \t\r\n\u000C]+ -> skip
     ;
 
-COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+MULTI_COMMENT
+    :   '/*' .*? '*/' -> channel(2)
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    :   '//' ~[\r\n]* -> channel(2)
+    ;
+
+COMMENT
+    :      MULTI_COMMENT
+    |      LINE_COMMENT
     ;

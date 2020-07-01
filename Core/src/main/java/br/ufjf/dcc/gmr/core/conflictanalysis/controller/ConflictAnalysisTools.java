@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -114,7 +115,34 @@ public class ConflictAnalysisTools {
                 visitor = new Java9Visitor(false);
             }
             visitor.visit(tree);
-
+  
+             for (int index = 0; index < tokens.size(); index++)
+      {
+         Token token = tokens.get(index);
+         // substitute whatever parser you have
+         if (token.getType() != parser.WS) 
+         {
+        String out = "";
+             if(token.getChannel()==2){
+                // Comments will be printed as channel 2 (configured in .g4 grammar file)
+            out += "Channel: " + token.getChannel();
+            out += " Type: " + token.getType();
+            out += " Hidden: ";
+             }
+            List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index);
+            for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++)
+            {
+               if (hiddenTokensToLeft.get(i).getType() != parser.WS)
+               {
+                 out += "\n\t" + i + ":";
+                  out += "\n\tChannel: " + hiddenTokensToLeft.get(i).getChannel() + "  Type: " + hiddenTokensToLeft.get(i).getType();
+                  out += hiddenTokensToLeft.get(i).getText().replaceAll("\\s", "");
+               }
+            }
+             out += token.getText().replaceAll("\\s", "");
+            System.out.println(out);
+         }
+      }
             return visitor.getList();
         } else {
             throw new IOException();
