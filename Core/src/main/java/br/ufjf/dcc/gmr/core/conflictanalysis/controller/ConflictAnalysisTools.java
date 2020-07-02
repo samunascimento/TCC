@@ -107,16 +107,19 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-            getJava9Comment(tokens,1,1410);
+            ConflictAnalysisTools.getJava9Comment(tokens,true);
             Java9Visitor visitor;
+            List<SyntaxStructure> result;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
+                result = ConflictAnalysisTools.getJava9Comment(tokens, true);
             } else {
                 visitor = new Java9Visitor(false);
+                result = ConflictAnalysisTools.getJava9Comment(tokens, false);
             }
             visitor.visit(tree);
-
-            return visitor.getList();
+            result.addAll(visitor.getList());
+            return result;
         } else {
             throw new IOException();
         }
@@ -198,40 +201,20 @@ public class ConflictAnalysisTools {
         }
     }
 
-    public static List<String> getJava9Comment(CommonTokenStream tokens, int startLine, int stopLine) throws IOException {
-        List<String> comments = new ArrayList<>();
+    public static List<SyntaxStructure> getJava9Comment(CommonTokenStream tokens, boolean warning) throws IOException {
+        List<SyntaxStructure> result = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
             if (token.getType() != Java9Lexer.WS) {
                 List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
-                List<Token> leftResult = new ArrayList<>();
                 for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
-                    if (hiddenTokensToLeft.get(i).getType() != Java9Lexer.WS
-                            && hiddenTokensToLeft.get(i).getLine() >= startLine
-                            && hiddenTokensToLeft.get(i).getLine() <= stopLine) {
-                        if (hiddenTokensToLeft.get(i).getChannel() == 2) {
-                            leftResult.add(hiddenTokensToLeft.get(i));
-                            comments.add(hiddenTokensToLeft.get(i).getText());
-                        }
+                    if (hiddenTokensToLeft.get(i).getChannel() == 2) {
+                        result.add(new SyntaxStructure(hiddenTokensToLeft.get(i),warning));
                     }
                 }
-                if (!leftResult.isEmpty()) {
-                    for (Token coisa : leftResult) {
-                        System.out.println("------------------------\nBEGIN LINE: " + coisa.getLine()
-                                + "\nEND LINE: " + (coisa.getLine() + coisa.getText().split("\n").length - 1)
-                                + "\nSTART INDEX: " + coisa.getStartIndex()
-                                + "\nSTOP INDEX: " + coisa.getStopIndex()
-                                + "\nTOKEN INDEX: " + coisa.getTokenIndex()
-                                + "\nCHAR POSITION IN LINE: " + coisa.getCharPositionInLine()
-                                + "\nTYPE: " + coisa.getText()
-                                + "\nEND: " + (coisa.getCharPositionInLine() + coisa.getText().length())
-                                + "\nTEXT:\n\n" + coisa.getText() + "\n------------------------\n");
-                    }
-                }
-                
             }
         }
-        return comments;
+        return result;
     }
 
     public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
@@ -259,14 +242,14 @@ public class ConflictAnalysisTools {
                     auxStructure = null;
                     for (SyntaxStructure ss : rawList) {
 
-                        if (ss.getStartLine() >= currentLine && ss.getStartLineStartColumn() >= currentColumn && ss.getStopLine() <= endLine) {
+                        if (ss.getStartLine() >= currentLine && ss.getStartCharIndex() >= currentColumn && ss.getStopLine() <= endLine) {
                             if (auxStructure == null) {
                                 auxStructure = ss;
                             } else {
                                 if (auxStructure.getStartLine() > ss.getStartLine()) {
                                     auxStructure = ss;
                                 } else {
-                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartLineStartColumn() > ss.getStartLineStartColumn()) {
+                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartCharIndex() > ss.getStartCharIndex()) {
                                         auxStructure = ss;
                                     }
                                 }
@@ -277,7 +260,7 @@ public class ConflictAnalysisTools {
                     if (auxStructure != null) {
                         list.add(auxStructure);
                         currentLine = auxStructure.getStopLine();
-                        currentColumn = auxStructure.getStopLineStopColumn();
+                        currentColumn = auxStructure.getStopCharIndex();
                     } else {
                         currentLine++;
                         currentColumn = 0;

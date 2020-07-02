@@ -208,12 +208,12 @@ public class ConflictRegion {
         str = str + "\n\n\n\n";
         if (this.syntaxV1 != null) {
             for (SyntaxStructure v1 : this.syntaxV1) {
-                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v1.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
             }
         }
         if (this.syntaxV2 != null) {
             for (SyntaxStructure v2 : this.syntaxV2) {
-                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v2.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
             }
         }
 

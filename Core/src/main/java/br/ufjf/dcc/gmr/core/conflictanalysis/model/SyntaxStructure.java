@@ -10,22 +10,36 @@ public class SyntaxStructure {
 
     private final int startLine;
     private final int stopLine;
-    private final int startLineStartColumn;
-    private final int stopLineStopColumn;
+    private final int startCharIndex;
+    private final int stopCharIndex;
     private final String structureType;
     private final boolean warning;
     private final String text;
 
-    public SyntaxStructure(Token start, Token stop, String structureType, String text, boolean warning) {
+    public SyntaxStructure(Token start, Token stop, String structureType,String text, boolean warning) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
-        this.startLineStartColumn = start.getStartIndex();
-        this.stopLineStopColumn = stop.getStopIndex();
+        this.startCharIndex = start.getStartIndex();
+        this.stopCharIndex = stop.getStopIndex();
         this.structureType = structureType;
         this.text = text;
         this.warning = warning;
     }
-    
+
+    public SyntaxStructure(Token token, boolean warning) {
+        this.startLine = token.getLine();
+        this.stopLine = (token.getLine() + token.getText().split("\n").length - 1);
+        this.startCharIndex = token.getStartIndex();
+        this.stopCharIndex = token.getStopIndex();
+        if (token.getType() == 117) {
+            this.structureType = "MultiLineComment";
+        } else {
+            this.structureType = "LineComment";
+        }
+        this.text = token.getText();
+        this.warning = warning;
+    }
+
     public int getStartLine() {
         return startLine;
     }
@@ -34,16 +48,16 @@ public class SyntaxStructure {
         return stopLine;
     }
 
-    public int getStartLineStartColumn() {
-        return startLineStartColumn;
+    public int getStartCharIndex() {
+        return startCharIndex;
     }
 
     public String getText() {
         return text;
     }
 
-    public int getStopLineStopColumn() {
-        return stopLineStopColumn;
+    public int getStopCharIndex() {
+        return stopCharIndex;
     }
 
     public String getStructureType() {
@@ -61,9 +75,14 @@ public class SyntaxStructure {
         return this.warning;
     }
 
-    @Override
-    public String toString() {
-        return "SyntaxStructure{" + "startLine=" + startLine + ", stopLine=" + stopLine + ", startLineStartColumn=" + startLineStartColumn + ", stopLineStopColumn=" + stopLineStopColumn + ", structureType=" + structureType + ", warning=" + warning + '}';
+    public String getForm() {
+        String result = "STRUCTURE TYPE: " + this.getStructureType()
+                + "\nSTART LINE: " + this.startLine
+                + "\nSTOP LINE: " + this.stopLine
+                + "\nSTART CHAR INDEX: " + this.startCharIndex
+                + "\nSTOP CHAR INDEX: " + this.stopCharIndex
+                + "\nTEXT:\n" + this.text;  
+        return result;
     }
 
 }

@@ -24,10 +24,20 @@ public class Translator {
         if (list.contains("Extension not parseble!")) {
             mainList.add("Extension not parseble!");
         } else {
+            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Nothing")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
                 list.remove("Nothing");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("MultiLineComment")
+                    || list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("MultiLineComment");
+                list.remove("LineComment");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("IfThenElseStatement")
                     || list.contains("IfThenStatement")
@@ -40,7 +50,7 @@ public class Translator {
                 list.remove("IfExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ForStatement")
                     || list.contains("ForStatementNoShortIf")

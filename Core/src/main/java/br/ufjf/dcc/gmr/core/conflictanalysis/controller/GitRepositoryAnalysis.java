@@ -332,9 +332,38 @@ public class GitRepositoryAnalysis {
         this.processData.fileName = this.processData.auxArray[this.processData.auxArray.length - 1];
     }
 
+    private boolean checkIfIsBegin(String line) {
+        if (line.startsWith("<<<<<<< HEAD")) {
+            if (line.replaceAll("<<<<<<< HEAD", "").equals("")) {
+                return true;
+            } else if (line.replaceAll("<<<<<<< HEAD", "").startsWith(":") && line.replaceAll("<<<<<<< HEAD", "").length() > 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private boolean checkIfIsEnd(String line) {
+        String test = ">>>>>>> " + processData.parents.get(1).getCommitHash(); 
+        if (line.startsWith(test)) {
+            if (line.replaceAll(test, "").equals("")) {
+                return true;
+            } else if (line.replaceAll(test, "").startsWith(":") && line.replaceAll(test, "").length() > 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     private void processFileContent(List<String> fileContent) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (int i = 0; i < fileContent.size(); i++) {
-            if (fileContent.get(i).contains("<<<<" + "<<<")) {
+            if (checkIfIsBegin(fileContent.get(i))) {
                 this.processData.beginLine = i + 1;
                 for (int j = i - linesContext; j < i; j++) {
                     if (j < 0) {
@@ -344,13 +373,13 @@ public class GitRepositoryAnalysis {
                     }
                 }
                 i++;
-                while (!fileContent.get(i).contains("====" + "===")) {
+                while (!(fileContent.get(i).replaceAll("=======", "").equals("") && fileContent.get(i).startsWith("======="))) {
                     this.processData.v1.add(fileContent.get(i));
                     i++;
                 }
                 this.processData.separatorLine = i + 1;
                 i++;
-                while (!fileContent.get(i).contains(">>>>" + ">>>")) {
+                while (!checkIfIsEnd(fileContent.get(i))) {
                     this.processData.v2.add(fileContent.get(i));
                     i++;
                 }
