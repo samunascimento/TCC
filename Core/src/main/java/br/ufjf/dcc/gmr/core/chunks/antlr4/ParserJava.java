@@ -31,17 +31,34 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
- 
+
     private static boolean reachEnd = false;
-    
+
     public static void main(String[] args) throws IOException, InterruptedException {
+
         List<List> pathAndOpenViewList = view();
+        System.out.println("teste");
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
+        List<MyVisitor> asts= new ArrayList<>();
+        int j = 0, i = 0;
         
-        MyVisitor AST1 = ASTExtractor(pathsList.get(2), booleanList.get(2));
-        MyVisitor AST2 = ASTExtractor(pathsList.get(3), booleanList.get(3));
+        for (int aux = 0; aux < pathsList.size(); aux++) {
+            asts.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));
+        }
+        
+        for (MyVisitor ast1 : asts) {
+            for (MyVisitor ast2 : asts) {
+                if(j != i){
+                    compare(ast1, ast2);
+                }
+                i++;
+            }
+            j++;
+        }
+    }
 
+    private static void compare(MyVisitor AST1, MyVisitor AST2) {
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
@@ -72,7 +89,6 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
-
     }
 
     private static List<List> view() throws InterruptedException {
@@ -122,7 +138,7 @@ public class ParserJava {
 
         returnList.add(booleanReturnList);
         returnList.add(pathsReturnList);
-        
+
         while (ParserJava.reachEnd == false) {
             Thread.sleep(1000);
         }
@@ -140,7 +156,7 @@ public class ParserJava {
 
         //Console
         //System.out.println(tree.toStringTree(parser));
-
+        System.out.println("Parser : " + path);
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
         String[] aux = path.split("/");

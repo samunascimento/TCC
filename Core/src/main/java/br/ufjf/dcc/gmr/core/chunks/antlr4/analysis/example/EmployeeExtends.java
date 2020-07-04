@@ -16,8 +16,8 @@ public class EmployeeExtends extends Person {
     private float salary;
     private boolean active;
 
-    public EmployeeExtends(String office, String registration, float salary, boolean active, String name, String CPF, int Age) {
-        super(name, CPF, Age);
+    public EmployeeExtends(String office, String registration, float salary, boolean active, String name, String cpf, int age) {
+        super(name, cpf, age);
         this.office = office;
         this.registration = registration;
         this.salary = salary;
