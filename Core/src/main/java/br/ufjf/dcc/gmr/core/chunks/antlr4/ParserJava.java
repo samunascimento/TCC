@@ -41,12 +41,7 @@ public class ParserJava {
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
         List<MyVisitor> asts = new ArrayList<>();
-        List<MyVisitor> astsAux = new ArrayList<>();
         int j = 0, i = 0;
-
-        for (int aux = 0; aux < pathsList.size(); aux++) {
-            astsAux.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));
-        }
 
         for (int aux = 0; aux < pathsList.size(); aux++) {
             asts.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));

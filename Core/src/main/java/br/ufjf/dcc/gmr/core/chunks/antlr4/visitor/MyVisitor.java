@@ -22,6 +22,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private boolean firstAnalysis;
     private boolean secondAnalysis;
     private boolean methodDeclaration;
+    private boolean isStatic;
 
     public MyVisitor() {
 
@@ -177,7 +178,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitExpression(JavaParser.ExpressionContext ctx) {
         //System.out.println("====================================== NAO TRATADO  ======================================");
-
         return super.visitExpression(ctx);
     }
 
@@ -417,7 +417,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 variable.setName(name);
             }
         }
-        
+
         if (this.methodDeclaration) {
             List<List<BaseBinding>> bindingScope = mdbGeneral.getBindingScope();
             List<BaseBinding> get = bindingScope.get(bindingScope.size() - 1);
@@ -786,6 +786,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
+        mdbGeneral.setIsStatic(isStatic);
         mdbGeneral.setTypeBinding(methodType);
         mdbGeneral.setParameters(parameters);
         methodDeclarationBindingList.add(mdbGeneral);
@@ -805,7 +806,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassBodyDeclaration(JavaParser.ClassBodyDeclarationContext ctx) {
-        //log(ctx);
+        if (ctx.getChild(1).getText().equals("static")) {
+            this.isStatic = true;
+        } else {
+            this.isStatic = false;
+        }
         return super.visitClassBodyDeclaration(ctx);
     }
 

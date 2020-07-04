@@ -7,6 +7,7 @@ import java.util.List;
 public class MethodDeclarationBinding extends BaseBinding {
 
     private String modifier;
+    private boolean isStatic;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
@@ -53,14 +54,21 @@ public class MethodDeclarationBinding extends BaseBinding {
         String output = "";
 
         output = output.concat(this.getName()).concat("(");
-        for (TypeBinding parameter : this.parameters) {
-            output = output.concat(parameter.getName() + ",");
+        
+        for (int i = 0; i < parameters.size(); i++) {
+            if(i < parameters.size()-1){
+                output = output.concat(parameters.get(i).getName() + ",");
+            }else{
+                output = output.concat(parameters.get(i).getName());
+            }
         }
+        
         output = output.concat(")");
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
 
+        output = output.concat(" is static: " + isStatic);
         return output;
     }
 
@@ -148,5 +156,19 @@ public class MethodDeclarationBinding extends BaseBinding {
      */
     public void setBindingScope(List<List<BaseBinding>> bindingScope) {
         this.bindingScope = bindingScope;
+    }
+
+    /**
+     * @return the isStatic
+     */
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    /**
+     * @param isStatic the isStatic to set
+     */
+    public void setIsStatic(boolean isStatic) {
+        this.isStatic = isStatic;
     }
 }

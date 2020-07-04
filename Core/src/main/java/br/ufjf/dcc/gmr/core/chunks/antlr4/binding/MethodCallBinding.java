@@ -33,8 +33,13 @@ public class MethodCallBinding extends BaseBinding{
         String output = "";
 
         output = output.concat(this.getName()).concat("(");
-        for (TypeBinding parameter : this.parameters) {
-            output = output.concat(parameter.getName() + ",");
+        
+        for (int i = 0; i < parameters.size(); i++) {
+            if(i < parameters.size()-1){
+                output = output.concat(parameters.get(i).getName() + ",");
+            }else{
+                output = output.concat(parameters.get(i).getName());
+            }
         }
         output = output.concat(")");
 
