@@ -1924,6 +1924,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCaseLine(Java9Parser.CaseLineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCaseLine(Java9Parser.CaseLineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEnumConstantName(Java9Parser.EnumConstantNameContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
@@ -98,7 +99,7 @@ public class ConflictAnalysisTools {
             throw new IOException();
         }
     }
-    
+
     public static List<SyntaxStructure> analyzeJava9SyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".java")) {
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -106,16 +107,19 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-            
+            ConflictAnalysisTools.getJava9Comment(tokens,true);
             Java9Visitor visitor;
+            List<SyntaxStructure> result;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
+                result = ConflictAnalysisTools.getJava9Comment(tokens, true);
             } else {
                 visitor = new Java9Visitor(false);
+                result = ConflictAnalysisTools.getJava9Comment(tokens, false);
             }
             visitor.visit(tree);
-
-            return visitor.getList();
+            result.addAll(visitor.getList());
+            return result;
         } else {
             throw new IOException();
         }
@@ -187,6 +191,82 @@ public class ConflictAnalysisTools {
                         list.add(ss);
                     }
                 }
+            } else {
+                return null;
+            }
+            return list;
+        } catch (IOException ex) {
+            System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
+            throw new IOException();
+        }
+    }
+
+    public static List<SyntaxStructure> getJava9Comment(CommonTokenStream tokens, boolean warning) throws IOException {
+        List<SyntaxStructure> result = new ArrayList<>();
+        for (int index = 0; index < tokens.size(); index++) {
+            Token token = tokens.get(index);
+            if (token.getType() != Java9Lexer.WS) {
+                List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
+                for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
+                    if (hiddenTokensToLeft.get(i).getChannel() == 2) {
+                        result.add(new SyntaxStructure(hiddenTokensToLeft.get(i),warning));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+        if (beginLine < 1 || endLine < 1) {
+            return null;
+        }
+        try {
+            int currentLine = beginLine;
+            int currentColumn = 0;
+            List<SyntaxStructure> rawList = null;
+            List<SyntaxStructure> list = new ArrayList();
+            SyntaxStructure auxStructure = null;
+            if (filePath.endsWith(".java")) {
+                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
+            } else if (filePath.endsWith(".py")) {
+                rawList = ConflictAnalysisTools.analyzePythonSyntaxTree(filePath);
+            } else {
+                return null;
+            }
+
+            if (rawList != null) {
+                while (currentLine <= endLine) {
+                    auxStructure = null;
+                    for (SyntaxStructure ss : rawList) {
+
+                        if (ss.getStartLine() >= currentLine && ss.getStartCharIndex() >= currentColumn && ss.getStopLine() <= endLine) {
+                            if (auxStructure == null) {
+                                auxStructure = ss;
+                            } else {
+                                if (auxStructure.getStartLine() > ss.getStartLine()) {
+                                    auxStructure = ss;
+                                } else {
+                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartCharIndex() > ss.getStartCharIndex()) {
+                                        auxStructure = ss;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    if (auxStructure != null) {
+                        list.add(auxStructure);
+                        currentLine = auxStructure.getStopLine();
+                        currentColumn = auxStructure.getStopCharIndex();
+                    } else {
+                        currentLine++;
+                        currentColumn = 0;
+                    }
+                }
+
             } else {
                 return null;
             }

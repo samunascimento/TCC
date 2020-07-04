@@ -3,22 +3,24 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TypeBinding {
+public class TypeBinding extends BaseBinding{
     
     private TypeBinding extendClass;
+    private List<TypeBinding> childrenClass;
     private TypeBinding parentClass;
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
-    private TypeBinding modifier;
-    private String name;
+    private String modifier;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
+        super();
+        this.childrenClass = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.attributes = new ArrayList<>();
         this.extendClass = null;
         this.mdbList = new ArrayList<>();
-        this.name = "";
+        this.modifier = null;
     }
     
     @Override
@@ -26,7 +28,7 @@ public class TypeBinding {
 
        String output;
        
-       output = "name= "+this.name+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
+       output = "name= "+super.getName()+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
 
         return output;
     }
@@ -41,7 +43,7 @@ public class TypeBinding {
     /**
      * @return the modifier
      */
-    public TypeBinding getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
@@ -55,22 +57,8 @@ public class TypeBinding {
     /**
      * @param modifier the modifier to set
      */
-    public void setModifier(TypeBinding modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -131,6 +119,20 @@ public class TypeBinding {
      */
     public void setParentClass(TypeBinding parentClass) {
         this.parentClass = parentClass;
+    }
+
+    /**
+     * @return the childrenClass
+     */
+    public List<TypeBinding> getChildrenClass() {
+        return childrenClass;
+    }
+
+    /**
+     * @param childrenClass the childrenClass to set
+     */
+    public void setChildrenClass(List<TypeBinding> childrenClass) {
+        this.childrenClass = childrenClass;
     }
     
    

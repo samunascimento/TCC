@@ -1598,6 +1598,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitSwitchLabel(Java9Parser.SwitchLabelContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#caseLine}.
+	 * @param ctx the parse tree
+	 */
+	void enterCaseLine(Java9Parser.CaseLineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#caseLine}.
+	 * @param ctx the parse tree
+	 */
+	void exitCaseLine(Java9Parser.CaseLineContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#enumConstantName}.
 	 * @param ctx the parse tree
 	 */

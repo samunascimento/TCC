@@ -37,7 +37,7 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
         
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(),ctx.getStop(),aux[0],ctxText,warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
     }
 
     @Override
@@ -283,34 +283,6 @@ public class JavaVisitor extends JavaParserBaseVisitor<Object> {
 
   @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-        
-        
-        Token startDeclaration = null, stopDeclaration = null;
-        for (Object object : ctx.children) {
-            if(object instanceof JavaParser.TypeTypeContext){
-                JavaParser.TypeTypeContext token = (JavaParser.TypeTypeContext) object;
-                startDeclaration = token.getStart();
-            }else if(object instanceof JavaParser.VariableDeclaratorsContext){
-                JavaParser.VariableDeclaratorsContext token = (JavaParser.VariableDeclaratorsContext) object;
-                JavaParser.VariableDeclaratorContext child = (JavaParser.VariableDeclaratorContext) token.getChild(0);
-                
-                for (ParseTree parseTree : child.children) {
-                    if(parseTree instanceof JavaParser.VariableDeclaratorIdContext){
-                        JavaParser.VariableDeclaratorIdContext identifier = (JavaParser.VariableDeclaratorIdContext) parseTree;
-                        stopDeclaration = identifier.getStop();
-                        this.list.add(new SyntaxStructure(startDeclaration, stopDeclaration, "LocalVariableDeclaration", "",warning));
-                    }
-                    else if(parseTree instanceof JavaParser.VariableInitializerContext){
-                        
-                        JavaParser.VariableInitializerContext initializer = (JavaParser.VariableInitializerContext) parseTree;
-                        this.list.add(new SyntaxStructure(initializer.getStart(), initializer.getStop(), "LocalVariableInitializer","" ,warning));
-                    }
-                }
-                
-            }
-            
-        }
-                
         process(ctx);
         return super.visitLocalVariableDeclaration(ctx);
     }

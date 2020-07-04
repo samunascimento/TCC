@@ -965,6 +965,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSwitchLabel(Java9Parser.SwitchLabelContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#caseLine}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCaseLine(Java9Parser.CaseLineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#enumConstantName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

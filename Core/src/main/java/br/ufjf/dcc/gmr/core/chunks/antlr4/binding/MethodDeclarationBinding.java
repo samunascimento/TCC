@@ -4,9 +4,8 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodDeclarationBinding {
+public class MethodDeclarationBinding extends BaseBinding {
 
-    private String name;
     private String modifier;
     private List<TypeBinding> parameters;
     private PackageBinding packageBinding;
@@ -14,8 +13,8 @@ public class MethodDeclarationBinding {
     private JavaParser.MethodDeclarationContext ctx;
 
     public MethodDeclarationBinding() {
-        this.modifier = "";
-        this.name = "";
+        super();
+        this.modifier = null;
         this.parameters = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
@@ -105,13 +104,7 @@ public class MethodDeclarationBinding {
         this.typeBinding = typeBinding;
     }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
+  
     /**
      * @return the parameters
      */
@@ -119,12 +112,6 @@ public class MethodDeclarationBinding {
         return parameters;
     }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 
     /**
      * @param parameters the parameters to set
