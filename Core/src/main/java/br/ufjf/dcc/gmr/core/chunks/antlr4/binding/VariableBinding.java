@@ -26,7 +26,7 @@ public class VariableBinding extends BaseBinding {
     }
 
     public VariableBinding() {
-        super("");
+        
     }
 
     @Override

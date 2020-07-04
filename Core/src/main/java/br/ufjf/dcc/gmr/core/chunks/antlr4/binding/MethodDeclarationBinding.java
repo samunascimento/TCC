@@ -11,6 +11,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
+    private List<List<BaseBinding>> bindingScope;
 
     public MethodDeclarationBinding() {
         super();
@@ -18,6 +19,7 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.parameters = new ArrayList<>();
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
+        this.bindingScope = new ArrayList<>();
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
@@ -79,7 +81,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the packageBinding
      */
-    public PackageBinding getPackageBinding() {
+    public PackageBinding getPackageBinding() {        
         return packageBinding;
     }
 
@@ -132,5 +134,19 @@ public class MethodDeclarationBinding extends BaseBinding {
      */
     public void setModifier(String modifier) {
         this.modifier = modifier;
+    }
+
+    /**
+     * @return the bindingScope
+     */
+    public List<List<BaseBinding>> getBindingScope() {
+        return bindingScope;
+    }
+
+    /**
+     * @param bindingScope the bindingScope to set
+     */
+    public void setBindingScope(List<List<BaseBinding>> bindingScope) {
+        this.bindingScope = bindingScope;
     }
 }

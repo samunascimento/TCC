@@ -18,6 +18,7 @@ public class BaseBinding {
     }
 
     public BaseBinding() {
+        this.name = null;
     }
     
     

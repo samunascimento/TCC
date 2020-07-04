@@ -20,9 +20,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private List<VariableBinding> variableBindingList;
     private PackageBinding packageBinding;
     private static List<TypeBinding> typeBindingList = new ArrayList<>();
+    private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
     private boolean firstAnalysis;
     private boolean secondAnalysis;
+    private boolean methodDeclaration;
 
     public MyVisitor() {
         
@@ -32,6 +34,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         this.methodCallBidingList = new ArrayList<>();
         this.methodDeclarationBindingList = new ArrayList<>();
         this.variableBindingList = new ArrayList<>();
+        this.methodDeclaration = false;
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -436,6 +439,12 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 variable.setName(name);
             }
         }
+        if(this.methodDeclaration){
+            List<List<BaseBinding>> bindingScope = mdbGeneral.getBindingScope();
+            List<BaseBinding> get = bindingScope.get(bindingScope.size()-1);
+            get.add(variable);
+        }else
+        
         getVariableBindingList().add(variable);
 
         return super.visitLocalVariableDeclaration(ctx);
@@ -450,7 +459,21 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
         //log(ctx);
-        return super.visitBlock(ctx);
+         List<BaseBinding> bindings = new ArrayList<>();
+        
+        if(this.methodDeclaration){
+            this.mdbGeneral.getBindingScope().add(bindings);
+       
+        }
+        
+        Object visitBlock = super.visitBlock(ctx);
+        
+        if(this.methodDeclaration){           
+            this.mdbGeneral.getBindingScope().remove(bindings);
+     
+        }
+        
+        return visitBlock;
     }
 
     @Override
@@ -742,24 +765,28 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-
+        
+        this.methodDeclaration = true;
+           
         if (!this.firstAnalysis) {
-            return super.visitMethodDeclaration(ctx);
+            Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
+            this.methodDeclaration = false;
+            return visitMethodDeclaration;
         }
-
+     
         List<TypeBinding> parameters = new ArrayList<>();
         TypeBinding methodType = new TypeBinding();
-        MethodDeclarationBinding mdb = new MethodDeclarationBinding();
+        mdbGeneral = new MethodDeclarationBinding();
 
-        mdb.setPackageBinding(packageBinding);
+        mdbGeneral.setPackageBinding(packageBinding);
         methodType.setPackageBinding(packageBinding);
-        mdb.setName(ctx.IDENTIFIER().getText());
-        mdb.setCtx(ctx);
+        mdbGeneral.setName(ctx.IDENTIFIER().getText());
+        mdbGeneral.setCtx(ctx);
 
         ParserRuleContext memberDeclaration = ctx.getParent();
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();        
         ParseTree modifier = classBodyDeclaration.getChild(0);        
-        mdb.setModifier(modifier.getText());
+        mdbGeneral.setModifier(modifier.getText());
 
         JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
         if (ctx.typeTypeOrVoid().typeType() == null) {
@@ -785,13 +812,16 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-        mdb.setTypeBinding(methodType);
-        mdb.setParameters(parameters);
-        methodDeclarationBindingList.add(mdb);
+        mdbGeneral.setTypeBinding(methodType);
+        mdbGeneral.setParameters(parameters);
+        methodDeclarationBindingList.add(mdbGeneral);
        
-        typeBinding.getMdbList().add(mdb);
+        typeBinding.getMdbList().add(mdbGeneral);
         
-        return super.visitMethodDeclaration(ctx);
+        
+        Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
+        this.methodDeclaration = false;
+        return visitMethodDeclaration;
     }
 
     @Override
@@ -1140,5 +1170,4 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public static void setTypeBindingList(List<TypeBinding> aTypeBindingList) {
         typeBindingList = aTypeBindingList;
     }
-
 }
