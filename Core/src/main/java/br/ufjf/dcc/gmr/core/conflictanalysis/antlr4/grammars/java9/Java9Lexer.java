@@ -2,12 +2,9 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Java9Lexer extends Lexer {
@@ -34,7 +31,7 @@ public class Java9Lexer extends Lexer {
 		DIV=99, BITAND=100, BITOR=101, CARET=102, MOD=103, ADD_ASSIGN=104, SUB_ASSIGN=105, 
 		MUL_ASSIGN=106, DIV_ASSIGN=107, AND_ASSIGN=108, OR_ASSIGN=109, XOR_ASSIGN=110, 
 		MOD_ASSIGN=111, LSHIFT_ASSIGN=112, RSHIFT_ASSIGN=113, URSHIFT_ASSIGN=114, 
-		Identifier=115, WS=116, COMMENT=117, LINE_COMMENT=118;
+		Identifier=115, WS=116, MULTI_LINE_COMMENT=117, LINE_COMMENT=118;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -70,7 +67,7 @@ public class Java9Lexer extends Lexer {
 		"BITOR", "CARET", "MOD", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", 
 		"AND_ASSIGN", "OR_ASSIGN", "XOR_ASSIGN", "MOD_ASSIGN", "LSHIFT_ASSIGN", 
 		"RSHIFT_ASSIGN", "URSHIFT_ASSIGN", "Identifier", "JavaLetter", "JavaLetterOrDigit", 
-		"WS", "COMMENT", "LINE_COMMENT"
+		"WS", "MULTI_LINE_COMMENT", "LINE_COMMENT"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -106,7 +103,7 @@ public class Java9Lexer extends Lexer {
 		"OR", "INC", "DEC", "ADD", "SUB", "MUL", "DIV", "BITAND", "BITOR", "CARET", 
 		"MOD", "ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "AND_ASSIGN", 
 		"OR_ASSIGN", "XOR_ASSIGN", "MOD_ASSIGN", "LSHIFT_ASSIGN", "RSHIFT_ASSIGN", 
-		"URSHIFT_ASSIGN", "Identifier", "WS", "COMMENT", "LINE_COMMENT"
+		"URSHIFT_ASSIGN", "Identifier", "WS", "MULTI_LINE_COMMENT", "LINE_COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -620,7 +617,7 @@ public class Java9Lexer extends Lexer {
 		"\u0329\u032c\u0333\u0337\u033b\u0341\u0344\u034b\u034f\u0357\u035a\u0361"+
 		"\u0365\u0369\u036e\u0371\u0374\u0379\u037c\u0381\u0386\u038e\u0399\u039d"+
 		"\u03a2\u03a6\u03b6\u03c0\u03c6\u03cd\u03d1\u03d7\u03e4\u03ec\u0475\u047e"+
-		"\u0486\u048b\u0495\u04a3\4\b\2\2\2\3\2";
+		"\u0486\u048b\u0495\u04a3\4\b\2\2\2\4\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

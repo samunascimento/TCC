@@ -900,10 +900,14 @@ switchLabels
 	;
 
 switchLabel
-	:	'case' constantExpression ':'
-	|	'case' enumConstantName ':'
+	:	caseLine
 	|	'default' ':'
 	;
+
+caseLine
+	:	'case' constantExpression ':'
+	|	'case' enumConstantName ':'
+        ;
 
 enumConstantName
 	:	identifier
@@ -1893,10 +1897,10 @@ JavaLetterOrDigit
 WS  :  [ \t\r\n\u000C]+ -> skip
     ;
 
-COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+MULTI_LINE_COMMENT
+    :   '/*' .*? '*/' -> channel(2)
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    :   '//' ~[\r\n]* -> channel(2)
     ;

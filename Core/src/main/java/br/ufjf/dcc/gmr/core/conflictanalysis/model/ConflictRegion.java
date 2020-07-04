@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Outmost;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -9,7 +8,6 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -135,7 +133,7 @@ public class ConflictRegion {
             } else {
                 Git.checkout(v1Commit, repositoryPath);
                 if (useOutmost) {
-                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                    this.syntaxV1 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } else {
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
@@ -145,7 +143,7 @@ public class ConflictRegion {
             } else {
                 Git.checkout(v2Commit, repositoryPath);
                 if (useOutmost) {
-                    this.syntaxV2 = Outmost.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 } else {
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
@@ -169,7 +167,7 @@ public class ConflictRegion {
             } else {
                 Git.checkout(v1Commit, repositoryPath);
                 if (useOutmost) {
-                    this.syntaxV1 = Outmost.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                    this.syntaxV1 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 } else {
                     this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 }
@@ -179,7 +177,7 @@ public class ConflictRegion {
             } else {
                 Git.checkout(v2Commit, repositoryPath);
                 if (useOutmost) {
-                    this.syntaxV2 = Outmost.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                    this.syntaxV2 = ConflictAnalysisTools.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 } else {
                     this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 }
@@ -210,12 +208,12 @@ public class ConflictRegion {
         str = str + "\n\n\n\n";
         if (this.syntaxV1 != null) {
             for (SyntaxStructure v1 : this.syntaxV1) {
-                str = str + v1.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v1.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v1.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
             }
         }
         if (this.syntaxV2 != null) {
             for (SyntaxStructure v2 : this.syntaxV2) {
-                str = str + v2.getStructureType() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n" + v2.getText() + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n";
+                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v2.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
             }
         }
 

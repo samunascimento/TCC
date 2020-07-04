@@ -1130,6 +1130,13 @@ public class Java9BaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitCaseLine(Java9Parser.CaseLineContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitEnumConstantName(Java9Parser.EnumConstantNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

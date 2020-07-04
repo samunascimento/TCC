@@ -4,6 +4,9 @@ import React, { useRef, useEffect } from 'react';
 import './Style.css'
 
 function BarChart({ data }) {
+
+    console.log(data)
+
     const ref = useRef();
 
     useEffect(() => {
@@ -11,8 +14,6 @@ function BarChart({ data }) {
     }, [data]);
 
     const draw = () => {
-
-        console.log(data);
 
         const colors = [
             'steelblue',
