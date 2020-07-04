@@ -40,20 +40,27 @@ public class ParserJava {
         System.out.println("teste");
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
-        List<MyVisitor> asts= new ArrayList<>();
+        List<MyVisitor> asts = new ArrayList<>();
+        List<MyVisitor> astsAux = new ArrayList<>();
         int j = 0, i = 0;
-        
+
+        for (int aux = 0; aux < pathsList.size(); aux++) {
+            astsAux.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));
+        }
+
         for (int aux = 0; aux < pathsList.size(); aux++) {
             asts.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));
         }
-        
+
         for (MyVisitor ast1 : asts) {
             for (MyVisitor ast2 : asts) {
-                if(j != i){
+                if (j != i) {
+                    System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getTypeBinding().getName() + " // " + ast2.getTypeBinding().getName() + " +=+=+=+=+=+=+=+=\n");
                     compare(ast1, ast2);
                 }
                 i++;
             }
+            i = 0;
             j++;
         }
     }
