@@ -158,7 +158,6 @@ public class ParserJava {
 
         //Console
         //System.out.println(tree.toStringTree(parser));
-        System.out.println("Parser : " + path);
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
         String[] aux = path.split("/");
