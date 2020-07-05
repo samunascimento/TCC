@@ -14,14 +14,25 @@ import java.util.Date;
 public class Point {
     private int x;
     private double y;
-    private String name;
+    private String namePackage;
+    private String nameClass;
+    private String nameMethod;
     private String metricName;
     private Date versionDate;
 
-    public Point(int x, double y,String name,String metricName,Date versionDate) {
+    public Point(int x, double y,String namePackage,String metricName,Date versionDate) {
         this.x = x;
         this.y = y;
-        this.name = name;
+        this.namePackage = namePackage;
+        this.metricName = metricName;
+        this.versionDate = versionDate;
+    }
+    
+    public Point(int x,double y, String namePackage,String nameClass,String metricName,Date versionDate){
+        this.x = x;
+        this.y = y;
+        this.namePackage = namePackage;
+        this.nameClass = nameClass;
         this.metricName = metricName;
         this.versionDate = versionDate;
     }
@@ -42,12 +53,28 @@ public class Point {
         this.y = y;
     }
 
-    public String getName() {
-        return name;
+    public String getNamePackage() {
+        return namePackage;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNamePackage(String namePackage) {
+        this.namePackage = namePackage;
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
+    }
+
+    public String getNameMethod() {
+        return nameMethod;
+    }
+
+    public void setNameMethod(String nameMethod) {
+        this.nameMethod = nameMethod;
     }
 
     public String getMetricName() {
@@ -65,9 +92,7 @@ public class Point {
     public void setVersionDate(Date versionDate) {
         this.versionDate = versionDate;
     }
-    
-    
-    
+
     
     
 }
