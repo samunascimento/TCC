@@ -36,6 +36,17 @@ public class Point {
         this.metricName = metricName;
         this.versionDate = versionDate;
     }
+    
+    public Point(int x,double y, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
+        this.x = x;
+        this.y = y;
+        this.namePackage = namePackage;
+        this.nameClass = nameClass;
+        this.nameMethod = nameMethod;
+        this.metricName = metricName;
+        this.versionDate = versionDate;
+    }
+    
 
     public int getX() {
         return x;
