@@ -407,10 +407,10 @@ public class MetricDao {
         return null;
     }
 
-    /* 
+     
         public List<List<Point>> selectClassMetrics(String nameProject) throws SQLException {
 
-        List<List<Point>> chartLines = new ArrayList<>();
+         List<List<Point>> chartLines = new ArrayList<>();
 
         Set<String> classNames = new HashSet<>();
         Set<String> metricNames = new HashSet<>();
@@ -420,49 +420,115 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value "
-                + "                        from tb_projectmetrics as a"
-                + "                        inner join tb_project_version as b "
-                + "                        on a.id = b.project_id "
-                + "                        inner join tb_version_package as c "
-                + "                        on b.version_id = c.version_id "
-                + "                        inner join tb_versionmetrics as v "
-                + "                        on v.id = c.version_id "
-                + "                        inner join tb_packagemetrics as d "
-                + "                        on c.package_id = d.id "
-                + "                        inner join tb_metric as e "
-                + "                        on d.tlocid = e.id or d.aid = e.id or d.ccrcid = e.id "
-                + "                        where a.projectname = " + "\'" + nameProject + "\'";
+        String sql = "select\n" +
+    "	pv.version_id ,\n" +
+    "	v.versiondate ,\n" +
+    "	p.packagename ,\n" +
+    "	c.classname ,\n" +
+    "	m.id ,\n" +
+    "	m.\"name\" ,\n" +
+    "	m.description ,\n" +
+    "	m.value\n" +
+    "from\n" +
+    "	tb_projectmetrics tp\n" +
+    "inner join tb_project_version pv on\n" +
+    "	tp.id = pv.project_id\n" +
+    "inner join tb_version_package vp on\n" +
+    "	vp.version_id = pv.version_id\n" +
+    "inner join tb_versionmetrics v\n" +
+    "	on vp.version_id = v.id \n" +
+    "inner join tb_package_class pc on\n" +
+    "	vp.package_id = pc.package_id\n" +
+    "inner join tb_packagemetrics p on\n" +
+    "	vp.package_id = p.id\n" +
+    "inner join tb_classmetrics c on\n" +
+    "	pc.class_id = c.id\n" +
+    "inner join tb_metric m on\n" +
+    /*"	c.ahfID = m.id\n" +
+    "	or c.aifID = m.id\n" +
+    "	or c.aaID = m.id\n" +
+    "	or c.adID = m.id\n" +
+    "	or c.aiID = m.id\n" +
+    "	or c.aitID = m.id\n" +
+    "	or c.aoID = m.id\n" +
+    "	or c.avID = m.id\n" +
+    "	or c.cfID = m.id\n" +
+    "	or c.clrciID = m.id\n" +
+    "	or c.cltciID = m.id\n" +
+    "	or c.ditID = m.id\n" +
+    "	or c.hmdID = m.id\n" +
+    "	or c.hmiID = m.id\n" +
+    "	or c.lcomID = m.id\n" +
+    "	or c.mhfID = m.id\n" +
+    "	or c.mifID = m.id\n" +
+    "	or c.maID = m.id\n" +
+    "	or c.mdID = m.id\n" +
+    "	or c.miID = m.id\n" +
+    "	or c.mitID = m.id\n" +
+    "	or c.moID = m.id\n" +
+    "	or c.nfID = m.id\n" +
+    "	or c.nmID = m.id\n" +
+    "	or c.nmaID = m.id\n" +
+    "	or c.nmiID = m.id\n" +
+    "	or c.nmirID = m.id\n" +
+    "	or c.noaID = m.id\n" +
+    "	or c.nochID = m.id\n" +
+    "	or c.nodID = m.id\n" +
+    "	or c.nodaID = m.id\n" +
+    "	or c.nodeID = m.id\n" +
+    "	or c.nolID = m.id\n" +
+    "	or c.nopaID = m.id\n" +
+    "	or c.normID = m.id\n" +
+    "	or c.npfID = m.id\n" +
+    "	or c.npmID = m.id\n" +
+    "	or c.nsfID = m.id\n" +
+    "	or c.nsmID = m.id\n" +
+    "	or c.pfID = m.id\n" +
+    "	or c.pmrID = m.id\n" +
+    "	or c.pmdID = m.id\n" +
+    "	or c.pmiID = m.id\n" +
+    "	or c.rtlocID = m.id\n" +
+    "	or c.sixID = m.id\n" +*/
+    "	c.tlocID = m.id\n" + // ALTERAR PARA 'OR' QUANDO FOR RODAR TODO O SCRIPT
+    /*"	or c.wmcID = m.id\n" +
+    "	or c.ahID = m.id"+ */
+    "       where tp.projectname = " + "\'" + nameProject + "\'";
+        int idIndex;
+
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             int id;
             while (resultSet.next()) {
-                classNames.add(resultSet.getString("packagename"));
+                classNames.add(resultSet.getString("className"));
                 metricNames.add(resultSet.getString("name"));
                 id = resultSet.getInt("id");
                 if (!versionIDs.contains(id)) {
                     versionIDs.add(id);
                 }
             }
-
-            for (String packageName : packageNames) {
+            for (String packageName : classNames) {
 
                 for (String metricName : metricNames) {
+
                     resultSet = stmt.executeQuery();
                     int cont = 0;
                     List<Point> listPoints = new ArrayList<>();
                     int idAux;
-                    int idIndex = 0;
+                    idIndex = 0;
                     while (resultSet.next()) {
-                        if (resultSet.getString("packageName").equals(packageName) && resultSet.getString("name").equals(metricName)) {
+                        if (resultSet.getString("className").equals(packageName) && resultSet.getString("name").equals(metricName)) {
                             idAux = resultSet.getInt("id");
-                            while (versionIDs.get(idIndex) < idAux) {
+                            while ((idIndex < versionIDs.size()) && (versionIDs.get(idIndex) < idAux)) {
                                 listPoints.add(null);
                                 cont++;
                                 idIndex++;
                             }
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value")));
+
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            Date versionDate = new Date(versionTimestamp.getTime());
+
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"),resultSet.getString("className"),resultSet.getString("name"), versionDate));
                             idIndex++;
                         }
                     }
@@ -473,10 +539,13 @@ public class MetricDao {
             return chartLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         } finally {
             if (stmt != null) {
                 stmt.close();
             }
         }
-    }*/
+        return null;
+    }
 }
