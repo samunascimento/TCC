@@ -114,6 +114,19 @@ public class JasomeResource {
         return listJ;
     }
     
+        
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("metric/method/{nameProject}")
+    public String getMetricMethod(@PathParam("nameProject") String nameProject) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        Gson g = new Gson();
+        List<List<Point>> selectMethodMetrics = dao.selectMethodMetrics(nameProject);
+        String listJ = g.toJson(selectMethodMetrics);
+        return listJ;
+    }
+    
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *
