@@ -152,10 +152,10 @@ export default class Project extends Component {
           const data = []
           const packagePoints = res.data;
           packagePoints.map((metrics) => {
-            metrics.filter((metric, index) => {             
-                (metric !== null) && (metric.metricName === metricName) ?
+            metrics.map((metric, index) => {             
+                if((metric !== null) && (metric.metricName === metricName)) {
                 metricCheck = true
-                : console.log('teste')          
+                }
             })
           if (metricCheck === true) {
             data.push(metrics)
