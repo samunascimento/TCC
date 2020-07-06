@@ -236,14 +236,17 @@ public class GitRepositoryAnalysis {
         this.processLabel.setText("Main Process...");
         System.out.println(status + "/" + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
-            this.catchCommits(merge);
-            Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
-            if (Git.mergeIsConflicting(this.processData.parents.get(1).getCommitHash(), repositoryPath, false, false)) {
-                this.secondProcessingLayer();
+            if (status == 443) {
+                System.out.println("");
+                this.catchCommits(merge);
+                Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
+                if (Git.mergeIsConflicting(this.processData.parents.get(1).getCommitHash(), repositoryPath, false, false)) {
+                    this.secondProcessingLayer();
+                }
+                this.resetRepository();
+                this.addMergeEvent();
+                this.resetMergeEventData();
             }
-            this.resetRepository();
-            this.addMergeEvent();
-            this.resetMergeEventData();
             this.progressBar.setValue(++status);
             System.out.println(status + "/" + mergeNumber + " merges processed...");
         }
@@ -347,7 +350,7 @@ public class GitRepositoryAnalysis {
     }
 
     private boolean checkIfIsEnd(String line) {
-        String test = ">>>>>>> " + processData.parents.get(1).getCommitHash(); 
+        String test = ">>>>>>> " + processData.parents.get(1).getCommitHash();
         if (line.startsWith(test)) {
             if (line.replaceAll(test, "").equals("")) {
                 return true;
@@ -389,7 +392,7 @@ public class GitRepositoryAnalysis {
                     if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
                         this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
                         this.processData.auxArray = fileContent.get(i).split(":");
-                        this.processData.extraInsideFilePath = this.processData.auxArray[this.processData.auxArray.length - 1];
+                        this.processData.extraInsideFilePath = "/" + this.processData.auxArray[this.processData.auxArray.length - 1];
                         this.processData.extraFilePath = repositoryPath + "/" + this.processData.extraInsideFilePath;
                     }
                 }
@@ -461,7 +464,7 @@ public class GitRepositoryAnalysis {
                         this.processData.parents.get(1).getCommitHash(),
                         this.processData.hash.getCommitHash());
                 if (this.processData.auxBool == false) {
-                    throw new EmptyOutput();
+                    this.catchSolutionWithExtraFile();
                 } else {
                     this.processData.solution = null;
                 }
@@ -491,6 +494,65 @@ public class GitRepositoryAnalysis {
                     this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
         }
 
+    }
+
+    private void catchSolutionWithExtraFile() throws EmptyOutput, PathDontExist, InvalidCommitHash, CheckoutError, LocalRepositoryNotAGitRepository, IOException, ImpossibleLineNumber {
+        if (!this.processData.beforeContext.isEmpty()) {
+            this.processData.solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
+                    this.processData.extraFilePath,
+                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                    this.processData.beginLine - 1);
+        } else {
+            this.processData.solutionFirstLine = 0;
+        }
+        if (!this.processData.afterContext.isEmpty()) {
+            this.processData.solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
+                    this.processData.extraFilePath,
+                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                    this.processData.endLine + 1);
+        } else {
+            this.processData.solutionFinalLine = 0;
+        }
+        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+            this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
+                    this.processData.extraFilePath,
+                    this.processData.parents.get(0).getCommitHash(),
+                    this.processData.hash.getCommitHash());
+            if (this.processData.auxBool == false) {
+                this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
+                        this.processData.extraFilePath,
+                        this.processData.parents.get(1).getCommitHash(),
+                        this.processData.hash.getCommitHash());
+                if (this.processData.auxBool == false) {
+                    throw new EmptyOutput();
+                } else {
+                    this.processData.solution = null;
+                }
+            } else {
+                this.processData.solution = null;
+            }
+        } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.POSTPONED || this.processData.solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
+            List<String> listAux = new ArrayList<>();
+            listAux.add("POSTPONED");
+            this.processData.solution = listAux;
+        } else if (this.processData.solutionFirstLine == 0 && this.processData.solutionFinalLine == 0) {
+            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath);
+            this.processData.solution.add(0, "<SOF>");
+            this.processData.solution.add("<EOF>");
+        } else if (this.processData.solutionFirstLine == 0) {
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+                    0,
+                    this.processData.solutionFinalLine - 1);
+            this.processData.solution.add(0, "<SOF>");
+        } else if (this.processData.solutionFinalLine == 0) {
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+                    this.processData.solutionFirstLine - 1,
+                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath).size() - 1);
+            this.processData.solution.add("<EOF>");
+        } else if (this.processData.solutionFirstLine > 0 && this.processData.solutionFinalLine > 0) {
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+                    this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
+        }
     }
 
     private void addConflictRegion() {
