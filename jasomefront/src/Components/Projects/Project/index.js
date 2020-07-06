@@ -380,168 +380,167 @@ export default class Project extends Component {
                     control={<Checkbox checked={this.state.classTloc} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classTloc' color="primary" />}
                     label='tloc'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classAhf} onChange={this.handleChangeClass} name='classAhf' color="primary" />}
+                    control={<Checkbox checked={this.state.classAhf} onChange={(event) => this.handleChangeClass(event,'AHF')} name='classAhf' color="primary" />}
                     label='ahf'
-                  />
-                  <FormControlLabel
-                    control={<Checkbox checked={this.state.classAif} onChange={this.handleChangeClass} name='classAif' color="primary" />}
+                  /><FormControlLabel
+                    control={<Checkbox checked={this.state.classAif} onChange={(event) => this.handleChangeClass(event,'AIF')} name='classAif' color="primary" />}
                     label='aif'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classAa} onChange={this.handleChangeClass} name='classAa' color="primary" />}
+                    control={<Checkbox checked={this.state.classAa} onChange={(event) => this.handleChangeClass(event,'Aa')} name='classAa' color="primary" />}
                     label='aa'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classAd} onChange={this.handleChangeClass} name='classAd' color="primary" />}
+                    control={<Checkbox checked={this.state.classAd} onChange={(event) => this.handleChangeClass(event,'Ad')} name='classAd' color="primary" />}
                     label='ad'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classAi} onChange={this.handleChangeClass} name='classAi' color="primary" />}
+                    control={<Checkbox checked={this.state.classAi} onChange={(event) => this.handleChangeClass(event,'Ai')} name='classAi' color="primary" />}
                     label='ai'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classAit} onChange={this.handleChangeClass} name='classAit' color="primary" />}
+                    control={<Checkbox checked={this.state.classAit} onChange={(event) => this.handleChangeClass(event,'Ait')} name='classAit' color="primary" />}
                     label='ait'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classAo} onChange={this.handleChangeClass} name='classAo' color="primary" />}
+                    control={<Checkbox checked={this.state.classAo} onChange={(event) => this.handleChangeClass(event,'Ao')} name='classAo' color="primary" />}
                     label='ao'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classAv} onChange={this.handleChangeClass} name='classAv' color="primary" />}
+                    control={<Checkbox checked={this.state.classAv} onChange={(event) => this.handleChangeClass(event,'Av')} name='classAv' color="primary" />}
                     label='av'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classCf} onChange={this.handleChangeClass} name='classCf' color="primary" />}
+                    control={<Checkbox checked={this.state.classCf} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classCf' color="primary" />}
                     label='cf'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classClrci} onChange={this.handleChangeClass} name='classClrci' color="primary" />}
+                    control={<Checkbox checked={this.state.classClrci} onChange={(event) => this.handleChangeClass(event,'ClRCi')} name='classClrci' color="primary" />}
                     label='clrci'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classCltci} onChange={this.handleChangeClass} name='classCltci' color="primary" />}
+                    control={<Checkbox checked={this.state.classCltci} onChange={(event) => this.handleChangeClass(event,'ClTCi')} name='classCltci' color="primary" />}
                     label='cltci'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classDit} onChange={this.handleChangeClass} name='classDit' color="primary" />}
+                    control={<Checkbox checked={this.state.classDit} onChange={(event) => this.handleChangeClass(event,'DIT')} name='classDit' color="primary" />}
                     label='dit'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classHmd} onChange={this.handleChangeClass} name='classHmd' color="primary" />}
+                    control={<Checkbox checked={this.state.classHmd} onChange={(event) => this.handleChangeClass(event,'HMd')} name='classHmd' color="primary" />}
                     label='hmd'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classHmi} onChange={this.handleChangeClass} name='classHmi' color="primary" />}
+                    control={<Checkbox checked={this.state.classHmi} onChange={(event) => this.handleChangeClass(event,'HMi')} name='classHmi' color="primary" />}
                     label='hmi'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classLcom} onChange={this.handleChangeClass} name='classLcom' color="primary" />}
+                    control={<Checkbox checked={this.state.classLcom} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classLcom' color="primary" />}
                     label='lcom'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMhf} onChange={this.handleChangeClass} name='classMhf' color="primary" />}
+                    control={<Checkbox checked={this.state.classMhf} onChange={(event) => this.handleChangeClass(event,'MHF')} name='classMhf' color="primary" />}
                     label='mhf'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMif} onChange={this.handleChangeClass} name='classMif' color="primary" />}
+                    control={<Checkbox checked={this.state.classMif} onChange={(event) => this.handleChangeClass(event,'MIF')} name='classMif' color="primary" />}
                     label='mif'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMa} onChange={this.handleChangeClass} name='classMa' color="primary" />}
+                    control={<Checkbox checked={this.state.classMa} onChange={(event) => this.handleChangeClass(event,'Ma')} name='classMa' color="primary" />}
                     label='ma'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classMd} onChange={this.handleChangeClass} name='classMd' color="primary" />}
+                    control={<Checkbox checked={this.state.classMd} onChange={(event) => this.handleChangeClass(event,'Md')} name='classMd' color="primary" />}
                     label='md'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMi} onChange={this.handleChangeClass} name='classMi' color="primary" />}
+                    control={<Checkbox checked={this.state.classMi} onChange={(event) => this.handleChangeClass(event,'Mi')} name='classMi' color="primary" />}
                     label='mi'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMit} onChange={this.handleChangeClass} name='classMit' color="primary" />}
+                    control={<Checkbox checked={this.state.classMit} onChange={(event) => this.handleChangeClass(event,'Mit')} name='classMit' color="primary" />}
                     label='mit'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classMo} onChange={this.handleChangeClass} name='classMo' color="primary" />}
+                    control={<Checkbox checked={this.state.classMo} onChange={(event) => this.handleChangeClass(event,'Mo')} name='classMo' color="primary" />}
                     label='mo'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNf} onChange={this.handleChangeClass} name='classNf' color="primary" />}
+                    control={<Checkbox checked={this.state.classNf} onChange={(event) => this.handleChangeClass(event,'NF')} name='classNf' color="primary" />}
                     label='nf'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNmi} onChange={this.handleChangeClass} name='classNmi' color="primary" />}
+                    control={<Checkbox checked={this.state.classNmi} onChange={(event) => this.handleChangeClass(event,'NMI')} name='classNmi' color="primary" />}
                     label='nmi'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNmir} onChange={this.handleChangeClass} name='classNmir' color="primary" />}
+                    control={<Checkbox checked={this.state.classNmir} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classNmir' color="primary" />}
                     label='nmir'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNoa} onChange={this.handleChangeClass} name='classNoa' color="primary" />}
+                    control={<Checkbox checked={this.state.classNoa} onChange={(event) => this.handleChangeClass(event,'NOA')} name='classNoa' color="primary" />}
                     label='noa'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNoch} onChange={this.handleChangeClass} name='classNoch' color="primary" />}
+                    control={<Checkbox checked={this.state.classNoch} onChange={(event) => this.handleChangeClass(event,'NOCh')} name='classNoch' color="primary" />}
                     label='noch'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNod} onChange={this.handleChangeClass} name='classNod' color="primary" />}
+                    control={<Checkbox checked={this.state.classNod} onChange={(event) => this.handleChangeClass(event,'NOD')} name='classNod' color="primary" />}
                     label='nod'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNoda} onChange={this.handleChangeClass} name='classNoda' color="primary" />}
+                    control={<Checkbox checked={this.state.classNoda} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classNoda' color="primary" />}
                     label='noda'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNode} onChange={this.handleChangeClass} name='classNode' color="primary" />}
+                    control={<Checkbox checked={this.state.classNode} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classNode' color="primary" />}
                     label='node'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNol} onChange={this.handleChangeClass} name='classNol' color="primary" />}
+                    control={<Checkbox checked={this.state.classNol} onChange={(event) => this.handleChangeClass(event,'NOL')} name='classNol' color="primary" />}
                     label='nol'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNopa} onChange={this.handleChangeClass} name='classNopa' color="primary" />}
+                    control={<Checkbox checked={this.state.classNopa} onChange={(event) => this.handleChangeClass(event,'NOPa')} name='classNopa' color="primary" />}
                     label='nopa'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNorm} onChange={this.handleChangeClass} name='classNorm' color="primary" />}
+                    control={<Checkbox checked={this.state.classNorm} onChange={(event) => this.handleChangeClass(event,'NORM')} name='classNorm' color="primary" />}
                     label='norm'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNpf} onChange={this.handleChangeClass} name='classNpf' color="primary" />}
+                    control={<Checkbox checked={this.state.classNpf} onChange={(event) => this.handleChangeClass(event,'NPF')} name='classNpf' color="primary" />}
                     label='npf'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNpm} onChange={this.handleChangeClass} name='classNpm' color="primary" />}
+                    control={<Checkbox checked={this.state.classNpm} onChange={(event) => this.handleChangeClass(event,'NPM')} name='classNpm' color="primary" />}
                     label='npm'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNsf} onChange={this.handleChangeClass} name='classNsf' color="primary" />}
+                    control={<Checkbox checked={this.state.classNsf} onChange={(event) => this.handleChangeClass(event,'NSF')} name='classNsf' color="primary" />}
                     label='nsf'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classNsm} onChange={this.handleChangeClass} name='classNsm' color="primary" />}
+                    control={<Checkbox checked={this.state.classNsm} onChange={(event) => this.handleChangeClass(event,'NSM')} name='classNsm' color="primary" />}
                     label='nsm'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classPf} onChange={this.handleChangeClass} name='classPf' color="primary" />}
+                    control={<Checkbox checked={this.state.classPf} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classPf' color="primary" />}
                     label='pf'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classPmr} onChange={this.handleChangeClass} name='classPmr' color="primary" />}
+                    control={<Checkbox checked={this.state.classPmr} onChange={(event) => this.handleChangeClass(event,'PMR')} name='classPmr' color="primary" />}
                     label='pmr'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classPmd} onChange={this.handleChangeClass} name='classPmd' color="primary" />}
+                    control={<Checkbox checked={this.state.classPmd} onChange={(event) => this.handleChangeClass(event,'PMd')} name='classPmd' color="primary" />}
                     label='pmd'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classPmi} onChange={this.handleChangeClass} name='classPmi' color="primary" />}
+                    control={<Checkbox checked={this.state.classPmi} onChange={(event) => this.handleChangeClass(event,'PMi')} name='classPmi' color="primary" />}
                     label='pmi'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classRtloc} onChange={this.handleChangeClass} name='classRtloc' color="primary" />}
+                    control={<Checkbox checked={this.state.classRtloc} onChange={(event) => this.handleChangeClass(event,'RTLOC')} name='classRtloc' color="primary" />}
                     label='rtloc'
                   /><FormControlLabel
-                    control={<Checkbox checked={this.state.classSix} onChange={this.handleChangeClass} name='classSix' color="primary" />}
+                    control={<Checkbox checked={this.state.classSix} onChange={(event) => this.handleChangeClass(event,'SIX')} name='classSix' color="primary" />}
                     label='six'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classWmc} onChange={this.handleChangeClass} name='classWmc' color="primary" />}
+                    control={<Checkbox checked={this.state.classWmc} onChange={(event) => this.handleChangeClass(event,'WMC')} name='classWmc' color="primary" />}
                     label='wmc'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classAh} onChange={this.handleChangeClass} name='classAh' color="primary" />}
+                    control={<Checkbox checked={this.state.classAh} onChange={(event) => this.handleChangeClass(event,'TLOC')} name='classAh' color="primary" />}
                     label='ah'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.classNf} onChange={this.handleChangeClass} name='classNf' color="primary" />}
+                    control={<Checkbox checked={this.state.classNf} onChange={(event) => this.handleChangeClass(event,'NF')} name='classNf' color="primary" />}
                     label='nf'
                   />
                 </FormGroup>
