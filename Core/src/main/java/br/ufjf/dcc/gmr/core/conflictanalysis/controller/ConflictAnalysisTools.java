@@ -31,7 +31,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
- * @author joao_lima
+ * @author João,Luan
  */
 public class ConflictAnalysisTools {
 
@@ -107,7 +107,7 @@ public class ConflictAnalysisTools {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-            ConflictAnalysisTools.getJava9Comment(tokens,true);
+            ConflictAnalysisTools.getJava9Comment(tokens, true);
             Java9Visitor visitor;
             List<SyntaxStructure> result;
             if (parser.getNumberOfSyntaxErrors() > 0) {
@@ -171,6 +171,32 @@ public class ConflictAnalysisTools {
         }
     }
 
+    private static List<SyntaxStructure> organizeSyntaxStructureList(List<SyntaxStructure> normalList, List<SyntaxStructure> commentList) {
+        if (commentList.isEmpty() && normalList.isEmpty()) {
+            return new ArrayList<>();
+        } else if (normalList.isEmpty()) {
+            return commentList;
+        } else if (commentList.isEmpty()) {
+            return normalList;
+        } else {
+            int i = 0;
+            for (SyntaxStructure ss : commentList) {
+                for (i = 0; i < normalList.size(); i++) {
+                    if (ss.getStartCharIndex() < normalList.get(i).getStartCharIndex()) {
+                        normalList.add(i, ss);
+                        i = 0;
+                        break;
+                    }
+                }
+                if (i == normalList.size()) {
+                    normalList.add(ss);
+                }
+
+            }
+            return normalList;
+        }
+    }
+
     public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
         try {
             List<SyntaxStructure> rawList = null;
@@ -209,7 +235,7 @@ public class ConflictAnalysisTools {
                 List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
                 for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
                     if (hiddenTokensToLeft.get(i).getChannel() == 2) {
-                        result.add(new SyntaxStructure(hiddenTokensToLeft.get(i),warning));
+                        result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning));
                     }
                 }
             }
