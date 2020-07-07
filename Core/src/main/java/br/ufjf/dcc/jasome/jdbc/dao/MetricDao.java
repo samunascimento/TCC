@@ -592,15 +592,15 @@ public class MetricDao {
                     "inner join tb_metric m on\n" +
                     "	mt.ciID = m.id\n" +
                     "	or mt.diID = m.id\n" +
-//                    "	or mt.finID = m.id\n" +
-//                    "	or mt.foutID = m.id\n" +
-//                    "	or mt.iovarsID = m.id\n" +
-//                    "	or mt.mclcID = m.id\n" +
-//                    "	or mt.nbdID = m.id\n" +
-//                    "	or mt.ncompID = m.id\n" +
-//                    "	or mt.nopID = m.id\n" +
-//                    "	or mt.nvarID = m.id\n" +
-//                    "	or mt.siID = m.id\n" +
+                    "	or mt.finID = m.id\n" +
+                    "	or mt.foutID = m.id\n" +
+                    "	or mt.iovarsID = m.id\n" +
+                    "	or mt.mclcID = m.id\n" +
+                    "	or mt.nbdID = m.id\n" +
+                    "	or mt.ncompID = m.id\n" +
+                    "	or mt.nopID = m.id\n" +
+                    "	or mt.nvarID = m.id\n" +
+                    "	or mt.siID = m.id\n" +
                     "	or mt.tlocID = m.id\n" + // ALTERAR PARA 'OR' QUANDO FOR RODAR TODAS AS METRICAS
                     "	or mt.vgID = m.id\n"+
                     "where tp.projectname = " + "\'" + nameProject + "\'"

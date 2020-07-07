@@ -582,39 +582,39 @@ export default class Project extends Component {
                     label='di'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodFin} onChange={this.handleChangeMethod} name='methodFin' color="primary" />}
+                    control={<Checkbox checked={this.state.methodFin} onChange={(event) => this.handleChangeMethod(event, 'Fin')} name='methodFin' color="primary" />}
                     label='fin'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodFout} onChange={this.handleChangeMethod} name='methodFout' color="primary" />}
+                    control={<Checkbox checked={this.state.methodFout} onChange={(event) => this.handleChangeMethod(event, 'Fout')} name='methodFout' color="primary" />}
                     label='fout'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodIovars} onChange={this.handleChangeMethod} name='methodIovars' color="primary" />}
+                    control={<Checkbox checked={this.state.methodIovars} onChange={(event) => this.handleChangeMethod(event, 'IOVars')} name='methodIovars' color="primary" />}
                     label='iovars'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodMclc} onChange={this.handleChangeMethod} name='methodMclc' color="primary" />}
+                    control={<Checkbox checked={this.state.methodMclc} onChange={(event) => this.handleChangeMethod(event, 'MCLC')} name='methodMclc' color="primary" />}
                     label='mclc'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodNbd} onChange={this.handleChangeMethod} name='methodNbd' color="primary" />}
+                    control={<Checkbox checked={this.state.methodNbd} onChange={(event) => this.handleChangeMethod(event, 'NBD')} name='methodNbd' color="primary" />}
                     label='nbd'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodNcomp} onChange={this.handleChangeMethod} name='methodNcomp' color="primary" />}
+                    control={<Checkbox checked={this.state.methodNcomp} onChange={(event) => this.handleChangeMethod(event, 'NCOMP')} name='methodNcomp' color="primary" />}
                     label='ncomp'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodNop} onChange={this.handleChangeMethod} name='methodNop' color="primary" />}
+                    control={<Checkbox checked={this.state.methodNop} onChange={(event) => this.handleChangeMethod(event, 'NOP')} name='methodNop' color="primary" />}
                     label='nop'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodNvar} onChange={this.handleChangeMethod} name='methodNvar' color="primary" />}
+                    control={<Checkbox checked={this.state.methodNvar} onChange={(event) => this.handleChangeMethod(event, 'NVAR')} name='methodNvar' color="primary" />}
                     label='nvar'
                   />
                   <FormControlLabel
-                    control={<Checkbox checked={this.state.methodSi} onChange={this.handleChangeMethod} name='methodSi' color="primary" />}
+                    control={<Checkbox checked={this.state.methodSi} onChange={(event) => this.handleChangeMethod(event, 'Si')} name='methodSi' color="primary" />}
                     label='si'
                   />
                   <FormControlLabel
