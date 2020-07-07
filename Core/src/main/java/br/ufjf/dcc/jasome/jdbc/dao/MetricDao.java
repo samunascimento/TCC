@@ -507,7 +507,7 @@ public class MetricDao {
                     versionIDs.add(id);
                 }
             }
-            for (String className : classNames) {
+             for (String className : classNames) {
 
                 for (String metricName : metricNames) {
 
