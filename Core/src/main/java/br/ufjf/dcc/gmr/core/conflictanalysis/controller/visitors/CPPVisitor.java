@@ -1593,7 +1593,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
      */
     @Override
     public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

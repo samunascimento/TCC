@@ -22,29 +22,11 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        /*List<SyntaxStructure> analyzeJava9SyntaxTree = ConflictAnalysisTools.
-                analyzeJava9SyntaxTree/*(
-                        "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF/Core/src/"
-                                + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")
-        ("src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
-
-        if (true){
-            System.out.println("lalala");
-        }
+      List<SyntaxStructure> analyzePythonSyntaxTree = ConflictAnalysisTools.getStructureTypeInInterval("/home/luan/Github/CalcNum-Listas/temp.py",1,21,false);
+        for (SyntaxStructure ss : analyzePythonSyntaxTree) {
+            System.out.println(ss.getForm());
+        }  
         
-        
-        for (SyntaxStructure syntaxStructure : analyzeJava9SyntaxTree) {
-            System.out.println(syntaxStructure);
-        }
-
-        
-        int i = 0;
-        
-        while (i < 10 ) {
-            System.out.println(i++);
-        }
-        */
-             
         
     }
 
