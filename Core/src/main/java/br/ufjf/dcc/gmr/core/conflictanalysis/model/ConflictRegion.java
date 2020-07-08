@@ -132,21 +132,13 @@ public class ConflictRegion {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                if (useOutmost) {
-                    this.syntaxV1 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                } else {
-                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                }
+                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                if (useOutmost) {
-                    this.syntaxV2 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                } else {
-                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
-                }
+                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
             }
             this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -166,21 +158,13 @@ public class ConflictRegion {
                 this.syntaxV1 = new ArrayList<>();
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                if (useOutmost) {
-                    this.syntaxV1 = ConflictAnalysisTools.outmostSyntaxStructure(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                } else {
-                    this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
-                }
+                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                if (useOutmost) {
-                    this.syntaxV2 = ConflictAnalysisTools.outmostSyntaxStructure(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                } else {
-                    this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
-                }
+                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
             }
             this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {

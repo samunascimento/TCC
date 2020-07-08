@@ -12,6 +12,7 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.python3.Python3Parser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.SSCShelf;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
@@ -78,170 +79,175 @@ public class ConflictAnalysisTools {
         return content;
     }
 
-    public static List<SyntaxStructure> analyzeJavaSyntaxTree(String filePath) throws IOException {
+    public static SSCShelf analyzeJavaSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".java")) {
+            List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             JavaLexer lexer = new JavaLexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
-
             JavaVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new JavaVisitor(true);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new JavaVisitor(false);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-
-            return visitor.getList();
+            return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static List<SyntaxStructure> analyzeJava9SyntaxTree(String filePath) throws IOException {
+    public static SSCShelf analyzeJava9SyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".java")) {
+            List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             Java9Lexer lexer = new Java9Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
             ParseTree tree = parser.compilationUnit();
-            ConflictAnalysisTools.getJava9Comment(tokens,true);
             Java9Visitor visitor;
-            List<SyntaxStructure> result;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
-                result = ConflictAnalysisTools.getJava9Comment(tokens, true);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new Java9Visitor(false);
-                result = ConflictAnalysisTools.getJava9Comment(tokens, false);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, false);
             }
             visitor.visit(tree);
-            result.addAll(visitor.getList());
-            return result;
+            return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static List<SyntaxStructure> analyzeCPPSyntaxTree(String filePath) throws IOException {
+    public static SSCShelf analyzeCPPSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+            List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
-
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new CPPVisitor(false);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-
-            return visitor.getList();
+            return new SSCShelf(visitor.getList(), comments);
         } else {
-
             throw new IOException();
         }
     }
 
-    public static List<SyntaxStructure> analyzePythonSyntaxTree(String filePath) throws IOException {
+    public static SSCShelf analyzePythonSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".py")) {
+            List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             Python3Lexer lexer = new Python3Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();
-
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new Python3Visitor(false);
+                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-
-            return visitor.getList();
+            return new SSCShelf(visitor.getList(), comments);
         } else {
 
             throw new IOException();
         }
     }
 
-    public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
+    public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop, boolean outmost) throws IOException {
         try {
-            List<SyntaxStructure> rawList = null;
-            List<SyntaxStructure> list = new ArrayList();
-
+            SSCShelf shelf;
+            List<SyntaxStructure> result = new ArrayList();
+            List<SyntaxStructure> comments = new ArrayList();
             if (filePath.endsWith(".java")) {
-                rawList = analyzeJava9SyntaxTree(filePath);
+                shelf = analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-                rawList = analyzeCPPSyntaxTree(filePath);
+                shelf = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
-                rawList = analyzePythonSyntaxTree(filePath);
+                shelf = analyzePythonSyntaxTree(filePath);
             } else {
                 return null;
             }
-            if (rawList != null) {
-                for (SyntaxStructure ss : rawList) {
-                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
-                        list.add(ss);
+            for (SyntaxStructure ss : shelf.getCommentAnalysis()) {
+                if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                    comments.add(ss);
+                }
+            }
+            if (outmost) {
+                boolean isOutmost = true;
+                result = getOutmostStructures(shelf.getNormalAnalysis(), start, stop);
+                for (SyntaxStructure comment : comments) {
+                    isOutmost = true;
+                    for (SyntaxStructure ss : result) {
+                        if(ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()){
+                            isOutmost = false;
+                            break;
+                        }
+                    }
+                    if(isOutmost){
+                        result.add(comment);
                     }
                 }
             } else {
-                return null;
+                for (SyntaxStructure ss : shelf.getNormalAnalysis()) {
+                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                        result.add(ss);
+                    }
+                }
+                result.addAll(comments);
             }
-            return list;
+            return result;
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
             throw new IOException();
         }
     }
 
-    public static List<SyntaxStructure> getJava9Comment(CommonTokenStream tokens, boolean warning) throws IOException {
+    public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning) throws IOException {
         List<SyntaxStructure> result = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
-            if (token.getType() != Java9Lexer.WS) {
-                List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
-                for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
-                    if (hiddenTokensToLeft.get(i).getChannel() == 2) {
-                        result.add(new SyntaxStructure(hiddenTokensToLeft.get(i),warning));
-                    }
+            List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
+            for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
+                if (hiddenTokensToLeft.get(i).getChannel() == 2) {
+                    result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning));
                 }
             }
+
         }
         return result;
     }
 
-    public static List<SyntaxStructure> outmostSyntaxStructure(String filePath, int beginLine, int endLine) throws IOException {
+    private static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
         if (beginLine < 1 || endLine < 1) {
             return null;
-        }
-        try {
+        } else {
             int currentLine = beginLine;
             int currentColumn = 0;
-            List<SyntaxStructure> rawList = null;
             List<SyntaxStructure> list = new ArrayList();
             SyntaxStructure auxStructure = null;
-            if (filePath.endsWith(".java")) {
-                rawList = ConflictAnalysisTools.analyzeJava9SyntaxTree(filePath);
-            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-                rawList = ConflictAnalysisTools.analyzeCPPSyntaxTree(filePath);
-            } else if (filePath.endsWith(".py")) {
-                rawList = ConflictAnalysisTools.analyzePythonSyntaxTree(filePath);
-            } else {
-                return null;
-            }
-
             if (rawList != null) {
                 while (currentLine <= endLine) {
                     auxStructure = null;
                     for (SyntaxStructure ss : rawList) {
-
                         if (ss.getStartLine() >= currentLine && ss.getStartCharIndex() >= currentColumn && ss.getStopLine() <= endLine) {
                             if (auxStructure == null) {
                                 auxStructure = ss;
@@ -266,15 +272,10 @@ public class ConflictAnalysisTools {
                         currentColumn = 0;
                     }
                 }
-
             } else {
                 return null;
             }
             return list;
-        } catch (IOException ex) {
-            System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
-            throw new IOException();
         }
     }
-
 }

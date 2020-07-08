@@ -22,10 +22,10 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        List<SyntaxStructure> analyzeJava9SyntaxTree = ConflictAnalysisTools.
+        /*List<SyntaxStructure> analyzeJava9SyntaxTree = ConflictAnalysisTools.
                 analyzeJava9SyntaxTree/*(
                         "/Users/gleiph/Dropbox/UFJF/repositorios/UFJF/Core/src/"
-                                + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")*/
+                                + "main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java")
         ("src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestLuan.java");
 
         if (true){
@@ -43,6 +43,7 @@ public class TestLuan {
         while (i < 10 ) {
             System.out.println(i++);
         }
+        */
              
         
     }

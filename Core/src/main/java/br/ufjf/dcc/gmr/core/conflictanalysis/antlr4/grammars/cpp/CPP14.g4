@@ -1932,9 +1932,9 @@ Newline
    ;
 
 BlockComment
-   : '/*' .*? '*/' -> skip
+   : '/*' .*? '*/' -> channel(2)
    ;
 
 LineComment
-   : '//' ~ [\r\n]* -> skip
+   : '//' ~ [\r\n]* -> channel(2)
    ;
