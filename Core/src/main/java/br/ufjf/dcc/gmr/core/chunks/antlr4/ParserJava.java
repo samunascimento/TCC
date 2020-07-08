@@ -37,7 +37,6 @@ public class ParserJava {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         List<List> pathAndOpenViewList = view();
-        System.out.println("teste");
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
         List<MyVisitor> asts = new ArrayList<>();

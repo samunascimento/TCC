@@ -3,11 +3,10 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TypeBinding extends BaseBinding{
-    
+public class TypeBinding extends BaseBinding {
+
     private TypeBinding extendClass;
-    private List<TypeBinding> childrenClass;
-    private TypeBinding parentClass;
+    private List<String> imports;
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
     private String modifier;
@@ -15,24 +14,24 @@ public class TypeBinding extends BaseBinding{
 
     public TypeBinding() {
         super();
-        this.childrenClass = new ArrayList<>();
-        this.packageBinding = new PackageBinding();
-        this.attributes = new ArrayList<>();
         this.extendClass = null;
+        this.imports = new ArrayList<>();
         this.mdbList = new ArrayList<>();
+        this.attributes = new ArrayList<>();
         this.modifier = null;
+        this.packageBinding = new PackageBinding();
     }
-    
+
     @Override
     public String toString() {
 
-       String output;
-       
-       output = "name= "+super.getName()+"| modifier= "+this.modifier+"| parentClass ="+this.parentClass+"| extendClass= "+this.extendClass;
+        String output;
+
+        output = "name= " + super.getName() + "| modifier= " + this.modifier + "| extendClass= " + this.extendClass;
 
         return output;
     }
-    
+
     /**
      * @return the mdbList
      */
@@ -106,36 +105,18 @@ public class TypeBinding extends BaseBinding{
     public void setPackageBinding(PackageBinding packageBinding) {
         this.packageBinding = packageBinding;
     }
-    
-        /**
-     * @return the parentClass
+
+    /**
+     * @return the imports
      */
-    public TypeBinding getParentClass() {
-        return parentClass;
+    public List<String> getImports() {
+        return imports;
     }
 
     /**
-     * @param parentClass the parentClass to set
+     * @param imports the imports to set
      */
-    public void setParentClass(TypeBinding parentClass) {
-        this.parentClass = parentClass;
+    public void setImports(List<String> imports) {
+        this.imports = imports;
     }
-
-    /**
-     * @return the childrenClass
-     */
-    public List<TypeBinding> getChildrenClass() {
-        return childrenClass;
-    }
-
-    /**
-     * @param childrenClass the childrenClass to set
-     */
-    public void setChildrenClass(List<TypeBinding> childrenClass) {
-        this.childrenClass = childrenClass;
-    }
-    
-   
-
-
 }

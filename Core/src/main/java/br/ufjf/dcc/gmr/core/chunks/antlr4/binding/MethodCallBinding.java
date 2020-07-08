@@ -7,16 +7,14 @@ import java.util.List;
 public class MethodCallBinding extends BaseBinding{
 
     private List<TypeBinding> parameters;
-    private PackageBinding packageBinding;
     private TypeBinding typeBinding;
-    private VariableBinding variableOrigin;
+    private VariableBinding variableOrigin;//remove
     private JavaParser.MethodCallContext ctx;
 
     public MethodCallBinding() {
         
         super();
         this.parameters = new ArrayList<>();
-        this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.ctx = null;
         this.variableOrigin = new VariableBinding();
@@ -54,14 +52,7 @@ public class MethodCallBinding extends BaseBinding{
 
         return output;
     }
-
-    /**
-     * @return the ctx
-     */
-    public JavaParser.MethodCallContext getCtx() {
-        return ctx;
-    }
-
+    
     /**
      * @param ctx the ctx to set
      */
@@ -69,15 +60,12 @@ public class MethodCallBinding extends BaseBinding{
         this.ctx = ctx;
     }
 
-
     /**
      * @return the parameters
      */
     public List<TypeBinding> getParameters() {
         return parameters;
     }
-
-
 
     /**
      * @param parameters the parameters to set
@@ -87,24 +75,10 @@ public class MethodCallBinding extends BaseBinding{
     }
 
     /**
-     * @return the packageBinding
-     */
-    public PackageBinding getPackageBinding() {
-        return packageBinding;
-    }
-
-    /**
      * @return the typeBinding
      */
     public TypeBinding getTypeBinding() {
         return typeBinding;
-    }
-
-    /**
-     * @param packageBinding the packageBinding to set
-     */
-    public void setPackageBinding(PackageBinding packageBinding) {
-        this.packageBinding = packageBinding;
     }
 
     /**
@@ -127,5 +101,4 @@ public class MethodCallBinding extends BaseBinding{
     public void setVariableOrigin(VariableBinding variableOrigin) {
         this.variableOrigin = variableOrigin;
     }
-
 }

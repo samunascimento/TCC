@@ -9,7 +9,6 @@ public class MethodDeclarationBinding extends BaseBinding {
     private String modifier;
     private boolean isStatic;
     private List<TypeBinding> parameters;
-    private PackageBinding packageBinding;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
     private List<List<BaseBinding>> bindingScope;
@@ -18,7 +17,6 @@ public class MethodDeclarationBinding extends BaseBinding {
         super();
         this.modifier = null;
         this.parameters = new ArrayList<>();
-        this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.bindingScope = new ArrayList<>();
     }
@@ -28,7 +26,10 @@ public class MethodDeclarationBinding extends BaseBinding {
             return false;
         } else if (this.getParameters() != null && mcb.getParameters() != null) {
             if (!mcb.getVariableOrigin().getName().equals("Not Declared")) {
-                if (!this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())) {
+                if (mcb.getVariableOrigin().getType() != null && !this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())) {
+                    return false;
+                }
+                if(!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())){
                     return false;
                 }
             }else{
@@ -87,24 +88,10 @@ public class MethodDeclarationBinding extends BaseBinding {
     }
 
     /**
-     * @return the packageBinding
-     */
-    public PackageBinding getPackageBinding() {        
-        return packageBinding;
-    }
-
-    /**
      * @return the typeBinding
      */
     public TypeBinding getTypeBinding() {
         return typeBinding;
-    }
-
-    /**
-     * @param packageBinding the packageBinding to set
-     */
-    public void setPackageBinding(PackageBinding packageBinding) {
-        this.packageBinding = packageBinding;
     }
 
     /**

@@ -260,7 +260,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
                                 parameterTypeBinding.setName("float");
                             } else {
-                                System.out.println("ERROR: MyVisitor:217=D");
+                                System.out.println("ERROR: MyVisitor:263=D");
                             }
 
                         } else {
@@ -278,7 +278,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             }
         }
-
+        methodCallBinding.setTypeBinding(typeBinding);
         methodCallBinding.setParameters(parameters);
 
         methodCallBidingList.add(methodCallBinding);
@@ -422,7 +422,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             List<List<BaseBinding>> bindingScope = mdbGeneral.getBindingScope();
             List<BaseBinding> get = bindingScope.get(bindingScope.size() - 1);
             get.add(variable);
-            getVariableBindingList().add(variable);
+            this.variableBindingList.add(variable);
         }
         return super.visitLocalVariableDeclaration(ctx);
     }
@@ -701,7 +701,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             }
         }
 
-        this.getVariableBindingList().add(variable);
+        this.variableBindingList.add(variable);
         this.typeBinding.addAttributes(variable);
 
         return super.visitFieldDeclaration(ctx);
@@ -749,10 +749,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         List<TypeBinding> parameters = new ArrayList<>();
-        TypeBinding methodType = new TypeBinding();
+        TypeBinding methodType = this.typeBinding;
         mdbGeneral = new MethodDeclarationBinding();
-
-        mdbGeneral.setPackageBinding(packageBinding);
+        //mdbGeneral.setPackageBinding(packageBinding);
         methodType.setPackageBinding(packageBinding);
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
         mdbGeneral.setCtx(ctx);
@@ -876,7 +875,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
-        //log(ctx);
         this.typeBinding.setName(ctx.getChild(1).getText());
         String name = "";
         JavaParser.ClassDeclarationContext classDeclaration = (JavaParser.ClassDeclarationContext) ctx;
@@ -887,7 +885,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             for (TypeBinding typeBinding1 : this.typeBindingList) {
                 if (typeBinding1.getName().equals(typeExtends)) {
                     this.typeBinding.setExtendClass(typeBinding1);
-                    typeBinding1.getChildrenClass().add(this.typeBinding);
                 }
             }
             if (this.typeBinding.getExtendClass() == null) {
@@ -935,7 +932,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
         for (ParseTree parserTree : ctx.children) {
             if (parserTree instanceof JavaParser.QualifiedNameContext) {
-                packageBinding.setName(parserTree.getText());
+                typeBinding.getImports().add(parserTree.getText());
             }
         }
 

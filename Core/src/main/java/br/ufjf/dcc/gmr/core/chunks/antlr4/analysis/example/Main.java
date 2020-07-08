@@ -6,6 +6,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
+import java.util.List;
+
 /**
  *
  * @author icout
@@ -15,7 +17,7 @@ public class Main {
     private String name;
     private String office;
     private int age;
-
+    
     public Main(String name, String office, int age) {
         this.name = name;
         this.age = age;

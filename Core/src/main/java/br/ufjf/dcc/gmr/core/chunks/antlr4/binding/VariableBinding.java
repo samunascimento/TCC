@@ -16,7 +16,6 @@ public class VariableBinding extends BaseBinding {
      */
     private String modifier;
     private TypeBinding type;
-    
             
     public VariableBinding(String Modifier, TypeBinding type, String name) {
         super(name);
