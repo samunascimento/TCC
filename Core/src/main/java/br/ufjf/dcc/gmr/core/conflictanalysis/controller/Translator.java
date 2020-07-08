@@ -352,6 +352,138 @@ public class Translator {
                 mainList.add(JavaLanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (!list.isEmpty()) {
+                mainList.add(JavaLanguageConstructsTypes.OTHER);
+            }
+        }
+        return mainList;
+    }
+
+    public static List<String> PythonTranslator(List<String> list) {
+
+        List<String> mainList = new ArrayList<>();
+
+        return mainList;
+    }
+
+    public static List<String> CPPTranslator(List<String> list) {
+
+        List<String> mainList = new ArrayList<>();
+        if (list.contains("Extension not parseble!")) {
+            mainList.add("Extension not parseble!");
+        } else {
+            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if ( list.contains("Assignmentexpression")) {
+                mainList.add(CPPLanguageConstructsTypes.ASSIGNMENT);
+                list.remove("Assignmentexpression");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Nothing")) {
+                mainList.add(CPPLanguageConstructsTypes.BLANK);
+                list.remove("Nothing");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+           
+             //CAST+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Castexpression")) {
+                mainList.add(CPPLanguageConstructsTypes.CAST_EXPRESSION);
+                list.remove("Castexpression");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+            //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Classspecifier")) {
+                mainList.add(JavaLanguageConstructsTypes.CLASS_DECLARATION);
+                list.remove("Classspecifier");
+            }
+            if (list.contains("Classhead")) {
+                mainList.add(JavaLanguageConstructsTypes.CLASS_SIGNATURE);
+                list.remove("Classhead");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Forinitstatement")
+                    || list.contains("Forrangedeclaration")) {
+                mainList.add(CPPLanguageConstructsTypes.FOR_STATEMENT);
+                list.remove("Forinitstatement");
+                list.remove("Forrangedeclaration");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+          
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //METHOD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //TRHOW++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+           
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("While")) {
+                mainList.add(CPPLanguageConstructsTypes.WHILE_STATEMENT);
+                list.remove("While");
+            }
+            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("WARNING!")) {
+                mainList.add(JavaLanguageConstructsTypes.ERROR);
+                list.remove("WARNING!");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (!list.isEmpty()) {
                 mainList.add(JavaLanguageConstructsTypes.OTHER);
             }
@@ -359,35 +491,5 @@ public class Translator {
         return mainList;
     }
     
-    public static List<String> PythonTranslator(List<String> list) {
-
-        List<String> mainList = new ArrayList<>();
-
-        return mainList;
-    }
-    
-    public static List<String> CPPTranslator(List<String> list) {
-
-        List<String> mainList = new ArrayList<>();
-
-        if (list.contains("Nothing")) {
-            mainList.add(CPPLanguageConstructsTypes.BLANK);
-            list.remove("Nothing");
-        } else {
-
-            if (list.contains("Forinitstatement")
-                    || list.contains("Forrangedeclaration")) {
-                mainList.add(CPPLanguageConstructsTypes.FOR_STATEMENT);
-                list.remove("Forinitstatement");
-                list.remove("Forrangedeclaration");
-            }
-            if (list.contains("While")) {
-                mainList.add(CPPLanguageConstructsTypes.WHILE_STATEMENT);
-                list.remove("While");
-            }
-
-        }
-        return mainList;
-    }
 
 }

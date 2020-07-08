@@ -32,7 +32,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
- * @author joao_lima
+ * @author João,Luan
  */
 public class ConflictAnalysisTools {
 
@@ -197,12 +197,12 @@ public class ConflictAnalysisTools {
                 for (SyntaxStructure comment : comments) {
                     isOutmost = true;
                     for (SyntaxStructure ss : result) {
-                        if(ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()){
+                        if (ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()) {
                             isOutmost = false;
                             break;
                         }
                     }
-                    if(isOutmost){
+                    if (isOutmost) {
                         result.add(comment);
                     }
                 }
@@ -229,9 +229,9 @@ public class ConflictAnalysisTools {
             for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
                 if (hiddenTokensToLeft.get(i).getChannel() == 2) {
                     result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning));
+
                 }
             }
-
         }
         return result;
     }

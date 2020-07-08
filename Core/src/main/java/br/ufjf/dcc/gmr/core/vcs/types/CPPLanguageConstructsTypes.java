@@ -11,20 +11,15 @@ package br.ufjf.dcc.gmr.core.vcs.types;
  */
 public class CPPLanguageConstructsTypes {
       
-    public static final String ANNOTATION = "Annotation"; 
-    public static final String ANNOTATION_TYPE_MEMBER_DECLARATION = "AnnotationDeclaration"; 
-    public static final String ARRAY_ACCESS = "ArrayAccess"; 
-    public static final String ARRAY_INITIALIZER = "ArrayInitializer"; 
-    public static final String ASSERT_STATEMENT = "AssertStatement";
-    public static final String ASSIGNMENT = "Assignment";
+    public static final String ASSIGNMENT = "Assignment"; 
     public static final String BLANK = "Blank"; 
     public static final String BREAK_STATEMENT = "BreakStatement"; 
     public static final String CASE_STATEMENT = "CaseStatement"; 
     public static final String CAST_EXPRESSION = "CastExpression"; 
     public static final String CATCH_CLAUSE = "CatchClause"; 
-    public static final String CLASS_DECLARATION = "ClassDeclaration";
+    public static final String CLASS_DECLARATION = "ClassDeclaration"; 
     public static final String CLASS_SIGNATURE = "ClassSignature";
-    public static final String COMMENT = "Comment"; 
+    public static final String COMMENT = "Comment";  //Depois
     public static final String CONTINUE_STATEMENT = "ContinueStatement"; 
     public static final String DO_STATEMENT = "DoStatement"; 
     public static final String ENUM_DECLARATION = "EnumDeclaration";
@@ -41,7 +36,7 @@ public class CPPLanguageConstructsTypes {
     public static final String METHOD_INVOCATION = "MethodInvocation";
     public static final String METHOD_SIGNATURE = "MethodSignature";
     public static final String PACKAGE_DECLARATION = "PackageDeclaration";  
-    public static final String RETURN_STATEMENT = "ReturnStatement";   
+    public static final String RETURN_STATEMENT = "ReturnStatement";  
     public static final String STATIC_INITIALIZER = "StaticInitializer";
     public static final String SWITCH_STATEMENT = "SwitchStatement"; 
     public static final String SYNCHRONIZED_STATEMENT = "SynchronizedStatement"; 
