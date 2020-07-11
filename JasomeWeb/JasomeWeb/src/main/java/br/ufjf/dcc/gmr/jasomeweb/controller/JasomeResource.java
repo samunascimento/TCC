@@ -8,6 +8,7 @@ package br.ufjf.dcc.gmr.jasomeweb.controller;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
@@ -70,6 +71,19 @@ public class JasomeResource {
         Gson g = new Gson();
         listProject = dao.selectNameProject();
         String listJ = g.toJson(listProject);
+        return listJ;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("namePackage/{nameProject}")
+    public String getNamePackage(@PathParam("nameProject") String nameProject) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        ArrayList<PackageMetrics> listPackage = new ArrayList<>();
+        Gson g = new Gson();
+        listPackage = dao.selectPackageName(nameProject);
+        String listJ = g.toJson(listPackage);
         return listJ;
     }
     
