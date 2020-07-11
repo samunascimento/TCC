@@ -7,6 +7,7 @@ package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -261,6 +262,56 @@ public class MetricDao {
         }
     }
 
+    public ArrayList<PackageMetrics> selectPackageName(String nameProject) throws SQLException{
+        Set<String> metricNames = new HashSet<>();
+
+        Set<String> packageNames = new HashSet<>();
+        
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+        
+        ArrayList<PackageMetrics> listPackage = new ArrayList<>();
+        PackageMetrics packageMetrics = null;
+
+        String sql = "select pk.id , pk.packagename \n" +
+                    "from tb_projectmetrics p\n" +
+                    "inner join tb_project_version pv\n" +
+                    "on p.id = pv.project_id \n" +
+                    "inner join tb_version_package vp\n" +
+                    "on pv.version_id = vp.version_id \n" +
+                    "inner join tb_packagemetrics pk\n" +
+                    "on vp.package_id = pk.id "
+                    + "where p.projectname = " + "\'" + nameProject + "\'";
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            int id = 1;
+            while (resultSet.next()) {
+                packageNames.add(resultSet.getString("packagename"));
+            }
+            
+            for (String packageName : packageNames) {
+                resultSet = stmt.executeQuery();
+                   packageMetrics = new PackageMetrics(id,packageName);
+                   id++;
+                listPackage.add(packageMetrics);
+            }
+
+            return listPackage;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return null;
+    }
+    
     public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
         List<List<Point>> chartLines = new ArrayList<>();
 

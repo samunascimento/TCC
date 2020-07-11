@@ -20,6 +20,7 @@ public class Point {
     private String metricName;
     private Date versionDate;
 
+    //package
     public Point(int x, double y,String namePackage,String metricName,Date versionDate) {
         this.x = x;
         this.y = y;
@@ -28,6 +29,7 @@ public class Point {
         this.versionDate = versionDate;
     }
     
+    //class
     public Point(int x,double y, String namePackage,String nameClass,String metricName,Date versionDate){
         this.x = x;
         this.y = y;
@@ -37,6 +39,7 @@ public class Point {
         this.versionDate = versionDate;
     }
     
+    //method
     public Point(int x,double y, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
         this.x = x;
         this.y = y;

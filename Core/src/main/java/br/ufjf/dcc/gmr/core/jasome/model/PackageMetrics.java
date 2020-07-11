@@ -34,6 +34,11 @@ public class PackageMetrics {
         this.listClassMetrics = new ArrayList<>();
     }
     
+    public PackageMetrics(int id,String namePackage){
+        this.id = id;
+        this.name = namePackage;
+    }
+    
     public List<ClassMetrics> getListClassMetrics() {
         return listClassMetrics;
     }
