@@ -299,19 +299,19 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitCompilationUnit(Java9Parser.CompilationUnitContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitOrdinaryCompilation(Java9Parser.OrdinaryCompilationContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitModularCompilation(Java9Parser.ModularCompilationContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 

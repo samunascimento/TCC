@@ -278,4 +278,37 @@ public class ConflictAnalysisTools {
             return list;
         }
     }
+    
+        private static List<SyntaxStructure> getOutmostStructures2(List<SyntaxStructure> rawList, int beginLine, int endLine) {
+        if ((beginLine < 1 || endLine < 1) || rawList == null) {
+            return null;
+        } else {
+            List<SyntaxStructure> list = new ArrayList();
+            SyntaxStructure auxStructure = null;
+            for (SyntaxStructure ss : rawList) {
+                if (!(ss.getStartLine() >= beginLine && ss.getStopLine() <= endLine)) {
+                    list.add(ss);
+                }
+            }
+           for (SyntaxStructure ssList : list) {
+                rawList.remove(ssList);
+            }
+           list.clear();
+            if (!rawList.isEmpty()) {
+                for (int i = 0; i < rawList.size(); i++) {
+                    for (int j = i + 1 ; j < rawList.size(); j++) {
+                        if ((rawList.get(i).getStartCharIndex() <= rawList.get(j).getStartCharIndex() 
+                                && rawList.get(i).getStopCharIndex() >= rawList.get(j).getStopCharIndex()) 
+                                && !rawList.get(i).equals(rawList.get(j))) {
+                            list.add(rawList.get(j));
+                        }
+                    }
+                }
+            }
+            for (SyntaxStructure ssList : list) {
+                rawList.remove(ssList);
+            }
+            return rawList;
+        }
+    }
 }
