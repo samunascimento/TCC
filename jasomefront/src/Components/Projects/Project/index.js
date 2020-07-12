@@ -82,203 +82,8 @@ export default class Project extends Component {
 
 
 
-      
-      data: [
-        [
-          {
-            "x": 0,
-            "y": 42.0,
-            "metricName": "TLOC",
-            "versionDate": "Jan 31, 2020 11:58:48 PM"
-          },
-          {
-            "x": 1,
-            "y": 173.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 1, 2020 2:00:26 AM"
-          },
-          {
-            "x": 2,
-            "y": 272.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 1, 2020 3:57:13 AM"
-          },
-          {
-            "x": 3,
-            "y": 270.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 1, 2020 4:51:56 AM"
-          },
-          {
-            "x": 4,
-            "y": 270.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 1, 2020 4:52:19 AM"
-          },
-          {
-            "x": 5,
-            "y": 501.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 1, 2020 10:04:29 PM"
-          },
-          {
-            "x": 6,
-            "y": 590.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 7:31:40 PM"
-          },
-          {
-            "x": 7,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 8:14:19 PM"
-          },
-          {
-            "x": 8,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 9:58:37 PM"
-          },
-          {
-            "x": 9,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 10:00:41 PM"
-          },
-          {
-            "x": 10,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 10:10:13 PM"
-          },
-          {
-            "x": 11,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 10:19:23 PM"
-          },
-          {
-            "x": 12,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 11:03:00 PM"
-          },
-          {
-            "x": 13,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 11:05:00 PM"
-          },
-          {
-            "x": 14,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 11:08:55 PM"
-          },
-          {
-            "x": 15,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 2, 2020 11:15:16 PM"
-          },
-          {
-            "x": 16,
-            "y": 673.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 3, 2020 12:00:32 AM"
-          },
-          {
-            "x": 17,
-            "y": 713.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 3, 2020 12:24:41 AM"
-          },
-          {
-            "x": 18,
-            "y": 713.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 3, 2020 12:29:28 AM"
-          },
-          {
-            "x": 19,
-            "y": 713.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 3, 2020 12:32:56 AM"
-          },
-          {
-            "x": 20,
-            "y": 713.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 3, 2020 12:33:33 AM"
-          },
-          {
-            "x": 21,
-            "y": 798.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 4, 2020 9:51:43 PM"
-          },
-          {
-            "x": 22,
-            "y": 813.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 6, 2020 2:21:36 PM"
-          },
-          {
-            "x": 23,
-            "y": 795.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 6, 2020 2:45:44 PM"
-          },
-          {
-            "x": 24,
-            "y": 813.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 6, 2020 3:18:29 PM"
-          },
-          {
-            "x": 25,
-            "y": 839.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 16, 2020 11:27:15 PM"
-          },
-          {
-            "x": 26,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 29, 2020 9:13:44 PM"
-          },
-          {
-            "x": 27,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Feb 29, 2020 9:13:44 PM"
-          },
-          {
-            "x": 28,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Mar 1, 2020 11:11:48 PM"
-          },
-          {
-            "x": 29,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Apr 5, 2020 1:56:08 PM"
-          },
-          {
-            "x": 30,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Apr 5, 2020 1:56:42 PM"
-          },
-          {
-            "x": 31,
-            "y": 858.0,
-            "metricName": "TLOC",
-            "versionDate": "Apr 5, 2020 10:57:26 PM"
-          }
-        ]
-      ],
+
+      data: [],
 
       root: {
         height: 240,
@@ -294,7 +99,7 @@ export default class Project extends Component {
   };
 
 
-
+  
 
   handleClick = event => this.setState({ anchorE1: event.currentTarget })
 
@@ -313,6 +118,13 @@ export default class Project extends Component {
   handleCloseMethod = () => this.setState({ anchorE4: null })
 
 
+  // componentDidUpdate(prevProps) {
+  //   // Uso típico, (não esqueça de comparar as props):
+  //   if (this.props.data !== prevProps.data) {
+  //     this.fetchData(this.props.data);
+  //   }
+  // }
+
 
   componentDidMount = () => {
     axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
@@ -322,7 +134,9 @@ export default class Project extends Component {
       })
   }
 
+  
   handleChangeProject = (event) => {
+
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     if (event.target.checked === true) {
@@ -331,10 +145,10 @@ export default class Project extends Component {
           const data = res.data;
           this.setState({ data });
         })
+        console.log(this.state.data)  
     }
 
     else if (event.target.checked === false) {
-
       const data = [];
       this.setState({ data });
 
@@ -458,6 +272,7 @@ export default class Project extends Component {
 
     const { root } = this.state
 
+     const { data } = this.state
 
     return (
       <div>
