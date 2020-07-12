@@ -39,12 +39,12 @@ public class ConflictAnalysisTools {
     public static File createSandbox(String repositoryPath, String projectName) throws IOException, RepositoryAlreadyExist {
         File sandbox;
         if (repositoryPath.contains("\\")) {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\RepositoryAnalysisSandbox_" + projectName);
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\.repositoryAnalysisSandbox_" + projectName);
         } else {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox_" + projectName);
+            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/.repositoryAnalysisSandbox_" + projectName);
         }
         try {
-            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), "RepositoryAnalysisSandbox_" + projectName);
+            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), ".repositoryAnalysisSandbox_" + projectName);
         } catch (RepositoryNotFound ex) {
             System.out.println("ERROR: RepositoryNotFound error!");
             throw new IOException();
@@ -187,7 +187,7 @@ public class ConflictAnalysisTools {
                 return null;
             }
             for (SyntaxStructure ss : shelf.getCommentAnalysis()) {
-                if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                if (ss.getStartLine() >= start && ss.getStartLine() <= stop) {
                     comments.add(ss);
                 }
             }
@@ -236,7 +236,7 @@ public class ConflictAnalysisTools {
         return result;
     }
 
-    private static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
+    private static List<SyntaxStructure> getOutmostStructuresInutil(List<SyntaxStructure> rawList, int beginLine, int endLine) {
         if (beginLine < 1 || endLine < 1) {
             return null;
         } else {
@@ -278,8 +278,8 @@ public class ConflictAnalysisTools {
             return list;
         }
     }
-    
-        private static List<SyntaxStructure> getOutmostStructures2(List<SyntaxStructure> rawList, int beginLine, int endLine) {
+
+    private static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
         if ((beginLine < 1 || endLine < 1) || rawList == null) {
             return null;
         } else {
@@ -290,17 +290,20 @@ public class ConflictAnalysisTools {
                     list.add(ss);
                 }
             }
-           for (SyntaxStructure ssList : list) {
+            for (SyntaxStructure ssList : list) {
                 rawList.remove(ssList);
             }
-           list.clear();
+            list.clear();
             if (!rawList.isEmpty()) {
                 for (int i = 0; i < rawList.size(); i++) {
-                    for (int j = i + 1 ; j < rawList.size(); j++) {
-                        if ((rawList.get(i).getStartCharIndex() <= rawList.get(j).getStartCharIndex() 
-                                && rawList.get(i).getStopCharIndex() >= rawList.get(j).getStopCharIndex()) 
+                    for (int j = i + 1; j < rawList.size(); j++) {
+                        if ((rawList.get(i).getStartCharIndex() <= rawList.get(j).getStartCharIndex()
+                                && rawList.get(i).getStopCharIndex() >= rawList.get(j).getStopCharIndex())
                                 && !rawList.get(i).equals(rawList.get(j))) {
                             list.add(rawList.get(j));
+                        }
+                        if (rawList.get(i).getStopCharIndex() < rawList.get(j).getStartCharIndex()) {
+                            break;
                         }
                     }
                 }

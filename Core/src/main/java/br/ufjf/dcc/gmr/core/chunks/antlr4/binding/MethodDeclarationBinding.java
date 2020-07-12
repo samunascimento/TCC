@@ -22,7 +22,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
-        if (!this.getName().equals(mcb.getName())) {
+        /*if (!this.getName().equals(mcb.getName())) {
             return false;
         } else if (this.getParameters() != null && mcb.getParameters() != null) {
             if (!mcb.getVariableOrigin().getName().equals("Not Declared")) {
@@ -45,7 +45,7 @@ public class MethodDeclarationBinding extends BaseBinding {
                     }
                 }
             }
-        }
+        }*/
         return true;
     }
 
