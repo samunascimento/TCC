@@ -198,19 +198,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             for (int i = 0; i < variableBindingList.size(); i++) {
                 if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
-                    variableOrigin.setName(variableBindingList.get(i).getName());
-                    variableOrigin.setType(variableBindingList.get(i).getType());
+                      methodCallBinding.setTypeBinding(variableBindingList.get(i).getType());
                     break;
-                } else {
-                    variableOrigin.setName("Not Declared");
-                    variableOrigin.setType(null);
-
                 }
-
             }
-            methodCallBinding.setVariableOrigin(variableOrigin);
 
-            methodCallBinding.setVariableOrigin(variableOrigin);
 
         }
 
@@ -278,7 +270,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             }
         }
-        methodCallBinding.setTypeBinding(typeBinding);
+        
         methodCallBinding.setParameters(parameters);
 
         methodCallBidingList.add(methodCallBinding);
