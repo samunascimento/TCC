@@ -21,31 +21,28 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.bindingScope = new ArrayList<>();
     }
 
-    public boolean equalsTo(MethodCallBinding mcb) {
-        if (!this.getName().equals(mcb.getName())) {
+    public boolean equalsTo(MethodCallBinding mcb) {        
+        if(!this.getName().equals(mcb.getName())){
             return false;
-        } else if (this.getParameters() != null && mcb.getParameters() != null) {
-            if (!mcb.getVariableOrigin().getName().equals("Not Declared")) {
-                if (mcb.getVariableOrigin().getType() != null && !this.typeBinding.getName().equals(mcb.getVariableOrigin().getType().getName())) {
-                    return false;
-                }
-                if(!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())){
-                    return false;
-                }
-            }else{
+        }
+        
+        if(this.getParameters() != null && mcb.getParameters() != null){
+            return false;
+        }
+        
+        if(this.getParameters().size() != mcb.getParameters().size()){
+            return false;
+        }
+        
+        //problema para funcionar pois ao passar um numero para uma função ele pode ser lido como int apesar 
+        //de o parâmetro da função ser um float
+        //exemplo Main linha 43 employeeExtends.increaseSalary(50);
+        for (int i = 0; i < this.getParameters().size(); i++) {
+            if(this.getParameters().get(i).getName().equals(mcb.getParameters().get(i).getName())){
                 return false;
-            }              
-
-            if (this.getParameters().size() != mcb.getParameters().size()) {
-                return false;
-            } else {
-                for (int i = 0; i < this.parameters.size(); i++) {
-                    if (!this.parameters.get(i).getName().equals(mcb.getParameters().get(i).getName())) {
-                        return false;
-                    }
-                }
             }
         }
+        
         return true;
     }
 

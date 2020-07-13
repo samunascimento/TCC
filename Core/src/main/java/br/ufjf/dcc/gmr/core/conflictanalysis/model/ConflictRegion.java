@@ -164,7 +164,7 @@ public class ConflictRegion {
                 this.syntaxV2 = new ArrayList<>();
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
+                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
             }
             this.generateTypeOfConflict();
         } catch (LocalRepositoryNotAGitRepository ex) {

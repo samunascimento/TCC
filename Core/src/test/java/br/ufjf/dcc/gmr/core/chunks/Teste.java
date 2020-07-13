@@ -5,6 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -8,7 +8,6 @@ public class MethodCallBinding extends BaseBinding{
 
     private List<TypeBinding> parameters;
     private TypeBinding typeBinding;
-    private VariableBinding variableOrigin;//remove
     private JavaParser.MethodCallContext ctx;
 
     public MethodCallBinding() {
@@ -17,8 +16,7 @@ public class MethodCallBinding extends BaseBinding{
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
         this.ctx = null;
-        this.variableOrigin = new VariableBinding();
-        
+               
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
@@ -43,12 +41,6 @@ public class MethodCallBinding extends BaseBinding{
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
-
-        if (variableOrigin != null && variableOrigin.getType() != null) {
-            output = output.concat(" IDENTIFIER:" + variableOrigin.getType().getName());
-        } else {
-            output = output.concat(" IDENTIFIER: ERROR");
-        }
 
         return output;
     }
@@ -88,17 +80,5 @@ public class MethodCallBinding extends BaseBinding{
         this.typeBinding = typeBinding;
     }
 
-    /**
-     * @return the variableOrigin
-     */
-    public VariableBinding getVariableOrigin() {
-        return variableOrigin;
-    }
-
-    /**
-     * @param variableOrigin the variableOrigin to set
-     */
-    public void setVariableOrigin(VariableBinding variableOrigin) {
-        this.variableOrigin = variableOrigin;
-    }
+  
 }
