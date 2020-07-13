@@ -21,28 +21,37 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.bindingScope = new ArrayList<>();
     }
 
-    public boolean equalsTo(MethodCallBinding mcb) {        
-        if(!this.getName().equals(mcb.getName())){
+    public boolean equalsTo(MethodCallBinding mcb) {
+        for (String aImport : mcb.getTypeBinding().getImports()) {
+            System.out.println("++++++import++++++" + aImport);
+        }
+        if (!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())) {
+            if (mcb.getTypeBinding().getExtendClass() == null||(mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
+                return false;
+            }
+        }
+
+        if (!this.getName().equals(mcb.getName())) {
             return false;
         }
-        
-        if(this.getParameters() != null && mcb.getParameters() != null){
+
+        if (this.getParameters() == null && mcb.getParameters() == null) {
             return false;
         }
-        
-        if(this.getParameters().size() != mcb.getParameters().size()){
+
+        if (this.getParameters().size() != mcb.getParameters().size()) {
             return false;
         }
-        
+
         //problema para funcionar pois ao passar um numero para uma função ele pode ser lido como int apesar 
         //de o parâmetro da função ser um float
         //exemplo Main linha 43 employeeExtends.increaseSalary(50);
         for (int i = 0; i < this.getParameters().size(); i++) {
-            if(this.getParameters().get(i).getName().equals(mcb.getParameters().get(i).getName())){
+            if (!this.getParameters().get(i).getName().equals(mcb.getParameters().get(i).getName())) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -52,15 +61,15 @@ public class MethodDeclarationBinding extends BaseBinding {
         String output = "";
 
         output = output.concat(this.getName()).concat("(");
-        
+
         for (int i = 0; i < parameters.size(); i++) {
-            if(i < parameters.size()-1){
+            if (i < parameters.size() - 1) {
                 output = output.concat(parameters.get(i).getName() + ",");
-            }else{
+            } else {
                 output = output.concat(parameters.get(i).getName());
             }
         }
-        
+
         output = output.concat(")");
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
@@ -98,14 +107,12 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.typeBinding = typeBinding;
     }
 
-  
     /**
      * @return the parameters
      */
     public List<TypeBinding> getParameters() {
         return parameters;
     }
-
 
     /**
      * @param parameters the parameters to set

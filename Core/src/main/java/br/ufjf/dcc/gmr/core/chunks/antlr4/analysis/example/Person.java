@@ -1,13 +1,16 @@
 
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
+import java.util.Random;
+
 public class Person {
 
     private String name;
     private String CPF;
     private int age;
     private Adress adress;
-
+    Random rand;
+    
     public Person(String name, String CPF, int Age) {
         this.name = name;
         this.CPF = CPF;

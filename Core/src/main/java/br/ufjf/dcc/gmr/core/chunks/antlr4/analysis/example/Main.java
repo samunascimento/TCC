@@ -20,7 +20,7 @@ public class Main {
         Person person = new Person();
         person.setName("name of a person");
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
-        employeeExtends.setName("name of a employeeExtends");
+        employeeExtends.setName("name of a employeeExtends");//
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
@@ -35,16 +35,16 @@ public class Main {
                 Person person1 = person;
             } else if (person.getAge() == 23) {
                 EmployeeExtends employeeExtends1 = employeeExtends;
-            } else if (employeeExtends.getSalary() == 300) {
+            } else if (employeeExtends.getSalary() == 300) {//
                 Employee employee1 = employee;
             }
         }
         
-        employeeExtends.increaseSalary(50);
-        employeeExtends.setActive(false);
+        employeeExtends.increaseSalary(50);//
+        employeeExtends.setActive(false);//
         int x =4;
+        float w = 50;
         String y = "kkk";
-        //employeeExtends.getname();
         person.getName();
         main.getName();
         employee.setInfo(y, x);
@@ -54,7 +54,7 @@ public class Main {
         person.getAdress().getCity();
         employee.getAdress().getCity();
 
-        System.out.println(employeeExtends.getAdress().getCity());
+        System.out.println(employeeExtends.getAdress().getCity());//
     }
 
     /**
