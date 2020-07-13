@@ -773,6 +773,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                     } else if (aux.typeType().primitiveType() != null) {
                         parameter.setName(aux.typeType().primitiveType().getText());
                     }
+                    parameter.setPackageBinding(packageBinding);
                     parameters.add(parameter);
                 }
             }
