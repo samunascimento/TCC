@@ -9,34 +9,34 @@ import {VictoryChart,VictoryZoomContainer,VictoryLine,VictoryBrushContainer,Vict
   Line 64:14:  'VictoryAxis' is not defined            react/jsx-no-undef
   Line 76:14:  'VictoryLine' is not defined            react/jsx-no-undef*/
 
-//   const data = [
-//     [
-//       {
-//         "x": 0,
-//         "y": 42.0,
-//         "metricName": "TLOC",
-//         "versionDate": "Jan 31, 2020 11:58:48 PM"
-//       },
-//       {
-//         "x": 1,
-//         "y": 173.0,
-//         "metricName": "TLOC",
-//         "versionDate": "Feb 1, 2020 2:00:26 AM"
-//       },
-//       {
-//         "x": 2,
-//         "y": 272.0,
-//         "metricName": "TLOC",
-//         "versionDate": "Feb 1, 2020 3:57:13 AM"
-//       },
-//       {
-//         "x": 3,
-//         "y": 270.0,
-//         "metricName": "TLOC",
-//         "versionDate": "Feb 1, 2020 4:51:56 AM"
-//       }
-//     ]
-//   ]
+  // const data = [
+  //   [
+  //     {
+  //       "x": 0,
+  //       "y": 42.0,
+  //       "metricName": "TLOC",
+  //       "versionDate": "Jan 31, 2020 11:58:48 PM"
+  //     },
+  //     {
+  //       "x": 1,
+  //       "y": 173.0,
+  //       "metricName": "TLOC",
+  //       "versionDate": "Feb 1, 2020 2:00:26 AM"
+  //     },
+  //     {
+  //       "x": 2,
+  //       "y": 272.0,
+  //       "metricName": "TLOC",
+  //       "versionDate": "Feb 1, 2020 3:57:13 AM"
+  //     },
+  //     {
+  //       "x": 3,
+  //       "y": 270.0,
+  //       "metricName": "TLOC",
+  //       "versionDate": "Feb 1, 2020 4:51:56 AM"
+  //     }
+  //   ]
+  // ]
 //   // find maxima for normalizing data
 
 
@@ -45,12 +45,10 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        data : props.data
+        data : this.props.data,
+        metric : false
     };
 
-    console.log(this.state.data)
-
-    
 
     this.maxima = this.state.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.y))
@@ -61,6 +59,17 @@ export default class extends Component {
     this.colors = ["black", "red", "blue"];
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // Uso típico, (não esqueça de comparar as props):
+    if (this.props.data !== prevState.data) {
+      this.setState({data: this.props.data})
+      this.setState({cont: this.state.cont + 1})
+      this.setState({metric: true})
+      console.log(this.state.data)
+    }
+  }
+
+
   handleZoom(domain) {
     this.setState({selectedDomain: domain});
   }
@@ -70,6 +79,9 @@ export default class extends Component {
   }
 
   render() {
+    if (!this.state.metric) {
+      return <span>Loading...</span>;
+  }
     return (
       <div>
         <VictoryChart
@@ -99,7 +111,7 @@ export default class extends Component {
                 tickLabels: { fill: this.colors[i], textAnchor: this.anchors[i] }
               }}
               // Use normalized tickValues (0 - 1)
-              tickValues={[0.25, 0.5, 0.75, 1]}
+              tickValues={[0,0.25, 0.5, 0.75, 1]}
               // Re-scale ticks by multiplying by correct maxima
               tickFormat={(t) => t * this.maxima[i]}
             />

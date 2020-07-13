@@ -798,7 +798,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassBodyDeclaration(JavaParser.ClassBodyDeclarationContext ctx) {
-        if (ctx.getChild(1).getText().equals("static")) {
+        if (ctx.getChild(1)!= null && ctx.getChild(1).getText().equals("static")) {
             this.isStatic = true;
         } else {
             this.isStatic = false;

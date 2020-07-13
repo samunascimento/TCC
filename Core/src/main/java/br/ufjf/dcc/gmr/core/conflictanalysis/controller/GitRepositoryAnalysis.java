@@ -298,7 +298,7 @@ public class GitRepositoryAnalysis {
     }
 
     private void prepareAnalysis() {
-        ConflictAnalysisTools.deleteDirectory(new File(Paths.get(this.repositoryPath).getParent().toString() + "/RepositoryAnalysisSandbox_" + this.projectName));
+        ConflictAnalysisTools.deleteDirectory(new File(Paths.get(this.repositoryPath).getParent().toString() + "/.repositoryAnalysisSandbox_" + this.projectName));
         try {
             Git.reset(this.repositoryPath, true, false, false, null);
         } catch (IOException ex) {
