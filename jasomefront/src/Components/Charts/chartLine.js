@@ -45,12 +45,10 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        data : props.data
+        data : this.props.data
     };
 
     console.log(this.state.data)
-
-    
 
     this.maxima = this.state.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.y))
