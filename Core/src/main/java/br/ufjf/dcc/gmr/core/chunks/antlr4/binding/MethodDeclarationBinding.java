@@ -22,9 +22,6 @@ public class MethodDeclarationBinding extends BaseBinding {
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
-        for (String aImport : mcb.getTypeBinding().getImports()) {
-            System.out.println("++++++import++++++" + aImport);
-        }
         if (!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())) {
             if (mcb.getTypeBinding().getExtendClass() == null||(mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
