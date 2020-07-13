@@ -9,7 +9,7 @@ public class Person {
     private String CPF;
     private int age;
     private Adress adress;
-    Random rand;
+    private Random rand;
     
     public Person(String name, String CPF, int Age) {
         this.name = name;

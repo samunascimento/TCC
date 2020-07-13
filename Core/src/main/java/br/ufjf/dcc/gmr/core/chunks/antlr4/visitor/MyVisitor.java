@@ -8,7 +8,6 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.antlr.v4.runtime.RuleContext;
 
 public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
@@ -179,35 +178,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitExpression(ctx);
     }
-
-    @Override
-    public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
-
-        if (!this.secondAnalysis) {
-            return super.visitMethodCall(ctx);
-        }
-
-        MethodCallBinding methodCallBinding = new MethodCallBinding();
-        VariableBinding variableOrigin = new VariableBinding();
-        List<TypeBinding> parameters = new ArrayList<>();
-
-        ParserRuleContext parent = ctx.getParent();
-
-        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
-
-            for (int i = 0; i < variableBindingList.size(); i++) {
-                if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
-                      methodCallBinding.setTypeBinding(variableBindingList.get(i).getType());
-                    break;
-                }
-            }
-
-
-        }
-
-        methodCallBinding.setName(ctx.IDENTIFIER().getText());
-        methodCallBinding.setCtx(ctx);
-
+    
+    private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters){
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
 
@@ -269,6 +241,37 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             }
         }
+    }
+    
+    @Override
+    public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
+
+        if (!this.secondAnalysis) {
+            return super.visitMethodCall(ctx);
+        }
+
+        MethodCallBinding methodCallBinding = new MethodCallBinding();
+        VariableBinding variableOrigin = new VariableBinding();
+        List<TypeBinding> parameters = new ArrayList<>();
+
+        ParserRuleContext parent = ctx.getParent();
+
+        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
+
+            for (int i = 0; i < variableBindingList.size(); i++) {
+                if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
+                      methodCallBinding.setTypeBinding(variableBindingList.get(i).getType());
+                    break;
+                }
+            }
+
+
+        }
+
+        methodCallBinding.setName(ctx.IDENTIFIER().getText());
+        methodCallBinding.setCtx(ctx);
+
+        methodCallExpressionList(ctx, parameters);
         
         methodCallBinding.setParameters(parameters);
 
