@@ -45,7 +45,7 @@ export default class extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        data :this.props.data,
+        data : this.props.data,
         metric : false
     };
 
