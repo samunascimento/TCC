@@ -6,8 +6,7 @@ import java.util.List;
 
 public class MethodDeclarationBinding extends BaseBinding {
 
-    private String modifier;
-    private boolean isStatic;
+    private List<Modifiers> modifier;
     private List<TypeBinding> parameters;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
@@ -15,7 +14,7 @@ public class MethodDeclarationBinding extends BaseBinding {
 
     public MethodDeclarationBinding() {
         super();
-        this.modifier = null;
+        this.modifier = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
         this.bindingScope = new ArrayList<>();
@@ -71,8 +70,12 @@ public class MethodDeclarationBinding extends BaseBinding {
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
+        
+        for (Modifiers modifiers : modifier) {
+            output = output.concat("| Modifier = "+modifiers+" | ");
+        }
+        
 
-        output = output.concat(" is static: " + isStatic);
         return output;
     }
 
@@ -121,14 +124,14 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the modifier
      */
-    public String getModifier() {
+    public List<Modifiers> getModifier() {
         return modifier;
     }
 
     /**
      * @param modifier the modifier to set
      */
-    public void setModifier(String modifier) {
+    public void setModifier(List<Modifiers> modifier) {
         this.modifier = modifier;
     }
 
@@ -144,19 +147,5 @@ public class MethodDeclarationBinding extends BaseBinding {
      */
     public void setBindingScope(List<List<BaseBinding>> bindingScope) {
         this.bindingScope = bindingScope;
-    }
-
-    /**
-     * @return the isStatic
-     */
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    /**
-     * @param isStatic the isStatic to set
-     */
-    public void setIsStatic(boolean isStatic) {
-        this.isStatic = isStatic;
     }
 }

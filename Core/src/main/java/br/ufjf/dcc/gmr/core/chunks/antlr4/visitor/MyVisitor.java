@@ -22,7 +22,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private boolean firstAnalysis;
     private boolean secondAnalysis;
     private boolean methodDeclaration;
-    private boolean isStatic;
 
     public MyVisitor() {
 
@@ -750,8 +749,37 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
         ParserRuleContext memberDeclaration = ctx.getParent();
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
-        ParseTree modifier = classBodyDeclaration.getChild(0);
-        mdbGeneral.setModifier(modifier.getText());
+        
+        for (ParseTree parseTree : classBodyDeclaration.children) {
+            if (parseTree instanceof JavaParser.ModifierContext) {
+                if (parseTree.getText().equals("public")) {
+                    mdbGeneral.getModifier().add(Modifiers.PUBLIC);
+                } else if (parseTree.getText().equals("private")) {
+                    mdbGeneral.getModifier().add(Modifiers.PRIVATE);
+                } else if (parseTree.getText().equals("protected")) {
+                    mdbGeneral.getModifier().add(Modifiers.PROTECTED);
+                } else if (parseTree.getText().equals("static")) {
+                    mdbGeneral.getModifier().add(Modifiers.STATIC);
+                } else if (parseTree.getText().equals("abstract")) {
+                    mdbGeneral.getModifier().add(Modifiers.ABSTRACT);
+                } else if (parseTree.getText().equals("final")) {
+                    mdbGeneral.getModifier().add(Modifiers.FINAL);
+                } else if (parseTree.getText().equals("strictfp")) {
+                    mdbGeneral.getModifier().add(Modifiers.STRICTFP);
+                } else if (parseTree.getText().equals("native")) {
+                    mdbGeneral.getModifier().add(Modifiers.NATIVE);
+                } else if (parseTree.getText().equals("synchronized")) {
+                    mdbGeneral.getModifier().add(Modifiers.SYNCHRONIZED);
+                } else if (parseTree.getText().equals("transient")) {
+                    mdbGeneral.getModifier().add(Modifiers.TRANSIENT);
+                } else if (parseTree.getText().equals("volatile")) {
+                    mdbGeneral.getModifier().add(Modifiers.VOLATILE);
+                } else if (parseTree.getText().equals("annotation")) {
+                    mdbGeneral.getModifier().add(Modifiers.ANNOTATION);
+                }
+            }
+        }
+        
 
         JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
         if (ctx.typeTypeOrVoid().typeType() == null) {
@@ -778,7 +806,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-        mdbGeneral.setIsStatic(isStatic);
+  
         mdbGeneral.setTypeBinding(methodType);
         mdbGeneral.setParameters(parameters);
         methodDeclarationBindingList.add(mdbGeneral);
