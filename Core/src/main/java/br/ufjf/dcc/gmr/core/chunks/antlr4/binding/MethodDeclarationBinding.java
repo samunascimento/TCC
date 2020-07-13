@@ -11,19 +11,19 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<TypeBinding> parameters;
     private TypeBinding typeBinding;
     private JavaParser.MethodDeclarationContext ctx;
-    private List<List<BaseBinding>> bindingScope;
+    private EnviromentBinding enviromentBinding;
 
     public MethodDeclarationBinding() {
         super();
         this.modifier = null;
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
-        this.bindingScope = new ArrayList<>();
+        this.enviromentBinding = new EnviromentBinding();
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
         if (!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())) {
-            if (mcb.getTypeBinding().getExtendClass() == null||(mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
+            if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
             }
         }
@@ -133,20 +133,6 @@ public class MethodDeclarationBinding extends BaseBinding {
     }
 
     /**
-     * @return the bindingScope
-     */
-    public List<List<BaseBinding>> getBindingScope() {
-        return bindingScope;
-    }
-
-    /**
-     * @param bindingScope the bindingScope to set
-     */
-    public void setBindingScope(List<List<BaseBinding>> bindingScope) {
-        this.bindingScope = bindingScope;
-    }
-
-    /**
      * @return the isStatic
      */
     public boolean isStatic() {
@@ -158,5 +144,19 @@ public class MethodDeclarationBinding extends BaseBinding {
      */
     public void setIsStatic(boolean isStatic) {
         this.isStatic = isStatic;
+    }
+
+    /**
+     * @return the enviromentBinding
+     */
+    public EnviromentBinding getEnviromentBinding() {
+        return enviromentBinding;
+    }
+
+    /**
+     * @param enviromentBinding the enviromentBinding to set
+     */
+    public void setEnviromentBinding(EnviromentBinding enviromentBinding) {
+        this.enviromentBinding = enviromentBinding;
     }
 }

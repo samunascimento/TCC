@@ -22,7 +22,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private boolean secondAnalysis;
     private boolean methodDeclaration;
     private boolean isStatic;
-
+    private EnviromentBinding enviromentBinding;
+    
     public MyVisitor() {
 
         this.packageBinding = new PackageBinding();
@@ -32,6 +33,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         this.methodDeclarationBindingList = new ArrayList<>();
         this.variableBindingList = new ArrayList<>();
         this.methodDeclaration = false;
+        this.enviromentBinding = new EnviromentBinding();
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -414,11 +416,12 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         if (this.methodDeclaration) {
-            List<List<BaseBinding>> bindingScope = mdbGeneral.getBindingScope();
-            List<BaseBinding> get = bindingScope.get(bindingScope.size() - 1);
+            EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
+            List<BaseBinding> get = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
             get.add(variable);
             this.variableBindingList.add(variable);
         }
+        
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -434,15 +437,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         List<BaseBinding> bindings = new ArrayList<>();
 
         if (this.methodDeclaration) {
-            this.mdbGeneral.getBindingScope().add(bindings);
-
+            this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
         }
 
         Object visitBlock = super.visitBlock(ctx);
 
         if (this.methodDeclaration) {
-            this.mdbGeneral.getBindingScope().remove(bindings);
-
+            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
         }
 
         return visitBlock;
@@ -1139,5 +1140,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
      */
     public static void setTypeBindingList(List<TypeBinding> aTypeBindingList) {
         typeBindingList = aTypeBindingList;
+    }
+
+    /**
+     * @return the enviromentBinding
+     */
+    public EnviromentBinding getEnviromentBinding() {
+        return enviromentBinding;
+    }
+
+    /**
+     * @param enviromentBinding the enviromentBinding to set
+     */
+    public void setEnviromentBinding(EnviromentBinding enviromentBinding) {
+        this.enviromentBinding = enviromentBinding;
     }
 }
