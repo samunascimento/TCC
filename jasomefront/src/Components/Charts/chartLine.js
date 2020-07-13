@@ -59,9 +59,9 @@ export default class extends Component {
     this.colors = ["black", "red", "blue"];
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // Uso típico, (não esqueça de comparar as props):
-    if (this.props.data !== prevProps.data) {
+    if (this.props.data !== prevState.data) {
       this.setState({data: this.props.data})
       this.setState({cont: this.state.cont + 1})
       this.setState({metric: true})
@@ -111,7 +111,7 @@ export default class extends Component {
                 tickLabels: { fill: this.colors[i], textAnchor: this.anchors[i] }
               }}
               // Use normalized tickValues (0 - 1)
-              tickValues={[0, 0.5, 0.75, 1]}
+              tickValues={[0,0.25, 0.5, 0.75, 1]}
               // Re-scale ticks by multiplying by correct maxima
               tickFormat={(t) => t * this.maxima[i]}
             />
