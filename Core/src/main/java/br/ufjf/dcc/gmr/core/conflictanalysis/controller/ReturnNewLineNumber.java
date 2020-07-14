@@ -231,7 +231,6 @@ public class ReturnNewLineNumber {
                 throw new PathDontExist();
             }
             j++;
-
         }
 
         for (int i = 0; i < chunk.get(j).getLines().size(); i++) {
@@ -251,9 +250,6 @@ public class ReturnNewLineNumber {
                     }
                 }
             }
-        }
-        if (Math.abs(cont) >= originalLineNumber) {
-            System.out.println("WTF ???");
         }
         return cont;
     }
@@ -346,9 +342,6 @@ public class ReturnNewLineNumber {
             return REMOVED_LINE;
         }
 
-        if (originalLineNumber + i < 0) {
-            System.out.println(i);
-        }
         return (originalLineNumber + i);
     }
 

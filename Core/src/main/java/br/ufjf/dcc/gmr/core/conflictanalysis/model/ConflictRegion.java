@@ -46,16 +46,24 @@ public class ConflictRegion {
         this.beginLine = beginLine;
         this.separatorLine = separatorLine;
         this.endLine = endLine;
-        this.originalV1StartLine = originalV1StartLine;
-        if (this.originalV1StartLine == 0) {
+        if (originalV1StartLine < 0) {
+            this.originalV1StartLine = -1;
+            this.originalV1StopLine = -1;
+        } else if (originalV1StartLine == 0) {
+            this.originalV1StartLine = 0;
             this.originalV1StopLine = 0;
         } else {
+            this.originalV1StartLine = originalV1StartLine;
             this.originalV1StopLine = originalV1StartLine + (separatorLine - beginLine - 2);
         }
-        this.originalV2StartLine = originalV2StartLine;
-        if (this.originalV2StartLine == 0) {
+        if (originalV2StartLine < 0) {
+            this.originalV2StartLine = -1;
+            this.originalV2StopLine = -1;
+        } else if (originalV2StartLine == 0) {
+            this.originalV2StartLine = 0;
             this.originalV2StopLine = 0;
         } else {
+            this.originalV2StartLine = originalV2StartLine;
             this.originalV2StopLine = originalV2StartLine + (endLine - separatorLine - 2);
         }
         this.developerDecision = generateDeveloperDecision();
@@ -130,12 +138,16 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
+            } else if (this.originalV1StartLine < 0) {
+                this.syntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
                 this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
+            } else if (this.originalV2StartLine < 0) {
+                this.syntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
                 this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
@@ -156,12 +168,16 @@ public class ConflictRegion {
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
+            } else if (this.originalV1StartLine < 0) {
+                this.syntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
                 this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
+            } else if (this.originalV2StartLine < 0) {
+                this.syntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
                 this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
@@ -219,23 +235,16 @@ public class ConflictRegion {
 
     private List<String> getSortedStructureType(List<SyntaxStructure> list) {
         List<String> structureType = new ArrayList<>();
-        if (list == null) {
-            structureType.add("Extension not parseble!");
-            return structureType;
-        } else if (list.isEmpty()) {
-            return structureType;
-        } else {
-            for (SyntaxStructure struc : list) {
-                if (!structureType.contains(struc.getStructureType())) {
-                    structureType.add(struc.getStructureType());
-                }
+        for (SyntaxStructure struc : list) {
+            if (!structureType.contains(struc.getStructureType())) {
+                structureType.add(struc.getStructureType());
             }
-            Collections.sort(structureType);
-            if (list.get(0).getWarning()) {
-                structureType.add(0, "WARNING!");
-            }
-            return structureType;
         }
+        Collections.sort(structureType);
+        if (list.get(0).getWarning()) {
+            structureType.add(0, "WARNING!");
+        }
+        return structureType;
     }
 
     private void generateTypeOfConflict() {

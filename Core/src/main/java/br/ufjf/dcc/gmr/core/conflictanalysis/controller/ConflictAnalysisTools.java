@@ -38,13 +38,9 @@ public class ConflictAnalysisTools {
 
     public static File createSandbox(String repositoryPath, String projectName) throws IOException, RepositoryAlreadyExist {
         File sandbox;
-        if (repositoryPath.contains("\\")) {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "\\.repositoryAnalysisSandbox_" + projectName);
-        } else {
-            sandbox = new File(Paths.get(repositoryPath).getParent().toString() + "/.repositoryAnalysisSandbox_" + projectName);
-        }
+        sandbox = new File(Paths.get(repositoryPath).getParent().toString() + File.separator +".repositoryAnalysisSandbox_" + projectName + File.separator);
         try {
-            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), ".repositoryAnalysisSandbox_" + projectName);
+            Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), ".repositoryAnalysisSandbox_" + projectName + File.separator);
         } catch (RepositoryNotFound ex) {
             System.out.println("ERROR: RepositoryNotFound error!");
             throw new IOException();
@@ -187,7 +183,7 @@ public class ConflictAnalysisTools {
                 return null;
             }
             for (SyntaxStructure ss : shelf.getCommentAnalysis()) {
-                if (ss.getStartLine() >= start && ss.getStartLine() <= stop) {
+                if ((ss.getStartLine() >= start && ss.getStartLine() <= stop) || (ss.getStopLine() >= start && ss.getStopLine() <= stop)) {
                     comments.add(ss);
                 }
             }

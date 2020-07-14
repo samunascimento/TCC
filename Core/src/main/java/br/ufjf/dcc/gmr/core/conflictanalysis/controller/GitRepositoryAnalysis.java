@@ -96,7 +96,11 @@ public class GitRepositoryAnalysis {
      */
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
-        this.repositoryPath = repositoryPath;
+        if (repositoryPath.endsWith(File.separator)) {
+            this.repositoryPath = repositoryPath;
+        } else {
+            this.repositoryPath = repositoryPath + File.separator;
+        }
         this.linesContext = linesContext;
         this.useOutmost = useOutmost;
         this.processData = new RepositoryAnalysisProcessData();
@@ -104,7 +108,7 @@ public class GitRepositoryAnalysis {
         this.progressBar = null;
         this.processLabel = null;
         this.analysisDone = false;
-        String[] auxArray = this.repositoryPath.split("/");
+        String[] auxArray = this.repositoryPath.split(File.separator);
         this.projectName = auxArray[auxArray.length - 1];
     }
 
@@ -116,12 +120,16 @@ public class GitRepositoryAnalysis {
      * be less than 1.
      * @param useOutmost If is necessary filter the ANTLR structures to the
      * outmost structures, input true.
-     * @param progressBar Input a ConflictAnalysisProgressBar if its use in a
-     * GUI
+     * @param progressBarPanel Input a ConflictAnalysisProgressBarPanel if its
+     * use in a GUI
      */
     public GitRepositoryAnalysis(String repositoryPath, int linesContext, ConflictAnalysisProgressBarPanel progressBarPanel, boolean useOutmost) {
         this.mergeEventList = new ArrayList<>();
-        this.repositoryPath = repositoryPath;
+        if (repositoryPath.endsWith(File.separator)) {
+            this.repositoryPath = repositoryPath;
+        } else {
+            this.repositoryPath = repositoryPath + File.separator;
+        }
         this.linesContext = linesContext;
         this.useOutmost = useOutmost;
         this.processData = new RepositoryAnalysisProcessData();
@@ -129,7 +137,7 @@ public class GitRepositoryAnalysis {
         this.progressBar = this.progressBarPanel.getProgressBar();
         this.processLabel = this.progressBarPanel.getProcessLabel();
         this.analysisDone = false;
-        String[] auxArray = this.repositoryPath.split("/");
+        String[] auxArray = this.repositoryPath.split(File.separator);
         this.projectName = auxArray[auxArray.length - 1];
     }
 
@@ -157,7 +165,7 @@ public class GitRepositoryAnalysis {
             System.out.println("The repository has already been analyzed!");
         } else {
             if (this.linesContext < 1) {
-                this.exceptionProtocol("ERROR: IOException error!");
+                this.exceptionProtocol("ERROR: IOException error!", null);
                 throw new IOException();
             }
             try {
@@ -167,55 +175,55 @@ public class GitRepositoryAnalysis {
                     this.firstProcessingLayerGUI();
                 }
             } catch (CheckoutError ex) {
-                this.exceptionProtocol("ERROR: CheckoutError error!");
+                this.exceptionProtocol("ERROR: CheckoutError error!", ex);
                 ConflictAnalysisTools.deleteDirectory(this.processData.sandbox);
             } catch (NoRemoteForTheCurrentBranch ex) {
-                this.exceptionProtocol("ERROR: NoRemoteForTheCurrentBranch error!");
+                this.exceptionProtocol("ERROR: NoRemoteForTheCurrentBranch error!", ex);
                 throw new IOException();
             } catch (ThereIsNoMergeInProgress ex) {
-                this.exceptionProtocol("ERROR: ThereIsNoMergeInProgress error!");
+                this.exceptionProtocol("ERROR: ThereIsNoMergeInProgress error!", ex);
                 throw new IOException();
             } catch (ThereIsNoMergeToAbort ex) {
-                this.exceptionProtocol("ERROR: ThereIsNoMergeToAbort error!");
+                this.exceptionProtocol("ERROR: ThereIsNoMergeToAbort error!", ex);
                 throw new IOException();
             } catch (AlreadyUpToDate ex) {
-                this.exceptionProtocol("ERROR: AlreadyUpToDate error!");
+                this.exceptionProtocol("ERROR: AlreadyUpToDate error!", ex);
                 throw new IOException();
             } catch (NotSomethingWeCanMerge ex) {
-                this.exceptionProtocol("ERROR: NotSomethingWeCanMerge error!");
+                this.exceptionProtocol("ERROR: NotSomethingWeCanMerge error!", ex);
                 throw new IOException();
             } catch (InvalidCommitHash ex) {
-                this.exceptionProtocol("ERROR: InvalidCommitHash error!");
+                this.exceptionProtocol("ERROR: InvalidCommitHash error!", ex);
                 throw new IOException();
             } catch (UnknownSwitch ex) {
-                this.exceptionProtocol("ERROR: UnknownSwitch error!");
+                this.exceptionProtocol("ERROR: UnknownSwitch error!", ex);
                 throw new IOException();
             } catch (RefusingToClean ex) {
-                this.exceptionProtocol("ERROR: RefusingToClean error!");
+                this.exceptionProtocol("ERROR: RefusingToClean error!", ex);
                 throw new IOException();
             } catch (IsOutsideRepository ex) {
-                this.exceptionProtocol("ERROR: IsOutsideRepository error!");
+                this.exceptionProtocol("ERROR: IsOutsideRepository error!", ex);
                 throw new IOException();
             } catch (InvalidDocument ex) {
-                this.exceptionProtocol("ERROR: InvalidDocument error!");
+                this.exceptionProtocol("ERROR: InvalidDocument error!", ex);
                 throw new IOException();
             } catch (LocalRepositoryNotAGitRepository ex) {
-                this.exceptionProtocol("ERROR: LocalRepositoryNotAGitRepository error!");
+                this.exceptionProtocol("ERROR: LocalRepositoryNotAGitRepository error!", ex);
                 throw new IOException();
             } catch (PathDontExist ex) {
-                this.exceptionProtocol("ERROR: PathDontExist error!");
+                this.exceptionProtocol("ERROR: PathDontExist error!", ex);
                 throw new IOException();
             } catch (EmptyOutput ex) {
-                this.exceptionProtocol("ERROR: EmptyOutput error!");
+                this.exceptionProtocol("ERROR: EmptyOutput error!", ex);
                 throw new IOException();
             } catch (IOException ex) {
-                this.exceptionProtocol("ERROR: IOException error!");
+                this.exceptionProtocol("ERROR: IOException error!", ex);
                 throw new IOException();
             } catch (RepositoryAlreadyExist ex) {
-                this.exceptionProtocol("ERROR: RepositoryAlreadyExist error!");
+                this.exceptionProtocol("ERROR: RepositoryAlreadyExist error!", ex);
                 throw new IOException();
             } catch (ImpossibleLineNumber ex) {
-                this.exceptionProtocol("ERROR: ImpossibleLineNumber error!");
+                this.exceptionProtocol("ERROR: ImpossibleLineNumber error!", ex);
                 throw new IOException();
             }
             this.analysisDone = true;
@@ -234,7 +242,7 @@ public class GitRepositoryAnalysis {
         this.progressBar.setMinimum(1);
         this.progressBar.setMaximum(allMerges.size());
         this.processLabel.setText("Main Process...");
-        System.out.println(status + "/" + mergeNumber + " merges processed...");
+        System.out.println("[" + this.projectName + "] " + status + File.separator + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
             this.catchCommits(merge);
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
@@ -245,7 +253,7 @@ public class GitRepositoryAnalysis {
             this.addMergeEvent();
             this.resetMergeEventData();
             this.progressBar.setValue(++status);
-            System.out.println(status + "/" + mergeNumber + " merges processed...");
+            System.out.println("[" + this.projectName + "] " + status + File.separator + mergeNumber + " merges processed...");
         }
         ConflictAnalysisTools.deleteDirectory(this.processData.sandbox);
         System.out.println("Starting ANTLR analysis...");
@@ -261,7 +269,7 @@ public class GitRepositoryAnalysis {
         mergeNumber = allMerges.size();
         this.prepareAnalysis();
         this.processData.sandbox = ConflictAnalysisTools.createSandbox(this.repositoryPath, this.projectName);
-        System.out.println(status + "/" + mergeNumber + " merges processed...");
+        System.out.println("[" + this.projectName + "] " + status + File.separator + mergeNumber + " merges processed...");
         for (String merge : allMerges) {
             this.catchCommits(merge);
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
@@ -272,7 +280,7 @@ public class GitRepositoryAnalysis {
             this.addMergeEvent();
             this.resetMergeEventData();
             status++;
-            System.out.println(status + "/" + mergeNumber + " merges processed...");
+            System.out.println("[" + this.projectName + "] " + status + File.separator + mergeNumber + " merges processed...");
         }
         ConflictAnalysisTools.deleteDirectory(this.processData.sandbox);
         System.out.println("Starting ANTLR analysis...");
@@ -326,9 +334,9 @@ public class GitRepositoryAnalysis {
     }
 
     private void catchMainConflictFileInfo(String filePath) {
-        this.processData.filePath = repositoryPath + filePath;
-        this.processData.insideFilePath = filePath;
-        this.processData.auxArray = filePath.split("/");
+        this.processData.filePath = repositoryPath + filePath.replaceFirst(File.separator, "");
+        this.processData.insideFilePath = filePath.replaceFirst(File.separator, "");
+        this.processData.auxArray = filePath.split(File.separator);
         this.processData.fileName = this.processData.auxArray[this.processData.auxArray.length - 1];
     }
 
@@ -385,12 +393,12 @@ public class GitRepositoryAnalysis {
                 }
                 this.processData.endLine = i + 1;
                 if (fileContent.get(i).contains(":")) {
-                    this.processData.auxArray = fileContent.get(i).split("/");
+                    this.processData.auxArray = fileContent.get(i).split(File.separator);
                     if (this.processData.auxArray[this.processData.auxArray.length - 1] != this.processData.fileName) {
                         this.processData.extraFileName = this.processData.auxArray[this.processData.auxArray.length - 1];
                         this.processData.auxArray = fileContent.get(i).split(":");
-                        this.processData.extraInsideFilePath = "/" + this.processData.auxArray[this.processData.auxArray.length - 1];
-                        this.processData.extraFilePath = repositoryPath + "/" + this.processData.extraInsideFilePath;
+                        this.processData.extraInsideFilePath = this.processData.auxArray[this.processData.auxArray.length - 1].replaceFirst(File.separator, "");;
+                        this.processData.extraFilePath = repositoryPath + File.separator + this.processData.extraInsideFilePath;
                     }
                 }
                 for (int j = i + 1; j < i + 1 + linesContext; j++) {
@@ -414,18 +422,21 @@ public class GitRepositoryAnalysis {
         this.processData.originalV2FirstLine = 0;
         if (this.processData.beginLine + 1 != this.processData.separatorLine) {
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.processData.sandbox.getPath());
-            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, this.processData.sandbox.getPath()
-                    + this.processData.insideFilePath, this.processData.beginLine + 1);
+            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, 
+                    this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath, this.processData.beginLine + 1);
+            if(this.processData.originalV1FirstLine == ReturnNewLineNumber.REMOVED_LINE){
+                System.out.println("");
+            }
         }
         if (this.processData.separatorLine + 1 != this.processData.endLine) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
             if (!this.processData.extraIsEmpty()) {
                 this.processData.originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
-                        this.processData.extraFilePath, this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                        this.processData.extraFilePath, this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath,
                         this.processData.separatorLine + 1);
             } else {
                 this.processData.originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
-                        this.processData.filePath, this.processData.sandbox.getPath() + this.processData.insideFilePath,
+                        this.processData.filePath, this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath,
                         this.processData.separatorLine + 1);
             }
         }
@@ -437,7 +448,7 @@ public class GitRepositoryAnalysis {
         if (!this.processData.beforeContext.isEmpty()) {
             this.processData.solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                     this.processData.filePath,
-                    this.processData.sandbox.getPath() + this.processData.insideFilePath,
+                    this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath,
                     this.processData.beginLine - 1);
         } else {
             this.processData.solutionFirstLine = 0;
@@ -445,7 +456,7 @@ public class GitRepositoryAnalysis {
         if (!this.processData.afterContext.isEmpty()) {
             this.processData.solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                     this.processData.filePath,
-                    this.processData.sandbox.getPath() + this.processData.insideFilePath,
+                    this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath,
                     this.processData.endLine + 1);
         } else {
             this.processData.solutionFinalLine = 0;
@@ -473,21 +484,21 @@ public class GitRepositoryAnalysis {
             listAux.add("POSTPONED");
             this.processData.solution = listAux;
         } else if (this.processData.solutionFirstLine == 0 && this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath);
+            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath);
             this.processData.solution.add(0, "<SOF>");
             this.processData.solution.add("<EOF>");
         } else if (this.processData.solutionFirstLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath),
                     0,
                     this.processData.solutionFinalLine - 1);
             this.processData.solution.add(0, "<SOF>");
         } else if (this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath),
                     this.processData.solutionFirstLine - 1,
-                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath).size() - 1);
+                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath).size() - 1);
             this.processData.solution.add("<EOF>");
         } else if (this.processData.solutionFirstLine > 0 && this.processData.solutionFinalLine > 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.insideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath),
                     this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
         }
 
@@ -497,7 +508,7 @@ public class GitRepositoryAnalysis {
         if (!this.processData.beforeContext.isEmpty()) {
             this.processData.solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                     this.processData.extraFilePath,
-                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                    this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath,
                     this.processData.beginLine - 1);
         } else {
             this.processData.solutionFirstLine = 0;
@@ -505,7 +516,7 @@ public class GitRepositoryAnalysis {
         if (!this.processData.afterContext.isEmpty()) {
             this.processData.solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(),
                     this.processData.extraFilePath,
-                    this.processData.sandbox.getPath() + this.processData.extraInsideFilePath,
+                    this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath,
                     this.processData.endLine + 1);
         } else {
             this.processData.solutionFinalLine = 0;
@@ -533,21 +544,21 @@ public class GitRepositoryAnalysis {
             listAux.add("POSTPONED");
             this.processData.solution = listAux;
         } else if (this.processData.solutionFirstLine == 0 && this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath);
+            this.processData.solution = ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath);
             this.processData.solution.add(0, "<SOF>");
             this.processData.solution.add("<EOF>");
         } else if (this.processData.solutionFirstLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath),
                     0,
                     this.processData.solutionFinalLine - 1);
             this.processData.solution.add(0, "<SOF>");
         } else if (this.processData.solutionFinalLine == 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath),
                     this.processData.solutionFirstLine - 1,
-                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath).size() - 1);
+                    ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath).size() - 1);
             this.processData.solution.add("<EOF>");
         } else if (this.processData.solutionFirstLine > 0 && this.processData.solutionFinalLine > 0) {
-            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + this.processData.extraInsideFilePath),
+            this.processData.solution = ListUtils.getSubList(ConflictAnalysisTools.getFileContent(this.processData.sandbox.getPath() + File.separator + this.processData.extraInsideFilePath),
                     this.processData.solutionFirstLine - 1, this.processData.solutionFinalLine - 1);
         }
     }
@@ -619,7 +630,7 @@ public class GitRepositoryAnalysis {
     private void catchUnmergedFiles(List<String> diffMessage) {
         for (String line : diffMessage) {
             if (line.startsWith("* Unmerged path")) {
-                this.processData.auxArray = line.split("/");
+                this.processData.auxArray = line.split(File.separator);
                 this.processData.conflictFiles.add(new ConflictFile(this.processData.auxArray[this.processData.auxArray.length - 1], null, null, null));
             }
         }
@@ -648,7 +659,7 @@ public class GitRepositoryAnalysis {
         for (MergeEvent merge : this.mergeEventList) {
             conflictsNumber += merge.getNumberOfConflictRegions();
         }
-        System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
+        System.out.println("[" + this.projectName + "] " + status + "/" + conflictsNumber + " conflicts processed...");
         for (MergeEvent merge : this.mergeEventList) {
             if (merge.getConflictFiles() != null) {
                 for (ConflictFile file : merge.getConflictFiles()) {
@@ -660,7 +671,7 @@ public class GitRepositoryAnalysis {
                                 region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             }
                             status++;
-                            System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
+                            System.out.println("[" + this.projectName + "] " + status + "/" + conflictsNumber + " conflicts processed...");
                         }
                     }
                 }
@@ -685,7 +696,7 @@ public class GitRepositoryAnalysis {
             conflictsNumber += merge.getNumberOfConflictRegions();
         }
         this.progressBar.setMaximum(conflictsNumber);
-        System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
+        System.out.println("[" + this.projectName + "] " + status + "/" + conflictsNumber + " conflicts processed...");
         for (MergeEvent merge : this.mergeEventList) {
             if (merge.getConflictFiles() != null) {
                 for (ConflictFile file : merge.getConflictFiles()) {
@@ -697,7 +708,7 @@ public class GitRepositoryAnalysis {
                                 region.setSyntaxV1SyntaxV2(this.repositoryPath, file.getFilePath(), merge.getParents().get(0).getCommitHash(), merge.getParents().get(1).getCommitHash(), this.useOutmost);
                             }
                             this.progressBar.setValue(++status);
-                            System.out.println(status + "/" + conflictsNumber + " conflicts processed...");
+                            System.out.println("[" + this.projectName + "] " + status + "/" + conflictsNumber + " conflicts processed...");
                         }
                     }
                 }
@@ -705,8 +716,11 @@ public class GitRepositoryAnalysis {
         }
     }
 
-    private void exceptionProtocol(String message) {
+    private void exceptionProtocol(String message, Exception ex) {
         System.out.println(message);
+        if (ex != null) {
+            ex.printStackTrace();
+        }
         ConflictAnalysisTools.deleteDirectory(this.processData.sandbox);
         this.mergeEventList = null;
         this.analysisDone = true;
