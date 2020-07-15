@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 
+import { PropTypes } from 'prop-types';
 
 // export default ({ match: { url}, name}) =>
 
@@ -73,7 +74,27 @@ export default class Project extends Component {
 
       maxHeight: 192,
 
-      data: [],
+      // data:[
+      //   [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }],
+      //   [{ x: 1, y: 400 }, { x: 2, y: 350 }, { x: 3, y: 300 }, { x: 4, y: 250 }],
+      //   [{ x: 1, y: 75 }, { x: 2, y: 85 }, { x: 3, y: 95 }, { x: 4, y: 100 }]
+      // ],
+
+      data: [
+        [
+          {
+            "x": 0,
+            "y": 42.0,
+            "metricName": "TLOC",
+            "versionDate": "Jan 31, 2020 11:58:48 PM"
+          },
+          {
+            "x": 1,
+            "y": 500.0,
+            "metricName": "TLOC",
+            "versionDate": "Feb 1, 2020 2:00:26 AM"
+          }
+        ]],
 
       root: {
         height: 240,
@@ -117,11 +138,17 @@ export default class Project extends Component {
 
 
   componentDidMount = () => {
-    axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
+    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
       .then(res => {
         const packageTree = res.data
         this.setState({ packageTree })
       })
+
+  //     axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
+  //     .then(res => {
+  //       const dados = res.data
+  //       this.setState({ data: dados })
+  //     })
   }
 
 
@@ -130,11 +157,10 @@ export default class Project extends Component {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     if (event.target.checked === true) {
-      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
+      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
         .then(res => {
           const data = res.data;
           this.setState({ data });
-          console.log(data)
         })
       console.log(this.state.data)
     }
@@ -152,7 +178,7 @@ export default class Project extends Component {
 
 
     if (event.target.checked === true) {
-      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
+      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           //const data = this.state.data;
@@ -189,7 +215,7 @@ export default class Project extends Component {
   handleChangeClass = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
+      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -219,7 +245,7 @@ export default class Project extends Component {
   handleChangeMethod = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
+      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -444,4 +470,13 @@ export default class Project extends Component {
       </div>
     );
   }
+}
+
+Project.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    name: PropTypes.string,
+    versionDate: PropTypes.string
+  })),
 }

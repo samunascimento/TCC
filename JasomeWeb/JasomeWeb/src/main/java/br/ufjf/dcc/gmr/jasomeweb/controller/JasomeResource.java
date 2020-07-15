@@ -106,12 +106,12 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/package/{nameProject}/{nameMetric}")
-    public String getMetricPackage(@PathParam("nameProject") String nameProject,@PathParam("nameMetric") String nameMetric) throws SQLException{
+    @Path("metric/package/{nameProject}/{namePackage}/{nameMetric}")
+    public String getMetricPackage(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameMetric") String nameMetric) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
-        List<List<Point>> selectPackageMetrics = dao.selectPackageMetrics(nameProject,nameMetric);
+        List<List<Point>> selectPackageMetrics = dao.selectPackageMetrics(nameProject,namePackage,nameMetric);
         String listJ = g.toJson(selectPackageMetrics);
         return listJ;
     }

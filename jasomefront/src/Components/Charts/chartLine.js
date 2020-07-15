@@ -1,5 +1,7 @@
 import React, { Component} from 'react';
 import {VictoryChart,VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis,VictoryTheme} from 'victory'
+
+import { PropTypes } from 'prop-types';
 /*
   Line 21:12:  'VictoryChart' is not defined           react/jsx-no-undef
   Line 26:16:  'VictoryZoomContainer' is not defined   react/jsx-no-undef
@@ -39,13 +41,17 @@ import {VictoryChart,VictoryZoomContainer,VictoryLine,VictoryBrushContainer,Vict
   // ]
 //   // find maxima for normalizing data
 
-
-export default class extends Component {
+ class ChartLine extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
         data : this.props.data,
+        // data:[
+        //   [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }],
+        //   [{ x: 1, y: 400 }, { x: 2, y: 350 }, { x: 3, y: 300 }, { x: 4, y: 250 }],
+        //   [{ x: 1, y: 75 }, { x: 2, y: 85 }, { x: 3, y: 95 }, { x: 4, y: 100 }]
+        // ],
         metric : false
     };
 
@@ -63,7 +69,7 @@ export default class extends Component {
     // Uso típico, (não esqueça de comparar as props):
     if (this.props.data !== prevState.data) {
       this.setState({data: this.props.data})
-      this.setState({cont: this.state.cont + 1})
+      this.setState({cont: this.state.cont + 1}) 
       this.setState({metric: true})
       console.log(this.state.data)
     }
@@ -129,4 +135,15 @@ export default class extends Component {
       </div>
     );
   }
+}
+
+export default ChartLine;
+
+ChartLine.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    name: PropTypes.string,
+    versionDate: PropTypes.string
+  })),
 }
