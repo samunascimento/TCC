@@ -20,7 +20,7 @@ public class MethodCallBinding extends BaseBinding{
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
-        return this.getName().equals(mdb.getName());
+        return mdb.equalsTo(this);
     }
 
     @Override

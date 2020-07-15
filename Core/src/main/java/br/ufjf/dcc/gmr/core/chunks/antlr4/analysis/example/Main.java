@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -7,7 +8,7 @@ public class Main {
     private String name;
     private String office;
     private int age;
-    List aux;
+    
     
     public Main(String name, String office, int age) {
         this.name = name;
@@ -24,7 +25,10 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
-
+        
+        List<String> aux = new ArrayList<>();
+        aux.add("0");
+        
         for (int i = 0; i < 10; i++) {
             float j = 3;
             j += i;
