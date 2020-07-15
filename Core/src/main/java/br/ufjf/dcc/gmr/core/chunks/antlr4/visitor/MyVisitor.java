@@ -180,8 +180,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         //System.out.println("====================================== NAO TRATADO  ======================================");
         return super.visitExpression(ctx);
     }
-    
-    private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters){
+
+    private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters) {
         JavaParser.ExpressionListContext expressionList
                 = (JavaParser.ExpressionListContext) ctx.expressionList();
 
@@ -206,26 +206,25 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
                             if (literal.BOOL_LITERAL() != null) {
 
-                                parameterTypeBinding.setName("bool");
-
+                                parameterTypeBinding.setName(PrimitiveTypes.BOOLEAN);
                             } else if (literal.CHAR_LITERAL() != null) {
 
-                                parameterTypeBinding.setName("char");
+                                parameterTypeBinding.setName(PrimitiveTypes.CHAR);
                             } else if (literal.NULL_LITERAL() != null) {
 
-                                parameterTypeBinding.setName("null");
+                                parameterTypeBinding.setName(PrimitiveTypes.NULL);
                             } else if (literal.STRING_LITERAL() != null) {
 
-                                parameterTypeBinding.setName("String");
+                                parameterTypeBinding.setName(PrimitiveTypes.STRING);
 
                             } else if (literal.integerLiteral() != null) {
 
-                                parameterTypeBinding.setName("int");
+                                parameterTypeBinding.setName(PrimitiveTypes.INT);
                             } else if (literal.floatLiteral() != null) {
 
-                                parameterTypeBinding.setName("float");
+                                parameterTypeBinding.setName(PrimitiveTypes.FLOAT);
                             } else {
-                                System.out.println("ERROR: MyVisitor:263=D");
+                                System.out.println("ERROR: MyVisitor:227=D");
                             }
 
                         } else {
@@ -238,13 +237,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                         }
                         parameters.add(parameterTypeBinding);
                     }
-
                 }
-
             }
         }
     }
-    
+
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
 
@@ -253,7 +250,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         }
 
         MethodCallBinding methodCallBinding = new MethodCallBinding();
-        VariableBinding variableOrigin = new VariableBinding();
         List<TypeBinding> parameters = new ArrayList<>();
 
         ParserRuleContext parent = ctx.getParent();
@@ -262,19 +258,17 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
             for (int i = 0; i < variableBindingList.size(); i++) {
                 if (parent.children.get(0).getText().equals(variableBindingList.get(i).getName())) {
-                      methodCallBinding.setTypeBinding(variableBindingList.get(i).getType());
+                    methodCallBinding.setTypeBinding(variableBindingList.get(i).getType());
                     break;
                 }
             }
-
-
         }
 
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
 
         methodCallExpressionList(ctx, parameters);
-        
+
         methodCallBinding.setParameters(parameters);
 
         methodCallBidingList.add(methodCallBinding);
@@ -416,11 +410,11 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
         if (this.methodDeclaration) {
             EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-            List<BaseBinding> get = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
+            List<BaseBinding> get = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
             get.add(variable);
             this.variableBindingList.add(variable);
         }
-        
+
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -753,7 +747,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
         ParserRuleContext memberDeclaration = ctx.getParent();
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
-        
+
         for (ParseTree parseTree : classBodyDeclaration.children) {
             if (parseTree instanceof JavaParser.ModifierContext) {
                 if (parseTree.getText().equals("public")) {
@@ -783,7 +777,6 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-        
 
         JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
         if (ctx.typeTypeOrVoid().typeType() == null) {
@@ -810,7 +803,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 }
             }
         }
-  
+
         mdbGeneral.setTypeBinding(methodType);
         mdbGeneral.setParameters(parameters);
         methodDeclarationBindingList.add(mdbGeneral);

@@ -47,10 +47,18 @@ public class EmployeeExtends extends Person {
         this.active = active;
     }
 
+    public void increaseSalary(double increase) {
+        this.salary += increase;
+    }
+    
     public void increaseSalary(float increase) {
         this.salary += increase;
     }
-
+        
+    public void increaseSalary(int increase) {
+        this.salary += increase;
+    }
+    
     public void dismiss() {
         this.active = false;
     }

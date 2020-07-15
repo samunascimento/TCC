@@ -39,18 +39,15 @@ public class MethodDeclarationBinding extends BaseBinding {
             return false;
         }
 
-        //problema para funcionar pois ao passar um numero para uma função ele pode ser lido como int apesar 
-        //de o parâmetro da função ser um float
-        //exemplo Main linha 43 employeeExtends.increaseSalary(50);
         for (int i = 0; i < this.getParameters().size(); i++) {
-            if (!this.getParameters().get(i).getName().equals(mcb.getParameters().get(i).getName())) {
+            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getName())) {
                 return false;
             }
         }
 
         return true;
     }
-
+    
     @Override
     public String toString() {
 
