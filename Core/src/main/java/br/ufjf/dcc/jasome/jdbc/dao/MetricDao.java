@@ -460,7 +460,7 @@ public class MetricDao {
     
     
     
-    public List<List<Point>> selectPackageMetrics(String nameProject, String nameMetric) throws SQLException {
+    public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage,String nameMetric) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
 
@@ -484,7 +484,7 @@ public class MetricDao {
                 + "inner join tb_metric as e \n"
                 + "on\n"
                 + "d."+ nameMetric +"id = e.id \n"
-                + "where a.projectname = " + "\'" + nameProject + "\'"
+                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "'"
                 + "order by v.id";
 
         int idIndex;
