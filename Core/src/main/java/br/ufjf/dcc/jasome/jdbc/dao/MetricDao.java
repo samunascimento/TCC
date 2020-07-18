@@ -294,7 +294,7 @@ public class MetricDao {
             
             for (String packageName : packageNames) {
                 resultSet = stmt.executeQuery();
-                   packageMetrics = new PackageMetrics(id,packageName);
+                   //packageMetrics = new PackageMetrics(id,packageName);
                    id++;
                 listPackage.add(packageMetrics);
             }
