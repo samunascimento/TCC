@@ -26,7 +26,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ParserJava {
 
-    private static boolean reachEnd = false;
+    private static boolean reachedEnd = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -51,6 +51,7 @@ public class ParserJava {
             i = 0;
             j++;
         }
+        
     }
 
     private static void compare(MyVisitor AST1, MyVisitor AST2) {
@@ -87,14 +88,13 @@ public class ParserJava {
     }
 
     private static List<List> view() throws InterruptedException {
-        boolean reachEnd = false;
         List<List> returnList = new ArrayList<>();
         List<Boolean> booleanReturnList = new ArrayList<>();
         List<String> pathsReturnList = new ArrayList<>();
         JFrame mainFrame = new JFrame();
         JButton closeButton = new JButton("close");
         List<JCheckBox> list = new ArrayList<>();
-        closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachEnd));
+        closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
 
@@ -134,10 +134,10 @@ public class ParserJava {
         returnList.add(booleanReturnList);
         returnList.add(pathsReturnList);
 
-        while (ParserJava.reachEnd == false) {
+        while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);
         }
-        ParserJava.reachEnd = false;
+        ParserJava.reachedEnd = false;
         return returnList;
     }
 
@@ -149,13 +149,8 @@ public class ParserJava {
         JavaParser parser = new JavaParser(tokens);
         ParseTree tree = parser.compilationUnit();
 
-        //Console
-        //System.out.println(tree.toStringTree(parser));
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
-        String[] aux = path.split("/");
-        String fileName = aux[aux.length - 1];
-        Object message = "Want to open the view dialog for the file: " + fileName + "?";
 
         if (openTree) {
             viewer.open();
@@ -170,17 +165,17 @@ public class ParserJava {
     }
 
     /**
-     * @return the reachEnd
+     * @return the reachedEnd
      */
-    public static boolean isReachEnd() {
-        return reachEnd;
+    public static boolean isReachedEnd() {
+        return reachedEnd;
     }
 
     /**
-     * @param aReachEnd the reachEnd to set
+     * @param aReachEnd the reachedEnd to set
      */
-    public static void setReachEnd(boolean aReachEnd) {
-        reachEnd = aReachEnd;
+    public static void setReachedEnd(boolean aReachEnd) {
+        reachedEnd = aReachEnd;
     }
 
 }

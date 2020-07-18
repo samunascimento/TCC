@@ -10,7 +10,7 @@ public class GlobalEnviroment {
     public GlobalEnviroment() {
         this.globalEnviroment = new HashMap<>();
     }
-
+    
     /**
      * @return the globalEnviroment
      */
@@ -24,7 +24,5 @@ public class GlobalEnviroment {
     public void setGlobalEnviroment(Map<String, TypeBinding> globalEnviroment) {
         this.globalEnviroment = globalEnviroment;
     }
-
-
     
 }

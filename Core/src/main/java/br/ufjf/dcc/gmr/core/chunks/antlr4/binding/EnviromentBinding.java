@@ -10,7 +10,30 @@ public class EnviromentBinding {
     public EnviromentBinding() {
         this.enviroment = new ArrayList<>();
     }
-
+    
+    public MethodDeclarationBinding findMethodDeclation(){
+        
+        for (List<BaseBinding> list : enviroment) {
+            for (BaseBinding baseBinding : list) {
+                
+            }
+        }
+        return null;
+    }
+    
+    public MethodCallBinding findMethodCall(MethodCallBinding find){
+        
+        for (List<BaseBinding> list : enviroment) {
+            for (BaseBinding baseBinding : list) {
+                if(find.equals(baseBinding)){
+                    return find;
+                }
+            }
+        }
+        return null;
+    }
+    
+    
     /**
      * @return the enviroment
      */

@@ -30,7 +30,7 @@ public class CloseButtonActionPerformed implements ActionListener{
             }
         }
         this.reachEnd = true;
-        ParserJava.setReachEnd(true);
+        ParserJava.setReachedEnd(true);
         this.frame.dispose();
         
     }
