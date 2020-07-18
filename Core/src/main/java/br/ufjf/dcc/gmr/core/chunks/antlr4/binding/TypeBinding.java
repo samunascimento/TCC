@@ -32,6 +32,7 @@ public class TypeBinding extends BaseBinding {
         return output;
     }
 
+
     /**
      * @return the mdbList
      */

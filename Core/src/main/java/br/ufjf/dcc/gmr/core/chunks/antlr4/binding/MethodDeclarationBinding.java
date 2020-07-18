@@ -21,6 +21,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
+        
         if (!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())) {
             if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;

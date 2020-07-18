@@ -20,6 +20,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private boolean firstAnalysis;
     private boolean secondAnalysis;
     private boolean methodDeclaration;
+    private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
     private EnviromentBinding enviromentBinding;
 
     public MyVisitor() {
@@ -32,6 +33,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         this.variableBindingList = new ArrayList<>();
         this.methodDeclaration = false;
         this.enviromentBinding = new EnviromentBinding();
+
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -907,30 +909,33 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             }
 
         }
+        if (firstAnalysis) {
+            this.getGlobalEnviroment().getEnviroment().put(packageBinding.getName().concat("/").concat(typeBinding.getName()), typeBinding);
+        }
+        
+    return super.visitClassDeclaration(ctx);
+}
 
-        return super.visitClassDeclaration(ctx);
-    }
-
-    @Override
-    public Object visitVariableModifier(JavaParser.VariableModifierContext ctx) {
+@Override
+        public Object visitVariableModifier(JavaParser.VariableModifierContext ctx) {
         //log(ctx);
         return super.visitVariableModifier(ctx);
     }
 
     @Override
-    public Object visitClassOrInterfaceModifier(JavaParser.ClassOrInterfaceModifierContext ctx) {
+        public Object visitClassOrInterfaceModifier(JavaParser.ClassOrInterfaceModifierContext ctx) {
         //log(ctx);
         return super.visitClassOrInterfaceModifier(ctx);
     }
 
     @Override
-    public Object visitModifier(JavaParser.ModifierContext ctx) {
+        public Object visitModifier(JavaParser.ModifierContext ctx) {
         //log(ctx);
         return super.visitModifier(ctx);
     }
 
     @Override
-    public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
+        public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
         //log(ctx);
 
         if (ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext) {
@@ -942,7 +947,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
+        public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
         for (ParseTree parserTree : ctx.children) {
             if (parserTree instanceof JavaParser.QualifiedNameContext) {
                 typeBinding.getImports().add(parserTree.getText());
@@ -954,10 +959,12 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
+        public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
         for (ParseTree parseTree : ctx.children) {
             if (parseTree instanceof JavaParser.QualifiedNameContext) {
                 packageBinding.setName(parseTree.getText());
+          
+                
             }
         }
 
@@ -966,44 +973,44 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
+        public Object visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
         //log(ctx);
         return super.visitCompilationUnit(ctx);
     }
 
     @Override
-    protected boolean shouldVisitNextChild(RuleNode node, Object currentResult) {
+        protected boolean shouldVisitNextChild(RuleNode node, Object currentResult) {
         return super.shouldVisitNextChild(node, currentResult);
     }
 
     @Override
-    protected Object aggregateResult(Object aggregate, Object nextResult) {
+        protected Object aggregateResult(Object aggregate, Object nextResult) {
         return super.aggregateResult(aggregate, nextResult);
     }
 
     @Override
-    protected Object defaultResult() {
+        protected Object defaultResult() {
 
         return super.defaultResult();
     }
 
     @Override
-    public Object visitErrorNode(ErrorNode node) {
+        public Object visitErrorNode(ErrorNode node) {
         return super.visitErrorNode(node);
     }
 
     @Override
-    public Object visitTerminal(TerminalNode node) {
+        public Object visitTerminal(TerminalNode node) {
         return super.visitTerminal(node);
     }
 
     @Override
-    public Object visitChildren(RuleNode node) {
+        public Object visitChildren(RuleNode node) {
         return super.visitChildren(node);
     }
 
     @Override
-    public Object visit(ParseTree tree) {
+        public Object visit(ParseTree tree) {
         return super.visit(tree);
     }
 
@@ -1022,27 +1029,27 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     }
 
     @Override
-    protected void finalize() throws Throwable {
+        protected void finalize() throws Throwable {
         super.finalize();
     }
 
     @Override
-    public String toString() {
+        public String toString() {
         return super.toString();
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
 
     @Override
-    public boolean equals(Object obj) {
+        public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
     @Override
-    public int hashCode() {
+        public int hashCode() {
         return super.hashCode();
     }
 
@@ -1170,5 +1177,19 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
      */
     public void setEnviromentBinding(EnviromentBinding enviromentBinding) {
         this.enviromentBinding = enviromentBinding;
+    }
+
+    /**
+     * @return the globalEnviroment
+     */
+    public GlobalEnviroment getGlobalEnviroment() {
+        return globalEnviroment;
+    }
+
+    /**
+     * @param globalEnviroment the globalEnviroment to set
+     */
+    public void setGlobalEnviroment(GlobalEnviroment globalEnviroment) {
+        this.globalEnviroment = globalEnviroment;
     }
 }

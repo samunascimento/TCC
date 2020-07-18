@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -48,13 +49,20 @@ public class ParserJava {
                 }
                 i++;
             }
+
             i = 0;
             j++;
         }
-        
+
+        System.out.println("+=+=+=+=+=+=+GlobalEnviroment Types+=+=+=+=+=+=+");
+        Map<String, TypeBinding> enviroment = asts.get(asts.size() - 1).getGlobalEnviroment().getEnviroment();
+        for (TypeBinding value : enviroment.values()) {
+            System.out.println(value);
+        }
     }
 
     private static void compare(MyVisitor AST1, MyVisitor AST2) {
+
         System.out.println("=============MethodDeclarationAST1=============");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
@@ -85,6 +93,7 @@ public class ParserJava {
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
+
     }
 
     private static List<List> view() throws InterruptedException {
@@ -98,7 +107,7 @@ public class ParserJava {
 
         Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
 
-        try ( DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 
             for (Path file : stream) {
                 String path = dir.toString().concat("/").concat(file.getFileName().toString());
