@@ -7,13 +7,23 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Chart from './../../Charts/chart';
 import Chart from './../../Charts/chartLine';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import axios from 'axios';
+import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Collapse from '@material-ui/core/Collapse';
+import ListItemText from '@material-ui/core/ListItemText';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+
 
 import { PropTypes } from 'prop-types';
 
@@ -47,6 +57,12 @@ export default class Project extends Component {
       anchorE3: null,
       anchorE4: null,
       anchorTloc: null,
+
+      openProject: false,
+      openPackage: false,
+      openClass: false,
+      openMethod: false,
+
 
       projectTloc: false,
 
@@ -94,7 +110,8 @@ export default class Project extends Component {
             "metricName": "TLOC",
             "versionDate": "Feb 1, 2020 2:00:26 AM"
           }
-        ]],
+        ]
+      ],
 
       root: {
         height: 240,
@@ -102,67 +119,89 @@ export default class Project extends Component {
         maxWidth: 400
       },
 
+      theme: createMuiTheme({
+        overrides: {
+          TreeItem: {
+            fontStyle: 'italic',
+            fontSize: 12,
+          },
+          label: {
+            fontStyle: 'italic',
+            fontSize: '5px',
+          },
+        }
+      }),
+
       packageTree: [],
       classTree: [{ name: 'MetricDao', id: 1 }, { name: 'ClassDao', id: 2 }, { name: 'PackageDaO', id: 3 }, { name: 'versionDao', id: 4 }, { name: 'ProjectDao', id: 5 }, { name: 'Teste', id: 6 }, { name: 'teste1', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
       methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
-    }
 
+      teste: makeStyles((theme) => ({
+        root: {
+          width: '100%',
+          maxWidth: 360,
+          backgroundColor: theme.palette.background.paper,
+          position: 'relative',
+          overflow: 'auto',
+          maxHeight: 300,
+        },
+        nested: {
+          paddingLeft: theme.spacing(4),
+        },
+      }))
+
+    };
+  }
+
+
+  handleClickProject = () => {
+    const openProject = !this.state.openProject
+    this.setState({ openProject })
+  };
+
+
+  handleClickPackage = () => {
+    const openPackage = !this.state.openPackage
+    this.setState({ openPackage })
+  };
+
+
+  handleClickClass = () => {
+    const openClass = !this.state.openClass
+    this.setState({ openClass })
+  };
+
+
+  handleClickMethod = () => {
+    const openMethod = !this.state.openMethod
+    this.setState({ openMethod })
   };
 
 
 
-
-  handleClick = event => this.setState({ anchorE1: event.currentTarget })
-
-  handleClose = () => this.setState({ anchorE1: null })
-
-  handleClickPackage = event => this.setState({ anchorE2: event.currentTarget })
-
-  handleClosePackage = () => this.setState({ anchorE2: null })
-
-  handleClickClass = event => this.setState({ anchorE3: event.currentTarget })
-
-  handleCloseClass = () => this.setState({ anchorE3: null })
-
-  handleClickMethod = event => this.setState({ anchorE4: event.currentTarget })
-
-  handleCloseMethod = () => this.setState({ anchorE4: null })
-
-
-  // componentDidUpdate(prevProps) {
-  //   // Uso típico, (não esqueça de comparar as props):
-  //   if (this.props.data !== prevProps.data) {
-  //     this.fetchData(this.props.data);
-  //   }
-  // }
-
-
   componentDidMount = () => {
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
+    axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
       .then(res => {
         const packageTree = res.data
         this.setState({ packageTree })
       })
-
-  //     axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
-  //     .then(res => {
-  //       const dados = res.data
-  //       this.setState({ data: dados })
-  //     })
   }
 
 
-  handleChangeProject = (event) => {
+  handleChangeProject = async (event) => {
 
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
+      await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
         .then(res => {
-          const data = res.data;
+          const data = this.state.data
+          data.push(res.data[0])
+          console.log(data)
           this.setState({ data });
+          console.log(this.state.data)
         })
-      console.log(this.state.data)
+
     }
 
     else if (event.target.checked === false) {
@@ -170,52 +209,53 @@ export default class Project extends Component {
       this.setState({ data });
 
     }
-    console.log(this.state.data)
   };
 
-  handleChangePackage = (event, metricName, packageName) => {
+  handleChangePackage = async (event, metricName, packageName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
 
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name)
+      await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
         .then(res => {
-          let metricCheck = false
-          //const data = this.state.data;
-          const data = []
-
-          const packagePoints = res.data;
-          packagePoints.map((metrics) => {
-            metrics.map((metric, index) => {
-              if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
-                metricCheck = true
-              }
-            })
-            if (metricCheck === true) {
-              data.push(metrics)
-            }
-            metricCheck = false;
-          })
-          this.setState({ data })
+          const data = this.state.data
+          data.push(res.data[0])
           console.log(data)
+          this.setState({ data });
+          console.log(this.state.data)
+
         })
     }
 
     //arrumar esse else
     else if (event.target.checked === false) {
 
-      const data = [];
-      this.setState({ data });
-
+      let metricCheck = false
+      this.state.data.map((metrics,index) => {
+        metrics.map((metric, index) => {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
+            metricCheck = true
+          }
+        })
+        if (metricCheck === true) {
+          //delete this.state.data[index] 
+          this.state.data.splice(index,1)
+          metricCheck = false
+        }
+        //this.setState({ data });
+        console.log(metricName)
+        console.log(this.state.data)
+      }
+        //console.log(this.state.data)
+      )
     }
-    console.log(this.state.data)
-  };
+  }
 
 
   handleChangeClass = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
+      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -245,7 +285,7 @@ export default class Project extends Component {
   handleChangeMethod = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
+      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -275,6 +315,9 @@ export default class Project extends Component {
 
 
   render() {
+
+    const classes = this.state.teste;
+
     const { anchorE1 } = this.state
     const { anchorE2 } = this.state
     const { anchorE3 } = this.state
@@ -294,180 +337,147 @@ export default class Project extends Component {
 
     return (
       <div>
-        <div>
-          <Grid container spacing={10}>
-            <Grid item xs={2}>
-              <Button aria-controls="long-menu" variant="contained" color="primary" aria-haspopup="true" onClick={this.handleClick}>
-                Project Metrics
-              </Button>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorE1}
-                keepMounted
-                open={Boolean(anchorE1)}
-                onClose={this.handleClose}
-                TransitionComponent={Fade}
-                PaperProps={{
-                  style: {
-                    maxHeight: maxHeight,
-                    width: '20ch',
-                  },
-                }}
-              >
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
-                    label='tloc'
-                  />
-                </FormGroup>
-              </Menu>
-            </Grid>
-            <Grid item xs={2}>
-              <Button aria-controls="long-menu" variant="contained" color="primary" aria-haspopup="true" onClick={this.handleClickPackage}>
-                Package Metrics
-              </Button>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorE2}
-                keepMounted
-                open={Boolean(anchorE2)}
-                onClose={this.handleClosePackage}
-                TransitionComponent={Fade}
-                transformOrigin={{
-                  vertical: 2000000000,
-                  horizontal: 'left',
-                }}
-                PaperProps={{
-                  style: {
-                    maxHeight: maxHeight,
-                    width: 400,
-                  },
-                }}
-              >
-                <TreeView
-                  className={root}
-                  defaultCollapseIcon={<ExpandMoreIcon />}
-                  defaultExpandIcon={<ChevronRightIcon />}
-                >
-                  {this.state.packageTree.map((packages) => (
+        <div style={{ width: '450px', position: "relative", float: "right" }}>
+          <Box
+            display="flex"
 
-                    <TreeItem nodeId={packages.id} label={packages.name}>
-                      <FormGroup>
-                        {packageMetrics.map((metric) => (
-                          <FormControlLabel
-                            control={<Checkbox onChange={(event) => this.handleChangePackage(event, metric.name, packages.name)} name={metric.name} color="primary" />}
-                            label={metric.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </TreeItem>
-
-                  ))}
-
-                </TreeView>
-              </Menu>
+            flexDirection="row-reverse"
+            p={1}
+            m={1}
+            bgcolor="background.paper"
+            css={{ maxWidth: 450 }}
+          >
+            <Grid item xs={12}>
+              <List component="nav"
+                aria-labelledby="nested-list-subheader"
+                position="relative"
+                left="1000px"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Metrics
+                  </ListSubheader>
+                }
+                className={classes.root}>
+                <ListItem button onClick={this.handleClickProject}>
+                  <ListItemText align="center" primary="Project Metrics" />
+                  {this.state.openProject ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
+                        label={<span style={{ fontSize: '14px' }}>TLOC</span>}
+                      />
+                    </FormGroup>
+                  </Paper>
+                </Collapse>
+                <ListItem button onClick={this.handleClickPackage}>
+                  <ListItemText align="center" primary="Package Metrics" />
+                  {this.state.openPackage ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                    <List component="div" disablePadding>
+                      <ListItem button className={classes.nested}>
+                        <TreeView
+                          className={root}
+                          defaultCollapseIcon={<ExpandMoreIcon />}
+                          defaultExpandIcon={<ChevronRightIcon />}
+                        >
+                          {this.state.packageTree.map((packages) => (
+                            <TreeItem title={packages.name} nodeId={packages.id} label={<span style={{ fontSize: '16px' }}>{packages.name}</span>}>
+                              <FormGroup>
+                                {packageMetrics.map((metric) => (
+                                  <FormControlLabel
+                                    control={<Checkbox onChange={(event) => this.handleChangePackage(event, metric.name, packages.name)} name={metric.name} color="primary" />}
+                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                  />
+                                ))}
+                              </FormGroup>
+                            </TreeItem>
+                          ))}
+                        </TreeView>
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Collapse>
+                <ListItem button onClick={this.handleClickClass}>
+                  <ListItemText align="center" primary="Class Metrics" />
+                  {this.state.openClass ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={this.state.openClass} timeout="auto" unmountOnExit>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                    <List component="div" disablePadding>
+                      <ListItem button className={classes.nested}>
+                        <TreeView
+                          className={root}
+                          defaultCollapseIcon={<ExpandMoreIcon />}
+                          defaultExpandIcon={<ChevronRightIcon />}
+                        >
+                          {this.state.classTree.map((classes) => (
+                            <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                              <FormGroup>
+                                {classMetrics.map((metric) => (
+                                  <FormControlLabel
+                                    control={<Checkbox onChange={(event) => this.handleChangeClass(event, metric.name)} name={metric.name} color="primary" />}
+                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                  />
+                                ))}
+                              </FormGroup>
+                            </TreeItem>
+                          ))}
+                        </TreeView>
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Collapse>
+                <ListItem button onClick={this.handleClickMethod}>
+                  <ListItemText align="center" primary="Method Metrics" />
+                  {this.state.openMethod ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                    <List component="div" disablePadding>
+                      <ListItem button className={classes.nested}>
+                        <TreeView
+                          className={root}
+                          defaultCollapseIcon={<ExpandMoreIcon />}
+                          defaultExpandIcon={<ChevronRightIcon />}
+                        >
+                          {this.state.classTree.map((classes) => (
+                            <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                              <FormGroup>
+                                {classMetrics.map((metric) => (
+                                  <FormControlLabel
+                                    control={<Checkbox onChange={(event) => this.handleChangeClass(event, metric.name)} name={metric.name} color="primary" />}
+                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                  />
+                                ))}
+                              </FormGroup>
+                            </TreeItem>
+                          ))}
+                        </TreeView>
+                      </ListItem>
+                    </List>
+                  </Paper>
+                </Collapse>
+              </List>
+              {/* </Grid> */}
+              {/* </Grid> */}
             </Grid>
-            <Grid item xs={2}>
-              <Button aria-controls="long-menu" variant="contained" color="primary" aria-haspopup="true" onClick={this.handleClickClass}>
-                Class Metrics
-              </Button>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorE3}
-                keepMounted
-                open={Boolean(anchorE3)}
-                onClose={this.handleCloseClass}
-                TransitionComponent={Fade}
-                transformOrigin={{
-                  vertical: 2000000000,
-                  horizontal: 'left',
-                }}
-                PaperProps={{
-                  style: {
-                    maxHeight: maxHeight,
-                    width: '20ch',
-                  },
-                }}
-              >
-                <TreeView
-                  className={root}
-                  defaultCollapseIcon={<ExpandMoreIcon />}
-                  defaultExpandIcon={<ChevronRightIcon />}
-                >
-                  {this.state.classTree.map((classes) => (
-                    <TreeItem nodeId={classes.id} label={classes.name}>
-                      <FormGroup>
-                        {classMetrics.map((metric) => (
-                          <FormControlLabel
-                            control={<Checkbox onChange={(event) => this.handleChangeClass(event, metric.name)} name={metric.name} color="primary" />}
-                            label={metric.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </TreeItem>
-                  ))}
-                </TreeView>
-              </Menu>
-            </Grid>
-            <Grid item xs={2}>
-              <Button aria-controls="long-menu" variant="contained" color="primary" aria-haspopup="true" onClick={this.handleClickMethod}>
-                Method Metrics
-              </Button>
-              <Menu
-                id="long-menu"
-                anchorEl={anchorE4}
-                keepMounted
-                open={Boolean(anchorE4)}
-                onClose={this.handleCloseMethod}
-                TransitionComponent={Fade}
-                transformOrigin={{
-                  vertical: 2000000000,
-                  horizontal: 'left',
-                }}
-                PaperProps={{
-                  style: {
-                    maxHeight: maxHeight,
-                    width: '20ch',
-                  },
-                }}
-              >
-                <TreeView
-                  className={root}
-                  defaultCollapseIcon={<ExpandMoreIcon />}
-                  defaultExpandIcon={<ChevronRightIcon />}
-                >
-                  {this.state.methodTree.map((methods) => (
-
-                    <TreeItem nodeId={methods.id} label={methods.name}>
-                      <FormGroup>
-                        {methodMetrics.map((metric) => (
-                          <FormControlLabel
-                            control={<Checkbox onChange={(event) => this.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
-                            label={metric.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </TreeItem>
-                  ))}
-                </TreeView>
-              </Menu>
-            </Grid>
-            <Grid item xs={2}>
-              <Button variant="contained" onClick={this.limparChart}>
-                limpar gráfico
-              </Button>
-            </Grid>
-          </Grid>
+          </Box>
         </div>
         <div>
           <h1>GRÁFICO</h1>
 
           <div className="App">
+            {console.log(this.state.data)}
             <Chart data={this.state.data} />
             {/* <BarChart /> */}
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }

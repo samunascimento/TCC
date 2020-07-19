@@ -5,6 +5,8 @@ import './Style.css'
 
 function BarChart({ data }) {
 
+    console.log(data)
+
     const ref = useRef();
 
     useEffect(() => {

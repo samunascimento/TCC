@@ -55,6 +55,8 @@ import { PropTypes } from 'prop-types';
         metric : false
     };
 
+    console.log(this.state.data)
+
 
     this.maxima = this.state.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.y))
@@ -85,9 +87,9 @@ import { PropTypes } from 'prop-types';
   }
 
   render() {
-    if (!this.state.metric) {
-      return <span>Loading...</span>;
-  }
+    // if (!this.state.metric) {
+    //   return <span>Loading...</span>;
+  // }
     return (
       <div>
         <VictoryChart
