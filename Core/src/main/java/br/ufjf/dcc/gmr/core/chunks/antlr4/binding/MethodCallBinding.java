@@ -34,7 +34,12 @@ public class MethodCallBinding extends BaseBinding{
             if(i < parameters.size()-1){
                 output = output.concat(parameters.get(i).getName() + ",");
             }else{
-                output = output.concat(parameters.get(i).getName());
+                try {
+                    output = output.concat(parameters.get(i).getName());
+                } catch (Exception e) {
+                    System.out.println("erro");
+                }
+                
             }
         }
         output = output.concat(")");

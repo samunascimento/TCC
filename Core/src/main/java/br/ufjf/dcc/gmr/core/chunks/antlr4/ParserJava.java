@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import static java.awt.Frame.*;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
@@ -96,29 +97,33 @@ public class ParserJava {
 
     }
 
+    private static List<String> javaFiles(String dir) {
+        List<String> javaFiles = new ArrayList<>();
+        File file = new File(dir);
+        File[] files = file.listFiles();
+        for (File file1 : files) {
+            if (file1.isFile() && file1.getAbsolutePath().endsWith(".java")) {
+                javaFiles.add(file1.getAbsolutePath());
+            } else if (file1.isDirectory()) {
+                javaFiles.addAll(javaFiles(file1.getAbsolutePath()));
+            }
+        }
+        return javaFiles;
+    }
+
     private static List<List> view() throws InterruptedException {
         List<List> returnList = new ArrayList<>();
         List<Boolean> booleanReturnList = new ArrayList<>();
-        List<String> pathsReturnList = new ArrayList<>();
         JFrame mainFrame = new JFrame();
         JButton closeButton = new JButton("close");
         List<JCheckBox> list = new ArrayList<>();
         closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
-        Path dir = FileSystems.getDefault().getPath("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
-
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
-
-            for (Path file : stream) {
-                String path = dir.toString().concat("/").concat(file.getFileName().toString());
-                JCheckBox checkBox = new JCheckBox(path);
-                checkBox.setVisible(true);
-                list.add(checkBox);
-                pathsReturnList.add(path);
-            }
-
-        } catch (IOException | DirectoryIteratorException x) {
-            System.err.println(x);
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        for (String javaFile : javaFiles) {
+            JCheckBox checkBox = new JCheckBox(javaFile);
+            checkBox.setVisible(true);
+            list.add(checkBox);
         }
 
         mainFrame.setLayout(new GridLayout(list.size() + 2, 5));
@@ -127,11 +132,6 @@ public class ParserJava {
             mainFrame.add(checkBox);
         }
 
-        JCheckBox checkBox = new JCheckBox("Select all");
-        checkBox.addMouseListener(new CheckBoxMouseListener(checkBox, list));
-        checkBox.setVisible(true);
-
-        mainFrame.add(checkBox);
         mainFrame.add(closeButton);
 
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
@@ -141,7 +141,7 @@ public class ParserJava {
         mainFrame.setVisible(true);
 
         returnList.add(booleanReturnList);
-        returnList.add(pathsReturnList);
+        returnList.add(javaFiles);
 
         while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);

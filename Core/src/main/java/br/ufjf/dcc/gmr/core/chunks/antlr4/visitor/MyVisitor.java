@@ -898,7 +898,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             ParseTree typeExtends = classDeclaration.getChild(3);
             name = typeExtends.getText();
             for (TypeBinding typeBinding1 : this.typeBindingList) {
-                if (typeBinding1.getName().equals(typeExtends)) {
+                
+                if (typeBinding1.getName() != null && typeBinding1.getName().equals(typeExtends)) {
                     this.typeBinding.setExtendClass(typeBinding1);
                 }
             }
