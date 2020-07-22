@@ -94,7 +94,7 @@ import { PropTypes } from 'prop-types';
       <div>
         <VictoryChart
           theme={VictoryTheme.material}
-          width={600} height={600}
+          width={1200} height={700}
           domain={{ y: [0, 1] }}
           animate={{
             duration: 1000,

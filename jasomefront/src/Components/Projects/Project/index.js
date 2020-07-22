@@ -63,10 +63,6 @@ export default class Project extends Component {
       openClass: false,
       openMethod: false,
 
-
-      projectTloc: false,
-
-
       packageMetrics: [{ name: 'TLOC' }, { name: 'A' }, { name: 'CCRC' }, { name: 'Ca', }, { name: 'Ce', }, { name: 'DMS', }, { name: 'I', }, { name: 'NOC', }, { name: 'NOI', },
       { name: 'PkgRCi' }, { name: 'PkgTCi' }],
 
@@ -107,6 +103,40 @@ export default class Project extends Component {
           {
             "x": 1,
             "y": 500.0,
+            "metricName": "TLOC",
+            "versionDate": "Feb 1, 2020 2:00:26 AM"
+          },
+          {
+            "x": 2,
+            "y": 800.0,
+            "metricName": "TLOC",
+            "versionDate": "Feb 1, 2020 2:00:26 AM"
+          }
+        ],
+        [
+          {
+            "x": 0,
+            "y": 70.0,
+            "metricName": "TLOC",
+            "versionDate": "Jan 31, 2020 11:58:48 PM"
+          },
+          {
+            "x": 1,
+            "y": 300.0,
+            "metricName": "TLOC",
+            "versionDate": "Feb 1, 2020 2:00:26 AM"
+          }
+        ],
+        [
+          {
+            "x": 0,
+            "y": 70.0,
+            "metricName": "TLOC",
+            "versionDate": "Jan 31, 2020 11:58:48 PM"
+          },
+          {
+            "x": 1,
+            "y": 700.0,
             "metricName": "TLOC",
             "versionDate": "Feb 1, 2020 2:00:26 AM"
           }
@@ -212,8 +242,10 @@ export default class Project extends Component {
   };
 
   handleChangePackage = async (event, metricName, packageName) => {
+    console.log(event.target.checked)
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
+    console.log(event.target.checked)
 
     if (event.target.checked === true) {
       await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
@@ -337,7 +369,7 @@ export default class Project extends Component {
 
     return (
       <div>
-        <div style={{ width: '450px', position: "relative", float: "right" }}>
+        <div style={{width: '20%', position: "relative", float: "right" }}>
           <Box
             display="flex"
 
@@ -345,26 +377,26 @@ export default class Project extends Component {
             p={1}
             m={1}
             bgcolor="background.paper"
-            css={{ maxWidth: 450 }}
+            style={{border:'2px groove black', borderRadius: '5px'}}
           >
             <Grid item xs={12}>
               <List component="nav"
                 aria-labelledby="nested-list-subheader"
                 position="relative"
-                left="1000px"
+                left="1000px" 
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
                     Metrics
                   </ListSubheader>
                 }
                 className={classes.root}>
-                <ListItem button onClick={this.handleClickProject}>
-                  <ListItemText align="center" primary="Project Metrics" />
+                <ListItem button onClick={this.handleClickProject} style = {{border: '1px solid grey', margin: '3px 0'}}>
+                  <ListItemText align="left" primary="Project Metrics" />
                   {this.state.openProject ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
                   <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
-                    <FormGroup>
+                    <FormGroup style = {{border: '1px solid grey'}}>
                       <FormControlLabel
                         control={<Checkbox onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
                         label={<span style={{ fontSize: '14px' }}>TLOC</span>}
@@ -372,12 +404,12 @@ export default class Project extends Component {
                     </FormGroup>
                   </Paper>
                 </Collapse>
-                <ListItem button onClick={this.handleClickPackage}>
-                  <ListItemText align="center" primary="Package Metrics" />
+                <ListItem button onClick={this.handleClickPackage} style = {{border: '1px solid grey', margin: '3px 0'}}>
+                  <ListItemText align="left" primary="Package Metrics" />
                   {this.state.openPackage ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey'}}>
                     <List component="div" disablePadding>
                       <ListItem button className={classes.nested}>
                         <TreeView
@@ -402,12 +434,12 @@ export default class Project extends Component {
                     </List>
                   </Paper>
                 </Collapse>
-                <ListItem button onClick={this.handleClickClass}>
-                  <ListItemText align="center" primary="Class Metrics" />
+                <ListItem button onClick={this.handleClickClass} style = {{border: '1px solid grey', margin: '3px 0'}}>
+                  <ListItemText align="left" primary="Class Metrics" />
                   {this.state.openClass ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={this.state.openClass} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
                     <List component="div" disablePadding>
                       <ListItem button className={classes.nested}>
                         <TreeView
@@ -432,12 +464,12 @@ export default class Project extends Component {
                     </List>
                   </Paper>
                 </Collapse>
-                <ListItem button onClick={this.handleClickMethod}>
-                  <ListItemText align="center" primary="Method Metrics" />
+                <ListItem button onClick={this.handleClickMethod} style = {{border: '1px solid grey', margin: '3px 0'}}>
+                  <ListItemText align="left" primary="Method Metrics" />
                   {this.state.openMethod ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey'}}>
                     <List component="div" disablePadding>
                       <ListItem button className={classes.nested}>
                         <TreeView
