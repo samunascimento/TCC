@@ -189,7 +189,7 @@ export default class Project extends Component {
 
 
   componentDidMount = () => {
-    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
+    axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
       .then(res => {
         const packageTree = res.data
         this.setState({ packageTree })
@@ -202,7 +202,7 @@ export default class Project extends Component {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     if (event.target.checked === true) {
-      await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
+      await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
         .then(res => {
           const data = this.state.data
           data.push(res.data[0])
@@ -227,7 +227,7 @@ export default class Project extends Component {
     console.log(event.target.checked)
 
     if (event.target.checked === true) {
-      await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
+      await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
         .then(res => {
           const data = this.state.data
           data.push(res.data[0])
@@ -266,7 +266,7 @@ export default class Project extends Component {
   handleChangeClass = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
+      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -296,7 +296,7 @@ export default class Project extends Component {
   handleChangeMethod = (event, metricName) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
     if (event.target.checked === true) {
-      axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
+      axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/method/` + this.props.nameProject.name)
         .then(res => {
           let metricCheck = false
           const data = []
@@ -348,7 +348,7 @@ export default class Project extends Component {
 
     return (
       <div>
-        <div style={{width: '20%', position: "relative", float: "right" }}>
+        <div style={{width: '20%', marginTop:'5%', position: "relative", float: "right" }}>
           <Box
             display="flex"
 
@@ -479,15 +479,15 @@ export default class Project extends Component {
             </Grid>
           </Box>
         </div>
-        <div>
-          <h1>GRÁFICO</h1>
+        {/* <div>
+          <h1>GRÁFICO</h1> */}
 
-          <div className="App">
+          <div className="App" style = {{width: '80%', height: '100%'}}>
             {console.log(this.state.data)}
             <Chart data={this.state.data} />
             {/* <BarChart /> */}
           </div>
-        </div>
+        {/* </div> */}
       </div >
     );
   }
