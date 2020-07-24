@@ -140,7 +140,6 @@ public class ParserJava {
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
         
         List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
-        //Collections.sort(javaFiles);
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
