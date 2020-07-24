@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -122,6 +123,8 @@ public class ParserJava {
         List<Boolean> booleanReturnList = new ArrayList<>();
 
         JPanel panel = new JPanel(new BorderLayout());
+        
+        JPanel checkBoxPanel = new JPanel();
 
         JFrame mainFrame = new JFrame();
         mainFrame.add(panel);
@@ -134,32 +137,31 @@ public class ParserJava {
 
         closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setLayout(new ScrollPaneLayout());
-        scrollPane.setPreferredSize(new Dimension(1920, 1080));
-        scrollPane.setBackground(Color.red);
-
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
-        for (String javaFile : javaFiles) {
-            JCheckBox checkBox = new JCheckBox(javaFile);
-            list.add(checkBox);
-        }
+        JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
         
-        mainFrame.setLayout(new GridLayout());
-        for (JCheckBox checkBox : list) {
-            scrollPane.add(checkBox);
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        //Collections.sort(javaFiles);
+        int i = 0;
+        for (String javaFile : javaFiles) {
+            JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
+            checkBoxPanel.add(checkBox);
+            list.add(checkBox);
+            i++;
         }
-
-        panel.add(scrollPane, BorderLayout.CENTER);
+        checkBoxPanel.setLayout(new GridLayout(list.size(),1));
+        mainFrame.setLayout(new GridLayout());
+        
+        panel.add(scrollPane);
         panel.add(closeButton, BorderLayout.SOUTH);
 
         returnList.add(booleanReturnList);
         returnList.add(javaFiles);
 
+        mainFrame.setVisible(true);
         while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);
         }
-        mainFrame.setVisible(true);
+
         ParserJava.reachedEnd = false;
         return returnList;
     }
