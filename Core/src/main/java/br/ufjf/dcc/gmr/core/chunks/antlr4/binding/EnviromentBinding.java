@@ -11,28 +11,28 @@ public class EnviromentBinding {
         this.enviroment = new ArrayList<>();
     }
     
-    public boolean findVariable(VariableBinding variable){
+    public VariableBinding findVariable(VariableBinding variable){
         
         for (List<BaseBinding> list : enviroment) {
             for (BaseBinding baseBinding : list) {
                 if(baseBinding.getName().equals(variable.getName())){
-                    return true;
+                    return variable;
                 }
             }
         }
-        return false;
+        return null;
     }
     
-    public boolean findMethodCall(MethodCallBinding find){
+    public MethodCallBinding findMethodCall(MethodCallBinding find){
         
         for (List<BaseBinding> list : enviroment) {
             for (BaseBinding baseBinding : list) {
                 if(baseBinding.getName().equals(find.getName())){
-                    return true;
+                    return find;
                 }
             }
         }
-        return false;
+        return null;
     }
     
     
