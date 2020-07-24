@@ -4,10 +4,14 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import static java.awt.Frame.*;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;
@@ -17,7 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
@@ -114,31 +120,38 @@ public class ParserJava {
     private static List<List> view() throws InterruptedException {
         List<List> returnList = new ArrayList<>();
         List<Boolean> booleanReturnList = new ArrayList<>();
+
+        JPanel panel = new JPanel(new BorderLayout());
+
         JFrame mainFrame = new JFrame();
+        mainFrame.add(panel);
+        mainFrame.setExtendedState(MAXIMIZED_BOTH);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         JButton closeButton = new JButton("close");
+
         List<JCheckBox> list = new ArrayList<>();
+
         closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
-        List<String> javaFiles = javaFiles("C:\\Users\\felip\\Desktop\\Bolsa\\Bolsa");
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setLayout(new ScrollPaneLayout());
+        scrollPane.setPreferredSize(new Dimension(1920, 1080));
+        scrollPane.setBackground(Color.red);
+
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(javaFile);
-            checkBox.setVisible(true);
             list.add(checkBox);
         }
-
-        mainFrame.setLayout(new GridLayout(list.size() + 2, 5));
-
+        
+        mainFrame.setLayout(new GridLayout());
         for (JCheckBox checkBox : list) {
-            mainFrame.add(checkBox);
+            scrollPane.add(checkBox);
         }
 
-        mainFrame.add(closeButton);
-
-        mainFrame.setExtendedState(MAXIMIZED_BOTH);
-
-        mainFrame.setLayout(new GridLayout(list.size(), 1));
-
-        mainFrame.setVisible(true);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(closeButton, BorderLayout.SOUTH);
 
         returnList.add(booleanReturnList);
         returnList.add(javaFiles);
@@ -146,6 +159,7 @@ public class ParserJava {
         while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);
         }
+        mainFrame.setVisible(true);
         ParserJava.reachedEnd = false;
         return returnList;
     }

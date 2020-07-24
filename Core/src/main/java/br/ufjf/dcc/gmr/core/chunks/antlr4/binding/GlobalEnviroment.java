@@ -23,55 +23,53 @@ public class GlobalEnviroment {
      */
     public void setEnviroment(Map<String, TypeBinding> enviroment) {
         this.enviroment = enviroment;
-
     }
 
     //Chamada de metodo, declaração de metodo, atributos e variaveis
-    public boolean findMethodDeclaration(MethodDeclarationBinding methodDeclaration, String key) {
+    public MethodDeclarationBinding findMethodDeclaration(MethodDeclarationBinding methodDeclaration, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
             if (methodDeclarationBinding.equals(methodDeclaration)) {
-                return true;
+                return methodDeclaration;
             }
         }
-
-        return false;
+        return null;
     }
 
-    public boolean findMethodCall(MethodCallBinding methodCall, String key) {
+    public MethodDeclarationBinding findMethodCall(MethodCallBinding methodCall, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
-            return methodDeclarationBinding.getEnviromentBinding().findMethodCall(methodCall);
+            if((methodDeclarationBinding.getEnviromentBinding().findMethodCall(methodCall)).equals(methodCall)){
+                return methodDeclarationBinding;
+            }
         }
-        return false;
-
+        return null;
     }
 
-    public boolean findAttribute(VariableBinding attribute, String key) {
+    public VariableBinding findAttribute(VariableBinding attribute, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (VariableBinding attribute1 : typeBinding.getAttributes()) {
             if (attribute.equals(attribute1)) {
-                return true;
+                return attribute;
             }
         }
-        return false;
+        return null;
     }
 
 
-    public boolean findVariable(VariableBinding variable, String key) {
+    public VariableBinding findVariable(VariableBinding variable, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
             return methodDeclarationBinding.getEnviromentBinding().findVariable(variable);
         }
-        return false;
-
+        return null;
     }
 }
