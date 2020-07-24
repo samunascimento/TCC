@@ -119,7 +119,7 @@ public class ParserJava {
         List<JCheckBox> list = new ArrayList<>();
         closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        List<String> javaFiles = javaFiles("C:\\Users\\felip\\Desktop\\Bolsa\\Bolsa");
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(javaFile);
             checkBox.setVisible(true);

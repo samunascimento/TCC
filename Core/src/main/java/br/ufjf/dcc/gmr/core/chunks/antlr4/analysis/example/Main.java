@@ -39,10 +39,17 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
         List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
         for (String javaFile : javaFiles) {
             System.out.println(javaFile);
         }
+        
+        byte b = 5;
+        short s = 5;
+        int i = 5;
+        long l = 5;
+        
         /*Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
         person.setName("name of a person");

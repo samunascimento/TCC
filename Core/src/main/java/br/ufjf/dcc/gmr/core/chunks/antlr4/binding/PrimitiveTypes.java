@@ -9,18 +9,27 @@ public class PrimitiveTypes {
     public static final String DOUBLE = "double";
     public static final String CHAR = "char";
     public static final String BOOLEAN = "boolean";
+    public static final String BYTE = "byte";
+    public static final String SHORT = "short";
+    public static final String LONG = "long";
 
     public static boolean isCompatibleType(String subType, String type) {
-
-        if (subType.equals(INT) && (type.equals(INT) || type.equals(FLOAT) || type.equals(DOUBLE))) {
+        
+        if(subType.equals(BYTE) && (type.equals(BYTE) || type.equals(CHAR) || type.equals(SHORT) || type.equals(INT) || type.equals(LONG) || type.equals(FLOAT) || type.equals(DOUBLE))){
             return true;
-        } else if (subType.equals(FLOAT) && (type.equals(FLOAT) || type.equals(DOUBLE))) {
+        }else if(subType.equals(SHORT) && (type.equals(CHAR) || type.equals(SHORT) || type.equals(INT) || type.equals(LONG) || type.equals(FLOAT) || type.equals(DOUBLE))){
+            return true;
+        }else if (subType.equals(INT) && (type.equals(INT) || type.equals(LONG) || type.equals(FLOAT) || type.equals(DOUBLE))) {
+            return true;
+        }else if(subType.equals(LONG) && (type.equals(LONG) || type.equals(FLOAT) || type.equals(DOUBLE))){
+            return true;
+        }else if (subType.equals(FLOAT) && (type.equals(FLOAT) || type.equals(DOUBLE))) {
             return true;
         } else if (subType.equals(DOUBLE) && type.equals(DOUBLE)) {
             return true;
         } else if (subType.equals(BOOLEAN) && type.equals(BOOLEAN)) {
             return true;
-        } else if (subType.equals(CHAR) && type.equals(CHAR)) {
+        } else if (subType.equals(CHAR) && (type.equals(CHAR) || type.equals(SHORT) || type.equals(INT) || type.equals(LONG) || type.equals(FLOAT) || type.equals(DOUBLE))) {
             return true;
         } else if (subType.equals(NULL) && type.equals(NULL)) {
             return true;
@@ -29,6 +38,7 @@ public class PrimitiveTypes {
         } else {
             return false;
         }
+        
         
     }
 }
