@@ -52,16 +52,14 @@ export default class Project extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      anchorE1: null,
-      anchorE2: null,
-      anchorE3: null,
-      anchorE4: null,
-      anchorTloc: null,
 
       openProject: false,
       openPackage: false,
       openClass: false,
       openMethod: false,
+
+      projectTloc: false,
+
 
       packageMetrics: [{ name: 'TLOC' }, { name: 'A' }, { name: 'CCRC' }, { name: 'Ca', }, { name: 'Ce', }, { name: 'DMS', }, { name: 'I', }, { name: 'NOC', }, { name: 'NOI', },
       { name: 'PkgRCi' }, { name: 'PkgTCi' }],
@@ -83,15 +81,6 @@ export default class Project extends Component {
       methodMetrics: [{ name: 'TLOC' }, { name: 'Ci' }, { name: 'Di' }, { name: 'Fin' }, { name: 'Fout' },
       { name: 'IOvars' }, { name: 'MCLC' }, { name: 'NBD' }, { name: 'NCOMP' }, { name: 'NOP' },
       { name: 'NVAR' }, { name: 'SI' }, { name: 'VG' }],
-
-      maxHeight: 192,
-
-      // data:[
-      //   [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }],
-      //   [{ x: 1, y: 400 }, { x: 2, y: 350 }, { x: 3, y: 300 }, { x: 4, y: 250 }],
-      //   [{ x: 1, y: 75 }, { x: 2, y: 85 }, { x: 3, y: 95 }, { x: 4, y: 100 }]
-      // ],
-
 
       data: [
         [
@@ -145,7 +134,7 @@ export default class Project extends Component {
       classTree: [{ name: 'MetricDao', id: 1 }, { name: 'ClassDao', id: 2 }, { name: 'PackageDaO', id: 3 }, { name: 'versionDao', id: 4 }, { name: 'ProjectDao', id: 5 }, { name: 'Teste', id: 6 }, { name: 'teste1', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
       methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
 
-      teste: makeStyles((theme) => ({
+      menu: makeStyles((theme) => ({
         root: {
           width: '100%',
           maxWidth: 360,
@@ -218,13 +207,17 @@ export default class Project extends Component {
       this.setState({ data });
 
     }
+
+    //this.setState({projectTloc: !this.state.projectTloc})
   };
 
-  handleChangePackage = async (event, metricName, packageName) => {
+  handleChangePackage = async (event, metricName, packageName, packageIndex) => {
     console.log(event.target.checked)
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
-    console.log(event.target.checked)
+    this.state.packageTree[packageIndex][metricName] = !this.state.packageTree[packageIndex][metricName]
+
+    console.log(this.state.packageTree[packageIndex][metricName])
 
     if (event.target.checked === true) {
       await axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
@@ -234,7 +227,6 @@ export default class Project extends Component {
           console.log(data)
           this.setState({ data });
           console.log(this.state.data)
-
         })
     }
 
@@ -263,8 +255,11 @@ export default class Project extends Component {
   }
 
 
-  handleChangeClass = (event, metricName) => {
+  handleChangeClass = (event, metricName, classIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
+
+    this.state.packageTree[classIndex][metricName] = !this.state.packageTree[classIndex][metricName]
+
     if (event.target.checked === true) {
       axios.get(`http://localhost:56875/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
         .then(res => {
@@ -327,7 +322,7 @@ export default class Project extends Component {
 
   render() {
 
-    const classes = this.state.teste;
+    const classes = this.state.menu;
 
     const { anchorE1 } = this.state
     const { anchorE2 } = this.state
@@ -377,7 +372,7 @@ export default class Project extends Component {
                   <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
                     <FormGroup style = {{border: '1px solid grey'}}>
                       <FormControlLabel
-                        control={<Checkbox onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
+                        control={<Checkbox checked={projectTloc} onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
                         label={<span style={{ fontSize: '14px' }}>TLOC</span>}
                       />
                     </FormGroup>
@@ -396,12 +391,12 @@ export default class Project extends Component {
                           defaultCollapseIcon={<ExpandMoreIcon />}
                           defaultExpandIcon={<ChevronRightIcon />}
                         >
-                          {this.state.packageTree.map((packages) => (
+                          {this.state.packageTree.map((packages,packageIndex) => (
                             <TreeItem title={packages.name} nodeId={packages.id} label={<span style={{ fontSize: '16px' }}>{packages.name}</span>}>
                               <FormGroup>
                                 {packageMetrics.map((metric) => (
                                   <FormControlLabel
-                                    control={<Checkbox onChange={(event) => this.handleChangePackage(event, metric.name, packages.name)} name={metric.name} color="primary" />}
+                                    control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.handleChangePackage(event, metric.name, packages.name,packageIndex)} name={metric.name} color="primary" />}
                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                   />
                                 ))}
@@ -426,12 +421,12 @@ export default class Project extends Component {
                           defaultCollapseIcon={<ExpandMoreIcon />}
                           defaultExpandIcon={<ChevronRightIcon />}
                         >
-                          {this.state.classTree.map((classes) => (
+                          {this.state.classTree.map((classes,index) => (
                             <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
                               <FormGroup>
                                 {classMetrics.map((metric) => (
                                   <FormControlLabel
-                                    control={<Checkbox onChange={(event) => this.handleChangeClass(event, metric.name)} name={metric.name} color="primary" />}
+                                    control={<Checkbox checked= {classes[metric.name]} onChange={(event) => this.handleChangeClass(event, metric.name,index)} name={metric.name} color="primary" />}
                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                   />
                                 ))}
@@ -461,7 +456,7 @@ export default class Project extends Component {
                               <FormGroup>
                                 {classMetrics.map((metric) => (
                                   <FormControlLabel
-                                    control={<Checkbox onChange={(event) => this.handleChangeClass(event, metric.name)} name={metric.name} color="primary" />}
+                                    control={<Checkbox onChange={(event) => this.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                   />
                                 ))}
