@@ -24,7 +24,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -38,7 +42,7 @@ public class ConflictAnalysisTools {
 
     public static File createSandbox(String repositoryPath, String projectName) throws IOException, RepositoryAlreadyExist {
         File sandbox;
-        sandbox = new File(Paths.get(repositoryPath).getParent().toString() + File.separator +".repositoryAnalysisSandbox_" + projectName + File.separator);
+        sandbox = new File(Paths.get(repositoryPath).getParent().toString() + File.separator + ".repositoryAnalysisSandbox_" + projectName + File.separator);
         try {
             Git.clone(repositoryPath, Paths.get(repositoryPath).getParent().toString(), ".repositoryAnalysisSandbox_" + projectName + File.separator);
         } catch (RepositoryNotFound ex) {
@@ -115,6 +119,18 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, false);
             }
             visitor.visit(tree);
+            /*
+            //Imprimir_arvore-------------------------------------------------------
+            JFrame frame = new JFrame("Java parser");
+            JPanel panel = new JPanel();
+            //JScrollPane scrollPane = new JScrollPane();
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.open();
+            frame.add(viewer);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //----------------------------------------------------------------------
+              */
             return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -138,6 +154,17 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
+            //Imprimir_arvore-------------------------------------------------------
+            JFrame frame = new JFrame("Java parser");
+            JPanel panel = new JPanel();
+//        JScrollPane scrollPane = new JScrollPane();
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.open();
+            frame.add(viewer);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            //----------------------------------------------------------------------
+
             return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -161,6 +188,19 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
+            /*
+        //Imprimir_arvore-------------------------------------------------------
+        JFrame frame = new JFrame("Java parser");
+        JPanel panel = new JPanel();
+        //JScrollPane scrollPane = new JScrollPane();
+        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+        viewer.open();
+        frame.add(viewer);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //----------------------------------------------------------------------
+             */
+
             return new SSCShelf(visitor.getList(), comments);
         } else {
 
