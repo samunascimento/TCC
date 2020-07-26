@@ -11,8 +11,13 @@ public class PrimitiveTypes {
     public static final String BOOLEAN = "boolean";
 
     public static boolean isCompatibleType(String subType, String type) {
+
         try {
-            if (subType.equals(INT) && (type.equals(INT) || type.equals(FLOAT) || type.equals(DOUBLE))) {
+            if ((subType != null && type == null) || (subType == null && type != null)) {
+                return false;
+            } else if (subType == null && type == null) {
+                return true;
+            } else if (subType.equals(INT) && (type.equals(INT) || type.equals(FLOAT) || type.equals(DOUBLE))) {
                 return true;
             } else if (subType.equals(FLOAT) && (type.equals(FLOAT) || type.equals(DOUBLE))) {
                 return true;
@@ -22,8 +27,6 @@ public class PrimitiveTypes {
                 return true;
             } else if (subType.equals(CHAR) && type.equals(CHAR)) {
                 return true;
-            } else if (subType.equals(NULL) && type.equals(NULL)) {
-                return true;
             } else if (subType.equals(STRING) && type.equals(STRING)) {
                 return true;
             } else {
@@ -32,7 +35,7 @@ public class PrimitiveTypes {
         } catch (Exception e) {
             System.out.println("@@@@@@@@@@@@@@@@@@@errorLine33@@@@@@@@@@@@@@@@@@@");
             e.printStackTrace();
-            
+
         }
         return false;
     }

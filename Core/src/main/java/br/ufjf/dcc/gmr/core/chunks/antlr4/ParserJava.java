@@ -38,7 +38,6 @@ public class ParserJava {
     private static boolean reachedEnd = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("=================================================================================");
         List<List> pathAndOpenViewList = view();
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
@@ -164,7 +163,6 @@ public class ParserJava {
     }
 
     private static MyVisitor ASTExtractor(String path, boolean openTree) throws IOException, HeadlessException, RecognitionException {
-        System.out.println("teste");
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);

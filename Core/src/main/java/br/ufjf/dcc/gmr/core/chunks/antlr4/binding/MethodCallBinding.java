@@ -30,17 +30,16 @@ public class MethodCallBinding extends BaseBinding {
 
         output = output.concat(this.getName()).concat("(");
 
+        /**
+         * TODO: parameter.getName() is null for System.out.println
+         */
         for (int i = 0; i < parameters.size(); i++) {
-            if (i < parameters.size() - 1) {
-                output = output.concat(parameters.get(i).getName() + ",");
-            } else {
-                try {
+            if (parameters.get(i).getName() != null) {
+                if (i < parameters.size() - 1) {
+                    output = output.concat(parameters.get(i).getName() + ",");
+                } else {
                     output = output.concat(parameters.get(i).getName());
-                } catch (Exception e) {
-                    System.out.println("@@@@@@@@@@@@@@@@@@@errorLine40@@@@@@@@@@@@@@@@@@@");
-                    e.printStackTrace();
                 }
-
             }
         }
         output = output.concat(")");
