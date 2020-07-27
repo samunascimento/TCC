@@ -772,6 +772,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1679,6 +1691,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionhead(CPP14Parser.FunctionheadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionhead(CPP14Parser.FunctionheadContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

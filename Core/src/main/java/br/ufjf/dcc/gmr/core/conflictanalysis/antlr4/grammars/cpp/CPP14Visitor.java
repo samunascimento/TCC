@@ -389,6 +389,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(CPP14Parser.DeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#includedeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#blockdeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -844,6 +850,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#functionhead}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionhead(CPP14Parser.FunctionheadContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#functionbody}.
 	 * @param ctx the parse tree

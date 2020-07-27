@@ -422,7 +422,14 @@ declaration
    | namespacedefinition
    | emptydeclaration
    | attributedeclaration
+   | includedeclaration
    ;
+
+includedeclaration
+   : 'include' '<' Identifier ('.' Identifier)? '>'
+   | 'include' '"' Identifier ('.' Identifier)? '"'
+   ;
+
 
 blockdeclaration
    : simpledeclaration
@@ -825,7 +832,11 @@ parameterdeclaration
    ;
 
 functiondefinition
-   : attributespecifierseq? declspecifierseq? declarator virtspecifierseq? functionbody
+   : functionhead functionbody
+   ;
+
+functionhead
+   : attributespecifierseq? declspecifierseq? declarator virtspecifierseq?
    ;
 
 functionbody

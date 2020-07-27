@@ -638,6 +638,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitDeclaration(CPP14Parser.DeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#includedeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#includedeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#blockdeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -1397,6 +1407,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#functionhead}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionhead(CPP14Parser.FunctionheadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#functionhead}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionhead(CPP14Parser.FunctionheadContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#functionbody}.
 	 * @param ctx the parse tree
