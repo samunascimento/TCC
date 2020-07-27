@@ -22,7 +22,7 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-      List<SyntaxStructure> analyzePythonSyntaxTree = ConflictAnalysisTools.getStructureTypeInInterval("/home/luan/Github/CalcNum-Listas/temp.py",1,21,false);
+      List<SyntaxStructure> analyzePythonSyntaxTree = ConflictAnalysisTools.getStructureTypeInInterval("/home/luan/Github/teste.cpp",1,84,false);
         for (SyntaxStructure ss : analyzePythonSyntaxTree) {
             System.out.println(ss.getForm());
         }  

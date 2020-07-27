@@ -121,14 +121,8 @@ public class ConflictAnalysisTools {
             visitor.visit(tree);
             /*
             //Imprimir_arvore-------------------------------------------------------
-            JFrame frame = new JFrame("Java parser");
-            JPanel panel = new JPanel();
-            //JScrollPane scrollPane = new JScrollPane();
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
-            frame.add(viewer);
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //----------------------------------------------------------------------
               */
             return new SSCShelf(visitor.getList(), comments);
@@ -186,14 +180,8 @@ public class ConflictAnalysisTools {
             visitor.visit(tree);
             /*
         //Imprimir_arvore-------------------------------------------------------
-        JFrame frame = new JFrame("Java parser");
-        JPanel panel = new JPanel();
-        //JScrollPane scrollPane = new JScrollPane();
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.open();
-        frame.add(viewer);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //----------------------------------------------------------------------
              */
 
