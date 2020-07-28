@@ -197,6 +197,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCastexpression(CPP14Parser.CastexpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#realcastexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#pmexpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

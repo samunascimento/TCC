@@ -221,7 +221,11 @@ noexceptexpression
 
 castexpression
    : unaryexpression
-   | '(' thetypeid ')' castexpression
+   | realcastexpression castexpression
+   ;
+
+realcastexpression
+   : '(' thetypeid ')'
    ;
 
 pmexpression
@@ -450,6 +454,7 @@ simpledeclaration
    : declspecifierseq? initdeclaratorlist? ';'
    | attributespecifierseq declspecifierseq? initdeclaratorlist ';'
    ;
+
 
 static_assertdeclaration
    : Static_assert '(' constantexpression ',' Stringliteral ')' ';'
@@ -746,6 +751,7 @@ noptrdeclarator
    | noptrdeclarator '[' constantexpression? ']' attributespecifierseq?
    | '(' ptrdeclarator ')'
    ;
+
 
 parametersandqualifiers
    : '(' parameterdeclarationclause ')' cvqualifierseq? refqualifier? exceptionspecification? attributespecifierseq?

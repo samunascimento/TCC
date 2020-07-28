@@ -41,6 +41,14 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    
+    
+    @Override
     public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
         process(ctx);
         return visitChildren(ctx);
