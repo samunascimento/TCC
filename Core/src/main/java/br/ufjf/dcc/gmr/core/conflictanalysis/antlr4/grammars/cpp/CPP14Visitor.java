@@ -317,6 +317,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLabeledstatement(CPP14Parser.LabeledstatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#caseexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCaseexpression(CPP14Parser.CaseexpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#expressionstatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -341,6 +347,18 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelectionstatement(CPP14Parser.SelectionstatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#ifexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfexpression(CPP14Parser.IfexpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#switchexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchexpression(CPP14Parser.SwitchexpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#condition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -352,6 +370,30 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIterationstatement(CPP14Parser.IterationstatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#dostatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDostatement(CPP14Parser.DostatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#whileexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileexpression(CPP14Parser.WhileexpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#basicforexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBasicforexpression(CPP14Parser.BasicforexpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#enhancedforexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#forinitstatement}.
 	 * @param ctx the parse tree
@@ -376,6 +418,24 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitJumpstatement(CPP14Parser.JumpstatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#breakstatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBreakstatement(CPP14Parser.BreakstatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#continuestatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinuestatement(CPP14Parser.ContinuestatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#returnstatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnstatement(CPP14Parser.ReturnstatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#declarationstatement}.
 	 * @param ctx the parse tree
@@ -1151,6 +1211,18 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctiontryblock(CPP14Parser.FunctiontryblockContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#tryblockexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTryblockexpression(CPP14Parser.TryblockexpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#functiontryblockexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#handlerseq}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1162,6 +1234,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitHandler(CPP14Parser.HandlerContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#catchexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCatchexpression(CPP14Parser.CatchexpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#exceptiondeclaration}.
 	 * @param ctx the parse tree

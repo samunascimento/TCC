@@ -41,6 +41,88 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitCatchexpression(CPP14Parser.CatchexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitTryblockexpression(CPP14Parser.TryblockexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    
+    @Override
+    public Object visitReturnstatement(CPP14Parser.ReturnstatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitContinuestatement(CPP14Parser.ContinuestatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitBreakstatement(CPP14Parser.BreakstatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitSwitchexpression(CPP14Parser.SwitchexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIfexpression(CPP14Parser.IfexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitCaseexpression(CPP14Parser.CaseexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+    
+    
+    @Override
+    public Object visitBasicforexpression(CPP14Parser.BasicforexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitDostatement(CPP14Parser.DostatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+    
+
+    @Override
+    public Object visitWhileexpression(CPP14Parser.WhileexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+    
+
+    @Override
     public Object visitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) {
         process(ctx);
         return visitChildren(ctx);
@@ -478,7 +560,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     
     @Override
     public Object visitJumpstatement(CPP14Parser.JumpstatementContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1360,28 +1442,28 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     
     @Override
     public Object visitTryblock(CPP14Parser.TryblockContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     
     @Override
     public Object visitFunctiontryblock(CPP14Parser.FunctiontryblockContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     
     @Override
     public Object visitHandlerseq(CPP14Parser.HandlerseqContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     
     @Override
     public Object visitHandler(CPP14Parser.HandlerContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
