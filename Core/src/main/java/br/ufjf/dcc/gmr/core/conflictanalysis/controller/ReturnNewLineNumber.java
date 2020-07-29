@@ -64,12 +64,18 @@ public class ReturnNewLineNumber {
             }
             if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
                 String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
                 aux.setFilePathTarget(c);
             } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                 String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                 String c = line.substring(1);
@@ -127,12 +133,19 @@ public class ReturnNewLineNumber {
             }
             if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
                 String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
                 aux.setFilePathTarget(c);
             } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                 String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
+
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                 String c = line.substring(1);
