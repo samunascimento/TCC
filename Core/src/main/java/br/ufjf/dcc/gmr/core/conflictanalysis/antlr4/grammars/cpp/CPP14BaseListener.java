@@ -208,6 +208,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayaccess(CPP14Parser.ArrayaccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayaccess(CPP14Parser.ArrayaccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTypeidofexpr(CPP14Parser.TypeidofexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1619,6 +1643,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -168,6 +168,26 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitPostfixexpression(CPP14Parser.PostfixexpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#arrayaccess}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayaccess(CPP14Parser.ArrayaccessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#arrayaccess}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayaccess(CPP14Parser.ArrayaccessContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#functioninvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#functioninvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#typeidofexpr}.
 	 * @param ctx the parse tree
 	 */
@@ -1347,6 +1367,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#arraydeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterArraydeclaration(CPP14Parser.ArraydeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#arraydeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#parametersandqualifiers}.
 	 * @param ctx the parse tree

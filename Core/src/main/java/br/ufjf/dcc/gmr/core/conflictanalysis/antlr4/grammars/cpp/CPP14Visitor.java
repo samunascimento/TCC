@@ -107,6 +107,18 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPostfixexpression(CPP14Parser.PostfixexpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#arrayaccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayaccess(CPP14Parser.ArrayaccessContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#functioninvocation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#typeidofexpr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -814,6 +826,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#arraydeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#parametersandqualifiers}.
 	 * @param ctx the parse tree

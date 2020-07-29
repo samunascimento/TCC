@@ -113,15 +113,14 @@ lambdadeclarator
 
 postfixexpression
    : primaryexpression
-   | postfixexpression '[' expression ']'
+   | arrayaccess
    | postfixexpression '[' bracedinitlist ']'
    | postfixexpression '(' expressionlist? ')'
    | simpletypespecifier '(' expressionlist? ')'
    | typenamespecifier '(' expressionlist? ')'
    | simpletypespecifier bracedinitlist
    | typenamespecifier bracedinitlist
-   | postfixexpression '.' Template? idexpression
-   | postfixexpression '->' Template? idexpression
+   | functioninvocation
    | postfixexpression '.' pseudodestructorname
    | postfixexpression '->' pseudodestructorname
    | postfixexpression '++'
@@ -132,6 +131,15 @@ postfixexpression
    | Const_cast '<' thetypeid '>' '(' expression ')'
    | typeidofthetypeid '(' expression ')'
    | typeidofthetypeid '(' thetypeid ')'
+   ;
+
+arrayaccess
+   : primaryexpression ('[' expression ']')*
+   ;
+
+functioninvocation
+   : primaryexpression '.' Template? idexpression
+   | primaryexpression '->' Template? idexpression
    ;
 /*
 add a middle layer to eliminate duplicated function declarations
@@ -789,10 +797,14 @@ ptrdeclarator
 noptrdeclarator
    : declaratorid attributespecifierseq?
    | noptrdeclarator parametersandqualifiers
-   | noptrdeclarator '[' constantexpression? ']' attributespecifierseq?
+   | arraydeclaration attributespecifierseq?
    | '(' ptrdeclarator ')'
    ;
 
+arraydeclaration
+   : declaratorid ('[' constantexpression? ']')*
+   ;
+    
 
 parametersandqualifiers
    : '(' parameterdeclarationclause ')' cvqualifierseq? refqualifier? exceptionspecification? attributespecifierseq?

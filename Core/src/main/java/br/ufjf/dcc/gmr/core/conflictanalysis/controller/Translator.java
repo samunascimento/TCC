@@ -376,9 +376,13 @@ public class Translator {
             // Não existe em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("");
+            if (list.contains("Arraydeclaration")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
+                list.remove("Arraydeclaration");
+            }
+            if (list.contains("Arrayaccess")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
+                list.remove("Arrayaccess");
             }
             // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -487,10 +491,9 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Functiondefinition");
             }
-            if (list.contains("")) {
+            if (list.contains("Functioninvocation")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
-                list.remove("");
-                // Revisar Postfixedexpression 
+                list.remove("Functioninvocation");
             }
             if (list.contains("Functionhead")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
