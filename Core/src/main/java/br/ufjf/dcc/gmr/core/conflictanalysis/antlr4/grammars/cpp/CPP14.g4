@@ -221,7 +221,11 @@ noexceptexpression
 
 castexpression
    : unaryexpression
-   | '(' thetypeid ')' castexpression
+   | realcastexpression castexpression
+   ;
+
+realcastexpression
+   : '(' thetypeid ')'
    ;
 
 pmexpression
@@ -343,8 +347,12 @@ statement
 
 labeledstatement
    : attributespecifierseq? Identifier ':' statement
-   | attributespecifierseq? Case constantexpression ':' statement
+   | attributespecifierseq? caseexpression statement
    | attributespecifierseq? Default ':' statement
+   ;
+
+caseexpression
+   : Case constantexpression ':'
    ;
 
 expressionstatement
@@ -361,9 +369,17 @@ statementseq
    ;
 
 selectionstatement
-   : If '(' condition ')' statement
-   | If '(' condition ')' statement Else statement
-   | Switch '(' condition ')' statement
+   : ifexpression statement
+   | ifexpression statement Else statement
+   | switchexpression statement
+   ;
+
+ifexpression
+   : If '(' condition ')'
+   ;
+
+switchexpression
+   : Switch '(' condition ')'
    ;
 
 condition
@@ -373,10 +389,26 @@ condition
    ;
 
 iterationstatement
-   : While '(' condition ')' statement
-   | Do statement While '(' expression ')' ';'
-   | For '(' forinitstatement condition? ';' expression? ')' statement
-   | For '(' forrangedeclaration ':' forrangeinitializer ')' statement
+   : whileexpression statement
+   | dostatement
+   | enhancedforexpression statement
+   | basicforexpression statement
+   ;
+
+dostatement
+   : Do statement whileexpression ';'
+   ;
+
+whileexpression
+   : While '(' condition ')'
+   ;
+
+basicforexpression
+   : For '(' forinitstatement condition? ';' expression? ')'
+   ;
+
+enhancedforexpression
+   : For '(' forrangedeclaration ':' forrangeinitializer ')' 
    ;
 
 forinitstatement
@@ -394,12 +426,25 @@ forrangeinitializer
    ;
 
 jumpstatement
-   : Break ';'
-   | Continue ';'
-   | Return expression? ';'
-   | Return bracedinitlist ';'
+   : breakstatement
+   | continuestatement
+   | returnstatement
    | Goto Identifier ';'
    ;
+
+breakstatement
+   : Break ';'
+   ;
+
+continuestatement
+   : Continue ';'
+   ;
+
+returnstatement
+   : Return expression? ';'
+   | Return bracedinitlist ';'
+   ;
+
 
 declarationstatement
    : blockdeclaration
@@ -422,7 +467,14 @@ declaration
    | namespacedefinition
    | emptydeclaration
    | attributedeclaration
+   | includedeclaration
    ;
+
+includedeclaration
+   : 'include' '<' Identifier ('.' Identifier)? '>'
+   | 'include' '"' Identifier ('.' Identifier)? '"'
+   ;
+
 
 blockdeclaration
    : simpledeclaration
@@ -443,6 +495,7 @@ simpledeclaration
    : declspecifierseq? initdeclaratorlist? ';'
    | attributespecifierseq declspecifierseq? initdeclaratorlist ';'
    ;
+
 
 static_assertdeclaration
    : Static_assert '(' constantexpression ',' Stringliteral ')' ';'
@@ -740,6 +793,7 @@ noptrdeclarator
    | '(' ptrdeclarator ')'
    ;
 
+
 parametersandqualifiers
    : '(' parameterdeclarationclause ')' cvqualifierseq? refqualifier? exceptionspecification? attributespecifierseq?
    ;
@@ -825,7 +879,11 @@ parameterdeclaration
    ;
 
 functiondefinition
-   : attributespecifierseq? declspecifierseq? declarator virtspecifierseq? functionbody
+   : functionhead functionbody
+   ;
+
+functionhead
+   : attributespecifierseq? declspecifierseq? declarator virtspecifierseq?
    ;
 
 functionbody
@@ -1078,20 +1136,33 @@ explicitspecialization
 /*Exception handling*/
 
 
+
 tryblock
-   : Try compoundstatement handlerseq
+   : tryblockexpression handlerseq
    ;
 
 functiontryblock
-   : Try ctorinitializer? compoundstatement handlerseq
+   : functiontryblockexpression handlerseq
+   ;
+
+tryblockexpression
+   : Try compoundstatement 
+   ;
+
+functiontryblockexpression
+   : Try ctorinitializer? compoundstatement 
    ;
 
 handlerseq
    : handler handlerseq?
    ;
 
-handler
-   : Catch '(' exceptiondeclaration ')' compoundstatement
+handler 
+   : catchexpression compoundstatement
+   ;
+
+catchexpression
+   : Catch '(' exceptiondeclaration ')'
    ;
 
 exceptiondeclaration
