@@ -373,19 +373,20 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-             // Não existe em c++
+            // Não existe em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if ( list.contains("")) {
-                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
                 list.remove("");
             }
+            // Ainda revisando
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // Ainda revisando
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // Revisar Postfixedexpression
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Nothing")) {
@@ -394,96 +395,153 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Breakstatement")) {
+                mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
+                list.remove("Breakstatement");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Caseexpression")) {
+                mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
+                list.remove("Caseexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-           
-             //CAST+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
+            //CAST+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Realcastexpression")) {
                 mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("");
+                list.remove("Realcastexpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Catchexpression")) {
+                mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
+                list.remove("Catchexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
+            if (list.contains("Classspecifier")) {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
-                list.remove("");
+                list.remove("Classspecifier");
             }
-            if (list.contains("")) {
+            if (list.contains("Classhead")) {
                 mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
-                list.remove("");
+                list.remove("Classhead");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Continuestatement")) {
+                mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
+                list.remove("Continuestatement");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Dostatement")) {
+                mainList.add(LanguageConstructsTypes.DO_STATEMENT);
+                list.remove("Dostatement");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-             
-            
+
+            if (list.contains("Enumhead")) {
+                mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
+                list.remove("Enumhead");
+            }
+            if (list.contains("Enumspecifier")) {
+                mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
+                list.remove("Enumspecifier");
+            }
+            if (list.contains("Enumeratordefinition")) {
+                mainList.add(LanguageConstructsTypes.ENUM_VALUE);
+                list.remove("Enumeratordefinition");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")
-                    || list.contains("")) {
+            if (list.contains("Basicforexpression")
+                    || list.contains("Enhancedforexpression")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
-                list.remove("");
-                list.remove("");
+                list.remove("Basicforexpression");
+                list.remove("Enhancedforexpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-          
+            if (list.contains("Ifexpression")) {
+                mainList.add(LanguageConstructsTypes.IF_STATEMENT);
+                list.remove("Ifexpression");
+                // Verificar Gleiph se realmente não precisa de else
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            //Não tem em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHOD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Functiondefinition")) {
+                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
+                list.remove("Functiondefinition");
+            }
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
+                list.remove("");
+                // Revisar Postfixedexpression 
+            }
+            if (list.contains("Functionhead")) {
+                mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
+                list.remove("Functionhead");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            //Não tem em c++
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //POINTER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //A fazer
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("returnstatement")) {
+                mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
+                list.remove("returnstatement");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            // Revisar Postfixedexpression
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Switchexpression")) {
+                mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
+                list.remove("Switchexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
-            
+            //Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //TRHOW++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            //THROW++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Throwexpression")) {
+                mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
+                list.remove("Throwexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            if (list.contains("Tryblockexpression")
+                    || list.contains("Functiontryblockexpression")) {
+                mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
+                list.remove("Tryblockexpression");
+                list.remove("Functiontryblockexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-           
+            // Revisar Postfixedexpression 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
+            if (list.contains("Whileexpression")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
-                list.remove("");
+                list.remove("Whileexpression");
             }
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -498,6 +556,5 @@ public class Translator {
         }
         return mainList;
     }
-    
 
 }
