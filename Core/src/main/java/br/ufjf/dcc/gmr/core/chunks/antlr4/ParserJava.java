@@ -5,26 +5,15 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import static java.awt.Frame.*;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
@@ -137,7 +126,7 @@ public class ParserJava {
 
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF\\Core\\src\\main\\java\\br\\ufjf\\dcc\\gmr\\core\\chunks\\antlr4\\analysis\\example");
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
@@ -158,7 +147,6 @@ public class ParserJava {
         while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);
         }
-        //ParserJava.reachedEnd = false;
         return returnList;
     }
 

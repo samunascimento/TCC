@@ -40,6 +40,8 @@ public class MethodCallBinding extends BaseBinding {
                 } else {
                     output = output.concat(parameters.get(i).getName());
                 }
+            }else{
+                System.out.println("");
             }
         }
         output = output.concat(")");

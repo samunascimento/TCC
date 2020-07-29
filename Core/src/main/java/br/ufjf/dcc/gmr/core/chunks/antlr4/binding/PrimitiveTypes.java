@@ -33,4 +33,15 @@ public class PrimitiveTypes {
         }
 
     }
+    
+    public static TypeBinding init(String type){
+        TypeBinding typeBinding = new TypeBinding();
+        typeBinding.setExtendClass(null);
+        typeBinding.setAttributes(null);
+        typeBinding.setImports(null);
+        typeBinding.setMdbList(null);
+        typeBinding.setPackageBinding(null);
+        typeBinding.setName(type);
+        return typeBinding;
+    }
 }
