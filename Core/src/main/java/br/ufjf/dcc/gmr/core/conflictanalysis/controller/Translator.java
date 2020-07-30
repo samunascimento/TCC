@@ -433,7 +433,12 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Ainda revisando
+            if (list.contains("BlockComment")
+                    || list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
+                list.remove("BlockComment");
+                list.remove("LineComment");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Continuestatement")) {
@@ -463,7 +468,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Ainda revisando
+              if (list.contains("Memberespecification")) {
+                mainList.add(LanguageConstructsTypes.FIELD);
+                list.remove("Memberespecification");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Basicforexpression")
@@ -507,13 +515,13 @@ public class Translator {
             //A fazer
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("returnstatement")) {
+            if (list.contains("Returnstatement")) {
                 mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-                list.remove("returnstatement");
+                list.remove("Returnstatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Revisar Postfixedexpression
+            // Não tem
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Switchexpression")) {
