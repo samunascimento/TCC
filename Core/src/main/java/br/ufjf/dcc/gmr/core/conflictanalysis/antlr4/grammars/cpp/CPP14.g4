@@ -26,10 +26,12 @@ grammar CPP14;
 
 
 translationunit
-   : declarationseq? EOF
+   : directive* LineComment? declarationseq? EOF
    ;
 /*Expressions*/
 
+directive
+   : Directive;
 
 primaryexpression
    : literal
@@ -1209,11 +1211,12 @@ noexceptspecification
 
 
 MultiLineMacro
-   : '#' (~ [\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN)
+   : '#' (~ [\n]*? '\\' '\r'? '\n')+ ~ [\n]+ 
    ;
 
 Directive
-   : '#' ~ [\n]* -> channel (HIDDEN)
+   : '#' '<' Identifier '>' 
+   | '#' ~ [\n]* 
    ;
 /*Lexer*/
 

@@ -18,6 +18,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitTranslationunit(CPP14Parser.TranslationunitContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void enterDirective(CPP14Parser.DirectiveContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void exitDirective(CPP14Parser.DirectiveContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#primaryexpression}.
 	 * @param ctx the parse tree
 	 */

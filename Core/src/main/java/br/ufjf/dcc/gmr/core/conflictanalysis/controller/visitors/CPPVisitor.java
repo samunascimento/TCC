@@ -38,6 +38,14 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
+        if(ctx.getText().contains("include"))
+            System.out.println("tem include");
+        
+        return super.visitDirective(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
         process(ctx);
         return visitChildren(ctx);

@@ -17,6 +17,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTranslationunit(CPP14Parser.TranslationunitContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDirective(CPP14Parser.DirectiveContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#primaryexpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
