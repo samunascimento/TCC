@@ -38,7 +38,7 @@ public class Jasome {
         
         try {
             //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\cwa-verification-server");
+            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\traccar-web");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
         }
@@ -87,36 +87,34 @@ public class Jasome {
         }
         
         ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
+        
         List<ProjectMetrics> select = projectDao.select();
         
-        Boolean equalProjects = false;
-        
+        //Boolean equalProjects = false;
         
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
 
-        //JasomeMethods jasome = new JasomeMethods("C:\\Users\\Principal\\Desktop\\calculadora-1", "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
         ProjectMetrics project = new ProjectMetrics();
 
         project.setSourceDir(jasome.GetRepositoryPath());
-        //System.out.println(jasome.GetRepositoryPath());
         project.setUrl("testeUrl");
         project.setName(jasome.GetRepositoryName());
         project.setOrganization("organization");
             
-        for (ProjectMetrics projectMetrics : select) {
-                     
-            if(projectMetrics.getName().equals(project.getName())){
-                equalProjects = true;
-                break;
-            }
-            
-        }
+//        for (ProjectMetrics projectMetrics : select) {
+//                     
+//            if(projectMetrics.getName().equals(project.getName())){
+//                equalProjects = true;
+//                break;
+//            }
+//            
+//        }
         
-        if(equalProjects == false){
+//        if(equalProjects == false){
             jasome.runProject(project, connection);
-        } else {
-            throw new RepositoryAlreadyExistInDataBase();
-        }
+//        } else {
+//            throw new RepositoryAlreadyExistInDataBase();
+//        }
 
 
         /*jasome.getArchiveType().add("java");

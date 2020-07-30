@@ -53,6 +53,7 @@ export default class Project extends Component {
     super(props);
     this.state = {
 
+      openMetrics: false,
       openProject: false,
       openPackage: false,
       openClass: false,
@@ -151,6 +152,10 @@ export default class Project extends Component {
     };
   }
 
+  handleClickMetrics = () => {
+    const openMetrics = !this.state.openMetrics
+    this.setState({ openMetrics })
+  };
 
   handleClickProject = () => {
     const openProject = !this.state.openProject
@@ -234,7 +239,7 @@ export default class Project extends Component {
     else if (event.target.checked === false) {
 
       let metricCheck = false
-      this.state.data.map((metrics,index) => {
+      this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
             metricCheck = true
@@ -242,7 +247,7 @@ export default class Project extends Component {
         })
         if (metricCheck === true) {
           //delete this.state.data[index] 
-          this.state.data.splice(index,1)
+          this.state.data.splice(index, 1)
           metricCheck = false
         }
         //this.setState({ data });
@@ -343,7 +348,7 @@ export default class Project extends Component {
 
     return (
       <div>
-        <div style={{width: '20%', marginTop:'5%', position: "relative", float: "right" }}>
+        <div style={{ width: '20%', position: "relative", float: "right" }}>
           <Box
             display="flex"
 
@@ -351,138 +356,136 @@ export default class Project extends Component {
             p={1}
             m={1}
             bgcolor="background.paper"
-            style={{border:'2px groove black', borderRadius: '5px'}}
+            style={{ border: '2px groove black', borderRadius: '5px' }}
           >
             <Grid item xs={12}>
               <List component="nav"
                 aria-labelledby="nested-list-subheader"
                 position="relative"
-                left="1000px" 
-                subheader={
-                  <ListSubheader component="div" id="nested-list-subheader">
-                    Metrics
-                  </ListSubheader>
-                }
+                left="1000px"
                 className={classes.root}>
-                <ListItem button onClick={this.handleClickProject} style = {{border: '1px solid grey', margin: '3px 0'}}>
-                  <ListItemText align="left" primary="Project Metrics" />
-                  {this.state.openProject ? <ExpandLess /> : <ExpandMore />}
+                <ListItem button onClick={this.handleClickMetrics} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                  <ListItemText align="left" primary="Metrics" />
+                  {this.state.openMetrics ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
-                    <FormGroup style = {{border: '1px solid grey'}}>
-                      <FormControlLabel
-                        control={<Checkbox checked={projectTloc} onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
-                        label={<span style={{ fontSize: '14px' }}>TLOC</span>}
-                      />
-                    </FormGroup>
-                  </Paper>
-                </Collapse>
-                <ListItem button onClick={this.handleClickPackage} style = {{border: '1px solid grey', margin: '3px 0'}}>
-                  <ListItemText align="left" primary="Package Metrics" />
-                  {this.state.openPackage ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey'}}>
-                    <List component="div" disablePadding>
-                      <ListItem button className={classes.nested}>
-                        <TreeView
-                          className={root}
-                          defaultCollapseIcon={<ExpandMoreIcon />}
-                          defaultExpandIcon={<ChevronRightIcon />}
-                        >
-                          {this.state.packageTree.map((packages,packageIndex) => (
-                            <TreeItem title={packages.name} nodeId={packages.id} label={<span style={{ fontSize: '16px' }}>{packages.name}</span>}>
-                              <FormGroup>
-                                {packageMetrics.map((metric) => (
-                                  <FormControlLabel
-                                    control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.handleChangePackage(event, metric.name, packages.name,packageIndex)} name={metric.name} color="primary" />}
-                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                  />
-                                ))}
-                              </FormGroup>
-                            </TreeItem>
-                          ))}
-                        </TreeView>
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Collapse>
-                <ListItem button onClick={this.handleClickClass} style = {{border: '1px solid grey', margin: '3px 0'}}>
-                  <ListItemText align="left" primary="Class Metrics" />
-                  {this.state.openClass ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={this.state.openClass} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
-                    <List component="div" disablePadding>
-                      <ListItem button className={classes.nested}>
-                        <TreeView
-                          className={root}
-                          defaultCollapseIcon={<ExpandMoreIcon />}
-                          defaultExpandIcon={<ChevronRightIcon />}
-                        >
-                          {this.state.classTree.map((classes,index) => (
-                            <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
-                              <FormGroup>
-                                {classMetrics.map((metric) => (
-                                  <FormControlLabel
-                                    control={<Checkbox checked= {classes[metric.name]} onChange={(event) => this.handleChangeClass(event, metric.name,index)} name={metric.name} color="primary" />}
-                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                  />
-                                ))}
-                              </FormGroup>
-                            </TreeItem>
-                          ))}
-                        </TreeView>
-                      </ListItem>
-                    </List>
-                  </Paper>
-                </Collapse>
-                <ListItem button onClick={this.handleClickMethod} style = {{border: '1px solid grey', margin: '3px 0'}}>
-                  <ListItemText align="left" primary="Method Metrics" />
-                  {this.state.openMethod ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
-                  <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey'}}>
-                    <List component="div" disablePadding>
-                      <ListItem button className={classes.nested}>
-                        <TreeView
-                          className={root}
-                          defaultCollapseIcon={<ExpandMoreIcon />}
-                          defaultExpandIcon={<ChevronRightIcon />}
-                        >
-                          {this.state.classTree.map((classes) => (
-                            <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
-                              <FormGroup>
-                                {classMetrics.map((metric) => (
-                                  <FormControlLabel
-                                    control={<Checkbox onChange={(event) => this.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
-                                    label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                  />
-                                ))}
-                              </FormGroup>
-                            </TreeItem>
-                          ))}
-                        </TreeView>
-                      </ListItem>
-                    </List>
-                  </Paper>
+                <Collapse in={this.state.openMetrics} timeout="auto" unmountOnExit>
+                  <ListItem button onClick={this.handleClickProject} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                    <ListItemText align="left" primary="Project Metrics" />
+                    {this.state.openProject ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
+                    <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
+                      <FormGroup style={{ border: '1px solid grey' }}>
+                        <FormControlLabel
+                          control={<Checkbox checked={projectTloc} onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
+                          label={<span style={{ fontSize: '14px' }}>TLOC</span>}
+                        />
+                      </FormGroup>
+                    </Paper>
+                  </Collapse>
+                  <ListItem button onClick={this.handleClickPackage} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                    <ListItemText align="left" primary="Package Metrics" />
+                    {this.state.openMetrics ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
+                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
+                      <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                          <TreeView
+                            className={root}
+                            defaultCollapseIcon={<ExpandMoreIcon />}
+                            defaultExpandIcon={<ChevronRightIcon />}
+                          >
+                            {this.state.packageTree.map((packages, packageIndex) => (
+                              <TreeItem title={packages.name} nodeId={packages.id} label={<span style={{ fontSize: '16px' }}>{packages.name}</span>}>
+                                <FormGroup>
+                                  {packageMetrics.map((metric) => (
+                                    <FormControlLabel
+                                      control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.handleChangePackage(event, metric.name, packages.name, packageIndex)} name={metric.name} color="primary" />}
+                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                    />
+                                  ))}
+                                </FormGroup>
+                              </TreeItem>
+                            ))}
+                          </TreeView>
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  </Collapse>
+                  <ListItem button onClick={this.handleClickClass} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                    <ListItemText align="left" primary="Class Metrics" />
+                    {this.state.openClass ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={this.state.openClass} timeout="auto" unmountOnExit>
+                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
+                      <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                          <TreeView
+                            className={root}
+                            defaultCollapseIcon={<ExpandMoreIcon />}
+                            defaultExpandIcon={<ChevronRightIcon />}
+                          >
+                            {this.state.classTree.map((classes, index) => (
+                              <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                                <FormGroup>
+                                  {classMetrics.map((metric) => (
+                                    <FormControlLabel
+                                      control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.handleChangeClass(event, metric.name, index)} name={metric.name} color="primary" />}
+                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                    />
+                                  ))}
+                                </FormGroup>
+                              </TreeItem>
+                            ))}
+                          </TreeView>
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  </Collapse>
+                  <ListItem button onClick={this.handleClickMethod} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                    <ListItemText align="left" primary="Method Metrics" />
+                    {this.state.openMethod ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
+                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
+                      <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                          <TreeView
+                            className={root}
+                            defaultCollapseIcon={<ExpandMoreIcon />}
+                            defaultExpandIcon={<ChevronRightIcon />}
+                          >
+                            {this.state.classTree.map((classes) => (
+                              <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                                <FormGroup>
+                                  {classMetrics.map((metric) => (
+                                    <FormControlLabel
+                                      control={<Checkbox onChange={(event) => this.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
+                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
+                                    />
+                                  ))}
+                                </FormGroup>
+                              </TreeItem>
+                            ))}
+                          </TreeView>
+                        </ListItem>
+                      </List>
+                    </Paper>
+                  </Collapse>
                 </Collapse>
               </List>
-              {/* </Grid> */}
-              {/* </Grid> */}
+           
             </Grid>
           </Box>
         </div>
-        {/* <div>
-          <h1>GRÁFICO</h1> */}
+   
 
-          <div className="App" style = {{width: '80%', height: '100%'}}>
-            {console.log(this.state.data)}
-            <Chart data={this.state.data} />
-            {/* <BarChart /> */}
-          </div>
-        {/* </div> */}
+        <div className="App" style={{ width: '80%', height: '100%' }}>
+          {console.log(this.state.data)}
+          <Chart data={this.state.data} />
+     
+        </div>
       </div >
     );
   }

@@ -62,44 +62,82 @@ public class JasomeMethods {
         this.repositoryName = projectName.getName();
     }
 
-    
-
     public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist, RefusingToClean, UnknownSwitch, IsOutsideRepository {
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);
         VersionMetrics versionMetrics = new VersionMetrics();
         ProjectMetrics projectMetrics = new ProjectMetrics();
-        JasomeExtract jasomeExtract = new JasomeExtract();
+//      JasomeExtract jasomeExtract = new JasomeExtract();
+        ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
         List<Integer> idList = new ArrayList<>();
+        List<ProjectMetrics> projectNames = new ArrayList<>();
+        boolean checkProject = false;
         try {
-            int i = 0;
-            int idPosition = 0;
+//            for (int i = 0; i < projectDao.select().size(); i++) {
+//                projectNames.add(projectDao.selectID(i + 1));
+//                if (project.getName() == projectNames.get(i).getName()) {
+//                    project.setId(projectNames.get(i).getId());
+//                    checkProject = true;
+//                    break;
+//                }
+//            }
+            int i;
+            int idPosition;
             System.out.println(project.getSourceDir());
-            List<Formats> log = Git.logAll(project.getSourceDir());
-            Collections.reverse(log);
+            List<Formats> log;
             List<String> parents;
-            System.out.println(log.size());
-            System.out.println("=================REVs=======================");
 
-            ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
             int projectId = projectDao.insert(project);
             project.setId(projectId);
 
-            for (Formats revision : log) {
-                parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-                versionMetrics.setAuthorName(revision.getAuthorName());
-                versionMetrics.setCommitDate(revision.getAuthorDate());
-                versionMetrics.setHash(revision.getCommitHash());
-                versionMetrics.setParentsHash(parents);
-                int id = versionMetricsDao.insert(versionMetrics);
-                idList.add(id);
-            }
+//            if (checkProject == false) {
+                i = 0;
+                idPosition = 0;
+                log = Git.logAll(project.getSourceDir());
+                Collections.reverse(log);
+                System.out.println(log.size());
+                System.out.println("=================REVs=======================");
 
-            for (Formats revision : log) {
-                parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-                projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
-                System.out.println(new Date());
-                idPosition++;
-            }
+                for (Formats revision : log) {
+                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                    versionMetrics.setAuthorName(revision.getAuthorName());
+                    versionMetrics.setCommitDate(revision.getAuthorDate());
+                    versionMetrics.setHash(revision.getCommitHash());
+                    versionMetrics.setParentsHash(parents);
+                    int id = versionMetricsDao.insert(versionMetrics);
+                    idList.add(id);
+                }
+
+                for (Formats revision : log) {
+                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
+                    System.out.println(new Date());
+                    idPosition++;
+                }
+//            } else if (checkProject == true) {
+//                i = 0;
+//                idPosition = 0;
+//                log = Git.logAll(project.getSourceDir());
+//                Collections.reverse(log);
+//                System.out.println(log.size());
+//                System.out.println("=================REVs=======================");
+//                
+//                String hash = projectDao.searchVersion(project.getId());
+//                boolean checkHash = false;
+//
+//                for (Formats revision : log) {
+//                    if(hash == revision.getCommitHash()){
+//                        checkHash = true;
+//                    }
+//                    
+//                    if(checkHash == true){
+//                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+//                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
+//                    System.out.println(new Date());
+//                    idPosition++;
+//                    }
+//                }
+//
+//            }
         } catch (NullPointerException ex) {
             System.out.println("Fim do arquivo");
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -113,7 +151,7 @@ public class JasomeMethods {
 
     public ProjectMetrics analyzeVersion(Formats revision, ProjectMetrics project, int i, Connection connection, List<String> parents, int idPosition) throws IOException, InvalidDocument, RefusingToClean, LocalRepositoryNotAGitRepository, UnknownSwitch, IsOutsideRepository, CheckoutError {
         ProjectMetrics projectMetrics = new ProjectMetrics();
-        JasomeExtract jasomeExtract = new JasomeExtract();
+//        JasomeExtract jasomeExtract = new JasomeExtract();
         System.out.println("======================" + revision.getCommitHash() + "==================");
         Git.clean(project.getSourceDir(), true, 3);
         Git.reset(project.getSourceDir(), true, false, false, null);
@@ -125,9 +163,6 @@ public class JasomeMethods {
         ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision, parents, idPosition);
         readXml.fazerParsing(extractMetrics.getOutputString());
         projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
-        if (extractMetrics.getError() != null && !extractMetrics.getError().isEmpty()) {
-            projectMetrics.getListVersionMetrics().get(i).setError(true);
-        }
         try {
             //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
             //    System.out.println("temos um erro nesta versão");
@@ -144,28 +179,27 @@ public class JasomeMethods {
         return projectMetrics;
     }
 
-    public void listJavaArchives(String repositoryPath, File directory, List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
-        try {
-            int k = 0;
-            ProjectMetrics projectMetrics = new ProjectMetrics();
-            if (directory.isDirectory()) {
-                String[] subDirectory = directory.list();
-                if (subDirectory != null) {
-                    for (String dir : subDirectory) {
-                        listJavaArchives(repositoryPath, new File(directory + File.separator + dir), archiveTypes);
-                    }
-                }
-
-            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith("." + archiveTypes.get(0))) {
-                getFileNames().add(directory.getName().toString());
-                pathNames.add(directory.getAbsoluteFile().toString());
-                System.out.println("adicionando arquivo: " + directory.getName());
-            }
-        } catch (NullPointerException ex) {
-            System.out.println("Fim do arquivo");
-        }
-    }
-
+//    public void listJavaArchives(String repositoryPath, File directory, List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
+//        try {
+//            int k = 0;
+//            ProjectMetrics projectMetrics = new ProjectMetrics();
+//            if (directory.isDirectory()) {
+//                String[] subDirectory = directory.list();
+//                if (subDirectory != null) {
+//                    for (String dir : subDirectory) {
+//                        listJavaArchives(repositoryPath, new File(directory + File.separator + dir), archiveTypes);
+//                    }
+//                }
+//
+//            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith("." + archiveTypes.get(0))) {
+//                getFileNames().add(directory.getName().toString());
+//                pathNames.add(directory.getAbsoluteFile().toString());
+//                System.out.println("adicionando arquivo: " + directory.getName());
+//            }
+//        } catch (NullPointerException ex) {
+//            System.out.println("Fim do arquivo");
+//        }
+//    }
     public void javaArchivesCount() {
         System.out.println("");
         System.out.println("número de arquivos: " + getFileNames().size());

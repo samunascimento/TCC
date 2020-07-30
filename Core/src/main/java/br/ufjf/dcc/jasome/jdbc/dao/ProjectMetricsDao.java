@@ -158,4 +158,34 @@ public class ProjectMetricsDao {
             }
         }
     }
+
+    public String searchVersion(int id) throws SQLException {
+        String sql = "select a.analyzed, a.id , a.Sha, b.project_id, b.version_id\n"
+                + "                from tb_versionmetrics as a\n"
+                + "                inner join tb_project_version as b\n"
+                + "                on a.id = b.version_id \n"
+                + "                where b.project_id = " + id + "\n"
+                + "		order by id";
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {             
+                if(resultSet.getBoolean("analyzed") != true){
+                    return resultSet.getString("sha");
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }
