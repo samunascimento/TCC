@@ -4,19 +4,19 @@ import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodCallBinding extends BaseBinding{
+public class MethodCallBinding extends BaseBinding {
 
     private List<TypeBinding> parameters;
     private TypeBinding typeBinding;
     private JavaParser.MethodCallContext ctx;
 
     public MethodCallBinding() {
-        
+
         super();
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
         this.ctx = null;
-               
+
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb) {
@@ -29,17 +29,19 @@ public class MethodCallBinding extends BaseBinding{
         String output = "";
 
         output = output.concat(this.getName()).concat("(");
-        
+
+        /**
+         * TODO: parameter.getName() is null for System.out.println
+         */
         for (int i = 0; i < parameters.size(); i++) {
-            if(i < parameters.size()-1){
-                output = output.concat(parameters.get(i).getName() + ",");
-            }else{
-                try {
+            if (parameters.get(i).getName() != null) {
+                if (i < parameters.size() - 1) {
+                    output = output.concat(parameters.get(i).getName() + ",");
+                } else {
                     output = output.concat(parameters.get(i).getName());
-                } catch (Exception e) {
-                    System.out.println("erro");
                 }
-                
+            }else{
+                System.out.println("");
             }
         }
         output = output.concat(")");
@@ -49,7 +51,7 @@ public class MethodCallBinding extends BaseBinding{
 
         return output;
     }
-    
+
     /**
      * @param ctx the ctx to set
      */
@@ -85,5 +87,4 @@ public class MethodCallBinding extends BaseBinding{
         this.typeBinding = typeBinding;
     }
 
-  
 }

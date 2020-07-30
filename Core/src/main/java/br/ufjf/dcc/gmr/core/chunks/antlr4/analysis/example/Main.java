@@ -1,15 +1,8 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JCheckBox;
 
 public class Main {
 
@@ -41,20 +34,20 @@ public class Main {
     public static void main(String[] args) {
 
         List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        for(int k = 0; k < javaFiles.size(); k++){
+            String javaFile = javaFiles.get(k);
+            System.out.println(k);
+        }
+        
         for (String javaFile : javaFiles) {
             System.out.println(javaFile);
         }
         
-        byte b = 5;
-        short s = 5;
-        int i = 5;
-        long l = 5;
-        
-        /*Main main = new Main("Office", "Felippe", 23);
+        Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
         person.setName("name of a person");
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
-        employeeExtends.setName("name of a employeeExtends");//
+        employeeExtends.setName("name of a employeeExtends");
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
@@ -91,7 +84,7 @@ public class Main {
         person.getAdress().getCity();
         employee.getAdress().getCity();
 
-        System.out.println(employeeExtends.getAdress().getCity());//*/
+        System.out.println(employeeExtends.getAdress().getCity());
     }
 
     /**

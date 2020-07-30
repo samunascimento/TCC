@@ -28,6 +28,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDirective(CPP14Parser.DirectiveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDirective(CPP14Parser.DirectiveContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPrimaryexpression(CPP14Parser.PrimaryexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -208,6 +220,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayaccess(CPP14Parser.ArrayaccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayaccess(CPP14Parser.ArrayaccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTypeidofexpr(CPP14Parser.TypeidofexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -383,6 +419,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCastexpression(CPP14Parser.CastexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -616,6 +664,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCaseexpression(CPP14Parser.CaseexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCaseexpression(CPP14Parser.CaseexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpressionstatement(CPP14Parser.ExpressionstatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -664,6 +724,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIfexpression(CPP14Parser.IfexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfexpression(CPP14Parser.IfexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSwitchexpression(CPP14Parser.SwitchexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSwitchexpression(CPP14Parser.SwitchexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCondition(CPP14Parser.ConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -683,6 +767,54 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIterationstatement(CPP14Parser.IterationstatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDostatement(CPP14Parser.DostatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDostatement(CPP14Parser.DostatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWhileexpression(CPP14Parser.WhileexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileexpression(CPP14Parser.WhileexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBasicforexpression(CPP14Parser.BasicforexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBasicforexpression(CPP14Parser.BasicforexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -736,6 +868,42 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBreakstatement(CPP14Parser.BreakstatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBreakstatement(CPP14Parser.BreakstatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterContinuestatement(CPP14Parser.ContinuestatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitContinuestatement(CPP14Parser.ContinuestatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReturnstatement(CPP14Parser.ReturnstatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnstatement(CPP14Parser.ReturnstatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDeclarationstatement(CPP14Parser.DeclarationstatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -767,6 +935,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeclaration(CPP14Parser.DeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1480,6 +1660,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParametersandqualifiers(CPP14Parser.ParametersandqualifiersContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1679,6 +1871,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionhead(CPP14Parser.FunctionheadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionhead(CPP14Parser.FunctionheadContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2260,6 +2464,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTryblockexpression(CPP14Parser.TryblockexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTryblockexpression(CPP14Parser.TryblockexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterHandlerseq(CPP14Parser.HandlerseqContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -2279,6 +2507,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitHandler(CPP14Parser.HandlerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCatchexpression(CPP14Parser.CatchexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCatchexpression(CPP14Parser.CatchexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

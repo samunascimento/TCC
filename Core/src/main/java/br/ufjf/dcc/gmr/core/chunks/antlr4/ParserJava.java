@@ -5,25 +5,15 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.MyVisitor;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import static java.awt.Frame.*;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
@@ -37,7 +27,6 @@ public class ParserJava {
     private static boolean reachedEnd = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
         List<List> pathAndOpenViewList = view();
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
@@ -56,12 +45,11 @@ public class ParserJava {
                 }
                 i++;
             }
-
             i = 0;
             j++;
         }
 
-        System.out.println("+=+=+=+=+=+=+GlobalEnviroment Types+=+=+=+=+=+=+");
+        System.out.println("***************GlobalEnviromentTypes***************");
         Map<String, TypeBinding> enviroment = asts.get(asts.size() - 1).getGlobalEnviroment().getEnviroment();
         for (TypeBinding value : enviroment.values()) {
             System.out.println(value);
@@ -70,33 +58,33 @@ public class ParserJava {
 
     private static void compare(MyVisitor AST1, MyVisitor AST2) {
 
-        System.out.println("=============MethodDeclarationAST1=============");
+        System.out.println("***************MethodDeclarationAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
         }
 
-        System.out.println("=============MethodCallAST1=============");
+        System.out.println("***************MethodCallAST1***************");
         for (MethodCallBinding methodCallBinding : AST1.getMethodCallBiding()) {
             System.out.println(methodCallBinding);
         }
 
-        System.out.println("=============MethodDeclarationAST2=============");
+        System.out.println("***************MethodDeclarationAST2***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodDeclarationBinding()) {
             System.out.println(methodDeclarationBinding);
         }
 
-        System.out.println("=============MethodCallAST2=============");
+        System.out.println("***************MethodCallAST2***************");
         for (MethodCallBinding methodCallBinding : AST2.getMethodCallBiding()) {
             System.out.println(methodCallBinding);
         }
 
-        System.out.println("=============Dependencies=============");
-        System.out.println("============= AST1 --> AST2 =============");
+        System.out.println("***************Dependencies***************");
+        System.out.println("--------------AST1 --> AST2--------------");
         Dependencies.methodDeclarationCallList(AST1.getMethodDeclarationBinding(), AST2.getMethodCallBiding());
-        System.out.println("============= AST2 --> AST1 =============");
+        System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getMethodDeclarationBinding(), AST1.getMethodCallBiding());
 
-        System.out.println("=============Variables=============");
+        System.out.println("***************Variables***************");
         for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
             System.out.println(variableBinding.toString());
         }
@@ -123,6 +111,8 @@ public class ParserJava {
 
         JPanel panel = new JPanel(new BorderLayout());
 
+        JPanel checkBoxPanel = new JPanel();
+
         JFrame mainFrame = new JFrame();
         mainFrame.add(panel);
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
@@ -134,33 +124,29 @@ public class ParserJava {
 
         closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setLayout(new ScrollPaneLayout());
-        scrollPane.setPreferredSize(new Dimension(1920, 1080));
-        scrollPane.setBackground(Color.red);
+        JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF\\Core\\src\\main\\java\\br\\ufjf\\dcc\\gmr\\core\\chunks\\antlr4\\analysis\\example");
+        int i = 0;
         for (String javaFile : javaFiles) {
-            JCheckBox checkBox = new JCheckBox(javaFile);
+            JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
+            checkBoxPanel.add(checkBox);
             list.add(checkBox);
+            i++;
         }
-        
+        checkBoxPanel.setLayout(new GridLayout(list.size(), 1));
         mainFrame.setLayout(new GridLayout());
-        for (JCheckBox checkBox : list) {
-            scrollPane.add(checkBox);
-        }
 
-        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(scrollPane);
         panel.add(closeButton, BorderLayout.SOUTH);
 
         returnList.add(booleanReturnList);
         returnList.add(javaFiles);
 
+        mainFrame.setVisible(true);
         while (ParserJava.reachedEnd == false) {
             Thread.sleep(1000);
         }
-        mainFrame.setVisible(true);
-        ParserJava.reachedEnd = false;
         return returnList;
     }
 
@@ -168,13 +154,13 @@ public class ParserJava {
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-
+        
         JavaParser parser = new JavaParser(tokens);
         ParseTree tree = parser.compilationUnit();
 
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
         viewer.setSize(new Dimension(500, 600));
-
+        
         if (openTree) {
             viewer.open();
         }

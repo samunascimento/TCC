@@ -21,7 +21,7 @@ public class PackageMetrics {
     Metric pkgRCi;
     Metric pkgTCi;
     Metric tloc;
-    
+     
     private int id;
     
     private int versionId;

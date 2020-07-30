@@ -5,10 +5,6 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
-/**
- *
- * @author icout
- */
 public class Adress {
     private String state;
     private String city;

@@ -18,6 +18,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitTranslationunit(CPP14Parser.TranslationunitContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void enterDirective(CPP14Parser.DirectiveContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 */
+	void exitDirective(CPP14Parser.DirectiveContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#primaryexpression}.
 	 * @param ctx the parse tree
 	 */
@@ -168,6 +178,26 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitPostfixexpression(CPP14Parser.PostfixexpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#arrayaccess}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayaccess(CPP14Parser.ArrayaccessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#arrayaccess}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayaccess(CPP14Parser.ArrayaccessContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#functioninvocation}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#functioninvocation}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#typeidofexpr}.
 	 * @param ctx the parse tree
 	 */
@@ -317,6 +347,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCastexpression(CPP14Parser.CastexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#realcastexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterRealcastexpression(CPP14Parser.RealcastexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#realcastexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#pmexpression}.
 	 * @param ctx the parse tree
@@ -508,6 +548,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitLabeledstatement(CPP14Parser.LabeledstatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#caseexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCaseexpression(CPP14Parser.CaseexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#caseexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCaseexpression(CPP14Parser.CaseexpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#expressionstatement}.
 	 * @param ctx the parse tree
 	 */
@@ -548,6 +598,26 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitSelectionstatement(CPP14Parser.SelectionstatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#ifexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfexpression(CPP14Parser.IfexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#ifexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfexpression(CPP14Parser.IfexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#switchexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitchexpression(CPP14Parser.SwitchexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#switchexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitchexpression(CPP14Parser.SwitchexpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#condition}.
 	 * @param ctx the parse tree
 	 */
@@ -567,6 +637,46 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIterationstatement(CPP14Parser.IterationstatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#dostatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterDostatement(CPP14Parser.DostatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#dostatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitDostatement(CPP14Parser.DostatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#whileexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileexpression(CPP14Parser.WhileexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#whileexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileexpression(CPP14Parser.WhileexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#basicforexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBasicforexpression(CPP14Parser.BasicforexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#basicforexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBasicforexpression(CPP14Parser.BasicforexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#enhancedforexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#enhancedforexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#forinitstatement}.
 	 * @param ctx the parse tree
@@ -608,6 +718,36 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitJumpstatement(CPP14Parser.JumpstatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#breakstatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBreakstatement(CPP14Parser.BreakstatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#breakstatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBreakstatement(CPP14Parser.BreakstatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#continuestatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinuestatement(CPP14Parser.ContinuestatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#continuestatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinuestatement(CPP14Parser.ContinuestatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#returnstatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnstatement(CPP14Parser.ReturnstatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#returnstatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnstatement(CPP14Parser.ReturnstatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#declarationstatement}.
 	 * @param ctx the parse tree
 	 */
@@ -637,6 +777,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeclaration(CPP14Parser.DeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#includedeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#includedeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#blockdeclaration}.
 	 * @param ctx the parse tree
@@ -1228,6 +1378,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#arraydeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterArraydeclaration(CPP14Parser.ArraydeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#arraydeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#parametersandqualifiers}.
 	 * @param ctx the parse tree
 	 */
@@ -1397,6 +1557,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#functionhead}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionhead(CPP14Parser.FunctionheadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#functionhead}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionhead(CPP14Parser.FunctionheadContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#functionbody}.
 	 * @param ctx the parse tree
@@ -1878,6 +2048,26 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitFunctiontryblock(CPP14Parser.FunctiontryblockContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#tryblockexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTryblockexpression(CPP14Parser.TryblockexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#tryblockexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTryblockexpression(CPP14Parser.TryblockexpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#functiontryblockexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#functiontryblockexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#handlerseq}.
 	 * @param ctx the parse tree
 	 */
@@ -1897,6 +2087,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitHandler(CPP14Parser.HandlerContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#catchexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterCatchexpression(CPP14Parser.CatchexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#catchexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitCatchexpression(CPP14Parser.CatchexpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#exceptiondeclaration}.
 	 * @param ctx the parse tree
