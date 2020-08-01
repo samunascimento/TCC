@@ -9,6 +9,7 @@ public class TypeBinding extends BaseBinding {
     private List<String> imports;
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
+    //TODO: change to list 
     private String modifier;
     private PackageBinding packageBinding;
 
