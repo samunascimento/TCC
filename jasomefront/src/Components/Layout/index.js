@@ -7,10 +7,16 @@ import {
 import { withStyles } from '@material-ui/core/styles'
 import { Menu } from '@material-ui/icons'
 import { compose } from 'recompose'
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 const drawerWidth = 240
 
 const styles = theme => ({
+
+  openProject: false,
+
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -37,16 +43,22 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
+    padding: theme.spacing(0),
   },
   nested: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
   },
 })
 
 class Layout extends Component {
   state = {
-    mobileOpen: false
+    mobileOpen: false,
+    to: null,
+  }
+
+  handleClickProject = () => {
+    const openProject = !this.state.openProject
+    this.setState({ openProject })
   }
 
   handleDrawerToggle = () => {
@@ -63,35 +75,38 @@ class Layout extends Component {
           <div className={classes.toolbar} />
         </Hidden>
         <MenuList>
-          <MenuItem component={Link} to="/" selected={'/' === pathname}>
+          <MenuItem component={Link} to="/" selected={'/' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
             Home
           </MenuItem>
-          <MenuItem component={Link} to="/metric" selected={'/metric' === pathname}>
+          <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
             Metric
           </MenuItem>
-          <MenuItem component={Link} to="/projects" selected={'/projects' === pathname}>
+          <MenuItem onClick={this.handleClickProject} component={Link} to="/projects" selected={'/projects' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
             Projects
+            {this.state.openProject ? <ExpandLess/> : <ExpandMore/>}
           </MenuItem>
-          <MenuList>
-            {projects.map(({ id, name }) => {
-              const to = `/projects/${id}`
-              return <MenuItem
-                to={to}
-                key={id}
-                className={classes.nested}
-                component={Link}
-                selected={to === pathname}
-              >
-                {name}
-              </MenuItem>
-            })}
-          </MenuList>
+          <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
+            <MenuList>
+              {projects.map(({ id, name }) => {
+                const to = `/projects/${id}`
+                return <MenuItem
+                  to={to}
+                  key={id}
+                  className={classes.nested}
+                  component={Link}
+                  selected={to === pathname}
+                >
+                  {name}
+                </MenuItem>
+              })}
+            </MenuList>
+          </Collapse>
         </MenuList>
       </div>
     )
 
     return <Fragment>
-      <CssBaseline/>
+      <CssBaseline />
 
       <div className={classes.root}>
         <AppBar position="absolute" className={classes.appBar}>

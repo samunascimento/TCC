@@ -356,7 +356,7 @@ export default class Project extends Component {
             p={1}
             m={1}
             bgcolor="background.paper"
-            style={{ border: '2px groove black', borderRadius: '5px' }}
+            style={{ border: '2px groove black', borderRadius: '5px', marginLeft:'16px', marginRight: '0'}}
           >
             <Grid item xs={12}>
               <List component="nav"
@@ -385,7 +385,7 @@ export default class Project extends Component {
                   </Collapse>
                   <ListItem button onClick={this.handleClickPackage} style={{ border: '1px solid grey', margin: '3px 0' }}>
                     <ListItemText align="left" primary="Package Metrics" />
-                    {this.state.openMetrics ? <ExpandLess /> : <ExpandMore />}
+                    {this.state.openPackage ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
                   <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
                     <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
