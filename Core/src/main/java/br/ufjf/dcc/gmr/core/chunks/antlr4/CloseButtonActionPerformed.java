@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;

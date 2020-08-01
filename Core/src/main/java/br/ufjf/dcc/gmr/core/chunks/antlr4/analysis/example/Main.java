@@ -38,7 +38,7 @@ public class Main {
             String javaFile = javaFiles.get(k);
             System.out.println(k);
         }
-        
+
         for (String javaFile : javaFiles) {
             System.out.println(javaFile);
         }

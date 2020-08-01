@@ -11,16 +11,22 @@ public class EnviromentBinding {
         this.enviroment = new ArrayList<>();
     }
     
+    
     public VariableBinding findVariable(VariableBinding variable){
         
-        for (List<BaseBinding> list : enviroment) {
-            for (BaseBinding baseBinding : list) {
-                if(baseBinding.getName().equals(variable.getName())){
-                    return variable;
+        for (int i = this.enviroment.size() - 1; i >= 0 ; i--) {
+            for (BaseBinding baseBinding : enviroment.get(i)) {
+                if (baseBinding instanceof VariableBinding) {
+                    VariableBinding variableBinding = (VariableBinding) baseBinding;
+                    if (variableBinding.getName().equals(variable.getName())) {
+                        return variableBinding;
+                    }
                 }
             }
         }
+        
         return null;
+
     }
     
     public MethodCallBinding findMethodCall(MethodCallBinding find){

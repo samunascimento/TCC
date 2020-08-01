@@ -371,7 +371,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
 
-        if (!this.secondAnalysis) {
+        if (!this.firstAnalysis) {
             return super.visitLocalVariableDeclaration(ctx);
         }
 
@@ -381,11 +381,13 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
          * dealing with reference type
          */
         if (ctx.typeType().classOrInterfaceType() != null) {
+            //Fill typeBindingList with correct types
             for (TypeBinding typeBinding1 : this.typeBindingList) {
                 if (ctx.typeType().classOrInterfaceType().getText().equals(typeBinding1.getName())) {
                     typeBinding = typeBinding1;
                 }
             }
+            //TODO: Create external type
         } /**
          * dealing with primitive type
          */
@@ -402,8 +404,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                 VariableBinding variableDeclarationBinding = new VariableBinding();
                 variableDeclarationBinding.setName(name);
                 variableDeclarationBinding.setType(typeBinding);
-                
-                
+
                 if (this.methodDeclaration) {
                     EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
                     List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
@@ -426,7 +427,10 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     public Object visitBlock(JavaParser.BlockContext ctx) {
         //log(ctx);
         List<BaseBinding> bindings = new ArrayList<>();
+        
+        String text = ctx.getText();
 
+        
         if (this.methodDeclaration) {
             this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
         }
@@ -727,6 +731,9 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
 
+        List<TypeBinding> parameters = new ArrayList<>();
+        TypeBinding methodType = this.typeBinding;
+
         this.methodDeclaration = true;
 
         if (!this.firstAnalysis) {
@@ -735,50 +742,16 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             return visitMethodDeclaration;
         }
 
-        List<TypeBinding> parameters = new ArrayList<>();
-        TypeBinding methodType = this.typeBinding;
-        mdbGeneral = new MethodDeclarationBinding();
-        //mdbGeneral.setPackageBinding(packageBinding);
         methodType.setPackageBinding(packageBinding);
+
+        mdbGeneral = new MethodDeclarationBinding();
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
-        if (ctx.IDENTIFIER().getText().equals("main")) {
-            System.out.println("");
-        }
         mdbGeneral.setCtx(ctx);
 
-        ParserRuleContext memberDeclaration = ctx.getParent();
-        ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
+        List<Modifiers> modifiers = extractModifier(ctx);
+        mdbGeneral.setModifier(modifiers);
 
-        for (ParseTree parseTree : classBodyDeclaration.children) {
-            if (parseTree instanceof JavaParser.ModifierContext) {
-                if (parseTree.getText().equals("public")) {
-                    mdbGeneral.getModifier().add(Modifiers.PUBLIC);
-                } else if (parseTree.getText().equals("private")) {
-                    mdbGeneral.getModifier().add(Modifiers.PRIVATE);
-                } else if (parseTree.getText().equals("protected")) {
-                    mdbGeneral.getModifier().add(Modifiers.PROTECTED);
-                } else if (parseTree.getText().equals("static")) {
-                    mdbGeneral.getModifier().add(Modifiers.STATIC);
-                } else if (parseTree.getText().equals("abstract")) {
-                    mdbGeneral.getModifier().add(Modifiers.ABSTRACT);
-                } else if (parseTree.getText().equals("final")) {
-                    mdbGeneral.getModifier().add(Modifiers.FINAL);
-                } else if (parseTree.getText().equals("strictfp")) {
-                    mdbGeneral.getModifier().add(Modifiers.STRICTFP);
-                } else if (parseTree.getText().equals("native")) {
-                    mdbGeneral.getModifier().add(Modifiers.NATIVE);
-                } else if (parseTree.getText().equals("synchronized")) {
-                    mdbGeneral.getModifier().add(Modifiers.SYNCHRONIZED);
-                } else if (parseTree.getText().equals("transient")) {
-                    mdbGeneral.getModifier().add(Modifiers.TRANSIENT);
-                } else if (parseTree.getText().equals("volatile")) {
-                    mdbGeneral.getModifier().add(Modifiers.VOLATILE);
-                } else if (parseTree.getText().equals("annotation")) {
-                    mdbGeneral.getModifier().add(Modifiers.ANNOTATION);
-                }
-            }
-        }
-
+        //Getting return type
         JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
         if (ctx.typeTypeOrVoid().typeType() == null) {
             methodType.setName("void");
@@ -788,6 +761,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
             methodType.setName(ctx.typeTypeOrVoid().typeType().classOrInterfaceType().getText());
         }
 
+        //Getting parameters
         JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
         if (ctx.formalParameters().formalParameterList() != null) {
             for (ParseTree parseTree : formalParameters.children) {
@@ -799,7 +773,10 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
                     } else if (aux.typeType().primitiveType() != null) {
                         parameter.setName(aux.typeType().primitiveType().getText());
                     }
+                    
+                    //TODO: change to use the parameter's package
                     parameter.setPackageBinding(packageBinding);
+                    
                     parameters.add(parameter);
                 }
             }
@@ -814,6 +791,45 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         this.methodDeclaration = false;
         return visitMethodDeclaration;
+    }
+
+    private List<Modifiers> extractModifier(JavaParser.MethodDeclarationContext ctx) {
+        List<Modifiers> result = new ArrayList<>();
+
+        ParserRuleContext memberDeclaration = ctx.getParent();
+        ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
+
+        for (ParseTree parseTree : classBodyDeclaration.children) {
+            if (parseTree instanceof JavaParser.ModifierContext) {
+                if (parseTree.getText().equals("public")) {
+                    result.add(Modifiers.PUBLIC);
+                } else if (parseTree.getText().equals("private")) {
+                    result.add(Modifiers.PRIVATE);
+                } else if (parseTree.getText().equals("protected")) {
+                    result.add(Modifiers.PROTECTED);
+                } else if (parseTree.getText().equals("static")) {
+                    result.add(Modifiers.STATIC);
+                } else if (parseTree.getText().equals("abstract")) {
+                    result.add(Modifiers.ABSTRACT);
+                } else if (parseTree.getText().equals("final")) {
+                    result.add(Modifiers.FINAL);
+                } else if (parseTree.getText().equals("strictfp")) {
+                    result.add(Modifiers.STRICTFP);
+                } else if (parseTree.getText().equals("native")) {
+                    result.add(Modifiers.NATIVE);
+                } else if (parseTree.getText().equals("synchronized")) {
+                    result.add(Modifiers.SYNCHRONIZED);
+                } else if (parseTree.getText().equals("transient")) {
+                    result.add(Modifiers.TRANSIENT);
+                } else if (parseTree.getText().equals("volatile")) {
+                    result.add(Modifiers.VOLATILE);
+                } else if (parseTree.getText().equals("annotation")) {
+                    result.add(Modifiers.ANNOTATION);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
