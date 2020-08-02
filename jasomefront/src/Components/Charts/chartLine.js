@@ -49,6 +49,30 @@ import { PropTypes } from 'prop-types';
 // ]
 //   // find maxima for normalizing data
 
+
+function aleatorio(inferior,superior){
+  let numPossibilidades = superior - inferior
+  let aleat = Math.random() * numPossibilidades
+  aleat = Math.floor(aleat)
+  return parseInt(inferior) + aleat
+}
+
+function gerarCor(){
+  let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+  let cor_aleatoria = "#";
+  for (let i=0;i<6;i++){
+     let posarray = aleatorio(0,hexadecimal.length)
+     cor_aleatoria += hexadecimal[posarray]
+  }
+  return cor_aleatoria
+}
+
+const colors = [];
+
+for (let index = 0; index < 200; index++) {
+  colors[index] = gerarCor()
+}
+
 class ChartLine extends Component {
 
   constructor(props) {
@@ -84,28 +108,26 @@ class ChartLine extends Component {
     // Uso típico, (não esqueça de comparar as props):
     if (this.props.data !== prevState.data) {
       this.setState({ data: this.props.data })
-      this.setState({ cont: this.state.cont + 1 })
-      this.setState({ metric: true })
       console.log(this.state.data)
     }
   }
 
-  aleatorio(inferior,superior){
-    let numPossibilidades = superior - inferior
-    let aleat = Math.random() * numPossibilidades
-    aleat = Math.floor(aleat)
-    return parseInt(inferior) + aleat
- }
+//   aleatorio(inferior,superior){
+//     let numPossibilidades = superior - inferior
+//     let aleat = Math.random() * numPossibilidades
+//     aleat = Math.floor(aleat)
+//     return parseInt(inferior) + aleat
+//  }
 
-  gerarCor(){
-    let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
-    let cor_aleatoria = "#";
-    for (let i=0;i<6;i++){
-       let posarray = this.aleatorio(0,hexadecimal.length)
-       cor_aleatoria += hexadecimal[posarray]
-    }
-    return cor_aleatoria
- }
+//   gerarCor(){
+//     let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+//     let cor_aleatoria = "#";
+//     for (let i=0;i<6;i++){
+//        let posarray = this.aleatorio(0,hexadecimal.length)
+//        cor_aleatoria += hexadecimal[posarray]
+//     }
+//     return cor_aleatoria
+//  }
 
 
   handleZoom(domain) {
@@ -149,7 +171,7 @@ class ChartLine extends Component {
               }
               style={{
                 data: {
-                  stroke: this.gerarCor(),
+                  stroke: colors[i]
                 }
               }}
           //     containerComponent={
