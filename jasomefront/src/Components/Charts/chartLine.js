@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { VictoryChart, VictoryZoomContainer, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryTheme } from 'victory'
+import {
+          VictoryChart,
+          VictoryZoomContainer,
+          VictoryLine,
+          VictoryBrushContainer,
+          VictoryAxis,
+          VictoryTheme,
+          VictoryTooltip,
+          VictoryVoronoiContainer } from 'victory'
 
 import { PropTypes } from 'prop-types';
 /*
@@ -47,24 +55,29 @@ class ChartLine extends Component {
     super(props);
     this.state = {
       data: this.props.data,
+      zoomDomain: { x: [0, this.props.data.map(
+        (dataset) => Math.max(...dataset.map((d) => d.x))
+      )]},
       // data:[
       //   [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }],
       //   [{ x: 1, y: 400 }, { x: 2, y: 350 }, { x: 3, y: 300 }, { x: 4, y: 250 }],
       //   [{ x: 1, y: 75 }, { x: 2, y: 85 }, { x: 3, y: 95 }, { x: 4, y: 100 }]
       // ],
-      metric: false
+      metric: false,
+      maximaY : this.props.data.map(
+        (dataset) => Math.max(...dataset.map((d) => d.y))
+      ),
+      maximaX : this.props.data.map(
+        (dataset) => Math.max(...dataset.map((d) => d.x))
+      )
     };
 
     console.log(this.state.data)
 
-
-    this.maxima = this.state.data.map(
-      (dataset) => Math.max(...dataset.map((d) => d.y))
-    )
-    this.xOffsets = [50, 200, 350];
-    this.tickPadding = [0, 0, -15];
-    this.anchors = ["end", "end", "start"];
-    this.colors = ["black", "red", "blue", "orange"];
+    // this.xOffsets = [50, 200, 350];
+    // this.tickPadding = [0, 0, -15];
+    // this.anchors = ["end", "end", "start"];
+    // this.colors = ["black", "red", "blue", "orange"];
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -79,41 +92,91 @@ class ChartLine extends Component {
 
 
   handleZoom(domain) {
-    this.setState({ selectedDomain: domain });
-  }
-
-  handleBrush(domain) {
     this.setState({ zoomDomain: domain });
   }
 
+  // handleBrush(domain) {
+  //   this.setState({ zoomDomain: domain });
+  // }
+
   render() {
     return (
-      // <div style = {{width: '75%'}}>
+      <div>
         <VictoryChart
           //domain={{ x: [0,800], y: [0, 100] }}
           theme={VictoryTheme.material}
           width={1350} height={850}
-          containerComponent=
-          {
+          // containerComponent=
+          // {
+          //   <VictoryVoronoiContainer/>
+          // }
+          containerComponent={
             <VictoryZoomContainer
+              //zoomDimension="x"
+              zoomDomain={this.state.zoomDomain} //add
               responsive={true}
-              zoomDomain={{ x: [0, 8], y: [0, 500] }} />
+              onZoomDomainChange={this.handleZoom.bind(this)} //add
+              //zoomDomain={{ x: [0, 8], y: [0, 500] }} //removido
+              />
           }
         >
           {this.state.data.map((d, i) => (
             <VictoryLine
               key={i}
               data={d}
+              labels={({ datum }) => datum.y}
+              labelComponent={
+                <VictoryTooltip
+                  style={{ fontSize: 10 }}
+                />
+              }
+          //     containerComponent={
+          //   <VictoryZoomContainer
+          //     responsive={true}
+          //     zoomDomain={{ x: [0, 8], y: [0, 500] }} />
+          // }
               style={{
-                // data: { stroke: this.state.colors[i] },
-                parent: { border: "1px solid #ccc" }
+                //data: { stroke: this.state.colors[i] },
+                // parent: { border: "1px solid #ccc" }
 
               }}
             >
             </VictoryLine>
           ))}
         </VictoryChart>
-      // </div>
+
+        {/* Mini gráfico */}
+        <VictoryChart
+        padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+        width={600} height={100} //scale={{ x: "time" }}
+        containerComponent={
+          <VictoryBrushContainer
+            brushDimension="x"
+            brushDomain={this.state.zoomDomain}
+            onBrushDomainChange={this.handleZoom.bind(this)}
+          />
+        }
+        >
+        <VictoryAxis
+          tickFormat={[0,this.state.maximaX]}
+        />
+        {this.state.data.map((d, i) => (
+            <VictoryLine
+              key={i}
+              data={d}
+              labels={({ datum }) => datum.y}
+              labelComponent={
+                <VictoryTooltip
+                  style={{ fontSize: 10 }}
+                />
+              }
+            >
+            </VictoryLine>
+          ))}
+        </VictoryChart>
+
+      
+      </div>
     );
   }
 }
