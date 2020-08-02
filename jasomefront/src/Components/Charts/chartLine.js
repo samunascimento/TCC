@@ -7,17 +7,11 @@ import {
           VictoryAxis,
           VictoryTheme,
           VictoryTooltip,
-          VictoryVoronoiContainer } from 'victory'
+          VictoryVoronoiContainer,
+          createContainer,
+          VictoryScatter } from 'victory'
 
 import { PropTypes } from 'prop-types';
-/*
-  Line 21:12:  'VictoryChart' is not defined           react/jsx-no-undef
-  Line 26:16:  'VictoryZoomContainer' is not defined   react/jsx-no-undef
-  Line 33:14:  'VictoryLine' is not defined            react/jsx-no-undef
-  Line 51:12:  'VictoryChart' is not defined           react/jsx-no-undef
-  Line 57:16:  'VictoryBrushContainer' is not defined  react/jsx-no-undef
-  Line 64:14:  'VictoryAxis' is not defined            react/jsx-no-undef
-  Line 76:14:  'VictoryLine' is not defined            react/jsx-no-undef*/
 
 // const data = [
 //   [
@@ -73,6 +67,10 @@ for (let index = 0; index < 200; index++) {
   colors[index] = gerarCor()
 }
 
+const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+
+
+
 class ChartLine extends Component {
 
   constructor(props) {
@@ -95,48 +93,21 @@ class ChartLine extends Component {
         (dataset) => Math.max(...dataset.map((d) => d.x))
       )
     };
-
-    console.log(this.state.data)
-
-    // this.xOffsets = [50, 200, 350];
-    // this.tickPadding = [0, 0, -15];
-    // this.anchors = ["end", "end", "start"];
-    // this.colors = ["black", "red", "blue", "orange"];
   }
 
   componentDidUpdate(prevProps, prevState) {
     // Uso típico, (não esqueça de comparar as props):
+    this.maximaX = this.props.data.map(
+      (dataset) => Math.max(...dataset.map((d) => d.x))
+    )
     if (this.props.data !== prevState.data) {
       this.setState({ data: this.props.data })
-      console.log(this.state.data)
     }
   }
-
-//   aleatorio(inferior,superior){
-//     let numPossibilidades = superior - inferior
-//     let aleat = Math.random() * numPossibilidades
-//     aleat = Math.floor(aleat)
-//     return parseInt(inferior) + aleat
-//  }
-
-//   gerarCor(){
-//     let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
-//     let cor_aleatoria = "#";
-//     for (let i=0;i<6;i++){
-//        let posarray = this.aleatorio(0,hexadecimal.length)
-//        cor_aleatoria += hexadecimal[posarray]
-//     }
-//     return cor_aleatoria
-//  }
-
 
   handleZoom(domain) {
     this.setState({ zoomDomain: domain });
   }
-
-  // handleBrush(domain) {
-  //   this.setState({ zoomDomain: domain });
-  // }
 
   render() {
     return (
@@ -145,42 +116,40 @@ class ChartLine extends Component {
           //domain={{ x: [0,800], y: [0, 100] }}
           theme={VictoryTheme.material}
           width={1350} height={850}
-          // containerComponent=
-          // {
-          //   <VictoryVoronoiContainer/>
-          // }
           containerComponent={
-            <VictoryZoomContainer
-              //zoomDimension="x"
-              zoomDomain={this.state.zoomDomain} //add
-              responsive={true}
-              onZoomDomainChange={this.handleZoom.bind(this)} //add
-              //zoomDomain={{ x: [0, 8], y: [0, 500] }} //removido
-              />
+            <VictoryZoomVoronoiContainer
+                  zoomDomain={this.state.zoomDomain} //add
+                  responsive={true}
+                  labels={({ datum }) => datum.y}
+                  onZoomDomainChange={this.handleZoom.bind(this)} //add
+                  // labelComponent={
+                  //   <VictoryTooltip
+                  //     style={{ fontSize: 10 }}
+                  //   />
+                  // }
+            />
           }
-        >
+                >
+        {this.state.data.map((d, i) => (
+                  <VictoryScatter
+                  style={colors[i] }
+                  size={9}
+                  data={d}
+                />   
+                  ))}
+          
           {this.state.data.map((d, i) => (
             <VictoryLine
               key={i}
               data={d}
-              //labels={({ datum }) => datum.y}
-              labelComponent={
-                <VictoryTooltip
-                  style={ {fontSize: 10 }}
-                />
-              }
               style={{
                 data: {
                   stroke: colors[i]
                 }
               }}
-          //     containerComponent={
-          //   <VictoryZoomContainer
-          //     responsive={true}
-          //     zoomDomain={{ x: [0, 8], y: [0, 500] }} />
-          // }
             >
             </VictoryLine>
+            
           ))}
         </VictoryChart>
 
