@@ -90,6 +90,23 @@ class ChartLine extends Component {
     }
   }
 
+  aleatorio(inferior,superior){
+    let numPossibilidades = superior - inferior
+    let aleat = Math.random() * numPossibilidades
+    aleat = Math.floor(aleat)
+    return parseInt(inferior) + aleat
+ }
+
+  gerarCor(){
+    let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+    let cor_aleatoria = "#";
+    for (let i=0;i<6;i++){
+       let posarray = this.aleatorio(0,hexadecimal.length)
+       cor_aleatoria += hexadecimal[posarray]
+    }
+    return cor_aleatoria
+ }
+
 
   handleZoom(domain) {
     this.setState({ zoomDomain: domain });
@@ -124,22 +141,22 @@ class ChartLine extends Component {
             <VictoryLine
               key={i}
               data={d}
-              labels={({ datum }) => datum.y}
+              //labels={({ datum }) => datum.y}
               labelComponent={
                 <VictoryTooltip
-                  style={{ fontSize: 10 }}
+                  style={ {fontSize: 10 }}
                 />
               }
+              style={{
+                data: {
+                  stroke: this.gerarCor(),
+                }
+              }}
           //     containerComponent={
           //   <VictoryZoomContainer
           //     responsive={true}
           //     zoomDomain={{ x: [0, 8], y: [0, 500] }} />
           // }
-              style={{
-                //data: { stroke: this.state.colors[i] },
-                // parent: { border: "1px solid #ccc" }
-
-              }}
             >
             </VictoryLine>
           ))}
