@@ -422,11 +422,8 @@ public class GitRepositoryAnalysis {
         this.processData.originalV2FirstLine = 0;
         if (this.processData.beginLine + 1 != this.processData.separatorLine) {
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.processData.sandbox.getPath());
-            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath, 
+            this.processData.originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(this.processData.sandbox.getPath(), this.processData.filePath,
                     this.processData.sandbox.getPath() + File.separator + this.processData.insideFilePath, this.processData.beginLine + 1);
-            if(this.processData.originalV1FirstLine == ReturnNewLineNumber.REMOVED_LINE){
-                System.out.println("");
-            }
         }
         if (this.processData.separatorLine + 1 != this.processData.endLine) {
             Git.checkout(this.processData.parents.get(1).getCommitHash(), this.processData.sandbox.getPath());
@@ -461,7 +458,9 @@ public class GitRepositoryAnalysis {
         } else {
             this.processData.solutionFinalLine = 0;
         }
-        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+            this.processData.solution = new ArrayList<>();
+        } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
             this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
                     this.processData.filePath,
                     this.processData.parents.get(0).getCommitHash(),
@@ -521,7 +520,9 @@ public class GitRepositoryAnalysis {
         } else {
             this.processData.solutionFinalLine = 0;
         }
-        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+        if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+            this.processData.solution = new ArrayList<>();
+        } else if (this.processData.solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || this.processData.solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
             this.processData.auxBool = Git.deletedFile(this.processData.sandbox.getPath(),
                     this.processData.extraFilePath,
                     this.processData.parents.get(0).getCommitHash(),
