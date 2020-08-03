@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJava9SyntaxTree;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -31,6 +34,8 @@ public class ConflictRegion {
     private List<SyntaxStructure> syntaxV2;
 
     private List<String> typesOfConflicts;
+
+    private String extension;
 
     private DeveloperDecision developerDecision;
 
@@ -152,7 +157,7 @@ public class ConflictRegion {
                 Git.checkout(v2Commit, repositoryPath);
                 this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
             }
-            this.generateTypeOfConflict();
+            this.generateTypeOfConflict(filePath);
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -182,7 +187,7 @@ public class ConflictRegion {
                 Git.checkout(v2Commit, repositoryPath);
                 this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
             }
-            this.generateTypeOfConflict();
+            this.generateTypeOfConflict(filePath);
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
             throw new IOException();
@@ -247,16 +252,30 @@ public class ConflictRegion {
         return structureType;
     }
 
-    private void generateTypeOfConflict() {
-        List<String> rawList = this.getV1StructureTypes();
-        for (String str : this.getV2StructureTypes()) {
-            if (!rawList.contains(str)) {
-                rawList.add(str);
+    private void generateTypeOfConflict(String filePath) {
+        if (this.originalV1StartLine < 0) {
+            this.typesOfConflicts = new ArrayList<>();
+            this.typesOfConflicts.add("Untreatable error in Diff command!");
+        } else {
+            List<String> rawList = this.getV1StructureTypes();
+            for (String str : this.getV2StructureTypes()) {
+                if (!rawList.contains(str)) {
+                    rawList.add(str);
+                }
             }
+            Collections.sort(rawList);
+            if (filePath.endsWith(".java")) {
+                this.typesOfConflicts = Translator.JavaTranslator(rawList);
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                this.typesOfConflicts = Translator.CPPTranslator(rawList);
+            } else if (filePath.endsWith(".py")) {
+                this.typesOfConflicts = rawList;
+            } else {
+                this.typesOfConflicts = rawList;
+            }
+            
+            Collections.sort(this.typesOfConflicts);
         }
-        Collections.sort(rawList);
-        this.typesOfConflicts = Translator.JavaTranslator(rawList);
-        Collections.sort(this.typesOfConflicts);
     }
 
     public List<String> getV1StructureTypes() {

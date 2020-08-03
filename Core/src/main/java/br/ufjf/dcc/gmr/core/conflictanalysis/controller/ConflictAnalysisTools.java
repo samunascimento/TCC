@@ -148,12 +148,12 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-            //Imprimir_arvore-------------------------------------------------------
+            /*Imprimir_arvore-------------------------------------------------------
             
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
 
-            //----------------------------------------------------------------------
+            //----------------------------------------------------------------------*/
 
             return new SSCShelf(visitor.getList(), comments);
         } else {
