@@ -82,6 +82,7 @@ public class JasomeMethods {
 //            }
             int i;
             int idPosition;
+            int id;
             System.out.println(project.getSourceDir());
             List<Formats> log;
             List<String> parents;
@@ -97,21 +98,26 @@ public class JasomeMethods {
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
 
+//                for (Formats revision : log) {
+//                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+//                    versionMetrics.setAuthorName(revision.getAuthorName());
+//                    versionMetrics.setCommitDate(revision.getAuthorDate());
+//                    versionMetrics.setHash(revision.getCommitHash());
+//                    versionMetrics.setParentsHash(parents);
+//                    int id = versionMetricsDao.insert(versionMetrics);
+//                    idList.add(id);
+//                }
+
                 for (Formats revision : log) {
                     parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
                     versionMetrics.setAuthorName(revision.getAuthorName());
                     versionMetrics.setCommitDate(revision.getAuthorDate());
                     versionMetrics.setHash(revision.getCommitHash());
                     versionMetrics.setParentsHash(parents);
-                    int id = versionMetricsDao.insert(versionMetrics);
-                    idList.add(id);
-                }
-
-                for (Formats revision : log) {
-                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
+                    id = versionMetricsDao.insert(versionMetrics);
+                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
+                    System.out.println("Commit número: " + id);
                     System.out.println(new Date());
-                    idPosition++;
                 }
 //            } else if (checkProject == true) {
 //                i = 0;
@@ -173,7 +179,6 @@ public class JasomeMethods {
 //            jasomeExtract.extractMetricClass(projectMetrics, listPackage);
 //            jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
         } finally {
-            System.out.println("Commit numero :" + i);
             i++;
         }
         return projectMetrics;
