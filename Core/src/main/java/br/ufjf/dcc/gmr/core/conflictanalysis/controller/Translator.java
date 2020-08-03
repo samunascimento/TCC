@@ -461,9 +461,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-              if (list.contains("Memberspecification")) {
+              if (list.contains("Memberspecification")
+                    ||list.contains("Memberdeclaration") ) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("Memberspecification");
+                list.remove("Memberdeclaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

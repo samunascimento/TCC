@@ -527,13 +527,13 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDeclaration(CPP14Parser.DeclarationContext ctx) {
-        process(ctx);
+  //      process(ctx);
         return visitChildren(ctx);
     }
 
