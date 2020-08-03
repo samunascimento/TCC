@@ -8,7 +8,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyVisitor extends JavaParserBaseVisitor<Object> {
+public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     //remover variableBindingList e methodCallBidingList se possivel
     private List<MethodDeclarationBinding> methodDeclarationBindingList;
@@ -23,8 +23,8 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
     private boolean methodDeclaration;
     private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
     private EnviromentBinding enviromentBinding;
-
-    public MyVisitor() {
+    
+    public Visitor3() {
 
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
