@@ -940,7 +940,7 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
         //log(ctx);
 
         if (ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext) {
-            String modifier = ctx.getChild(0).getText();
+            Modifiers modifier = Modifiers.equalsTo(ctx.getChild(0).getText());
             this.typeBinding.setModifier(modifier);
         }
 

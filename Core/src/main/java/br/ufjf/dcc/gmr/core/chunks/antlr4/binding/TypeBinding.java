@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
-import java.nio.file.WatchEvent.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class TypeBinding extends BaseBinding {
     private List<String> imports;
     private List<MethodDeclarationBinding> mdbList;
     private List<VariableBinding> attributes;
-    private List<Modifier> modifier;
+    private List<Modifiers> modifier;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
@@ -44,7 +43,7 @@ public class TypeBinding extends BaseBinding {
     /**
      * @return the modifier
      */
-    public List<Modifier> getModifier() {
+    public List<Modifiers> getModifier() {
         return modifier;
     }
 
@@ -58,8 +57,8 @@ public class TypeBinding extends BaseBinding {
     /**
      * @param modifier the modifier to set
      */
-    public void setModifier(List<Modifier> modifier) {
-        this.modifier = modifier;
+    public void setModifier(Modifiers modifier) {
+        this.modifier.add(modifier);
     }
 
     /**
