@@ -359,13 +359,6 @@ public class Translator {
         return mainList;
     }
 
-    public static List<String> PythonTranslator(List<String> list) {
-
-        List<String> mainList = new ArrayList<>();
-
-        return mainList;
-    }
-
     public static List<String> CPPTranslator(List<String> list) {
 
         List<String> mainList = new ArrayList<>();
@@ -435,7 +428,7 @@ public class Translator {
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("BlockComment")
                     || list.contains("LineComment")) {
-                mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
+                mainList.add(LanguageConstructsTypes.COMMENT);
                 list.remove("BlockComment");
                 list.remove("LineComment");
             }
@@ -468,9 +461,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-              if (list.contains("Memberespecification")) {
+              if (list.contains("Memberspecification")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
-                list.remove("Memberespecification");
+                list.remove("Memberspecification");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -565,6 +558,13 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.OTHER);
             }
         }
+        return mainList;
+    }
+    
+        public static List<String> PythonTranslator(List<String> list) {
+
+        List<String> mainList = new ArrayList<>();
+
         return mainList;
     }
 
