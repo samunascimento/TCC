@@ -801,36 +801,14 @@ public class MyVisitor extends JavaParserBaseVisitor<Object> {
 
         for (ParseTree parseTree : classBodyDeclaration.children) {
             if (parseTree instanceof JavaParser.ModifierContext) {
-                if (parseTree.getText().equals("public")) {
-                    result.add(Modifiers.PUBLIC);
-                } else if (parseTree.getText().equals("private")) {
-                    result.add(Modifiers.PRIVATE);
-                } else if (parseTree.getText().equals("protected")) {
-                    result.add(Modifiers.PROTECTED);
-                } else if (parseTree.getText().equals("static")) {
-                    result.add(Modifiers.STATIC);
-                } else if (parseTree.getText().equals("abstract")) {
-                    result.add(Modifiers.ABSTRACT);
-                } else if (parseTree.getText().equals("final")) {
-                    result.add(Modifiers.FINAL);
-                } else if (parseTree.getText().equals("strictfp")) {
-                    result.add(Modifiers.STRICTFP);
-                } else if (parseTree.getText().equals("native")) {
-                    result.add(Modifiers.NATIVE);
-                } else if (parseTree.getText().equals("synchronized")) {
-                    result.add(Modifiers.SYNCHRONIZED);
-                } else if (parseTree.getText().equals("transient")) {
-                    result.add(Modifiers.TRANSIENT);
-                } else if (parseTree.getText().equals("volatile")) {
-                    result.add(Modifiers.VOLATILE);
-                } else if (parseTree.getText().equals("annotation")) {
-                    result.add(Modifiers.ANNOTATION);
-                }
+                result.add(Modifiers.equalsTo(parseTree.getText()));
             }
         }
 
         return result;
     }
+
+    
 
     @Override
     public Object visitMemberDeclaration(JavaParser.MemberDeclarationContext ctx) {

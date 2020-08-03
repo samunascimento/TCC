@@ -5,13 +5,14 @@ import Projects from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
 
+
 export default class extends Component {
   state = {
     projects: []
   }
 
   async componentDidMount() {
-    const projects = await (await fetch('http://localhost:56875/JasomeWeb/webresources/jasome/nameProject')).json()
+    const projects = await (await fetch('http://localhost:8080/JasomeWeb/webresources/jasome/nameProject')).json()
     console.log(projects);
     this.setState({ projects })
   }
