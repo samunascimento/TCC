@@ -5,20 +5,20 @@ import java.util.List;
 
 public class TypeBinding extends BaseBinding {
 
-    private TypeBinding extendClass;
+    private TypeBinding extendClassBinding;
     private List<String> imports;
-    private List<MethodDeclarationBinding> mdbList;
-    private List<VariableBinding> attributes;
-    private List<Modifiers> modifier;
+    private List<MethodDeclarationBinding> MethodsBinding;
+    private List<VariableBinding> attributesBinding;
+    private List<Modifiers> modifiers;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
         super();
-        this.extendClass = null;
+        this.extendClassBinding = null;
         this.imports = new ArrayList<>();
-        this.mdbList = new ArrayList<>();
-        this.attributes = new ArrayList<>();
-        this.modifier = null;
+        this.MethodsBinding = new ArrayList<>();
+        this.attributesBinding = new ArrayList<>();
+        this.modifiers = null;
         this.packageBinding = new PackageBinding();
     }
 
@@ -27,70 +27,70 @@ public class TypeBinding extends BaseBinding {
 
         String output;
 
-        output = "name= " + super.getName() + "| modifier= " + this.modifier + "| extendClass= " + this.extendClass;
+        output = "name= " + super.getName() + "| modifier= " + this.modifiers + "| extendClass= " + this.extendClassBinding;
 
         return output;
     }
 
 
     /**
-     * @return the mdbList
+     * @return the MethodsBinding
      */
     public List<MethodDeclarationBinding> getMdbList() {
-        return mdbList;
+        return MethodsBinding;
     }
 
     /**
-     * @return the modifier
+     * @return the modifiers
      */
     public List<Modifiers> getModifier() {
-        return modifier;
+        return modifiers;
     }
 
     /**
-     * @param mdbList the mdbList to set
+     * @param mdbList the MethodsBinding to set
      */
     public void setMdbList(List<MethodDeclarationBinding> mdbList) {
-        this.mdbList = mdbList;
+        this.MethodsBinding = mdbList;
     }
 
     /**
-     * @param modifier the modifier to set
+     * @param modifier the modifiers to set
      */
     public void setModifier(Modifiers modifier) {
-        this.modifier.add(modifier);
+        this.modifiers.add(modifier);
     }
 
     /**
-     * @return the extendClass
+     * @return the extendClassBinding
      */
     public TypeBinding getExtendClass() {
-        return extendClass;
+        return extendClassBinding;
     }
 
     /**
-     * @param extendClass the extendClass to set
+     * @param extendClass the extendClassBinding to set
      */
     public void setExtendClass(TypeBinding extendClass) {
-        this.extendClass = extendClass;
+        this.extendClassBinding = extendClass;
     }
 
     /**
-     * @return the attributes
+     * @return the attributesBinding
      */
     public List<VariableBinding> getAttributes() {
-        return attributes;
+        return attributesBinding;
     }
 
     /**
-     * @param attributes the attributes to set
+     * @param attributes the attributesBinding to set
      */
     public void setAttributes(List<VariableBinding> attributes) {
-        this.attributes = attributes;
+        this.attributesBinding = attributes;
     }
 
     public void addAttributes(VariableBinding attribute) {
-        this.attributes.add(attribute);
+        this.attributesBinding.add(attribute);
     }
 
     /**
