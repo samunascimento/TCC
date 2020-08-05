@@ -305,6 +305,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#realassignmentexpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#assignmentoperator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -473,12 +479,6 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(CPP14Parser.DeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link CPP14Parser#includedeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#blockdeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -496,6 +496,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#variabledeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#static_assertdeclaration}.
 	 * @param ctx the parse tree

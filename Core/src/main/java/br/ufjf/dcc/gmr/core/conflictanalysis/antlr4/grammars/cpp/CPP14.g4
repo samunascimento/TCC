@@ -26,7 +26,7 @@ grammar CPP14;
 
 
 translationunit
-   : directive* LineComment? declarationseq? EOF
+   : (directive*)? declarationseq? EOF
    ;
 /*Expressions*/
 
@@ -114,7 +114,8 @@ lambdadeclarator
    ;
 
 postfixexpression
-   : primaryexpression
+   : functioninvocation
+   | primaryexpression
    | arrayaccess
    | postfixexpression '[' bracedinitlist ']'
    | postfixexpression '(' expressionlist? ')'
@@ -122,7 +123,6 @@ postfixexpression
    | typenamespecifier '(' expressionlist? ')'
    | simpletypespecifier bracedinitlist
    | typenamespecifier bracedinitlist
-   | functioninvocation
    | postfixexpression '.' pseudodestructorname
    | postfixexpression '->' pseudodestructorname
    | postfixexpression '++'
@@ -140,8 +140,9 @@ arrayaccess
    ;
 
 functioninvocation
-   : primaryexpression '.' Template? idexpression
-   | primaryexpression '->' Template? idexpression
+   : primaryexpression '.' Template? idexpression ('(' expressionlist? ')')?
+   | primaryexpression '(' expressionlist? ')'
+   | primaryexpression '->' Template? idexpression ('(' expressionlist? ')')?
    ;
 /*
 add a middle layer to eliminate duplicated function declarations
@@ -315,8 +316,12 @@ conditionalexpression
 
 assignmentexpression
    : conditionalexpression
-   | logicalorexpression assignmentoperator initializerclause
+   | realassignmentexpression
    | throwexpression
+   ;
+
+realassignmentexpression
+   : logicalorexpression assignmentoperator initializerclause
    ;
 
 assignmentoperator
@@ -477,14 +482,7 @@ declaration
    | namespacedefinition
    | emptydeclaration
    | attributedeclaration
-   | includedeclaration
    ;
-
-includedeclaration
-   : 'include' '<' Identifier ('.' Identifier)? '>'
-   | 'include' '"' Identifier ('.' Identifier)? '"'
-   ;
-
 
 blockdeclaration
    : simpledeclaration
@@ -502,8 +500,13 @@ aliasdeclaration
    ;
 
 simpledeclaration
-   : declspecifierseq? initdeclaratorlist? ';'
+   : variabledeclaration
+   | declspecifierseq? initdeclaratorlist? ';'
    | attributespecifierseq declspecifierseq? initdeclaratorlist ';'
+   ;
+
+variabledeclaration
+   : declspecifierseq initdeclaratorlist ';'
    ;
 
 
@@ -1218,6 +1221,7 @@ Directive
    : '#' '<' Identifier '>' 
    | '#' ~ [\n]* 
    ;
+
 /*Lexer*/
 
 /*Keywords*/

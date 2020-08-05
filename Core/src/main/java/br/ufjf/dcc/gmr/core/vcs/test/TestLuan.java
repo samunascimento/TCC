@@ -22,7 +22,7 @@ public class TestLuan {
      */
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-      List<SyntaxStructure> analyzeCPP14SyntaxTree = ConflictAnalysisTools.getStructureTypeInInterval("/Users/gleiph/Desktop/teste.cpp",1,84,false);
+      List<SyntaxStructure> analyzeCPP14SyntaxTree = ConflictAnalysisTools.getStructureTypeInInterval("/home/joao_lima/CodeBlocksProjects/Test/main.cpp",1,84,false);
         for (SyntaxStructure ss : analyzeCPP14SyntaxTree) {
             System.out.println(ss.getForm());
         }  

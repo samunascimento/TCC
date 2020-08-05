@@ -498,6 +498,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#realassignmentexpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#realassignmentexpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#assignmentoperator}.
 	 * @param ctx the parse tree
 	 */
@@ -778,16 +788,6 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitDeclaration(CPP14Parser.DeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CPP14Parser#includedeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CPP14Parser#includedeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#blockdeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -817,6 +817,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#variabledeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#variabledeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#static_assertdeclaration}.
 	 * @param ctx the parse tree

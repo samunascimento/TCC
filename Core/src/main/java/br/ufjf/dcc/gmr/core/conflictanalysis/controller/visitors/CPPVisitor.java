@@ -37,12 +37,36 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
     }
 
+    public void process(ParserRuleContext ctx, String outsiderType, String text) {
+        //Adding in list
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text, warning));
+    }
+
     @Override
-    public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
+    public Object visitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
-    
+
+    @Override
+    public Object visitRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
+        if (ctx.getText().contains("include")) {
+            if (ctx.getText().contains("//")) {
+                String[] auxArray = ctx.getText().split("//");
+                process(ctx, "Includedeclaration", auxArray[0]);
+            } else {
+                process(ctx, "Includedeclaration", ctx.getText());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
     @Override
     public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
         process(ctx);
@@ -54,8 +78,6 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
         process(ctx);
         return visitChildren(ctx);
     }
-    
-    
 
     @Override
     public Object visitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) {
@@ -143,18 +165,12 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) {
-         process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
-    public Object visitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) {
+    public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -281,7 +297,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitUnaryexpression(CPP14Parser.UnaryexpressionContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -341,19 +357,19 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitCastexpression(CPP14Parser.CastexpressionContext ctx) {
-    //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitPmexpression(CPP14Parser.PmexpressionContext ctx) {
-    //    process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitMultiplicativeexpression(CPP14Parser.MultiplicativeexpressionContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -365,7 +381,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitShiftexpression(CPP14Parser.ShiftexpressionContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -377,43 +393,43 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitRelationalexpression(CPP14Parser.RelationalexpressionContext ctx) {
-    //    process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitEqualityexpression(CPP14Parser.EqualityexpressionContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitAndexpression(CPP14Parser.AndexpressionContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitExclusiveorexpression(CPP14Parser.ExclusiveorexpressionContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitInclusiveorexpression(CPP14Parser.InclusiveorexpressionContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLogicalandexpression(CPP14Parser.LogicalandexpressionContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLogicalorexpression(CPP14Parser.LogicalorexpressionContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -425,7 +441,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -437,7 +453,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitExpression(CPP14Parser.ExpressionContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -449,7 +465,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitStatement(CPP14Parser.StatementContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -461,19 +477,19 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitExpressionstatement(CPP14Parser.ExpressionstatementContext ctx) {
-    //    process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitCompoundstatement(CPP14Parser.CompoundstatementContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitStatementseq(CPP14Parser.StatementseqContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -521,25 +537,25 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitDeclarationstatement(CPP14Parser.DeclarationstatementContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
-    //    process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDeclaration(CPP14Parser.DeclarationContext ctx) {
-  //      process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -551,7 +567,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -575,13 +591,13 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitDeclspecifier(CPP14Parser.DeclspecifierContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDeclspecifierseq(CPP14Parser.DeclspecifierseqContext ctx) {
-      //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -605,7 +621,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitTypespecifier(CPP14Parser.TypespecifierContext ctx) {
-//        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -689,7 +705,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitEnumeratorlist(CPP14Parser.EnumeratorlistContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -863,13 +879,13 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitInitdeclaratorlist(CPP14Parser.InitdeclaratorlistContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitInitdeclarator(CPP14Parser.InitdeclaratorContext ctx) {
-      //  process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -881,13 +897,13 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitPtrdeclarator(CPP14Parser.PtrdeclaratorContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) {
-       // process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1013,7 +1029,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
-     //   process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

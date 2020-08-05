@@ -286,7 +286,7 @@ public class Translator {
                 list.remove("SwitchExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //synchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
+            //SYNCHRONIZED_STATEMENT+++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SynchronizedStatement")) {
                 mainList.add(LanguageConstructsTypes.SYNCHRONIZED_STATEMENT);
                 list.remove("SynchronizedStatement");
@@ -383,7 +383,10 @@ public class Translator {
             // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Revisar Postfixedexpression
+            if (list.contains("Realassignmentexpression")) {
+                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+                list.remove("Realassignmentexpression");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Nothing")) {
@@ -480,11 +483,13 @@ public class Translator {
             if (list.contains("Ifexpression")) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
                 list.remove("Ifexpression");
-                // Verificar Gleiph se realmente não precisa de else
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Ainda revisando
+            if (list.contains("Includedeclaration")) {
+                mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
+                list.remove("Includedeclaration");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Não tem em c++
@@ -542,7 +547,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Revisar Postfixedexpression 
+            if (list.contains("Variabledeclaration")) {
+                mainList.add(LanguageConstructsTypes.VARIABLE);
+                list.remove("Variabledeclaration");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Whileexpression")) {
