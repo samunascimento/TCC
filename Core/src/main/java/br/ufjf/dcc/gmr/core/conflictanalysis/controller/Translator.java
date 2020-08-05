@@ -464,8 +464,8 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-              if (list.contains("Memberspecification")
-                    ||list.contains("Memberdeclaration") ) {
+            if (list.contains("Memberspecification")
+                    || list.contains("Memberdeclaration")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("Memberspecification");
                 list.remove("Memberdeclaration");
@@ -495,13 +495,17 @@ public class Translator {
             //Não tem em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHOD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Functiondefinition")) {
+            if (list.contains("Functiondefinition")
+                    || list.contains("Pseudodestructdeclaration")) {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Functiondefinition");
+                list.remove("Pseudodestructdeclaration");
             }
-            if (list.contains("Functioninvocation")) {
+            if (list.contains("Functioninvocation")
+                    || list.contains("Pseudodestructcaller")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("Functioninvocation");
+                list.remove("Pseudodestructcaller");
             }
             if (list.contains("Functionhead")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
@@ -570,8 +574,8 @@ public class Translator {
         }
         return mainList;
     }
-    
-        public static List<String> PythonTranslator(List<String> list) {
+
+    public static List<String> PythonTranslator(List<String> list) {
 
         List<String> mainList = new ArrayList<>();
 

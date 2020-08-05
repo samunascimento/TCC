@@ -238,6 +238,26 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitPseudodestructorname(CPP14Parser.PseudodestructornameContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#pseudodestructdeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#pseudodestructdeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#pseudodestructcaller}.
+	 * @param ctx the parse tree
+	 */
+	void enterPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#pseudodestructcaller}.
+	 * @param ctx the parse tree
+	 */
+	void exitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#unaryexpression}.
 	 * @param ctx the parse tree
 	 */

@@ -149,6 +149,18 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPseudodestructorname(CPP14Parser.PseudodestructornameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#pseudodestructdeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#pseudodestructcaller}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#unaryexpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

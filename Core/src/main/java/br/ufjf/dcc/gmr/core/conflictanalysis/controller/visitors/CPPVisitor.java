@@ -43,6 +43,18 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) {
         process(ctx);
         return visitChildren(ctx);
@@ -291,7 +303,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitPseudodestructorname(CPP14Parser.PseudodestructornameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

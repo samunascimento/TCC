@@ -292,6 +292,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnaryexpression(CPP14Parser.UnaryexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

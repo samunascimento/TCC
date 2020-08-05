@@ -162,11 +162,19 @@ expressionlist
    ;
 
 pseudodestructorname
-   : nestednamespecifier? thetypename '::' '~' thetypename
-   | nestednamespecifier Template simpletemplateid '::' '~' thetypename
-   | nestednamespecifier? '~' thetypename
-   | '~' decltypespecifier
+   : pseudodestructdeclaration
+   | pseudodestructcaller
    ;
+
+pseudodestructdeclaration
+   : nestednamespecifier? thetypename '::' '~' thetypename  
+   | nestednamespecifier Template simpletemplateid '::' '~' thetypename
+   ;
+
+pseudodestructcaller
+    : '~' decltypespecifier
+    | nestednamespecifier? '~' thetypename
+    ;
 
 unaryexpression
    : postfixexpression
