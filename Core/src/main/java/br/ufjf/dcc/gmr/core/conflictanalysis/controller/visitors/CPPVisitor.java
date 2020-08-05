@@ -201,19 +201,19 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitIdexpression(CPP14Parser.IdexpressionContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitUnqualifiedid(CPP14Parser.UnqualifiedidContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitQualifiedid(CPP14Parser.QualifiedidContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 

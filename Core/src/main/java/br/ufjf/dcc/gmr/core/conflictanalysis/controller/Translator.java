@@ -448,6 +448,12 @@ public class Translator {
                 list.remove("Dostatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DELET+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                if (list.contains("Deleteexpression")) {
+                mainList.add(LanguageConstructsTypes.DO_STATEMENT);
+                list.remove("Deleteexpression");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             if (list.contains("Enumhead")) {
