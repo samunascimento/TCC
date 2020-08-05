@@ -85,7 +85,7 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST2.getMethodDeclarationBinding(), AST1.getMethodCallBiding());
 
         System.out.println("***************Variables***************");
-        for (VariableBinding variableBinding : AST1.getVariableBindingList()) {
+        for (VariableBinding variableBinding : AST1.getVariableBindingForList()) {
             System.out.println(variableBinding.toString());
         }
 

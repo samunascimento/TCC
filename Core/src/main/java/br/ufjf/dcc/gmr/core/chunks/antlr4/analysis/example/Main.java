@@ -7,42 +7,20 @@ import java.util.List;
 public class Main {
 
     private String name;
-    private String office;
     private int age;
+    private String office;
+  
     
     
     public Main(String name, String office, int age) {
-        this.name = name;
+        
         this.age = age;
         this.office = office;
-    }
-    
-    private static List<String> javaFiles(String dir){
-        List<String> javaFiles = new ArrayList<>();
-        File file = new File(dir);
-        File[] files = file.listFiles();
-        for (File file1 : files) {
-            if(file1.isFile() && file1.getAbsolutePath().endsWith(".java")){
-                javaFiles.add(file1.getAbsolutePath());
-            }else if(file1.isDirectory()){
-                javaFiles.addAll(javaFiles(file1.getAbsolutePath()));
-            }
-        }
-        return javaFiles;
+        this.name = name;
     }
 
     public static void main(String[] args) {
-
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\UFJF");
-        for(int k = 0; k < javaFiles.size(); k++){
-            String javaFile = javaFiles.get(k);
-            System.out.println(k);
-        }
-
-        for (String javaFile : javaFiles) {
-            System.out.println(javaFile);
-        }
-        
+       
         Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
         person.setName("name of a person");
@@ -119,6 +97,8 @@ public class Main {
      * @param name the name to set
      */
     public void setName(String name) {
+        
+        String falatu;
         this.name = name;
     }
 

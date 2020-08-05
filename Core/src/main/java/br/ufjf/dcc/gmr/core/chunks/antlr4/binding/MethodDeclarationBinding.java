@@ -7,23 +7,23 @@ import java.util.List;
 public class MethodDeclarationBinding extends BaseBinding {
 
     private List<Modifiers> modifier;
-    private List<TypeBinding> parameters;
-    private TypeBinding typeBinding;
+    private List<VariableBinding> parametersBindings;
+    private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
     private EnviromentBinding enviromentBinding;
 
     public MethodDeclarationBinding() {
         super();
         this.modifier = new ArrayList<>();
-        this.parameters = new ArrayList<>();
-        this.typeBinding = new TypeBinding();
+        this.parametersBindings = new ArrayList<>();
+        this.returnBinding = new TypeBinding();
         this.enviromentBinding = new EnviromentBinding();
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
         
-        if (!this.typeBinding.getName().equals(mcb.getTypeBinding().getName())) {
-            if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.typeBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
+        if (!this.returnBinding.getName().equals(mcb.getTypeBinding().getName())) {
+            if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.returnBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
             }
         }
@@ -56,11 +56,11 @@ public class MethodDeclarationBinding extends BaseBinding {
 
         output = output.concat(this.getName()).concat("(");
 
-        for (int i = 0; i < parameters.size(); i++) {
-            if (i < parameters.size() - 1) {
-                output = output.concat(parameters.get(i).getName() + ",");
+        for (int i = 0; i < parametersBindings.size(); i++) {
+            if (i < parametersBindings.size() - 1) {
+                output = output.concat(parametersBindings.get(i).getName() + ",");
             } else {
-                output = output.concat(parameters.get(i).getName());
+                output = output.concat(parametersBindings.get(i).getName());
             }
         }
 
@@ -94,29 +94,29 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the typeBinding
      */
-    public TypeBinding getTypeBinding() {
-        return typeBinding;
+    public TypeBinding getReturnBinding() {
+        return returnBinding;
     }
 
     /**
-     * @param typeBinding the typeBinding to set
+     * @param returnBinding the typeBinding to set
      */
-    public void setTypeBinding(TypeBinding typeBinding) {
-        this.typeBinding = typeBinding;
+    public void setReturnBinding(TypeBinding returnBinding) {
+        this.returnBinding = returnBinding;
     }
 
     /**
      * @return the parameters
      */
-    public List<TypeBinding> getParameters() {
-        return parameters;
+    public List<VariableBinding> getParameters() {
+        return parametersBindings;
     }
 
     /**
      * @param parameters the parameters to set
      */
-    public void setParameters(List<TypeBinding> parameters) {
-        this.parameters = parameters;
+    public void setParameters(List<VariableBinding> parameters) {
+        this.parametersBindings = parameters;
     }
 
     /**
