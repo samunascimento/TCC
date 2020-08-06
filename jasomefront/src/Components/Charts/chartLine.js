@@ -115,7 +115,7 @@ class ChartLine extends Component {
         <VictoryChart
           //domain={{ x: [0,800], y: [0, 100] }}
           theme={VictoryTheme.material}
-          width={1350} height={850}
+          width={1350} height={800}
           containerComponent={
             <VictoryZoomVoronoiContainer
                   zoomDomain={this.state.zoomDomain} //add
