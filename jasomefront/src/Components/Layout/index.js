@@ -158,6 +158,7 @@ class Layout extends Component {
   }
 }
 
+
 export default compose(
   withRouter,
   withStyles(styles)
