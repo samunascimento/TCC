@@ -198,16 +198,34 @@ public class VersionMetricsDao {
         }
     }
     
-    public void updateAnalyze(VersionMetrics versionMetric) throws SQLException {
-        String sql = "UPDATE tb_versionMetrics SET tlocid = ? , analyzed = ?  WHERE ID = ? ";
+    public void updateId(VersionMetrics versionMetric) throws SQLException {
+        String sql = "UPDATE tb_versionMetrics SET tlocid = ? WHERE ID = ? ";
 
         PreparedStatement stmt = null;
 
         try {
             stmt = connection.prepareStatement(sql);
             stmt.setInt(1, versionMetric.getTloc().getId());
-            stmt.setBoolean(2, true);
-            stmt.setInt(3, versionMetric.getId());
+            stmt.setInt(2, versionMetric.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public void updateAnalyzed(VersionMetrics versionMetric) throws SQLException {
+        String sql = "UPDATE tb_versionMetrics SET analyzed = ? WHERE ID = ? ";
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setBoolean(1, true);
+            stmt.setInt(2, versionMetric.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

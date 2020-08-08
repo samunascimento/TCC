@@ -616,7 +616,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             if (tagAtual.equals("Project")) {
                 versionMetrics.setProjectID(projectMetrics.getId());
                 versionMetrics.setId(this.versionId);
-                versionMetricDao.updateAnalyze(versionMetrics);
+                versionMetricDao.updateId(versionMetrics);
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }

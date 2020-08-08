@@ -38,7 +38,7 @@ public class Jasome {
         
         try {
             //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\tango-examples-java");
+            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\android-async-http");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
         }
