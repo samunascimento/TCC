@@ -120,13 +120,13 @@ class ChartLine extends Component {
             <VictoryZoomVoronoiContainer
                   zoomDomain={this.state.zoomDomain} //add
                   responsive={true}
-                  labels={({ datum }) => datum.y}
+                  labels={({ datum }) => `(${datum.x},${datum.y})` }
                   onZoomDomainChange={this.handleZoom.bind(this)} //add
-                  // labelComponent={
-                  //   <VictoryTooltip
-                  //     style={{ fontSize: 10 }}
-                  //   />
-                  // }
+                  labelComponent={
+                    <VictoryTooltip
+                      style={{ fontSize: 13 }}
+                    />
+                  }
             />
           }
                 >
