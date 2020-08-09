@@ -96,12 +96,16 @@ class ChartLine extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Uso típico, (não esqueça de comparar as props):
-    this.maximaX = this.props.data.map(
-      (dataset) => Math.max(...dataset.map((d) => d.x))
-    )
     if (this.props.data !== prevState.data) {
       this.setState({ data: this.props.data })
+      this.setState({maximaX: this.state.data.map(
+        (dataset) => Math.max(...dataset.map((d) => d.x))
+      )})
+      this.setState({maximaY: this.state.data.map(
+        (dataset) => Math.max(...dataset.map((d) => d.y))
+      )})
+      console.log(this.state.maximaX[0])
+      console.log(this.state.maximaY[0])
     }
   }
 
@@ -113,7 +117,7 @@ class ChartLine extends Component {
     return (
       <div>
         <VictoryChart
-          //domain={{ x: [0,800], y: [0, 100] }}
+          //domain={{ x: [0,this.state.maximaX[0]], y: [0, this.state.maximaY[0]] }}
           theme={VictoryTheme.material}
           width={1350} height={800}
           containerComponent={
@@ -157,7 +161,7 @@ class ChartLine extends Component {
         {/* Mini gráfico */}
         <VictoryChart
         padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-        width={600} height={100} //scale={{ x: "time" }}
+        width={1350} height={150} //scale={{ x: "time" }}
         containerComponent={
           <VictoryBrushContainer
             brushDimension="x"
@@ -167,7 +171,7 @@ class ChartLine extends Component {
         }
         >
         <VictoryAxis
-          tickFormat={[0,this.state.maximaX]}
+          //tickFormat={[0,this.state.maximaX[0]]}
         />
         {this.state.data.map((d, i) => (
             <VictoryLine
