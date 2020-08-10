@@ -15,7 +15,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     //TODO Delete typeBindingList
     private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
     private EnviromentBinding enviromentBinding;
-    
+//    
     public Visitor3() {
         
         this.methodCallBidingList = new ArrayList<>();
