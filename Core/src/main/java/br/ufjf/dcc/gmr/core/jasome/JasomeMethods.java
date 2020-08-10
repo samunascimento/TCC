@@ -115,9 +115,12 @@ public class JasomeMethods {
                     versionMetrics.setHash(revision.getCommitHash());
                     versionMetrics.setParentsHash(parents);
                     id = versionMetricsDao.insert(versionMetrics);
+                    versionMetrics.setId(id);
                     projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
-                    System.out.println("Commit número: " + id);
+                    versionMetricsDao.updateAnalyzed(versionMetrics);
+                    System.out.println("Commit número: " + idPosition);
                     System.out.println(new Date());
+                    idPosition++;
                 }
 //            } else if (checkProject == true) {
 //                i = 0;

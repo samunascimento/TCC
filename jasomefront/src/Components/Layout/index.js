@@ -109,7 +109,7 @@ class Layout extends Component {
       <CssBaseline />
 
       <div className={classes.root}>
-        <AppBar position="absolute" className={classes.appBar}>
+        <AppBar style = {{left:'0px', width:'12.5%', borderRadius: '3px'}} position="absolute" className={classes.appBar}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -151,13 +151,13 @@ class Layout extends Component {
           </Drawer>
         </Hidden>
         <main className={classes.content}>
-          <div className={classes.toolbar} />
           {children}
         </main>
       </div>
     </Fragment>
   }
 }
+
 
 export default compose(
   withRouter,

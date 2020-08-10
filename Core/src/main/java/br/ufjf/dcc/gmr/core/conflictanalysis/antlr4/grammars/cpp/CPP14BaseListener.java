@@ -292,6 +292,30 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnaryexpression(CPP14Parser.UnaryexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -599,6 +623,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -940,18 +976,6 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIncludedeclaration(CPP14Parser.IncludedeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -983,6 +1007,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
