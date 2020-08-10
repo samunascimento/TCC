@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
@@ -30,18 +31,18 @@ public class ParserJava {
         List<List> pathAndOpenViewList = view();
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
-        List<Visitor3> asts = new ArrayList<>();
+        List<Visitor1> asts = new ArrayList<>();
         int j = 0, i = 0;
 
         for (int aux = 0; aux < pathsList.size(); aux++) {
             asts.add(ASTExtractor(pathsList.get(aux), booleanList.get(aux)));
         }
 
-        for (Visitor3 ast1 : asts) {
-            for (Visitor3 ast2 : asts) {
+        for (Visitor1 ast1 : asts) {
+            for (Visitor1 ast2 : asts) {
                 if (j != i) {
                     System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getTypeBinding().getName() + " // " + ast2.getTypeBinding().getName() + " +=+=+=+=+=+=+=+=\n");
-                    compare(ast1, ast2);
+                    //compare(ast1, ast2);
                 }
                 i++;
             }
@@ -56,7 +57,7 @@ public class ParserJava {
         }
     }
 
-    private static void compare(Visitor3 AST1, Visitor3 AST2) {
+    /*private static void compare(Visitor1 AST1, Visitor1 AST2) {
 
         System.out.println("***************MethodDeclarationAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
@@ -90,7 +91,7 @@ public class ParserJava {
         }
 
     }
-
+*/
     private static List<String> javaFiles(String dir) {
         List<String> javaFiles = new ArrayList<>();
         File file = new File(dir);
@@ -126,10 +127,7 @@ public class ParserJava {
 
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        List<String> javaFiles = //javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
-                new ArrayList<>();
-        javaFiles.add("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example/Main.java");
-        
+        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
@@ -153,7 +151,7 @@ public class ParserJava {
         return returnList;
     }
 
-    private static Visitor3 ASTExtractor(String path, boolean openTree) throws IOException, HeadlessException, RecognitionException {
+    private static Visitor1 ASTExtractor(String path, boolean openTree) throws IOException, HeadlessException, RecognitionException {
         ANTLRFileStream fileStream = new ANTLRFileStream(path);
         JavaLexer lexer = new JavaLexer(fileStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -168,11 +166,8 @@ public class ParserJava {
             viewer.open();
         }
 
-        Visitor3 visitor = new Visitor3();
-
-        visitor.visitFirst(tree);
-        visitor.visitSecond(tree);
-
+        Visitor1 visitor = new Visitor1();
+        visitor.visit(tree);
         return visitor;
     }
 

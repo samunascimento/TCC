@@ -626,7 +626,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
             name = typeExtends.getText();
             for (TypeBinding typeBinding1 : typeBindingList) {
 
-                if (typeBinding1.getName() != null && typeBinding1.getName().equals(typeExtends)) {
+                if (typeBinding1.getName() != null && typeBinding1.getName().equals(name)) {
                     this.typeBinding.setExtendClass(typeBinding1);
                 }
             }
