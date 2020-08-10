@@ -12,30 +12,17 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     //remover variableBindingList e methodCallBidingList se possivel
     private List<MethodDeclarationBinding> methodDeclarationBindingList;
-    private List<MethodCallBinding> methodCallBidingList;
-    private List<VariableBinding> variableBindingForList;
+    //PackageBinding, 
     private PackageBinding packageBinding;
-    //TODO Delete typeBindingList
-    private static List<TypeBinding> typeBindingList = new ArrayList<>();
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
-    //TODO Delete firstAnalysis and secondAnalysis
-    private boolean firstAnalysis;
-    private boolean secondAnalysis;
-    private boolean methodDeclaration;
     private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
-    private EnviromentBinding enviromentBinding;
     
     public Visitor2() {
         
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
-        this.typeBindingList.add(this.typeBinding);
-        this.methodCallBidingList = new ArrayList<>();
         this.methodDeclarationBindingList = new ArrayList<>();
-        this.variableBindingForList = new ArrayList<>();
-        this.methodDeclaration = false;
-        this.enviromentBinding = new EnviromentBinding();
 
     }
 
@@ -185,98 +172,8 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         return super.visitExpression(ctx);
     }
 
-    private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters) {
-        JavaParser.ExpressionListContext expressionList
-                = (JavaParser.ExpressionListContext) ctx.expressionList();
-
-        if (expressionList != null) {
-            for (ParseTree parseTree : expressionList.children) {
-                if (parseTree instanceof JavaParser.ExpressionContext) {
-                    TypeBinding parameterTypeBinding = new TypeBinding();
-                    //Check
-                    parameterTypeBinding.setPackageBinding(packageBinding);
-
-                    JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
-
-                    /**
-                     * TODO: treat expression in expression
-                     */
-                    if (expressionContext.primary() != null) {
-
-                        JavaParser.PrimaryContext primary = expressionContext.primary();
-
-                        if (primary.literal() != null) {
-                            JavaParser.LiteralContext literal = primary.literal();
-
-                            if (literal.BOOL_LITERAL() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.BOOLEAN);
-                            } else if (literal.CHAR_LITERAL() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.CHAR);
-                            } else if (literal.NULL_LITERAL() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.NULL);
-                            } else if (literal.STRING_LITERAL() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.STRING);
-
-                            } else if (literal.integerLiteral() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.INT);
-                            } else if (literal.floatLiteral() != null) {
-
-                                parameterTypeBinding.setName(PrimitiveTypes.FLOAT);
-                            } else {
-                                System.out.println("ERROR: MyVisitor:227=D");
-                            }
-
-                        } else {
-                            //it is a type 
-                            for (int i = 0; i < variableBindingForList.size(); i++) {
-                                if (expressionContext.primary().getText().equals(variableBindingForList.get(i).getName())) {
-                                    parameterTypeBinding.setName(variableBindingForList.get(i).getType().getName());
-                                }
-                            }
-                        }
-                        parameters.add(parameterTypeBinding);
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
-
-        if (!this.secondAnalysis) {
-            return super.visitMethodCall(ctx);
-        }
-
-        MethodCallBinding methodCallBinding = new MethodCallBinding();
-        List<TypeBinding> parameters = new ArrayList<>();
-
-        ParserRuleContext parent = ctx.getParent();
-
-        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
-
-            for (int i = 0; i < variableBindingForList.size(); i++) {
-                if (parent.children.get(0).getText().equals(variableBindingForList.get(i).getName())) {
-                    methodCallBinding.setTypeBinding(variableBindingForList.get(i).getType());
-                    break;
-                }
-            }
-        }
-
-        methodCallBinding.setName(ctx.IDENTIFIER().getText());
-        methodCallBinding.setCtx(ctx);
-
-        methodCallExpressionList(ctx, parameters);
-
-        methodCallBinding.setParameters(parameters);
-
-        methodCallBidingList.add(methodCallBinding);
-
         return super.visitMethodCall(ctx);
     }
 
@@ -372,64 +269,64 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-
-        if (!this.firstAnalysis) {
-            return super.visitLocalVariableDeclaration(ctx);
-        }
         
-       
-
-        TypeBinding typeBinding = null;
-
-        /**
-         * dealing with reference type
-         */
-        if (ctx.typeType().classOrInterfaceType() != null) {
-            //Fill typeBindingList with correct types
-            for (TypeBinding typeBinding1 : this.typeBindingList) {
-                if (ctx.typeType().classOrInterfaceType().getText().equals(typeBinding1.getName())) {
-                    typeBinding = typeBinding1;
-                }
-            }
-            //TODO: Create external type
-        } /**
-         * dealing with primitive type
-         */
-        else if (ctx.typeType().primitiveType() != null) {
-            String type = ctx.typeType().primitiveType().getText();
-            typeBinding = PrimitiveTypes.init(type);
-        } else {
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ERRORvisitLocalVariableDeclaration@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        }
-
-        if (ctx.variableDeclarators().variableDeclarator() != null) {
-            for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
-                String name = variableDeclarator.variableDeclaratorId().getText();
-                VariableBinding variableDeclarationBinding = new VariableBinding();
-                variableDeclarationBinding.setName(name);
-                variableDeclarationBinding.setType(typeBinding);
-
-                if (this.methodDeclaration) {
-                     if( ctx.parent instanceof JavaParser.ForInitContext ){
-                            this.variableBindingForList.add(variableDeclarationBinding);
-                     }else{
-                         EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-                         List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-                         
-                         while (variableBindingForList.size() > 0) {
-                             currentScope.add(variableBindingForList.get(0));
-                             variableBindingForList.remove(0);
-                         }
-                         
-                         currentScope.add(variableDeclarationBinding);
-                         
-                     }
-                    
-                   
-                }
-            }
-        }
-
+//        if (!this.firstAnalysis) {
+//            return super.visitLocalVariableDeclaration(ctx);
+//        }
+//        
+//       
+//
+//        TypeBinding typeBinding = null;
+//
+//        /**
+//         * dealing with reference type
+//         */
+//        if (ctx.typeType().classOrInterfaceType() != null) {
+//            //Fill typeBindingList with correct types
+//            for (TypeBinding typeBinding1 : this.typeBindingList) {
+//                if (ctx.typeType().classOrInterfaceType().getText().equals(typeBinding1.getName())) {
+//                    typeBinding = typeBinding1;
+//                }
+//            }
+//            //TODO: Create external type
+//        } /**
+//         * dealing with primitive type
+//         */
+//        else if (ctx.typeType().primitiveType() != null) {
+//            String type = ctx.typeType().primitiveType().getText();
+//            typeBinding = PrimitiveTypes.init(type);
+//        } else {
+//            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ERRORvisitLocalVariableDeclaration@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//        }
+//
+//        if (ctx.variableDeclarators().variableDeclarator() != null) {
+//            for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
+//                String name = variableDeclarator.variableDeclaratorId().getText();
+//                VariableBinding variableDeclarationBinding = new VariableBinding();
+//                variableDeclarationBinding.setName(name);
+//                variableDeclarationBinding.setType(typeBinding);
+//
+//                if (this.methodDeclaration) {
+//                     if( ctx.parent instanceof JavaParser.ForInitContext ){
+//                            this.variableBindingForList.add(variableDeclarationBinding);
+//                     }else{
+//                         EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
+//                         List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+//                         
+//                         while (variableBindingForList.size() > 0) {
+//                             currentScope.add(variableBindingForList.get(0));
+//                             variableBindingForList.remove(0);
+//                         }
+//                         
+//                         currentScope.add(variableDeclarationBinding);
+//                         
+//                     }
+//                    
+//                   
+//                }
+//            }
+//        }
+//
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -441,31 +338,31 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
-        //log(ctx);
-        List<BaseBinding> bindings = new ArrayList<>();
-        
-        String text = ctx.getText();
-
-        
-        if (this.methodDeclaration) {
-            this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
-            
-            //Add Method's parameters variables to enviromentBinding before start read Method's block code
-            if(this.mdbGeneral.getEnviromentBinding().getEnviroment().size() == 1){
-                for (VariableBinding parameter : mdbGeneral.getParameters()) {
-                    EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-                    currentScope.add(parameter);
-                }
-            }          
-        }
-
-        Object visitBlock = super.visitBlock(ctx);
-
-        if (this.methodDeclaration) {
-            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
-        }
-
+       
+//             List<BaseBinding> bindings = new ArrayList<>();
+//        
+//        String text = ctx.getText();
+//
+//        
+//        if (this.methodDeclaration) {
+//            this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
+//            
+//            //Add Method's parameters variables to enviromentBinding before start read Method's block code
+//            if(this.mdbGeneral.getEnviromentBinding().getEnviroment().size() == 1){
+//                for (VariableBinding parameter : mdbGeneral.getParameters()) {
+//                    EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
+//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+//                    currentScope.add(parameter);
+//                }
+//            }          
+//        }
+//
+       Object visitBlock = super.visitBlock(ctx);
+//
+//        if (this.methodDeclaration) {
+//            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
+//        }
+//
         return visitBlock;
     }
 
@@ -688,10 +585,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
-
-        if (!this.firstAnalysis) {
-            return super.visitFieldDeclaration(ctx);
-        }
+        
         VariableBinding variable = new VariableBinding();
         TypeBinding type = new TypeBinding();
 
@@ -758,14 +652,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
         List<VariableBinding> parameters = new ArrayList<>();
         TypeBinding methodType = this.typeBinding;
-
-        this.methodDeclaration = true;
-
-        if (!this.firstAnalysis) {
-            Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
-            this.methodDeclaration = false;
-            return visitMethodDeclaration;
-        }
 
         methodType.setPackageBinding(packageBinding);
 
@@ -835,7 +721,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         typeBinding.getMdbList().add(mdbGeneral);
 
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
-        this.methodDeclaration = false;
         return visitMethodDeclaration;
     }
 
@@ -930,30 +815,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
-        this.typeBinding.setName(ctx.getChild(1).getText());
-        String name = "";
-        JavaParser.ClassDeclarationContext classDeclaration = (JavaParser.ClassDeclarationContext) ctx;
-
-        if (classDeclaration.getChild(2).getText().equals("extends")) {
-            ParseTree typeExtends = classDeclaration.getChild(3);
-            name = typeExtends.getText();
-            for (TypeBinding typeBinding1 : this.typeBindingList) {
-
-                if (typeBinding1.getName() != null && typeBinding1.getName().equals(typeExtends)) {
-                    this.typeBinding.setExtendClass(typeBinding1);
-                }
-            }
-            if (this.typeBinding.getExtendClass() == null) {
-                TypeBinding type = new TypeBinding();
-                type.setName(name);
-                this.typeBinding.setExtendClass(type);
-            }
-
-        }
-        if (firstAnalysis) {
-            this.getGlobalEnviroment().getEnviroment().put(packageBinding.getName().concat("/").concat(typeBinding.getName()), typeBinding);
-        }
-
         return super.visitClassDeclaration(ctx);
     }
 
@@ -977,36 +838,17 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
-        //log(ctx);
-
-        if (ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext) {
-            Modifier modifier = Modifier.equalsTo(ctx.getChild(0).getText());
-            this.typeBinding.addModifier(modifier);
-        }
-
         return super.visitTypeDeclaration(ctx);
     }
 
     @Override
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
-        for (ParseTree parserTree : ctx.children) {
-            if (parserTree instanceof JavaParser.QualifiedNameContext) {
-                typeBinding.getImports().add(parserTree.getText());
-            }
-        }
 
-        Object visitImportDeclaration = super.visitImportDeclaration(ctx);
-        return visitImportDeclaration;
+        return super.visitImportDeclaration(ctx);
     }
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        for (ParseTree parseTree : ctx.children) {
-            if (parseTree instanceof JavaParser.QualifiedNameContext) {
-                packageBinding.setName(parseTree.getText());
-
-            }
-        }
 
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
@@ -1053,21 +895,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public Object visit(ParseTree tree) {
         return super.visit(tree);
     }
-
-    public Object visitFirst(ParseTree tree) {
-        this.firstAnalysis = true;
-        this.secondAnalysis = false;
-
-        return super.visit(tree);
-    }
-
-    public Object visitSecond(ParseTree tree) {
-        this.firstAnalysis = false;
-        this.secondAnalysis = true;
-
-        return super.visit(tree);
-    }
-
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
@@ -1094,13 +922,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     }
 
     /**
-     * @return the methodCallBidingList
-     */
-    public List<MethodCallBinding> getMethodCallBiding() {
-        return methodCallBidingList;
-    }
-
-    /**
      * @return the methodDeclarationBindingList
      */
     public List<MethodDeclarationBinding> getMethodDeclarationBinding() {
@@ -1119,13 +940,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
      */
     public TypeBinding getTypeBinding() {
         return typeBinding;
-    }
-
-    /**
-     * @param methodCallBiding the methodCallBidingList to set
-     */
-    public void setMethodCallBiding(List<MethodCallBinding> methodCallBiding) {
-        this.methodCallBidingList = methodCallBiding;
     }
 
     /**
@@ -1148,77 +962,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-
-    /**
-     * @return the variableBindingList
-     */
-    public List<VariableBinding> getVariableBindingForList() {
-        return variableBindingForList;
-    }
-
-    /**
-     * @param variableBindingForList the variableBindingList to set
-     */
-    public void setVariableBindingForList(List<VariableBinding> variableBindingForList) {
-        this.variableBindingForList = variableBindingForList;
-    }
-
-    /**
-     * @return the firstAnalysis
-     */
-    public boolean isFirstAnalysis() {
-        return firstAnalysis;
-    }
-
-    /**
-     * @param firstAnalysis the firstAnalysis to set
-     */
-    public void setFirstAnalysis(boolean firstAnalysis) {
-        this.firstAnalysis = firstAnalysis;
-    }
-
-    /**
-     * @return the secondAnalysis
-     */
-    public boolean isSecondAnalysis() {
-        return secondAnalysis;
-    }
-
-    /**
-     * @param secondAnalysis the secondAnalysis to set
-     */
-    public void setSecondAnalysis(boolean secondAnalysis) {
-        this.secondAnalysis = secondAnalysis;
-    }
-
-    /**
-     * @return the typeBindingList
-     */
-    public static List<TypeBinding> getTypeBindingList() {
-        return typeBindingList;
-    }
-
-    /**
-     * @param aTypeBindingList the typeBindingList to set
-     */
-    public static void setTypeBindingList(List<TypeBinding> aTypeBindingList) {
-        typeBindingList = aTypeBindingList;
-    }
-
-    /**
-     * @return the enviromentBinding
-     */
-    public EnviromentBinding getEnviromentBinding() {
-        return enviromentBinding;
-    }
-
-    /**
-     * @param enviromentBinding the enviromentBinding to set
-     */
-    public void setEnviromentBinding(EnviromentBinding enviromentBinding) {
-        this.enviromentBinding = enviromentBinding;
-    }
-
+    
     /**
      * @return the globalEnviroment
      */

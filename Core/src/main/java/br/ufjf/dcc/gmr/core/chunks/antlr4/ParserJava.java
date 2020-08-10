@@ -169,9 +169,8 @@ public class ParserJava {
         }
 
         Visitor1 visitor = new Visitor1();
-
-        visitor.visitFirst(tree);
-        visitor.visitSecond(tree);
+        
+        visitor.visit(tree);
 
         return visitor;
     }
