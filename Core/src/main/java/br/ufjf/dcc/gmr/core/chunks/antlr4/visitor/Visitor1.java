@@ -15,9 +15,11 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
     private List<MethodCallBinding> methodCallBidingList;
     private List<VariableBinding> variableBindingForList;
     private PackageBinding packageBinding;
+    //TODO Delete typeBindingList
     private static List<TypeBinding> typeBindingList = new ArrayList<>();
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
+    //TODO Delete firstAnalysis and secondAnalysis
     private boolean firstAnalysis;
     private boolean secondAnalysis;
     private boolean methodDeclaration;
@@ -25,7 +27,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
     private EnviromentBinding enviromentBinding;
     
     public Visitor1() {
-
+        
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.typeBindingList.add(this.typeBinding);
@@ -771,7 +773,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
         mdbGeneral.setCtx(ctx);
 
-        List<Modifiers> modifiers = extractModifier(ctx);
+        List<Modifier> modifiers = extractModifier(ctx);
         mdbGeneral.setModifier(modifiers);
 
         //Getting return type
@@ -837,15 +839,15 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         return visitMethodDeclaration;
     }
 
-    private List<Modifiers> extractModifier(JavaParser.MethodDeclarationContext ctx) {
-        List<Modifiers> result = new ArrayList<>();
+    private List<Modifier> extractModifier(JavaParser.MethodDeclarationContext ctx) {
+        List<Modifier> result = new ArrayList<>();
 
         ParserRuleContext memberDeclaration = ctx.getParent();
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
 
         for (ParseTree parseTree : classBodyDeclaration.children) {
             if (parseTree instanceof JavaParser.ModifierContext) {
-                result.add(Modifiers.equalsTo(parseTree.getText()));
+                result.add(Modifier.equalsTo(parseTree.getText()));
             }
         }
 
@@ -978,8 +980,8 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         //log(ctx);
 
         if (ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext) {
-            Modifiers modifier = Modifiers.equalsTo(ctx.getChild(0).getText());
-            this.typeBinding.setModifier(modifier);
+            Modifier modifier = Modifier.equalsTo(ctx.getChild(0).getText());
+            this.typeBinding.addModifier(modifier);
         }
 
         return super.visitTypeDeclaration(ctx);

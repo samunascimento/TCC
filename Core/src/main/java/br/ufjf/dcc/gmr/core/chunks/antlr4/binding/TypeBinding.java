@@ -9,7 +9,7 @@ public class TypeBinding extends BaseBinding {
     private List<String> imports;
     private List<MethodDeclarationBinding> MethodsBinding;
     private List<VariableBinding> attributesBinding;
-    private List<Modifiers> modifiers;
+    private List<Modifier> modifiers;
     private PackageBinding packageBinding;
 
     public TypeBinding() {
@@ -18,7 +18,7 @@ public class TypeBinding extends BaseBinding {
         this.imports = new ArrayList<>();
         this.MethodsBinding = new ArrayList<>();
         this.attributesBinding = new ArrayList<>();
-        this.modifiers = null;
+        this.modifiers = new ArrayList<>();
         this.packageBinding = new PackageBinding();
     }
 
@@ -43,7 +43,7 @@ public class TypeBinding extends BaseBinding {
     /**
      * @return the modifiers
      */
-    public List<Modifiers> getModifier() {
+    public List<Modifier> getModifier() {
         return modifiers;
     }
 
@@ -57,7 +57,11 @@ public class TypeBinding extends BaseBinding {
     /**
      * @param modifier the modifiers to set
      */
-    public void setModifier(Modifiers modifier) {
+    public void setModifier(List<Modifier> modifiers) {
+        this.modifiers = modifiers;
+    }
+    
+    public void addModifier(Modifier modifier){
         this.modifiers.add(modifier);
     }
 

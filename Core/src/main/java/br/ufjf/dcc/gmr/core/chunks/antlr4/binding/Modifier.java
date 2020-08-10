@@ -1,9 +1,9 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
-public enum Modifiers {
+public enum Modifier {
     PUBLIC, PRIVATE, PROTECTED, STATIC, ABSTRACT, FINAL, STRICTFP, NATIVE, SYNCHRONIZED, TRANSIENT, VOLATILE, ANNOTATION;
 
-    public static Modifiers equalsTo(String str){
+    public static Modifier equalsTo(String str){
         if(str.equals("abstract")){
             return ABSTRACT;
         }else if(str.equals("annotation")){

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MethodDeclarationBinding extends BaseBinding {
 
-    private List<Modifiers> modifier;
+    private List<Modifier> modifier;
     private List<VariableBinding> parametersBindings;
     private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
@@ -69,7 +69,7 @@ public class MethodDeclarationBinding extends BaseBinding {
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
         
-        for (Modifiers modifiers : modifier) {
+        for (Modifier modifiers : modifier) {
             output = output.concat("| Modifier = "+modifiers+" | ");
         }
         
@@ -122,14 +122,14 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the modifier
      */
-    public List<Modifiers> getModifier() {
+    public List<Modifier> getModifier() {
         return modifier;
     }
 
     /**
      * @param modifier the modifier to set
      */
-    public void setModifier(List<Modifiers> modifier) {
+    public void setModifier(List<Modifier> modifier) {
         this.modifier = modifier;
     }
 
