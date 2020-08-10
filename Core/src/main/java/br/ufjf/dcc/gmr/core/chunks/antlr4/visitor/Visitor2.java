@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -16,7 +17,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     private PackageBinding packageBinding;
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
-    private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
+    private static GlobalEnviroment globalEnviroment = ParserJava.getGlobalEnviroment();;
     
     public Visitor2() {
         

@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -14,13 +15,14 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
     //TODO Delete typeBindingList
     private static List<TypeBinding> typeBindingList = new ArrayList<>();
     private TypeBinding typeBinding;
-    private static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
-
+    private static GlobalEnviroment globalEnviroment = ParserJava.getGlobalEnviroment();
+    
     public Visitor1() {
 
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
         this.typeBindingList.add(this.typeBinding);
+
 
     }
 
@@ -638,7 +640,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
 
         }
         globalEnviroment.getEnviroment().put(packageBinding.getName().concat("/").concat(typeBinding.getName()), typeBinding);
-
+        ParserJava.getGlobalEnviroment();
         return super.visitClassDeclaration(ctx);
     }
 
