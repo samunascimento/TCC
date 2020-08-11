@@ -15,8 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -34,47 +36,47 @@ public class ParserJava {
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
         List<Visitor1> asts = new ArrayList<>();
+
         int j = 0, i = 0;
 
         for (int aux = 0; aux < pathsList.size(); aux++) {
             ASTExtractor1(pathsList.get(aux), booleanList.get(aux));
         }
         for (int aux = 0; aux < pathsList.size(); aux++) {
-           ASTExtractor2(pathsList.get(aux), booleanList.get(aux));
+            ASTExtractor2(pathsList.get(aux), booleanList.get(aux));
         }
         for (int aux = 0; aux < pathsList.size(); aux++) {
-           ASTExtractor3(pathsList.get(aux), booleanList.get(aux));
+            ASTExtractor3(pathsList.get(aux), booleanList.get(aux));
         }
+        Object[] paths = globalEnviroment.getEnviroment().keySet().toArray();
         
         for (String pathAST1 : pathsList) {
             for (String pathAST2 : pathsList) {
-                    TypeBinding ast1 = globalEnviroment.getEnviroment().get(pathAST1);
-                    TypeBinding ast2 = globalEnviroment.getEnviroment().get(pathAST2);
-            
-                    if( j != i){
-                        System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getName() + " // " + ast2.getName() + " +=+=+=+=+=+=+=+=\n");
-                        compare(ast1, ast2);
+                TypeBinding ast1 = new TypeBinding();
+                TypeBinding ast2 = new TypeBinding();
+                
+                for (Object path : paths) {
+                    if (pathAST1.contains(path.toString())) {
+                        ast1 = globalEnviroment.getEnviroment().get(path.toString());
                     }
-                    i++;
+                }
+
+                for (Object path : paths) {
+                    if (pathAST2.contains(path.toString())) {
+                        ast2 = globalEnviroment.getEnviroment().get(path.toString());
+                    }
+                }
+
+                if (j != i) {
+                    System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getName() + " // " + ast2.getName() + " +=+=+=+=+=+=+=+=\n");
+                    compare(ast1, ast2);
+                }
+                i++;
             }
             i = 0;
             j++;
-            
-             
+
         }
-        
-//        
-//        for (Visitor1 ast1 : asts) {
-//            for (Visitor1 ast2 : asts) {
-//                if (j != i) {
-//                    System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getTypeBinding().getName() + " // " + ast2.getTypeBinding().getName() + " +=+=+=+=+=+=+=+=\n");
-//                    //compare(ast1, ast2);
-//                }
-//                i++;
-//            }
-//            i = 0;
-//            j++;
-//        }
 
         System.out.println("***************GlobalEnviromentTypes***************");
         Map<String, TypeBinding> enviroment = asts.get(asts.size() - 1).getGlobalEnviroment().getEnviroment();
@@ -84,18 +86,17 @@ public class ParserJava {
     }
 
     private static void compare(TypeBinding AST1, TypeBinding AST2) {
-        
+
 //        System.out.println("***************MethodDeclarationAST1***************");
 //        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
 //            System.out.println(methodDeclarationBinding);
 //        }
-        
-        
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
             for (List<BaseBinding> context : methodDeclarationBinding.getEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
-                    if(baseBinding instanceof MethodCallBinding){
-                          System.out.println(baseBinding);
+
+                    if (baseBinding instanceof MethodCallBinding) {
+                        System.out.println(baseBinding);
                     }
                 }
             }
@@ -128,7 +129,7 @@ public class ParserJava {
 //        }
 
     }
-     
+
     private static List<String> javaFiles(String dir) {
         List<String> javaFiles = new ArrayList<>();
         File file = new File(dir);

@@ -6,7 +6,7 @@ import java.util.Map;
 public class GlobalEnviroment {
 
     private Map<String, TypeBinding> enviroment;
-
+    
     public GlobalEnviroment() {
         this.enviroment = new HashMap<>();
     }
@@ -17,7 +17,7 @@ public class GlobalEnviroment {
     public Map<String, TypeBinding> getEnviroment() {
         return enviroment;
     }
-
+    
     /**
      * @param enviroment the globalEnviroment to set
      */

@@ -9,7 +9,6 @@ import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
