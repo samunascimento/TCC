@@ -639,7 +639,9 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
             }
 
         }
-        globalEnviroment.getEnviroment().put(packageBinding.getName().concat("/").concat(typeBinding.getName()), typeBinding);
+        String packagename = packageBinding.getName().replaceAll("\\.", "/");
+        packageBinding.setName(packagename);
+        globalEnviroment.getEnviroment().put(packageBinding.getName().concat("/").concat(typeBinding.getName()).concat(".java"), typeBinding);
         ParserJava.getGlobalEnviroment();
         return super.visitClassDeclaration(ctx);
     }
