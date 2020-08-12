@@ -124,4 +124,10 @@ public class TypeBinding extends BaseBinding {
     public void setImports(List<String> imports) {
         this.imports = imports;
     }
+
+    @Override
+    public String getName() {
+        return this.getPackageBinding().getName().concat(".").concat(super.getName());
+    }
+    
 }

@@ -1,29 +1,29 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Visitor1 extends JavaParserBaseVisitor<Object> {
 
     private PackageBinding packageBinding;
-
+    private boolean error;
     private TypeBinding typeBinding;
     private GlobalEnviroment globalEnviroment;
 
     public Visitor1() {
+        this.error = false;
         this.globalEnviroment = new GlobalEnviroment();
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
     }
 
     public Visitor1(GlobalEnviroment globalEnviroment) {
+        this.error = false;
         this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
@@ -631,22 +631,18 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
             name = typeExtends.getText();
             TypeBinding extendedClass = globalEnviroment.getEnviroment().get(name);
             this.typeBinding.setExtendClass(extendedClass);
-            /**
-             * TODO: tratar usando caso Person
-             */
+            
             if (this.typeBinding.getExtendClass() == null) {
-                TypeBinding type = new TypeBinding();
-                type.setName(name);
-                this.typeBinding.setExtendClass(type);
+//                TypeBinding type = new TypeBinding();
+//                type.setName(name);
+//                this.typeBinding.setExtendClass(type);
+                this.error = true;
             }
 
         }
-        String packagename = "";
-        for (String string : packageBinding.getName().split("\\.")) {
-            packagename = packagename.concat(string).concat(File.separator);
-        }
-        packageBinding.setName(packagename);
-        globalEnviroment.getEnviroment().put(packageBinding.getName().concat(typeBinding.getName()).concat(".java"), typeBinding);
+        
+        
+        globalEnviroment.getEnviroment().put(packageBinding.getPath().concat(".java"), typeBinding);
         return super.visitClassDeclaration(ctx);
     }
 
@@ -675,6 +671,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         if (ctx.getChild(0) instanceof JavaParser.ClassOrInterfaceModifierContext) {
             Modifier modifier = Modifier.equalsTo(ctx.getChild(0).getText());
             this.typeBinding.addModifier(modifier);
+            this.typeBinding.setPackageBinding(packageBinding);
         }
 
         return super.visitTypeDeclaration(ctx);
@@ -812,5 +809,19 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
      */
     public void setGlobalEnviroment(GlobalEnviroment globalEnviroment) {
         this.globalEnviroment = globalEnviroment;
+    }
+
+    /**
+     * @return the error
+     */
+    public boolean isError() {
+        return error;
+    }
+
+    /**
+     * @param error the error to set
+     */
+    public void setError(boolean error) {
+        this.error = error;
     }
 }

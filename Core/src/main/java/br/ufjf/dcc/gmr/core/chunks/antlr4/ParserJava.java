@@ -190,27 +190,34 @@ public class ParserJava {
     }
 
     private static void ASTExtractor1(List<String> pathList, List<Boolean> openTreeList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
+        List<String> unprocessed = new ArrayList<>();
+        List<String> copyPathList = new ArrayList<>(pathList);
+        do {
+            unprocessed.clear();
+            for (int i = 0; i < copyPathList.size(); i++) {
+                ANTLRFileStream fileStream = new ANTLRFileStream(copyPathList.get(i));
+                JavaLexer lexer = new JavaLexer(fileStream);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        for (int i = 0; i < pathList.size(); i++) {
+                JavaParser parser = new JavaParser(tokens);
+                ParseTree tree = parser.compilationUnit();
 
-            ANTLRFileStream fileStream = new ANTLRFileStream(pathList.get(i));
-            JavaLexer lexer = new JavaLexer(fileStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.setSize(new Dimension(500, 600));
 
-            JavaParser parser = new JavaParser(tokens);
-            ParseTree tree = parser.compilationUnit();
+                if (openTreeList.get(i)) {
+                    viewer.open();
+                }
 
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.setSize(new Dimension(500, 600));
+                Visitor1 visitor = new Visitor1(globalEnviroment);
 
-            if (openTreeList.get(i)) {
-                viewer.open();
+                visitor.visit(tree);
+                if (visitor.isError()) {
+                    unprocessed.add(copyPathList.get(i));
+                }
             }
-
-            Visitor1 visitor = new Visitor1(globalEnviroment);
-
-            visitor.visit(tree);
-        }
+            copyPathList = unprocessed;
+        } while (!unprocessed.isEmpty());
     }
 
     private static void ASTExtractor2(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
