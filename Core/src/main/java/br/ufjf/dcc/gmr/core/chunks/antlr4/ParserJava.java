@@ -34,33 +34,28 @@ public class ParserJava {
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
     }
-    
-    
+
     public static void main(String[] args) throws IOException, InterruptedException {
         List<List> pathAndOpenViewList = view();
         List<Boolean> booleanList = pathAndOpenViewList.get(0);
         List<String> pathsList = pathAndOpenViewList.get(1);
-        List<Visitor1> asts = new ArrayList<>();
         ParserJava parserJava = new ParserJava();
-        
+
         int j = 0, i = 0;
 
-        for (int aux = 0; aux < pathsList.size(); aux++) {
-            ASTExtractor1(pathsList.get(aux), booleanList.get(aux), parserJava.getGlobalEnviroment());
-        }
-        for (int aux = 0; aux < pathsList.size(); aux++) {
-            ASTExtractor2(pathsList.get(aux), booleanList.get(aux), parserJava.getGlobalEnviroment());
-        }
-        for (int aux = 0; aux < pathsList.size(); aux++) {
-            ASTExtractor3(pathsList.get(aux), booleanList.get(aux), parserJava.getGlobalEnviroment());
-        }
+        ASTExtractor1(pathsList, booleanList, parserJava.getGlobalEnviroment());
+
+        ASTExtractor2(pathsList, parserJava.getGlobalEnviroment());
+
+        ASTExtractor3(pathsList, parserJava.getGlobalEnviroment());
+
         Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
-        
+
         for (String pathAST1 : pathsList) {
             for (String pathAST2 : pathsList) {
                 TypeBinding ast1 = new TypeBinding();
                 TypeBinding ast2 = new TypeBinding();
-                
+
                 for (String path : paths) {
                     if (pathAST1.endsWith(path)) {
                         ast1 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
@@ -194,64 +189,66 @@ public class ParserJava {
         return returnList;
     }
 
-    private static void ASTExtractor1(String path, boolean openTree, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
-        ANTLRFileStream fileStream = new ANTLRFileStream(path);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+    private static void ASTExtractor1(List<String> pathList, List<Boolean> openTreeList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
 
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
+        for (int i = 0; i < pathList.size(); i++) {
 
-        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.setSize(new Dimension(500, 600));
+            ANTLRFileStream fileStream = new ANTLRFileStream(pathList.get(i));
+            JavaLexer lexer = new JavaLexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        if (openTree) {
-            viewer.open();
+            JavaParser parser = new JavaParser(tokens);
+            ParseTree tree = parser.compilationUnit();
+
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.setSize(new Dimension(500, 600));
+
+            if (openTreeList.get(i)) {
+                viewer.open();
+            }
+
+            Visitor1 visitor = new Visitor1(globalEnviroment);
+
+            visitor.visit(tree);
         }
-
-        Visitor1 visitor = new Visitor1(globalEnviroment);
-
-        visitor.visit(tree);
     }
 
-    private static void ASTExtractor2(String path, boolean openTree, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
-        ANTLRFileStream fileStream = new ANTLRFileStream(path);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+    private static void ASTExtractor2(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
+        for (int i = 0; i < pathList.size(); i++) {
 
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
+            ANTLRFileStream fileStream = new ANTLRFileStream(pathList.get(i));
+            JavaLexer lexer = new JavaLexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.setSize(new Dimension(500, 600));
+            JavaParser parser = new JavaParser(tokens);
+            ParseTree tree = parser.compilationUnit();
 
-        if (openTree) {
-            viewer.open();
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.setSize(new Dimension(500, 600));
+
+            Visitor2 visitor = new Visitor2(globalEnviroment);
+
+            visitor.visit(tree);
         }
-
-        Visitor2 visitor = new Visitor2(globalEnviroment);
-
-        visitor.visit(tree);
     }
 
-    private static void ASTExtractor3(String path, boolean openTree, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
-        ANTLRFileStream fileStream = new ANTLRFileStream(path);
-        JavaLexer lexer = new JavaLexer(fileStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+    private static void ASTExtractor3(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
+        for (int i = 0; i < pathList.size(); i++) {
 
-        JavaParser parser = new JavaParser(tokens);
-        ParseTree tree = parser.compilationUnit();
+            ANTLRFileStream fileStream = new ANTLRFileStream(pathList.get(i));
+            JavaLexer lexer = new JavaLexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.setSize(new Dimension(500, 600));
+            JavaParser parser = new JavaParser(tokens);
+            ParseTree tree = parser.compilationUnit();
 
-        if (openTree) {
-            viewer.open();
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.setSize(new Dimension(500, 600));
+
+            Visitor3 visitor = new Visitor3(globalEnviroment);
+
+            visitor.visit(tree);
         }
-
-        Visitor3 visitor = new Visitor3(globalEnviroment);
-
-        visitor.visit(tree);
     }
 
     /**
