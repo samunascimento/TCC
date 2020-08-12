@@ -628,10 +628,11 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
 
         if (classDeclaration.getChild(2).getText().equals("extends")) {
             ParseTree typeExtends = classDeclaration.getChild(3);
-            name = typeExtends.getText();
+            //TODO: tratar para outros pacotes 
+            name = packageBinding.getName().concat(".").concat(typeExtends.getText()).concat(".java");
             TypeBinding extendedClass = globalEnviroment.getEnviroment().get(name);
             this.typeBinding.setExtendClass(extendedClass);
-            
+
             if (this.typeBinding.getExtendClass() == null) {
 //                TypeBinding type = new TypeBinding();
 //                type.setName(name);
@@ -640,9 +641,10 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
             }
 
         }
-        
-        
-        globalEnviroment.getEnviroment().put(packageBinding.getPath().concat(".java"), typeBinding);
+
+        if (!this.error) {
+            globalEnviroment.getEnviroment().put(typeBinding.getName().concat(".java"), typeBinding);
+        }
         return super.visitClassDeclaration(ctx);
     }
 

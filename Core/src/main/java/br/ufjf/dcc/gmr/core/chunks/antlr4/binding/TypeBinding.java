@@ -127,7 +127,13 @@ public class TypeBinding extends BaseBinding {
 
     @Override
     public String getName() {
+        
+        try{
         return this.getPackageBinding().getName().concat(".").concat(super.getName());
+        }catch(NullPointerException e){
+            System.out.println("achou....");
+            return null;
+        }
     }
     
 }

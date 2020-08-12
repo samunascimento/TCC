@@ -190,10 +190,10 @@ public class ParserJava {
     }
 
     private static void ASTExtractor1(List<String> pathList, List<Boolean> openTreeList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
-        List<String> unprocessed = new ArrayList<>();
+        List<String> unprocessed = null;
         List<String> copyPathList = new ArrayList<>(pathList);
         do {
-            unprocessed.clear();
+            unprocessed = new ArrayList<>();
             for (int i = 0; i < copyPathList.size(); i++) {
                 ANTLRFileStream fileStream = new ANTLRFileStream(copyPathList.get(i));
                 JavaLexer lexer = new JavaLexer(fileStream);
