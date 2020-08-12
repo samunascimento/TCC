@@ -26,7 +26,7 @@ public class ProjectVersionDao {
         this.connection = connection;
     }
 
-    public void insert(ProjectMetrics projectMetrics, VersionMetrics versionMetrics) throws SQLException {
+    public void insert(ProjectMetrics projectMetrics, int versionMetricsId) throws SQLException {
 
         String sql = "INSERT INTO tb_project_version "
                 + "(" + PROJECT_ID + ", " + VERSION_ID + ") "
@@ -38,7 +38,7 @@ public class ProjectVersionDao {
             stmt = connection.prepareStatement(sql);
 
             stmt.setInt(1, projectMetrics.getId());
-            stmt.setInt(2, versionMetrics.getId());
+            stmt.setInt(2, versionMetricsId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -77,6 +77,36 @@ public class ProjectVersionDao {
             }
             
             return listVersionId;
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public int selectSizeList(int projectId) throws SQLException {
+
+        String sql = "SELECT * FROM tb_project_version where project_id = ? ";
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+        
+        int size = 0;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            
+            stmt.setInt(1, projectId);
+
+            resultSet = stmt.executeQuery();
+
+            resultSet.next();            
+            size = resultSet.getInt("version_id");                                    
+            return size;
             
         } catch (SQLException e) {
             throw new RuntimeException(e);

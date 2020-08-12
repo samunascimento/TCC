@@ -18,6 +18,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
+import br.ufjf.dcc.jasome.jdbc.dao.ProjectVersionDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
 import java.io.File;
 import java.io.IOException;
@@ -66,47 +67,36 @@ public class JasomeMethods {
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);
         VersionMetrics versionMetrics = new VersionMetrics();
         ProjectMetrics projectMetrics = new ProjectMetrics();
-//      JasomeExtract jasomeExtract = new JasomeExtract();
         ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
+        ProjectVersionDao projectVersionDao = new ProjectVersionDao(connection);
         List<Integer> idList = new ArrayList<>();
         List<ProjectMetrics> projectNames = new ArrayList<>();
         boolean checkProject = false;
         try {
-//            for (int i = 0; i < projectDao.select().size(); i++) {
-//                projectNames.add(projectDao.selectID(i + 1));
-//                if (project.getName() == projectNames.get(i).getName()) {
-//                    project.setId(projectNames.get(i).getId());
-//                    checkProject = true;
-//                    break;
-//                }
-//            }
+            for (int i = 0; i < projectDao.select().size(); i++) {
+                projectNames.add(projectDao.selectID(i + 1));
+                if (project.getName().equals(projectNames.get(i).getName())) {
+                    project.setId(projectNames.get(i).getId());
+                    checkProject = true;
+                    break;
+                }
+            }
             int i;
             int idPosition;
             int id;
             System.out.println(project.getSourceDir());
             List<Formats> log;
             List<String> parents;
-
-            int projectId = projectDao.insert(project);
-            project.setId(projectId);
-
-//            if (checkProject == false) {
+            
+            if (checkProject == false) {
+                int projectId = projectDao.insert(project);
+                project.setId(projectId);
                 i = 0;
                 idPosition = 0;
                 log = Git.logAll(project.getSourceDir());
                 Collections.reverse(log);
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
-
-//                for (Formats revision : log) {
-//                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-//                    versionMetrics.setAuthorName(revision.getAuthorName());
-//                    versionMetrics.setCommitDate(revision.getAuthorDate());
-//                    versionMetrics.setHash(revision.getCommitHash());
-//                    versionMetrics.setParentsHash(parents);
-//                    int id = versionMetricsDao.insert(versionMetrics);
-//                    idList.add(id);
-//                }
 
                 for (Formats revision : log) {
                     parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
@@ -115,38 +105,67 @@ public class JasomeMethods {
                     versionMetrics.setHash(revision.getCommitHash());
                     versionMetrics.setParentsHash(parents);
                     id = versionMetricsDao.insert(versionMetrics);
+                    idList.add(id);
+                }
+                
+                connection.commit();
+
+                for (Formats revision : log) {
+                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                    versionMetrics.setAuthorName(revision.getAuthorName());
+                    versionMetrics.setCommitDate(revision.getAuthorDate());
+                    versionMetrics.setHash(revision.getCommitHash());
+                    versionMetrics.setParentsHash(parents);
+                    id = idList.get(idPosition);
                     versionMetrics.setId(id);
                     projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
+                    projectVersionDao.insert(project, versionMetrics.getId());
                     versionMetricsDao.updateAnalyzed(versionMetrics);
-                    System.out.println("Commit número: " + idPosition);
+                    System.out.println("Commit número: " + (idPosition + 1));
                     System.out.println(new Date());
                     idPosition++;
+                    connection.commit();
                 }
-//            } else if (checkProject == true) {
-//                i = 0;
-//                idPosition = 0;
-//                log = Git.logAll(project.getSourceDir());
-//                Collections.reverse(log);
-//                System.out.println(log.size());
-//                System.out.println("=================REVs=======================");
-//                
-//                String hash = projectDao.searchVersion(project.getId());
-//                boolean checkHash = false;
-//
-//                for (Formats revision : log) {
-//                    if(hash == revision.getCommitHash()){
-//                        checkHash = true;
-//                    }
-//                    
-//                    if(checkHash == true){
-//                    parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
-//                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, idList.get(idPosition));
-//                    System.out.println(new Date());
-//                    idPosition++;
-//                    }
-//                }
-//
-//            }
+                
+            } else if (checkProject == true) {
+                i = 0;
+                idPosition = 1;
+                log = Git.logAll(project.getSourceDir());
+                Collections.reverse(log);
+                System.out.println(log.size());
+                System.out.println("=================REVs=======================");
+
+                int size = projectDao.searchVersion(project.getId());
+                
+                id = versionMetricsDao.versionToAnalyze(project.getId());
+                id++;
+
+                for (Formats revision : log) {
+                    
+                    
+                    if (size >= idPosition) {
+                        idPosition++;
+                    }
+                    else {
+                        parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
+                        versionMetrics.setAuthorName(revision.getAuthorName());
+                        versionMetrics.setCommitDate(revision.getAuthorDate());
+                        versionMetrics.setHash(revision.getCommitHash());
+                        versionMetrics.setParentsHash(parents);
+                        System.out.println(id);
+                        versionMetrics.setId(id);
+                        projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
+                        System.out.println(versionMetrics.getId());
+                        projectVersionDao.insert(project, versionMetrics.getId());
+                        versionMetricsDao.updateAnalyzed(versionMetrics);
+                        System.out.println("Commit número: " + (idPosition));
+                        System.out.println(new Date());
+                        idPosition++;
+                        id++;
+                        connection.commit();
+                    }
+                }
+            }
         } catch (NullPointerException ex) {
             System.out.println("Fim do arquivo");
         } catch (LocalRepositoryNotAGitRepository ex) {
