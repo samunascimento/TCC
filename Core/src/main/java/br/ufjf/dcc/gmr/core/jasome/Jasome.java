@@ -38,7 +38,7 @@ public class Jasome {
         
         try {
             //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\android-async-http");
+            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\Java");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
         }
@@ -85,6 +85,7 @@ public class Jasome {
         } else {
             connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
         }
+        connection.setAutoCommit(false);
         
         ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
         

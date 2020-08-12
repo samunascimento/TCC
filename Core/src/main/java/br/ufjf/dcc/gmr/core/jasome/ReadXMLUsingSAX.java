@@ -133,11 +133,13 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        try {
-            projectVersionDao.insert(projectMetrics, versionMetrics);
-        } catch (SQLException ex) {
-            Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        //Comentei pois lançava a exceção no método acima e não entrava aqui
+//        try {
+//            c
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ReadXMLUsingSAX.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     /**

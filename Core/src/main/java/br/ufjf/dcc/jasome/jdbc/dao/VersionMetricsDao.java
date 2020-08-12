@@ -176,9 +176,9 @@ public class VersionMetricsDao {
 
             Date versionDate = new Date(versionTimestamp.getTime());
 
-            Metric metric = metricDao.selectID(tlocID);
+//            Metric metric = metricDao.selectID(tlocID);  comentado pois estava gerando erro
 
-            versionMetrics.setTloc(metric);
+//            versionMetrics.setTloc(metric);
 
             versionMetrics.setHash(hash);
 
@@ -235,6 +235,39 @@ public class VersionMetricsDao {
             }
         }
     }
+    
+    public int versionToAnalyze(int projectId) throws SQLException {
+        VersionMetrics versionMetrics;
+        versionMetrics = new VersionMetrics();
+        MetricDao metricDao = new MetricDao(connection);
+
+        String sql = "Select * from tb_project_version where project_id = " + projectId + " order by version_id DESC";
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+        
+        int idToAnalyze = 0;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            
+            resultSet.next();
+            
+            idToAnalyze = resultSet.getInt("version_id");
+            System.out.println("");
+            
+            return idToAnalyze;
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
     public void update(VersionMetrics verionMetric, int id) throws SQLException {
         String sql = null; // "UPDATE tb_versionMetrics SET tloc = '" + metric.getValue() + "' WHERE ID = '" + id + "'";
@@ -252,4 +285,6 @@ public class VersionMetricsDao {
             }
         }
     }
+    
+    
 }
