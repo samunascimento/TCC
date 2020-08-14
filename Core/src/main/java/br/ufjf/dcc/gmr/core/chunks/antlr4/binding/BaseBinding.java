@@ -5,6 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
+import java.io.File;
+
 /**
  *
  * @author felip
@@ -20,8 +22,6 @@ public class BaseBinding {
     public BaseBinding() {
         this.name = null;
     }
-    
-    
     
     /**
      * @return the name

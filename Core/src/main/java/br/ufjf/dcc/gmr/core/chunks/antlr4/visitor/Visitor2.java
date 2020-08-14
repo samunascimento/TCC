@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -11,20 +10,15 @@ import java.util.List;
 
 public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
-    //remover variableBindingList e methodCallBidingList se possivel
-    private List<MethodDeclarationBinding> methodDeclarationBindingList;
-    //PackageBinding, 
     private PackageBinding packageBinding;
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
-    private static GlobalEnviroment globalEnviroment = ParserJava.getGlobalEnviroment();;
+    private GlobalEnviroment globalEnviroment;
     
-    public Visitor2() {
-        
+    public Visitor2(GlobalEnviroment globalEnviroment) {
+        this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
-        this.methodDeclarationBindingList = new ArrayList<>();
-
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -717,7 +711,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         
         mdbGeneral.setReturnBinding(methodType);
         mdbGeneral.setParameters(parameters);
-        methodDeclarationBindingList.add(mdbGeneral);
 
         typeBinding.getMdbList().add(mdbGeneral);
 
@@ -923,13 +916,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     }
 
     /**
-     * @return the methodDeclarationBindingList
-     */
-    public List<MethodDeclarationBinding> getMethodDeclarationBinding() {
-        return methodDeclarationBindingList;
-    }
-
-    /**
      * @return the packageBinding
      */
     public PackageBinding getPackageBinding() {
@@ -941,13 +927,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
      */
     public TypeBinding getTypeBinding() {
         return typeBinding;
-    }
-
-    /**
-     * @param methodDeclarationBinding the methodDeclarationBindingList to set
-     */
-    public void setMethodDeclarationBinding(List<MethodDeclarationBinding> methodDeclarationBinding) {
-        this.methodDeclarationBindingList = methodDeclarationBinding;
     }
 
     /**
