@@ -236,6 +236,25 @@ public class VersionMetricsDao {
         }
     }
     
+    public void updateErro(boolean error, int versionId) throws SQLException {
+        String sql = "UPDATE tb_versionMetrics SET erro = ? WHERE ID = ? ";
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setBoolean(1, error);
+            stmt.setInt(2, versionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
     public int versionToAnalyze(int projectId) throws SQLException {
         VersionMetrics versionMetrics;
         versionMetrics = new VersionMetrics();

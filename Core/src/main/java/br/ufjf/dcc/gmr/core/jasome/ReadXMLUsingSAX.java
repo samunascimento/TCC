@@ -104,25 +104,31 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         this.version = version;
         this.parents = parents;
-        
+
         versionId = idPosition;
     }
 
-    public void fazerParsing(String xml) {
+    public void fazerParsing(String xml) throws SQLException {
 
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser;
+        boolean checkError = false;
         try {
             saxParser = factory.newSAXParser();
 //            saxParser.parse(pathArq, this);
             saxParser.parse(new InputSource(new StringReader(xml)), this);
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
+            checkError = true;
             StringBuffer msg = new StringBuffer();
             msg.append("Erro:\n");
             msg.append(e.getMessage() + "\n");
             msg.append(e.toString());
             System.out.println(msg);
+        }
+        finally
+        {
+            versionMetricDao.updateErro(checkError, versionId);
         }
     }
 
@@ -133,7 +139,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        
+
         //Comentei pois lançava a exceção no método acima e não entrava aqui
 //        try {
 //            c
@@ -255,7 +261,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                     }
 
                 } else if (project && pacckage && clazz && !method) {
-                                     
+
                     if (metric.getName().equals("Aa")) {
 
                         int insert = metricDao.insert(metric);
@@ -613,7 +619,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
 
         tagAtual = qName;
         try {
-            
+
             // atualizando o valor de analyzed  e inserindo id da métrica
             if (tagAtual.equals("Project")) {
                 versionMetrics.setProjectID(projectMetrics.getId());
@@ -622,24 +628,23 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 for (int i = 0; i < versionMetrics.getListPackageMetric().size(); i++) {
                     versionPackageDao.insert(versionMetrics, versionMetrics.getListPackageMetric().get(i));
                 }
-                
-                //buscando os pais e atualizando na tabela
 
-                List<VersionMetrics> versionParents = new ArrayList<>();                                            
+                //buscando os pais e atualizando na tabela
+                List<VersionMetrics> versionParents = new ArrayList<>();
                 List<Integer> listVersionId = projectVersionDao.selectProjectId(versionMetrics.getProjectID());
-                
-                for(int i = 0; i < listVersionId.size(); i++){
-                    
+
+                for (int i = 0; i < listVersionId.size(); i++) {
+
                     versionParents.add(versionMetricDao.selectID(listVersionId.get(i)));
-                    
+
                 }
-                                     
+
                 for (int i = 0; i < versionMetrics.getParentsHash().size(); i++) {
                     System.out.println(versionMetrics.getParentsHash().get(i));
-                    if(versionMetrics.getParentsHash().get(i).equals("")){
-                            parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i), null);
-                        }
-                    for (int k = 0; k < versionParents.size(); k++) {                        
+                    if (versionMetrics.getParentsHash().get(i).equals("")) {
+                        parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i), null);
+                    }
+                    for (int k = 0; k < versionParents.size(); k++) {
                         if (versionMetrics.getParentsHash().get(i).equals(versionParents.get(k).getHash())) {
                             parentsHashDao.insert(versionMetrics, versionMetrics.getParentsHash().get(i), versionParents.get(k));
                         }
@@ -653,7 +658,7 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 packageMetrics.setId(packageId);
                 for (int i = 0; i < packageMetrics.getListClassMetrics().size(); i++) {
                     packageClassDao.insert(packageMetrics, packageMetrics.getListClassMetrics().get(i));
-                }                
+                }
                 versionMetrics.getListPackageMetric().add(packageMetrics);
                 pacckage = false;
 
@@ -663,14 +668,14 @@ public class ReadXMLUsingSAX extends DefaultHandler {
                 classMetrics.setId(classId);
                 for (int i = 0; i < classMetrics.getListMethodsMetrics().size(); i++) {
                     classMethodDao.insert(classMetrics, classMetrics.getListMethodsMetrics().get(i));
-                } 
+                }
                 packageMetrics.getListClassMetrics().add(classMetrics);
                 clazz = false;
 
             } else if (tagAtual.equals("Method")) {
                 int methodId = methodMetricDao.insert(methodMetrics);
                 methodMetrics.setId(methodId);
-                classMetrics.getListMethodsMetrics().add(methodMetrics);            
+                classMetrics.getListMethodsMetrics().add(methodMetrics);
                 method = false;
 
             }

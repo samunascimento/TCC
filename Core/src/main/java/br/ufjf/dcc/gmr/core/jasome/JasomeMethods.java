@@ -87,7 +87,7 @@ public class JasomeMethods {
             System.out.println(project.getSourceDir());
             List<Formats> log;
             List<String> parents;
-            
+
             if (checkProject == false) {
                 int projectId = projectDao.insert(project);
                 project.setId(projectId);
@@ -107,7 +107,7 @@ public class JasomeMethods {
                     id = versionMetricsDao.insert(versionMetrics);
                     idList.add(id);
                 }
-                
+
                 connection.commit();
 
                 for (Formats revision : log) {
@@ -126,7 +126,7 @@ public class JasomeMethods {
                     idPosition++;
                     connection.commit();
                 }
-                
+
             } else if (checkProject == true) {
                 i = 0;
                 idPosition = 1;
@@ -136,23 +136,20 @@ public class JasomeMethods {
                 System.out.println("=================REVs=======================");
 
                 int size = projectDao.searchVersion(project.getId());
-                
+
                 id = versionMetricsDao.versionToAnalyze(project.getId());
                 id++;
 
                 for (Formats revision : log) {
-                    
-                    
+
                     if (size >= idPosition) {
                         idPosition++;
-                    }
-                    else {
+                    } else {
                         parents = Git.parent(project.getSourceDir(), revision.getCommitHash());
                         versionMetrics.setAuthorName(revision.getAuthorName());
                         versionMetrics.setCommitDate(revision.getAuthorDate());
                         versionMetrics.setHash(revision.getCommitHash());
                         versionMetrics.setParentsHash(parents);
-                        System.out.println(id);
                         versionMetrics.setId(id);
                         projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
                         System.out.println(versionMetrics.getId());
@@ -188,45 +185,18 @@ public class JasomeMethods {
         CLIExecution extractMetrics = extractMetrics(project);
         System.out.println(new Date());
         System.out.println("==============================================");
-        ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision, parents, idPosition);
-        readXml.fazerParsing(extractMetrics.getOutputString());
-        projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
         try {
-            //if (projectMetrics.getListVersionMetrics().get(i).getError()) {
-            //    System.out.println("temos um erro nesta versão");
-            //}
-
-//            List<PackageMetrics> listPackage = projectMetrics.getListVersionMetrics().get(i).getListPackageMetric();
-//            jasomeExtract.extractMetricPackage(projectMetrics, listPackage);
-//            jasomeExtract.extractMetricClass(projectMetrics, listPackage);
-//            jasomeExtract.extractMetricMethod(projectMetrics, listPackage);
+            ReadXMLUsingSAX readXml = new ReadXMLUsingSAX(project, connection, revision, parents, idPosition);
+            readXml.fazerParsing(extractMetrics.getOutputString());
+            projectMetrics.getListVersionMetrics().add(readXml.getVersionMetrics());
+        } catch (SQLException e) {
+            System.out.println("Erro ao fazer inserção no banco");
         } finally {
             i++;
         }
         return projectMetrics;
     }
 
-//    public void listJavaArchives(String repositoryPath, File directory, List<String> archiveTypes) throws RepositoryNotFound, ParseException, InvalidDocument, CheckoutError, InvalidDocument {
-//        try {
-//            int k = 0;
-//            ProjectMetrics projectMetrics = new ProjectMetrics();
-//            if (directory.isDirectory()) {
-//                String[] subDirectory = directory.list();
-//                if (subDirectory != null) {
-//                    for (String dir : subDirectory) {
-//                        listJavaArchives(repositoryPath, new File(directory + File.separator + dir), archiveTypes);
-//                    }
-//                }
-//
-//            } else if (directory.isFile() && directory.getAbsoluteFile().toString().endsWith("." + archiveTypes.get(0))) {
-//                getFileNames().add(directory.getName().toString());
-//                pathNames.add(directory.getAbsoluteFile().toString());
-//                System.out.println("adicionando arquivo: " + directory.getName());
-//            }
-//        } catch (NullPointerException ex) {
-//            System.out.println("Fim do arquivo");
-//        }
-//    }
     public void javaArchivesCount() {
         System.out.println("");
         System.out.println("número de arquivos: " + getFileNames().size());
