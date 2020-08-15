@@ -1,6 +1,8 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
-public class EmployeeExtends extends Person {
+import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example2.Person2;
+
+public class EmployeeExtends extends Person2 {
 
     private String office;
     private String registration;

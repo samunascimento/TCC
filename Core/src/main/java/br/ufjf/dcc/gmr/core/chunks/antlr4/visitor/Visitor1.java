@@ -624,20 +624,34 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
         this.typeBinding.setName(ctx.getChild(1).getText());
         String name = "";
+        TypeBinding extendedClass = new TypeBinding();
         JavaParser.ClassDeclarationContext classDeclaration = (JavaParser.ClassDeclarationContext) ctx;
 
         if (classDeclaration.getChild(2).getText().equals("extends")) {
             ParseTree typeExtends = classDeclaration.getChild(3);
-            //TODO: tratar para outros pacotes 
-            name = packageBinding.getName().concat(".").concat(typeExtends.getText()).concat(".java");
-            TypeBinding extendedClass = globalEnviroment.getEnviroment().get(name);
+            
+            if(typeBinding.getImports().size() != 0){
+                for (String Import : typeBinding.getImports()) {
+                    String[] aux = Import.split("\\.");
+                    String name2 = aux[aux.length-1];
+                    if( name2.equals(typeExtends.getText())){
+                        name = Import.concat(".java");
+                        extendedClass = globalEnviroment.getEnviroment().get(name);
+                    }
+                }
+            }else{
+                name = packageBinding.getName().concat(".").concat(typeExtends.getText()).concat(".java");
+                extendedClass = globalEnviroment.getEnviroment().get(name);
+                
+            }                    
+            
             this.typeBinding.setExtendClass(extendedClass);
 
             if (this.typeBinding.getExtendClass() == null) {
 //                TypeBinding type = new TypeBinding();
 //                type.setName(name);
 //                this.typeBinding.setExtendClass(type);
-                this.error = true;
+                  this.error = true;
             }
 
         }
