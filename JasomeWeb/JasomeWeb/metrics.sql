@@ -34,6 +34,7 @@ CREATE TABLE tb_versionMetrics (
     authorName varchar(255),
     versionDate timeStamptz,
     analyzed boolean,
+    erro boolean,
     PRIMARY KEY (ID),
     FOREIGN KEY (tlocID) REFERENCES tb_metric(ID)
 );
