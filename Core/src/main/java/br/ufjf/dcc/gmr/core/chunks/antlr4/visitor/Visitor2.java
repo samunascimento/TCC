@@ -14,7 +14,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
     private GlobalEnviroment globalEnviroment;
-    
+
     public Visitor2(GlobalEnviroment globalEnviroment) {
         this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
@@ -264,7 +264,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-        
+
 //        if (!this.firstAnalysis) {
 //            return super.visitLocalVariableDeclaration(ctx);
 //        }
@@ -333,7 +333,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
-       
+
 //             List<BaseBinding> bindings = new ArrayList<>();
 //        
 //        String text = ctx.getText();
@@ -352,7 +352,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 //            }          
 //        }
 //
-       Object visitBlock = super.visitBlock(ctx);
+        Object visitBlock = super.visitBlock(ctx);
 //
 //        if (this.methodDeclaration) {
 //            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
@@ -580,7 +580,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
-        
+
         VariableBinding variable = new VariableBinding();
         TypeBinding type = new TypeBinding();
 
@@ -605,7 +605,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
                 variable.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
-
 
         this.typeBinding.addAttributes(variable);
 
@@ -648,8 +647,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         List<VariableBinding> parameters = new ArrayList<>();
         TypeBinding methodType = this.typeBinding;
 
-        methodType.setPackageBinding(packageBinding);
-
         mdbGeneral = new MethodDeclarationBinding();
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
         mdbGeneral.setCtx(ctx);
@@ -658,57 +655,61 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         mdbGeneral.setModifier(modifiers);
 
         //Getting return type
-        JavaParser.TypeTypeOrVoidContext TypeOrVoid = (JavaParser.TypeTypeOrVoidContext) ctx.typeTypeOrVoid();
-        if (ctx.typeTypeOrVoid().typeType() == null) {
+        JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
+        if (typeType == null) {
             methodType.setName("void");
-        } else if (ctx.typeTypeOrVoid().typeType().primitiveType() != null) {
-            methodType.setName(ctx.typeTypeOrVoid().typeType().primitiveType().getText());
-        } else if (ctx.typeTypeOrVoid().typeType().classOrInterfaceType() != null) {
-            methodType.setName(ctx.typeTypeOrVoid().typeType().classOrInterfaceType().getText());
+        } else if (typeType.primitiveType() != null) {
+            methodType.setName(typeType.primitiveType().getText());
+        } else if (typeType.classOrInterfaceType() != null) {
+            String name = packageBinding.getName();
+            name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
+            TypeBinding compare = globalEnviroment.getEnviroment().get(name);
+            if(compare != null){
+                methodType = compare;
+            }else{
+                methodType.setName(typeType.classOrInterfaceType().getText());
+            }
         }
 
         //Getting parameters
         JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
-        
+
         if (ctx.formalParameters().formalParameterList() != null) {
             for (ParseTree parseTree : formalParameters.children) {
                 if (parseTree instanceof JavaParser.FormalParameterContext) {
-                    
+
                     JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
                     TypeBinding parameterType = new TypeBinding();
                     VariableBinding parameter = new VariableBinding();
-                    
+
                     parameter.setName(aux.variableDeclaratorId().getText());
-                   
+
                     if (aux.typeType().classOrInterfaceType() != null) {
-                        
+
                         for (TypeBinding type : globalEnviroment.getEnviroment().values()) {
-                            if(aux.typeType().classOrInterfaceType().getText().equals(type.getName())){
+                            if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
                                 parameterType = type;
-                                
                             }
                         }
-                        if( parameterType.getName() == null){
-                            
+                        if (parameterType.getName() == null) {
+
                             parameterType.setName(aux.typeType().classOrInterfaceType().getText());
                             //TODO: change to use the parameter's package
                             parameterType.setPackageBinding(packageBinding);
-                        }                       
-                        
+                        }
+
                     } else if (aux.typeType().primitiveType() != null) {
-                        
+
                         parameterType.setName(aux.typeType().primitiveType().getText());
                     }
-                    
+
                     parameter.setType(parameterType);
-                  
+
                     parameters.add(parameter);
                 }
             }
         }
-        
-        
-        
+
         mdbGeneral.setReturnBinding(methodType);
         mdbGeneral.setParameters(parameters);
 
@@ -732,8 +733,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
         return result;
     }
-
-    
 
     @Override
     public Object visitMemberDeclaration(JavaParser.MemberDeclarationContext ctx) {
@@ -843,6 +842,11 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof JavaParser.QualifiedNameContext) {
+                packageBinding.setName(parseTree.getText());
+            }
+        }
 
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
@@ -889,7 +893,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public Object visit(ParseTree tree) {
         return super.visit(tree);
     }
-    
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
@@ -942,7 +946,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-    
+
     /**
      * @return the globalEnviroment
      */

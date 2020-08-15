@@ -131,7 +131,6 @@ public class TypeBinding extends BaseBinding {
         try{
         return this.getPackageBinding().getName().concat(".").concat(super.getName());
         }catch(NullPointerException e){
-            System.out.println("achou....");
             return null;
         }
     }

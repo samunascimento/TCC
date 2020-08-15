@@ -1,4 +1,3 @@
-
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
 import java.util.Random;

@@ -64,6 +64,10 @@ public class Main {
 
         System.out.println(employeeExtends.getAdress().getCity());
     }
+    
+    public Person person(Person person){
+        return person;
+    }
 
     /**
      * @return the age
