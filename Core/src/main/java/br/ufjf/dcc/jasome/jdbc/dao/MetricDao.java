@@ -459,13 +459,92 @@ public class MetricDao {
     }
     
     
-    
+//   public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage,String nameMetric) throws SQLException {
+//
+//        List<List<Point>> chartLines = new ArrayList<>();
+//
+//        Set<String> packageNames = new HashSet<>();
+//        List<Integer> versionIDs = new ArrayList<>();
+//
+//        PreparedStatement stmt = null;
+//
+//        ResultSet resultSet = null;
+//
+//        String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value \n"
+//                + "from tb_projectmetrics as a\n"
+//                + "inner join tb_project_version as b \n"
+//                + "on a.id = b.project_id \n"
+//                + "inner join tb_version_package as c \n"
+//                + "on b.version_id = c.version_id \n"
+//                + "inner join tb_versionmetrics as v \n"
+//                + "on v.id = c.version_id \n"
+//                + "inner join tb_packagemetrics as d \n"
+//                + "on c.package_id = d.id \n"
+//                + "inner join tb_metric as e \n"
+//                + "on\n"
+//                + "d."+ nameMetric +"id = e.id \n"
+//                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "'"
+//                + "order by v.id";
+//
+//        int idIndex;
+//
+//        try {
+//            stmt = connection.prepareStatement(sql);
+//            resultSet = stmt.executeQuery();
+//            int id;
+//            while (resultSet.next()) {
+//                packageNames.add(resultSet.getString("packagename"));
+//                id = resultSet.getInt("id");
+//                if (!versionIDs.contains(id)) {
+//                    versionIDs.add(id);
+//                }
+//            }
+//            for (String packageName : packageNames) {
+//                    
+//                    resultSet = stmt.executeQuery();
+//                    int cont = 0;
+//                    List<Point> listPoints = new ArrayList<>();
+//                    int idAux;
+//                    idIndex = 0;
+//                    while (resultSet.next()) {
+//                        if (resultSet.getString("packageName").equals(packageName)) {
+//                            idAux = resultSet.getInt("id");
+//                            while ((idIndex < versionIDs.size()) && (versionIDs.get(idIndex) < idAux)) {
+//                                listPoints.add(null);
+//                                cont++;
+//                                idIndex++;
+//                            }
+//
+//                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+//                            Date versionDate = new Date(versionTimestamp.getTime());
+//
+//                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+//                            idIndex++;
+//                        }
+//                    }
+//                    chartLines.add(listPoints);
+//
+//            }
+//
+//            return chartLines;
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        } catch (IndexOutOfBoundsException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (stmt != null) {
+//                stmt.close();
+//            }
+//        }
+//        return null;
+//    }
+//    
+
     public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage,String nameMetric) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
 
         Set<String> packageNames = new HashSet<>();
-        List<Integer> versionIDs = new ArrayList<>();
 
         PreparedStatement stmt = null;
 
@@ -473,19 +552,19 @@ public class MetricDao {
 
         String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value \n"
                 + "from tb_projectmetrics as a\n"
-                + "inner join tb_project_version as b \n"
+                + "left join tb_project_version as b \n"
                 + "on a.id = b.project_id \n"
-                + "inner join tb_version_package as c \n"
+                + "left join tb_version_package as c \n"
                 + "on b.version_id = c.version_id \n"
-                + "inner join tb_versionmetrics as v \n"
+                + "left join tb_versionmetrics as v \n"
                 + "on v.id = c.version_id \n"
-                + "inner join tb_packagemetrics as d \n"
+                + "left join tb_packagemetrics as d \n"
                 + "on c.package_id = d.id \n"
-                + "inner join tb_metric as e \n"
+                + "left join tb_metric as e \n"
                 + "on\n"
                 + "d."+ nameMetric +"id = e.id \n"
-                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "'"
-                + "order by v.id";
+                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null";
+//                + "order by v.id";
 
         int idIndex;
 
@@ -493,40 +572,20 @@ public class MetricDao {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             int id;
+            int cont = 0;
+            List<Point> listPoints = new ArrayList<>();
             while (resultSet.next()) {
-                packageNames.add(resultSet.getString("packagename"));
-                id = resultSet.getInt("id");
-                if (!versionIDs.contains(id)) {
-                    versionIDs.add(id);
+                if (resultSet.getString("packageName") != null) {
+                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                    Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(cont, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                }else{
+                    listPoints.add(null);
                 }
+                cont++;
+                
             }
-            for (String packageName : packageNames) {
-                    
-                    resultSet = stmt.executeQuery();
-                    int cont = 0;
-                    List<Point> listPoints = new ArrayList<>();
-                    int idAux;
-                    idIndex = 0;
-                    while (resultSet.next()) {
-                        if (resultSet.getString("packageName").equals(packageName)) {
-                            idAux = resultSet.getInt("id");
-                            while ((idIndex < versionIDs.size()) && (versionIDs.get(idIndex) < idAux)) {
-                                listPoints.add(null);
-                                cont++;
-                                idIndex++;
-                            }
-
-                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            Date versionDate = new Date(versionTimestamp.getTime());
-
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
-                            idIndex++;
-                        }
-                    }
-                    chartLines.add(listPoints);
-
-            }
-
+            chartLines.add(listPoints);
             return chartLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -540,7 +599,7 @@ public class MetricDao {
         return null;
     }
     
-
+    
     public List<List<Point>> selectClassMetrics(String nameProject) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
