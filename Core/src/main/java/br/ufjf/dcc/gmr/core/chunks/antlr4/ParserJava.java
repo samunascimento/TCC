@@ -15,9 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.swing.*;
 import org.antlr.v4.gui.TreeViewer;
@@ -57,19 +55,19 @@ public class ParserJava {
                 TypeBinding ast2 = new TypeBinding();
 
                 for (String path : paths) {
-                    if (pathAST1.endsWith(path)) {
+                    if (pathAST1.endsWith(replaceAll(path, File.separator))) {
                         ast1 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
                     }
                 }
 
                 for (String path : paths) {
-                    if (pathAST2.endsWith(path)) {
+                    if (pathAST2.endsWith(replaceAll(path, File.separator))) {
                         ast2 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
                     }
                 }
 
                 if (j != i) {
-                    System.out.println("\n+=+=+=+=+=+=+=+= " + ast1.getName() + " // " + ast2.getName() + " +=+=+=+=+=+=+=+=\n");
+                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
                     compare(ast1, ast2);
                 }
                 i++;
@@ -87,10 +85,12 @@ public class ParserJava {
 
     private static void compare(TypeBinding AST1, TypeBinding AST2) {
 
-//        System.out.println("***************MethodDeclarationAST1***************");
-//        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodDeclarationBinding()) {
-//            System.out.println(methodDeclarationBinding);
-//        }
+        System.out.println("***************MethodDeclarationAST1***************");
+        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
+            System.out.println(methodDeclarationBinding.toString());
+        }
+
+        System.out.println("***************MethodCallAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
             for (List<BaseBinding> context : methodDeclarationBinding.getEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
@@ -101,22 +101,24 @@ public class ParserJava {
                 }
             }
         }
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//        System.out.println("***************MethodCallAST1***************");
-//        for (MethodCallBinding methodCallBinding : AST1.getMethodCallBiding()) {
-//            System.out.println(methodCallBinding);
-//        }
-//
-//        System.out.println("***************MethodDeclarationAST2***************");
-//        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodDeclarationBinding()) {
-//            System.out.println(methodDeclarationBinding);
-//        }
-//
-//        System.out.println("***************MethodCallAST2***************");
-//        for (MethodCallBinding methodCallBinding : AST2.getMethodCallBiding()) {
-//            System.out.println(methodCallBinding);
-//        }
-//
+
+        System.out.println("***************MethodDeclarationAST2***************");
+        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMdbList()) {
+            System.out.println(methodDeclarationBinding.toString());
+        }
+
+        System.out.println("***************MethodCallAST2***************");
+        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMdbList()) {
+            for (List<BaseBinding> context : methodDeclarationBinding.getEnviromentBinding().getEnviroment()) {
+                for (BaseBinding baseBinding : context) {
+
+                    if (baseBinding instanceof MethodCallBinding) {
+                        System.out.println(baseBinding);
+                    }
+                }
+            }
+        }
+
 //        System.out.println("***************Dependencies***************");
 //        System.out.println("--------------AST1 --> AST2--------------");
 //        Dependencies.methodDeclarationCallList(AST1.getMethodDeclarationBinding(), AST2.getMethodCallBiding());
@@ -127,7 +129,6 @@ public class ParserJava {
 //        for (VariableBinding variableBinding : AST1.getVariableBindingForList()) {
 //            System.out.println(variableBinding.toString());
 //        }
-
     }
 
     private static List<String> javaFiles(String dir) {
@@ -167,9 +168,9 @@ public class ParserJava {
 
         List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
         List<String> javaFiles2 = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example2");
-        
+
         javaFiles.addAll(javaFiles2);
-        
+
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
@@ -260,6 +261,20 @@ public class ParserJava {
 
             visitor.visit(tree);
         }
+    }
+
+    public static String replaceAll(String str, String replace) {
+        String aux = "";
+        aux = aux.concat(str);
+        str = "";
+        for (String string : aux.split("\\.")) {
+            if (!string.equals("java")) {
+                str = str.concat(string).concat(replace);
+            } else {
+                str = str.substring(0, str.length() - 1).concat(".java");
+            }
+        }
+        return str;
     }
 
     /**
