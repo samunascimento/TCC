@@ -14,11 +14,13 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     private MethodDeclarationBinding mdbGeneral;
     private TypeBinding typeBinding;
     private GlobalEnviroment globalEnviroment;
-
+    private String className;
+    
     public Visitor2(GlobalEnviroment globalEnviroment) {
         this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
+        this.className = ""; 
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -647,26 +649,25 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         List<VariableBinding> parameters = new ArrayList<>();
         TypeBinding methodType = this.typeBinding;
 
-        mdbGeneral = new MethodDeclarationBinding();
-        mdbGeneral.setName(ctx.IDENTIFIER().getText());
-        mdbGeneral.setCtx(ctx);
+        this.mdbGeneral = new MethodDeclarationBinding();
+        this.mdbGeneral.setName(ctx.IDENTIFIER().getText());
+        this.mdbGeneral.setCtx(ctx);
 
         List<Modifier> modifiers = extractModifier(ctx);
-        mdbGeneral.setModifier(modifiers);
+        this.mdbGeneral.setModifier(modifiers);
 
-        //Getting return type
         JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
         if (typeType == null) {
             methodType.setName("void");
         } else if (typeType.primitiveType() != null) {
             methodType.setName(typeType.primitiveType().getText());
         } else if (typeType.classOrInterfaceType() != null) {
-            String name = packageBinding.getName();
+            String name = this.packageBinding.getName();
             name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
-            TypeBinding compare = globalEnviroment.getEnviroment().get(name);
-            if(compare != null){
+            TypeBinding compare = this.globalEnviroment.getEnviroment().get(name);
+            if (compare != null) {
                 methodType = compare;
-            }else{
+            } else {
                 methodType.setName(typeType.classOrInterfaceType().getText());
             }
         }
@@ -686,7 +687,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
                     if (aux.typeType().classOrInterfaceType() != null) {
 
-                        for (TypeBinding type : globalEnviroment.getEnviroment().values()) {
+                        for (TypeBinding type : this.globalEnviroment.getEnviroment().values()) {
                             if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
                                 parameterType = type;
                             }
@@ -695,11 +696,10 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
                             parameterType.setName(aux.typeType().classOrInterfaceType().getText());
                             //TODO: change to use the parameter's package
-                            parameterType.setPackageBinding(packageBinding);
+                            parameterType.setPackageBinding(this.packageBinding);
                         }
 
                     } else if (aux.typeType().primitiveType() != null) {
-
                         parameterType.setName(aux.typeType().primitiveType().getText());
                     }
 
@@ -710,10 +710,9 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
             }
         }
 
-        mdbGeneral.setReturnBinding(methodType);
-        mdbGeneral.setParameters(parameters);
-
-        typeBinding.getMdbList().add(mdbGeneral);
+        this.mdbGeneral.setReturnBinding(methodType);
+        this.mdbGeneral.setParameters(parameters);
+        this.globalEnviroment.getEnviroment().get(this.className).getMdbList().add(this.mdbGeneral);
 
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
@@ -808,6 +807,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
+        this.className =  packageBinding.getName().concat(".").concat(ctx.getChild(1).getText()).concat(".java");
         return super.visitClassDeclaration(ctx);
     }
 
@@ -959,5 +959,19 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
      */
     public void setGlobalEnviroment(GlobalEnviroment globalEnviroment) {
         this.globalEnviroment = globalEnviroment;
+    }
+
+    /**
+     * @return the className
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * @param className the className to set
+     */
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
