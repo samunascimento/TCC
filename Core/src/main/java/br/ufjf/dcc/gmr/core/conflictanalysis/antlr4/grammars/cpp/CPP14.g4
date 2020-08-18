@@ -392,9 +392,13 @@ statementseq
    ;
 
 selectionstatement
+   : ifstatement
+   | switchexpression statement
+   ;
+
+ifstatement
    : ifexpression statement
    | ifexpression statement Else statement
-   | switchexpression statement
    ;
 
 ifexpression

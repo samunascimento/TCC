@@ -290,7 +290,7 @@ public class GitRepositoryAnalysis {
 
     private void secondProcessingLayer() throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, PathDontExist, EmptyOutput, CheckoutError, ImpossibleLineNumber {
         for (FileDiff fileDiff : Git.diff(this.repositoryPath, "", "", false)) {
-            if (!fileDiff.getLines().isEmpty()) {
+            if (!fileDiff.getLines().isEmpty() && !ConflictAnalysisTools.isDirectory(new File(repositoryPath + fileDiff.getFilePathSource().replaceFirst(File.separator, "")))){
                 this.catchMainConflictFileInfo(fileDiff.getFilePathSource());
                 this.thirdProcessingLayer(ConflictAnalysisTools.getFileContent(this.processData.filePath));
                 this.addConflictFile();

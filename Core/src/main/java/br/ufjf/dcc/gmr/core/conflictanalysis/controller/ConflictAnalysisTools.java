@@ -55,6 +55,14 @@ public class ConflictAnalysisTools {
         return sandbox;
     }
 
+    public static boolean isDirectory(File dir) {
+        if (dir.isDirectory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static boolean deleteDirectory(File dir) {
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
@@ -124,7 +132,7 @@ public class ConflictAnalysisTools {
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
             //----------------------------------------------------------------------
-              */
+             */
             return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();

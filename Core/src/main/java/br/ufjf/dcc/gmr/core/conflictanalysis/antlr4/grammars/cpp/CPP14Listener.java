@@ -628,6 +628,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitSelectionstatement(CPP14Parser.SelectionstatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#ifstatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfstatement(CPP14Parser.IfstatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#ifstatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfstatement(CPP14Parser.IfstatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#ifexpression}.
 	 * @param ctx the parse tree
 	 */

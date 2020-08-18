@@ -383,6 +383,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelectionstatement(CPP14Parser.SelectionstatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#ifstatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfstatement(CPP14Parser.IfstatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#ifexpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
