@@ -20,7 +20,7 @@ public class BaseBinding {
     }
 
     public BaseBinding() {
-        this.name = null;
+        this.name = "";
     }
     
     /**

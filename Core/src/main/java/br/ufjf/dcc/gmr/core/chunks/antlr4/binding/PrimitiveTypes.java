@@ -12,6 +12,8 @@ public class PrimitiveTypes {
     public static final String BYTE = "byte";
     public static final String SHORT = "short";
     public static final String LONG = "long";
+    public static final String VOID = "void";
+    public static final String PRIMITIVE_PACKAGE = "#PRIMITIVE#";
 
     public static boolean isCompatibleType(String subType, String type) {
 
@@ -44,13 +46,16 @@ public class PrimitiveTypes {
     }
 
     public static TypeBinding init(String type) {
-
+        
+        PackageBinding primitivePackageBinding = new PackageBinding();
+        primitivePackageBinding.setName(PRIMITIVE_PACKAGE);
+        
         TypeBinding typeBinding = new TypeBinding();
         typeBinding.setExtendClass(null);
         typeBinding.setAttributes(null);
         typeBinding.setImports(null);
         typeBinding.setMdbList(null);
-        typeBinding.setPackageBinding(null);
+        typeBinding.setPackageBinding(primitivePackageBinding);
         typeBinding.setName(type);
         return typeBinding;
 

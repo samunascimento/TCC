@@ -6,7 +6,7 @@ import java.util.Map;
 public class GlobalEnviroment {
 
     private Map<String, TypeBinding> enviroment;
-    
+
     public GlobalEnviroment() {
         this.enviroment = new HashMap<>();
     }
@@ -17,7 +17,7 @@ public class GlobalEnviroment {
     public Map<String, TypeBinding> getEnviroment() {
         return enviroment;
     }
-    
+
     /**
      * @param enviroment the globalEnviroment to set
      */
@@ -31,19 +31,29 @@ public class GlobalEnviroment {
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
-            if (methodDeclarationBinding.equals(methodDeclaration)) {
-                return methodDeclaration;
+            if (methodDeclarationBinding.getName().equals(methodDeclaration.getName())) {
+                if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
+                    if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
+                        for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
+                            if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
+                                return null;
+                            }
+                        }
+                        return methodDeclaration;
+                    }
+                }
             }
+            return null;
         }
         return null;
     }
-
+    
     public MethodDeclarationBinding findMethodCall(MethodCallBinding methodCall, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
-            if((methodDeclarationBinding.getEnviromentBinding().findMethodCall(methodCall)).equals(methodCall)){
+            if ((methodDeclarationBinding.getMethodEnviromentBinding().findMethodCall(methodCall)).equals(methodCall)) {
                 return methodDeclarationBinding;
             }
         }
@@ -62,13 +72,12 @@ public class GlobalEnviroment {
         return null;
     }
 
-
     public VariableBinding findVariable(VariableBinding variable, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
-            return methodDeclarationBinding.getEnviromentBinding().findVariable(variable);
+            return methodDeclarationBinding.getMethodEnviromentBinding().findVariable(variable);
         }
         return null;
     }

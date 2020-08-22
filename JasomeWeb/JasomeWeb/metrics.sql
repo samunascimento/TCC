@@ -321,3 +321,4 @@ VALUES
     ('IOVARS','Input/Output Variables: NOP + 1 (0 if void return type) (method)'),
     ('DI','Data Complexity: (IOVars)/(Fout+1) (method)'),
     ('CI','System Complexity: Si + Di (method)')
+

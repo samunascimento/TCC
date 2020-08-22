@@ -266,64 +266,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
-
-//        if (!this.firstAnalysis) {
-//            return super.visitLocalVariableDeclaration(ctx);
-//        }
-//        
-//       
-//
-//        TypeBinding typeBinding = null;
-//
-//        /**
-//         * dealing with reference type
-//         */
-//        if (ctx.typeType().classOrInterfaceType() != null) {
-//            //Fill typeBindingList with correct types
-//            for (TypeBinding typeBinding1 : this.typeBindingList) {
-//                if (ctx.typeType().classOrInterfaceType().getText().equals(typeBinding1.getName())) {
-//                    typeBinding = typeBinding1;
-//                }
-//            }
-//            //TODO: Create external type
-//        } /**
-//         * dealing with primitive type
-//         */
-//        else if (ctx.typeType().primitiveType() != null) {
-//            String type = ctx.typeType().primitiveType().getText();
-//            typeBinding = PrimitiveTypes.init(type);
-//        } else {
-//            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ERRORvisitLocalVariableDeclaration@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//        }
-//
-//        if (ctx.variableDeclarators().variableDeclarator() != null) {
-//            for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
-//                String name = variableDeclarator.variableDeclaratorId().getText();
-//                VariableBinding variableDeclarationBinding = new VariableBinding();
-//                variableDeclarationBinding.setName(name);
-//                variableDeclarationBinding.setType(typeBinding);
-//
-//                if (this.methodDeclaration) {
-//                     if( ctx.parent instanceof JavaParser.ForInitContext ){
-//                            this.variableBindingForList.add(variableDeclarationBinding);
-//                     }else{
-//                         EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-//                         List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-//                         
-//                         while (variableBindingForList.size() > 0) {
-//                             currentScope.add(variableBindingForList.get(0));
-//                             variableBindingForList.remove(0);
-//                         }
-//                         
-//                         currentScope.add(variableDeclarationBinding);
-//                         
-//                     }
-//                    
-//                   
-//                }
-//            }
-//        }
-//
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -647,9 +589,10 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
 
         List<VariableBinding> parameters = new ArrayList<>();
-        TypeBinding methodType = this.typeBinding;
-
+        TypeBinding methodType = new TypeBinding();
+        
         this.mdbGeneral = new MethodDeclarationBinding();
+     
         this.mdbGeneral.setName(ctx.IDENTIFIER().getText());
         this.mdbGeneral.setCtx(ctx);
 
@@ -657,18 +600,27 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         this.mdbGeneral.setModifier(modifiers);
 
         JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
-        if (typeType == null) {
-            methodType.setName("void");
+        if (typeType == null) {            
+            
+            methodType = PrimitiveTypes.init(PrimitiveTypes.VOID);
         } else if (typeType.primitiveType() != null) {
-            methodType.setName(typeType.primitiveType().getText());
+            
+            methodType = PrimitiveTypes.init(typeType.primitiveType().getText());
         } else if (typeType.classOrInterfaceType() != null) {
+            
             String name = this.packageBinding.getName();
             name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
             TypeBinding compare = this.globalEnviroment.getEnviroment().get(name);
             if (compare != null) {
                 methodType = compare;
             } else {
-                methodType.setName(typeType.classOrInterfaceType().getText());
+                //TODO external class                
+                if(typeType.classOrInterfaceType().getText().equals(PrimitiveTypes.STRING)){
+                    methodType = PrimitiveTypes.init(PrimitiveTypes.STRING);
+                }else{
+                    methodType.setName(typeType.classOrInterfaceType().getText());
+                }
+                
             }
         }
 
@@ -692,15 +644,16 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
                                 parameterType = type;
                             }
                         }
-                        if (parameterType.getName() == null) {
+                        if (parameterType.getName().isEmpty()) {
 
                             parameterType.setName(aux.typeType().classOrInterfaceType().getText());
-                            //TODO: change to use the parameter's package
-                            parameterType.setPackageBinding(this.packageBinding);
+                            
+                            
                         }
 
-                    } else if (aux.typeType().primitiveType() != null) {
-                        parameterType.setName(aux.typeType().primitiveType().getText());
+                    } else if (aux.typeType().primitiveType() != null) {                        
+                        parameterType = PrimitiveTypes.init(aux.typeType().primitiveType().getText());                        
+                        
                     }
 
                     parameter.setType(parameterType);

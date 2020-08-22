@@ -7,17 +7,26 @@ import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.Binding;
 
 public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     //remover variableBindingList e methodCallBidingList se possivel
+    private PackageBinding packageBinding;
     private List<MethodCallBinding> methodCallBidingList;
     //TODO Delete typeBindingList
     private GlobalEnviroment globalEnviroment;
     private EnviromentBinding enviromentBinding;
+    private boolean methodDeclaration;
+    private String className;
+    private MethodDeclarationBinding methodDeclarationBinding;
 //    
+
     public Visitor3(GlobalEnviroment globalEnviroment) {
-        
+        this.methodDeclarationBinding = new MethodDeclarationBinding();
+        this.methodDeclaration = false;
+        this.className = "";
+        this.packageBinding = new PackageBinding();
         this.methodCallBidingList = new ArrayList<>();
         this.enviromentBinding = new EnviromentBinding();
         this.globalEnviroment = globalEnviroment;
@@ -178,7 +187,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 if (parseTree instanceof JavaParser.ExpressionContext) {
                     TypeBinding parameterTypeBinding = new TypeBinding();
                     //Check parameters PackBinding
-//                    parameterTypeBinding.setPackageBinding(packageBinding);
+                    //parameterTypeBinding.setPackageBinding(packageBinding);
 
                     JavaParser.ExpressionContext expressionContext = (JavaParser.ExpressionContext) parseTree;
 
@@ -217,15 +226,33 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
                         } else {
                             //it is a type 
-//                            for (int i = 0; i < variableBindingForList.size(); i++) {
-//                                if (expressionContext.primary().getText().equals(variableBindingForList.get(i).getName())) {
-//                                    parameterTypeBinding.setName(variableBindingForList.get(i).getType().getName());
-//                                }
-//                            }
-                          }
-                        parameters.add(parameterTypeBinding);
+                            String name = expressionContext.primary().getText();
+                            parameterTypeBinding = globalEnviroment.getEnviroment().get(packageBinding.getName().concat(".").concat(name).concat(".java"));
+
+                            if (parameterTypeBinding == null) {
+                                if (!globalEnviroment.getEnviroment().get(this.className).getImports().isEmpty()) {
+                                    for (String aImport : globalEnviroment.getEnviroment().get(this.className).getImports()) {
+                                        if (aImport.endsWith("*")) {
+                                            aImport = aImport.substring(0, aImport.length() - 1);
+                                            parameterTypeBinding = globalEnviroment.getEnviroment().get(aImport.concat(name).concat(".java"));
+                                        } else {
+
+                                            if (aImport.endsWith(name)) {
+                                                parameterTypeBinding = globalEnviroment.getEnviroment().get(aImport.concat(".java"));
+                                            }
+                                        }
+                                    }
+                                }
+                                if (parameterTypeBinding == null) {
+                                    parameterTypeBinding = new TypeBinding();
+                                    parameterTypeBinding.setName("Not treatet - localVariableDeclaration Visitor3");
+                                }
+                            }
+                        }
                     }
+                    parameters.add(parameterTypeBinding);
                 }
+
             }
         }
     }
@@ -233,15 +260,12 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
 
-      
-
         MethodCallBinding methodCallBinding = new MethodCallBinding();
         List<TypeBinding> parameters = new ArrayList<>();
 
         ParserRuleContext parent = ctx.getParent();
 
 //        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
-
 //            for (int i = 0; i < variableBindingForList.size(); i++) {
 //                if (parent.children.get(0).getText().equals(variableBindingForList.get(i).getName())) {
 //                    methodCallBinding.setTypeBinding(variableBindingForList.get(i).getType());
@@ -249,14 +273,22 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //                }
 //            }
 //        }
-
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
-
+        
         methodCallExpressionList(ctx, parameters);
 
         methodCallBinding.setParameters(parameters);
-
+        
+        if(methodDeclaration){
+            int lastIndexX = this.enviromentBinding.getEnviroment().size()-1;
+            
+            if(this.enviromentBinding.getEnviroment().get(lastIndexX) != null){
+                this.enviromentBinding.getEnviroment().get(lastIndexX).add(methodCallBinding);
+            }
+            
+        }
+        
         methodCallBidingList.add(methodCallBinding);
 
         return super.visitMethodCall(ctx);
@@ -354,6 +386,76 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
+
+        TypeBinding typeBinding = null;
+
+        /**
+         * dealing with reference type
+         */
+        if (ctx.typeType().classOrInterfaceType() != null) {
+
+            String name = ctx.typeType().classOrInterfaceType().getText();
+
+            typeBinding = globalEnviroment.getEnviroment().get(packageBinding.getName().concat(".").concat(name).concat(".java"));
+
+            if (typeBinding == null) {
+                if (!globalEnviroment.getEnviroment().get(this.className).getImports().isEmpty()) {
+                    for (String aImport : globalEnviroment.getEnviroment().get(this.className).getImports()) {
+                        if (aImport.endsWith("*")) {
+                            aImport = aImport.substring(0, aImport.length() - 1);
+                            typeBinding = globalEnviroment.getEnviroment().get(aImport.concat(name).concat(".java"));
+                        } else {
+
+                            if (aImport.endsWith(name)) {
+                                typeBinding = globalEnviroment.getEnviroment().get(aImport.concat(".java"));
+                            }
+                        }
+                    }
+                }
+                if (typeBinding == null) {
+                    typeBinding = new TypeBinding();
+                    typeBinding.setName("Not treatet - localVariableDeclaration Visitor3");
+                }
+            }
+
+            //TODO: Create external type
+        } /**
+         * dealing with primitive type
+         */
+        else if (ctx.typeType().primitiveType() != null) {
+            String type = ctx.typeType().primitiveType().getText();
+            typeBinding = PrimitiveTypes.init(type);
+        } else {
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@ERRORvisitLocalVariableDeclaration@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        }
+
+        if (ctx.variableDeclarators().variableDeclarator() != null) {
+            for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
+                String name = variableDeclarator.variableDeclaratorId().getText();
+                VariableBinding variableDeclarationBinding = new VariableBinding();
+                variableDeclarationBinding.setName(name);
+                variableDeclarationBinding.setType(typeBinding);
+
+//                if (this.methodDeclaration) {
+//                    if (ctx.parent instanceof JavaParser.ForInitContext) {
+//                        this.variableBindingForList.add(variableDeclarationBinding);
+//                    } else {
+//                        EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
+//                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+//
+//                        while (variableBindingForList.size() > 0) {
+//                            currentScope.add(variableBindingForList.get(0));
+//                            variableBindingForList.remove(0);
+//                        }
+//
+//                        currentScope.add(variableDeclarationBinding);
+//
+//                    }
+//
+//                }
+            }
+        }
+
         return super.visitLocalVariableDeclaration(ctx);
     }
 
@@ -366,29 +468,27 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
         //log(ctx);
-//        List<BaseBinding> bindings = new ArrayList<>();
-//        
-//        String text = ctx.getText();
+        List<BaseBinding> bindings = new ArrayList<>();
 
-        
-//        if (this.methodDeclaration) {
-//            this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
-//            
-//            //Add Method's parameters variables to enviromentBinding before start read Method's block code
-//            if(this.mdbGeneral.getEnviromentBinding().getEnviroment().size() == 1){
-//                for (VariableBinding parameter : mdbGeneral.getParameters()) {
-//                    EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+        String text = ctx.getText();
+
+        if (this.methodDeclaration) {
+            MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(methodDeclarationBinding, className);
+            this.enviromentBinding.getEnviroment().add(bindings);
+
+            //Add Method's parameters variables to enviromentBinding before start read Method's block code
+//            if (this.enviromentBinding.getEnviroment().size() == 1) {
+//                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
+//                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
+//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
 //                    currentScope.add(parameter);
 //                }
-//            }          
-//        }
-
+//            }
+        }
         Object visitBlock = super.visitBlock(ctx);
-
-//        if (this.methodDeclaration) {
-//            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
-//        }
+        if (this.methodDeclaration) {
+            this.methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment().remove(bindings);
+        }
 
         return visitBlock;
     }
@@ -648,10 +748,84 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-   
+        this.methodDeclaration = true;
+        List<VariableBinding> parameters = new ArrayList<>();
+        TypeBinding methodType = new TypeBinding();
+        if (ctx.IDENTIFIER().getText().equals("getCity")) {
+            int x = 10 + 20;
+        }
+
+        JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
+        if (typeType == null) {
+
+            methodType = PrimitiveTypes.init(PrimitiveTypes.VOID);
+        } else if (typeType.primitiveType() != null) {
+
+            methodType = PrimitiveTypes.init(typeType.primitiveType().getText());
+        } else if (typeType.classOrInterfaceType() != null) {
+
+            String name = this.packageBinding.getName();
+            name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
+            TypeBinding compare = this.globalEnviroment.getEnviroment().get(name);
+            if (compare != null) {
+                methodType = compare;
+            } else {
+                //TODO external class                
+                if (typeType.classOrInterfaceType().getText().equals(PrimitiveTypes.STRING)) {
+                    methodType = PrimitiveTypes.init(PrimitiveTypes.STRING);
+                } else {
+                    methodType.setName(typeType.classOrInterfaceType().getText());
+                }
+
+            }
+        }
+
+        //Getting parameters
+        JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
+
+        if (ctx.formalParameters().formalParameterList() != null) {
+            for (ParseTree parseTree : formalParameters.children) {
+                if (parseTree instanceof JavaParser.FormalParameterContext) {
+
+                    JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
+                    TypeBinding parameterType = new TypeBinding();
+                    VariableBinding parameter = new VariableBinding();
+
+                    parameter.setName(aux.variableDeclaratorId().getText());
+
+                    if (aux.typeType().classOrInterfaceType() != null) {
+
+                        for (TypeBinding type : this.globalEnviroment.getEnviroment().values()) {
+                            if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
+                                parameterType = type;
+                            }
+                        }
+                        if (parameterType.getName() == null) {
+
+                            parameterType.setName(aux.typeType().classOrInterfaceType().getText());
+                            //TODO: change to use the parameter's package
+                            parameterType.setPackageBinding(this.packageBinding);
+                        }
+
+                    } else if (aux.typeType().primitiveType() != null) {
+                        parameterType.setName(aux.typeType().primitiveType().getText());
+                    }
+
+                    parameter.setType(parameterType);
+
+                    parameters.add(parameter);
+                }
+            }
+        }
+
+        this.methodDeclarationBinding.setName(ctx.IDENTIFIER().getText());
+        this.methodDeclarationBinding.setReturnBinding(methodType);
+        this.methodDeclarationBinding.setParameters(parameters);
+
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
+        this.methodDeclaration = false;
         return visitMethodDeclaration;
-    }    
+    }
 
     @Override
     public Object visitMemberDeclaration(JavaParser.MemberDeclarationContext ctx) {
@@ -727,6 +901,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
+        this.className = packageBinding.getName().concat(".").concat(ctx.getChild(1).getText()).concat(".java");
         return super.visitClassDeclaration(ctx);
     }
 
@@ -762,7 +937,11 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof JavaParser.QualifiedNameContext) {
+                packageBinding.setName(parseTree.getText());
+            }
+        }
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
     }
