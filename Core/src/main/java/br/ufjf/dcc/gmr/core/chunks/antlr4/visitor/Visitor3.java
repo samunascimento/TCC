@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.Binding;
 
 public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
@@ -274,11 +275,20 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //        }
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
-
+        
         methodCallExpressionList(ctx, parameters);
 
         methodCallBinding.setParameters(parameters);
-
+        
+        if(methodDeclaration){
+            int lastIndexX = this.enviromentBinding.getEnviroment().size()-1;
+            
+            if(this.enviromentBinding.getEnviroment().get(lastIndexX) != null){
+                this.enviromentBinding.getEnviroment().get(lastIndexX).add(methodCallBinding);
+            }
+            
+        }
+        
         methodCallBidingList.add(methodCallBinding);
 
         return super.visitMethodCall(ctx);
