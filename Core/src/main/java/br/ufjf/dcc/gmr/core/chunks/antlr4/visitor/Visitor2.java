@@ -644,11 +644,11 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
                                 parameterType = type;
                             }
                         }
-                        if (parameterType.getName() == null) {
+                        if (parameterType.getName().isEmpty()) {
 
                             parameterType.setName(aux.typeType().classOrInterfaceType().getText());
-                            //TODO: change to use the parameter's package
-                            parameterType.setPackageBinding(this.packageBinding);
+                            
+                            
                         }
 
                     } else if (aux.typeType().primitiveType() != null) {                        
