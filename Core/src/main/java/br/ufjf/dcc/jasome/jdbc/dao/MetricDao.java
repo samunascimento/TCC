@@ -262,27 +262,51 @@ public class MetricDao {
         }
     }
 
-    public ArrayList<PackageMetrics> selectPackageName(String nameProject) throws SQLException{
-        Set<String> metricNames = new HashSet<>();
-
-        Set<String> packageNames = new HashSet<>();
-        
+    public String selectMetricDescription(String metricName) throws SQLException {
+        String description = null;
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
-        
+
+        String sql = "select description from tb_description where name = '" + metricName.toUpperCase() + "'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            
+            resultSet.next();
+            description = resultSet.getString("description");
+            
+            return description;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+    public ArrayList<PackageMetrics> selectPackageName(String nameProject) throws SQLException {
+        Set<String> metricNames = new HashSet<>();
+
+        Set<String> packageNames = new HashSet<>();
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
         ArrayList<PackageMetrics> listPackage = new ArrayList<>();
         PackageMetrics packageMetrics = null;
 
-        String sql = "select pk.id , pk.packagename \n" +
-                    "from tb_projectmetrics p\n" +
-                    "inner join tb_project_version pv\n" +
-                    "on p.id = pv.project_id \n" +
-                    "inner join tb_version_package vp\n" +
-                    "on pv.version_id = vp.version_id \n" +
-                    "inner join tb_packagemetrics pk\n" +
-                    "on vp.package_id = pk.id "
-                    + "where p.projectname = " + "\'" + nameProject + "\'";
+        String sql = "select pk.id , pk.packagename \n"
+                + "from tb_projectmetrics p\n"
+                + "inner join tb_project_version pv\n"
+                + "on p.id = pv.project_id \n"
+                + "inner join tb_version_package vp\n"
+                + "on pv.version_id = vp.version_id \n"
+                + "inner join tb_packagemetrics pk\n"
+                + "on vp.package_id = pk.id "
+                + "where p.projectname = " + "\'" + nameProject + "\'";
 
         try {
             stmt = connection.prepareStatement(sql);
@@ -291,11 +315,11 @@ public class MetricDao {
             while (resultSet.next()) {
                 packageNames.add(resultSet.getString("packagename"));
             }
-            
+
             for (String packageName : packageNames) {
                 resultSet = stmt.executeQuery();
-                   packageMetrics = new PackageMetrics(id,packageName);
-                   id++;
+                packageMetrics = new PackageMetrics(id, packageName);
+                id++;
                 listPackage.add(packageMetrics);
             }
 
@@ -311,7 +335,7 @@ public class MetricDao {
         }
         return null;
     }
-    
+
     public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
         List<List<Point>> chartLines = new ArrayList<>();
 
@@ -457,8 +481,7 @@ public class MetricDao {
         }
         return null;
     }
-    
-    
+
 //   public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage,String nameMetric) throws SQLException {
 //
 //        List<List<Point>> chartLines = new ArrayList<>();
@@ -539,8 +562,7 @@ public class MetricDao {
 //        return null;
 //    }
 //    
-
-    public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage,String nameMetric) throws SQLException {
+    public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage, String nameMetric) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
 
@@ -562,7 +584,7 @@ public class MetricDao {
                 + "on c.package_id = d.id \n"
                 + "left join tb_metric as e \n"
                 + "on\n"
-                + "d."+ nameMetric +"id = e.id \n"
+                + "d." + nameMetric + "id = e.id \n"
                 + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null";
 //                + "order by v.id";
 
@@ -579,11 +601,11 @@ public class MetricDao {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
                     listPoints.add(new Point(cont, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
-                }else{
+                } else {
                     listPoints.add(null);
                 }
                 cont++;
-                
+
             }
             chartLines.add(listPoints);
             return chartLines;
@@ -598,8 +620,7 @@ public class MetricDao {
         }
         return null;
     }
-    
-    
+
     public List<List<Point>> selectClassMetrics(String nameProject) throws SQLException {
 
         List<List<Point>> chartLines = new ArrayList<>();
@@ -636,56 +657,56 @@ public class MetricDao {
                 + "inner join tb_classmetrics c on\n"
                 + " pc.class_id = c.id\n"
                 + "inner join tb_metric m on\n"
-                + " c.ahfID = m.id\n" +
-    "   or c.aifID = m.id\n" +
-    "   or c.aaID = m.id\n" +
-    "   or c.adID = m.id\n" +
-    "   or c.aiID = m.id\n" +
-    "   or c.aitID = m.id\n" +
-    "   or c.aoID = m.id\n" +
-    "   or c.avID = m.id\n" +
-    "   or c.cfID = m.id\n" +
-    "   or c.clrciID = m.id\n" +
-    "   or c.cltciID = m.id\n" +
-    "   or c.ditID = m.id\n" +
-    "   or c.hmdID = m.id\n" +
-    "   or c.hmiID = m.id\n" +
-    "   or c.lcomID = m.id\n" +
-    "   or c.mhfID = m.id\n" +
-    "   or c.mifID = m.id\n" +
-    "   or c.maID = m.id\n" +
-    "   or c.mdID = m.id\n" +
-    "   or c.miID = m.id\n" +
-    "   or c.mitID = m.id\n" +
-    "   or c.moID = m.id\n" +
-    "   or c.nfID = m.id\n" +
-    "   or c.nmID = m.id\n" +
-    "   or c.nmaID = m.id\n" +
-    "   or c.nmiID = m.id\n" +
-    "   or c.nmirID = m.id\n" +
-    "   or c.noaID = m.id\n" +
-    "   or c.nochID = m.id\n" +
-    "   or c.nodID = m.id\n" +
-    "   or c.nodaID = m.id\n" +
-    "   or c.nodeID = m.id\n" +
-    "   or c.nolID = m.id\n" +
-    "   or c.nopaID = m.id\n" +
-    "   or c.normID = m.id\n" +
-    "   or c.npfID = m.id\n" +
-    "   or c.npmID = m.id\n" +
-    "   or c.nsfID = m.id\n" +
-    "   or c.nsmID = m.id\n" +
-    "   or c.pfID = m.id\n" +
-    "   or c.pmrID = m.id\n" +
-    "   or c.pmdID = m.id\n" +
-    "   or c.pmiID = m.id\n" +
-    "   or c.rtlocID = m.id\n" +
-    "   or c.sixID = m.id\n" +
-    "   or c.tlocID = m.id\n" +
-    "   or c.wmcID = m.id\n" +
-    "   or c.ahID = m.id"+
-    "       where tp.projectname = " + "\'" + nameProject + "\'"
-    + "order by v.id";
+                + " c.ahfID = m.id\n"
+                + "   or c.aifID = m.id\n"
+                + "   or c.aaID = m.id\n"
+                + "   or c.adID = m.id\n"
+                + "   or c.aiID = m.id\n"
+                + "   or c.aitID = m.id\n"
+                + "   or c.aoID = m.id\n"
+                + "   or c.avID = m.id\n"
+                + "   or c.cfID = m.id\n"
+                + "   or c.clrciID = m.id\n"
+                + "   or c.cltciID = m.id\n"
+                + "   or c.ditID = m.id\n"
+                + "   or c.hmdID = m.id\n"
+                + "   or c.hmiID = m.id\n"
+                + "   or c.lcomID = m.id\n"
+                + "   or c.mhfID = m.id\n"
+                + "   or c.mifID = m.id\n"
+                + "   or c.maID = m.id\n"
+                + "   or c.mdID = m.id\n"
+                + "   or c.miID = m.id\n"
+                + "   or c.mitID = m.id\n"
+                + "   or c.moID = m.id\n"
+                + "   or c.nfID = m.id\n"
+                + "   or c.nmID = m.id\n"
+                + "   or c.nmaID = m.id\n"
+                + "   or c.nmiID = m.id\n"
+                + "   or c.nmirID = m.id\n"
+                + "   or c.noaID = m.id\n"
+                + "   or c.nochID = m.id\n"
+                + "   or c.nodID = m.id\n"
+                + "   or c.nodaID = m.id\n"
+                + "   or c.nodeID = m.id\n"
+                + "   or c.nolID = m.id\n"
+                + "   or c.nopaID = m.id\n"
+                + "   or c.normID = m.id\n"
+                + "   or c.npfID = m.id\n"
+                + "   or c.npmID = m.id\n"
+                + "   or c.nsfID = m.id\n"
+                + "   or c.nsmID = m.id\n"
+                + "   or c.pfID = m.id\n"
+                + "   or c.pmrID = m.id\n"
+                + "   or c.pmdID = m.id\n"
+                + "   or c.pmiID = m.id\n"
+                + "   or c.rtlocID = m.id\n"
+                + "   or c.sixID = m.id\n"
+                + "   or c.tlocID = m.id\n"
+                + "   or c.wmcID = m.id\n"
+                + "   or c.ahID = m.id"
+                + "       where tp.projectname = " + "\'" + nameProject + "\'"
+                + "order by v.id";
         int idIndex;
 
         try {
@@ -700,7 +721,7 @@ public class MetricDao {
                     versionIDs.add(id);
                 }
             }
-             for (String className : classNames) {
+            for (String className : classNames) {
 
                 for (String metricName : metricNames) {
 
@@ -754,50 +775,51 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select\n" +
-                    "   pv.version_id ,\n" +
-                    "   v.versiondate ,\n" +
-                    "   v.id ,\n" +
-                    "   p.packagename ,\n" +
-                    "   c.classname ,\n" +
-                    "   mt.methodname ,\n" +
-                    "   m.\"name\" ,\n" +
-                    "   m.description ,\n" +
-                    "   m.value\n" +
-                    "from\n" +
-                    "   tb_projectmetrics tp\n" +
-                    "inner join tb_project_version pv on\n" +
-                    "   tp.id = pv.project_id\n" +
-                    "inner join tb_version_package vp on\n" +
-                    "   vp.version_id = pv.version_id\n" +
-                    "inner join tb_versionmetrics v on\n" +
-                    "   vp.version_id = v.id\n" +
-                    "inner join tb_package_class pc on\n" +
-                    "   vp.package_id = pc.package_id\n" +
-                    "inner join tb_class_method cm on\n" +
-                    "   pc.class_id = cm.class_id\n" +
-                    "inner join tb_packagemetrics p on\n" +
-                    "   vp.package_id = p.id\n" +
-                    "inner join tb_classmetrics c on\n" +
-                    "   pc.class_id = c.id\n" +
-                    "inner join tb_methodmetrics mt on\n" +
-                    "   mt.id = cm.method_id\n" +
-                    "inner join tb_metric m on\n" +
-                    "   mt.ciID = m.id\n" +
-                    "   or mt.diID = m.id\n" +
-                    "   or mt.finID = m.id\n" +
-                    "   or mt.foutID = m.id\n" +
-                    "   or mt.iovarsID = m.id\n" +
-                    "   or mt.mclcID = m.id\n" +
-                    "   or mt.nbdID = m.id\n" +
-                    "   or mt.ncompID = m.id\n" +
-                    "   or mt.nopID = m.id\n" +
-                    "   or mt.nvarID = m.id\n" +
-                    "   or mt.siID = m.id\n" +
-                    "   or mt.tlocID = m.id\n" + // ALTERAR PARA 'OR' QUANDO FOR RODAR TODAS AS METRICAS
-                    "   or mt.vgID = m.id\n"+
-                    "where tp.projectname = " + "\'" + nameProject + "\'"
-                    + "order by v.id";
+        String sql = "select\n"
+                + "   pv.version_id ,\n"
+                + "   v.versiondate ,\n"
+                + "   v.id ,\n"
+                + "   p.packagename ,\n"
+                + "   c.classname ,\n"
+                + "   mt.methodname ,\n"
+                + "   m.\"name\" ,\n"
+                + "   m.description ,\n"
+                + "   m.value\n"
+                + "from\n"
+                + "   tb_projectmetrics tp\n"
+                + "inner join tb_project_version pv on\n"
+                + "   tp.id = pv.project_id\n"
+                + "inner join tb_version_package vp on\n"
+                + "   vp.version_id = pv.version_id\n"
+                + "inner join tb_versionmetrics v on\n"
+                + "   vp.version_id = v.id\n"
+                + "inner join tb_package_class pc on\n"
+                + "   vp.package_id = pc.package_id\n"
+                + "inner join tb_class_method cm on\n"
+                + "   pc.class_id = cm.class_id\n"
+                + "inner join tb_packagemetrics p on\n"
+                + "   vp.package_id = p.id\n"
+                + "inner join tb_classmetrics c on\n"
+                + "   pc.class_id = c.id\n"
+                + "inner join tb_methodmetrics mt on\n"
+                + "   mt.id = cm.method_id\n"
+                + "inner join tb_metric m on\n"
+                + "   mt.ciID = m.id\n"
+                + "   or mt.diID = m.id\n"
+                + "   or mt.finID = m.id\n"
+                + "   or mt.foutID = m.id\n"
+                + "   or mt.iovarsID = m.id\n"
+                + "   or mt.mclcID = m.id\n"
+                + "   or mt.nbdID = m.id\n"
+                + "   or mt.ncompID = m.id\n"
+                + "   or mt.nopID = m.id\n"
+                + "   or mt.nvarID = m.id\n"
+                + "   or mt.siID = m.id\n"
+                + "   or mt.tlocID = m.id\n"
+                + // ALTERAR PARA 'OR' QUANDO FOR RODAR TODAS AS METRICAS
+                "   or mt.vgID = m.id\n"
+                + "where tp.projectname = " + "\'" + nameProject + "\'"
+                + "order by v.id";
 
         int idIndex;
 
@@ -834,7 +856,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"),resultSet.getString("classname"),resultSet.getString("methodname"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("classname"), resultSet.getString("methodname"), resultSet.getString("name"), versionDate));
                             idIndex++;
                         }
                     }

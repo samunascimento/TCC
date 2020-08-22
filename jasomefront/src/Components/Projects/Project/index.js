@@ -59,6 +59,8 @@ export default class Project extends Component {
       openClass: false,
       openMethod: false,
 
+      openDescriptions: false,
+
       projectTloc: false,
 
 
@@ -147,7 +149,9 @@ export default class Project extends Component {
         nested: {
           paddingLeft: theme.spacing(4),
         },
-      }))
+      })),
+
+      metricsDescriptions: [],
 
     };
   }
@@ -178,6 +182,11 @@ export default class Project extends Component {
   handleClickMethod = () => {
     const openMethod = !this.state.openMethod
     this.setState({ openMethod })
+  };
+
+  handleClickMetricsDescriptions = () => {
+    const openDescriptions = !this.state.openDescriptions
+    this.setState({ openDescriptions })
   };
 
 
@@ -218,6 +227,7 @@ export default class Project extends Component {
 
   handleChangePackage = async (event, metricName, packageName, packageIndex) => {
     console.log(event.target.checked)
+
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     this.state.packageTree[packageIndex][metricName] = !this.state.packageTree[packageIndex][metricName]
@@ -233,6 +243,14 @@ export default class Project extends Component {
           this.setState({ data });
           console.log(this.state.data)
         })
+        // const metricsDescriptions = [];
+        // this.setState ({metricsDescriptions: metricsDescriptions.push(this.state[metricName])})
+        // console.log(metricsDescriptions)
+        const metricsName = this.state.metricsName
+        metricsName.push(metricName)
+        this.setState({metricsName})
+        console.log(metricsName)
+
     }
 
     //arrumar esse else
@@ -246,11 +264,9 @@ export default class Project extends Component {
           }
         })
         if (metricCheck === true) {
-          //delete this.state.data[index] 
           this.state.data.splice(index, 1)
           metricCheck = false
         }
-        //this.setState({ data });
         console.log(metricName)
         console.log(this.state.data)
       }
@@ -356,7 +372,7 @@ export default class Project extends Component {
             p={1}
             m={1}
             bgcolor="background.paper"
-            style={{ border: '2px groove black', borderRadius: '5px', marginLeft:'16px', marginRight: '0'}}
+            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
           >
             <Grid item xs={12}>
               <List component="nav"
@@ -475,16 +491,46 @@ export default class Project extends Component {
                   </Collapse>
                 </Collapse>
               </List>
-           
+
             </Grid>
           </Box>
+          {/* <Box
+            display="flex"
+
+            flexDirection="row-reverse"
+            p={1}
+            m={1}
+            bgcolor="background.paper"
+            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
+          >
+            <Grid item xs={12}>
+              <List component="nav"
+                aria-labelledby="nested-list-subheader"
+                position="relative"
+                left="1000px"
+                className={classes.root}>
+                <ListItem button onClick={this.handleClickMetricsDescriptions} style={{ border: '1px solid grey', margin: '3px 0' }}>
+                  <ListItemText align="left" primary="Descriptions" />
+                  {this.state.openDescriptions ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
+           
+                </Collapse>
+              </List>
+            </Grid>
+          </Box> */}
+
+          {this.state.metricsName.map((metricName, index) => (
+
+          <li key={metricName}> {metricName}</li>
+            
+          ))}
+
         </div>
-   
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
           {console.log(this.state.data)}
           <Chart data={this.state.data} />
-     
         </div>
       </div >
     );
