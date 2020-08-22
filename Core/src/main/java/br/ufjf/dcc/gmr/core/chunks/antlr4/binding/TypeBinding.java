@@ -129,6 +129,7 @@ public class TypeBinding extends BaseBinding {
     public String getName() {
         
         try{
+ 
         return this.getPackageBinding().getName().concat(".").concat(super.getName());
         }catch(NullPointerException e){
             return null;

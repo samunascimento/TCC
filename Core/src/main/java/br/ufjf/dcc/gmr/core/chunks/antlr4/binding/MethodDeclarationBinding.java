@@ -10,14 +10,14 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<VariableBinding> parametersBindings;
     private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
-    private EnviromentBinding enviromentBinding;
+    private EnviromentBinding methodEnviromentBinding;
 
     public MethodDeclarationBinding() {
         super();
         this.modifier = new ArrayList<>();
         this.parametersBindings = new ArrayList<>();
         this.returnBinding = new TypeBinding();
-        this.enviromentBinding = new EnviromentBinding();
+        this.methodEnviromentBinding = new EnviromentBinding();
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
@@ -136,14 +136,14 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the enviromentBinding
      */
-    public EnviromentBinding getEnviromentBinding() {
-        return enviromentBinding;
+    public EnviromentBinding getMethodEnviromentBinding() {
+        return methodEnviromentBinding;
     }
 
     /**
-     * @param enviromentBinding the enviromentBinding to set
+     * @param methodEnviromentBinding the enviromentBinding to set
      */
-    public void setEnviromentBinding(EnviromentBinding enviromentBinding) {
-        this.enviromentBinding = enviromentBinding;
+    public void setEnviromentBinding(EnviromentBinding methodEnviromentBinding) {
+        this.methodEnviromentBinding = methodEnviromentBinding;
     }
 }

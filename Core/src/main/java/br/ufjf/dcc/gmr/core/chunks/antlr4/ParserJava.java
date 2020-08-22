@@ -92,7 +92,7 @@ public class ParserJava {
 
         System.out.println("***************MethodCallAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
-            for (List<BaseBinding> context : methodDeclarationBinding.getEnviromentBinding().getEnviroment()) {
+            for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
 
                     if (baseBinding instanceof MethodCallBinding) {
@@ -109,7 +109,7 @@ public class ParserJava {
 
         System.out.println("***************MethodCallAST2***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMdbList()) {
-            for (List<BaseBinding> context : methodDeclarationBinding.getEnviromentBinding().getEnviroment()) {
+            for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
 
                     if (baseBinding instanceof MethodCallBinding) {
