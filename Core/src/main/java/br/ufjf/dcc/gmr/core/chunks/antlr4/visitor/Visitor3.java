@@ -477,19 +477,19 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             this.enviromentBinding.getEnviroment().add(bindings);
 
             //Add Method's parameters variables to enviromentBinding before start read Method's block code
-//            if (this.enviromentBinding.getEnviroment().size() == 1) {
-//                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
-//                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
-//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
-//                    currentScope.add(parameter);
-//                }
-//            }
+            if (this.enviromentBinding.getEnviroment().size() == 1) {
+                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
+                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
+                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
+                    currentScope.add(parameter);
+                }
+            }
         }
         Object visitBlock = super.visitBlock(ctx);
         if (this.methodDeclaration) {
             this.methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }
-
+        
         return visitBlock;
     }
 
