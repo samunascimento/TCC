@@ -43,6 +43,18 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIfstatement(CPP14Parser.IfstatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) {
         process(ctx);
         return visitChildren(ctx);
@@ -207,13 +219,13 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitUnqualifiedid(CPP14Parser.UnqualifiedidContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitQualifiedid(CPP14Parser.QualifiedidContext ctx) {
-      //  process(ctx);
+        //  process(ctx);
         return visitChildren(ctx);
     }
 

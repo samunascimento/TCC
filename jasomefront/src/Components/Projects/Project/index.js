@@ -27,31 +27,12 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import { PropTypes } from 'prop-types';
 
-// export default ({ match: { url}, name}) =>
-
-// useEffect (() => {
-//   axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + {name}
-//   .then(res => {
-//     const data = res.data;
-//     this.setState({ data });
-//   })
-// )
-
-// <Fragment>
-
-
-//   <h1>{name}</h1>
-//   <h1>{url}</h1>
-
-
-// </Fragment>
-
-
-
 export default class Project extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
+      projectName: props.nameProject.name,
 
       openMetrics: false,
       openProject: false,
@@ -147,7 +128,9 @@ export default class Project extends Component {
         nested: {
           paddingLeft: theme.spacing(4),
         },
-      }))
+      })),
+
+      metricsDescriptions: [],
 
     };
   }
@@ -180,6 +163,11 @@ export default class Project extends Component {
     this.setState({ openMethod })
   };
 
+  handleClickMetricsDescriptions = () => {
+    const openDescriptions = !this.state.openDescriptions
+    this.setState({ openDescriptions })
+  };
+
 
 
   componentDidMount = () => {
@@ -190,8 +178,33 @@ export default class Project extends Component {
       })
   }
 
+  getMetricDescription = (metricName, checkMetric) => {
+    axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/description/` + metricName)
+      .then(res => {
+        const description = res.data;
+        const metricDescription = { 'metricName': metricName, 'metricDescription': description, 'checkMetric': checkMetric }
+        const metricsDescriptions = this.state.metricsDescriptions;
+        metricsDescriptions.push(metricDescription)
+        this.setState({ metricsDescriptions })
+      })
+  }
 
-  handleChangeProject = async (event) => {
+  RemoveMetricDescription = (metricName, checkMetric) => {
+    let metricCheck = false
+    this.state.metricsDescriptions.map((metric, index) => {
+      if (metric.metricName === metricName && metric.checkMetric === checkMetric) {
+        metricCheck = true
+      }
+      console.log(metricCheck)
+      if (metricCheck === true) {
+        this.state.metricsDescriptions.splice(index, 1)
+        metricCheck = false
+      }
+    })
+  }
+
+
+  handleChangeProject = async (event, metricName) => {
 
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
@@ -200,39 +213,49 @@ export default class Project extends Component {
         .then(res => {
           const data = this.state.data
           data.push(res.data[0])
-          console.log(data)
           this.setState({ data });
-          console.log(this.state.data)
         })
+
+      this.getMetricDescription(metricName, 'project')
+      console.log(this.state.projectName)
 
     }
 
     else if (event.target.checked === false) {
-      const data = [];
-      this.setState({ data });
+      let metricCheck = false
+      this.state.data.map((metrics, index) => {
+        metrics.map((metric, index) => {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
+            metricCheck = true
+          }
+        })
+        if (metricCheck === true) {
+          this.state.data.splice(index, 1)
+          metricCheck = false
+        }
 
+        this.RemoveMetricDescription(metricName, 'project')
+
+      })
     }
-
-    //this.setState({projectTloc: !this.state.projectTloc})
-  };
+  }
 
   handleChangePackage = async (event, metricName, packageName, packageIndex) => {
-    console.log(event.target.checked)
+
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     this.state.packageTree[packageIndex][metricName] = !this.state.packageTree[packageIndex][metricName]
-
-    console.log(this.state.packageTree[packageIndex][metricName])
 
     if (event.target.checked === true) {
       await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
         .then(res => {
           const data = this.state.data
           data.push(res.data[0])
-          console.log(data)
           this.setState({ data });
-          console.log(this.state.data)
         })
+
+      this.getMetricDescription(metricName, packageName);
+
     }
 
     //arrumar esse else
@@ -244,18 +267,14 @@ export default class Project extends Component {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
             metricCheck = true
           }
+
         })
         if (metricCheck === true) {
-          //delete this.state.data[index] 
           this.state.data.splice(index, 1)
           metricCheck = false
         }
-        //this.setState({ data });
-        console.log(metricName)
-        console.log(this.state.data)
-      }
-        //console.log(this.state.data)
-      )
+      })
+      this.RemoveMetricDescription(metricName, packageName);
     }
   }
 
@@ -356,7 +375,7 @@ export default class Project extends Component {
             p={1}
             m={1}
             bgcolor="background.paper"
-            style={{ border: '2px groove black', borderRadius: '5px', marginLeft:'16px', marginRight: '0'}}
+            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
           >
             <Grid item xs={12}>
               <List component="nav"
@@ -377,7 +396,7 @@ export default class Project extends Component {
                     <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
                       <FormGroup style={{ border: '1px solid grey' }}>
                         <FormControlLabel
-                          control={<Checkbox checked={projectTloc} onChange={this.handleChangeProject} name='projectTloc' color="primary" />}
+                          control={<Checkbox checked={projectTloc} onChange={(event) => this.handleChangeProject(event, 'TLOC')} name='projectTloc' color="primary" />}
                           label={<span style={{ fontSize: '14px' }}>TLOC</span>}
                         />
                       </FormGroup>
@@ -475,16 +494,28 @@ export default class Project extends Component {
                   </Collapse>
                 </Collapse>
               </List>
-           
+
+            </Grid>
+          </Box>
+          <Box
+            display="flex"
+
+            flexDirection="row-reverse"
+            p={1}
+            m={1}
+            bgcolor="background.paper"
+            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
+          >
+            <Grid item xs={12}>
+              {this.state.metricsDescriptions.map((metric, index) => (
+                <li title={metric.metricDescription}>{metric.metricName + ' (' + metric.checkMetric + ')'}</li>
+              ))}
             </Grid>
           </Box>
         </div>
-   
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          {console.log(this.state.data)}
           <Chart data={this.state.data} />
-     
         </div>
       </div >
     );

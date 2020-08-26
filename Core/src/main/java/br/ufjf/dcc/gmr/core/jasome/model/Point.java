@@ -14,25 +14,38 @@ import java.util.Date;
 public class Point {
     private int x;
     private double y;
+    private String nameProject;
     private String namePackage;
     private String nameClass;
     private String nameMethod;
     private String metricName;
     private Date versionDate;
-
-    //package
-    public Point(int x, double y,String namePackage,String metricName,Date versionDate) {
+    
+    //project
+    public Point(int x, double y,String nameProject, String metricName,Date versionDate) {
         this.x = x;
         this.y = y;
+        this.nameProject = nameProject;
+        this.metricName = metricName;
+        this.versionDate = versionDate;
+    }
+    
+
+    //package
+    public Point(int x, double y,String nameProject, String namePackage,String metricName,Date versionDate) {
+        this.x = x;
+        this.y = y;
+        this.nameProject = nameProject;
         this.namePackage = namePackage;
         this.metricName = metricName;
         this.versionDate = versionDate;
     }
     
     //class
-    public Point(int x,double y, String namePackage,String nameClass,String metricName,Date versionDate){
+    public Point(int x,double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate){
         this.x = x;
         this.y = y;
+        this.nameProject = nameProject;
         this.namePackage = namePackage;
         this.nameClass = nameClass;
         this.metricName = metricName;
@@ -40,9 +53,10 @@ public class Point {
     }
     
     //method
-    public Point(int x,double y, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
+    public Point(int x,double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
         this.x = x;
         this.y = y;
+        this.nameProject = nameProject;
         this.namePackage = namePackage;
         this.nameClass = nameClass;
         this.nameMethod = nameMethod;
