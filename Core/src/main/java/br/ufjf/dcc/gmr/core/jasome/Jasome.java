@@ -37,8 +37,8 @@ public class Jasome {
         Connection connection = ConnectionFactory.getConnection();
         
         try {
-            //  JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
-            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\java");
+            //JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
+            analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\minecrowdcontrol");
             //analyze(null, null, null, "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
@@ -79,7 +79,6 @@ public class Jasome {
 
     public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase {
 
-        
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {
             connection = ConnectionFactory.getConnection();
@@ -92,8 +91,6 @@ public class Jasome {
         
         List<ProjectMetrics> select = projectDao.select();
         
-        //Boolean equalProjects = false;
-        
         JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
 
         ProjectMetrics project = new ProjectMetrics();
@@ -102,40 +99,8 @@ public class Jasome {
         project.setUrl("testeUrl");
         project.setName(jasome.GetRepositoryName());
         project.setOrganization("organization");
-            
-//        for (ProjectMetrics projectMetrics : select) {
-//                     
-//            if(projectMetrics.getName().equals(project.getName())){
-//                equalProjects = true;
-//                break;
-//            }
-//            
-//        }
-        
-//        if(equalProjects == false){
-            jasome.runProject(project, connection);
-//        } else {
-//            throw new RepositoryAlreadyExistInDataBase();
-//        }
 
-
-        /*jasome.getArchiveType().add("java");
-        List<Formats> log = Git.logAll(jasome.GetRepositoryPath());
-        System.out.println(log.size());
-        for (int i = 0; i < log.size(); i++) {
-        jasome.getFileNames().clear();
-        jasome.gitCommands(jasome, log, i);
-        System.out.println("");
-        System.out.println("");
-        jasome.listJavaArchives(jasome.GetRepositoryPath(),directory,jasome.getArchiveType());
-        jasome.javaArchivesCount();
-        jasome.runJasome(jasome.GetRepositoryPath(), jasome.getFileNames(), jasome.getArchiveType(), i);
-        }*/
-//        } catch (LocalRepositoryNotAGitRepository ex) {
-//            System.out.println("Não é um repositório válido");
-//        } catch (IOException ex) {
-//            System.out.println("Não é um repositório válido");
-//        }
+        jasome.runProject(project, connection);
     }
 
 }
