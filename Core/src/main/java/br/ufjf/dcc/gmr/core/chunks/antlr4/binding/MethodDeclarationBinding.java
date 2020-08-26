@@ -58,9 +58,9 @@ public class MethodDeclarationBinding extends BaseBinding {
 
         for (int i = 0; i < parametersBindings.size(); i++) {
             if (i < parametersBindings.size() - 1) {
-                output = output.concat(parametersBindings.get(i).getName() + ",");
+                output = output.concat(parametersBindings.get(i).getType().getName() + ",");
             } else {
-                output = output.concat(parametersBindings.get(i).getName());
+                output = output.concat(parametersBindings.get(i).getType().getName());
             }
         }
 
