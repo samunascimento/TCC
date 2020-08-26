@@ -31,7 +31,7 @@ public class ConnectionFactory {
             System.out.println("Conexao com sucesso");
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Erro - conexão" + ex);
-        }
+        }   
         
         return con;
     }   

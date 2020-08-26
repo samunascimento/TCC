@@ -64,6 +64,8 @@ export default class Project extends Component {
       { name: 'IOvars' }, { name: 'MCLC' }, { name: 'NBD' }, { name: 'NCOMP' }, { name: 'NOP' },
       { name: 'NVAR' }, { name: 'SI' }, { name: 'VG' }],
 
+      colors: [],
+
       data: [
         [
           {
@@ -135,6 +137,24 @@ export default class Project extends Component {
     };
   }
 
+  aleatorio = (inferior,superior) => {
+    let numPossibilidades = superior - inferior
+    let aleat = Math.random() * numPossibilidades
+    aleat = Math.floor(aleat)
+    return parseInt(inferior) + aleat
+  }
+  
+  gerarCor = () =>{
+    let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+    let cor_aleatoria = "#";
+    for (let i=0;i<6;i++){
+       let posarray = this.aleatorio(0,hexadecimal.length)
+       cor_aleatoria += hexadecimal[posarray]
+    }
+    return cor_aleatoria
+  }
+  
+
   handleClickMetrics = () => {
     const openMetrics = !this.state.openMetrics
     this.setState({ openMetrics })
@@ -176,6 +196,12 @@ export default class Project extends Component {
         const packageTree = res.data
         this.setState({ packageTree })
       })
+
+      for (let index = 0; index < 200; index++) {
+        const colors = this.state.colors
+        colors[index] = this.gerarCor()
+        this.setState({colors})
+      }
   }
 
   getMetricDescription = (metricName, checkMetric) => {
@@ -515,7 +541,7 @@ export default class Project extends Component {
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} />
+          <Chart data={this.state.data} colors={this.state.colors} />
         </div>
       </div >
     );

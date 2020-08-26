@@ -13,60 +13,6 @@ import {
 
 import { PropTypes } from 'prop-types';
 
-// const data = [
-//   [
-//     {
-//       "x": 0,
-//       "y": 42.0,
-//       "metricName": "TLOC",
-//       "versionDate": "Jan 31, 2020 11:58:48 PM"
-//     },
-//     {
-//       "x": 1,
-//       "y": 173.0,
-//       "metricName": "TLOC",
-//       "versionDate": "Feb 1, 2020 2:00:26 AM"
-//     },
-//     {
-//       "x": 2,
-//       "y": 272.0,
-//       "metricName": "TLOC",
-//       "versionDate": "Feb 1, 2020 3:57:13 AM"
-//     },
-//     {
-//       "x": 3,
-//       "y": 270.0,
-//       "metricName": "TLOC",
-//       "versionDate": "Feb 1, 2020 4:51:56 AM"
-//     }
-//   ]
-// ]
-//   // find maxima for normalizing data
-
-
-function aleatorio(inferior,superior){
-  let numPossibilidades = superior - inferior
-  let aleat = Math.random() * numPossibilidades
-  aleat = Math.floor(aleat)
-  return parseInt(inferior) + aleat
-}
-
-function gerarCor(){
-  let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
-  let cor_aleatoria = "#";
-  for (let i=0;i<6;i++){
-     let posarray = aleatorio(0,hexadecimal.length)
-     cor_aleatoria += hexadecimal[posarray]
-  }
-  return cor_aleatoria
-}
-
-const colors = [];
-
-for (let index = 0; index < 200; index++) {
-  colors[index] = gerarCor()
-}
-
 const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 
 
@@ -77,14 +23,10 @@ class ChartLine extends Component {
     super(props);
     this.state = {
       data: this.props.data,
+      colors: this.props.colors,
       zoomDomain: { x: [0, this.props.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.x))
       )]},
-      // data:[
-      //   [{ x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 4, y: 4 }],
-      //   [{ x: 1, y: 400 }, { x: 2, y: 350 }, { x: 3, y: 300 }, { x: 4, y: 250 }],
-      //   [{ x: 1, y: 75 }, { x: 2, y: 85 }, { x: 3, y: 95 }, { x: 4, y: 100 }]
-      // ],
       metric: false,
       maximaY : this.props.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.y))
@@ -136,7 +78,7 @@ class ChartLine extends Component {
                 >
         {this.state.data.map((d, i) => (
                   <VictoryScatter
-                  style={colors[i] }
+                  style={this.state.colors[i] }
                   size={4}
                   data={d}
                   labels={({ datum }) => `(${datum.x},${datum.y})` }
@@ -149,7 +91,7 @@ class ChartLine extends Component {
               data={d}
               style={{
                 data: {
-                  stroke: colors[i]
+                  stroke: this.state.colors[i]
                 }
               }}
             >
