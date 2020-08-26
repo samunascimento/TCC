@@ -689,6 +689,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNamespacedefinition(CPP14Parser.NamespacedefinitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#namespacesignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#namednamespacedefinition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

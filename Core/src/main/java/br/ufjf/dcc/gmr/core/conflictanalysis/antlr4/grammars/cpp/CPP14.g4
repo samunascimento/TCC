@@ -679,7 +679,12 @@ originalnamespacename
    : Identifier
    ;
 
+
 namespacedefinition
+   : namespacesignature '{' namespacebody '}'
+   ;
+
+namespacesignature
    : namednamespacedefinition
    | unnamednamespacedefinition
    ;
@@ -690,15 +695,15 @@ namednamespacedefinition
    ;
 
 originalnamespacedefinition
-   : Inline? Namespace Identifier '{' namespacebody '}'
+   : Inline? Namespace Identifier 
    ;
 
 extensionnamespacedefinition
-   : Inline? Namespace originalnamespacename '{' namespacebody '}'
+   : Inline? Namespace originalnamespacename 
    ;
 
 unnamednamespacedefinition
-   : Inline? Namespace '{' namespacebody '}'
+   : Inline? Namespace 
    ;
 
 namespacebody

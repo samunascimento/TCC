@@ -1372,6 +1372,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNamespacesignature(CPP14Parser.NamespacesignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNamednamespacedefinition(CPP14Parser.NamednamespacedefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}

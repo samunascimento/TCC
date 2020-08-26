@@ -11,7 +11,9 @@ import java.io.IOException;
  */
 public class TestJoao {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        
+    
         
         /*for(SyntaxStructure ss : ConflictAnalysisTools.getStructureTypeInInterval("/home/joao_lima/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/binding/MethodDeclarationBinding.java", 1, 116, true)){
             System.out.println(ss.getForm());

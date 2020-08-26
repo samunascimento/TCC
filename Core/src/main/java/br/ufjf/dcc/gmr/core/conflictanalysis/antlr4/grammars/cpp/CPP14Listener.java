@@ -1138,6 +1138,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitNamespacedefinition(CPP14Parser.NamespacedefinitionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#namespacesignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterNamespacesignature(CPP14Parser.NamespacesignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#namespacesignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#namednamespacedefinition}.
 	 * @param ctx the parse tree
 	 */

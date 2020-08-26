@@ -449,7 +449,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //DELET+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                if (list.contains("Deleteexpression")) {
+            if (list.contains("Deleteexpression")) {
                 mainList.add(LanguageConstructsTypes.DO_STATEMENT);
                 list.remove("Deleteexpression");
             }
@@ -516,6 +516,16 @@ public class Translator {
             if (list.contains("Functionhead")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("Functionhead");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //NAMESPACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Namespacesignature")
+                    || list.contains("Namespacealiasdefinition")
+                    || list.contains("Usingdirective")) {
+                mainList.add(LanguageConstructsTypes.NAMESPACE);
+                list.remove("Namespacesignature");
+                list.remove("Namespacealiasdefinition");
+                list.remove("Usingdirective");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

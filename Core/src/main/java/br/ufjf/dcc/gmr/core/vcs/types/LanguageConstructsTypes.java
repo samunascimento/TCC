@@ -41,6 +41,7 @@ public class LanguageConstructsTypes {
     public static final String METHOD_INTERFACE = "MethodInterface";  //X
     public static final String METHOD_INVOCATION = "MethodInvocation"; //V
     public static final String METHOD_SIGNATURE = "MethodSignature"; //V
+    public static final String NAMESPACE = "Namespace";
     public static final String PACKAGE_DECLARATION = "PackageDeclaration"; //x
     public static final String POINTER = "Pointer";//-
     public static final String RETURN_STATEMENT = "ReturnStatement";   //V
