@@ -413,13 +413,18 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                     }
                 }
                 if (typeBinding == null) {
-                    typeBinding = new TypeBinding();
-                    typeBinding.setName("Not treatet - localVariableDeclaration Visitor3");
+                    if(name.equals(PrimitiveTypes.STRING)){
+                        typeBinding = PrimitiveTypes.init(PrimitiveTypes.STRING);
+                    }else{
+                        typeBinding = ExternalTypeBinding.init(name);                        
+                    }                 
                 }
             }
 
-            //TODO: Create external type
-        } /**
+    
+        }
+        
+        /**
          * dealing with primitive type
          */
         else if (ctx.typeType().primitiveType() != null) {
@@ -436,25 +441,25 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 variableDeclarationBinding.setName(name);
                 variableDeclarationBinding.setType(typeBinding);
 
-//                if (this.methodDeclaration) {
+                if (this.methodDeclaration) {
 //                    if (ctx.parent instanceof JavaParser.ForInitContext) {
 //                        this.variableBindingForList.add(variableDeclarationBinding);
 //                    } else {
-//                        EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-//                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-//
+                        EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
+                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+
 //                        while (variableBindingForList.size() > 0) {
 //                            currentScope.add(variableBindingForList.get(0));
 //                            variableBindingForList.remove(0);
 //                        }
-//
-//                        currentScope.add(variableDeclarationBinding);
-//
-//                    }
-//
-//                }
+
+                        currentScope.add(variableDeclarationBinding);
+
+                    }
+
+                }
             }
-        }
+        
 
         return super.visitLocalVariableDeclaration(ctx);
     }
@@ -477,19 +482,19 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             this.enviromentBinding.getEnviroment().add(bindings);
 
             //Add Method's parameters variables to enviromentBinding before start read Method's block code
-//            if (this.enviromentBinding.getEnviroment().size() == 1) {
-//                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
-//                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
-//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
-//                    currentScope.add(parameter);
-//                }
-//            }
+            if (this.enviromentBinding.getEnviroment().size() == 1) {
+                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
+                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
+                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size()-1);
+                    currentScope.add(parameter);
+                }
+            }
         }
         Object visitBlock = super.visitBlock(ctx);
         if (this.methodDeclaration) {
             this.methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }
-
+        
         return visitBlock;
     }
 
