@@ -370,7 +370,7 @@ public class MetricDao {
                     if (resultSet.getString("name").equals(metricName)) {
                         Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                         Date versionDate = new Date(versionTimestamp.getTime());
-                        listPoints.add(new Point(cont++, resultSet.getDouble("value"), null, resultSet.getString("name"), versionDate));
+                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("projectname"), resultSet.getString("name"), versionDate));
                     }
                 }
                 chartLines.add(listPoints);
@@ -461,7 +461,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
                             idIndex++;
                         }
                     }
@@ -600,7 +600,7 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(cont, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                    listPoints.add(new Point(cont, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
                 } else {
                     listPoints.add(null);
                 }
@@ -742,7 +742,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("className"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("className"), resultSet.getString("name"), versionDate));
                             idIndex++;
                         }
                     }
@@ -856,7 +856,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), resultSet.getString("packagename"), resultSet.getString("classname"), resultSet.getString("methodname"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("classname"), resultSet.getString("methodname"), resultSet.getString("name"), versionDate));
                             idIndex++;
                         }
                     }
