@@ -137,23 +137,23 @@ export default class Project extends Component {
     };
   }
 
-  aleatorio = (inferior,superior) => {
+  aleatorio = (inferior, superior) => {
     let numPossibilidades = superior - inferior
     let aleat = Math.random() * numPossibilidades
     aleat = Math.floor(aleat)
     return parseInt(inferior) + aleat
   }
-  
-  gerarCor = () =>{
-    let hexadecimal = new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F")
+
+  gerarCor = () => {
+    let hexadecimal = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F")
     let cor_aleatoria = "#";
-    for (let i=0;i<6;i++){
-       let posarray = this.aleatorio(0,hexadecimal.length)
-       cor_aleatoria += hexadecimal[posarray]
+    for (let i = 0; i < 6; i++) {
+      let posarray = this.aleatorio(0, hexadecimal.length)
+      cor_aleatoria += hexadecimal[posarray]
     }
     return cor_aleatoria
   }
-  
+
 
   handleClickMetrics = () => {
     const openMetrics = !this.state.openMetrics
@@ -197,11 +197,11 @@ export default class Project extends Component {
         this.setState({ packageTree })
       })
 
-      for (let index = 0; index < 200; index++) {
-        const colors = this.state.colors
-        colors[index] = this.gerarCor()
-        this.setState({colors})
-      }
+    for (let index = 0; index < 200; index++) {
+      const colors = this.state.colors
+      colors[index] = this.gerarCor()
+      this.setState({ colors })
+    }
   }
 
   getMetricDescription = (metricName, checkMetric) => {
@@ -280,6 +280,11 @@ export default class Project extends Component {
           this.setState({ data });
         })
 
+      const packageSplit = packageName.split('.');
+      if (packageSplit.length !== 1) {
+        packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
+      }
+
       this.getMetricDescription(metricName, packageName);
 
     }
@@ -300,6 +305,10 @@ export default class Project extends Component {
           metricCheck = false
         }
       })
+      const packageSplit = packageName.split('.');
+      if (packageSplit.length === 1) {
+        packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
+      }
       this.RemoveMetricDescription(metricName, packageName);
     }
   }
@@ -388,6 +397,8 @@ export default class Project extends Component {
     const { maxHeight } = this.state
 
     const { root } = this.state
+
+    const { square } = this.state
 
     const { data } = this.state
 
@@ -534,7 +545,10 @@ export default class Project extends Component {
           >
             <Grid item xs={12}>
               {this.state.metricsDescriptions.map((metric, index) => (
-                <li title={metric.metricDescription}>{metric.metricName + ' (' + metric.checkMetric + ')'}</li>
+                <div>
+                  <div style={{ display: 'inline-block', height: '20px', width: '20px', backgroundColor: this.state.colors[index + 1] }}></div>
+                  <dt style={{ marginLeft: '10px', display: 'inline-block' }} title={metric.metricDescription}>{metric.metricName + ' (' + metric.checkMetric + ')'}</dt>
+                </div>
               ))}
             </Grid>
           </Box>
