@@ -175,10 +175,6 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         return super.visitExpression(ctx);
     }
 
-    private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters) {
-
-    }
-
     @Override
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
         return super.visitMethodCall(ctx);
@@ -622,43 +618,16 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
-        this.typeBinding.setName(ctx.getChild(1).getText());
-        String name = "";
-        TypeBinding extendedClass = new TypeBinding();
-        JavaParser.ClassDeclarationContext classDeclaration = (JavaParser.ClassDeclarationContext) ctx;
 
-        if (classDeclaration.getChild(2).getText().equals("extends")) {
-            ParseTree typeExtends = classDeclaration.getChild(3);
-            
-            if(typeBinding.getImports().size() != 0){
-                for (String Import : typeBinding.getImports()) {
-                    String[] aux = Import.split("\\.");
-                    String name2 = aux[aux.length-1];
-                    if( name2.equals(typeExtends.getText())){
-                        name = Import.concat(".java");
-                        extendedClass = globalEnviroment.getEnviroment().get(name);
-                    }
-                }
-            }else{
-                name = packageBinding.getName().concat(".").concat(typeExtends.getText()).concat(".java");
-                extendedClass = globalEnviroment.getEnviroment().get(name);
-                
-            }                    
-            
-            this.typeBinding.setExtendClass(extendedClass);
+        BaseVisitor baseVisitor = new BaseVisitor();
+        String packageName = packageBinding.getName();
 
-            if (this.typeBinding.getExtendClass() == null) {
-//                TypeBinding type = new TypeBinding();
-//                type.setName(name);
-//                this.typeBinding.setExtendClass(type);
-                  this.error = true;
-            }
-
-        }
+        this.error = baseVisitor.visitClassDeclaration(ctx, this.typeBinding, this.globalEnviroment, packageName);
 
         if (!this.error) {
-            globalEnviroment.getEnviroment().put(typeBinding.getName().concat(".java"), typeBinding);
+            this.globalEnviroment.getEnviroment().put(this.typeBinding.getName().concat(".java"), this.typeBinding);
         }
+
         return super.visitClassDeclaration(ctx);
     }
 
