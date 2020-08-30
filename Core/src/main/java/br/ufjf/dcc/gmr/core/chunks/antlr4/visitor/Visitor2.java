@@ -679,11 +679,9 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        for (ParseTree parseTree : ctx.children) {
-            if (parseTree instanceof JavaParser.QualifiedNameContext) {
-                packageBinding.setName(parseTree.getText());
-            }
-        }
+        
+        BaseVisitor baseVisitor = new BaseVisitor();        
+        baseVisitor.visitPackageDeclaration(ctx, this.packageBinding);
 
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;

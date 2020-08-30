@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Person;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.GlobalEnviroment;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Modifier;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PackageBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PrimitiveTypes;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.VariableBinding;
@@ -32,7 +33,7 @@ public class BaseVisitor {
 
     public BaseVisitor() {
     }
-    
+
     public boolean visitClassDeclaration(JavaParser.ClassDeclarationContext ctx, TypeBinding typeBinding, GlobalEnviroment globalEnviroment, String packageName) {
 
         Person person = new Person();
@@ -166,7 +167,11 @@ public class BaseVisitor {
         return result;
     }
 
-    public void visitPackageDeclaration() {
-
+    public void visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx, PackageBinding packageBinding) {
+        for (ParseTree parseTree : ctx.children) {
+            if (parseTree instanceof JavaParser.QualifiedNameContext) {
+                packageBinding.setName(parseTree.getText());
+            }
+        }
     }
 }

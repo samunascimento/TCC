@@ -290,7 +290,6 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //        }
 //
 //        methodCallBidingList.add(methodCallBinding);
-
         return super.visitMethodCall(ctx);
     }
 
@@ -413,18 +412,15 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                     }
                 }
                 if (typeBinding == null) {
-                    if(name.equals(PrimitiveTypes.STRING)){
+                    if (name.equals(PrimitiveTypes.STRING)) {
                         typeBinding = PrimitiveTypes.init(PrimitiveTypes.STRING);
-                    }else{
-                        typeBinding = ExternalTypeBinding.init(name);                        
-                    }                 
+                    } else {
+                        typeBinding = ExternalTypeBinding.init(name);
+                    }
                 }
             }
 
-    
-        }
-        
-        /**
+        } /**
          * dealing with primitive type
          */
         else if (ctx.typeType().primitiveType() != null) {
@@ -452,14 +448,11 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //                            currentScope.add(variableBindingForList.get(0));
 //                            variableBindingForList.remove(0);
 //                        }
-
 //                        currentScope.add(variableDeclarationBinding);
-
-                    }
-
                 }
+
             }
-        
+        }
 
         return super.visitLocalVariableDeclaration(ctx);
     }
@@ -870,11 +863,10 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        for (ParseTree parseTree : ctx.children) {
-            if (parseTree instanceof JavaParser.QualifiedNameContext) {
-                packageBinding.setName(parseTree.getText());
-            }
-        }
+        
+        BaseVisitor baseVisitor = new BaseVisitor();
+        baseVisitor.visitPackageDeclaration(ctx, this.packageBinding);
+        
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
     }
