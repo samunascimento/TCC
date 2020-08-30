@@ -70,6 +70,7 @@ public class JasomeResource {
         List<ProjectMetrics> listProject = new ArrayList<>();
         Gson g = new Gson();
         listProject = dao.selectNameProject();
+        connection.close();
         String listJ = g.toJson(listProject);
         return listJ;
     }
@@ -83,6 +84,7 @@ public class JasomeResource {
         ArrayList<PackageMetrics> listPackage = new ArrayList<>();
         Gson g = new Gson();
         listPackage = dao.selectPackageName(nameProject);
+        connection.close();
         String listJ = g.toJson(listPackage);
         return listJ;
     }
@@ -99,6 +101,7 @@ public class JasomeResource {
         List<Point> listPoints = new ArrayList<>();
         List<Metric> list = new ArrayList<>();
         List<List<Point>> selectVersionMetrics = dao.selectVersionMetrics(nameProject);
+        connection.close();
         String listJ = g.toJson(selectVersionMetrics);
         return listJ;
     }
@@ -112,6 +115,7 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<List<Point>> selectPackageMetrics = dao.selectPackageMetrics(nameProject,namePackage,nameMetric);
+        connection.close();
         String listJ = g.toJson(selectPackageMetrics);
         return listJ;
     }
@@ -124,6 +128,7 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         String description = dao.selectMetricDescription(nameMetric);
+        connection.close();
         String listJ = g.toJson(description);
         return listJ;
     }
@@ -137,6 +142,7 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<List<Point>> selectPackageMetrics = dao.selectAllPackageMetrics(nameProject);
+        connection.close();
         String listJ = g.toJson(selectPackageMetrics);
         return listJ;
     }
@@ -149,6 +155,7 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<List<Point>> selectClassMetrics = dao.selectClassMetrics(nameProject);
+        connection.close();
         String listJ = g.toJson(selectClassMetrics);
         return listJ;
     }
@@ -162,6 +169,7 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new Gson();
         List<List<Point>> selectMethodMetrics = dao.selectMethodMetrics(nameProject);
+        connection.close();
         String listJ = g.toJson(selectMethodMetrics);
         return listJ;
     }
