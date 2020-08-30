@@ -753,80 +753,8 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        this.methodDeclaration = true;
-        List<VariableBinding> parameters = new ArrayList<>();
-        TypeBinding methodType = new TypeBinding();
-        if (ctx.IDENTIFIER().getText().equals("getCity")) {
-            int x = 10 + 20;
-        }
-
-        JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
-        if (typeType == null) {
-
-            methodType = PrimitiveTypes.init(PrimitiveTypes.VOID);
-        } else if (typeType.primitiveType() != null) {
-
-            methodType = PrimitiveTypes.init(typeType.primitiveType().getText());
-        } else if (typeType.classOrInterfaceType() != null) {
-
-            String name = this.packageBinding.getName();
-            name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
-            TypeBinding compare = this.globalEnviroment.getEnviroment().get(name);
-            if (compare != null) {
-                methodType = compare;
-            } else {
-                //TODO external class                
-                if (typeType.classOrInterfaceType().getText().equals(PrimitiveTypes.STRING)) {
-                    methodType = PrimitiveTypes.init(PrimitiveTypes.STRING);
-                } else {
-                    methodType.setName(typeType.classOrInterfaceType().getText());
-                }
-
-            }
-        }
-
-        //Getting parameters
-        JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
-
-        if (ctx.formalParameters().formalParameterList() != null) {
-            for (ParseTree parseTree : formalParameters.children) {
-                if (parseTree instanceof JavaParser.FormalParameterContext) {
-
-                    JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
-                    TypeBinding parameterType = new TypeBinding();
-                    VariableBinding parameter = new VariableBinding();
-
-                    parameter.setName(aux.variableDeclaratorId().getText());
-
-                    if (aux.typeType().classOrInterfaceType() != null) {
-
-                        for (TypeBinding type : this.globalEnviroment.getEnviroment().values()) {
-                            if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
-                                parameterType = type;
-                            }
-                        }
-                        if (parameterType.getName() == null) {
-
-                            parameterType.setName(aux.typeType().classOrInterfaceType().getText());
-                            //TODO: change to use the parameter's package
-                            parameterType.setPackageBinding(this.packageBinding);
-                        }
-
-                    } else if (aux.typeType().primitiveType() != null) {
-                        parameterType.setName(aux.typeType().primitiveType().getText());
-                    }
-
-                    parameter.setType(parameterType);
-
-                    parameters.add(parameter);
-                }
-            }
-        }
-
-        this.methodDeclarationBinding.setName(ctx.IDENTIFIER().getText());
-        this.methodDeclarationBinding.setReturnBinding(methodType);
-        this.methodDeclarationBinding.setParameters(parameters);
-
+        BaseVisitor baseVisitor = new BaseVisitor(methodDeclarationBinding);
+        baseVisitor.visitMethodDeclaration(ctx, globalEnviroment, packageBinding.getName(), className);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         this.methodDeclaration = false;
         return visitMethodDeclaration;

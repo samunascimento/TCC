@@ -11,7 +11,7 @@ import java.util.List;
 public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     private PackageBinding packageBinding;
-    private MethodDeclarationBinding mdbGeneral;
+    private MethodDeclarationBinding methodDeclarationBinding;
     private TypeBinding typeBinding;
     private GlobalEnviroment globalEnviroment;
     private String className;
@@ -277,31 +277,8 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
-
-//             List<BaseBinding> bindings = new ArrayList<>();
-//        
-//        String text = ctx.getText();
-//
-//        
-//        if (this.methodDeclaration) {
-//            this.mdbGeneral.getEnviromentBinding().getEnviroment().add(bindings);
-//            
-//            //Add Method's parameters variables to enviromentBinding before start read Method's block code
-//            if(this.mdbGeneral.getEnviromentBinding().getEnviroment().size() == 1){
-//                for (VariableBinding parameter : mdbGeneral.getParameters()) {
-//                    EnviromentBinding bindingScope = this.mdbGeneral.getEnviromentBinding();
-//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-//                    currentScope.add(parameter);
-//                }
-//            }          
-//        }
-//
         Object visitBlock = super.visitBlock(ctx);
-//
-//        if (this.methodDeclaration) {
-//            this.mdbGeneral.getEnviromentBinding().getEnviroment().remove(bindings);
-//        }
-//
+
         return visitBlock;
     }
 
@@ -587,103 +564,10 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-
-        List<VariableBinding> parameters = new ArrayList<>();
-        TypeBinding methodType = new TypeBinding();
-        
-        this.mdbGeneral = new MethodDeclarationBinding();
-     
-        this.mdbGeneral.setName(ctx.IDENTIFIER().getText());
-        this.mdbGeneral.setCtx(ctx);
-
-        List<Modifier> modifiers = extractModifier(ctx);
-        this.mdbGeneral.setModifier(modifiers);
-
-        JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
-        if (typeType == null) {            
-            
-            methodType = PrimitiveTypes.init(PrimitiveTypes.VOID);
-        } else if (typeType.primitiveType() != null) {
-            
-            methodType = PrimitiveTypes.init(typeType.primitiveType().getText());
-        } else if (typeType.classOrInterfaceType() != null) {
-            
-            String name = this.packageBinding.getName();
-            name = name.concat(".").concat(typeType.classOrInterfaceType().getText()).concat(".java");
-            TypeBinding compare = this.globalEnviroment.getEnviroment().get(name);
-            if (compare != null) {
-                methodType = compare;
-            } else {
-                //TODO external class                
-                if(typeType.classOrInterfaceType().getText().equals(PrimitiveTypes.STRING)){
-                    methodType = PrimitiveTypes.init(PrimitiveTypes.STRING);
-                }else{
-                    methodType.setName(typeType.classOrInterfaceType().getText());
-                }
-                
-            }
-        }
-
-        //Getting parameters
-        JavaParser.FormalParameterListContext formalParameters = (JavaParser.FormalParameterListContext) ctx.formalParameters().formalParameterList();
-
-        if (ctx.formalParameters().formalParameterList() != null) {
-            for (ParseTree parseTree : formalParameters.children) {
-                if (parseTree instanceof JavaParser.FormalParameterContext) {
-
-                    JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
-                    TypeBinding parameterType = new TypeBinding();
-                    VariableBinding parameter = new VariableBinding();
-
-                    parameter.setName(aux.variableDeclaratorId().getText());
-
-                    if (aux.typeType().classOrInterfaceType() != null) {
-
-                        for (TypeBinding type : this.globalEnviroment.getEnviroment().values()) {
-                            if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
-                                parameterType = type;
-                            }
-                        }
-                        if (parameterType.getName().isEmpty()) {
-
-                            parameterType.setName(aux.typeType().classOrInterfaceType().getText());
-                            
-                            
-                        }
-
-                    } else if (aux.typeType().primitiveType() != null) {                        
-                        parameterType = PrimitiveTypes.init(aux.typeType().primitiveType().getText());                        
-                        
-                    }
-
-                    parameter.setType(parameterType);
-
-                    parameters.add(parameter);
-                }
-            }
-        }
-
-        this.mdbGeneral.setReturnBinding(methodType);
-        this.mdbGeneral.setParameters(parameters);
-        this.globalEnviroment.getEnviroment().get(this.className).getMdbList().add(this.mdbGeneral);
-
+        BaseVisitor baseVisitor = new BaseVisitor(methodDeclarationBinding);
+        baseVisitor.visitMethodDeclaration(ctx, globalEnviroment, this.packageBinding.getName(), className);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
-    }
-
-    private List<Modifier> extractModifier(JavaParser.MethodDeclarationContext ctx) {
-        List<Modifier> result = new ArrayList<>();
-
-        ParserRuleContext memberDeclaration = ctx.getParent();
-        ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
-
-        for (ParseTree parseTree : classBodyDeclaration.children) {
-            if (parseTree instanceof JavaParser.ModifierContext) {
-                result.add(Modifier.equalsTo(parseTree.getText()));
-            }
-        }
-
-        return result;
     }
 
     @Override
