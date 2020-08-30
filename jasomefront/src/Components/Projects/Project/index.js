@@ -306,7 +306,7 @@ export default class Project extends Component {
         }
       })
       const packageSplit = packageName.split('.');
-      if (packageSplit.length === 1) {
+      if (packageSplit.length !== 1) {
         packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
       }
       this.RemoveMetricDescription(metricName, packageName);

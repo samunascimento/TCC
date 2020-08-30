@@ -453,21 +453,21 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select v.versiondate, v.id, d.packagename, e.name, e.value \n"
-                + "from tb_projectmetrics as a\n"
-                + "left join tb_project_version as b \n"
-                + "on a.id = b.project_id \n"
-                + "left join tb_version_package as c \n"
-                + "on b.version_id = c.version_id \n"
-                + "left join tb_versionmetrics as v \n"
-                + "on v.id = c.version_id \n"
-                + "left join tb_packagemetrics as d \n"
-                + "on c.package_id = d.id \n"
-                + "left join tb_metric as e \n"
-                + "on\n"
-                + "d." + nameMetric + "id = e.id \n"
-                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null";
-//                + "order by v.id";
+        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname \n" +
+                        "from tb_projectmetrics as a\n" +
+                        "inner join tb_project_version as b\n" +
+                        "on a.id = b.project_id\n" +
+                        "left join tb_version_package as c \n" +
+                        "on b.version_id = c.version_id\n" +
+                        "left join tb_versionmetrics as v\n" +
+                        "on v.id = b.version_id --alt\n" +
+                        "left join tb_packagemetrics as d \n" +
+                        "on c.package_id = d.id\n" +
+                        "left join tb_metric as e \n" +
+                        "on\n" +
+                        "d." + nameMetric + "id = e.id \n" +
+                        "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"+
+                        "order by b.version_id";
 
         int idIndex;
 
@@ -483,7 +483,9 @@ public class MetricDao {
                     Date versionDate = new Date(versionTimestamp.getTime());
                     listPoints.add(new Point(cont, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
                 } else {
-                    listPoints.add(null);
+                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                    Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(cont,null, null, null, null, versionDate));
                 }
                 cont++;
 

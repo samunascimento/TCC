@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Point {
     private int x;
-    private double y;
+    private Double y;
     private String nameProject;
     private String namePackage;
     private String nameClass;
@@ -22,7 +22,7 @@ public class Point {
     private Date versionDate;
     
     //project
-    public Point(int x, double y,String nameProject, String metricName,Date versionDate) {
+    public Point(int x, Double y,String nameProject, String metricName,Date versionDate) {
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -32,7 +32,7 @@ public class Point {
     
 
     //package
-    public Point(int x, double y,String nameProject, String namePackage,String metricName,Date versionDate) {
+    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate) {
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -42,7 +42,7 @@ public class Point {
     }
     
     //class
-    public Point(int x,double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate){
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate){
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -53,7 +53,7 @@ public class Point {
     }
     
     //method
-    public Point(int x,double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -73,7 +73,7 @@ public class Point {
         this.x = x;
     }
 
-    public double getY() {
+    public Double getY() {
         return y;
     }
 
