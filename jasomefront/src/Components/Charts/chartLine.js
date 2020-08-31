@@ -33,13 +33,21 @@ class ChartLine extends Component {
       ),
       maximaX : this.props.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.x))
-      )
+      ),
+      nameX: ""
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
+
+    // if(this.state.switch !== prevState.switch){
+    //   this.setState({switch: this.props.switch})
+    //   console.log(this.state.switch)
+    // }
+
     if (this.props.data !== prevState.data) {
       this.setState({ data: this.props.data })
+
       this.setState({maximaX: this.state.data.map(
         (dataset) => Math.max(...dataset.map((d) => d.x))
       )})
@@ -53,6 +61,14 @@ class ChartLine extends Component {
 
   handleZoom(domain) {
     this.setState({ zoomDomain: domain });
+  }
+
+  handleSwitch(){
+      if (this.props.switch){
+        return "x"
+      }else{
+        return "versionDate"
+      }
   }
 
   render() {
@@ -76,15 +92,14 @@ class ChartLine extends Component {
             />
           }
                 >
-        {this.state.data.map((d, i) => (
+        {/* {this.state.data.map((d, i) => (
                   <VictoryScatter
                   style={this.state.colors[i] }
                   size={4}
                   data={d}
                   labels={({ datum }) => `(${datum.x},${datum.y})` }
                 />   
-                  ))}
-          
+                  ))} */}
           {this.state.data.map((d, i) => (
             <VictoryLine
               key={i}
@@ -94,6 +109,8 @@ class ChartLine extends Component {
                   stroke: this.state.colors[i]
                 }
               }}
+              x={this.handleSwitch()}
+              y="y"
             >
             </VictoryLine>
             

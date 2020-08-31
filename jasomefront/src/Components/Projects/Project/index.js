@@ -23,6 +23,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Switch from '@material-ui/core/Switch';
 
 
 import { PropTypes } from 'prop-types';
@@ -132,6 +133,8 @@ export default class Project extends Component {
         },
       })),
 
+      checkSwitch: true,
+
       metricsDescriptions: [],
 
     };
@@ -189,7 +192,6 @@ export default class Project extends Component {
   };
 
 
-
   componentDidMount = () => {
     axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/namePackage/` + this.props.nameProject.name)
       .then(res => {
@@ -221,7 +223,6 @@ export default class Project extends Component {
       if (metric.metricName === metricName && metric.checkMetric === checkMetric) {
         metricCheck = true
       }
-      console.log(metricCheck)
       if (metricCheck === true) {
         this.state.metricsDescriptions.splice(index, 1)
         metricCheck = false
@@ -377,6 +378,17 @@ export default class Project extends Component {
     }
   }
 
+  handleChangeSwitch = (event) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+  };
+
+  // handleSwitch = () => {
+  //   console.log('entrou no onclick')
+  //   const checkSwitch = !this.state.checkSwitch
+  //   console.log(checkSwitch)
+  //   this.setState({checkSwitch})
+  // };
+
 
 
   render() {
@@ -405,6 +417,22 @@ export default class Project extends Component {
     return (
       <div>
         <div style={{ width: '20%', position: "relative", float: "right" }}>
+          {/* <div style={{ position: 'relative',  align: 'center'}}> */}
+          <Grid component="label" container alignItems="center" spacing={1}>
+          <Grid item>Commit</Grid>
+          <Grid item>
+            <Switch
+              checked={this.state.checkedA}
+              //onChange={this.handleChangeSwitch}
+              name="checkedA"
+              color="primary"
+              inputProps={{ 'aria-label': 'primary checkbox' }}
+              onClick={() => this.setState({ checkSwitch: !this.state.checkSwitch })}
+            />
+          </Grid>
+          <Grid item>Date</Grid>
+        </Grid>
+          {/* </div> */}
           <Box
             display="flex"
 
@@ -555,7 +583,7 @@ export default class Project extends Component {
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} colors={this.state.colors} />
+          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch}/>
         </div>
       </div >
     );
