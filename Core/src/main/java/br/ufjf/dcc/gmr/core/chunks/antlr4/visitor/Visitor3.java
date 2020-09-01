@@ -11,23 +11,20 @@ import javax.naming.Binding;
 
 public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
-    //remover variableBindingList e methodCallBidingList se possivel
     private PackageBinding packageBinding;
-    private List<MethodCallBinding> methodCallBidingList;
-    //TODO Delete typeBindingList
+    private List<VariableBinding> variableBindingForList;
     private GlobalEnviroment globalEnviroment;
     private EnviromentBinding enviromentBinding;
     private boolean methodDeclaration;
     private String className;
     private MethodDeclarationBinding methodDeclarationBinding;
-//    
 
     public Visitor3(GlobalEnviroment globalEnviroment) {
+        this.variableBindingForList = new ArrayList<>();
         this.methodDeclarationBinding = new MethodDeclarationBinding();
         this.methodDeclaration = false;
         this.className = "";
         this.packageBinding = new PackageBinding();
-        this.methodCallBidingList = new ArrayList<>();
         this.enviromentBinding = new EnviromentBinding();
         this.globalEnviroment = globalEnviroment;
     }
@@ -264,7 +261,8 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
         List<TypeBinding> parameters = new ArrayList<>();
 
         ParserRuleContext parent = ctx.getParent();
-
+        TypeBinding typeBinding = new TypeBinding();
+        typeBinding.setName("NotTreated");
 //        if (parent != null && parent instanceof JavaParser.ExpressionContext) {
 //            for (int i = 0; i < variableBindingForList.size(); i++) {
 //                if (parent.children.get(0).getText().equals(variableBindingForList.get(i).getName())) {
@@ -273,6 +271,9 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //                }
 //            }
 //        }
+
+        methodCallBinding.setTypeBinding(typeBinding);
+
         methodCallBinding.setName(ctx.IDENTIFIER().getText());
         methodCallBinding.setCtx(ctx);
 
@@ -280,16 +281,15 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
         methodCallBinding.setParameters(parameters);
 
-//        if (methodDeclaration) {
-//            int lastIndexX = this.enviromentBinding.getEnviroment().size() - 1;
-//
-//            if (this.enviromentBinding.getEnviroment().get(lastIndexX) != null) {
-//                this.enviromentBinding.getEnviroment().get(lastIndexX).add(methodCallBinding);
-//            }
-//
-//        }
-//
-//        methodCallBidingList.add(methodCallBinding);
+        if (methodDeclaration) {
+
+            MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+            EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
+            List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+
+            currentScope.add(methodCallBinding);
+
+        }
         return super.visitMethodCall(ctx);
     }
 
@@ -438,17 +438,20 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 variableDeclarationBinding.setType(typeBinding);
 
                 if (this.methodDeclaration) {
-//                    if (ctx.parent instanceof JavaParser.ForInitContext) {
-//                        this.variableBindingForList.add(variableDeclarationBinding);
-//                    } else {
-//                        EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
-//                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+                    if (ctx.parent instanceof JavaParser.ForInitContext) {
+                        this.variableBindingForList.add(variableDeclarationBinding);
 
-//                        while (variableBindingForList.size() > 0) {
-//                            currentScope.add(variableBindingForList.get(0));
-//                            variableBindingForList.remove(0);
-//                        }
-//                        currentScope.add(variableDeclarationBinding);
+                    } else {
+                        MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+                        EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
+                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+
+                        while (variableBindingForList.size() > 0) {
+                            currentScope.add(variableBindingForList.get(0));
+                            variableBindingForList.remove(0);
+                        }
+                        currentScope.add(variableDeclarationBinding);
+                    }
                 }
 
             }
@@ -466,27 +469,35 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
         //log(ctx);
-//        List<BaseBinding> bindings = new ArrayList<>();
-//
-//        String text = ctx.getText();
-//
-//        if (this.methodDeclaration) {
-//            MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(methodDeclarationBinding, className);
-//            this.enviromentBinding.getEnviroment().add(bindings);
-//
-//            //Add Method's parameters variables to enviromentBinding before start read Method's block code
-//            if (this.enviromentBinding.getEnviroment().size() == 1) {
-//                for (VariableBinding parameter : methodDeclarationBinding.getParameters()) {
-//                    EnviromentBinding bindingScope = this.methodDeclarationBinding.getMethodEnviromentBinding();
-//                    List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-//                    currentScope.add(parameter);
-//                }
-//            }
-//        }
+        List<BaseBinding> bindings = new ArrayList<>();
+        MethodDeclarationBinding findMethodDeclaration = new MethodDeclarationBinding();
+        String text = ctx.getText();
+
+        if (this.methodDeclaration) {
+            findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+            if (findMethodDeclaration != null) {
+                
+                findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().add(bindings);
+
+                //Add Method's parameters variables to enviromentBinding before start read Method's block code
+                if (findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().size() == 1) {
+                    for (VariableBinding parameter : findMethodDeclaration.getParameters()) {
+                        EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
+                        List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+                        currentScope.add(parameter);
+                    }
+                }
+
+            }
+
+        }
         Object visitBlock = super.visitBlock(ctx);
-//        if (this.methodDeclaration) {
-//            this.methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment().remove(bindings);
-//        }
+
+        if (this.methodDeclaration) {
+            String a = "batata";
+            findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+            findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
+        }
 
         return visitBlock;
     }
@@ -746,8 +757,9 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        BaseVisitor baseVisitor = new BaseVisitor(methodDeclarationBinding);
-        baseVisitor.visitMethodDeclaration(ctx, globalEnviroment, packageBinding.getName(), className);
+        this.methodDeclaration = true;
+        BaseVisitor baseVisitor = new BaseVisitor();
+        baseVisitor.visitMethodDeclaration(ctx, this.globalEnviroment, this.methodDeclarationBinding, packageBinding.getName(), className);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         this.methodDeclaration = false;
         return visitMethodDeclaration;
@@ -863,10 +875,10 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        
+
         BaseVisitor baseVisitor = new BaseVisitor();
         baseVisitor.visitPackageDeclaration(ctx, this.packageBinding);
-        
+
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
     }
@@ -936,20 +948,6 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    /**
-     * @return the methodCallBidingList
-     */
-    public List<MethodCallBinding> getMethodCallBiding() {
-        return methodCallBidingList;
-    }
-
-    /**
-     * @param methodCallBiding the methodCallBidingList to set
-     */
-    public void setMethodCallBiding(List<MethodCallBinding> methodCallBiding) {
-        this.methodCallBidingList = methodCallBiding;
     }
 
     /**

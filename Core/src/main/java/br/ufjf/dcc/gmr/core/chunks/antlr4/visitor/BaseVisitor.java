@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Person;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.ExternalTypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.GlobalEnviroment;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Modifier;
@@ -25,13 +26,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class BaseVisitor {
 
-    MethodDeclarationBinding mdbGeneral;
-
-    public BaseVisitor(MethodDeclarationBinding mdbGeneral) {
-        this.mdbGeneral = mdbGeneral;
-    }
-
     public BaseVisitor() {
+        
     }
 
     public boolean visitClassDeclaration(JavaParser.ClassDeclarationContext ctx, TypeBinding typeBinding, GlobalEnviroment globalEnviroment, String packageName) {
@@ -71,18 +67,16 @@ public class BaseVisitor {
         return false;
     }
 
-    public void visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx, GlobalEnviroment globalEnviroment, String packageName, String className) {
+    public void visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx, GlobalEnviroment globalEnviroment, MethodDeclarationBinding mdbGeneral, String packageName, String className) {
 
         List<VariableBinding> parameters = new ArrayList<>();
         TypeBinding methodType = new TypeBinding();
 
-        this.mdbGeneral = new MethodDeclarationBinding();
-
-        this.mdbGeneral.setName(ctx.IDENTIFIER().getText());
-        this.mdbGeneral.setCtx(ctx);
+        mdbGeneral.setName(ctx.IDENTIFIER().getText());
+        mdbGeneral.setCtx(ctx);
 
         List<Modifier> modifiers = extractModifier(ctx);
-        this.mdbGeneral.setModifier(modifiers);
+        mdbGeneral.setModifier(modifiers);
 
         JavaParser.TypeTypeContext typeType = (JavaParser.TypeTypeContext) ctx.typeTypeOrVoid().typeType();
         if (typeType == null) {
@@ -125,13 +119,18 @@ public class BaseVisitor {
                     if (aux.typeType().classOrInterfaceType() != null) {
 
                         for (TypeBinding type : globalEnviroment.getEnviroment().values()) {
-                            if (aux.typeType().classOrInterfaceType().getText().equals(type.getName())) {
+                            String[] typeName = type.getName().split("\\.");
+                            if (aux.typeType().classOrInterfaceType().getText().equals(typeName[typeName.length-1])) {
                                 parameterType = type;
                             }
                         }
                         if (parameterType.getName().isEmpty()) {
 
-                            parameterType.setName(aux.typeType().classOrInterfaceType().getText());
+                            if (aux.typeType().classOrInterfaceType().getText().equals(PrimitiveTypes.STRING)) {
+                                parameterType = PrimitiveTypes.init(PrimitiveTypes.STRING);
+                            } else {
+                                parameterType = ExternalTypeBinding.init(aux.typeType().classOrInterfaceType().getText());
+                            }
 
                         }
 
@@ -147,9 +146,9 @@ public class BaseVisitor {
             }
         }
 
-        this.mdbGeneral.setReturnBinding(methodType);
-        this.mdbGeneral.setParameters(parameters);
-        globalEnviroment.getEnviroment().get(className).getMdbList().add(this.mdbGeneral);
+       mdbGeneral.setReturnBinding(methodType);
+       mdbGeneral.setParameters(parameters);
+        
     }
 
     private List<Modifier> extractModifier(JavaParser.MethodDeclarationContext ctx) {

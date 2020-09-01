@@ -17,6 +17,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     private String className;
     
     public Visitor2(GlobalEnviroment globalEnviroment) {
+        this.methodDeclarationBinding = new MethodDeclarationBinding();
         this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
@@ -564,8 +565,11 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
-        BaseVisitor baseVisitor = new BaseVisitor(methodDeclarationBinding);
-        baseVisitor.visitMethodDeclaration(ctx, globalEnviroment, this.packageBinding.getName(), className);
+        BaseVisitor baseVisitor = new BaseVisitor();
+        MethodDeclarationBinding mdbGeneral = new MethodDeclarationBinding();
+        baseVisitor.visitMethodDeclaration(ctx, this.globalEnviroment, mdbGeneral, this.packageBinding.getName(), className);
+        this.methodDeclarationBinding = mdbGeneral;
+        globalEnviroment.getEnviroment().get(className).getMdbList().add(this.methodDeclarationBinding);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
     }

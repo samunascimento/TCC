@@ -42,8 +42,9 @@ public class GlobalEnviroment {
                         return methodDeclaration;
                     }
                 }
+                return null;
             }
-            return null;
+            
         }
         return null;
     }
