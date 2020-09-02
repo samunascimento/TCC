@@ -468,17 +468,14 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
-        //log(ctx);
         List<BaseBinding> bindings = new ArrayList<>();
         MethodDeclarationBinding findMethodDeclaration = new MethodDeclarationBinding();
-        String text = ctx.getText();
 
         if (this.methodDeclaration) {
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             if (findMethodDeclaration != null) {
                 
                 findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().add(bindings);
-
                 //Add Method's parameters variables to enviromentBinding before start read Method's block code
                 if (findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().size() == 1) {
                     for (VariableBinding parameter : findMethodDeclaration.getParameters()) {
@@ -487,18 +484,14 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                         currentScope.add(parameter);
                     }
                 }
-
             }
-
         }
         Object visitBlock = super.visitBlock(ctx);
 
         if (this.methodDeclaration) {
-            String a = "batata";
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }
-
         return visitBlock;
     }
 

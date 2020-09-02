@@ -3,10 +3,10 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 import java.util.Random;
 
 public class Person {
-
-    private String name;
+ private String name;
     private String CPF;
     private int age;
+   
     private Adress adress;
     private Random rand;
     
@@ -15,7 +15,13 @@ public class Person {
         this.CPF = CPF;
         this.age = Age;
     }
-
+    
+    @Override
+    public String toString(){
+        String aux = "name: ".concat(name).concat("\n");
+        aux = aux.concat("CPF: " + CPF);
+        return aux;
+    }
     public void setInfo(String name, int age) {
         this.name = name;
         this.age = age;

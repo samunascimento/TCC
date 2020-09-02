@@ -13,7 +13,6 @@ public class Main {
     
     
     public Main(String name, String office, int age) {
-        
         this.age = age;
         this.office = office;
         this.name = name;
@@ -59,7 +58,6 @@ public class Main {
         person.setInfo(y, x);
         person.setInfo(x, y);
 
-        person.getAdress().getCity();
         employee.getAdress().getCity();
 
         System.out.println(employeeExtends.getAdress().getCity());
