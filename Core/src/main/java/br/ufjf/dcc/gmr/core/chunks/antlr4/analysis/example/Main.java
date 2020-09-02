@@ -9,9 +9,7 @@ public class Main {
     private String name;
     private int age;
     private String office;
-  
-    
-    
+
     public Main(String name, String office, int age) {
         this.age = age;
         this.office = office;
@@ -19,7 +17,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-       
+
         Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
         person.setName("name of a person");
@@ -28,15 +26,15 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
-        
+
         List<String> aux = new ArrayList<>();
         aux.add("0");
-        
+
         for (int i = 0; i < 10; i++) {
             float j = 3;
             j += i;
         }
-        
+
         if (employee != null) {
             if (employee.getName().equals("name of a employee")) {
                 Person person1 = person;
@@ -46,10 +44,10 @@ public class Main {
                 Employee employee1 = employee;
             }
         }
-        
+
         employeeExtends.increaseSalary(50);//
         employeeExtends.setActive(false);//
-        int x =4;
+        int x = 4;
         float w = 50;
         String y = "kkk";
         person.getName();
@@ -62,9 +60,20 @@ public class Main {
 
         System.out.println(employeeExtends.getAdress().getCity());
     }
-    
-    public Person person(Person person){
+
+    public Person person(Person person) {
         return person;
+    }
+
+    public void teste() {
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+        }
     }
 
     /**
@@ -99,7 +108,7 @@ public class Main {
      * @param name the name to set
      */
     public void setName(String name) {
-        
+
         String falatu;
         this.name = name;
     }

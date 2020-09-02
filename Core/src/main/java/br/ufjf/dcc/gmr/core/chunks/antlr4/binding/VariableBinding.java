@@ -4,6 +4,7 @@ public class VariableBinding extends BaseBinding {
 
     private String modifier;
     private TypeBinding type;
+    //Add context
             
     public VariableBinding(String Modifier, TypeBinding type, String name) {
         super(name);

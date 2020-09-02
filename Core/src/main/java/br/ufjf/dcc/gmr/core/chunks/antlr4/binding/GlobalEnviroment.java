@@ -1,11 +1,46 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GlobalEnviroment {
 
     private Map<String, TypeBinding> enviroment;
+
+    /**
+     * TODO...
+     * @param type
+     * @param begin
+     * @param end
+     * @return 
+     */
+    public List<BaseBinding> findLanguageConstructs(String type, int begin, int end) {
+
+        
+        
+        List<BaseBinding> result = new ArrayList<>();
+
+        TypeBinding typeBinding = enviroment.get(type);
+
+        typeBinding.getAttributes();
+        typeBinding.getImports();
+        typeBinding.getMdbList();
+
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+            if (methodDeclarationBinding.getCtx().getStart().getLine() >= begin
+                    && methodDeclarationBinding.getCtx().getStop().getLine() <= end) {
+                {
+                    result.add(methodDeclarationBinding);
+                }
+            }
+
+        }
+        
+        
+        return result;
+    }
 
     public GlobalEnviroment() {
         this.enviroment = new HashMap<>();
@@ -44,11 +79,11 @@ public class GlobalEnviroment {
                 }
                 return null;
             }
-            
+
         }
         return null;
     }
-    
+
     public MethodDeclarationBinding findMethodCall(MethodCallBinding methodCall, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
