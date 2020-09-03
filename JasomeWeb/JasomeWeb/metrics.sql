@@ -43,7 +43,7 @@ CREATE TABLE tb_versionMetrics (
 
 CREATE TABLE tb_packageMetrics (
     ID Serial NOT Null,
-	packageName varchar(255),
+	packageName varchar(400),
     aID Integer,
     ccrcID Integer,
     caID Integer,
@@ -72,7 +72,7 @@ CREATE TABLE tb_packageMetrics (
 
 CREATE TABLE tb_classMetrics (
     ID Serial NOT Null,
-	className varchar(255),
+	className varchar(400),
 	ahfID Integer,
 	aifID Integer,
     aaID Integer,
@@ -174,7 +174,7 @@ CREATE TABLE tb_classMetrics (
 
 CREATE TABLE tb_methodMetrics (
     ID Serial NOT Null,
-	methodName varchar(255),
+	methodName varchar(400),
     ciID Integer,
     diID Integer,
     finID Integer,
@@ -214,7 +214,7 @@ CREATE TABLE tb_project_version (
 CREATE TABLE tb_version_package (
     version_id Serial NOT Null,
     package_id Serial NOT Null,
-	package_name varchar (255) null,
+	package_name varchar (400) null,
     FOREIGN KEY (version_id) REFERENCES tb_versionMetrics(ID),
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID)
 );
@@ -222,7 +222,7 @@ CREATE TABLE tb_version_package (
 CREATE TABLE tb_package_class (
     package_id Serial NOT Null,
     class_id Serial NOT Null,
-	class_name varchar (255),
+	class_name varchar (400),
     FOREIGN KEY (package_id) REFERENCES tb_packageMetrics(ID),
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID)
 );
@@ -230,7 +230,7 @@ CREATE TABLE tb_package_class (
 CREATE TABLE tb_class_method (
     class_id Serial NOT Null,
     method_id Serial NOT Null,
-	method_name varchar (255),
+	method_name varchar (400),
     FOREIGN KEY (class_id) REFERENCES tb_classMetrics(ID),
     FOREIGN KEY (method_id) REFERENCES tb_methodMetrics(ID)
 );
@@ -321,4 +321,3 @@ VALUES
     ('IOVARS','Input/Output Variables: NOP + 1 (0 if void return type) (method)'),
     ('DI','Data Complexity: (IOVars)/(Fout+1) (method)'),
     ('CI','System Complexity: Si + Di (method)')
-
