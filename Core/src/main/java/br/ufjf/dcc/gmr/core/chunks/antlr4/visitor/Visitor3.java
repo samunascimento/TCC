@@ -7,7 +7,6 @@ import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.naming.Binding;
 
 public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
@@ -484,12 +483,21 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                         currentScope.add(parameter);
                     }
                 }
+            } else{
+                System.out.println("ERROOORRRR:VisitBlock 487....");
             }
         }
         Object visitBlock = super.visitBlock(ctx);
 
         if (this.methodDeclaration) {
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+            
+            //TODO: Add localVariableDeclaration (declaration and parameters) 
+            //TODO: change variable declaration inside a method to LocalVariableDeclaration 
+            findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
+            
+            findMethodDeclaration.addMethodCallBindingBinding(bindings);
+            
             findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }
         return visitBlock;

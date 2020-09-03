@@ -11,13 +11,20 @@ public class MethodDeclarationBinding extends BaseBinding {
     private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
     private EnviromentBinding methodEnviromentBinding;
-
+    private List<LocalVariableDeclarationBinding> localVariableDeclarationBindings;
+    private List<LocalVariableUsageBinding> localVariableUsageBindings;
+    private List<MethodCallBinding> methodCallBindings;
+    
+    
     public MethodDeclarationBinding() {
         super();
         this.modifier = new ArrayList<>();
         this.parametersBindings = new ArrayList<>();
         this.returnBinding = new TypeBinding();
         this.methodEnviromentBinding = new EnviromentBinding();
+        this.localVariableDeclarationBindings = new ArrayList<>();
+        this.localVariableUsageBindings = new ArrayList<>();
+        this.methodCallBindings = new ArrayList<>();
     }
 
     public boolean equalsTo(MethodCallBinding mcb) {
@@ -145,5 +152,64 @@ public class MethodDeclarationBinding extends BaseBinding {
      */
     public void setEnviromentBinding(EnviromentBinding methodEnviromentBinding) {
         this.methodEnviromentBinding = methodEnviromentBinding;
+    }
+
+    public List<VariableBinding> getParametersBindings() {
+        return parametersBindings;
+    }
+
+    public void setParametersBindings(List<VariableBinding> parametersBindings) {
+        this.parametersBindings = parametersBindings;
+    }
+
+    public List<LocalVariableDeclarationBinding> getLocalVariableDeclarationBindings() {
+        return localVariableDeclarationBindings;
+    }
+
+    public void setLocalVariableDeclarationBindings(List<LocalVariableDeclarationBinding> localVariableDeclarationBindings) {
+        this.localVariableDeclarationBindings = localVariableDeclarationBindings;
+    }
+
+    public List<LocalVariableUsageBinding> getLocalVariableUsageBindings() {
+        return localVariableUsageBindings;
+    }
+
+    public void setLocalVariableUsageBindings(List<LocalVariableUsageBinding> localVariableUsageBindings) {
+        this.localVariableUsageBindings = localVariableUsageBindings;
+    }
+
+    public List<MethodCallBinding> getMethodCallBindings() {
+        return methodCallBindings;
+    }
+
+    public void setMethodCallBindings(List<MethodCallBinding> methodCallBindings) {
+        this.methodCallBindings = methodCallBindings;
+    }
+    
+    public void addLocalVariableDeclarationBinding(List<BaseBinding> baseBindings){
+        
+        for (BaseBinding baseBinding : baseBindings) {
+            if(baseBinding instanceof LocalVariableDeclarationBinding)
+                this.localVariableDeclarationBindings.add((LocalVariableDeclarationBinding) baseBinding);
+        }
+        
+    }
+    
+    public void addLocalVariableUsageBinding(List<BaseBinding> baseBindings){
+        
+        for (BaseBinding baseBinding : baseBindings) {
+            if(baseBinding instanceof LocalVariableUsageBinding)
+                this.localVariableUsageBindings.add((LocalVariableUsageBinding) baseBinding);
+        }
+        
+    }
+    
+    public void addMethodCallBindingBinding(List<BaseBinding> baseBindings){
+        
+        for (BaseBinding baseBinding : baseBindings) {
+            if(baseBinding instanceof MethodCallBinding)
+                this.methodCallBindings.add((MethodCallBinding) baseBinding);
+        }
+        
     }
 }
