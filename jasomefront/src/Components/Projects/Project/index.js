@@ -115,6 +115,11 @@ export default class Project extends Component {
         }
       }),
 
+      projectMetricsChart: [],
+      packageMetricsChart: [],
+      classMetricsChart: [],
+      methodMetricsChart: [],
+
       packageTree: [],
       classTree: [{ name: 'MetricDao', id: 1 }, { name: 'ClassDao', id: 2 }, { name: 'PackageDaO', id: 3 }, { name: 'versionDao', id: 4 }, { name: 'ProjectDao', id: 5 }, { name: 'Teste', id: 6 }, { name: 'teste1', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
       methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
@@ -219,41 +224,52 @@ export default class Project extends Component {
 
   RemoveMetricDescription = (metricName, checkMetric) => {
     let metricCheck = false
+    let metricIndex = 1
     this.state.metricsDescriptions.map((metric, index) => {
       if (metric.metricName === metricName && metric.checkMetric === checkMetric) {
         metricCheck = true
-      }
-      if (metricCheck === true) {
-        this.state.metricsDescriptions.splice(index, 1)
-        metricCheck = false
+        metricIndex = index
       }
     })
+    if (metricCheck === true) {
+      this.state.metricsDescriptions.splice(metricIndex, 1)
+    }
   }
 
-
-  handleChangeProject = async (event, metricName) => {
+  addProjectMetric = (event, metricName) => {
 
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     if (event.target.checked === true) {
-      await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
-        .then(res => {
-          const data = this.state.data
-          data.push(res.data[0])
-          this.setState({ data });
-        })
 
-      this.getMetricDescription(metricName, 'project')
-      console.log(this.state.projectName)
+      const metric = { 'metricName': metricName }
+      const projectMetricsChart = this.state.projectMetricsChart;
+      projectMetricsChart.push(metric)
+      this.setState({ projectMetricsChart })
 
     }
 
     else if (event.target.checked === false) {
       let metricCheck = false
+      let metricIndex = 1
+
+      this.state.projectMetricsChart.map((metric, index) => {
+        if (metric.metricName === metricName) {
+          metricCheck = true
+          metricIndex = index
+        }
+      })
+      if (metricCheck === true) {
+        this.state.projectMetricsChart.splice(metricIndex, 1)
+        metricCheck = false
+      }
+
       this.state.data.map((metrics, index) => {
+      
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
             metricCheck = true
+            metricIndex = index
           }
         })
         if (metricCheck === true) {
@@ -265,41 +281,80 @@ export default class Project extends Component {
 
       })
     }
+
   }
 
-  handleChangePackage = async (event, metricName, packageName, packageIndex) => {
 
+  handleChangeProject = async (metric) => {
+
+
+    // if (event.target.checked === true) {
+    await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
+      .then(res => {
+        const data = this.state.data
+        data.push(res.data[0])
+        this.setState({ data });
+      })
+    this.getMetricDescription(metric.metricName, 'project')
+    // }
+
+    // else if (event.target.checked === false) {
+    //   let metricCheck = false
+    //   let metricIndex = 1
+    //   this.state.data.map((metrics, index) => {
+    //     metrics.map((metric, index) => {
+    //       if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
+    //         metricCheck = true
+    //         metricIndex = index
+    //       }
+    //     })
+    //     if (metricCheck === true) {
+    //       this.state.data.splice(metricIndex, 1)
+    //     }
+
+    //     this.RemoveMetricDescription(metricName, 'project')
+
+    //   })
+    // }
+  }
+
+  addPackageMetric = (event, metricName, packageName, packageIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     this.state.packageTree[packageIndex][metricName] = !this.state.packageTree[packageIndex][metricName]
 
     if (event.target.checked === true) {
-      await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageName + `/` + metricName)
-        .then(res => {
-          const data = this.state.data
-          data.push(res.data[0])
-          this.setState({ data });
-        })
 
-      const packageSplit = packageName.split('.');
-      if (packageSplit.length !== 1) {
-        packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
-      }
 
-      this.getMetricDescription(metricName, packageName);
+      const metric = { 'metricName': metricName, 'packageName': packageName }
+      const packageMetricsChart = this.state.packageMetricsChart;
+      packageMetricsChart.push(metric)
+      this.setState({ packageMetricsChart })
+
+
 
     }
 
-    //arrumar esse else
     else if (event.target.checked === false) {
 
       let metricCheck = false
+      let metricIndex = 1
+      this.state.packageMetricsChart.map((metric, index) => {
+        if (metric.metricName === metricName && metric.packageName === packageName) {
+          metricCheck = true
+          metricIndex = index
+        }
+      })
+      if (metricCheck === true) {
+        this.state.packageMetricsChart.splice(metricIndex, 1)
+        metricCheck = false
+      }
+
       this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
             metricCheck = true
           }
-
         })
         if (metricCheck === true) {
           this.state.data.splice(index, 1)
@@ -311,7 +366,28 @@ export default class Project extends Component {
         packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
       }
       this.RemoveMetricDescription(metricName, packageName);
+
     }
+
+
+  }
+
+  handleChangePackage = async (packageMetric) => {
+
+    await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageMetric.packageName + `/` + packageMetric.metricName)
+      .then(res => {
+        const data = this.state.data
+        data.push(res.data[0])
+        this.setState({ data });
+      })
+
+    const packageSplit = packageMetric.packageName.split('.');
+    if (packageSplit.length !== 1) {
+      packageMetric.packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
+    }
+
+    this.getMetricDescription(packageMetric.metricName, packageMetric.packageName);
+
   }
 
 
@@ -382,12 +458,16 @@ export default class Project extends Component {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
   };
 
-  // handleSwitch = () => {
-  //   console.log('entrou no onclick')
-  //   const checkSwitch = !this.state.checkSwitch
-  //   console.log(checkSwitch)
-  //   this.setState({checkSwitch})
-  // };
+  generateChart = () => {
+    this.state.projectMetricsChart.map((projectMetric) => {
+      this.handleChangeProject(projectMetric)
+    })
+    this.state.packageMetricsChart.map((packageMetric) => {
+      this.handleChangePackage(packageMetric);
+    })
+    this.setState({ projectMetricsChart: [] })
+    this.setState({ packageMetricsChart: [] })
+  }
 
 
 
@@ -419,19 +499,19 @@ export default class Project extends Component {
         <div style={{ width: '20%', position: "relative", float: "right" }}>
           {/* <div style={{ position: 'relative',  align: 'center'}}> */}
           <Grid component="label" container alignItems="center" spacing={1}>
-          <Grid item>Commit</Grid>
-          <Grid item>
-            <Switch
-              checked={this.state.checkedA}
-              //onChange={this.handleChangeSwitch}
-              name="checkedA"
-              color="primary"
-              inputProps={{ 'aria-label': 'primary checkbox' }}
-              onClick={() => this.setState({ checkSwitch: !this.state.checkSwitch })}
-            />
+            <Grid item>Commit</Grid>
+            <Grid item>
+              <Switch
+                checked={this.state.checkedA}
+                //onChange={this.handleChangeSwitch}
+                name="checkedA"
+                color="primary"
+                inputProps={{ 'aria-label': 'primary checkbox' }}
+                onClick={() => this.setState({ checkSwitch: !this.state.checkSwitch })}
+              />
+            </Grid>
+            <Grid item>Date</Grid>
           </Grid>
-          <Grid item>Date</Grid>
-        </Grid>
           {/* </div> */}
           <Box
             display="flex"
@@ -461,7 +541,7 @@ export default class Project extends Component {
                     <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
                       <FormGroup style={{ border: '1px solid grey' }}>
                         <FormControlLabel
-                          control={<Checkbox checked={projectTloc} onChange={(event) => this.handleChangeProject(event, 'TLOC')} name='projectTloc' color="primary" />}
+                          control={<Checkbox checked={projectTloc} onChange={(event) => this.addProjectMetric(event, 'TLOC')} name='projectTloc' color="primary" />}
                           label={<span style={{ fontSize: '14px' }}>TLOC</span>}
                         />
                       </FormGroup>
@@ -485,7 +565,7 @@ export default class Project extends Component {
                                 <FormGroup>
                                   {packageMetrics.map((metric) => (
                                     <FormControlLabel
-                                      control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.handleChangePackage(event, metric.name, packages.name, packageIndex)} name={metric.name} color="primary" />}
+                                      control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.addPackageMetric(event, metric.name, packages.name, packageIndex)} name={metric.name} color="primary" />}
                                       label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                     />
                                   ))}
@@ -557,6 +637,9 @@ export default class Project extends Component {
                       </List>
                     </Paper>
                   </Collapse>
+                  <Button onClick={this.generateChart} variant="contained" color="primary">
+                    generate graph
+                  </Button>
                 </Collapse>
               </List>
 
@@ -583,7 +666,7 @@ export default class Project extends Component {
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch}/>
+          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch} />
         </div>
       </div >
     );

@@ -474,19 +474,19 @@ public class MetricDao {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             int id;
-            int cont = 0;
+//            int cont = 0;
             List<Point> listPoints = new ArrayList<>();
             while (resultSet.next()) {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(cont, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                    listPoints.add(new Point(resultSet.getInt("id"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(cont,null, null, null, null, versionDate));
+                    listPoints.add(new Point(resultSet.getInt("id"),null, null, null, null, versionDate));
                 }
-                cont++;
+//                cont++;
 
             }
             chartLines.add(listPoints);
