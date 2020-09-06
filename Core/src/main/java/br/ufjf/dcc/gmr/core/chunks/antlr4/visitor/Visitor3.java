@@ -494,11 +494,11 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             
             //TODO: Add localVariableDeclaration (declaration and parameters) 
             //TODO: change variable declaration inside a method to LocalVariableDeclaration 
-            findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
-            
-            findMethodDeclaration.addMethodCallBindingBinding(bindings);
-            
-            findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
+//            findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
+//            
+//            findMethodDeclaration.addMethodCallBinding(bindings);
+//            
+//            findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }
         return visitBlock;
     }

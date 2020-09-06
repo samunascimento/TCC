@@ -622,7 +622,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
         BaseVisitor baseVisitor = new BaseVisitor();
         String packageName = packageBinding.getName();
 
-        this.error = baseVisitor.visitClassDeclaration(ctx, this.typeBinding, this.globalEnviroment, packageName);
+        this.error = baseVisitor.visitClassDeclaration(ctx, this.typeBinding, this.globalEnviroment, packageName, error);
 
         if (!this.error) {
             this.globalEnviroment.getEnviroment().put(this.typeBinding.getName().concat(".java"), this.typeBinding);
