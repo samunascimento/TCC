@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
 import java.util.Random;
 
-public class Person {
+public class Person{
  private String name;
     private String CPF;
     private int age;
@@ -14,6 +14,9 @@ public class Person {
         this.name = name;
         this.CPF = CPF;
         this.age = Age;
+    }
+    public Person(){
+        super();
     }
     
     @Override
@@ -31,10 +34,6 @@ public class Person {
         this.age = age;
         this.name = name;
     }
-
-    public Person() {
-    }
-
     /**
      * @return the age
      */

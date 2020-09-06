@@ -15,6 +15,9 @@ public class Main {
         this.office = office;
         this.name = name;
     }
+    public Main(){
+        
+    }
 
     public static void main(String[] args) {
 
@@ -26,7 +29,7 @@ public class Main {
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
-
+        float teste = 3;
         List<String> aux = new ArrayList<>();
         aux.add("0");
 
