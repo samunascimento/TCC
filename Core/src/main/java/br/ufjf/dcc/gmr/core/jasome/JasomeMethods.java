@@ -104,11 +104,13 @@ public class JasomeMethods {
                     versionMetrics.setCommitDate(revision.getAuthorDate());
                     versionMetrics.setHash(revision.getCommitHash());
                     versionMetrics.setParentsHash(parents);
+                    versionMetrics.setCommitId(idPosition + 1);
                     id = versionMetricsDao.insert(versionMetrics);
                     idList.add(id);
+                    idPosition++;
                 }
-
-                connection.commit();
+                
+                idPosition = 0;
 
                 for (Formats revision : log) {
                     parents = Git.parent(project.getSourceDir(), revision.getCommitHash());

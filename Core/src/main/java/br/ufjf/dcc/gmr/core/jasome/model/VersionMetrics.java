@@ -13,6 +13,8 @@ public class VersionMetrics {
     private Metric tloc;
 
     private int id;
+    
+    private int commitId;
 
     private String hash;
 
@@ -139,6 +141,20 @@ public class VersionMetrics {
      */
     public void setParentsHash(List<String> parentsHash) {
         this.parentsHash = parentsHash;
+    }
+
+    /**
+     * @return the commitId
+     */
+    public int getCommitId() {
+        return commitId;
+    }
+
+    /**
+     * @param commitId the commitId to set
+     */
+    public void setCommitId(int commitId) {
+        this.commitId = commitId;
     }
 
 }

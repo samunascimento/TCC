@@ -452,7 +452,7 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname \n" +
+        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID \n" +
                         "from tb_projectmetrics as a\n" +
                         "inner join tb_project_version as b\n" +
                         "on a.id = b.project_id\n" +
@@ -480,11 +480,11 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("id"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("id"),null, null, null, null, versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"),null, null, null, null, versionDate));
                 }
 //                cont++;
 
