@@ -1,3 +1,4 @@
+  
 DROP TABLE tb_parents_hash;
 DROP TABLE tb_project_version;
 DROP TABLE tb_version_package;
@@ -31,6 +32,7 @@ CREATE TABLE tb_projectMetrics(
 CREATE TABLE tb_versionMetrics (
     ID Serial NOT NULL,
     tlocID Integer,
+    commitID Integer,
     Sha varchar(255),
     authorName varchar(255),
     versionDate timeStamptz,

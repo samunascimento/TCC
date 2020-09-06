@@ -33,8 +33,8 @@ public class VersionMetricsDao {
 
     public int insert(VersionMetrics versionMetrics) throws SQLException {
         String sql = "INSERT INTO tb_versionmetrics "
-                + "(tlocID,sha,authorname,versiondate, analyzed) "
-                + "VALUES (?,?,?,?,?) "
+                + "(tlocID,sha,authorname,versiondate, analyzed, commitID) "
+                + "VALUES (?,?,?,?,?,?) "
                 + "RETURNING id;";
 
         timeStamp = new java.sql.Timestamp(versionMetrics.getCommitDate().getTime());
@@ -58,6 +58,8 @@ public class VersionMetricsDao {
             stmt.setTimestamp(4, timeStamp);
             
             stmt.setBoolean(5, false);
+            
+            stmt.setInt(6, versionMetrics.getCommitId());
 
             tableKeys = stmt.executeQuery();
             tableKeys.next();
