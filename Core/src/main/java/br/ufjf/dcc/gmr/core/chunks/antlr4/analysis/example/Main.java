@@ -9,7 +9,7 @@ public class Main {
     private String name;
     private int age;
     private String office;
-
+    
     public Main(String name, String office, int age) {
         this.age = age;
         this.office = office;
@@ -20,7 +20,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
         Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
         person.setName("name of a person");

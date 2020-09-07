@@ -67,8 +67,8 @@ public class ParserJava {
                 }
 
                 if (j != i) {
-                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
-                    compare(ast1, ast2);
+//                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
+//                    compare(ast1, ast2);
                 }
                 i++;
             }
@@ -86,12 +86,13 @@ public class ParserJava {
     private static void compare(TypeBinding AST1, TypeBinding AST2) {
 
         System.out.println("***************MethodDeclarationAST1***************");
-        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
             System.out.println(methodDeclarationBinding.toString());
         }
 
         System.out.println("***************MethodCallAST1***************");
-        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMdbList()) {
+        
+        for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
             for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
 
@@ -103,12 +104,12 @@ public class ParserJava {
         }
 
         System.out.println("***************MethodDeclarationAST2***************");
-        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodsBinding()) {
             System.out.println(methodDeclarationBinding.toString());
         }
 
         System.out.println("***************MethodCallAST2***************");
-        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodsBinding()) {
             for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
                 for (BaseBinding baseBinding : context) {
 
@@ -220,7 +221,6 @@ public class ParserJava {
             }
             copyPathList = unprocessed;
         } while (!unprocessed.isEmpty());
-        System.out.println("EndOfVistor1");
     }
 
     private static void ASTExtractor2(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
@@ -240,7 +240,6 @@ public class ParserJava {
 
             visitor.visit(tree);
         }
-        System.out.println("EndOfVistor2");
     }
 
     private static void ASTExtractor3(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {

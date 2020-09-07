@@ -36,7 +36,7 @@ public class TypeBinding extends BaseBinding {
     /**
      * @return the MethodsBinding
      */
-    public List<MethodDeclarationBinding> getMdbList() {
+    public List<MethodDeclarationBinding> getMethodsBinding() {
         return MethodsBinding;
     }
 
@@ -50,7 +50,7 @@ public class TypeBinding extends BaseBinding {
     /**
      * @param mdbList the MethodsBinding to set
      */
-    public void setMdbList(List<MethodDeclarationBinding> mdbList) {
+    public void setMethodsBinding(List<MethodDeclarationBinding> mdbList) {
         this.MethodsBinding = mdbList;
     }
 

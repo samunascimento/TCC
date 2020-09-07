@@ -569,7 +569,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         MethodDeclarationBinding mdbGeneral = new MethodDeclarationBinding();
         baseVisitor.visitMethodDeclaration(ctx, this.globalEnviroment, mdbGeneral, this.packageBinding.getName(), className);
         this.methodDeclarationBinding = mdbGeneral;
-        globalEnviroment.getEnviroment().get(className).getMdbList().add(this.methodDeclarationBinding);
+        globalEnviroment.getEnviroment().get(className).getMethodsBinding().add(this.methodDeclarationBinding);
         Object visitMethodDeclaration = super.visitMethodDeclaration(ctx);
         return visitMethodDeclaration;
     }

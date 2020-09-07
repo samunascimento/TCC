@@ -1,4 +1,3 @@
-
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example2;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.*;

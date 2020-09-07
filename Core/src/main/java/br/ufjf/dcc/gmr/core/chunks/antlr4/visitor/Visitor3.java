@@ -280,12 +280,17 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
         methodCallBinding.setParameters(parameters);
 
+//        if (methodDeclaration) {
+//            MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(methodDeclarationBinding, className);
+//            List<MethodCallBinding> bindingScope = findMethodDeclaration.getMethodCallBindings();
+//            bindingScope.add(methodCallBinding);
+//        }
+
         if (methodDeclaration) {
 
             MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
             List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-
             currentScope.add(methodCallBinding);
 
         }
@@ -468,15 +473,16 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
+        if (this.className.equals("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java")) {
+            System.out.println();
+        }
         List<BaseBinding> bindings = new ArrayList<>();
         MethodDeclarationBinding findMethodDeclaration = new MethodDeclarationBinding();
-        if( this.className.equals("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java")){
-            int x =1+1;
-        }
+
         if (this.methodDeclaration) {
+            //find the methodDeclaration
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
-            if (findMethodDeclaration != null) {
-                
+            try {
                 findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().add(bindings);
                 //Add Method's parameters variables to enviromentBinding before start read Method's block code
                 if (findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().size() == 1) {
@@ -486,28 +492,23 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                         currentScope.add(parameter);
                     }
                 }
-            } else{
-                System.out.println("ERROOORRRR:VisitBlock 487....");
+            } catch (Exception e) {
+                System.out.println("ERROR: VisitBlock 1");
             }
         }
         Object visitBlock = super.visitBlock(ctx);
 
         if (this.methodDeclaration) {
-            findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
-            
-            //TODO: Add localVariableDeclaration (declaration and parameters) 
-            //TODO: change variable declaration inside a method to LocalVariableDeclaration 
-
             try {
-                findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);           
+                findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
+                //add local variable declarations and method calls
+                findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
                 findMethodDeclaration.addMethodCallBinding(bindings);
-                
+                findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
             } catch (Exception e) {
-                System.out.println("Error line 506: VisitBlock");
+                System.out.println("ERROR: VisitBlock 2");
             }
-            
-            
-            findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
+
         }
         return visitBlock;
     }

@@ -54,7 +54,7 @@ public class PrimitiveTypes {
         typeBinding.setExtendClass(null);
         typeBinding.setAttributes(null);
         typeBinding.setImports(null);
-        typeBinding.setMdbList(null);
+        typeBinding.setMethodsBinding(null);
         typeBinding.setPackageBinding(primitivePackageBinding);
         typeBinding.setName(type);
         return typeBinding;

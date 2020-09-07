@@ -26,9 +26,9 @@ public class GlobalEnviroment {
 
         typeBinding.getAttributes();
         typeBinding.getImports();
-        typeBinding.getMdbList();
+        typeBinding.getMethodsBinding();
 
-        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
             if (methodDeclarationBinding.getCtx().getStart().getLine() >= begin
                     && methodDeclarationBinding.getCtx().getStop().getLine() <= end) {
                 {
@@ -65,7 +65,7 @@ public class GlobalEnviroment {
 
         TypeBinding typeBinding = enviroment.get(key);
         Boolean verify = true;
-        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
             verify = true;
             if (methodDeclarationBinding.getName().equals(methodDeclaration.getName())) {
                 if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
@@ -89,7 +89,7 @@ public class GlobalEnviroment {
 
         TypeBinding typeBinding = enviroment.get(key);
 
-        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
             if ((methodDeclarationBinding.getMethodEnviromentBinding().findMethodCall(methodCall)).equals(methodCall)) {
                 return methodDeclarationBinding;
             }
@@ -113,7 +113,7 @@ public class GlobalEnviroment {
 
         TypeBinding typeBinding = enviroment.get(key);
 
-        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
             return methodDeclarationBinding.getMethodEnviromentBinding().findVariable(variable);
         }
         return null;

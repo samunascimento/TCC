@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Person;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.ExternalTypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.GlobalEnviroment;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
