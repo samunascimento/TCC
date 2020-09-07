@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import {
-          VictoryChart,
-          VictoryZoomContainer,
-          VictoryLine,
-          VictoryBrushContainer,
-          VictoryAxis,
-          VictoryTheme,
-          VictoryTooltip,
-          VictoryVoronoiContainer,
-          createContainer,
-          VictoryScatter } from 'victory'
+  VictoryChart,
+  VictoryZoomContainer,
+  VictoryLine,
+  VictoryBrushContainer,
+  VictoryAxis,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+  createContainer,
+  VictoryScatter
+} from 'victory'
 
 import { PropTypes } from 'prop-types';
 
@@ -24,16 +25,16 @@ class ChartLine extends Component {
     this.state = {
       data: this.props.data,
       colors: this.props.colors,
-      zoomDomain: { x: [0, this.props.data.map(
-        (dataset) => Math.max(...dataset.map((d) => d.x))
-      )]},
+      zoomDomain: {
+        x: [1, this.props.data.map(
+          (dataset) => Math.max(...dataset.map((d) => d.x))
+        )]
+      },
       metric: false,
-      maximaY : this.props.data.map(
-        (dataset) => Math.max(...dataset.map((d) => d.y))
-      ),
-      maximaX : this.props.data.map(
-        (dataset) => Math.max(...dataset.map((d) => d.x))
-      ),
+      maximaY : this.props.maximaY,
+      // maximaX : this.props.data.map(
+      //   (dataset) => Math.max(...dataset.map((d) => d.x))
+      // ),
       nameX: ""
     };
   }
@@ -48,12 +49,16 @@ class ChartLine extends Component {
     if (this.props.data !== prevState.data) {
       this.setState({ data: this.props.data })
 
-      this.setState({maximaX: this.state.data.map(
-        (dataset) => Math.max(...dataset.map((d) => d.x))
-      )})
-      this.setState({maximaY: this.state.data.map(
-        (dataset) => Math.max(...dataset.map((d) => d.y))
-      )})
+      this.setState({
+        maximaX: this.state.data.map(
+          (dataset) => Math.max(...dataset.map((d) => d.x))
+        )
+      })
+      this.setState({
+        maximaY: this.state.data.map(
+          (dataset) => Math.max(...dataset.map((d) => d.y))
+        )
+      })
       console.log(this.state.maximaX[0])
       console.log(this.state.maximaY[0])
     }
@@ -63,36 +68,41 @@ class ChartLine extends Component {
     this.setState({ zoomDomain: domain });
   }
 
-  handleSwitch(){
-      if (this.props.switch){
-        return "x"
-      }else{
-        return "versionDate"
-      }
+  handleSwitch() {
+    if (this.props.switch) {
+      return "x"
+    } else {
+      return "versionDate"
+    }
   }
 
   render() {
+    console.log(this.props.maximaY)
     return (
       <div>
         <VictoryChart
-          //domain={{ x: [0,this.state.maximaX[0]], y: [0, this.state.maximaY[0]] }}
+          // domain={{ x: [1,this.props.data.map(
+          //   (dataset) => Math.max(...dataset.map((d) => d.x))
+          // )]}}
+          minDomain={{ x: 1 }}
+          maxDomain={{ y: (this.props.maximaY * 1.1)}}
           theme={VictoryTheme.material}
           width={1350} height={800}
           containerComponent={
             <VictoryZoomVoronoiContainer
-                  zoomDomain={this.state.zoomDomain} //add
-                  responsive={true}
-                  //labels={({ datum }) => `(${datum.x},${datum.y})` }
-                  onZoomDomainChange={this.handleZoom.bind(this)} //add
-                  // labelComponent={
-                  //   <VictoryTooltip
-                  //     style={{ fontSize: 13 }}
-                  //   />
-                  // }
+              zoomDomain={this.state.zoomDomain} //add
+              responsive={true}
+              //labels={({ datum }) => `(${datum.x},${datum.y})` }
+              onZoomDomainChange={this.handleZoom.bind(this)} //add
+            // labelComponent={
+            //   <VictoryTooltip
+            //     style={{ fontSize: 13 }}
+            //   />
+            // }
             />
           }
-                >
-        {/* {this.state.data.map((d, i) => (
+        >
+          {/* {this.state.data.map((d, i) => (
                   <VictoryScatter
                   style={this.state.colors[i] }
                   size={4}
@@ -113,26 +123,31 @@ class ChartLine extends Component {
               y="y"
             >
             </VictoryLine>
-            
+
           ))}
         </VictoryChart>
 
         {/* Mini gráfico */}
         <VictoryChart
-        padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-        width={1350} height={150} //scale={{ x: "time" }}
-        containerComponent={
-          <VictoryBrushContainer
-            brushDimension="x"
-            brushDomain={this.state.zoomDomain}
-            onBrushDomainChange={this.handleZoom.bind(this)}
-          />
-        }
+          // domain={{ x: [1,this.props.data.map(
+          //   (dataset) => Math.max(...dataset.map((d) => d.x))
+          // )]}}
+          minDomain={{ x: 1 }}
+          maxDomain={{y: this}}
+          padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+          width={1350} height={150} //scale={{ x: "time" }}
+          containerComponent={
+            <VictoryBrushContainer
+              brushDimension="x"
+              brushDomain={this.state.zoomDomain}
+              onBrushDomainChange={this.handleZoom.bind(this)}
+            />
+          }
         >
-        <VictoryAxis
+          <VictoryAxis
           //tickFormat={[0,this.state.maximaX[0]]}
-        />
-        {this.state.data.map((d, i) => (
+          />
+          {this.state.data.map((d, i) => (
             <VictoryLine
               key={i}
               data={d}
@@ -147,7 +162,7 @@ class ChartLine extends Component {
           ))}
         </VictoryChart>
 
-      
+
       </div>
     );
   }

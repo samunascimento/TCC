@@ -74,6 +74,7 @@ public class JasomeMethods {
         boolean checkProject = false;
         try {
             for (int i = 0; i < projectDao.select().size(); i++) {
+                System.out.println(i);
                 projectNames.add(projectDao.selectID(i + 1));
                 if (project.getName().equals(projectNames.get(i).getName())) {
                     project.setId(projectNames.get(i).getId());

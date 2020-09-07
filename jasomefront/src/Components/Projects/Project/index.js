@@ -24,6 +24,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Switch from '@material-ui/core/Switch';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 import { PropTypes } from 'prop-types';
@@ -42,6 +43,8 @@ export default class Project extends Component {
       openMethod: false,
 
       projectTloc: false,
+
+      loadingState: false,
 
 
       packageMetrics: [{ name: 'TLOC' }, { name: 'A' }, { name: 'CCRC' }, { name: 'Ca', }, { name: 'Ce', }, { name: 'DMS', }, { name: 'I', }, { name: 'NOC', }, { name: 'NOI', },
@@ -141,6 +144,8 @@ export default class Project extends Component {
       checkSwitch: true,
 
       metricsDescriptions: [],
+
+      maximaY: 0,
 
     };
   }
@@ -265,7 +270,7 @@ export default class Project extends Component {
       }
 
       this.state.data.map((metrics, index) => {
-      
+
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
             metricCheck = true
@@ -287,35 +292,16 @@ export default class Project extends Component {
 
   handleChangeProject = async (metric) => {
 
-
-    // if (event.target.checked === true) {
     await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
         data.push(res.data[0])
         this.setState({ data });
+        this.setState({
+          maximaY: this.getMaximaY(this.state.data)
+        })
       })
     this.getMetricDescription(metric.metricName, 'project')
-    // }
-
-    // else if (event.target.checked === false) {
-    //   let metricCheck = false
-    //   let metricIndex = 1
-    //   this.state.data.map((metrics, index) => {
-    //     metrics.map((metric, index) => {
-    //       if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
-    //         metricCheck = true
-    //         metricIndex = index
-    //       }
-    //     })
-    //     if (metricCheck === true) {
-    //       this.state.data.splice(metricIndex, 1)
-    //     }
-
-    //     this.RemoveMetricDescription(metricName, 'project')
-
-    //   })
-    // }
   }
 
   addPackageMetric = (event, metricName, packageName, packageIndex) => {
@@ -372,6 +358,21 @@ export default class Project extends Component {
 
   }
 
+  getMaximaY = (data) => {
+
+    const maximas = data.map(
+      (dataset) => Math.max(...dataset.map((d) => d.y))
+    )
+
+    const max = Math.max(...maximas)
+
+    console.log(max)
+
+    return max
+
+
+  }
+
   handleChangePackage = async (packageMetric) => {
 
     await axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/package/` + this.props.nameProject.name + `/` + packageMetric.packageName + `/` + packageMetric.metricName)
@@ -379,7 +380,11 @@ export default class Project extends Component {
         const data = this.state.data
         data.push(res.data[0])
         this.setState({ data });
+        this.setState({
+          maximaY: this.getMaximaY(this.state.data)
+        })
       })
+
 
     const packageSplit = packageMetric.packageName.split('.');
     if (packageSplit.length !== 1) {
@@ -458,7 +463,53 @@ export default class Project extends Component {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
   };
 
-  generateChart = () => {
+
+  //   setStateAsync(state) {
+  //     return new Promise((resolve) => {
+  //       this.setState(state, resolve)
+  //     });
+  //   }
+
+  //   teste = () => {
+
+  //     this.state.projectMetricsChart.map((projectMetric) => {
+  //       this.handleChangeProject(projectMetric)
+  //     })
+  //     this.state.packageMetricsChart.map((packageMetric) => {
+  //       this.handleChangePackage(packageMetric);
+  //     })
+  //     this.setState({ projectMetricsChart: [] })
+
+  //     this.setState({ packageMetricsChart: [] })
+
+  // }
+
+  generateChart = async () => {
+
+    // this.setStateAsync({ loadingState: true })
+
+    // console.log(this.state.loadingState)
+
+    // this.teste();
+
+    // console.log(this.state.loadingState)
+
+    // await this.setStateAsync({ loadingState: false })
+
+    // console.log(this.state.loadingState)
+
+
+    // this.setState({
+    //   loadingState: true
+    // }, () => {
+    //   console.log('teste')
+    //   await this.teste().then(() => {
+    //     console.log('teste')
+    //     this.setState({ loadingState: false })
+
+    //   })
+    // })
+
     this.state.projectMetricsChart.map((projectMetric) => {
       this.handleChangeProject(projectMetric)
     })
@@ -466,7 +517,10 @@ export default class Project extends Component {
       this.handleChangePackage(packageMetric);
     })
     this.setState({ projectMetricsChart: [] })
+
     this.setState({ packageMetricsChart: [] })
+
+    // this.state.loadingState = false
   }
 
 
@@ -637,9 +691,15 @@ export default class Project extends Component {
                       </List>
                     </Paper>
                   </Collapse>
-                  <Button onClick={this.generateChart} variant="contained" color="primary">
-                    generate graph
+                  <div style={{ display: 'inline-block' }}>
+                    <Button onClick={this.generateChart} variant="contained" color="primary">
+                      generate graph
                   </Button>
+                    <Button onClick={this.generateChart} variant="contained" color="primary">
+                      clear graph
+                  </Button>
+                  </div>
+                  {/* {this.state.loadingState && <CircularProgress />} */}
                 </Collapse>
               </List>
 
@@ -666,7 +726,7 @@ export default class Project extends Component {
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch} />
+          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch} maximaY={this.state.maximaY} />
         </div>
       </div >
     );
