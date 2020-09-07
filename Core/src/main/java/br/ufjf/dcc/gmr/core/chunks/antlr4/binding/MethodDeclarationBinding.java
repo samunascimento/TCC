@@ -204,7 +204,7 @@ public class MethodDeclarationBinding extends BaseBinding {
         
     }
     
-    public void addMethodCallBindingBinding(List<BaseBinding> baseBindings){
+    public void addMethodCallBinding(List<BaseBinding> baseBindings){
         
         for (BaseBinding baseBinding : baseBindings) {
             if(baseBinding instanceof MethodCallBinding)

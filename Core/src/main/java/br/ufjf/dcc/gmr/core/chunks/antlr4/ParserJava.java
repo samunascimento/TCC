@@ -166,10 +166,7 @@ public class ParserJava {
 
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example");
-        List<String> javaFiles2 = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis/example2");
-
-        javaFiles.addAll(javaFiles2);
+        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
 
         int i = 0;
         for (String javaFile : javaFiles) {
@@ -223,6 +220,7 @@ public class ParserJava {
             }
             copyPathList = unprocessed;
         } while (!unprocessed.isEmpty());
+        System.out.println("EndOfVistor1");
     }
 
     private static void ASTExtractor2(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
@@ -242,6 +240,7 @@ public class ParserJava {
 
             visitor.visit(tree);
         }
+        System.out.println("EndOfVistor2");
     }
 
     private static void ASTExtractor3(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {

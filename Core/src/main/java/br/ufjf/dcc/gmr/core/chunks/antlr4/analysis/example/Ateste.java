@@ -5,11 +5,13 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example2.Person2;
+
 /**
  *
  * @author icout
  */
-public class Ateste extends Person {
+public class Ateste extends Person2 {
 
     private String office;
     private String registration;

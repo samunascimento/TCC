@@ -64,22 +64,23 @@ public class GlobalEnviroment {
     public MethodDeclarationBinding findMethodDeclaration(MethodDeclarationBinding methodDeclaration, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
-
+        Boolean verify = true;
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMdbList()) {
+            verify = true;
             if (methodDeclarationBinding.getName().equals(methodDeclaration.getName())) {
                 if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
                     if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
                         for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
                             if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
-                                return null;
+                                verify = false;
                             }
                         }
-                        return methodDeclaration;
+                        if(verify){                            
+                            return methodDeclaration;
+                        }
                     }
                 }
-                return null;
             }
-
         }
         return null;
     }

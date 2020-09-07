@@ -1,27 +1,31 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example;
 
-import java.util.Random;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example2.Person2;
 
-public class Person {
- private String name;
+public class Person extends Person2{
+
+    private String name;
     private String CPF;
     private int age;
-   
     private Adress adress;
-    private Random rand;
-    
+
     public Person(String name, String CPF, int Age) {
         this.name = name;
         this.CPF = CPF;
         this.age = Age;
     }
-    
+
+    Person() {
+        
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         String aux = "name: ".concat(name).concat("\n");
         aux = aux.concat("CPF: " + CPF);
         return aux;
     }
+
     public void setInfo(String name, int age) {
         this.name = name;
         this.age = age;
@@ -31,10 +35,6 @@ public class Person {
         this.age = age;
         this.name = name;
     }
-
-    public Person() {
-    }
-
     /**
      * @return the age
      */
@@ -55,7 +55,7 @@ public class Person {
     public String getName() {
         return name;
     }
-    
+
     /**
      * @param Age the age to set
      */
@@ -85,17 +85,12 @@ public class Person {
         this.name = name1;
     }
 
-    /**
-     * @return the adress
-     */
     public Adress getAdress() {
         return adress;
     }
 
-    /**
-     * @param adress the adress to set
-     */
     public void setAdress(Adress adress) {
         this.adress = adress;
     }
+
 }

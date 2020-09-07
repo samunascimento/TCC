@@ -11,7 +11,7 @@ import java.util.List;
 public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     private PackageBinding packageBinding;
-    private List<VariableBinding> variableBindingForList;
+    private List<LocalVariableDeclarationBinding> variableBindingForList;
     private GlobalEnviroment globalEnviroment;
     private EnviromentBinding enviromentBinding;
     private boolean methodDeclaration;
@@ -432,8 +432,9 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
         if (ctx.variableDeclarators().variableDeclarator() != null) {
             for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
                 String name = variableDeclarator.variableDeclaratorId().getText();
-                VariableBinding variableDeclarationBinding = new VariableBinding();
+                LocalVariableDeclarationBinding variableDeclarationBinding = new LocalVariableDeclarationBinding();
                 variableDeclarationBinding.setName(name);
+                variableDeclarationBinding.setCtx(ctx);
                 variableDeclarationBinding.setType(typeBinding);
 
                 if (this.methodDeclaration) {
@@ -469,7 +470,9 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     public Object visitBlock(JavaParser.BlockContext ctx) {
         List<BaseBinding> bindings = new ArrayList<>();
         MethodDeclarationBinding findMethodDeclaration = new MethodDeclarationBinding();
-
+        if( this.className.equals("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java")){
+            int x =1+1;
+        }
         if (this.methodDeclaration) {
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             if (findMethodDeclaration != null) {
@@ -494,9 +497,15 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             
             //TODO: Add localVariableDeclaration (declaration and parameters) 
             //TODO: change variable declaration inside a method to LocalVariableDeclaration 
-            findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
+
+            try {
+                findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);           
+                findMethodDeclaration.addMethodCallBinding(bindings);
+                
+            } catch (Exception e) {
+                System.out.println("Error line 506: VisitBlock");
+            }
             
-            findMethodDeclaration.addMethodCallBindingBinding(bindings);
             
             findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
         }

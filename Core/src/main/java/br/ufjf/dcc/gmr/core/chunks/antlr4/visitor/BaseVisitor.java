@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Person;
@@ -20,19 +15,14 @@ import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-/**
- *
- * @author felip
- */
 public class BaseVisitor {
 
     public BaseVisitor() {
-        
+
     }
 
-    public boolean visitClassDeclaration(JavaParser.ClassDeclarationContext ctx, TypeBinding typeBinding, GlobalEnviroment globalEnviroment, String packageName) {
+    public boolean visitClassDeclaration(JavaParser.ClassDeclarationContext ctx, TypeBinding typeBinding, GlobalEnviroment globalEnviroment, String packageName, Boolean error) {
 
-        Person person = new Person();
         TypeBinding extendedClass = new TypeBinding();
 
         typeBinding.setName(ctx.getChild(1).getText());
@@ -50,14 +40,21 @@ public class BaseVisitor {
                     if (name2.equals(typeExtends.getText())) {
                         name = Import.concat(".java");
                         extendedClass = globalEnviroment.getEnviroment().get(name);
+                    } else {
+                        //if the class has imports but the imports don't match the extended class
+                        name = packageName.concat(".").concat(typeExtends.getText()).concat(".java");
+                        extendedClass = globalEnviroment.getEnviroment().get(name);
                     }
                 }
             } else {
+                //if the class don't have imports
                 name = packageName.concat(".").concat(typeExtends.getText()).concat(".java");
                 extendedClass = globalEnviroment.getEnviroment().get(name);
             }
 
-            typeBinding.setExtendClass(extendedClass);
+            if (extendedClass != null) {
+                typeBinding.setExtendClass(extendedClass);
+            }
 
             if (typeBinding.getExtendClass() == null) {
                 return true;
@@ -120,7 +117,7 @@ public class BaseVisitor {
 
                         for (TypeBinding type : globalEnviroment.getEnviroment().values()) {
                             String[] typeName = type.getName().split("\\.");
-                            if (aux.typeType().classOrInterfaceType().getText().equals(typeName[typeName.length-1])) {
+                            if (aux.typeType().classOrInterfaceType().getText().equals(typeName[typeName.length - 1])) {
                                 parameterType = type;
                             }
                         }
@@ -146,9 +143,9 @@ public class BaseVisitor {
             }
         }
 
-       mdbGeneral.setReturnBinding(methodType);
-       mdbGeneral.setParameters(parameters);
-        
+        mdbGeneral.setReturnBinding(methodType);
+        mdbGeneral.setParameters(parameters);
+
     }
 
     private List<Modifier> extractModifier(JavaParser.MethodDeclarationContext ctx) {
