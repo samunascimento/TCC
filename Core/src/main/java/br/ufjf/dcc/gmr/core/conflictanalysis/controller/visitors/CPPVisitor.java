@@ -43,6 +43,12 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx) {
         process(ctx);
         return visitChildren(ctx);

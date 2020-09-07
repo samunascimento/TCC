@@ -512,9 +512,14 @@ aliasdeclaration
    ;
 
 simpledeclaration
-   : variabledeclaration
+   : pointerdeclaration
+   | variabledeclaration
    | declspecifierseq? initdeclaratorlist? ';'
    | attributespecifierseq declspecifierseq? initdeclaratorlist ';'
+   ;
+
+pointerdeclaration
+   : declspecifierseq ptrdeclarator
    ;
 
 variabledeclaration
