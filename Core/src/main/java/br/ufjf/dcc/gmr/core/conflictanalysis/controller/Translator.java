@@ -532,7 +532,10 @@ public class Translator {
             //Não tem em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //POINTER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //A fazer
+            if (list.contains("Pointerdeclaration")) {
+                mainList.add(LanguageConstructsTypes.POINTER);
+                list.remove("Pointerdeclaration");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Returnstatement")) {

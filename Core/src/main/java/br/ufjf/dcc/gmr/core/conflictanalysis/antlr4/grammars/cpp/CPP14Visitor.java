@@ -515,6 +515,12 @@ public interface CPP14Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#pointerdeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#variabledeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

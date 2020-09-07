@@ -1024,6 +1024,18 @@ public class CPP14BaseListener implements CPP14Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}

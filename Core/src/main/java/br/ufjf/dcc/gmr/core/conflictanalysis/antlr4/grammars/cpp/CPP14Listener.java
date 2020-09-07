@@ -848,6 +848,16 @@ public interface CPP14Listener extends ParseTreeListener {
 	 */
 	void exitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CPP14Parser#pointerdeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CPP14Parser#pointerdeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CPP14Parser#variabledeclaration}.
 	 * @param ctx the parse tree
 	 */
