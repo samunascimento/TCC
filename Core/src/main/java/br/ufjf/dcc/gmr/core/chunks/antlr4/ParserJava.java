@@ -67,8 +67,8 @@ public class ParserJava {
                 }
 
                 if (j != i) {
-//                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
-//                    compare(ast1, ast2);
+                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
+                    compare(ast1, ast2);
                 }
                 i++;
             }
@@ -93,13 +93,8 @@ public class ParserJava {
         System.out.println("***************MethodCallAST1***************");
         
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
-            for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
-                for (BaseBinding baseBinding : context) {
-
-                    if (baseBinding instanceof MethodCallBinding) {
-                        System.out.println(baseBinding);
-                    }
-                }
+            for (MethodCallBinding methodCall : methodDeclarationBinding.getMethodCallBindings()) {
+                System.out.println(methodCall);
             }
         }
 
@@ -110,13 +105,8 @@ public class ParserJava {
 
         System.out.println("***************MethodCallAST2***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST2.getMethodsBinding()) {
-            for (List<BaseBinding> context : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
-                for (BaseBinding baseBinding : context) {
-
-                    if (baseBinding instanceof MethodCallBinding) {
-                        System.out.println(baseBinding);
-                    }
-                }
+            for (MethodCallBinding methodCall : methodDeclarationBinding.getMethodCallBindings()) {
+                System.out.println(methodCall);
             }
         }
 

@@ -286,7 +286,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 //            bindingScope.add(methodCallBinding);
 //        }
 
-        if (methodDeclaration) {
+        if (this.methodDeclaration) {
 
             MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
@@ -477,7 +477,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             System.out.println();
         }
         List<BaseBinding> bindings = new ArrayList<>();
-        MethodDeclarationBinding findMethodDeclaration = new MethodDeclarationBinding();
+        MethodDeclarationBinding findMethodDeclaration = null;
 
         if (this.methodDeclaration) {
             //find the methodDeclaration

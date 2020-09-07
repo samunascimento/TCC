@@ -5,6 +5,7 @@ import java.util.List;
 
 public class EnviromentBinding {
 
+    //Variable declaration and usage, and method call
     private List<List<BaseBinding>> enviroment;
 
     public EnviromentBinding() {

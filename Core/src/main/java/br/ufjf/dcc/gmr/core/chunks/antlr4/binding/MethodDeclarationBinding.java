@@ -10,6 +10,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<VariableBinding> parametersBindings;
     private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
+    //Local variable and method call (while processing)
     private EnviromentBinding methodEnviromentBinding;
     private List<LocalVariableDeclarationBinding> localVariableDeclarationBindings;
     private List<LocalVariableUsageBinding> localVariableUsageBindings;

@@ -76,7 +76,7 @@ public class GlobalEnviroment {
                             }
                         }
                         if(verify){                            
-                            return methodDeclaration;
+                            return methodDeclarationBinding;
                         }
                     }
                 }
