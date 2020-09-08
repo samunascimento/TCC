@@ -22,7 +22,8 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main("Office", "Felippe", 23);
         Person person = new Person();
-        person.setName("name of a person");
+        String batata = "name of a person";
+        person.setName(batata);
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
         employeeExtends.setName("name of a employeeExtends");
         Employee employee = new Employee();
@@ -70,7 +71,7 @@ public class Main {
     public void teste() {
 
         for (int i = 0; i < 10; i++) {
-            System.out.println(i);
+            System.out.println("Batata");
         }
 
         for (int i = 0; i < 10; i++) {

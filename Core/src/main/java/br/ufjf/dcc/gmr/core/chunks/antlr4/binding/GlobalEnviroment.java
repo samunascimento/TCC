@@ -11,15 +11,14 @@ public class GlobalEnviroment {
 
     /**
      * TODO...
+     *
      * @param type
      * @param begin
      * @param end
-     * @return 
+     * @return
      */
     public List<BaseBinding> findLanguageConstructs(String type, int begin, int end) {
 
-        
-        
         List<BaseBinding> result = new ArrayList<>();
 
         TypeBinding typeBinding = enviroment.get(type);
@@ -37,8 +36,7 @@ public class GlobalEnviroment {
             }
 
         }
-        
-        
+
         return result;
     }
 
@@ -75,7 +73,7 @@ public class GlobalEnviroment {
                                 verify = false;
                             }
                         }
-                        if(verify){                            
+                        if (verify) {
                             return methodDeclarationBinding;
                         }
                     }
@@ -109,12 +107,40 @@ public class GlobalEnviroment {
         return null;
     }
 
-    public VariableBinding findVariable(VariableBinding variable, String key) {
+    public LocalVariableDeclarationBinding findVariable(MethodDeclarationBinding methodDeclaration, String key, String variable) {
 
         TypeBinding typeBinding = enviroment.get(key);
+        Boolean verify = true;
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
-            return methodDeclarationBinding.getMethodEnviromentBinding().findVariable(variable);
+            verify = true;
+            if (methodDeclarationBinding.getName().equals(methodDeclaration.getName())) {
+                if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
+                    if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
+                        for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
+                            if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
+                                verify = false;
+                            }
+                        }
+                        if (verify) {
+                            List<LocalVariableDeclarationBinding> variableList = new ArrayList<>();
+                            for (List<BaseBinding> enviroment : methodDeclarationBinding.getMethodEnviromentBinding().getEnviroment()) {
+                                for (BaseBinding baseBinding : enviroment) {
+                                    if (baseBinding instanceof LocalVariableDeclarationBinding) {
+                                        if (((LocalVariableDeclarationBinding) baseBinding).getName().equals(variable)) {
+                                            variableList.add((LocalVariableDeclarationBinding) baseBinding);
+                                        }
+                                    }
+                                }
+
+                            }
+                            if(!variableList.isEmpty()){
+                                return variableList.get(variableList.size()-1);
+                            }                             
+                        }
+                    }
+                }
+            }
         }
         return null;
     }
