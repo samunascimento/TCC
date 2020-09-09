@@ -19,8 +19,8 @@ public class MethodCallBinding extends BaseBinding {
 
     }
 
-    public boolean equalsTo(MethodDeclarationBinding mdb) {
-        return mdb.equalsTo(this);
+    public boolean equalsTo(MethodDeclarationBinding mdb, TypeBinding mdbType) {
+        return mdb.equalsTo(this, mdbType);
     }
 
     @Override

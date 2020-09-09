@@ -109,6 +109,18 @@ public class ParserJava {
                 System.out.println(methodCall);
             }
         }
+        
+        System.out.println("***************Dependencies***************");
+        System.out.println("--------------AST1 --> AST2--------------");
+        Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
+        System.out.println("--------------AST2 --> AST1--------------");
+        Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
+//        System.out.println("***************Variables***************");
+//        for (VariableBinding variableBinding : AST1.getVariableBindingForList()) {
+//            System.out.println(variableBinding.toString());
+//        }
+        
+        
 
 //        System.out.println("***************Dependencies***************");
 //        System.out.println("--------------AST1 --> AST2--------------");
@@ -191,10 +203,10 @@ public class ParserJava {
                 ANTLRFileStream fileStream = new ANTLRFileStream(copyPathList.get(i));
                 JavaLexer lexer = new JavaLexer(fileStream);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
-
+                
                 JavaParser parser = new JavaParser(tokens);
                 ParseTree tree = parser.compilationUnit();
-
+                
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.setSize(new Dimension(500, 600));
 
@@ -203,7 +215,7 @@ public class ParserJava {
                 }
 
                 Visitor1 visitor = new Visitor1(globalEnviroment);
-
+                
                 visitor.visit(tree);
                 if (visitor.isError()) {
                     unprocessed.add(copyPathList.get(i));

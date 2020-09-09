@@ -31,8 +31,19 @@ public class TypeBinding extends BaseBinding {
 
         return output;
     }
-
-
+    
+    public List<MethodCallBinding> getAllMethodsCallBinding(){
+        List<MethodCallBinding> methodsCallBinding = new ArrayList<>();
+        for (MethodDeclarationBinding methodDeclarationBinding : this.getMethodsBinding()) {
+            methodsCallBinding.addAll(methodDeclarationBinding.getMethodCallBindings());
+        }
+        return methodsCallBinding;
+    }
+    
+    public List<MethodDeclarationBinding> getAllMethodsDeclaration(){
+        return this.getMethodsBinding();
+    }
+    
     /**
      * @return the MethodsBinding
      */

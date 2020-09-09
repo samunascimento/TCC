@@ -15,6 +15,9 @@ public class Adress {
         this.number = number;
     }
 
+    public Adress() {
+    }
+    
     /**
      * @return the city
      */

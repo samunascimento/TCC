@@ -21,21 +21,23 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main("Office", "Felippe", 23);
+        Adress adress = new Adress();
+        adress.setCity("cidade");
         Person person = new Person();
         String batata = "name of a person";
-        person.setName(batata);
+        System.out.println(person);
         EmployeeExtends employeeExtends = new EmployeeExtends("Ofice", "1524-abc", 0, true, "Felippe", "132.259.762.58", 23);
         employeeExtends.setName("name of a employeeExtends");
         Employee employee = new Employee();
         employee.setName("name of a employee");
         System.out.println(main.name + " " + main.office + " " + main.age);
-        float teste = 3;
         List<String> aux = new ArrayList<>();
         aux.add("0");
 
         for (int i = 0; i < 10; i++) {
             float j = 3;
             j += i;
+            System.out.println("");
         }
 
         if (employee != null) {

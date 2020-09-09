@@ -4,18 +4,20 @@ import java.util.List;
 
 public class Dependencies {
 
-    public static void methodDeclarationCallList(List<MethodDeclarationBinding> mdbList, List<MethodCallBinding> mcbList){
+    public static void methodDeclarationCallList(List<MethodDeclarationBinding> mdbList, TypeBinding mdbType, List<MethodCallBinding> mcbList){
         for (MethodCallBinding methodCallBinding : mcbList) {
+            
             for (MethodDeclarationBinding methodDeclarationBinding : mdbList) {
-                methodDeclarationCall(methodDeclarationBinding, methodCallBinding);
+                
+                methodDeclarationCall(methodDeclarationBinding,mdbType, methodCallBinding);
             }
         }
     }
     
-    private static boolean methodDeclarationCall(MethodDeclarationBinding mdb, MethodCallBinding mcb) {
-        if(mdb.equalsTo(mcb)){
+    private static boolean methodDeclarationCall(MethodDeclarationBinding mdb, TypeBinding mdbType, MethodCallBinding mcb) {
+        if(mdb.equalsTo(mcb, mdbType)){
             System.out.println(mdb + " ==> " + mcb);
         }
-        return mdb.equalsTo(mcb);
+        return mdb.equalsTo(mcb, mdbType);
     }
 }

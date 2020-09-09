@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,9 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.methodCallBindings = new ArrayList<>();
     }
 
-    public boolean equalsTo(MethodCallBinding mcb) {
+    public boolean equalsTo(MethodCallBinding mcb, TypeBinding type) {
         
-        if (!this.returnBinding.getName().equals(mcb.getTypeBinding().getName())) {
+        if (!type.getName().equals(mcb.getTypeBinding().getName())) {
             if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.returnBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
             }
@@ -40,7 +41,7 @@ public class MethodDeclarationBinding extends BaseBinding {
             return false;
         }
 
-        if (this.getParameters() == null && mcb.getParameters() == null) {
+        if (this.getParameters() == null || mcb.getParameters() == null) {
             return false;
         }
 
@@ -49,7 +50,7 @@ public class MethodDeclarationBinding extends BaseBinding {
         }
 
         for (int i = 0; i < this.getParameters().size(); i++) {
-            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getName())) {
+            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getType().getName())) {
                 return false;
             }
         }

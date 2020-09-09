@@ -175,12 +175,8 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     }
 
     private void methodCallExpressionList(JavaParser.MethodCallContext ctx, List<TypeBinding> parameters) {
-        JavaParser.ExpressionListContext expressionList
-                = (JavaParser.ExpressionListContext) ctx.expressionList();
-        if (this.className.equals("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java")) {
-            System.out.println();
-            MethodDeclarationBinding MethodDeclarationBinding = methodDeclarationBinding;
-        }
+        JavaParser.ExpressionListContext expressionList = (JavaParser.ExpressionListContext) ctx.expressionList();
+
         if (expressionList != null) {
             for (ParseTree parseTree : expressionList.children) {
                 if (parseTree instanceof JavaParser.ExpressionContext) {
@@ -202,23 +198,23 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
                             if (literal.BOOL_LITERAL() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.BOOLEAN);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.BOOLEAN);
                             } else if (literal.CHAR_LITERAL() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.CHAR);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.CHAR);
                             } else if (literal.NULL_LITERAL() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.NULL);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.NULL);
                             } else if (literal.STRING_LITERAL() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.STRING);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.STRING);
 
                             } else if (literal.integerLiteral() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.INT);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.INT);
                             } else if (literal.floatLiteral() != null) {
 
-                                parameterTypeBinding.setName(PrimitiveTypes.FLOAT);
+                                parameterTypeBinding = PrimitiveTypes.init(PrimitiveTypes.FLOAT);
                             } else {
                                 System.out.println("ERROR: MyVisitor:227=D");
                             }
