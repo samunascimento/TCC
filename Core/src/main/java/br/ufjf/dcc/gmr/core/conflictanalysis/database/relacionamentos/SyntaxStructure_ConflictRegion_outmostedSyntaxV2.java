@@ -9,6 +9,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.database.relacionamentos;
  *
  * @author luan
  */
-public class SyntaxStructure_ConflictRegion {
+public class SyntaxStructure_ConflictRegion_outmostedSyntaxV2 {
     
 }
