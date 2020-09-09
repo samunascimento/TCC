@@ -127,12 +127,12 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, false);
             }
             visitor.visit(tree);
-            /*
-            //Imprimir_arvore-------------------------------------------------------
+            /*Imprimir_arvore-------------------------------------------------------
+
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
-            //----------------------------------------------------------------------
-             */
+
+            //----------------------------------------------------------------------*/
             return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -156,13 +156,12 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-            //Imprimir_arvore-------------------------------------------------------
-            
+            /*Imprimir_arvore-------------------------------------------------------
+
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
 
-            //----------------------------------------------------------------------
-
+            //----------------------------------------------------------------------*/
             return new SSCShelf(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -186,13 +185,12 @@ public class ConflictAnalysisTools {
                 comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
-            /*
-        //Imprimir_arvore-------------------------------------------------------
-        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-        viewer.open();
-        //----------------------------------------------------------------------
-             */
+            /*Imprimir_arvore-------------------------------------------------------
 
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.open();
+
+            //----------------------------------------------------------------------*/
             return new SSCShelf(visitor.getList(), comments);
         } else {
 
@@ -200,11 +198,14 @@ public class ConflictAnalysisTools {
         }
     }
 
-    public static List<SyntaxStructure> getStructureTypeInInterval(String filePath, int start, int stop, boolean outmost) throws IOException {
+    public static SSCShelf getStructureTypeInInterval(String filePath, int start, int stop) throws IOException {
         try {
             SSCShelf shelf;
-            List<SyntaxStructure> result = new ArrayList();
-            List<SyntaxStructure> comments = new ArrayList();
+            List<SyntaxStructure> normalAnalysis = new ArrayList<>();
+            List<SyntaxStructure> commentAnalysis = new ArrayList<>();
+            List<SyntaxStructure> outmostedNormalAnalysis = new ArrayList<>();
+            List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
+            boolean isOutmost;
             if (filePath.endsWith(".java")) {
                 shelf = analyzeJava9SyntaxTree(filePath);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
@@ -212,40 +213,37 @@ public class ConflictAnalysisTools {
             } else if (filePath.endsWith(".py")) {
                 shelf = analyzePythonSyntaxTree(filePath);
             } else {
-                return null;
+                return new SSCShelf(null, null, null, null);
+            }
+            for (SyntaxStructure ss : shelf.getNormalAnalysis()) {
+                if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
+                    normalAnalysis.add(ss);
+                }
             }
             for (SyntaxStructure ss : shelf.getCommentAnalysis()) {
                 if ((ss.getStartLine() >= start && ss.getStartLine() <= stop) || (ss.getStopLine() >= start && ss.getStopLine() <= stop)) {
-                    comments.add(ss);
+                    commentAnalysis.add(ss);
                 }
             }
-            if (outmost) {
-                boolean isOutmost = true;
-                result = getOutmostStructures(shelf.getNormalAnalysis(), start, stop);
-                for (SyntaxStructure comment : comments) {
-                    isOutmost = true;
-                    for (SyntaxStructure ss : result) {
-                        if (ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()) {
-                            isOutmost = false;
-                            break;
-                        }
-                    }
-                    if (isOutmost) {
-                        result.add(comment);
+            isOutmost = true;
+            outmostedNormalAnalysis = getOutmostStructures(shelf.getNormalAnalysis(), start, stop);
+            for (SyntaxStructure comment : commentAnalysis) {
+                isOutmost = true;
+                for (SyntaxStructure ss : outmostedNormalAnalysis) {
+                    if (ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()) {
+                        isOutmost = false;
+                        break;
                     }
                 }
-            } else {
-                for (SyntaxStructure ss : shelf.getNormalAnalysis()) {
-                    if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
-                        result.add(ss);
-                    }
+                if (isOutmost) {
+                    outmostedCommentAnalysis.add(comment);
                 }
-                result.addAll(comments);
             }
-            return result;
+            return new SSCShelf(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis);
+
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
-            throw new IOException();
+            throw ex;
         }
     }
 
@@ -264,50 +262,7 @@ public class ConflictAnalysisTools {
         return result;
     }
 
-    private static List<SyntaxStructure> getOutmostStructuresInutil(List<SyntaxStructure> rawList, int beginLine, int endLine) {
-        if (beginLine < 1 || endLine < 1) {
-            return null;
-        } else {
-            int currentLine = beginLine;
-            int currentColumn = 0;
-            List<SyntaxStructure> list = new ArrayList();
-            SyntaxStructure auxStructure = null;
-            if (rawList != null) {
-                while (currentLine <= endLine) {
-                    auxStructure = null;
-                    for (SyntaxStructure ss : rawList) {
-                        if (ss.getStartLine() >= currentLine && ss.getStartCharIndex() >= currentColumn && ss.getStopLine() <= endLine) {
-                            if (auxStructure == null) {
-                                auxStructure = ss;
-                            } else {
-                                if (auxStructure.getStartLine() > ss.getStartLine()) {
-                                    auxStructure = ss;
-                                } else {
-                                    if (auxStructure.getStartLine() == ss.getStartLine() && auxStructure.getStartCharIndex() > ss.getStartCharIndex()) {
-                                        auxStructure = ss;
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                    if (auxStructure != null) {
-                        list.add(auxStructure);
-                        currentLine = auxStructure.getStopLine();
-                        currentColumn = auxStructure.getStopCharIndex();
-                    } else {
-                        currentLine++;
-                        currentColumn = 0;
-                    }
-                }
-            } else {
-                return null;
-            }
-            return list;
-        }
-    }
-
-    private static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
+    public static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
         if ((beginLine < 1 || endLine < 1) || rawList == null) {
             return null;
         } else {

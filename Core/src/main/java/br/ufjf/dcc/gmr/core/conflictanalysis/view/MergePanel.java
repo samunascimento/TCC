@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -65,6 +66,7 @@ public class MergePanel extends JPanel {
     private JLabel controlPanelV1LinesLabel;
     private JLabel controlPanelV2LinesLabel;
     private JTextArea controlPanelTypeOfConflictTextArea;
+    private JCheckBox controlPanelOutmostCheckBox;
     private JTextArea controlPanelDeveloperDecisionTextArea;
     private JScrollPane controlPanelTypeOfConflictTextAreaScrollPane;
 //  ======================================================
@@ -126,6 +128,7 @@ public class MergePanel extends JPanel {
         this.controlPanelV1LinesLabel = generateControlPanelV1LinesLabel();
         this.controlPanelV2LinesLabel = generateControlPanelV2LinesLabel();
         this.controlPanelTypeOfConflictTextArea = generateControlPanelTypeOfConflictTextArea();
+        this.controlPanelOutmostCheckBox = generateControlPanelOutmostCheckBox();
         this.controlPanelDeveloperDecisionTextArea = generateControlPanelDeveloperDecisionTextArea();
         this.controlPanelTypeOfConflictTextAreaScrollPane = generateControlPanelTypeOfConflictTextAreaScrollPane();
         this.conflictTextArea = generateConflictTextArea();
@@ -348,6 +351,15 @@ public class MergePanel extends JPanel {
         return prototype;
     }
 
+    private JCheckBox generateControlPanelOutmostCheckBox() {
+        JCheckBox prototype = new JCheckBox("Outmost");
+        prototype.setSelected(false);
+        prototype.addActionListener((ActionEvent evt) -> {
+            controlPanelOutmostCheckBoxActionPerformed();
+        });
+        return prototype;
+    }
+
     private JTextArea generateConflictTextArea() {
         JTextArea prototype = new JTextArea();
         prototype.setEditable(false);
@@ -424,6 +436,8 @@ public class MergePanel extends JPanel {
         gbc.gridy = 5;
         this.controlPanel.add(this.controlPanelTypeOfConflictTextAreaScrollPane, gbc);
         gbc.gridy = 6;
+        this.controlPanel.add(this.controlPanelOutmostCheckBox, gbc);
+        gbc.gridy = 7;
         this.controlPanel.add(this.controlPanelDeveloperDecisionTextArea, gbc);
     }
 
@@ -524,6 +538,12 @@ public class MergePanel extends JPanel {
         }
     }
 
+    private void controlPanelOutmostCheckBoxActionPerformed() {
+        if (this.currentFile != null) {
+            this.updateRegion(this.currentFile.getConflictRegion().get(this.currentConflictIndex - 1));
+        }
+    }
+
 //  ***********************************************************************    
 //  *                                                                     *
 //  *                           Process Methods                           *
@@ -571,7 +591,11 @@ public class MergePanel extends JPanel {
                 this.solutionTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getSolutionForm());
                 this.controlPanelV1LinesLabel.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1().size() + " lines");
                 this.controlPanelV2LinesLabel.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2().size() + " lines");
-                this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypeOfConflict() + "\n");
+                if (this.controlPanelOutmostCheckBox.isSelected()) {
+                    this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getOutmostedTypeOfConflict() + "\n");
+                } else {
+                    this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypeOfConflict() + "\n");
+                }
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getDeveloperDecision());
             } else {
                 this.controlPanelConflictIndexLabel.setText("0/0");
@@ -617,7 +641,11 @@ public class MergePanel extends JPanel {
             this.solutionTextArea.setText(file.getConflictRegion().get(0).getSolutionForm());
             this.controlPanelV1LinesLabel.setText("V1: " + file.getConflictRegion().get(0).getV1().size() + " lines");
             this.controlPanelV2LinesLabel.setText("V2: " + file.getConflictRegion().get(0).getV2().size() + " lines");
-            this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypeOfConflict() + "\n");
+            if (this.controlPanelOutmostCheckBox.isSelected()) {
+                this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getOutmostedTypeOfConflict() + "\n");
+            } else {
+                this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypeOfConflict() + "\n");
+            }
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
 
         } else {
@@ -639,7 +667,11 @@ public class MergePanel extends JPanel {
         this.solutionTextArea.setText(region.getSolutionForm());
         this.controlPanelV1LinesLabel.setText("V1: " + region.getV1().size() + " lines");
         this.controlPanelV2LinesLabel.setText("V2: " + region.getV2().size() + " lines");
-        this.controlPanelTypeOfConflictTextArea.setText(region.getTypeOfConflict() + "\n");
+        if (this.controlPanelOutmostCheckBox.isSelected()) {
+            this.controlPanelTypeOfConflictTextArea.setText(region.getOutmostedTypeOfConflict() + "\n");
+        } else {
+            this.controlPanelTypeOfConflictTextArea.setText(region.getTypeOfConflict() + "\n");
+        }
         this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 
     }

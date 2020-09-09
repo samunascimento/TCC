@@ -1,9 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeCPPSyntaxTree;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzeJava9SyntaxTree;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools.analyzePythonSyntaxTree;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -30,12 +27,14 @@ public class ConflictRegion {
     private final int originalV1StopLine;
     private final int originalV2StartLine;
     private final int originalV2StopLine;
+
     private List<SyntaxStructure> syntaxV1;
     private List<SyntaxStructure> syntaxV2;
+    private List<SyntaxStructure> outmostedSyntaxV1;
+    private List<SyntaxStructure> outmostedSyntaxV2;
 
     private List<String> typesOfConflicts;
-
-    private String extension;
+    private List<String> outmostedTypesOfConflicts;
 
     private DeveloperDecision developerDecision;
 
@@ -107,6 +106,14 @@ public class ConflictRegion {
         return syntaxV2;
     }
 
+    public List<SyntaxStructure> getSyntaxV1Outmost() {
+        return outmostedSyntaxV1;
+    }
+
+    public List<SyntaxStructure> getSyntaxV2Outmost() {
+        return outmostedSyntaxV2;
+    }
+
     public List<String> getAfterContext() {
         return afterContext;
     }
@@ -139,23 +146,49 @@ public class ConflictRegion {
         return developerDecision.name();
     }
 
-    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
+    public String getTypeOfConflict() {
+        String result = "";
+        for (String str : this.typesOfConflicts) {
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
+    }
+    
+    public String getOutmostedTypeOfConflict() {
+        String result = "";
+        for (String str : this.outmostedTypesOfConflicts) {
+            result = result + "\n" + str;
+        }
+        return result.replaceFirst("\n", "");
+    }
+
+
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
+        SSCShelf shelf;
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
+                this.outmostedSyntaxV1 = new ArrayList<>();
             } else if (this.originalV1StartLine < 0) {
                 this.syntaxV1 = null;
+                this.outmostedSyntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
+                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                this.syntaxV1 = shelf.getAll();
+                this.outmostedSyntaxV1 = shelf.getAllOutmosted();
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
+                this.outmostedSyntaxV2 = new ArrayList<>();
             } else if (this.originalV2StartLine < 0) {
                 this.syntaxV2 = null;
+                this.outmostedSyntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
+                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                this.syntaxV2 = shelf.getAll();
+                this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
             this.generateTypeOfConflict(filePath);
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -169,23 +202,32 @@ public class ConflictRegion {
         }
     }
 
-    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit, boolean useOutmost) throws IOException {
+    public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit) throws IOException {
+        SSCShelf shelf;
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
+                this.outmostedSyntaxV1 = new ArrayList<>();
             } else if (this.originalV1StartLine < 0) {
                 this.syntaxV1 = null;
+                this.outmostedSyntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                this.syntaxV1 = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine, useOutmost);
+                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                this.syntaxV1 = shelf.getAll();
+                this.outmostedSyntaxV1 = shelf.getAllOutmosted();
             }
             if (this.originalV2StartLine == 0) {
                 this.syntaxV2 = new ArrayList<>();
+                this.outmostedSyntaxV2 = new ArrayList<>();
             } else if (this.originalV2StartLine < 0) {
                 this.syntaxV2 = null;
+                this.outmostedSyntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                this.syntaxV2 = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine, useOutmost);
+                shelf = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                this.syntaxV2 = shelf.getAll();
+                this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
             this.generateTypeOfConflict(filePath);
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -209,17 +251,6 @@ public class ConflictRegion {
         }
         for (String line : this.afterContext) {
             str = str + line + "\n";
-        }
-        str = str + "\n\n\n\n";
-        if (this.syntaxV1 != null) {
-            for (SyntaxStructure v1 : this.syntaxV1) {
-                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v1.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
-            }
-        }
-        if (this.syntaxV2 != null) {
-            for (SyntaxStructure v2 : this.syntaxV2) {
-                str = str + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + v2.getForm() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
-            }
         }
 
         return str;
@@ -253,9 +284,11 @@ public class ConflictRegion {
     }
 
     private void generateTypeOfConflict(String filePath) {
-        if (this.originalV1StartLine < 0) {
+        if (this.originalV1StartLine < 0 || this.originalV2StartLine < 0) {
             this.typesOfConflicts = new ArrayList<>();
             this.typesOfConflicts.add("Untreatable error in Diff command!");
+            this.outmostedTypesOfConflicts = new ArrayList<>();
+            this.outmostedTypesOfConflicts.add("Untreatable error in Diff command!");
         } else {
             List<String> rawList = this.getV1StructureTypes();
             for (String str : this.getV2StructureTypes()) {
@@ -263,18 +296,28 @@ public class ConflictRegion {
                     rawList.add(str);
                 }
             }
+            List<String> outmostedRawList = this.getOutmostedV1StructureTypes();
+            for (String str : this.getOutmostedV2StructureTypes()) {
+                if (!outmostedRawList.contains(str)) {
+                    outmostedRawList.add(str);
+                }
+            }
             Collections.sort(rawList);
             if (filePath.endsWith(".java")) {
                 this.typesOfConflicts = Translator.JavaTranslator(rawList);
+                this.outmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 this.typesOfConflicts = Translator.CPPTranslator(rawList);
+                this.outmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
             } else if (filePath.endsWith(".py")) {
                 this.typesOfConflicts = rawList;
+                this.outmostedTypesOfConflicts = outmostedRawList;
             } else {
                 this.typesOfConflicts = rawList;
+                this.outmostedTypesOfConflicts = outmostedRawList;
             }
-            
             Collections.sort(this.typesOfConflicts);
+            Collections.sort(this.outmostedTypesOfConflicts);
         }
     }
 
@@ -306,47 +349,32 @@ public class ConflictRegion {
         return result;
     }
 
-    /*public String getTypeOfConflict() {
-        List<String> v1SS = Arrays.asList(this.getV1StructureTypes().split("\n"));
-        List<String> v2SS = Arrays.asList(this.getV2StructureTypes().split("\n"));
-        List<String> tof = new ArrayList<>();
-        String result = "";
-        if (v1SS.contains("WARNING!") && v2SS.contains("WARNING!")) {
-            result = "\nWARNING! [V1 & V2]";
-            v1SS.remove("WARNING");
-            v2SS.remove("WARNING");
-        } else if (v1SS.contains("WARNING!")) {
-            result = "\nWARNING! [V1]";
-            v1SS.remove("WARNING");
-        } else if (v2SS.contains("WARNING!")) {
-            result = "\nWARNING! [V2]";
-            v2SS.remove("WARNING");
-        }
-        for (String str : v1SS) {
-            if (v2SS.contains(str)) {
-                tof.add(str + " [V1 & V2]");
-            } else {
-                tof.add(str + " [V1]");
+    public List<String> getOutmostedV1StructureTypes() {
+        List<String> result = new ArrayList<>();
+        if (this.outmostedSyntaxV1 == null) {
+            result.add("Extension not parseble!");
+        } else if (this.originalV1StartLine == 0 || this.outmostedSyntaxV1.isEmpty()) {
+            result.add("Nothing");
+        } else {
+            for (String str : this.getSortedStructureType(outmostedSyntaxV1)) {
+                result.add(str);
             }
+        }
+        return result;
+    }
 
-        }
-        for (String str : v2SS) {
-            if (!tof.contains(str + " [V1 & V2]") && !tof.contains(str + " [V1]")) {
-                tof.add(str + " [V2]");
+    public List<String> getOutmostedV2StructureTypes() {
+        List<String> result = new ArrayList<>();
+        if (this.outmostedSyntaxV2 == null) {
+            result.add("Extension not parseble!");
+        } else if (this.originalV2StartLine == 0 || this.outmostedSyntaxV2.isEmpty()) {
+            result.add("Nothing");
+        } else {
+            for (String str : this.getSortedStructureType(outmostedSyntaxV2)) {
+                result.add(str);
             }
         }
-        Collections.sort(tof);
-        for (String str : tof) {
-            result = result + "\n" + str;
-        }
-        return result.replaceFirst("\n", "");
-    }*/
-    public String getTypeOfConflict() {
-        String result = "";
-        for (String str : this.typesOfConflicts) {
-            result = result + "\n" + str;
-        }
-        return result.replaceFirst("\n", "");
+        return result;
     }
 
     private DeveloperDecision generateDeveloperDecision() {

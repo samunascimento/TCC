@@ -90,7 +90,7 @@ public class Cli {
                 }
             }
 
-            GitRepositoryAnalysis analysis = new GitRepositoryAnalysis(directoryPath, cln, OutmostBool);
+            GitRepositoryAnalysis analysis = new GitRepositoryAnalysis(directoryPath, cln);
             analysis.startAnalysis();
             name = analysis.getProjectName();
 

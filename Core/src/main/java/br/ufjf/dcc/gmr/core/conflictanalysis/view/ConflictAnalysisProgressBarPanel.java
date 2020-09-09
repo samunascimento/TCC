@@ -22,13 +22,11 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
     private final JLabel processLabel;
     private final String repositoryPath;
     private final int lineContext;
-    private final boolean useOutmost;
     private List<MergeEvent> mergeEventList;
 
-    public ConflictAnalysisProgressBarPanel(String repositoryPath, int lineContext, boolean useOutmost) {
+    public ConflictAnalysisProgressBarPanel(String repositoryPath, int lineContext) {
         this.repositoryPath = repositoryPath;
         this.lineContext = lineContext;
-        this.useOutmost = useOutmost;
         this.mergeEventList = null;
         this.progressBar = new JProgressBar();
         this.processLabel = new JLabel("Starting");
@@ -67,7 +65,7 @@ public class ConflictAnalysisProgressBarPanel extends JPanel implements Runnable
      */
     @Override
     public void run() {
-        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this, this.useOutmost);
+        GitRepositoryAnalysis repositoryAnalysis = new GitRepositoryAnalysis(repositoryPath, lineContext, this);
         try {
             repositoryAnalysis.startAnalysis();
         } catch (IOException ex) {
