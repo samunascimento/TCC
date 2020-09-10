@@ -15,16 +15,15 @@ public class CommitData {
         List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
         this.commitHash = info.get(0);
         this.author = info.get(1);
-        this.authorDate = new Date(Long.parseLong(info.get(2))*1000);
+        this.authorDate = new Date(Long.parseLong(info.get(2)) * 1000);
         this.committer = info.get(3);
-        this.committerDate = new Date(Long.parseLong(info.get(4))*1000);
+        this.committerDate = new Date(Long.parseLong(info.get(4)) * 1000);
         this.title = info.get(5);
     }
 
     public CommitData() {
     }
 
-    
     public String getCommitHash() {
         return commitHash;
     }
@@ -93,9 +92,5 @@ public class CommitData {
     public String toString() {
         return "CommitData{" + "commitHash=" + commitHash + ", author=" + author + ", authorDate=" + authorDate + ", committer=" + committer + ", committerDate=" + committerDate + ", title=" + title + ", id=" + id + '}';
     }
-    
-    
-    
-    
 
 }

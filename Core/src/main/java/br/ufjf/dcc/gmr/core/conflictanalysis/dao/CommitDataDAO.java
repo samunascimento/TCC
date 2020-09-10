@@ -168,7 +168,7 @@ public class CommitDataDAO {
                 + AUTHOR_DATE + " = ?, "
                 + TITLE + " = ? "
                 + "WHERE ID = ?";
-        
+
         System.out.println(sql);
 
         PreparedStatement stmt = null;

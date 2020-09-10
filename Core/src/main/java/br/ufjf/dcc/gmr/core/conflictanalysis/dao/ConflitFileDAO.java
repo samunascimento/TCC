@@ -18,7 +18,7 @@ import java.util.List;
  * @author luan
  */
 public class ConflitFileDAO {
-    
+
     private final Connection connection;
 
     public static final String ID = "id";
@@ -28,7 +28,6 @@ public class ConflitFileDAO {
     public static final String EXTRAFILENAME = "extraFileName";
     public static final String EXTRAFILEPATH = "extraFilePath";
     public static final String EXTRAINSIDEFILEPATH = "extraInsideFilePath";
-
 
     public ConflitFileDAO(Connection connection) {
         this.connection = connection;
@@ -116,7 +115,7 @@ public class ConflitFileDAO {
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                  commit = new ConflictFile();
+                commit = new ConflictFile();
                 commit.setFileName(resultSet.getString(FILENAME));
                 commit.setFilePath(resultSet.getString(FILEPATH));
                 commit.setInsideFilePath(resultSet.getString(INSIDEFILEPATH));
@@ -166,7 +165,7 @@ public class ConflitFileDAO {
                 + EXTRAFILEPATH + " = ?, "
                 + EXTRAINSIDEFILEPATH + " = ? "
                 + "WHERE ID = ?";
-        
+
         System.out.println(sql);
 
         PreparedStatement stmt = null;

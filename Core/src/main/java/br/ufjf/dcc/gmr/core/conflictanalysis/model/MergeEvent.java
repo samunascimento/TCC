@@ -4,12 +4,12 @@ import java.util.List;
 
 public class MergeEvent {
 
-    private final CommitData hash;
-    private final List<CommitData> parents;
-    private final List<ConflictFile> conflictFiles;
-    private final CommitData commonAncestorOfParents;
-    private final boolean isConflict;
-    
+    private CommitData hash;
+    private List<CommitData> parents;
+    private List<ConflictFile> conflictFiles;
+    private CommitData commonAncestorOfParents;
+    private boolean isConflict;
+
     public MergeEvent(CommitData hash, List<CommitData> parents, List<ConflictFile> conflictFiles, CommitData commonAncestorOfParents) {
         this.hash = hash;
         this.parents = parents;
@@ -17,7 +17,27 @@ public class MergeEvent {
         this.commonAncestorOfParents = commonAncestorOfParents;
         this.isConflict = !conflictFiles.isEmpty();
     }
-        
+
+    //---------------------------------------------------------------------------
+    public MergeEvent() {
+
+    }
+
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setIsConflict(boolean isConflict) {
+        this.isConflict = isConflict;
+    }
+
+    //--------------------------------------------------------------------------
     public CommitData getHash() {
         return hash;
     }
@@ -33,7 +53,7 @@ public class MergeEvent {
     public CommitData getCommonAncestorOfParents() {
         return commonAncestorOfParents;
     }
-    
+
     public boolean isConflict() {
         return isConflict;
     }
@@ -84,12 +104,12 @@ public class MergeEvent {
         System.out.println("***********************************************************************************");
 
     }
-    
-    public int getNumberOfConflictRegions(){
-        if(this.isConflict){
+
+    public int getNumberOfConflictRegions() {
+        if (this.isConflict) {
             int i = 0;
-            for(ConflictFile file : this.conflictFiles){
-                if(file.getConflictRegion() != null){
+            for (ConflictFile file : this.conflictFiles) {
+                if (file.getConflictRegion() != null) {
                     i += file.getConflictRegion().size();
                 }
             }
