@@ -358,20 +358,6 @@ export default class Project extends Component {
 
   }
 
-  getMaximaY = (data) => {
-
-    const maximas = data.map(
-      (dataset) => Math.max(...dataset.map((d) => d.y))
-    )
-
-    const max = Math.max(...maximas)
-
-    console.log(max)
-
-    return max
-
-
-  }
 
   handleChangePackage = async (packageMetric) => {
 
@@ -399,7 +385,7 @@ export default class Project extends Component {
   handleChangeClass = (event, metricName, classIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
-    this.state.packageTree[classIndex][metricName] = !this.state.packageTree[classIndex][metricName]
+    this.state.classTree[classIndex][metricName] = !this.state.classTree[classIndex][metricName]
 
     if (event.target.checked === true) {
       axios.get(`http://localhost:8080/JasomeWeb/webresources/jasome/metric/class/` + this.props.nameProject.name)
@@ -523,6 +509,39 @@ export default class Project extends Component {
     // this.state.loadingState = false
   }
 
+  clearMenuPackage = () => {
+    const packageTree = []
+    this.state.packageTree.map((packageItem, packageIndex) => {
+      packageTree.push(packageItem)
+      this.state.packageMetrics.map((metric, metricIndex) => {
+        packageTree[packageIndex][metric.name] = false
+      })
+    })
+
+    return packageTree
+
+  }
+
+  clearChart = () => {
+    this.setState({ data: [] })
+    this.setState({ metricsDescriptions: [] })
+    this.setState({openProject:false, openPackage: false, openClass:false, openMethod:false })
+    this.setState({ projectTloc: false })
+    this.setState({ packageTree: this.clearMenuPackage() })
+
+  }
+
+  getMaximaY = (data) => {
+
+    const maximas = data.map(
+      (dataset) => Math.max(...dataset.map((d) => d.y))
+    )
+
+    const max = Math.max(...maximas)
+
+    return max
+
+  }
 
 
   render() {
@@ -691,12 +710,12 @@ export default class Project extends Component {
                       </List>
                     </Paper>
                   </Collapse>
-                  <div style={{ display: 'inline-block' }}>
-                    <Button onClick={this.generateChart} variant="contained" color="primary">
-                      generate graph
+                  <div>
+                    <Button style={{ display: 'inline-block', marginLeft: '10%' }} onClick={this.generateChart} variant="contained" color="primary">
+                      generate
                   </Button>
-                    <Button onClick={this.generateChart} variant="contained" color="primary">
-                      clear graph
+                    <Button style={{ display: 'inline-block', marginLeft: '10%' }} onClick={this.clearChart} variant="contained" color="primary">
+                      clear
                   </Button>
                   </div>
                   {/* {this.state.loadingState && <CircularProgress />} */}

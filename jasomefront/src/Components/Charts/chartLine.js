@@ -59,8 +59,7 @@ class ChartLine extends Component {
           (dataset) => Math.max(...dataset.map((d) => d.y))
         )
       })
-      console.log(this.state.maximaX[0])
-      console.log(this.state.maximaY[0])
+
     }
   }
 
@@ -77,7 +76,6 @@ class ChartLine extends Component {
   }
 
   render() {
-    console.log(this.props.maximaY)
     return (
       <div>
         <VictoryChart
