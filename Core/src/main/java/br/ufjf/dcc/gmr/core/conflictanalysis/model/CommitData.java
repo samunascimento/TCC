@@ -21,6 +21,10 @@ public class CommitData {
         this.title = info.get(5);
     }
 
+    public CommitData() {
+    }
+
+    
     public String getCommitHash() {
         return commitHash;
     }
@@ -51,5 +55,47 @@ public class CommitData {
     private String committer;
     private Date committerDate;
     private String title;
+    private int id;
+
+    public void setCommitHash(String commitHash) {
+        this.commitHash = commitHash;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setAuthorDate(Date authorDate) {
+        this.authorDate = authorDate;
+    }
+
+    public void setCommitter(String committer) {
+        this.committer = committer;
+    }
+
+    public void setCommitterDate(Date committerDate) {
+        this.committerDate = committerDate;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "CommitData{" + "commitHash=" + commitHash + ", author=" + author + ", authorDate=" + authorDate + ", committer=" + committer + ", committerDate=" + committerDate + ", title=" + title + ", id=" + id + '}';
+    }
+    
+    
+    
+    
 
 }
