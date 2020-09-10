@@ -9,6 +9,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
  *
  * @author luan
  */
-public class CommitData_MergeEvent_parents {
+public class CommitdataMergeeventHashDAO {
     
 }

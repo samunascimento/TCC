@@ -9,6 +9,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
  *
  * @author luan
  */
-public class ConflictRegionDB {
+public class SyntaxstructureConflictregionOutmostedsyntaxV2DAO {
     
 }

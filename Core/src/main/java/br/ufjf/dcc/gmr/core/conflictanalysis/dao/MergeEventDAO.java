@@ -9,6 +9,6 @@ package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
  *
  * @author luan
  */
-public class SyntaxStructure_ConflictRegion_outmostedSyntaxV2 {
+public class MergeEventDAO {
     
 }
