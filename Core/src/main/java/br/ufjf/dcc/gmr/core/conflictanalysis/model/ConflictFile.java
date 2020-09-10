@@ -4,13 +4,15 @@ import java.util.List;
 
 public class ConflictFile {
 
-    private final String fileName;
-    private final String filePath;
-    private final String insideFilePath;
-    private final String extraFileName;
-    private final String extraFilePath;
-    private final String extraInsideFilePath;
-    private final List<ConflictRegion> conflictRegion;
+    private  String fileName;
+    private  String filePath;
+    private  String insideFilePath;
+    private  String extraFileName;
+    private  String extraFilePath;
+    private  String extraInsideFilePath;
+    private  List<ConflictRegion> conflictRegion;
+    
+    private int id;
 
     public ConflictFile(String fileName, String filePath, String insideFilePath, List<ConflictRegion> conflictRegion) {
         this.fileName = fileName;
@@ -30,6 +32,10 @@ public class ConflictFile {
         this.extraFilePath = extraFilePath;
         this.extraInsideFilePath = extraInsideFilePath;
         this.conflictRegion = conflictRegion;
+    }
+    
+    public ConflictFile(){
+        
     }
 
     public String getFileName() {
@@ -60,6 +66,52 @@ public class ConflictFile {
         return extraFilePath;
     }
 
+    public String getInsideFilePath() {
+        return insideFilePath;
+    }
+
+    public String getExtraInsideFilePath() {
+        return extraInsideFilePath;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setInsideFilePath(String insideFilePath) {
+        this.insideFilePath = insideFilePath;
+    }
+
+    public void setExtraFileName(String extraFileName) {
+        this.extraFileName = extraFileName;
+    }
+
+    public void setExtraFilePath(String extraFilePath) {
+        this.extraFilePath = extraFilePath;
+    }
+
+    public void setExtraInsideFilePath(String extraInsideFilePath) {
+        this.extraInsideFilePath = extraInsideFilePath;
+    }
+
+    public void setConflictRegion(List<ConflictRegion> conflictRegion) {
+        this.conflictRegion = conflictRegion;
+    }
+    
+        public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
+    
     public boolean extraIsEmpty() {
         if (this.extraFileName == "" || this.extraFilePath == "" || this.extraInsideFilePath == "" || this.extraFileName == null || this.extraFilePath == null || this.extraInsideFilePath == null) {
             return true;
