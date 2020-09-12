@@ -78,7 +78,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("namePackage/{nameProject}")
+    @Path("projects/namePackage/{nameProject}")
     public String getNamePackage(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -93,7 +93,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/version/{nameProject}")
+    @Path("projects/metric/version/{nameProject}")
     public String getMetricVersion(@PathParam("nameProject") String nameProject) throws SQLException {
         
         Connection connection = ConnectionFactory.getConnection();
@@ -110,7 +110,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/package/{nameProject}/{namePackage}/{nameMetric}")
+    @Path("projects/metric/package/{nameProject}/{namePackage}/{nameMetric}")
     public String getMetricPackage(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameMetric") String nameMetric) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -123,7 +123,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/description/{nameMetric}")
+    @Path("projects/metric/description/{nameMetric}")
     public String getMetricPackage(@PathParam("nameProject") String nameProject,@PathParam("nameMetric") String nameMetric) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -137,7 +137,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/package/{nameProject}")
+    @Path("projects/metric/package/{nameProject}")
     public String getMetricPackage(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -150,7 +150,7 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/class/{nameProject}")
+    @Path("projects/metric/class/{nameProject}")
     public String getMetricClass(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
@@ -164,7 +164,7 @@ public class JasomeResource {
         
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("metric/method/{nameProject}")
+    @Path("projects/metric/method/{nameProject}")
     public String getMetricMethod(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
