@@ -4,6 +4,7 @@ import { NotFound } from './Errors'
 import Projects from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
+import axios from 'axios'
 
 
 export default class extends Component {
@@ -12,7 +13,7 @@ export default class extends Component {
   }
 
   async componentDidMount() {
-    const projects = await (await fetch('http://localhost:8080/JasomeWeb/webresources/jasome/nameProject')).json()
+    const projects = await (await fetch(`nameProject`)).json()
     console.log(projects);
     this.setState({ projects })
   }

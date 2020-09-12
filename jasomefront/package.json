@@ -2,6 +2,7 @@
   "name": "jasomefront",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080/JasomeWeb/webresources/jasome",
   "dependencies": {
     "@material-ui/core": "^4.10.0",
     "@material-ui/icons": "^4.9.1",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.5"
   }
 }
