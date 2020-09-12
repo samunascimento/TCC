@@ -28,8 +28,8 @@ public class ProjectMetricsDao {
     public int insert(ProjectMetrics projectMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_projectMetrics "
-                + "(sourceDir,projectname) "
-                + "VALUES (?,?) "
+                + "(id,sourceDir,projectname) "
+                + "VALUES (?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -39,8 +39,9 @@ public class ProjectMetricsDao {
         try {
             stmt = connection.prepareStatement(sql);
             //set value
-            stmt.setString(1, projectMetrics.getSourceDir());
-            stmt.setString(2, projectMetrics.getName());
+            stmt.setInt(1, projectMetrics.getId());
+            stmt.setString(2, projectMetrics.getSourceDir());
+            stmt.setString(3, projectMetrics.getName());
             tableKeys = stmt.executeQuery();
             tableKeys.next();
 

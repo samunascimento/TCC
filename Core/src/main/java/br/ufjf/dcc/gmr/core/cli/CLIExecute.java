@@ -36,7 +36,8 @@ public class CLIExecute {
 
         return execution;
     }
-      public static CLIExecution execute(String[] command, String directory) throws IOException {
+
+    public static CLIExecution execute(String[] command, String directory) throws IOException {
 
         CLIExecution execution = new CLIExecution();
 
@@ -50,18 +51,20 @@ public class CLIExecute {
         BufferedReader stdError = new BufferedReader(new InputStreamReader(exec.getErrorStream()));
 
         // read the output from the command
-        while ((s = stdInput.readLine()) != null) {
-            execution.addOutput(s);
+        if (stdInput.ready()) {
+            while ((s = stdInput.readLine()) != null) {
+                execution.addOutput(s);
+            }
         }
 
         // read any errors from the attempted command
-        while ((s = stdError.readLine()) != null) {
-            execution.addError(s);
+        if (stdError.ready()) {
+            while ((s = stdError.readLine()) != null) {
+                execution.addError(s);
+            }
         }
-
         return execution;
     }
-
 
     public static CLIExecution executeParallel(String command, String directory) throws IOException {
 

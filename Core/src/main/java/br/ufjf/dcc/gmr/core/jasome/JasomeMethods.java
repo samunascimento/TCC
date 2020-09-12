@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
+import br.ufjf.dcc.gmr.core.cli.ExecutionWindows;
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
@@ -73,8 +74,8 @@ public class JasomeMethods {
         List<ProjectMetrics> projectNames = new ArrayList<>();
         boolean checkProject = false;
         try {
-            for (int i = 0; i < projectDao.select().size(); i++) {
-                System.out.println(i);
+            int projectDaoSize = projectDao.select().size();
+            for (int i = 0; i < projectDaoSize; i++) {
                 projectNames.add(projectDao.selectID(i + 1));
                 if (project.getName().equals(projectNames.get(i).getName())) {
                     project.setId(projectNames.get(i).getId());
@@ -85,13 +86,12 @@ public class JasomeMethods {
             int i;
             int idPosition;
             int id;
-            System.out.println(project.getSourceDir());
             List<Formats> log;
             List<String> parents;
 
             if (checkProject == false) {
+                project.setId(projectDaoSize + 1);
                 int projectId = projectDao.insert(project);
-                project.setId(projectId);
                 i = 0;
                 idPosition = 0;
                 log = Git.logAll(project.getSourceDir());
@@ -166,8 +166,8 @@ public class JasomeMethods {
                     }
                 }
             }
-        } catch (NullPointerException ex) {
-            System.out.println("Fim do arquivo");
+//        } catch (NullPointerException ex) {
+//            System.out.println("Fim do arquivo");
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("Não é um repositório válido");
         } catch (IOException ex) {
@@ -222,9 +222,11 @@ public class JasomeMethods {
     }
 
     public static CLIExecution extractMetrics(ProjectMetrics project) throws IOException {
+        ExecutionWindows teste = new ExecutionWindows();
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return CLIExecute.executeParallel(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
+            return teste.ExecutionWindows(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), null, ".");
+//           return CLIExecute.execute(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
         } else {
             return CLIExecute.executeParallel(jasomePath.concat(" ").concat(project.getSourceDir()), ".");
         }
