@@ -39,7 +39,7 @@ public class Main {
             j += i;
             System.out.println("");
         }
-
+        
         if (employee != null) {
             if (employee.getName().equals("name of a employee")) {
                 Person person1 = person;

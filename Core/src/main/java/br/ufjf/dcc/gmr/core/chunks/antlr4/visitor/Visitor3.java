@@ -227,7 +227,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                             }
                             if (name != null) {
 
-                                LocalVariableDeclarationBinding variable = globalEnviroment.findVariable(this.methodDeclarationBinding, className, name);
+                                LocalVariableDeclarationBinding variable = globalEnviroment.findVariableDeclaration(this.methodDeclarationBinding, className, name);
 
                                 if (variable != null) {
                                     parameterTypeBinding = variable.getType();
@@ -255,6 +255,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
 
         MethodCallBinding methodCallBinding = new MethodCallBinding();
+        LocalVariableUsageBinding localVariableUsageBinding = new LocalVariableUsageBinding();
         List<TypeBinding> parameters = new ArrayList<>();
 
         ParserRuleContext parent = ctx.getParent();
@@ -264,9 +265,17 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
         if (parent != null && parent instanceof JavaParser.ExpressionContext) {
 
             String variableName = parent.children.get(0).getText();
-            LocalVariableDeclarationBinding variable = globalEnviroment.findVariable(this.methodDeclarationBinding, className, variableName);
-
+            LocalVariableDeclarationBinding variable = globalEnviroment.findVariableDeclaration(this.methodDeclarationBinding, className, variableName);
+            
             if (variable != null) {
+                localVariableUsageBinding = globalEnviroment.findVariableUsage(methodDeclarationBinding, className, variableName);
+                if(localVariableUsageBinding != null){
+                    localVariableUsageBinding.getUsageStringList().add(parent.getText());
+                }
+                localVariableUsageBinding.setLocalVariableDeclarationBinding(variable);
+                localVariableUsageBinding.setCtx(ctx);
+                
+                localVariableUsageBinding.setName(variableName);
                 typeBinding = variable.getType();
                 methodCallBinding.setTypeBinding(typeBinding);
             }
@@ -283,6 +292,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
             List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
+            currentScope.add(localVariableUsageBinding);
             currentScope.add(methodCallBinding);
 
         }
@@ -499,6 +509,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             try {
                 findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
                 //add local variable declarations and method calls
+                findMethodDeclaration.addLocalVariableUsageBinding(bindings);
                 findMethodDeclaration.addLocalVariableDeclarationBinding(bindings);
                 findMethodDeclaration.addMethodCallBinding(bindings);
                 findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().remove(bindings);
