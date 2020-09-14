@@ -511,7 +511,6 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
             type.setName(ctx.typeType().getText());
             type.setPackageBinding(packageBinding);
             variable.setType(type);
-
         }
 
         ParserRuleContext memberDeclaration = ctx.getParent();
@@ -527,7 +526,8 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
                 variable.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
-
+        variable.setCtx(ctx);
+        
         this.typeBinding.addAttributes(variable);
 
         return super.visitFieldDeclaration(ctx);

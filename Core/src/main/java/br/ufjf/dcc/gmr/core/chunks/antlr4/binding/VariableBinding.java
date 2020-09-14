@@ -1,16 +1,19 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+
 public class VariableBinding extends BaseBinding {
 
     private String modifier;
     private TypeBinding type;
-    //Add context
+    private JavaParser.FieldDeclarationContext ctx;
             
-    public VariableBinding(String Modifier, TypeBinding type, String name) {
+    public VariableBinding(String Modifier, TypeBinding type, String name, JavaParser.FieldDeclarationContext ctx) {
         super(name);
         this.modifier = Modifier;
         this.type = type;
-    }
+        this.ctx = ctx;
+    }   
 
     public VariableBinding() {
         
@@ -38,5 +41,13 @@ public class VariableBinding extends BaseBinding {
 
     public void setType(TypeBinding type) {
         this.type = type;
+    }
+
+    public JavaParser.FieldDeclarationContext getCtx() {
+        return ctx;
+    }
+
+    public void setCtx(JavaParser.FieldDeclarationContext ctx) {
+        this.ctx = ctx;
     }
 }
