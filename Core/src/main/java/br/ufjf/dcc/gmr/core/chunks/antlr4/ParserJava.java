@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -28,7 +29,7 @@ public class ParserJava {
 
     private static boolean reachedEnd = false;
     private GlobalEnviroment globalEnviroment;
-
+    
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
     }
@@ -116,25 +117,9 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
         System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
-//        System.out.println("***************Variables***************");
-//        for (VariableBinding variableBinding : AST1.getVariableBindingForList()) {
-//            System.out.println(variableBinding.toString());
-//        }
         
-        
-
-//        System.out.println("***************Dependencies***************");
-//        System.out.println("--------------AST1 --> AST2--------------");
-//        Dependencies.methodDeclarationCallList(AST1.getMethodDeclarationBinding(), AST2.getMethodCallBiding());
-//        System.out.println("--------------AST2 --> AST1--------------");
-//        Dependencies.methodDeclarationCallList(AST2.getMethodDeclarationBinding(), AST1.getMethodCallBiding());
-//
-//        System.out.println("***************Variables***************");
-//        for (VariableBinding variableBinding : AST1.getVariableBindingForList()) {
-//            System.out.println(variableBinding.toString());
-//        }
     }
-
+    
     private static List<String> javaFiles(String dir) {
         List<String> javaFiles = new ArrayList<>();
         File file = new File(dir);

@@ -34,12 +34,29 @@ public class GlobalEnviroment {
                     result.add(methodDeclarationBinding);
                 }
             }
-
         }
-
+        
+        for (VariableBinding variableBinding : typeBinding.getAttributes()) {
+            if (variableBinding.getCtx().getStart().getLine() >= begin
+                    && variableBinding.getCtx().getStop().getLine() <= end) {
+                {
+                    result.add(variableBinding);
+                }
+            }
+        }
+        
+        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
+            if (methodDeclarationBinding.getCtx().getStart().getLine() >= begin
+                    && methodDeclarationBinding.getCtx().getStop().getLine() <= end) {
+                {
+                    result.add(methodDeclarationBinding);
+                }
+            }
+        }
+        
         return result;
     }
-
+    
     public GlobalEnviroment() {
         this.enviroment = new HashMap<>();
     }

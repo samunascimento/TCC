@@ -18,7 +18,8 @@ public class LanguageConstruct {
         this.type = type;
     }
 
-    
+    public LanguageConstruct() {
+    }
     
     /**
      * @return the lineBegin
