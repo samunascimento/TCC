@@ -9,15 +9,15 @@ public class LocalVariableUsageBinding extends BaseBinding{
 
     private LocalVariableDeclarationBinding localVariableDeclarationBinding;
     private JavaParser.MethodCallContext ctx;
-    private List<String> usageStringList;
+    private String usageString;
     
     public LocalVariableUsageBinding() {
-        this.usageStringList = new ArrayList<>();
+
     }
 
     public LocalVariableUsageBinding(LocalVariableDeclarationBinding localVariableDeclarationBinding, JavaParser.MethodCallContext ctx) {
         super(localVariableDeclarationBinding.getName());
-        this.usageStringList = new ArrayList<>();
+        this.usageString = "";
         this.localVariableDeclarationBinding = localVariableDeclarationBinding;
         this.ctx = ctx;
     }
@@ -33,12 +33,12 @@ public class LocalVariableUsageBinding extends BaseBinding{
     }
 
 
-    public List<String> getUsageStringList() {
-        return usageStringList;
+    public String getUsageString() {
+        return usageString;
     }
     
-    public void setUsageStringList(List<String> usageStringList) {
-        this.usageStringList = usageStringList;
+    public void setUsageString(String usageString) {
+        this.usageString = usageString;
     }
 
     /**

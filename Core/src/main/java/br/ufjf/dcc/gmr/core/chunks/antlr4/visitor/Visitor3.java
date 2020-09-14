@@ -266,16 +266,14 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
             String variableName = parent.children.get(0).getText();
             LocalVariableDeclarationBinding variable = globalEnviroment.findVariableDeclaration(this.methodDeclarationBinding, className, variableName);
-            
+
             if (variable != null) {
-                localVariableUsageBinding = globalEnviroment.findVariableUsage(methodDeclarationBinding, className, variableName);
-                if(localVariableUsageBinding != null){
-                    localVariableUsageBinding.getUsageStringList().add(parent.getText());
-                }
+            
                 localVariableUsageBinding.setLocalVariableDeclarationBinding(variable);
                 localVariableUsageBinding.setCtx(ctx);
-                
+                localVariableUsageBinding.setUsageString(parent.getText());
                 localVariableUsageBinding.setName(variableName);
+
                 typeBinding = variable.getType();
                 methodCallBinding.setTypeBinding(typeBinding);
             }

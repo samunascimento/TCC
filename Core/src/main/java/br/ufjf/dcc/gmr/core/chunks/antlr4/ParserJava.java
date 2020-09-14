@@ -80,6 +80,7 @@ public class ParserJava {
         System.out.println("***************GlobalEnviromentTypes***************");
         for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
             System.out.println(value);
+            
         }
     }
 
