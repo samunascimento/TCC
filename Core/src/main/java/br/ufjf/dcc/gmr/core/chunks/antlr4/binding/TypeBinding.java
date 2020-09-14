@@ -6,7 +6,7 @@ import java.util.List;
 public class TypeBinding extends BaseBinding {
 
     private TypeBinding extendClassBinding;
-    private List<String> imports;
+    private List<ImportBinding> imports;
     private List<MethodDeclarationBinding> MethodsBinding;
     private List<VariableBinding> attributesBinding;
     private List<Modifier> modifiers;
@@ -125,14 +125,14 @@ public class TypeBinding extends BaseBinding {
     /**
      * @return the imports
      */
-    public List<String> getImports() {
+    public List<ImportBinding> getImports() {
         return imports;
     }
 
     /**
      * @param imports the imports to set
      */
-    public void setImports(List<String> imports) {
+    public void setImports(List<ImportBinding> imports) {
         this.imports = imports;
     }
 
