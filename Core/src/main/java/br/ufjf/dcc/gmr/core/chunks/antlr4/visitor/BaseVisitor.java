@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.ExternalTypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.GlobalEnviroment;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.ImportBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.MethodDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Modifier;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PackageBinding;
@@ -33,11 +34,11 @@ public class BaseVisitor {
             ParseTree typeExtends = classDeclaration.getChild(3);
 
             if (typeBinding.getImports().size() != 0) {
-                for (String Import : typeBinding.getImports()) {
-                    String[] aux = Import.split("\\.");
+                for (ImportBinding Import : typeBinding.getImports()) {
+                    String[] aux = Import.getName().split("\\.");
                     String name2 = aux[aux.length - 1];
                     if (name2.equals(typeExtends.getText())) {
-                        name = Import.concat(".java");
+                        name = Import.getName().concat(".java");
                         extendedClass = globalEnviroment.getEnviroment().get(name);
                     } else {
                         //if the class has imports but the imports don't match the extended class

@@ -403,14 +403,14 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
             if (typeBinding == null) {
                 if (!globalEnviroment.getEnviroment().get(this.className).getImports().isEmpty()) {
-                    for (String aImport : globalEnviroment.getEnviroment().get(this.className).getImports()) {
-                        if (aImport.endsWith("*")) {
-                            aImport = aImport.substring(0, aImport.length() - 1);
-                            typeBinding = globalEnviroment.getEnviroment().get(aImport.concat(name).concat(".java"));
+                    for (ImportBinding aImport : globalEnviroment.getEnviroment().get(this.className).getImports()) {
+                        if (aImport.getName().endsWith("*")) {
+                            aImport.setName(aImport.getName().substring(0, aImport.getName().length() - 1));
+                            typeBinding = globalEnviroment.getEnviroment().get(aImport.getName().concat(name).concat(".java"));
                         } else {
 
-                            if (aImport.endsWith(name)) {
-                                typeBinding = globalEnviroment.getEnviroment().get(aImport.concat(".java"));
+                            if (aImport.getName().endsWith(name)) {
+                                typeBinding = globalEnviroment.getEnviroment().get(aImport.getName().concat(".java"));
                             }
                         }
                     }
