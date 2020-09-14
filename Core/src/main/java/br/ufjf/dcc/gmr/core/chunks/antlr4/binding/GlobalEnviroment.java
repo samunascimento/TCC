@@ -23,19 +23,16 @@ public class GlobalEnviroment {
 
         TypeBinding typeBinding = enviroment.get(type);
 
-        typeBinding.getAttributes();
-        typeBinding.getImports();
-        typeBinding.getMethodsBinding();
-
-        for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
-            if (methodDeclarationBinding.getCtx().getStart().getLine() >= begin
-                    && methodDeclarationBinding.getCtx().getStop().getLine() <= end) {
+        //Add imports, attributes and methodDeclaration in result object. MethodCalls, LocalVariables and LocalVariablesUsage are inside MethodDeclaration
+        for (ImportBinding importBinding : typeBinding.getImports()) {
+            if (importBinding.getCtx().getStart().getLine() >= begin
+                    && importBinding.getCtx().getStop().getLine() <= end) {
                 {
-                    result.add(methodDeclarationBinding);
+                    result.add(importBinding);
                 }
             }
         }
-        
+
         for (VariableBinding variableBinding : typeBinding.getAttributes()) {
             if (variableBinding.getCtx().getStart().getLine() >= begin
                     && variableBinding.getCtx().getStop().getLine() <= end) {
@@ -44,19 +41,52 @@ public class GlobalEnviroment {
                 }
             }
         }
-        
+
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
-            if (methodDeclarationBinding.getCtx().getStart().getLine() >= begin
-                    && methodDeclarationBinding.getCtx().getStop().getLine() <= end) {
+            if (methodDeclarationBinding.getCtx().getStart().getLine() <= begin
+                    && methodDeclarationBinding.getCtx().getStop().getLine() >= end) {
                 {
-                    result.add(methodDeclarationBinding);
+
+                    for (MethodCallBinding methodCallBinding : methodDeclarationBinding.getMethodCallBindings()) {
+
+                        if (methodCallBinding.getCtx().getStart().getLine() >= begin
+                                && methodCallBinding.getCtx().getStop().getLine() <= end) {
+                            {
+                                result.add(methodCallBinding);
+                            }
+                        }
+
+                    }
+
+                    for (LocalVariableDeclarationBinding localVariableDeclarationBinding : methodDeclarationBinding.getLocalVariableDeclarationBindings()) {
+
+                        if (localVariableDeclarationBinding.getCtx().getStart().getLine() >= begin
+                                && localVariableDeclarationBinding.getCtx().getStop().getLine() <= end) {
+                            {
+                                result.add(localVariableDeclarationBinding);
+                            }
+                        }
+
+                    }
+
+                    for (LocalVariableUsageBinding localVariableUsageBinding : methodDeclarationBinding.getLocalVariableUsageBindings()) {
+
+                        if (localVariableUsageBinding.getCtx().getStart().getLine() >= begin
+                                && localVariableUsageBinding.getCtx().getStop().getLine() <= end) {
+                            {
+                                result.add(localVariableUsageBinding);
+                            }
+                        }
+
+                    }
+
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     public GlobalEnviroment() {
         this.enviroment = new HashMap<>();
     }

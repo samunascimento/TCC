@@ -255,7 +255,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
     public Object visitMethodCall(JavaParser.MethodCallContext ctx) {
 
         MethodCallBinding methodCallBinding = new MethodCallBinding();
-        LocalVariableUsageBinding localVariableUsageBinding = new LocalVariableUsageBinding();
+        LocalVariableUsageBinding localVariableUsageBinding = null;
         List<TypeBinding> parameters = new ArrayList<>();
 
         ParserRuleContext parent = ctx.getParent();
@@ -268,7 +268,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             LocalVariableDeclarationBinding variable = globalEnviroment.findVariableDeclaration(this.methodDeclarationBinding, className, variableName);
 
             if (variable != null) {
-            
+                localVariableUsageBinding = new LocalVariableUsageBinding();
                 localVariableUsageBinding.setLocalVariableDeclarationBinding(variable);
                 localVariableUsageBinding.setCtx(ctx);
                 localVariableUsageBinding.setUsageString(parent.getText());
@@ -290,8 +290,10 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
             MethodDeclarationBinding findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
             List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
-            currentScope.add(localVariableUsageBinding);
             currentScope.add(methodCallBinding);
+            if (localVariableUsageBinding != null) {
+                currentScope.add(localVariableUsageBinding);
+            }
 
         }
         return super.visitMethodCall(ctx);

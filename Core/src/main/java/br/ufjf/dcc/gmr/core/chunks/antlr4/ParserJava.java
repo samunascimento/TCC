@@ -83,6 +83,9 @@ public class ParserJava {
             System.out.println(value);
             
         }
+        
+       parserJava.getGlobalEnviroment().findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 32, 44);
+       
     }
 
     private static void compare(TypeBinding AST1, TypeBinding AST2) {
