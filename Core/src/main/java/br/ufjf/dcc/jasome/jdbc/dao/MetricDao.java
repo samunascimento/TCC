@@ -456,7 +456,7 @@ public class MetricDao {
                         "from tb_projectmetrics as a\n" +
                         "inner join tb_project_version as b\n" +
                         "on a.id = b.project_id\n" +
-                        "left join tb_version_package as c \n" +
+                        "inner join tb_version_package as c \n" +
                         "on b.version_id = c.version_id\n" +
                         "left join tb_versionmetrics as v\n" +
                         "on v.id = b.version_id --alt\n" +
