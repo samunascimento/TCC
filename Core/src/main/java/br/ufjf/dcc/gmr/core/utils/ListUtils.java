@@ -9,6 +9,18 @@ import java.util.List;
  */
 public class ListUtils {
 
+    public static String getTextListStringToString(List<String> text) {
+        if (text == null) {
+            return null;
+        } else {
+            String result = "";
+            for (String line : text) {
+                result = result + "\n" + line;
+            }
+            return result.replaceFirst("\n", "");
+        }
+    }
+
     public static List<String> getSubList(List<String> content, int begin, int end) {
 
         List<String> result = new ArrayList<>();

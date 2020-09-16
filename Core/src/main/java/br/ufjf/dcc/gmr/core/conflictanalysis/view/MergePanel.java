@@ -589,12 +589,12 @@ public class MergePanel extends JPanel {
                 this.currentMaxConflictIndex = merge.getConflictFiles().get(0).getConflictRegion().size();
                 this.conflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getConflictForm());
                 this.solutionTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getSolutionForm());
-                this.controlPanelV1LinesLabel.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1().size() + " lines");
-                this.controlPanelV2LinesLabel.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2().size() + " lines");
+                this.controlPanelV1LinesLabel.setText("V1: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV1Size() + " lines");
+                this.controlPanelV2LinesLabel.setText("V2: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getV2Size() + " lines");
                 if (this.controlPanelOutmostCheckBox.isSelected()) {
                     this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getOutmostedTypeOfConflict() + "\n");
                 } else {
-                    this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypeOfConflict() + "\n");
+                    this.controlPanelTypeOfConflictTextArea.setText(merge.getConflictFiles().get(0).getConflictRegion().get(0).getTypesOfConflict() + "\n");
                 }
                 this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + merge.getConflictFiles().get(0).getConflictRegion().get(0).getDeveloperDecision());
             } else {
@@ -639,12 +639,12 @@ public class MergePanel extends JPanel {
             this.currentMaxConflictIndex = file.getConflictRegion().size();
             this.conflictTextArea.setText(file.getConflictRegion().get(0).getConflictForm());
             this.solutionTextArea.setText(file.getConflictRegion().get(0).getSolutionForm());
-            this.controlPanelV1LinesLabel.setText("V1: " + file.getConflictRegion().get(0).getV1().size() + " lines");
-            this.controlPanelV2LinesLabel.setText("V2: " + file.getConflictRegion().get(0).getV2().size() + " lines");
+            this.controlPanelV1LinesLabel.setText("V1: " + file.getConflictRegion().get(0).getV1Size() + " lines");
+            this.controlPanelV2LinesLabel.setText("V2: " + file.getConflictRegion().get(0).getV2Size() + " lines");
             if (this.controlPanelOutmostCheckBox.isSelected()) {
                 this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getOutmostedTypeOfConflict() + "\n");
             } else {
-                this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypeOfConflict() + "\n");
+                this.controlPanelTypeOfConflictTextArea.setText(file.getConflictRegion().get(0).getTypesOfConflict() + "\n");
             }
             this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + file.getConflictRegion().get(0).getDeveloperDecision());
 
@@ -665,12 +665,12 @@ public class MergePanel extends JPanel {
         this.controlPanelConflictIndexLabel.setText(this.currentConflictIndex + "/" + this.currentMaxConflictIndex);
         this.conflictTextArea.setText(region.getConflictForm());
         this.solutionTextArea.setText(region.getSolutionForm());
-        this.controlPanelV1LinesLabel.setText("V1: " + region.getV1().size() + " lines");
-        this.controlPanelV2LinesLabel.setText("V2: " + region.getV2().size() + " lines");
+        this.controlPanelV1LinesLabel.setText("V1: " + region.getV1Size() + " lines");
+        this.controlPanelV2LinesLabel.setText("V2: " + region.getV2Size() + " lines");
         if (this.controlPanelOutmostCheckBox.isSelected()) {
             this.controlPanelTypeOfConflictTextArea.setText(region.getOutmostedTypeOfConflict() + "\n");
         } else {
-            this.controlPanelTypeOfConflictTextArea.setText(region.getTypeOfConflict() + "\n");
+            this.controlPanelTypeOfConflictTextArea.setText(region.getTypesOfConflict() + "\n");
         }
         this.controlPanelDeveloperDecisionTextArea.setText("DEVELOPER DECISION: " + region.getDeveloperDecision());
 

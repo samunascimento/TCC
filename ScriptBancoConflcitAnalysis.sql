@@ -18,6 +18,8 @@ create table ConflictRegion(
   beforeContext text,
   v1 text,
   v2 text,
+  v1Size int,
+  v2Size int, 	
   solution text,
   beginLine int,
   separatorLine int,
@@ -116,20 +118,20 @@ create table CommitData(
 create table CommitData_MergeEvent_Hash(
 	idCommitData int,
 	idMergeEvent int,
-	FOREIGN KEY	(idCommitData) REFERENCES ConflictFile(id),
+	FOREIGN KEY	(idCommitData) REFERENCES CommitData(id),
 	FOREIGN KEY	(idMergeEvent) REFERENCES MergeEvent(id)
 );
 
 create table CommitData_MergeEvent_parents(
 	idCommitData int,
 	idMergeEvent int,
-	FOREIGN KEY	(idCommitData) REFERENCES ConflictFile(id),
+	FOREIGN KEY	(idCommitData) REFERENCES CommitData(id),
 	FOREIGN KEY	(idMergeEvent) REFERENCES MergeEvent(id)
 );
 
 create table CommitData_MergeEvent_commonAncestorOfParents(
 	idCommitData int,
 	idMergeEvent int,
-	FOREIGN KEY	(idCommitData) REFERENCES ConflictFile(id),
+	FOREIGN KEY	(idCommitData) REFERENCES CommitData(id),
 	FOREIGN KEY	(idMergeEvent) REFERENCES MergeEvent(id)
 );

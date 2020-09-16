@@ -10,6 +10,14 @@ import java.util.List;
  * @author joao
  */
 public class CommitData {
+    
+    private String commitHash;
+    private String author;
+    private Date authorDate;
+    private String committer;
+    private Date committerDate;
+    private String title;
+    private int id;
 
     public CommitData(String hash, String repositoryPath) throws IOException {
         List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
@@ -47,14 +55,6 @@ public class CommitData {
     public String getTitle() {
         return title;
     }
-
-    private String commitHash;
-    private String author;
-    private Date authorDate;
-    private String committer;
-    private Date committerDate;
-    private String title;
-    private int id;
 
     public void setCommitHash(String commitHash) {
         this.commitHash = commitHash;
