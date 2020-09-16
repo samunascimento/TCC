@@ -13,20 +13,20 @@ import java.util.List;
 
 public class ConflictRegion {
 
-    private final List<String> rawText;
-    private final List<String> beforeContext;
-    private final List<String> afterContext;
-    private final List<String> v1;
-    private final List<String> v2;
-    private final List<String> solution;
-    private final int beginLine;
-    private final int separatorLine;
-    private final int endLine;
+    private List<String> rawText;
+    private List<String> beforeContext;
+    private List<String> afterContext;
+    private List<String> v1;
+    private List<String> v2;
+    private List<String> solution;
+    private int beginLine;
+    private int separatorLine;
+    private int endLine;
 
-    private final int originalV1StartLine;
-    private final int originalV1StopLine;
-    private final int originalV2StartLine;
-    private final int originalV2StopLine;
+    private int originalV1StartLine;
+    private int originalV1StopLine;
+    private int originalV2StartLine;
+    private int originalV2StopLine;
 
     private List<SyntaxStructure> syntaxV1;
     private List<SyntaxStructure> syntaxV2;
@@ -153,7 +153,7 @@ public class ConflictRegion {
         }
         return result.replaceFirst("\n", "");
     }
-    
+
     public String getOutmostedTypeOfConflict() {
         String result = "";
         for (String str : this.outmostedTypesOfConflicts) {
@@ -161,7 +161,6 @@ public class ConflictRegion {
         }
         return result.replaceFirst("\n", "");
     }
-
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
         SSCShelf shelf;
@@ -419,4 +418,107 @@ public class ConflictRegion {
         }
         return false;
     }
+
+    //----------------------------------------------------------------------------
+    public List<String> getRawText() {
+        return rawText;
+    }
+
+    public List<String> getSolution() {
+        return solution;
+    }
+
+    public List<SyntaxStructure> getOutmostedSyntaxV1() {
+        return outmostedSyntaxV1;
+    }
+
+    public List<SyntaxStructure> getOutmostedSyntaxV2() {
+        return outmostedSyntaxV2;
+    }
+
+    public List<String> getOutmostedTypesOfConflicts() {
+        return outmostedTypesOfConflicts;
+    }
+    
+    public ConflictRegion(){}
+   
+
+    private int id;
+    
+    public void setRawText(List<String> rawText) {
+        this.rawText = rawText;
+    }
+
+    public void setBeforeContext(List<String> beforeContext) {
+        this.beforeContext = beforeContext;
+    }
+
+    public void setAfterContext(List<String> afterContext) {
+        this.afterContext = afterContext;
+    }
+
+    public void setV1(List<String> v1) {
+        this.v1 = v1;
+    }
+
+    public void setV2(List<String> v2) {
+        this.v2 = v2;
+    }
+
+    public void setSolution(List<String> solution) {
+        this.solution = solution;
+    }
+
+    public void setBeginLine(int beginLine) {
+        this.beginLine = beginLine;
+    }
+
+    public void setSeparatorLine(int separatorLine) {
+        this.separatorLine = separatorLine;
+    }
+
+    public void setEndLine(int endLine) {
+        this.endLine = endLine;
+    }
+
+    public void setOriginalV1StartLine(int originalV1StartLine) {
+        this.originalV1StartLine = originalV1StartLine;
+    }
+
+    public void setOriginalV1StopLine(int originalV1StopLine) {
+        this.originalV1StopLine = originalV1StopLine;
+    }
+
+    public void setOriginalV2StartLine(int originalV2StartLine) {
+        this.originalV2StartLine = originalV2StartLine;
+    }
+
+    public void setOriginalV2StopLine(int originalV2StopLine) {
+        this.originalV2StopLine = originalV2StopLine;
+    }
+
+    public void setSyntaxV1(List<SyntaxStructure> syntaxV1) {
+        this.syntaxV1 = syntaxV1;
+    }
+
+    public void setSyntaxV2(List<SyntaxStructure> syntaxV2) {
+        this.syntaxV2 = syntaxV2;
+    }
+
+    public void setTypesOfConflicts(List<String> typesOfConflicts) {
+        this.typesOfConflicts = typesOfConflicts;
+    }
+
+    public void setOutmostedTypesOfConflicts(List<String> outmostedTypesOfConflicts) {
+        this.outmostedTypesOfConflicts = outmostedTypesOfConflicts;
+    }
+    
+     public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+     //----------------------------------------------------------------------------
 }

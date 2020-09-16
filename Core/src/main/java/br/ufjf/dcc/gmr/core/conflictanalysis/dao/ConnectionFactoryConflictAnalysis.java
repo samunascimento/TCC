@@ -16,7 +16,8 @@ import java.sql.SQLException;
 public class ConnectionFactoryConflictAnalysis {
     
     private static final String DRIVER = "org.postgresql.Driver";
-    private static final String URL = "jdbc:postgresql://localhost:5432/merge";
+    //private static final String URL = "jdbc:postgresql://localhost:5432/merge";
+    private static final String URL = "jdbc:postgresql://localhost:54321/merge";
     private static final String USER = "postgres";
     private static final String PASS = "kraken";
     

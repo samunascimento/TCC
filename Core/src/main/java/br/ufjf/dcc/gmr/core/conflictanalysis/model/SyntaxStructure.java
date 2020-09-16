@@ -8,15 +8,16 @@ import org.antlr.v4.runtime.Token;
  */
 public class SyntaxStructure {
 
-    private final int startLine;
-    private final int stopLine;
-    private final int startCharIndex;
-    private final int stopCharIndex;
-    private final String structureType;
-    private final boolean warning;
-    private final String text;
+    private int startLine;
+    private int stopLine;
+    private int startCharIndex;
+    private int stopCharIndex;
+    private String structureType;
+    private boolean warning;
+    private String text;
+    private int id;
 
-    public SyntaxStructure(Token start, Token stop, String structureType,String text, boolean warning) {
+    public SyntaxStructure(Token start, Token stop, String structureType, String text, boolean warning) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startCharIndex = start.getStartIndex();
@@ -81,8 +82,57 @@ public class SyntaxStructure {
                 + "\nSTOP LINE: " + this.stopLine
                 + "\nSTART CHAR INDEX: " + this.startCharIndex
                 + "\nSTOP CHAR INDEX: " + this.stopCharIndex
-                + "\nTEXT:\n" + this.text;  
+                + "\nTEXT:\n" + this.text;
         return result;
     }
 
+    //---------------------------------------------------------------------------
+    public boolean isWarning() {
+        return warning;
+    }
+    
+
+    
+
+    public void setStartLine(int startLine) {
+        this.startLine = startLine;
+    }
+
+    public void setStopLine(int stopLine) {
+        this.stopLine = stopLine;
+    }
+
+    public void setStartCharIndex(int startCharIndex) {
+        this.startCharIndex = startCharIndex;
+    }
+
+    public void setStopCharIndex(int stopCharIndex) {
+        this.stopCharIndex = stopCharIndex;
+    }
+
+    public void setStructureType(String structureType) {
+        this.structureType = structureType;
+    }
+
+    public void setWarning(boolean warning) {
+        this.warning = warning;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public SyntaxStructure(){}
+    
+    //---------------------------------------------------------------------------
+    
+    
 }
