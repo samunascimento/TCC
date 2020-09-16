@@ -40,6 +40,31 @@ public class ConflictRegion {
 
     private DeveloperDecision developerDecision;
 
+    public ConflictRegion(String rawText, String beforeContext, String afterContext, String v1, int v1Size, String v2, int v2Size, String solution, int beginLine, int separatorLine, int endLine, int originalV1StartLine, int originalV1StopLine, int originalV2StartLine, int originalV2StopLine, List<SyntaxStructure> syntaxV1, List<SyntaxStructure> syntaxV2, List<SyntaxStructure> outmostedSyntaxV1, List<SyntaxStructure> outmostedSyntaxV2, String typesOfConflicts, String outmostedTypesOfConflicts, DeveloperDecision developerDecision) {
+        this.rawText = rawText;
+        this.beforeContext = beforeContext;
+        this.afterContext = afterContext;
+        this.v1 = v1;
+        this.v1Size = v1Size;
+        this.v2 = v2;
+        this.v2Size = v2Size;
+        this.solution = solution;
+        this.beginLine = beginLine;
+        this.separatorLine = separatorLine;
+        this.endLine = endLine;
+        this.originalV1StartLine = originalV1StartLine;
+        this.originalV1StopLine = originalV1StopLine;
+        this.originalV2StartLine = originalV2StartLine;
+        this.originalV2StopLine = originalV2StopLine;
+        this.syntaxV1 = syntaxV1;
+        this.syntaxV2 = syntaxV2;
+        this.outmostedSyntaxV1 = outmostedSyntaxV1;
+        this.outmostedSyntaxV2 = outmostedSyntaxV2;
+        this.typesOfConflicts = typesOfConflicts;
+        this.outmostedTypesOfConflicts = outmostedTypesOfConflicts;
+        this.developerDecision = developerDecision;
+    }
+    
     public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
 
@@ -411,4 +436,5 @@ public class ConflictRegion {
         }
         return false;
     }
+
 }

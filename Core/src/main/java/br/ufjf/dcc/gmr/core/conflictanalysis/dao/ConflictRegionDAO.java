@@ -5,10 +5,246 @@
  */
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author luan
  */
 public class ConflictRegionDAO {
-    
+/*
+    private final Connection connection;
+
+    public static final String ID = "id";
+    public static final String RAWTEXT = "rawText";
+    public static final String BEFORECONTEXT = "beforeContext";
+    public static final String AFTERCONTEXT = "afterContext";
+    public static final String V1 = "v1";
+    public static final String V2 = "v2";
+    public static final String SOLUTION = "solution";
+    public static final String TYPESOFCONFLICTS = "typesOfConflicts";
+    public static final String OUTMOSTEDTYPESOFCONFLICTS = "outmostedTypesOfConflicts";
+    public static final String BEGINLINE = "beginLine";
+    public static final String SEPARATORLINE = "separatorLine";
+    public static final String ENDLINE = "endLine";
+    public static final String ORIGINALV1STARTLINE = "originalV1StartLine";
+    public static final String ORIGINALV1STOPLINE = "originalV1StopLine";
+    public static final String ORIGINALV2STARTLINE = "originalV2StartLine";
+    public static final String ORIGINALV2STOPLINE = "originalV2StopLine";
+
+    public ConflictRegionDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public int insert(ConflictRegion conflictRegion) throws SQLException {
+
+        String sql = "INSERT INTO conflctiFile "
+                + "(" + RAWTEXT + ", " + BEFORECONTEXT + ", " + AFTERCONTEXT + ", "
+                + V1 + ", " + V2 + ", " + SOLUTION + ", " + TYPESOFCONFLICTS + ", " + OUTMOSTEDTYPESOFCONFLICTS + ", "
+                + BEGINLINE + ", " + SEPARATORLINE + ", " + ENDLINE + ", " + ORIGINALV1STARTLINE + ", "
+                + ORIGINALV1STOPLINE + ", " + ORIGINALV2STARTLINE + ", " + ORIGINALV2STOPLINE + ") "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                + "RETURNING id;";
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setString(1, conflictRegion.getRawText());
+            stmt.setString(2, conflictRegion.getBeforeContext());
+            stmt.setString(3, conflictRegion.getAfterContext());
+            stmt.setString(4, conflictRegion.getV1());
+            stmt.setString(5, conflictRegion.getV2());
+            stmt.setString(6, conflictRegion.getSolution());
+            stmt.setString(7, conflictRegion.getTypeOfConflict());
+            stmt.setString(8, conflictRegion.getOutmostedTypeOfConflict());
+            stmt.setInt(9, conflictRegion.getBeginLine());
+            stmt.setInt(10, conflictRegion.getSeparatorLine());
+            stmt.setInt(11, conflictRegion.getEndLine());
+            stmt.setInt(12, conflictRegion.getOriginalV1StartLine());
+            stmt.setInt(13, conflictRegion.getOriginalV1StopLine());
+            stmt.setInt(14, conflictRegion.getOriginalV2StartLine());
+            stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
+
+            ResultSet result = stmt.executeQuery();
+
+            result.next();
+
+            return result.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+    public List<ConflictRegion> select() throws SQLException {
+        ConflictRegion commit;
+
+        List<ConflictRegion> commitsList = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+
+        String sql = "SELECT * FROM ConflictRegion";
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                commit = new ConflictRegion();
+                commit.setRawText(resultSet.getString(RAWTEXT));
+                commit.setBeforeContext(resultSet.getString(BEFORECONTEXT));
+                commit.setAfterContext(resultSet.getString(AFTERCONTEXT));
+                commit.setV1(resultSet.getString(V1));
+                commit.setV2(resultSet.getString(V2));
+                commit.setSolution(resultSet.getString(SOLUTION));
+                commit.setTypeOfConflict(resultSet.getString(TYPESOFCONFLICTS));
+                commit.setOutmostedTypeOfConflict(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
+                commit.setBeginLine(resultSet.getInt(BEGINLINE));
+                commit.setSeparatorLine(resultSet.getInt(SEPARATORLINE));
+                commit.setEndLine(resultSet.getInt(ENDLINE));
+                commit.setOriginalV1StartLine(resultSet.getInt(ORIGINALV1STARTLINE));
+                commit.setOriginalV1StopLine(resultSet.getInt(ORIGINALV1STOPLINE));
+                commit.setOriginalV2StartLine(resultSet.getInt(ORIGINALV2STARTLINE));
+                commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
+                commit.setId(resultSet.getInt(ID));
+
+                commitsList.add(commit);
+
+            }
+            return commitsList;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+    public ConflictRegion select(int id) throws SQLException {
+        ConflictRegion commit = null;
+
+        PreparedStatement stmt = null;
+
+        String sql = "SELECT * FROM ConflictRegion cd where cd.id = " + id;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                commit = new ConflictRegion();
+                commit.setRawText(resultSet.getString(RAWTEXT));
+                commit.setBeforeContext(resultSet.getString(BEFORECONTEXT));
+                commit.setAfterContext(resultSet.getString(AFTERCONTEXT));
+                commit.setV1(resultSet.getString(V1));
+                commit.setV2(resultSet.getString(V2));
+                commit.setSolution(resultSet.getString(SOLUTION));
+                commit.setTypeOfConflict(resultSet.getString(TYPESOFCONFLICTS));
+                commit.setOutmostedTypeOfConflict(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
+                commit.setBeginLine(resultSet.getInt(BEGINLINE));
+                commit.setSeparatorLine(resultSet.getInt(SEPARATORLINE));
+                commit.setEndLine(resultSet.getInt(ENDLINE));
+                commit.setOriginalV1StartLine(resultSet.getInt(ORIGINALV1STARTLINE));
+                commit.setOriginalV1StopLine(resultSet.getInt(ORIGINALV1STOPLINE));
+                commit.setOriginalV2StartLine(resultSet.getInt(ORIGINALV2STARTLINE));
+                commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
+                commit.setId(resultSet.getInt(ID));
+
+            }
+
+            return commit;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM ConflictRegion WHERE ID = ?";
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+    public void update(ConflictRegion conflictRegion, int id) throws SQLException {
+        String sql = "UPDATE ConflictRegion SET "
+                + RAWTEXT + " = ?, "
+                + BEFORECONTEXT + " = ?, "
+                + AFTERCONTEXT + " = ?, "
+                + V1 + " = ?, "
+                + V2 + " = ?, "
+                + SOLUTION + " = ? "
+                + TYPESOFCONFLICTS + " = ? "
+                + OUTMOSTEDTYPESOFCONFLICTS + " = ? "
+                + BEGINLINE + " = ? "
+                + SEPARATORLINE + " = ? "
+                + ENDLINE + " = ? "
+                + ORIGINALV1STARTLINE + " = ? "
+                + ORIGINALV1STOPLINE + " = ? "
+                + ORIGINALV2STARTLINE + " = ? "
+                + ORIGINALV2STOPLINE + " = ? "
+                + "WHERE ID = ?";
+
+        System.out.println(sql);
+
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, conflictRegion.getRawText());
+            stmt.setString(2, conflictRegion.getBeforeContext());
+            stmt.setString(3, conflictRegion.getAfterContext());
+            stmt.setString(4, conflictRegion.getV1());
+            stmt.setString(5, conflictRegion.getV2());
+            stmt.setString(6, conflictRegion.getSolution());
+            stmt.setString(7, conflictRegion.getTypeOfConflict());
+            stmt.setString(8, conflictRegion.getOutmostedTypeOfConflict());
+            stmt.setInt(9, conflictRegion.getBeginLine());
+            stmt.setInt(10, conflictRegion.getSeparatorLine());
+            stmt.setInt(11, conflictRegion.getEndLine());
+            stmt.setInt(12, conflictRegion.getOriginalV1StartLine());
+            stmt.setInt(13, conflictRegion.getOriginalV1StopLine());
+            stmt.setInt(14, conflictRegion.getOriginalV2StartLine());
+            stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
+            stmt.setInt(16, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+*/
 }

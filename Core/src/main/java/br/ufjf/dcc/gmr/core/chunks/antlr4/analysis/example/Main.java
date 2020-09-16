@@ -9,20 +9,20 @@ public class Main {
     private String name;
     private int age;
     private String office;
-    
+
     public Main(String name, String office, int age) {
         this.age = age;
         this.office = office;
         this.name = name;
     }
-    public Main(){
-        
+
+    public Main() {
+
     }
 
     public static void main(String[] args) {
         Main main = new Main("Office", "Felippe", 23);
         Adress adress = new Adress();
-        adress.setCity("cidade");
         Person person = new Person();
         String batata = "name of a person";
         System.out.println(person);
@@ -33,13 +33,13 @@ public class Main {
         System.out.println(main.name + " " + main.office + " " + main.age);
         List<String> aux = new ArrayList<>();
         aux.add("0");
-
+        adress.setCity("cidade");
         for (int i = 0; i < 10; i++) {
             float j = 3;
             j += i;
             System.out.println("");
         }
-        
+
         if (employee != null) {
             if (employee.getName().equals("name of a employee")) {
                 Person person1 = person;

@@ -503,14 +503,14 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
 
-        VariableBinding variable = new VariableBinding();
+        AttributeDeclaratinBinding variable = new AttributeDeclaratinBinding();
         TypeBinding type = new TypeBinding();
 
         if (ctx.typeType() != null) {
 
             type.setName(ctx.typeType().getText());
             type.setPackageBinding(packageBinding);
-            variable.setType(type);
+            variable.setTypeBinding(type);
         }
 
         ParserRuleContext memberDeclaration = ctx.getParent();
@@ -567,6 +567,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     public Object visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
         BaseVisitor baseVisitor = new BaseVisitor();
         MethodDeclarationBinding mdbGeneral = new MethodDeclarationBinding();
+        mdbGeneral.setType(globalEnviroment.getEnviroment().get(className));
         baseVisitor.visitMethodDeclaration(ctx, this.globalEnviroment, mdbGeneral, this.packageBinding.getName(), className);
         this.methodDeclarationBinding = mdbGeneral;
         globalEnviroment.getEnviroment().get(className).getMethodsBinding().add(this.methodDeclarationBinding);
