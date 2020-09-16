@@ -13,12 +13,12 @@ public class EnviromentBinding {
     }
     
     
-    public VariableBinding findVariable(VariableBinding variable){
+    public AttributeDeclaratinBinding findVariable(AttributeDeclaratinBinding variable){
         
         for (int i = this.enviroment.size() - 1; i >= 0 ; i--) {
             for (BaseBinding baseBinding : enviroment.get(i)) {
-                if (baseBinding instanceof VariableBinding) {
-                    VariableBinding variableBinding = (VariableBinding) baseBinding;
+                if (baseBinding instanceof AttributeDeclaratinBinding) {
+                    AttributeDeclaratinBinding variableBinding = (AttributeDeclaratinBinding) baseBinding;
                     if (variableBinding.getName().equals(variable.getName())) {
                         return variableBinding;
                     }

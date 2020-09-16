@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -29,7 +28,7 @@ public class ParserJava {
 
     private static boolean reachedEnd = false;
     private GlobalEnviroment globalEnviroment;
-    
+
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
     }
@@ -69,7 +68,7 @@ public class ParserJava {
 
                 if (j != i) {
                     System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
-                    compare(ast1, ast2);
+                    compare(ast1, ast2, parserJava.getGlobalEnviroment());
                 }
                 i++;
             }
@@ -81,14 +80,14 @@ public class ParserJava {
         System.out.println("***************GlobalEnviromentTypes***************");
         for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
             System.out.println(value);
-            
+
         }
-        
-       parserJava.getGlobalEnviroment().findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 32, 44);
-       
+
+        //parserJava.getGlobalEnviroment().findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 32, 44);
+
     }
 
-    private static void compare(TypeBinding AST1, TypeBinding AST2) {
+    private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
         System.out.println("***************MethodDeclarationAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
@@ -96,7 +95,7 @@ public class ParserJava {
         }
 
         System.out.println("***************MethodCallAST1***************");
-        
+
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
             for (MethodCallBinding methodCall : methodDeclarationBinding.getMethodCallBindings()) {
                 System.out.println(methodCall);
@@ -114,15 +113,20 @@ public class ParserJava {
                 System.out.println(methodCall);
             }
         }
-        
+
         System.out.println("***************Dependencies***************");
         System.out.println("--------------AST1 --> AST2--------------");
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
         System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
-        
+        System.out.println("***************Chunks***************");
+        List<BaseBinding> sourceBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 35, 37);
+        List<BaseBinding> targetBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 24, 26);
+        Dependencies.atributeDependsOn(sourceBinding, targetBinding);
+        Dependencies.methodDependsOn(sourceBinding, targetBinding);
+        Dependencies.variableDependsOn(sourceBinding, targetBinding);
     }
-    
+
     private static List<String> javaFiles(String dir) {
         List<String> javaFiles = new ArrayList<>();
         File file = new File(dir);
@@ -192,10 +196,10 @@ public class ParserJava {
                 ANTLRFileStream fileStream = new ANTLRFileStream(copyPathList.get(i));
                 JavaLexer lexer = new JavaLexer(fileStream);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
-                
+
                 JavaParser parser = new JavaParser(tokens);
                 ParseTree tree = parser.compilationUnit();
-                
+
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.setSize(new Dimension(500, 600));
 
@@ -204,7 +208,7 @@ public class ParserJava {
                 }
 
                 Visitor1 visitor = new Visitor1(globalEnviroment);
-                
+
                 visitor.visit(tree);
                 if (visitor.isError()) {
                     unprocessed.add(copyPathList.get(i));

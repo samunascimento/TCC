@@ -33,7 +33,7 @@ public class GlobalEnviroment {
             }
         }
 
-        for (VariableBinding variableBinding : typeBinding.getAttributes()) {
+        for (AttributeDeclaratinBinding variableBinding : typeBinding.getAttributes()) {
             if (variableBinding.getCtx().getStart().getLine() >= begin
                     && variableBinding.getCtx().getStop().getLine() <= end) {
                 {
@@ -116,7 +116,7 @@ public class GlobalEnviroment {
                 if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
                     if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
                         for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
-                            if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
+                            if (!methodDeclarationBinding.getParameters().get(i).getTypeBinding().getName().equals(methodDeclaration.getParameters().get(i).getTypeBinding().getName())) {
                                 verify = false;
                             }
                         }
@@ -142,11 +142,11 @@ public class GlobalEnviroment {
         return null;
     }
 
-    public VariableBinding findAttribute(VariableBinding attribute, String key) {
+    public AttributeDeclaratinBinding findAttribute(AttributeDeclaratinBinding attribute, String key) {
 
         TypeBinding typeBinding = enviroment.get(key);
 
-        for (VariableBinding attribute1 : typeBinding.getAttributes()) {
+        for (AttributeDeclaratinBinding attribute1 : typeBinding.getAttributes()) {
             if (attribute.equals(attribute1)) {
                 return attribute;
             }
@@ -165,7 +165,7 @@ public class GlobalEnviroment {
                 if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
                     if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
                         for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
-                            if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
+                            if (!methodDeclarationBinding.getParameters().get(i).getTypeBinding().getName().equals(methodDeclaration.getParameters().get(i).getTypeBinding().getName())) {
                                 verify = false;
                             }
                         }
@@ -203,7 +203,7 @@ public class GlobalEnviroment {
                 if (methodDeclarationBinding.getReturnBinding().getName().equals(methodDeclaration.getReturnBinding().getName())) {
                     if (methodDeclarationBinding.getParameters().size() == methodDeclaration.getParameters().size()) {
                         for (int i = 0; i < methodDeclarationBinding.getParameters().size(); i++) {
-                            if (!methodDeclarationBinding.getParameters().get(i).getType().getName().equals(methodDeclaration.getParameters().get(i).getType().getName())) {
+                            if (!methodDeclarationBinding.getParameters().get(i).getTypeBinding().getName().equals(methodDeclaration.getParameters().get(i).getTypeBinding().getName())) {
                                 verify = false;
                             }
                         }

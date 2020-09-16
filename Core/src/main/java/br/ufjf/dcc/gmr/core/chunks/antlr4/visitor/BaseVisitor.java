@@ -8,7 +8,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.Modifier;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PackageBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PrimitiveTypes;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.VariableBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.AttributeDeclaratinBinding;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,12 +66,12 @@ public class BaseVisitor {
 
     public void visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx, GlobalEnviroment globalEnviroment, MethodDeclarationBinding mdbGeneral, String packageName, String className) {
 
-        List<VariableBinding> parameters = new ArrayList<>();
+        List<AttributeDeclaratinBinding> parameters = new ArrayList<>();
         TypeBinding methodType = new TypeBinding();
 
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
         mdbGeneral.setCtx(ctx);
-
+        
         List<Modifier> modifiers = extractModifier(ctx);
         mdbGeneral.setModifier(modifiers);
 
@@ -109,7 +109,7 @@ public class BaseVisitor {
 
                     JavaParser.FormalParameterContext aux = (JavaParser.FormalParameterContext) parseTree;
                     TypeBinding parameterType = new TypeBinding();
-                    VariableBinding parameter = new VariableBinding();
+                    AttributeDeclaratinBinding parameter = new AttributeDeclaratinBinding();
 
                     parameter.setName(aux.variableDeclaratorId().getText());
 
@@ -136,7 +136,7 @@ public class BaseVisitor {
 
                     }
 
-                    parameter.setType(parameterType);
+                    parameter.setTypeBinding(parameterType);
 
                     parameters.add(parameter);
                 }

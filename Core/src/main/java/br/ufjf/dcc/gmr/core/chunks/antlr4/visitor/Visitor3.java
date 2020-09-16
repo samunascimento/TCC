@@ -230,7 +230,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                                 LocalVariableDeclarationBinding variable = globalEnviroment.findVariableDeclaration(this.methodDeclarationBinding, className, name);
 
                                 if (variable != null) {
-                                    parameterTypeBinding = variable.getType();
+                                    parameterTypeBinding = variable.getTypeBinding();
 
                                 }
 
@@ -274,7 +274,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 localVariableUsageBinding.setUsageString(parent.getText());
                 localVariableUsageBinding.setName(variableName);
 
-                typeBinding = variable.getType();
+                typeBinding = variable.getTypeBinding();
                 methodCallBinding.setTypeBinding(typeBinding);
             }
 
@@ -442,7 +442,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 LocalVariableDeclarationBinding variableDeclarationBinding = new LocalVariableDeclarationBinding();
                 variableDeclarationBinding.setName(name);
                 variableDeclarationBinding.setCtx(ctx);
-                variableDeclarationBinding.setType(typeBinding);
+                variableDeclarationBinding.setTypeBinding(typeBinding);
 
                 if (this.methodDeclaration) {
                     if (ctx.parent instanceof JavaParser.ForInitContext) {
@@ -484,7 +484,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
                 findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().add(bindings);
                 //Add Method's parameters variables to enviromentBinding before start read Method's block code
                 if (findMethodDeclaration.getMethodEnviromentBinding().getEnviroment().size() == 1) {
-                    for (VariableBinding parameter : findMethodDeclaration.getParameters()) {
+                    for (AttributeDeclaratinBinding parameter : findMethodDeclaration.getParameters()) {
                         EnviromentBinding bindingScope = findMethodDeclaration.getMethodEnviromentBinding();
                         List<BaseBinding> currentScope = bindingScope.getEnviroment().get(bindingScope.getEnviroment().size() - 1);
                         currentScope.add(parameter);

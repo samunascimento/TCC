@@ -8,7 +8,7 @@ public class TypeBinding extends BaseBinding {
     private TypeBinding extendClassBinding;
     private List<ImportBinding> imports;
     private List<MethodDeclarationBinding> MethodsBinding;
-    private List<VariableBinding> attributesBinding;
+    private List<AttributeDeclaratinBinding> attributesBinding;
     private List<Modifier> modifiers;
     private PackageBinding packageBinding;
 
@@ -93,18 +93,18 @@ public class TypeBinding extends BaseBinding {
     /**
      * @return the attributesBinding
      */
-    public List<VariableBinding> getAttributes() {
+    public List<AttributeDeclaratinBinding> getAttributes() {
         return attributesBinding;
     }
 
     /**
      * @param attributes the attributesBinding to set
      */
-    public void setAttributes(List<VariableBinding> attributes) {
+    public void setAttributes(List<AttributeDeclaratinBinding> attributes) {
         this.attributesBinding = attributes;
     }
 
-    public void addAttributes(VariableBinding attribute) {
+    public void addAttributes(AttributeDeclaratinBinding attribute) {
         this.attributesBinding.add(attribute);
     }
 

@@ -1,11 +1,8 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class LocalVariableUsageBinding extends BaseBinding{
+public class LocalVariableUsageBinding extends VariableDeclarationBinding{
 
     private LocalVariableDeclarationBinding localVariableDeclarationBinding;
     private JavaParser.MethodCallContext ctx;
@@ -15,8 +12,8 @@ public class LocalVariableUsageBinding extends BaseBinding{
 
     }
 
-    public LocalVariableUsageBinding(LocalVariableDeclarationBinding localVariableDeclarationBinding, JavaParser.MethodCallContext ctx) {
-        super(localVariableDeclarationBinding.getName());
+    public LocalVariableUsageBinding(LocalVariableDeclarationBinding localVariableDeclarationBinding, JavaParser.MethodCallContext ctx, TypeBinding typeBinding) {
+        super(localVariableDeclarationBinding.getName(), typeBinding);
         this.usageString = "";
         this.localVariableDeclarationBinding = localVariableDeclarationBinding;
         this.ctx = ctx;
