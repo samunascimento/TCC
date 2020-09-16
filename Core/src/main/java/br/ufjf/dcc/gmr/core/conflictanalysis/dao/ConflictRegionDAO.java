@@ -18,7 +18,7 @@ import java.util.List;
  * @author luan
  */
 public class ConflictRegionDAO {
-/*
+
     private final Connection connection;
 
     public static final String ID = "id";
@@ -37,6 +37,8 @@ public class ConflictRegionDAO {
     public static final String ORIGINALV1STOPLINE = "originalV1StopLine";
     public static final String ORIGINALV2STARTLINE = "originalV2StartLine";
     public static final String ORIGINALV2STOPLINE = "originalV2StopLine";
+    public static final String V1SIZE = "v1Size";
+    public static final String V2SIZE = "v2Size";
 
     public ConflictRegionDAO(Connection connection) {
         this.connection = connection;
@@ -48,8 +50,9 @@ public class ConflictRegionDAO {
                 + "(" + RAWTEXT + ", " + BEFORECONTEXT + ", " + AFTERCONTEXT + ", "
                 + V1 + ", " + V2 + ", " + SOLUTION + ", " + TYPESOFCONFLICTS + ", " + OUTMOSTEDTYPESOFCONFLICTS + ", "
                 + BEGINLINE + ", " + SEPARATORLINE + ", " + ENDLINE + ", " + ORIGINALV1STARTLINE + ", "
-                + ORIGINALV1STOPLINE + ", " + ORIGINALV2STARTLINE + ", " + ORIGINALV2STOPLINE + ") "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                + ORIGINALV1STOPLINE + ", " + ORIGINALV2STARTLINE + ", " + ORIGINALV2STOPLINE
+                + V1SIZE + ", " + V2SIZE + ") "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -63,7 +66,7 @@ public class ConflictRegionDAO {
             stmt.setString(4, conflictRegion.getV1());
             stmt.setString(5, conflictRegion.getV2());
             stmt.setString(6, conflictRegion.getSolution());
-            stmt.setString(7, conflictRegion.getTypeOfConflict());
+            stmt.setString(7, conflictRegion.getTypesOfConflict());
             stmt.setString(8, conflictRegion.getOutmostedTypeOfConflict());
             stmt.setInt(9, conflictRegion.getBeginLine());
             stmt.setInt(10, conflictRegion.getSeparatorLine());
@@ -72,6 +75,8 @@ public class ConflictRegionDAO {
             stmt.setInt(13, conflictRegion.getOriginalV1StopLine());
             stmt.setInt(14, conflictRegion.getOriginalV2StartLine());
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
+            stmt.setInt(16, conflictRegion.getV1Size());
+            stmt.setInt(17, conflictRegion.getV2Size());
 
             ResultSet result = stmt.executeQuery();
 
@@ -108,8 +113,8 @@ public class ConflictRegionDAO {
                 commit.setV1(resultSet.getString(V1));
                 commit.setV2(resultSet.getString(V2));
                 commit.setSolution(resultSet.getString(SOLUTION));
-                commit.setTypeOfConflict(resultSet.getString(TYPESOFCONFLICTS));
-                commit.setOutmostedTypeOfConflict(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
+                commit.setTypesOfConflicts(resultSet.getString(TYPESOFCONFLICTS));
+                commit.setOutmostedTypesOfConflicts(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
                 commit.setBeginLine(resultSet.getInt(BEGINLINE));
                 commit.setSeparatorLine(resultSet.getInt(SEPARATORLINE));
                 commit.setEndLine(resultSet.getInt(ENDLINE));
@@ -117,6 +122,8 @@ public class ConflictRegionDAO {
                 commit.setOriginalV1StopLine(resultSet.getInt(ORIGINALV1STOPLINE));
                 commit.setOriginalV2StartLine(resultSet.getInt(ORIGINALV2STARTLINE));
                 commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
+                commit.setV1Size(resultSet.getInt(V1SIZE));
+                commit.setV2Size(resultSet.getInt(V2SIZE));
                 commit.setId(resultSet.getInt(ID));
 
                 commitsList.add(commit);
@@ -151,8 +158,8 @@ public class ConflictRegionDAO {
                 commit.setV1(resultSet.getString(V1));
                 commit.setV2(resultSet.getString(V2));
                 commit.setSolution(resultSet.getString(SOLUTION));
-                commit.setTypeOfConflict(resultSet.getString(TYPESOFCONFLICTS));
-                commit.setOutmostedTypeOfConflict(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
+                commit.setTypesOfConflicts(resultSet.getString(TYPESOFCONFLICTS));
+                commit.setOutmostedTypesOfConflicts(resultSet.getString(OUTMOSTEDTYPESOFCONFLICTS));
                 commit.setBeginLine(resultSet.getInt(BEGINLINE));
                 commit.setSeparatorLine(resultSet.getInt(SEPARATORLINE));
                 commit.setEndLine(resultSet.getInt(ENDLINE));
@@ -160,6 +167,8 @@ public class ConflictRegionDAO {
                 commit.setOriginalV1StopLine(resultSet.getInt(ORIGINALV1STOPLINE));
                 commit.setOriginalV2StartLine(resultSet.getInt(ORIGINALV2STARTLINE));
                 commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
+                commit.setV1Size(resultSet.getInt(V1SIZE));
+                commit.setV2Size(resultSet.getInt(V2SIZE));
                 commit.setId(resultSet.getInt(ID));
 
             }
@@ -211,6 +220,8 @@ public class ConflictRegionDAO {
                 + ORIGINALV1STOPLINE + " = ? "
                 + ORIGINALV2STARTLINE + " = ? "
                 + ORIGINALV2STOPLINE + " = ? "
+                + V1SIZE + " = ? "
+                + V2SIZE + " = ? "
                 + "WHERE ID = ?";
 
         System.out.println(sql);
@@ -225,7 +236,7 @@ public class ConflictRegionDAO {
             stmt.setString(4, conflictRegion.getV1());
             stmt.setString(5, conflictRegion.getV2());
             stmt.setString(6, conflictRegion.getSolution());
-            stmt.setString(7, conflictRegion.getTypeOfConflict());
+            stmt.setString(7, conflictRegion.getTypesOfConflicts());
             stmt.setString(8, conflictRegion.getOutmostedTypeOfConflict());
             stmt.setInt(9, conflictRegion.getBeginLine());
             stmt.setInt(10, conflictRegion.getSeparatorLine());
@@ -234,7 +245,9 @@ public class ConflictRegionDAO {
             stmt.setInt(13, conflictRegion.getOriginalV1StopLine());
             stmt.setInt(14, conflictRegion.getOriginalV2StartLine());
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
-            stmt.setInt(16, id);
+            stmt.setInt(16, conflictRegion.getV1Size());
+            stmt.setInt(17, conflictRegion.getV2Size());
+            stmt.setInt(18, id);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -246,5 +259,5 @@ public class ConflictRegionDAO {
             }
         }
     }
-*/
+
 }

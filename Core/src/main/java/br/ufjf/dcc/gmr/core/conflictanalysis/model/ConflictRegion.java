@@ -13,22 +13,22 @@ import java.util.List;
 
 public class ConflictRegion {
 
-    private final String rawText;
-    private final String beforeContext;
-    private final String afterContext;
-    private final String v1;
-    private final int v1Size;
-    private final String v2;
-    private final int v2Size;
-    private final String solution;
-    private final int beginLine;
-    private final int separatorLine;
-    private final int endLine;
+    private  String rawText;
+    private  String beforeContext;
+    private  String afterContext;
+    private  String v1;
+    private  int v1Size;
+    private  String v2;
+    private  int v2Size;
+    private  String solution;
+    private  int beginLine;
+    private  int separatorLine;
+    private  int endLine;
 
-    private final int originalV1StartLine;
-    private final int originalV1StopLine;
-    private final int originalV2StartLine;
-    private final int originalV2StopLine;
+    private  int originalV1StartLine;
+    private  int originalV1StopLine;
+    private  int originalV2StartLine;
+    private  int originalV2StopLine;
 
     private List<SyntaxStructure> syntaxV1;
     private List<SyntaxStructure> syntaxV2;
@@ -106,7 +106,126 @@ public class ConflictRegion {
         this.developerDecision = generateDeveloperDecision(solution, v1, v2);
 
     }
+    //------------------------------------------------------------------------------
+    public ConflictRegion(){}
 
+    private int id;
+    
+       public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public void setRawText(String rawText) {
+        this.rawText = rawText;
+    }
+
+    public void setBeforeContext(String beforeContext) {
+        this.beforeContext = beforeContext;
+    }
+
+    public void setAfterContext(String afterContext) {
+        this.afterContext = afterContext;
+    }
+
+    public void setV1(String v1) {
+        this.v1 = v1;
+    }
+
+    public void setV1Size(int v1Size) {
+        this.v1Size = v1Size;
+    }
+
+    public void setV2(String v2) {
+        this.v2 = v2;
+    }
+
+    public void setV2Size(int v2Size) {
+        this.v2Size = v2Size;
+    }
+
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
+
+    public void setBeginLine(int beginLine) {
+        this.beginLine = beginLine;
+    }
+
+    public void setSeparatorLine(int separatorLine) {
+        this.separatorLine = separatorLine;
+    }
+
+    public void setEndLine(int endLine) {
+        this.endLine = endLine;
+    }
+
+    public void setOriginalV1StartLine(int originalV1StartLine) {
+        this.originalV1StartLine = originalV1StartLine;
+    }
+
+    public void setOriginalV1StopLine(int originalV1StopLine) {
+        this.originalV1StopLine = originalV1StopLine;
+    }
+
+    public void setOriginalV2StartLine(int originalV2StartLine) {
+        this.originalV2StartLine = originalV2StartLine;
+    }
+
+    public void setOriginalV2StopLine(int originalV2StopLine) {
+        this.originalV2StopLine = originalV2StopLine;
+    }
+
+    public void setSyntaxV1(List<SyntaxStructure> syntaxV1) {
+        this.syntaxV1 = syntaxV1;
+    }
+
+    public void setSyntaxV2(List<SyntaxStructure> syntaxV2) {
+        this.syntaxV2 = syntaxV2;
+    }
+
+    public void setOutmostedSyntaxV1(List<SyntaxStructure> outmostedSyntaxV1) {
+        this.outmostedSyntaxV1 = outmostedSyntaxV1;
+    }
+
+    public void setOutmostedSyntaxV2(List<SyntaxStructure> outmostedSyntaxV2) {
+        this.outmostedSyntaxV2 = outmostedSyntaxV2;
+    }
+
+    public void setTypesOfConflicts(String typesOfConflicts) {
+        this.typesOfConflicts = typesOfConflicts;
+    }
+
+    public void setOutmostedTypesOfConflicts(String outmostedTypesOfConflicts) {
+        this.outmostedTypesOfConflicts = outmostedTypesOfConflicts;
+    }
+
+    public void setDeveloperDecision(DeveloperDecision developerDecision) {
+        this.developerDecision = developerDecision;
+    }
+
+    public String getRawText() {
+        return rawText;
+    }
+
+    public String getSolution() {
+        return solution;
+    }
+
+    public String getTypesOfConflicts() {
+        return typesOfConflicts;
+    }
+
+    public String getOutmostedTypesOfConflicts() {
+        return outmostedTypesOfConflicts;
+    }
+    
+    
+
+    //------------------------------------------------------------------------------
     public int getOriginalV1StartLine() {
         return originalV1StartLine;
     }
