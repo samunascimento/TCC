@@ -13,12 +13,14 @@ import java.util.List;
 
 public class ConflictRegion {
 
-    private final List<String> rawText;
-    private final List<String> beforeContext;
-    private final List<String> afterContext;
-    private final List<String> v1;
-    private final List<String> v2;
-    private final List<String> solution;
+    private final String rawText;
+    private final String beforeContext;
+    private final String afterContext;
+    private final String v1;
+    private final int v1Size;
+    private final String v2;
+    private final int v2Size;
+    private final String solution;
     private final int beginLine;
     private final int separatorLine;
     private final int endLine;
@@ -33,20 +35,26 @@ public class ConflictRegion {
     private List<SyntaxStructure> outmostedSyntaxV1;
     private List<SyntaxStructure> outmostedSyntaxV2;
 
-    private List<String> typesOfConflicts;
-    private List<String> outmostedTypesOfConflicts;
+    private String typesOfConflicts;
+    private String outmostedTypesOfConflicts;
 
     private DeveloperDecision developerDecision;
 
     public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
             int endLine, int originalV1StartLine, int originalV2StartLine) {
 
-        this.rawText = rawText;
-        this.beforeContext = beforeContext;
-        this.afterContext = afterContext;
-        this.v1 = v1;
-        this.v2 = v2;
-        this.solution = solution;
+        this.rawText = ListUtils.getTextListStringToString(rawText);
+        this.beforeContext = ListUtils.getTextListStringToString(beforeContext);
+        this.afterContext = ListUtils.getTextListStringToString(afterContext);
+        this.v1 = ListUtils.getTextListStringToString(v1);
+        this.v1Size = v1.size();
+        this.v2 = ListUtils.getTextListStringToString(v2);
+        this.v2Size = v2.size();
+        if (solution.contains("POSTPONED")) {
+            this.solution = this.beforeContext + this.rawText + this.afterContext;
+        } else {
+            this.solution = ListUtils.getTextListStringToString(solution);
+        }
         this.beginLine = beginLine;
         this.separatorLine = separatorLine;
         this.endLine = endLine;
@@ -70,7 +78,7 @@ public class ConflictRegion {
             this.originalV2StartLine = originalV2StartLine;
             this.originalV2StopLine = originalV2StartLine + (endLine - separatorLine - 2);
         }
-        this.developerDecision = generateDeveloperDecision();
+        this.developerDecision = generateDeveloperDecision(solution, v1, v2);
 
     }
 
@@ -114,20 +122,28 @@ public class ConflictRegion {
         return outmostedSyntaxV2;
     }
 
-    public List<String> getAfterContext() {
+    public String getAfterContext() {
         return afterContext;
     }
 
-    public List<String> getBeforeContext() {
+    public String getBeforeContext() {
         return beforeContext;
     }
 
-    public List<String> getV1() {
+    public String getV1() {
         return v1;
     }
 
-    public List<String> getV2() {
+    public int getV1Size() {
+        return v1Size;
+    }
+
+    public String getV2() {
         return v2;
+    }
+
+    public int getV2Size() {
+        return v2Size;
     }
 
     public int getBeginLine() {
@@ -146,22 +162,13 @@ public class ConflictRegion {
         return developerDecision.name();
     }
 
-    public String getTypeOfConflict() {
-        String result = "";
-        for (String str : this.typesOfConflicts) {
-            result = result + "\n" + str;
-        }
-        return result.replaceFirst("\n", "");
-    }
-    
-    public String getOutmostedTypeOfConflict() {
-        String result = "";
-        for (String str : this.outmostedTypesOfConflicts) {
-            result = result + "\n" + str;
-        }
-        return result.replaceFirst("\n", "");
+    public String getTypesOfConflict() {
+        return typesOfConflicts;
     }
 
+    public String getOutmostedTypeOfConflict() {
+        return outmostedTypesOfConflicts;
+    }
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
         SSCShelf shelf;
@@ -242,31 +249,16 @@ public class ConflictRegion {
     }
 
     public String getConflictForm() {
-        String str = "";
-        for (String line : this.beforeContext) {
-            str = str + line + "\n";
-        }
-        for (String line : this.rawText) {
-            str = str + line + "\n";
-        }
-        for (String line : this.afterContext) {
-            str = str + line + "\n";
-        }
-
-        return str;
+        return this.beforeContext + this.rawText + this.afterContext;
     }
 
     public String getSolutionForm() {
-        String str = "";
         if (solution == null) {
-            str = str + "The file was deleted!";
+            return "The file was deleted!";
         } else {
-            for (String line : this.solution) {
-                str = str + "\n" + line;
-            }
+            return solution;
         }
 
-        return str.replaceFirst("\n", "");
     }
 
     private List<String> getSortedStructureType(List<SyntaxStructure> list) {
@@ -284,11 +276,11 @@ public class ConflictRegion {
     }
 
     private void generateTypeOfConflict(String filePath) {
+        List<String> auxTypesOfConflicts;
+        List<String> auxOutmostedTypesOfConflicts;
         if (this.originalV1StartLine < 0 || this.originalV2StartLine < 0) {
-            this.typesOfConflicts = new ArrayList<>();
-            this.typesOfConflicts.add("Untreatable error in Diff command!");
-            this.outmostedTypesOfConflicts = new ArrayList<>();
-            this.outmostedTypesOfConflicts.add("Untreatable error in Diff command!");
+            this.typesOfConflicts = "Untreatable error in Diff command!";
+            this.outmostedTypesOfConflicts = "Untreatable error in Diff command!";
         } else {
             List<String> rawList = this.getV1StructureTypes();
             for (String str : this.getV2StructureTypes()) {
@@ -304,20 +296,22 @@ public class ConflictRegion {
             }
             Collections.sort(rawList);
             if (filePath.endsWith(".java")) {
-                this.typesOfConflicts = Translator.JavaTranslator(rawList);
-                this.outmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
+                auxTypesOfConflicts = Translator.JavaTranslator(rawList);
+                auxOutmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-                this.typesOfConflicts = Translator.CPPTranslator(rawList);
-                this.outmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
+                auxTypesOfConflicts = Translator.CPPTranslator(rawList);
+                auxOutmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
             } else if (filePath.endsWith(".py")) {
-                this.typesOfConflicts = rawList;
-                this.outmostedTypesOfConflicts = outmostedRawList;
+                auxTypesOfConflicts = rawList;
+                auxOutmostedTypesOfConflicts = outmostedRawList;
             } else {
-                this.typesOfConflicts = rawList;
-                this.outmostedTypesOfConflicts = outmostedRawList;
+                auxTypesOfConflicts = rawList;
+                auxOutmostedTypesOfConflicts = outmostedRawList;
             }
-            Collections.sort(this.typesOfConflicts);
-            Collections.sort(this.outmostedTypesOfConflicts);
+            Collections.sort(auxTypesOfConflicts);
+            Collections.sort(auxOutmostedTypesOfConflicts);
+            this.typesOfConflicts = ListUtils.getTextListStringToString(auxTypesOfConflicts);
+            this.outmostedTypesOfConflicts = ListUtils.getTextListStringToString(auxOutmostedTypesOfConflicts);
         }
     }
 
@@ -377,23 +371,21 @@ public class ConflictRegion {
         return result;
     }
 
-    private DeveloperDecision generateDeveloperDecision() {
+    private DeveloperDecision generateDeveloperDecision(List<String> solution, List<String> v1, List<String> v2) {
         if (solution.contains("DELETED")) {
             return DeveloperDecision.DELETED;
         } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {
             return DeveloperDecision.NONE;
-        } else if (containsNewCode()) {
+        } else if (containsNewCode(solution, v1, v2)) {
             return DeveloperDecision.NEWCODE;
         } else if (solution.contains("POSTPONED")) {
-            this.solution.clear();
-            this.solution.add(this.getConflictForm());
             return DeveloperDecision.POSTPONED;
         } else {
-            String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
-            String rawV1 = ListUtils.getRawStringForm(this.v1);
-            String rawV2 = ListUtils.getRawStringForm(this.v2);
+            String rawSolution = ListUtils.getRawStringForm(ListUtils.getSubList(solution, 1, solution.size() - 2));
+            String rawV1 = ListUtils.getRawStringForm(v1);
+            String rawV2 = ListUtils.getRawStringForm(v2);
 
             if (rawSolution.equals(rawV1)) {
                 return DeveloperDecision.VERSION1;
@@ -407,11 +399,11 @@ public class ConflictRegion {
         }
     }
 
-    private boolean containsNewCode() {
+    private boolean containsNewCode(List<String> solution, List<String> v1, List<String> v2) {
 
-        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(this.solution, 1, this.solution.size() - 2));
-        List<String> rawV1 = ListUtils.getRawListStringForm(this.v1);
-        List<String> rawV2 = ListUtils.getRawListStringForm(this.v2);
+        List<String> rawSolution = ListUtils.getRawListStringForm(ListUtils.getSubList(solution, 1, solution.size() - 2));
+        List<String> rawV1 = ListUtils.getRawListStringForm(v1);
+        List<String> rawV2 = ListUtils.getRawListStringForm(v2);
         for (String line : rawSolution) {
             if (!(rawV1.contains(line) || rawV2.contains(line))) {
                 return true;
