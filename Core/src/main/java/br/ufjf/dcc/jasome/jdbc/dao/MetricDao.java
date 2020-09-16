@@ -305,7 +305,7 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select a.id, a.projectname, b.version_id, c.versiondate,c.id,d.id,d.name,d.description,d.value "
+        String sql = "select a.id, a.projectname, b.version_id, c.versiondate,c.id,d.id,d.name,d.description,d.value,c.sha "
                 + "from tb_projectmetrics as a "
                 + "inner join tb_project_version as b "
                 + "on a.id = b.project_id "
@@ -330,7 +330,7 @@ public class MetricDao {
                     if (resultSet.getString("name").equals(metricName)) {
                         Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                         Date versionDate = new Date(versionTimestamp.getTime());
-                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("projectname"), resultSet.getString("name"), versionDate));
+                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("projectname"), resultSet.getString("name"), versionDate,resultSet.getString("sha")));
                     }
                 }
                 chartLines.add(listPoints);
@@ -452,7 +452,7 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID \n" +
+        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID,v.sha \n" +
                         "from tb_projectmetrics as a\n" +
                         "inner join tb_project_version as b\n" +
                         "on a.id = b.project_id\n" +
@@ -480,11 +480,11 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate,resultSet.getString("sha")));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"),null, null, null, null, versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"),null, null, null, null, versionDate,resultSet.getString("sha")));
                 }
 //                cont++;
 
