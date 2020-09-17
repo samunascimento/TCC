@@ -133,48 +133,7 @@ public class JasomeResource {
         String listJ = g.toJson(description);
         return listJ;
     }
-    
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("projects/metric/package/{nameProject}")
-    public String getMetricPackage(@PathParam("nameProject") String nameProject) throws SQLException{
-        Connection connection = ConnectionFactory.getConnection();
-        MetricDao dao = new MetricDao(connection);
-        Gson g = new Gson();
-        List<List<Point>> selectPackageMetrics = dao.selectAllPackageMetrics(nameProject);
-        connection.close();
-        String listJ = g.toJson(selectPackageMetrics);
-        return listJ;
-    }
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("projects/metric/class/{nameProject}")
-    public String getMetricClass(@PathParam("nameProject") String nameProject) throws SQLException{
-        Connection connection = ConnectionFactory.getConnection();
-        MetricDao dao = new MetricDao(connection);
-        Gson g = new Gson();
-        List<List<Point>> selectClassMetrics = dao.selectClassMetrics(nameProject);
-        connection.close();
-        String listJ = g.toJson(selectClassMetrics);
-        return listJ;
-    }
-    
-        
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("projects/metric/method/{nameProject}")
-    public String getMetricMethod(@PathParam("nameProject") String nameProject) throws SQLException{
-        Connection connection = ConnectionFactory.getConnection();
-        MetricDao dao = new MetricDao(connection);
-        Gson g = new Gson();
-        List<List<Point>> selectMethodMetrics = dao.selectMethodMetrics(nameProject);
-        connection.close();
-        String listJ = g.toJson(selectMethodMetrics);
-        return listJ;
-    }
-    
+       
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *
