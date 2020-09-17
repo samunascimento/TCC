@@ -191,7 +191,6 @@ public class MetricDao {
         }
     }
 
-
     public List<ProjectMetrics> selectNameProject() throws SQLException {
         List<ProjectMetrics> listProject = new ArrayList<>();
         Metric metric = null;
@@ -232,10 +231,10 @@ public class MetricDao {
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
-            
+
             resultSet.next();
             description = resultSet.getString("description");
-            
+
             return description;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -296,45 +295,258 @@ public class MetricDao {
         return null;
     }
 
-    public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
-        List<List<Point>> chartLines = new ArrayList<>();
+    private class Merge {
 
-        Set<String> metricNames = new HashSet<>();
+        private int versionID;
+        private int count;
+
+        /**
+         * @return the parentID
+         */
+        public int getVersionID() {
+            return versionID;
+        }
+
+        /**
+         * @param parentID the parentID to set
+         */
+        public void setVersionID(int versionID) {
+            this.versionID = versionID;
+        }
+
+        /**
+         * @return the count
+         */
+        public int getCount() {
+            return count;
+        }
+
+        /**
+         * @param count the count to set
+         */
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+    }
+
+    public List<Merge> getMerges() throws SQLException {
+
+        Merge merge = new Merge();
+
+        List<Merge> merges = new ArrayList<>();
+
+        String sql = "select ph.version_id,count(ph.version_id) from tb_projectmetrics tp \n"
+                + "inner join tb_project_version pv\n"
+                + "on tp.id = pv.project_id \n"
+                + "inner join tb_versionmetrics v\n"
+                + "on v.id = pv.version_id \n"
+                + "inner join tb_parents_hash ph\n"
+                + "on v.id = ph.version_id \n"
+                + "group by ph.version_id\n"
+                + "having count(ph.version_id) > 1\n"
+                + "order by ph.version_id ";
 
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
 
-        String sql = "select a.id, a.projectname, b.version_id, c.versiondate,c.id,d.id,d.name,d.description,d.value "
-                + "from tb_projectmetrics as a "
-                + "inner join tb_project_version as b "
-                + "on a.id = b.project_id "
-                + "inner join tb_versionmetrics as c "
-                + "on b.version_id = c.id "
-                + "inner join tb_metric  as d "
-                + "on c.tlocid = d.id "
-                + "where a.projectname = " + "\'" + nameProject + "\'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                merge.setVersionID(resultSet.getInt("version_id"));
+                merge.setCount(resultSet.getInt("count"));
+                merges.add(merge);
+            }
+
+            return merges;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+
+    }
+
+    private class Branch {
+
+        private int parentID;
+        private int count;
+
+        /**
+         * @return the versionID
+         */
+        public int getParentID() {
+            return parentID;
+        }
+
+        /**
+         * @param versionID the versionID to set
+         */
+        public void setParentID(int parentID) {
+            this.parentID = parentID;
+        }
+
+        /**
+         * @return the count
+         */
+        public int getCount() {
+            return count;
+        }
+
+        /**
+         * @param count the count to set
+         */
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
+
+    public List<Branch> getBranches() throws SQLException {
+
+        List<Branch> branches = new ArrayList<>();
+
+        String sql = "select ph.parent_id ,count(ph.parent_id ) from tb_projectmetrics tp \n"
+                + "inner join tb_project_version pv\n"
+                + "on tp.id = pv.project_id \n"
+                + "inner join tb_versionmetrics v\n"
+                + "on v.id = pv.version_id \n"
+                + "inner join tb_parents_hash ph\n"
+                + "on v.id = ph.version_id \n"
+                + "group by ph.parent_id\n"
+                + "having count(ph.parent_id ) > 1\n"
+                + "order by ph.parent_id  ";
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
 
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                metricNames.add(resultSet.getString("name"));
+                Branch branch = new Branch();
+                branch.setParentID(resultSet.getInt("parent_id"));
+                branch.setCount(resultSet.getInt("count"));
+                branches.add(branch);
             }
+            return branches;
 
-            for (String metricName : metricNames) {
-                resultSet = stmt.executeQuery();
-                int cont = 0;
-                List<Point> listPoints = new ArrayList<>();
-                while (resultSet.next()) {
-                    if (resultSet.getString("name").equals(metricName)) {
-                        Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                        Date versionDate = new Date(versionTimestamp.getTime());
-                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("projectname"), resultSet.getString("name"), versionDate));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+
+    }
+
+    public List<List<Point>> selectVersionMetrics(String nameProject) throws SQLException {
+        List<List<Point>> chartLines = new ArrayList<>();
+
+        Set<String> metricNames = new HashSet<>();
+
+        List<Branch> branches = getBranches();
+
+        List<Merge> merges = getMerges();
+
+        List<Integer> finalPoints = new ArrayList<>();
+
+        boolean checkMerge = false;
+        boolean checkBranch = false;
+        boolean checkFirstBranch = false;
+        boolean checkListPoints = false;
+        int count = 0;
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        String sql = "select * from tb_projectmetrics tp \n"
+                + "inner join tb_project_version pv\n"
+                + "on tp.id = pv.project_id \n"
+                + "inner join tb_versionmetrics v\n"
+                + "on v.id = pv.version_id \n"
+                + "inner join tb_parents_hash ph\n"
+                + "on v.id = ph.version_id \n"
+                + "inner join tb_metric tm \n"
+                + "on v.tlocid = tm.id\n"
+                + "where tp.projectname = " + "\'" + nameProject + "\'";
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+//            while (resultSet.next()) {
+//                metricNames.add(resultSet.getString("name"));
+//            }
+//
+//            for (String metricName : metricNames) {
+            resultSet = stmt.executeQuery();
+            List<Point> listPoints = new ArrayList<>();
+            while (resultSet.next()) {
+//                    if (resultSet.getString("name").equals(metricName)) {
+//                for (Merge merge : merges) {
+//                    if (merge.getVersionID() == resultSet.getInt("version_id")) {
+//                        chartLines.add(listPoints);
+//                        listPoints = new ArrayList<>();
+//                        chartLines.add(listPoints = new ArrayList<>());
+//                    }
+//                }
+//
+                checkBranch = false;
+
+                for (int i = 0; i < branches.size(); i++) {
+                    if (branches.get(i).getParentID() == resultSet.getInt("parent_id")) {
+                        checkBranch = true;
+                        checkFirstBranch = true;
+                        if (checkListPoints == false) {
+                            chartLines.add(listPoints);
+                        }
+                        for (int j = 0; j < chartLines.size(); j++) {
+                            if (chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+                                checkListPoints = false;
+                                Point point = chartLines.get(j).get(chartLines.get(j).size() - 1);
+                                finalPoints.add(chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID());
+                                listPoints = new ArrayList();
+                                listPoints.add(point);
+
+                            }
+                        }
                     }
                 }
-                chartLines.add(listPoints);
+                System.out.println(resultSet.getInt("parent_id"));
+                System.out.println(checkFirstBranch);
+                System.out.println(checkBranch);
+                System.out.println(resultSet.getInt("parent_id"));
+
+                if (checkFirstBranch == true && checkBranch == false) {
+                    System.out.println(resultSet.getInt("parent_id"));
+                    if (checkListPoints == false) {
+                        chartLines.add(listPoints);
+                        checkListPoints = true;
+                    }
+                    for (int i = 0; i < chartLines.size(); i++) {
+                        if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            Date versionDate = new Date(versionTimestamp.getTime());
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                        }
+                    }
+                } else {
+
+                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                    Date versionDate = new Date(versionTimestamp.getTime());
+                    System.out.println(listPoints);
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+
+                }
             }
+            chartLines.add(listPoints);
 
             return chartLines;
         } catch (SQLException e) {
@@ -421,7 +633,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, 0, 0));
                             idIndex++;
                         }
                     }
@@ -452,21 +664,21 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
-        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID \n" +
-                        "from tb_projectmetrics as a\n" +
-                        "inner join tb_project_version as b\n" +
-                        "on a.id = b.project_id\n" +
-                        "left join tb_version_package as c \n" +
-                        "on b.version_id = c.version_id\n" +
-                        "left join tb_versionmetrics as v\n" +
-                        "on v.id = b.version_id --alt\n" +
-                        "left join tb_packagemetrics as d \n" +
-                        "on c.package_id = d.id\n" +
-                        "left join tb_metric as e \n" +
-                        "on\n" +
-                        "d." + nameMetric + "id = e.id \n" +
-                        "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"+
-                        "order by b.version_id";
+        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID \n"
+                + "from tb_projectmetrics as a\n"
+                + "inner join tb_project_version as b\n"
+                + "on a.id = b.project_id\n"
+                + "left join tb_version_package as c \n"
+                + "on b.version_id = c.version_id\n"
+                + "left join tb_versionmetrics as v\n"
+                + "on v.id = b.version_id --alt\n"
+                + "left join tb_packagemetrics as d \n"
+                + "on c.package_id = d.id\n"
+                + "left join tb_metric as e \n"
+                + "on\n"
+                + "d." + nameMetric + "id = e.id \n"
+                + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"
+                + "order by b.version_id";
 
         int idIndex;
 
@@ -480,11 +692,11 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, 0, 0));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"),null, null, null, null, versionDate));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), null, null, null, null, versionDate, 0, 0));
                 }
 //                cont++;
 
@@ -624,7 +836,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("className"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("className"), resultSet.getString("name"), versionDate, 0, 0));
                             idIndex++;
                         }
                     }
@@ -738,7 +950,7 @@ public class MetricDao {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
 
-                            listPoints.add(new Point(cont++, resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("classname"), resultSet.getString("methodname"), resultSet.getString("name"), versionDate));
+                            listPoints.add(new Point(cont++, resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("classname"), resultSet.getString("methodname"), resultSet.getString("name"), versionDate, 0, 0));
                             idIndex++;
                         }
                     }

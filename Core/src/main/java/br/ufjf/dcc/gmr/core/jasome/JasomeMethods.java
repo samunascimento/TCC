@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.cli.ExecutionWindows;
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
@@ -222,11 +221,9 @@ public class JasomeMethods {
     }
 
     public static CLIExecution extractMetrics(ProjectMetrics project) throws IOException {
-        ExecutionWindows teste = new ExecutionWindows();
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            return teste.ExecutionWindows(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), null, ".");
-//           return CLIExecute.execute(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
+          return CLIExecute.execute(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
         } else {
             return CLIExecute.executeParallel(jasomePath.concat(" ").concat(project.getSourceDir()), ".");
         }

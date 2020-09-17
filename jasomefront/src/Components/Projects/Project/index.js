@@ -295,8 +295,8 @@ export default class Project extends Component {
     await axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
-        data.push(res.data[0])
-        this.setState({ data });
+        data.push(res.data)
+        this.setState({ data: res.data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
         })

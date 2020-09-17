@@ -12,6 +12,8 @@ import java.util.Date;
  * @author anton
  */
 public class Point {
+    private int versionID;
+    private int parentID;
     private int x;
     private Double y;
     private String nameProject;
@@ -22,27 +24,31 @@ public class Point {
     private Date versionDate;
     
     //project
-    public Point(int x, Double y,String nameProject, String metricName,Date versionDate) {
+    public Point(int x, Double y,String nameProject, String metricName,Date versionDate, int versionID, int parentID) {
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
         this.metricName = metricName;
         this.versionDate = versionDate;
+        this.versionID = versionID;
+        this.parentID = parentID;
     }
     
 
     //package
-    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate) {
+    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate, int versionID, int parentID) {
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
         this.namePackage = namePackage;
         this.metricName = metricName;
         this.versionDate = versionDate;
+        this.versionID = versionID;
+        this.parentID = parentID;
     }
     
     //class
-    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate){
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate, int versionID, int parentID){
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -50,10 +56,12 @@ public class Point {
         this.nameClass = nameClass;
         this.metricName = metricName;
         this.versionDate = versionDate;
+        this.versionID = versionID;
+        this.parentID = parentID;
     }
     
     //method
-    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate){
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate, int versionID,int parentID){
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -62,6 +70,8 @@ public class Point {
         this.nameMethod = nameMethod;
         this.metricName = metricName;
         this.versionDate = versionDate;
+        this.versionID = versionID;
+        this.parentID = parentID;
     }
     
 
@@ -119,6 +129,34 @@ public class Point {
 
     public void setVersionDate(Date versionDate) {
         this.versionDate = versionDate;
+    }
+
+    /**
+     * @return the versionID
+     */
+    public int getVersionID() {
+        return versionID;
+    }
+
+    /**
+     * @param versionID the versionID to set
+     */
+    public void setVersionID(int versionID) {
+        this.versionID = versionID;
+    }
+
+    /**
+     * @return the parentID
+     */
+    public int getParentID() {
+        return parentID;
+    }
+
+    /**
+     * @param parentID the parentID to set
+     */
+    public void setParentID(int parentID) {
+        this.parentID = parentID;
     }
 
     

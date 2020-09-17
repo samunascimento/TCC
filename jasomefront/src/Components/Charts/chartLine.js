@@ -39,7 +39,11 @@ class ChartLine extends Component {
     };
   }
 
+
   componentDidUpdate(prevProps, prevState) {
+
+
+    console.log(this.state.data)
 
     // if(this.state.switch !== prevState.switch){
     //   this.setState({switch: this.props.switch})
