@@ -6,6 +6,7 @@ import java.util.List;
 
 public class MethodCallBinding extends BaseBinding {
 
+
     private List<TypeBinding> parameters;
     private TypeBinding typeBinding;
     private JavaParser.MethodCallContext ctx;
@@ -20,7 +21,7 @@ public class MethodCallBinding extends BaseBinding {
     }
 
     public boolean equalsTo(MethodDeclarationBinding mdb, TypeBinding mdbType) {
-        return mdb.equalsTo(this, mdbType);
+        return mdb.equalsTo(this);
     }
 
     @Override
@@ -46,8 +47,8 @@ public class MethodCallBinding extends BaseBinding {
         }
         output = output.concat(")");
 
-        output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
-                concat(ctx.getStop().getLine() + "").concat("]");
+        output = output.concat("[").concat(getCtx().getStart().getLine() + "").concat(",").
+                concat(getCtx().getStop().getLine() + "").concat("]");
 
         return output;
     }
@@ -86,5 +87,12 @@ public class MethodCallBinding extends BaseBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-
+    
+    
+    /**
+     * @return the ctx
+     */
+    public JavaParser.MethodCallContext getCtx() {
+        return ctx;
+    }
 }

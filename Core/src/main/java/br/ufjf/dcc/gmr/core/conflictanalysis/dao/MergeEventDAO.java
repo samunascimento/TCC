@@ -31,6 +31,10 @@ public class MergeEventDAO {
 
     public int insert(MergeEvent mergeEvent) throws SQLException {
 
+        //insert MergeEvent
+        CommitDataDAO commitDataDAO = new CommitDataDAO(connection);
+        CommitDataMergeEventParentsDAO commitDataMergeEventParentsDAO = new CommitDataMergeEventParentsDAO(connection);
+        
         String sql = "INSERT INTO MergeEvent "
                 + "(" + ISCONFLICT + ") "
                 + "VALUES (?)"
@@ -47,7 +51,17 @@ public class MergeEventDAO {
 
             result.next();
 
-            return result.getInt(1);
+            int mergeEventID = result.getInt(1);
+            
+            for (CommitData parent : mergeEvent.getParents()) {
+                int commitDataID = commitDataDAO.insert(parent);
+                commitDataMergeEventParentsDAO.insert(commitDataID, mergeEventID);
+                            
+            }
+            
+            
+            
+            return mergeEventID;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

@@ -79,21 +79,7 @@ public class MergeEvent {
                     for (ConflictRegion region : file.getConflictRegion()) {
                         c++;
                         System.out.println("\t#################Conflict " + c + "#################");
-                        for (String line : region.getAfterContext()) {
-                            System.out.println("\t\t" + line);
-                        }
-                        System.out.println("\t\t<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (" + region.getBeginLine() + ")");
-                        for (String line : region.getV1()) {
-                            System.out.println("\t\t\t" + line);
-                        }
-                        System.out.println("\t\t============================== (" + region.getSeparatorLine() + ")");
-                        for (String line : region.getV2()) {
-                            System.out.println("\t\t\t" + line);
-                        }
-                        System.out.println("\t\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> (" + region.getEndLine() + ")");
-                        for (String line : region.getBeforeContext()) {
-                            System.out.println("\t\t" + line);
-                        }
+                        System.out.println(region.getConflictForm());
                         System.out.println("\t###################################################\n\n");
                     }
                 }

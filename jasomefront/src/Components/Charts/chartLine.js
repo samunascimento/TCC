@@ -21,7 +21,7 @@ const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
 class ChartLine extends Component {
 
   constructor(props) {
-    super(props);
+    super(props); //depreciado...
     this.state = {
       data: this.props.data,
       colors: this.props.colors,
@@ -94,13 +94,8 @@ class ChartLine extends Component {
             <VictoryZoomVoronoiContainer
               zoomDomain={this.state.zoomDomain} //add
               responsive={true}
-              //labels={({ datum }) => `(${datum.x},${datum.y})` }
+              labels={({ datum }) => `(x : ${datum.x}, y: ${datum.y}) \n sha: ${datum.sha}` }
               onZoomDomainChange={this.handleZoom.bind(this)} //add
-            // labelComponent={
-            //   <VictoryTooltip
-            //     style={{ fontSize: 13 }}
-            //   />
-            // }
             />
           }
         >

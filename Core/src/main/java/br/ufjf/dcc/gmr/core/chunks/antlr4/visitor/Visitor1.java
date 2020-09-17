@@ -666,7 +666,10 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
     public Object visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
         for (ParseTree parserTree : ctx.children) {
             if (parserTree instanceof JavaParser.QualifiedNameContext) {
-                typeBinding.getImports().add(parserTree.getText());
+                ImportBinding importBinding = new ImportBinding();
+                importBinding.setName(parserTree.getText());
+                importBinding.setCtx(ctx);
+                typeBinding.getImports().add(importBinding);
             }
         }
 

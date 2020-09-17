@@ -22,21 +22,29 @@ public class Point {
     private String nameMethod;
     private String metricName;
     private Date versionDate;
+    private String sha;
     
     //project
-    public Point(int x, Double y,String nameProject, String metricName,Date versionDate, int versionID, int parentID) {
+
+    public Point(int x, Double y,String nameProject, String metricName,Date versionDate, String sha, int versionID, int parentID) {
+
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
         this.metricName = metricName;
         this.versionDate = versionDate;
+
         this.versionID = versionID;
         this.parentID = parentID;
+        this.sha = sha;
+
     }
     
 
     //package
-    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate, int versionID, int parentID) {
+
+    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate, String sha, int versionID, int parentID) {
+
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
@@ -45,6 +53,7 @@ public class Point {
         this.versionDate = versionDate;
         this.versionID = versionID;
         this.parentID = parentID;
+        this.sha = sha;
     }
     
     //class
@@ -73,8 +82,10 @@ public class Point {
         this.versionID = versionID;
         this.parentID = parentID;
     }
-    
 
+    public Point(int i, double aDouble, Object object, String string, String string0, Date versionDate) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     public int getX() {
         return x;
     }

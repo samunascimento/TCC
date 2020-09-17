@@ -467,6 +467,7 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
+<<<<<<< HEAD
         String sql = "select * from tb_projectmetrics tp \n"
                 + "inner join tb_project_version pv\n"
                 + "on tp.id = pv.project_id \n"
@@ -477,6 +478,17 @@ public class MetricDao {
                 + "inner join tb_metric tm \n"
                 + "on v.tlocid = tm.id\n"
                 + "where tp.projectname = " + "\'" + nameProject + "\'";
+=======
+        String sql = "select a.id, a.projectname, b.version_id, c.versiondate,c.id,d.id,d.name,d.description,d.value,c.sha "
+                + "from tb_projectmetrics as a "
+                + "inner join tb_project_version as b "
+                + "on a.id = b.project_id "
+                + "inner join tb_versionmetrics as c "
+                + "on b.version_id = c.id "
+                + "inner join tb_metric  as d "
+                + "on c.tlocid = d.id "
+                + "where a.projectname = " + "\'" + nameProject + "\'";
+>>>>>>> 920082459a456c33a91d08db5f41cb148d75d4a9
 
         try {
             stmt = connection.prepareStatement(sql);
@@ -515,6 +527,7 @@ public class MetricDao {
                                 listPoints = new ArrayList();
                                 listPoints.add(point);
 
+<<<<<<< HEAD
                             }
                         }
                     }
@@ -529,6 +542,17 @@ public class MetricDao {
                     if (checkListPoints == false) {
                         chartLines.add(listPoints);
                         checkListPoints = true;
+=======
+            for (String metricName : metricNames) {
+                resultSet = stmt.executeQuery();
+                int cont = 0;
+                List<Point> listPoints = new ArrayList<>();
+                while (resultSet.next()) {
+                    if (resultSet.getString("name").equals(metricName)) {
+                        Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                        Date versionDate = new Date(versionTimestamp.getTime());
+                        listPoints.add(new Point(cont++, resultSet.getDouble("value"),resultSet.getString("projectname"), resultSet.getString("name"), versionDate,resultSet.getString("sha")));
+>>>>>>> 920082459a456c33a91d08db5f41cb148d75d4a9
                     }
                     for (int i = 0; i < chartLines.size(); i++) {
                         if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
@@ -664,6 +688,7 @@ public class MetricDao {
 
         ResultSet resultSet = null;
 
+<<<<<<< HEAD
         String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID \n"
                 + "from tb_projectmetrics as a\n"
                 + "inner join tb_project_version as b\n"
@@ -679,6 +704,23 @@ public class MetricDao {
                 + "d." + nameMetric + "id = e.id \n"
                 + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"
                 + "order by b.version_id";
+=======
+        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID,v.sha \n" +
+                        "from tb_projectmetrics as a\n" +
+                        "inner join tb_project_version as b\n" +
+                        "on a.id = b.project_id\n" +
+                        "inner join tb_version_package as c \n" +
+                        "on b.version_id = c.version_id\n" +
+                        "left join tb_versionmetrics as v\n" +
+                        "on v.id = b.version_id --alt\n" +
+                        "left join tb_packagemetrics as d \n" +
+                        "on c.package_id = d.id\n" +
+                        "left join tb_metric as e \n" +
+                        "on\n" +
+                        "d." + nameMetric + "id = e.id \n" +
+                        "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"+
+                        "order by b.version_id";
+>>>>>>> 920082459a456c33a91d08db5f41cb148d75d4a9
 
         int idIndex;
 
@@ -692,11 +734,19 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
+<<<<<<< HEAD
                     listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, 0, 0));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
                     listPoints.add(new Point(resultSet.getInt("commitID"), null, null, null, null, versionDate, 0, 0));
+=======
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"),null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate,resultSet.getString("sha")));
+                } else {
+                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                    Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(resultSet.getInt("commitID"),null, null, null, null, versionDate,resultSet.getString("sha")));
+>>>>>>> 920082459a456c33a91d08db5f41cb148d75d4a9
                 }
 //                cont++;
 

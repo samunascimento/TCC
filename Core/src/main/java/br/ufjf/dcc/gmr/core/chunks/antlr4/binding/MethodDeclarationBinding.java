@@ -8,7 +8,8 @@ import java.util.List;
 public class MethodDeclarationBinding extends BaseBinding {
 
     private List<Modifier> modifier;
-    private List<VariableBinding> parametersBindings;
+    private TypeBinding type;
+    private List<AttributeDeclaratinBinding> parametersBindings;
     private TypeBinding returnBinding;
     private JavaParser.MethodDeclarationContext ctx;
     //Local variable and method call (while processing)
@@ -21,6 +22,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     public MethodDeclarationBinding() {
         super();
         this.modifier = new ArrayList<>();
+        this.type = new TypeBinding();
         this.parametersBindings = new ArrayList<>();
         this.returnBinding = new TypeBinding();
         this.methodEnviromentBinding = new EnviromentBinding();
@@ -29,9 +31,9 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.methodCallBindings = new ArrayList<>();
     }
 
-    public boolean equalsTo(MethodCallBinding mcb, TypeBinding type) {
+    public boolean equalsTo(MethodCallBinding mcb) {
         
-        if (!type.getName().equals(mcb.getTypeBinding().getName())) {
+        if (!this.type.getName().equals(mcb.getTypeBinding().getName())) {
             if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.returnBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
             }
@@ -50,7 +52,7 @@ public class MethodDeclarationBinding extends BaseBinding {
         }
 
         for (int i = 0; i < this.getParameters().size(); i++) {
-            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getType().getName())) {
+            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getTypeBinding().getName())) {
                 return false;
             }
         }
@@ -67,9 +69,9 @@ public class MethodDeclarationBinding extends BaseBinding {
 
         for (int i = 0; i < parametersBindings.size(); i++) {
             if (i < parametersBindings.size() - 1) {
-                output = output.concat(parametersBindings.get(i).getType().getName() + ",");
+                output = output.concat(parametersBindings.get(i).getTypeBinding().getName() + ",");
             } else {
-                output = output.concat(parametersBindings.get(i).getType().getName());
+                output = output.concat(parametersBindings.get(i).getTypeBinding().getName());
             }
         }
 
@@ -117,14 +119,14 @@ public class MethodDeclarationBinding extends BaseBinding {
     /**
      * @return the parameters
      */
-    public List<VariableBinding> getParameters() {
+    public List<AttributeDeclaratinBinding> getParameters() {
         return parametersBindings;
     }
 
     /**
      * @param parameters the parameters to set
      */
-    public void setParameters(List<VariableBinding> parameters) {
+    public void setParameters(List<AttributeDeclaratinBinding> parameters) {
         this.parametersBindings = parameters;
     }
 
@@ -156,11 +158,11 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.methodEnviromentBinding = methodEnviromentBinding;
     }
 
-    public List<VariableBinding> getParametersBindings() {
+    public List<AttributeDeclaratinBinding> getParametersBindings() {
         return parametersBindings;
     }
 
-    public void setParametersBindings(List<VariableBinding> parametersBindings) {
+    public void setParametersBindings(List<AttributeDeclaratinBinding> parametersBindings) {
         this.parametersBindings = parametersBindings;
     }
 
@@ -213,5 +215,13 @@ public class MethodDeclarationBinding extends BaseBinding {
                 this.methodCallBindings.add((MethodCallBinding) baseBinding);
         }
         
+    }
+
+    public TypeBinding getType() {
+        return type;
+    }
+
+    public void setType(TypeBinding type) {
+        this.type = type;
     }
 }

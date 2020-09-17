@@ -6,7 +6,8 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
-import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -123,10 +124,10 @@ public class CommitDataDAO {
                 commit.setAuthorDate(resultSet.getDate(COMMITER_DATE));
                 commit.setCommitter(resultSet.getString(COMMITER));
                 commit.setAuthor(resultSet.getString(AUTHOR));
-                commit.setCommitterDate(resultSet.getDate(COMMITER_DATE));
+                commit.setAuthorDate(resultSet.getDate(AUTHOR_DATE));
                 commit.setTitle(resultSet.getString(TITLE));
                 commit.setId(resultSet.getInt(ID));
-
+                
             }
 
             return commit;
@@ -214,16 +215,31 @@ public class CommitDataDAO {
 //        commitDataDAO.delete(11);
 
         commitData.setTitle("2 melhor commit");
-        commitDataDAO.update(commitData, 7);
+//        commitDataDAO.update(commitData, 7);
 
-        List<CommitData> select = commitDataDAO.select();
+//        List<CommitData> select = commitDataDAO.select();
 
-        for (CommitData commitData1 : select) {
-            System.out.println(commitData1);
-        }
+//        for (CommitData commitData1 : select) {
+//            System.out.println(commitData1);
+//        }
 //        CommitData select = commitDataDAO.select(10);
 //        System.out.println(select);
 
+        List<CommitData> parents = new ArrayList<>();
+        parents.add(commitData);
+        commitData.setCommitHash("fhjsjhdgshj");
+        parents.add(commitData);
+        List<ConflictFile> conflictFiles = new ArrayList<>();
+
+        MergeEvent mergeEvent = new MergeEvent(commitData, parents, conflictFiles, commitData);
+        MergeEventDAO mergeEventDAO = new MergeEventDAO(connection);
+        mergeEventDAO.insert(mergeEvent);
+
+        
+        
+        
+        
+        
     }
 
 }
