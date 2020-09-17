@@ -109,7 +109,7 @@ public class JasomeMethods {
                     idList.add(id);
                     idPosition++;
                 }
-                
+
                 idPosition = 0;
 
                 for (Formats revision : log) {
@@ -223,7 +223,7 @@ public class JasomeMethods {
     public static CLIExecution extractMetrics(ProjectMetrics project) throws IOException {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-          return CLIExecute.execute(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
+            return CLIExecute.executeParallel(jasomePath.concat(".bat").concat(" ").concat("\"").concat(project.getSourceDir()).concat("\""), ".");
         } else {
             return CLIExecute.executeParallel(jasomePath.concat(" ").concat(project.getSourceDir()), ".");
         }
