@@ -19,7 +19,7 @@ public class ChooserActionPerformed implements ActionListener {
     public ChooserActionPerformed(View view){
         this.view = view;
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent arg0) {
         clearTable(getView().getTable());

@@ -119,12 +119,12 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
         System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
-        System.out.println("***************Chunks***************");
-        List<BaseBinding> sourceBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 35, 37);
-        List<BaseBinding> targetBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 24, 26);
-        Dependencies.atributeDependsOn(sourceBinding, targetBinding);
-        Dependencies.methodDependsOn(sourceBinding, targetBinding);
-        Dependencies.variableDependsOn(sourceBinding, targetBinding);
+//        System.out.println("***************Chunks***************");
+//        List<BaseBinding> sourceBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 35, 37);
+//        List<BaseBinding> targetBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 24, 26);
+//        Dependencies.atributeDependsOn(sourceBinding, targetBinding);
+//        Dependencies.methodDependsOn(sourceBinding, targetBinding);
+//        Dependencies.variableDependsOn(sourceBinding, targetBinding);
     }
 
     private static List<String> javaFiles(String dir) {
@@ -162,8 +162,10 @@ public class ParserJava {
 
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
-
+        //List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
+        
+        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\exemple");
+        
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
