@@ -1,12 +1,13 @@
 import React, { Component, Fragment, useState } from 'react'
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
 import Fade from '@material-ui/core/Fade';
+import ChartMenu from './chartMenu'
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 //import Chart from './../../Charts/chart';
 import Chart from './../../Charts/chartLine';
+import Caption from './chartCaption'
 import ListSubheader from '@material-ui/core/ListSubheader';
 import axios from 'axios';
 import Box from '@material-ui/core/Box'
@@ -35,12 +36,6 @@ export default class Project extends Component {
     this.state = {
 
       projectName: props.nameProject.name,
-
-      openMetrics: false,
-      openProject: false,
-      openPackage: false,
-      openClass: false,
-      openMethod: false,
 
       projectTloc: false,
 
@@ -98,26 +93,6 @@ export default class Project extends Component {
           }
         ]
       ],
-
-      root: {
-        height: 240,
-        flexGrow: 1,
-        maxWidth: 400
-      },
-
-      theme: createMuiTheme({
-        overrides: {
-          TreeItem: {
-            fontStyle: 'italic',
-            fontSize: 12,
-          },
-          label: {
-            fontStyle: 'italic',
-            fontSize: '5px',
-          },
-        }
-      }),
-
       projectMetricsChart: [],
       packageMetricsChart: [],
       classMetricsChart: [],
@@ -127,19 +102,6 @@ export default class Project extends Component {
       classTree: [{ name: 'MetricDao', id: 1 }, { name: 'ClassDao', id: 2 }, { name: 'PackageDaO', id: 3 }, { name: 'versionDao', id: 4 }, { name: 'ProjectDao', id: 5 }, { name: 'Teste', id: 6 }, { name: 'teste1', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
       methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
 
-      menu: makeStyles((theme) => ({
-        root: {
-          width: '100%',
-          maxWidth: 360,
-          backgroundColor: theme.palette.background.paper,
-          position: 'relative',
-          overflow: 'auto',
-          maxHeight: 300,
-        },
-        nested: {
-          paddingLeft: theme.spacing(4),
-        },
-      })),
 
       checkSwitch: true,
 
@@ -166,41 +128,6 @@ export default class Project extends Component {
     }
     return cor_aleatoria
   }
-
-
-  handleClickMetrics = () => {
-    const openMetrics = !this.state.openMetrics
-    this.setState({ openMetrics })
-  };
-
-  handleClickProject = () => {
-    const openProject = !this.state.openProject
-    this.setState({ openProject })
-  };
-
-
-  handleClickPackage = () => {
-    const openPackage = !this.state.openPackage
-    this.setState({ openPackage })
-  };
-
-
-  handleClickClass = () => {
-    const openClass = !this.state.openClass
-    this.setState({ openClass })
-  };
-
-
-  handleClickMethod = () => {
-    const openMethod = !this.state.openMethod
-    this.setState({ openMethod })
-  };
-
-  handleClickMetricsDescriptions = () => {
-    const openDescriptions = !this.state.openDescriptions
-    this.setState({ openDescriptions })
-  };
-
 
   componentDidMount = () => {
     axios.get(`namePackage/` + this.props.nameProject.name)
@@ -525,7 +452,6 @@ export default class Project extends Component {
   clearChart = () => {
     this.setState({ data: [] })
     this.setState({ metricsDescriptions: [] })
-    this.setState({openProject:false, openPackage: false, openClass:false, openMethod:false })
     this.setState({ projectTloc: false })
     this.setState({ packageTree: this.clearMenuPackage() })
 
@@ -546,27 +472,6 @@ export default class Project extends Component {
 
   render() {
 
-    const classes = this.state.menu;
-
-    const { anchorE1 } = this.state
-    const { anchorE2 } = this.state
-    const { anchorE3 } = this.state
-    const { anchorE4 } = this.state
-
-    const { projectTloc } = this.state
-    const { projectMetric } = this.state
-    const { packageMetrics } = this.state
-    const { classMetrics } = this.state
-    const { methodMetrics } = this.state
-
-    const { maxHeight } = this.state
-
-    const { root } = this.state
-
-    const { square } = this.state
-
-    const { data } = this.state
-
     return (
       <div>
         <div style={{ width: '20%', position: "relative", float: "right" }}>
@@ -585,163 +490,12 @@ export default class Project extends Component {
             </Grid>
             <Grid item>Date</Grid>
           </Grid>
-          {/* </div> */}
-          <Box
-            display="flex"
-
-            flexDirection="row-reverse"
-            p={1}
-            m={1}
-            bgcolor="background.paper"
-            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
-          >
-            <Grid item xs={12}>
-              <List component="nav"
-                aria-labelledby="nested-list-subheader"
-                position="relative"
-                left="1000px"
-                className={classes.root}>
-                <ListItem button onClick={this.handleClickMetrics} style={{ border: '1px solid grey', margin: '3px 0' }}>
-                  <ListItemText align="left" primary="Metrics" />
-                  {this.state.openMetrics ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={this.state.openMetrics} timeout="auto" unmountOnExit>
-                  <ListItem button onClick={this.handleClickProject} style={{ border: '1px solid grey', margin: '3px 0' }}>
-                    <ListItemText align="left" primary="Project Metrics" />
-                    {this.state.openProject ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
-                    <Paper style={{ maxHeight: 300, overflow: 'auto' }}>
-                      <FormGroup style={{ border: '1px solid grey' }}>
-                        <FormControlLabel
-                          control={<Checkbox checked={projectTloc} onChange={(event) => this.addProjectMetric(event, 'TLOC')} name='projectTloc' color="primary" />}
-                          label={<span style={{ fontSize: '14px' }}>TLOC</span>}
-                        />
-                      </FormGroup>
-                    </Paper>
-                  </Collapse>
-                  <ListItem button onClick={this.handleClickPackage} style={{ border: '1px solid grey', margin: '3px 0' }}>
-                    <ListItemText align="left" primary="Package Metrics" />
-                    {this.state.openPackage ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={this.state.openPackage} timeout="auto" unmountOnExit>
-                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
-                      <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                          <TreeView
-                            className={root}
-                            defaultCollapseIcon={<ExpandMoreIcon />}
-                            defaultExpandIcon={<ChevronRightIcon />}
-                          >
-                            {this.state.packageTree.map((packages, packageIndex) => (
-                              <TreeItem title={packages.name} nodeId={packages.id} label={<span style={{ fontSize: '16px' }}>{packages.name}</span>}>
-                                <FormGroup>
-                                  {packageMetrics.map((metric) => (
-                                    <FormControlLabel
-                                      control={<Checkbox checked={packages[metric.name]} onChange={(event) => this.addPackageMetric(event, metric.name, packages.name, packageIndex)} name={metric.name} color="primary" />}
-                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                    />
-                                  ))}
-                                </FormGroup>
-                              </TreeItem>
-                            ))}
-                          </TreeView>
-                        </ListItem>
-                      </List>
-                    </Paper>
-                  </Collapse>
-                  <ListItem button onClick={this.handleClickClass} style={{ border: '1px solid grey', margin: '3px 0' }}>
-                    <ListItemText align="left" primary="Class Metrics" />
-                    {this.state.openClass ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={this.state.openClass} timeout="auto" unmountOnExit>
-                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
-                      <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                          <TreeView
-                            className={root}
-                            defaultCollapseIcon={<ExpandMoreIcon />}
-                            defaultExpandIcon={<ChevronRightIcon />}
-                          >
-                            {this.state.classTree.map((classes, index) => (
-                              <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
-                                <FormGroup>
-                                  {classMetrics.map((metric) => (
-                                    <FormControlLabel
-                                      control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.handleChangeClass(event, metric.name, index)} name={metric.name} color="primary" />}
-                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                    />
-                                  ))}
-                                </FormGroup>
-                              </TreeItem>
-                            ))}
-                          </TreeView>
-                        </ListItem>
-                      </List>
-                    </Paper>
-                  </Collapse>
-                  <ListItem button onClick={this.handleClickMethod} style={{ border: '1px solid grey', margin: '3px 0' }}>
-                    <ListItemText align="left" primary="Method Metrics" />
-                    {this.state.openMethod ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
-                    <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
-                      <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                          <TreeView
-                            className={root}
-                            defaultCollapseIcon={<ExpandMoreIcon />}
-                            defaultExpandIcon={<ChevronRightIcon />}
-                          >
-                            {this.state.classTree.map((classes) => (
-                              <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
-                                <FormGroup>
-                                  {classMetrics.map((metric) => (
-                                    <FormControlLabel
-                                      control={<Checkbox onChange={(event) => this.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
-                                      label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
-                                    />
-                                  ))}
-                                </FormGroup>
-                              </TreeItem>
-                            ))}
-                          </TreeView>
-                        </ListItem>
-                      </List>
-                    </Paper>
-                  </Collapse>
-                  <div>
-                    <Button style={{ display: 'inline-block', marginLeft: '10%' }} onClick={this.generateChart} variant="contained" color="primary">
-                      generate
-                  </Button>
-                    <Button style={{ display: 'inline-block', marginLeft: '10%' }} onClick={this.clearChart} variant="contained" color="primary">
-                      clear
-                  </Button>
-                  </div>
-                  {/* {this.state.loadingState && <CircularProgress />} */}
-                </Collapse>
-              </List>
-
-            </Grid>
-          </Box>
-          <Box
-            display="flex"
-
-            flexDirection="row-reverse"
-            p={1}
-            m={1}
-            bgcolor="background.paper"
-            style={{ border: '2px groove black', borderRadius: '5px', marginLeft: '16px', marginRight: '0' }}
-          >
-            <Grid item xs={12}>
-              {this.state.metricsDescriptions.map((metric, index) => (
-                <div>
-                  <div style={{ display: 'inline-block', height: '20px', width: '20px', backgroundColor: this.state.colors[index + 1] }}></div>
-                  <dt style={{ marginLeft: '10px', display: 'inline-block' }} title={metric.metricDescription}>{metric.metricName + ' (' + metric.checkMetric + ')'}</dt>
-                </div>
-              ))}
-            </Grid>
-          </Box>
+          <ChartMenu projectTloc = {this.state.projectTloc} addProjectMetric = {this.addProjectMetric} 
+          packageTree={this.state.packageTree} packageMetrics= {this.state.packageMetrics} addPackageMetric = {this.addPackageMetric} 
+          classTree = {this.state.classTree} classMetrics = {this.state.classMetrics} handleChangeClass= {this.handleChangeClass} 
+          methodTree= { this.state.methodTree} methodMetrics = {this.state.methodMetrics} handleChangeMethod = {this.handleChangeMethod}
+          generateChart = {this.generateChart} clearChart = {this.clearChart}/>
+          <Caption metricsDescriptions={this.state.metricsDescriptions}  colors={this.state.colors}/>
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
