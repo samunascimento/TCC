@@ -37,7 +37,7 @@ export default class Project extends Component {
 
       projectName: props.nameProject.name,
 
-      projectTloc: false,
+      projectTloc: true,
 
       loadingState: false,
 
@@ -65,34 +65,9 @@ export default class Project extends Component {
 
       colors: [],
 
-      data: [
-        [
-          {
-            "x": 0,
-            "y": 100
-          },
-          {
-            "x": 1,
-            "y": 200
-          },
-          {
-            "x": 2,
-            "y": 300
-          },
-          {
-            "x": 3,
-            "y": 400.0
-          },
-          {
-            "x": 4,
-            "y": 500
-          },
-          {
-            "x": 5,
-            "y": 600.0
-          }
-        ]
-      ],
+      data: [],
+
+      
       projectMetricsChart: [],
       packageMetricsChart: [],
       classMetricsChart: [],
@@ -130,6 +105,19 @@ export default class Project extends Component {
   }
 
   componentDidMount = () => {
+    axios.get(`metric/version/` + this.props.nameProject.name)
+      .then(res => {
+        const data = this.state.data
+        data.push(res.data)
+        this.setState({ data: res.data });
+        this.setState({
+          maximaY: this.getMaximaY(this.state.data)
+        })
+        this.setState({projectTLOC: res.data})
+      })
+      
+    this.getMetricDescription('TLOC', 'project')
+
     axios.get(`namePackage/` + this.props.nameProject.name)
       .then(res => {
         const packageTree = res.data
@@ -450,12 +438,18 @@ export default class Project extends Component {
   }
 
   clearChart = () => {
-    this.setState({ data: [] })
+    //this.setState({ data: [] })
+    this.state.data.map((metrics, index) => {
+      metrics.splice(0,metrics.length);
+    })
     this.setState({ metricsDescriptions: [] })
     this.setState({ projectTloc: false })
     this.setState({ packageTree: this.clearMenuPackage() })
 
   }
+
+
+
 
   getMaximaY = (data) => {
 
@@ -490,12 +484,12 @@ export default class Project extends Component {
             </Grid>
             <Grid item>Date</Grid>
           </Grid>
-          <ChartMenu projectTloc = {this.state.projectTloc} addProjectMetric = {this.addProjectMetric} 
-          packageTree={this.state.packageTree} packageMetrics= {this.state.packageMetrics} addPackageMetric = {this.addPackageMetric} 
-          classTree = {this.state.classTree} classMetrics = {this.state.classMetrics} handleChangeClass= {this.handleChangeClass} 
-          methodTree= { this.state.methodTree} methodMetrics = {this.state.methodMetrics} handleChangeMethod = {this.handleChangeMethod}
-          generateChart = {this.generateChart} clearChart = {this.clearChart}/>
-          <Caption metricsDescriptions={this.state.metricsDescriptions}  colors={this.state.colors}/>
+          <ChartMenu projectTloc={this.state.projectTloc} addProjectMetric={this.addProjectMetric}
+            packageTree={this.state.packageTree} packageMetrics={this.state.packageMetrics} addPackageMetric={this.addPackageMetric}
+            classTree={this.state.classTree} classMetrics={this.state.classMetrics} handleChangeClass={this.handleChangeClass}
+            methodTree={this.state.methodTree} methodMetrics={this.state.methodMetrics} handleChangeMethod={this.handleChangeMethod}
+            generateChart={this.generateChart} clearChart={this.clearChart} />
+          <Caption metricsDescriptions={this.state.metricsDescriptions} colors={this.state.colors} />
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
@@ -506,11 +500,11 @@ export default class Project extends Component {
   }
 }
 
-Project.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    name: PropTypes.string,
-    versionDate: PropTypes.string
-  })),
-}
+// Project.propTypes = {
+//   data: PropTypes.arrayOf(PropTypes.shape({
+//     x: PropTypes.number,
+//     y: PropTypes.number,
+//     name: PropTypes.string,
+//     versionDate: PropTypes.string
+//   })),
+// }

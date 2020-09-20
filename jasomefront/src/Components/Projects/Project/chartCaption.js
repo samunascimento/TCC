@@ -29,7 +29,7 @@ export default class caption extends Component {
                 <Grid item xs={12}>
                     {this.props.metricsDescriptions.map((metric, index) => (
                         <div>
-                            <div style={{ display: 'inline-block', height: '20px', width: '20px', backgroundColor: this.props.colors[index + 1] }}></div>
+                            <div style={{ display: 'inline-block', height: '20px', width: '20px', backgroundColor: this.props.colors[index] }}></div>
                             <dt style={{ marginLeft: '10px', display: 'inline-block' }} title={metric.metricDescription}>{metric.metricName + ' (' + metric.checkMetric + ')'}</dt>
                         </div>
                     ))}

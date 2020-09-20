@@ -23,7 +23,7 @@ class ChartLine extends Component {
   constructor(props) {
     super(props); //depreciado...
     this.state = {
-      data: this.props.data,
+      data: [],
       colors: this.props.colors,
       zoomDomain: {
         x: [1, this.props.data.map(
@@ -31,27 +31,67 @@ class ChartLine extends Component {
         )]
       },
       metric: false,
-      maximaY : this.props.maximaY,
-      // maximaX : this.props.data.map(
-      //   (dataset) => Math.max(...dataset.map((d) => d.x))
-      // ),
+      maximaY: this.props.maximaY,
       nameX: ""
     };
   }
 
+  // componentDidMount(){
+  //   console.log('imprimindo data')
+  //   console.log(this.props.data)
+  //   this.setState({ data: this.props.data })
 
-  componentDidUpdate(prevProps, prevState) {
+  //   this.setState({
+  //     zoomDomain: {
+  //       x: [1, this.props.data.map(
+  //         (dataset) => Math.max(...dataset.map((d) => d.x))
+  //       )]
+  //     }
+  //   })
 
+  //   console.log('zoomDomain')
+  //   console.log(this.state.zoomDomain)
 
-    console.log(this.state.data)
+  //   this.setState({
+  //     maximaX: this.state.data.map(
+  //       (dataset) => Math.max(...dataset.map((d) => d.x))
+  //     )
+  //   })
+  //   this.setState({
+  //     maximaY: this.state.data.map(
+  //       (dataset) => Math.max(...dataset.map((d) => d.y))
+  //     )
+  //   })
+  //   console.log('imprimindo maximaY')
+  //   console.log(this.state.maximaY)
+  // }
+  
+  componentDidUpdate(prevProps,prevState) {
+    console.log('componentDidUpdate')
 
-    // if(this.state.switch !== prevState.switch){
-    //   this.setState({switch: this.props.switch})
-    //   console.log(this.state.switch)
-    // }
-
+    console.log('prevprops')
+    console.log(prevProps.data)
+    console.log('prevState')
+    console.log(prevState)
+    console.log('this.props.data')
+    console.log(this.props.data)
+    console.log('this.state.data')
+    console.log(this.state)
     if (this.props.data !== prevState.data) {
+      console.log('imprimindo data')
+      console.log(this.props.data)
       this.setState({ data: this.props.data })
+
+      this.setState({
+        zoomDomain: {
+          x: [1, this.props.data.map(
+            (dataset) => Math.max(...dataset.map((d) => d.x))
+          )]
+        }
+      })
+
+      console.log('zoomDomain')
+      console.log(this.state.zoomDomain)
 
       this.setState({
         maximaX: this.state.data.map(
@@ -63,6 +103,8 @@ class ChartLine extends Component {
           (dataset) => Math.max(...dataset.map((d) => d.y))
         )
       })
+      console.log('imprimindo maximaY')
+      console.log(this.state.maximaY)
 
     }
   }
@@ -83,10 +125,8 @@ class ChartLine extends Component {
     return (
       <div>
         <VictoryChart
-          // domain={{ x: [1,this.props.data.map(
-          //   (dataset) => Math.max(...dataset.map((d) => d.x))
-          // )]}}
           minDomain={{ x: 1 }}
+          minDomain={{ y: 0 }}
           maxDomain={{ y: (this.props.maximaY * 1.1)}}
           theme={VictoryTheme.material}
           width={1350} height={800}
@@ -94,7 +134,7 @@ class ChartLine extends Component {
             <VictoryZoomVoronoiContainer
               zoomDomain={this.state.zoomDomain} //add
               responsive={true}
-              labels={({ datum }) => `(x : ${datum.x}, y: ${datum.y}) \n sha: ${datum.sha}` }
+              labels={({ datum }) => `(x : ${datum.x}, y: ${datum.y}) \n sha: ${datum.sha}`}
               onZoomDomainChange={this.handleZoom.bind(this)} //add
             />
           }
@@ -130,7 +170,8 @@ class ChartLine extends Component {
           //   (dataset) => Math.max(...dataset.map((d) => d.x))
           // )]}}
           minDomain={{ x: 1 }}
-          maxDomain={{y: this}}
+          minDomain={{ y: 0 }}
+          maxDomain={{ y: (this.props.maximaY * 1.1) }}
           padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
           width={1350} height={150} //scale={{ x: "time" }}
           containerComponent={
