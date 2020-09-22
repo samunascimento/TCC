@@ -24,7 +24,15 @@ public class Vertex {
         this.typeBinding = new TypeBinding();
         this.conflictChunk = new ConflictChunk();
     }
-
+    
+    @Override
+    public String toString(){
+        String txt = "Arquivo: "+typeBinding.getName()+" || Intervalo de Linhas : ";
+        txt+= conflictChunk.getLanguageConstructLiteral().getLineBegin()+" até "+conflictChunk.getLanguageConstructLiteral().getLineEnd();
+        
+        return txt;
+    }
+    
     public String getId() {
         return id;
     }
