@@ -1,8 +1,10 @@
 package br.ufjf.dcc.gmr.core.chunks.jung;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.*;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationImageServer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,16 +17,19 @@ import javax.swing.JFrame;
 public class Main {
 
     private static GlobalEnviroment globalEnviroment;
+    private static List<ConflictChunk> chunks;
     private static Set<String> paths;
 
-    public Main(GlobalEnviroment globalEnviroment, Set paths) {
+    public Main(GlobalEnviroment globalEnviroment, List<ConflictChunk> chunks, Set paths) {
         Main.globalEnviroment = globalEnviroment;
+        this.chunks = chunks;
         Main.paths = paths;
     }
 
     public static void main(String[] args) {
         Graph<Vertex, Edge> graph = new DirectedSparseMultigraph<>();
         addGraphVertices(graph);
+        addEdges(graph);
         JFrame frame = new JFrame();
 
         frame.setLayout(new BorderLayout());
@@ -35,21 +40,39 @@ public class Main {
         frame.setExtendedState(MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
+
     }
 
     private static void addGraphVertices(Graph graph) {
 
-        for (String path : Main.paths) {
-            graph.addVertex(new Vertex(path, Main.globalEnviroment.getEnviroment().get(path)));
+        for (ConflictChunk chunk : chunks) {
+            graph.addVertex(new Vertex(chunk.getFilePath(), Main.globalEnviroment.getEnviroment().get(chunk.getFilePath()), chunk));
         }
 
     }
 
     private static void addEdges(Graph graph) {
 
-        List<Vertex> vertices = (List<Vertex>) graph.getVertices();
-        for (Vertex vertice : vertices) {
+        Collection<Vertex> vertices = graph.getVertices();
+        List<BaseBinding> sourceBinding = new ArrayList<>();
+        List<BaseBinding> targetBinding = new ArrayList<>();;
+        int id = 0;
+        for (Vertex verticeA : vertices) {
+            for (Vertex verticeB : vertices) {
+                if (!verticeA.equals(verticeB)) {
+                    
+                    sourceBinding = verticeA.getConflictChunk().getLanguageConstructBindings();
+                    targetBinding = verticeB.getConflictChunk().getLanguageConstructBindings();
+                    
+                    if(Dependencies.atributeDependsOn(sourceBinding, targetBinding) || Dependencies.methodDependsOn(sourceBinding, targetBinding) || Dependencies.variableDependsOn(sourceBinding, targetBinding)){
+                        Edge edge = new Edge();
+                        edge.setId(id);
+                        id++;                        
+                        graph.addEdge(edge, verticeA, verticeB, EdgeType.DIRECTED);
+                    }
 
+                }
+            }
         }
 
     }

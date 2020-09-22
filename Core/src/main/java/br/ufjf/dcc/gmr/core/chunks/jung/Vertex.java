@@ -6,19 +6,23 @@
 package br.ufjf.dcc.gmr.core.chunks.jung;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
 
 public class Vertex {
     
     private String id;
     private TypeBinding typeBinding;
+    private ConflictChunk conflictChunk;
 
-    public Vertex(String id, TypeBinding typeBinding) {
+    public Vertex(String id, TypeBinding typeBinding, ConflictChunk conflictChunk) {
         this.id = id;
         this.typeBinding = typeBinding;
+        this.conflictChunk = conflictChunk;
     }
     
     public Vertex() {
         this.typeBinding = new TypeBinding();
+        this.conflictChunk = new ConflictChunk();
     }
 
     public String getId() {
@@ -35,5 +39,13 @@ public class Vertex {
 
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
+    }
+
+    public ConflictChunk getConflictChunk() {
+        return conflictChunk;
+    }
+
+    public void setConflictChunk(ConflictChunk conflictChunk) {
+        this.conflictChunk = conflictChunk;
     }
 }

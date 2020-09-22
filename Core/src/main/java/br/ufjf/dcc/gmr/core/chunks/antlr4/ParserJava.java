@@ -1,6 +1,8 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -24,11 +26,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import br.ufjf.dcc.gmr.core.chunks.jung.*;
+
 public class ParserJava {
-    
+
     private static boolean reachedEnd = false;
     private GlobalEnviroment globalEnviroment;
-    
+
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
     }
@@ -82,12 +85,28 @@ public class ParserJava {
             System.out.println(value);
 
         }
+
+          LanguageConstruct languageConstructA = new LanguageConstruct();
+        languageConstructA.setLineBegin(26);
+        languageConstructA.setLineEnd(31);
+        languageConstructA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        List<BaseBinding> sourceBinding = parserJava.globalEnviroment.findLanguageConstructs(languageConstructA);
+        ConflictChunk chunkB = new ConflictChunk(languageConstructA, sourceBinding, "br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java"); 
         
-        //parserJava.getGlobalEnviroment().findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 32, 44);
-        Main jung = new Main(parserJava.getGlobalEnviroment(), paths);
+        LanguageConstruct languageConstructB = new LanguageConstruct();
+        languageConstructB.setLineBegin(32);
+        languageConstructB.setLineEnd(45);
+        languageConstructB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        List<BaseBinding> targetBinding =  parserJava.globalEnviroment.findLanguageConstructs(languageConstructB);     
+        ConflictChunk chunkA = new ConflictChunk(languageConstructB, targetBinding, "br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        
+        List<ConflictChunk> chunkList = new ArrayList<>();
+        chunkList.add(chunkA);
+        chunkList.add(chunkB);
+        
+        Main jung = new Main(parserJava.getGlobalEnviroment(), chunkList, paths);
         jung.main(args);
     }
-    
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
@@ -121,12 +140,12 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
         System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
-//        System.out.println("***************Chunks***************");
-//        List<BaseBinding> sourceBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 35, 37);
-//        List<BaseBinding> targetBinding = globalEnviroment.findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 24, 26);
-//        Dependencies.atributeDependsOn(sourceBinding, targetBinding);
-//        Dependencies.methodDependsOn(sourceBinding, targetBinding);
-//        Dependencies.variableDependsOn(sourceBinding, targetBinding);
+        System.out.println("***************Chunks***************");
+
+      
+        
+        
+        
     }
 
     private static List<String> javaFiles(String dir) {
@@ -165,9 +184,8 @@ public class ParserJava {
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
         List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
-        
+
         //List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\exemple");
-        
         int i = 0;
         for (String javaFile : javaFiles) {
             JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
