@@ -180,8 +180,8 @@ public final class View extends JFrame {
 
     public static void main(String[] args) {
         View frame = new View();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         frame.setExtendedState(MAXIMIZED_BOTH);
 
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));

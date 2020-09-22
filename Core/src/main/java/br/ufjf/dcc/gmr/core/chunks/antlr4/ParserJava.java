@@ -23,12 +23,12 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
-
+import br.ufjf.dcc.gmr.core.chunks.jung.*;
 public class ParserJava {
-
+    
     private static boolean reachedEnd = false;
     private GlobalEnviroment globalEnviroment;
-
+    
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
     }
@@ -82,10 +82,12 @@ public class ParserJava {
             System.out.println(value);
 
         }
-
+        
         //parserJava.getGlobalEnviroment().findLanguageConstructs("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java", 32, 44);
-
+        Main jung = new Main(parserJava.getGlobalEnviroment(), paths);
+        jung.main(args);
     }
+    
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
@@ -162,9 +164,9 @@ public class ParserJava {
 
         JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
 
-        //List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
+        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
         
-        List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\exemple");
+        //List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\exemple");
         
         int i = 0;
         for (String javaFile : javaFiles) {
