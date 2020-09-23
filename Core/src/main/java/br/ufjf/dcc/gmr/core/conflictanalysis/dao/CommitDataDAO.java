@@ -87,9 +87,9 @@ public class CommitDataDAO {
             while (resultSet.next()) {
                 commit = new CommitData();
                 commit.setCommitHash(resultSet.getString(COMMIT_HASH));
-                commit.setAuthorDate(resultSet.getDate(COMMITER_DATE));
                 commit.setCommitter(resultSet.getString(COMMITER));
                 commit.setAuthor(resultSet.getString(AUTHOR));
+                commit.setAuthorDate(resultSet.getDate(COMMITER_DATE));
                 commit.setCommitterDate(resultSet.getDate(COMMITER_DATE));
                 commit.setTitle(resultSet.getString(TITLE));
                 commit.setId(resultSet.getInt(ID));
@@ -112,7 +112,7 @@ public class CommitDataDAO {
 
         PreparedStatement stmt = null;
 
-        String sql = "SELECT * FROM commitData cd where cd.id = " + id;
+        String sql = "SELECT * FROM commitData cd WHERE cd.id = " + id;
 
         try {
             stmt = connection.prepareStatement(sql);
@@ -127,7 +127,7 @@ public class CommitDataDAO {
                 commit.setAuthorDate(resultSet.getDate(AUTHOR_DATE));
                 commit.setTitle(resultSet.getString(TITLE));
                 commit.setId(resultSet.getInt(ID));
-                
+
             }
 
             return commit;
@@ -218,13 +218,11 @@ public class CommitDataDAO {
 //        commitDataDAO.update(commitData, 7);
 
 //        List<CommitData> select = commitDataDAO.select();
-
 //        for (CommitData commitData1 : select) {
 //            System.out.println(commitData1);
 //        }
 //        CommitData select = commitDataDAO.select(10);
 //        System.out.println(select);
-
         List<CommitData> parents = new ArrayList<>();
         parents.add(commitData);
         commitData.setCommitHash("fhjsjhdgshj");
@@ -235,11 +233,6 @@ public class CommitDataDAO {
         MergeEventDAO mergeEventDAO = new MergeEventDAO(connection);
         mergeEventDAO.insert(mergeEvent);
 
-        
-        
-        
-        
-        
     }
 
 }
