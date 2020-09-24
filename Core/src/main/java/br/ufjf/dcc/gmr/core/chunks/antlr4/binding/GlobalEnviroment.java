@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +18,7 @@ public class GlobalEnviroment {
      * @param end
      * @return
      */
-    public List<BaseBinding> findLanguageConstructs(LanguageConstruct languageConstruct) {
+    public List<BaseBinding> findLanguageConstructs(Chunk languageConstruct) {
 
         List<BaseBinding> result = new ArrayList<>();
 

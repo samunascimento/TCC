@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.jung;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.*;
@@ -33,12 +34,12 @@ import javax.xml.transform.URIResolver;
 public class Main {
 
     private static GlobalEnviroment globalEnviroment;
-    private static List<ConflictChunk> chunks;
+    private static List<ConflictChunk> conflictChunkList;
     private static Set<String> paths;
 
-    public Main(GlobalEnviroment globalEnviroment, List<ConflictChunk> chunks, Set paths) {
+    public Main(GlobalEnviroment globalEnviroment, List<ConflictChunk> conflictChunkList, Set paths) {
         Main.globalEnviroment = globalEnviroment;
-        this.chunks = chunks;
+        this.conflictChunkList = conflictChunkList;
         Main.paths = paths;
     }
 
@@ -56,7 +57,7 @@ public class Main {
         DefaultModalGraphMouse gm = new DefaultModalGraphMouse();
         gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
         vv.setGraphMouse(gm);
-        
+
         vv.getRenderer().getVertexLabelRenderer().setPosition(Position.S);
 
         frame.getContentPane().add(vv, BorderLayout.CENTER);
@@ -69,8 +70,8 @@ public class Main {
 
     private static void addGraphVertices(Graph graph) {
 
-        for (ConflictChunk chunk : chunks) {
-            graph.addVertex(new Vertex(chunk.getFilePath(), Main.globalEnviroment.getEnviroment().get(chunk.getFilePath()), chunk));
+        for (ConflictChunk conflictChunk : conflictChunkList) {
+            graph.addVertex(new Vertex(conflictChunk));
         }
 
     }
@@ -78,17 +79,23 @@ public class Main {
     private static void addEdges(Graph graph) {
 
         Collection<Vertex> vertices = graph.getVertices();
-        List<BaseBinding> sourceBinding = new ArrayList<>();
-        List<BaseBinding> targetBinding = new ArrayList<>();;
+        boolean A,B,C,D;
+        
         int id = 0;
         for (Vertex verticeA : vertices) {
             for (Vertex verticeB : vertices) {
                 if (!verticeA.equals(verticeB)) {
 
-                    sourceBinding = verticeA.getConflictChunk().getLanguageConstructBindings();
-                    targetBinding = verticeB.getConflictChunk().getLanguageConstructBindings();
-
-                    if (Dependencies.atributeDependsOn(sourceBinding, targetBinding) || Dependencies.methodDependsOn(sourceBinding, targetBinding) || Dependencies.variableDependsOn(sourceBinding, targetBinding)) {
+                    //VerticeA's ChunkVersionOne dependencies check with VerticeB Chunks
+                    A = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion1(),verticeB.getConflictChunk().getChunkVersion1());
+                    B = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion1(),verticeB.getConflictChunk().getChunkVersion2());
+                    
+                    //VerticeA's ChunkVersionTwo  dependencies check with VerticeB Chunks
+                    C = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion2(),verticeB.getConflictChunk().getChunkVersion1());
+                    D = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion2(),verticeB.getConflictChunk().getChunkVersion2());
+                    
+                    //if last one versionChunk are dependencies with verticeB versionchunks, we create a edge between both
+                    if ( A || B || C || D) {
                         Edge edge = new Edge();
                         edge.setId(id);
                         id++;
@@ -98,6 +105,24 @@ public class Main {
                 }
             }
         }
+
+    }
+
+    public static boolean verifyChunksDependencies(Chunk chunkA, Chunk chunkB) {
+
+        List<BaseBinding> sourceBinding = new ArrayList<>();
+        List<BaseBinding> targetBinding = new ArrayList<>();
+
+        sourceBinding = chunkA.getLanguageConstruct();
+        targetBinding = chunkB.getLanguageConstruct();
+
+        if(Dependencies.atributeDependsOn(sourceBinding, targetBinding)||
+            Dependencies.methodDependsOn(sourceBinding, targetBinding) ||
+                Dependencies.variableDependsOn(sourceBinding, targetBinding)){
+            return true;
+        }
+
+        return false;
 
     }
 

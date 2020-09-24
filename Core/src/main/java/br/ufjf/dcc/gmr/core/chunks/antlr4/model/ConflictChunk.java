@@ -15,42 +15,58 @@ import java.util.List;
  */
 public class ConflictChunk {
     
-    private LanguageConstruct languageConstructLiteral;
-    private List<BaseBinding> languageConstructBindings;
-    private String filePath;
-
-    public ConflictChunk(LanguageConstruct languageConstructLiteral, List<BaseBinding> languageConstructBaseBindings, String typeBindingPath) {
-        this.languageConstructLiteral = languageConstructLiteral;
-        this.languageConstructBindings = languageConstructBaseBindings;
-        this.filePath = typeBindingPath;
+    private Chunk beforeContext;
+     private Chunk chunkVersion1;
+    private Chunk chunkVersion2;
+    private Chunk afterContext;
+    
+    public ConflictChunk(Chunk beforeContext, Chunk chunkVersion1, Chunk chunkVersion2, Chunk afterContext) {
+        this.beforeContext = beforeContext;
+        this.chunkVersion1 = chunkVersion1;
+        this.chunkVersion2 = chunkVersion2;
+        this.afterContext = afterContext;
     }
+   
+    
+
+
 
     public ConflictChunk() {
     }
 
-    public LanguageConstruct getLanguageConstructLiteral() {
-        return languageConstructLiteral;
+    public Chunk getBeforeContext() {
+        return beforeContext;
     }
 
-    public void setLanguageConstructLiteral(LanguageConstruct languageConstructLiteral) {
-        this.languageConstructLiteral = languageConstructLiteral;
+    public void setBeforeContext(Chunk beforeContext) {
+        this.beforeContext = beforeContext;
     }
 
-    public List<BaseBinding> getLanguageConstructBindings() {
-        return languageConstructBindings;
+    public Chunk getChunkVersion1() {
+        return chunkVersion1;
     }
 
-    public void setLanguageConstructBindings(List<BaseBinding> languageConstructBindings) {
-        this.languageConstructBindings = languageConstructBindings;
+    public void setChunkVersion1(Chunk chunkVersion1) {
+        this.chunkVersion1 = chunkVersion1;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public Chunk getChunkVersion2() {
+        return chunkVersion2;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setChunkVersion2(Chunk chunkVersion2) {
+        this.chunkVersion2 = chunkVersion2;
     }
+
+    public Chunk getAfterContext() {
+        return afterContext;
+    }
+
+    public void setAfterContext(Chunk afterContext) {
+        this.afterContext = afterContext;
+    }
+
+   
     
     
     
