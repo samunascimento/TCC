@@ -14,22 +14,18 @@ import java.util.List;
  * @author felip
  */
 public class ConflictChunk {
-    
+
     private Chunk beforeContext;
-     private Chunk chunkVersion1;
+    private Chunk chunkVersion1;
     private Chunk chunkVersion2;
     private Chunk afterContext;
-    
+
     public ConflictChunk(Chunk beforeContext, Chunk chunkVersion1, Chunk chunkVersion2, Chunk afterContext) {
         this.beforeContext = beforeContext;
         this.chunkVersion1 = chunkVersion1;
         this.chunkVersion2 = chunkVersion2;
         this.afterContext = afterContext;
     }
-   
-    
-
-
 
     public ConflictChunk() {
     }
@@ -66,10 +62,4 @@ public class ConflictChunk {
         this.afterContext = afterContext;
     }
 
-   
-    
-    
-    
-    
-    
 }
