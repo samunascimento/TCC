@@ -190,6 +190,11 @@ class ChartLine extends Component {
             <VictoryLine
               key={i}
               data={d}
+              style={{
+                data: {
+                  stroke: this.state.colors[i]
+                }
+              }}
               labels={({ datum }) => datum.y}
               labelComponent={
                 <VictoryTooltip

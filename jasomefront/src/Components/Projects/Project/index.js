@@ -192,7 +192,7 @@ export default class Project extends Component {
       this.state.data.map((metrics, index) => {
         console.log(index)
         console.log(this.state.data.length)
-
+        
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
             metricCheck = true
@@ -449,9 +449,8 @@ export default class Project extends Component {
 
   clearChart = () => {
     //this.setState({ data: [] })
-    this.state.data.map((metrics, index) => {
-      metrics.splice(0,metrics.length);
-    })
+    const dataSize = this.state.data.length
+    this.state.data.splice(0,dataSize)
     this.setState({ metricsDescriptions: [] })
     this.setState({ projectTloc: false })
     this.setState({ packageTree: this.clearMenuPackage() })
