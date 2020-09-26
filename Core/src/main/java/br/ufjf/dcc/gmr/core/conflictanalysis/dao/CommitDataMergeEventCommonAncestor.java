@@ -13,14 +13,14 @@ import java.sql.SQLException;
  *
  * @author luan
  */
-public class CommitDataMergeEventCommonAncestorofParentsDAO {
+public class CommitDataMergeEventCommonAncestor {
 
     private Connection connection;
 
     public static final String COMMIT_DATA_ID = "idCommitData";
     public static final String MERGE_EVENT_ID = "idMergeEvent";
 
-    public CommitDataMergeEventCommonAncestorofParentsDAO(Connection connection) {
+    public CommitDataMergeEventCommonAncestor(Connection connection) {
         this.connection = connection;
     }
 

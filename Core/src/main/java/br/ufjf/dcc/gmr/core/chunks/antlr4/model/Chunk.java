@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.model;
 
-public class LanguageConstruct {
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.BaseBinding;
+import java.util.List;
+
+public class Chunk {
 
     private int lineBegin;
     private int lineEnd;
@@ -8,8 +11,9 @@ public class LanguageConstruct {
     private int columnEnd;
     private String text;
     private String type;
-
-    public LanguageConstruct(int lineBegin, int lineEnd, int columnBegin, int columnEnd, String text, String type) {
+    private List<BaseBinding> languageConstruct;
+    
+    public Chunk(int lineBegin, int lineEnd, int columnBegin, int columnEnd, String text, String type) {
         this.lineBegin = lineBegin;
         this.lineEnd = lineEnd;
         this.columnBegin = columnBegin;
@@ -18,7 +22,7 @@ public class LanguageConstruct {
         this.type = type;
     }
 
-    public LanguageConstruct() {
+    public Chunk() {
     }
     
     /**
@@ -103,6 +107,14 @@ public class LanguageConstruct {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<BaseBinding> getLanguageConstruct() {
+        return languageConstruct;
+    }
+
+    public void setLanguageConstruct(List<BaseBinding> languageConstruct) {
+        this.languageConstruct = languageConstruct;
     }
     
 }

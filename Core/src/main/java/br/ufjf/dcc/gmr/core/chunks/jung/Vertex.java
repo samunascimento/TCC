@@ -10,45 +10,25 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
 
 public class Vertex {
     
-    private String id;
-    private TypeBinding typeBinding;
     private ConflictChunk conflictChunk;
 
-    public Vertex(String id, TypeBinding typeBinding, ConflictChunk conflictChunk) {
-        this.id = id;
-        this.typeBinding = typeBinding;
+    public Vertex(ConflictChunk conflictChunk) {
         this.conflictChunk = conflictChunk;
     }
     
     public Vertex() {
-        this.typeBinding = new TypeBinding();
+      
         this.conflictChunk = new ConflictChunk();
     }
     
     @Override
     public String toString(){
-        String txt = "Arquivo: "+typeBinding.getName()+" || Intervalo de Linhas : ";
-        txt+= conflictChunk.getLanguageConstructLiteral().getLineBegin()+" até "+conflictChunk.getLanguageConstructLiteral().getLineEnd();
+        String txt = "Arquivo: "+conflictChunk.getChunkVersion1().getType()+" || Intervalo de Linhas : ";
+        txt+= conflictChunk.getBeforeContext().getLineBegin()+" até "+conflictChunk.getBeforeContext().getLineEnd();
         
         return txt;
     }
     
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public TypeBinding getTypeBinding() {
-        return typeBinding;
-    }
-
-    public void setTypeBinding(TypeBinding typeBinding) {
-        this.typeBinding = typeBinding;
-    }
-
     public ConflictChunk getConflictChunk() {
         return conflictChunk;
     }

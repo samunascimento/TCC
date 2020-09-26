@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.LanguageConstruct;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -86,25 +86,27 @@ public class ParserJava {
 
         }
 
-          LanguageConstruct languageConstructA = new LanguageConstruct();
-        languageConstructA.setLineBegin(26);
-        languageConstructA.setLineEnd(31);
-        languageConstructA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-        List<BaseBinding> sourceBinding = parserJava.globalEnviroment.findLanguageConstructs(languageConstructA);
-        ConflictChunk chunkB = new ConflictChunk(languageConstructA, sourceBinding, "br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java"); 
+          Chunk chunkA = new Chunk();
+        chunkA.setLineBegin(26);
+        chunkA.setLineEnd(31);
+        chunkA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        chunkA.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkA)); 
+        ConflictChunk conflictChunkA = new ConflictChunk(); 
+        conflictChunkA.setChunkVersion1(chunkA);
         
-        LanguageConstruct languageConstructB = new LanguageConstruct();
-        languageConstructB.setLineBegin(32);
-        languageConstructB.setLineEnd(45);
-        languageConstructB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-        List<BaseBinding> targetBinding =  parserJava.globalEnviroment.findLanguageConstructs(languageConstructB);     
-        ConflictChunk chunkA = new ConflictChunk(languageConstructB, targetBinding, "br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        Chunk chunkB = new Chunk();
+        chunkB.setLineBegin(32);
+        chunkB.setLineEnd(45);
+        chunkB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+        chunkB.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkB));     
+        ConflictChunk conflictChunkB = new ConflictChunk(); 
+        conflictChunkB.setChunkVersion1(chunkB);
         
-        List<ConflictChunk> chunkList = new ArrayList<>();
-        chunkList.add(chunkA);
-        chunkList.add(chunkB);
+       List<ConflictChunk> conflictChunkList = new ArrayList<>();
+       conflictChunkList.add(conflictChunkA);
+       conflictChunkList.add(conflictChunkB);
         
-        Main jung = new Main(parserJava.getGlobalEnviroment(), chunkList, paths);
+        Main jung = new Main(parserJava.getGlobalEnviroment(), conflictChunkList, paths);
         jung.main(args);
     }
 

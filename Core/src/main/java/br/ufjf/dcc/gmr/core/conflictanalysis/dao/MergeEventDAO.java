@@ -34,6 +34,7 @@ public class MergeEventDAO {
         //insert MergeEvent
         CommitDataDAO commitDataDAO = new CommitDataDAO(connection);
         CommitDataMergeEventParentsDAO commitDataMergeEventParentsDAO = new CommitDataMergeEventParentsDAO(connection);
+        CommitDataMergeEventCommonAncestor commitDataMergeEventCommonAncestorDAO = new CommitDataMergeEventCommonAncestor(connection);
         
         String sql = "INSERT INTO MergeEvent "
                 + "(" + ISCONFLICT + ") "
@@ -54,11 +55,14 @@ public class MergeEventDAO {
             int mergeEventID = result.getInt(1);
             
             for (CommitData parent : mergeEvent.getParents()) {
-                int commitDataID = commitDataDAO.insert(parent);
-                commitDataMergeEventParentsDAO.insert(commitDataID, mergeEventID);
+                int parentId = commitDataDAO.insert(parent);
+                commitDataMergeEventParentsDAO.insert(parentId, mergeEventID);
                             
             }
             
+            CommitData commonAncestorOfParents = mergeEvent.getCommonAncestorOfParents();
+            int commonAncestorId = commitDataDAO.insert(commonAncestorOfParents);
+            commitDataMergeEventCommonAncestorDAO.insert(commonAncestorId, mergeEventID);
             
             
             return mergeEventID;
