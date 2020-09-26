@@ -147,8 +147,9 @@ class ChartLine extends Component {
                   labels={({ datum }) => `(${datum.x},${datum.y})` }
                 />   
                   ))} */}
-          {this.state.data.map((d, i) => (
+          {this.props.data.map((d, i) => (
             <VictoryLine
+              {...console.log(this.props.data)}
               key={i}
               data={d}
               style={{

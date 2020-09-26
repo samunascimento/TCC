@@ -29,6 +29,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 import { PropTypes } from 'prop-types';
+import { branch } from 'recompose';
 
 export default class Project extends Component {
   constructor(props) {
@@ -108,12 +109,14 @@ export default class Project extends Component {
     axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
-        data.push(res.data)
-        this.setState({ data: res.data });
+        res.data.map((branch) => {
+          data.push(branch)
+        })
+        this.setState({ data: data});
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
         })
-        this.setState({projectTLOC: res.data})
+        this.setState({projectTLOC: true})
       })
       
     this.getMetricDescription('TLOC', 'project')
@@ -184,22 +187,27 @@ export default class Project extends Component {
         metricCheck = false
       }
 
+      let indexArray = []
+
       this.state.data.map((metrics, index) => {
+        console.log(index)
+        console.log(this.state.data.length)
 
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
             metricCheck = true
-            metricIndex = index
           }
         })
+        console.log(metricCheck)
         if (metricCheck === true) {
-          this.state.data.splice(index, 1)
+          indexArray.push(index)
           metricCheck = false
         }
-
-        this.RemoveMetricDescription(metricName, 'project')
-
       })
+        console.log(indexArray.length)
+        this.state.data.splice(indexArray[0], indexArray.length)
+      
+      this.RemoveMetricDescription(metricName, 'project')
     }
 
   }
@@ -210,8 +218,10 @@ export default class Project extends Component {
     await axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
-        data.push(res.data)
-        this.setState({ data: res.data });
+        res.data.map((branch) => {
+          data.push(branch)
+        })
+        this.setState({ data: data});
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
         })
