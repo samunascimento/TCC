@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.CommitData;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.MergeEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,9 +34,12 @@ public class MergeEventDAO {
 
         //insert MergeEvent
         CommitDataDAO commitDataDAO = new CommitDataDAO(connection);
+        ConflictFileDAO conflictFileDAO = new ConflictFileDAO(connection);
         CommitDataMergeEventParentsDAO commitDataMergeEventParentsDAO = new CommitDataMergeEventParentsDAO(connection);
         CommitDataMergeEventCommonAncestor commitDataMergeEventCommonAncestorDAO = new CommitDataMergeEventCommonAncestor(connection);
-        
+        CommitDataMergeEventHashDAO commitDataMergeEventHashDAO = new CommitDataMergeEventHashDAO(connection);
+        ConflictFileMergeEventDAO conflictFileMergeEventDAO = new ConflictFileMergeEventDAO(connection);
+
         String sql = "INSERT INTO MergeEvent "
                 + "(" + ISCONFLICT + ") "
                 + "VALUES (?)"
@@ -53,18 +57,28 @@ public class MergeEventDAO {
             result.next();
 
             int mergeEventID = result.getInt(1);
-            
+
             for (CommitData parent : mergeEvent.getParents()) {
                 int parentId = commitDataDAO.insert(parent);
                 commitDataMergeEventParentsDAO.insert(parentId, mergeEventID);
-                            
+
             }
-            
+
             CommitData commonAncestorOfParents = mergeEvent.getCommonAncestorOfParents();
             int commonAncestorId = commitDataDAO.insert(commonAncestorOfParents);
             commitDataMergeEventCommonAncestorDAO.insert(commonAncestorId, mergeEventID);
+
+            CommitData MergeEventHash = mergeEvent.getHash();
+            int hashID = commitDataDAO.insert(MergeEventHash);
+            commitDataMergeEventHashDAO.insert(hashID, mergeEventID);
             
+               for (ConflictFile conflictFiles : mergeEvent.getConflictFiles()) {
+                int conflictID = conflictFileDAO.insert(conflictFiles);
+                commitDataMergeEventParentsDAO.insert(conflictID, mergeEventID);
+            }
+          
             
+
             return mergeEventID;
         } catch (SQLException e) {
             throw new RuntimeException(e);

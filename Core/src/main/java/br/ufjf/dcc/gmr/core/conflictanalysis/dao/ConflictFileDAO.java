@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author luan
  */
-public class ConflitFileDAO {
+public class ConflictFileDAO {
 
     private final Connection connection;
 
@@ -29,7 +29,7 @@ public class ConflitFileDAO {
     public static final String EXTRAFILEPATH = "extraFilePath";
     public static final String EXTRAINSIDEFILEPATH = "extraInsideFilePath";
 
-    public ConflitFileDAO(Connection connection) {
+    public ConflictFileDAO(Connection connection) {
         this.connection = connection;
     }
 
