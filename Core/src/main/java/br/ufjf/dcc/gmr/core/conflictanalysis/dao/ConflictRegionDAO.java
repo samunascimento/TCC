@@ -39,6 +39,7 @@ public class ConflictRegionDAO {
     public static final String ORIGINALV2STOPLINE = "originalV2StopLine";
     public static final String V1SIZE = "v1Size";
     public static final String V2SIZE = "v2Size";
+    public static final String DEVELOPERDECISION = "developerDecision";
 
     public ConflictRegionDAO(Connection connection) {
         this.connection = connection;
@@ -51,8 +52,8 @@ public class ConflictRegionDAO {
                 + V1 + ", " + V2 + ", " + SOLUTION + ", " + TYPESOFCONFLICTS + ", " + OUTMOSTEDTYPESOFCONFLICTS + ", "
                 + BEGINLINE + ", " + SEPARATORLINE + ", " + ENDLINE + ", " + ORIGINALV1STARTLINE + ", "
                 + ORIGINALV1STOPLINE + ", " + ORIGINALV2STARTLINE + ", " + ORIGINALV2STOPLINE
-                + V1SIZE + ", " + V2SIZE + ") "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                + V1SIZE + ", " + V2SIZE + ", " + DEVELOPERDECISION + ") "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -77,6 +78,7 @@ public class ConflictRegionDAO {
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
             stmt.setInt(16, conflictRegion.getV1Size());
             stmt.setInt(17, conflictRegion.getV2Size());
+            stmt.setString(18,conflictRegion.getDeveloperDecision());
 
             ResultSet result = stmt.executeQuery();
 
@@ -124,6 +126,7 @@ public class ConflictRegionDAO {
                 commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
                 commit.setV1Size(resultSet.getInt(V1SIZE));
                 commit.setV2Size(resultSet.getInt(V2SIZE));
+                commit.setDeveloperDecision(resultSet.getString(DEVELOPERDECISION));
                 commit.setId(resultSet.getInt(ID));
 
                 commitsList.add(commit);
@@ -169,6 +172,7 @@ public class ConflictRegionDAO {
                 commit.setOriginalV2StopLine(resultSet.getInt(ORIGINALV2STOPLINE));
                 commit.setV1Size(resultSet.getInt(V1SIZE));
                 commit.setV2Size(resultSet.getInt(V2SIZE));
+                commit.setDeveloperDecision(resultSet.getString(DEVELOPERDECISION));
                 commit.setId(resultSet.getInt(ID));
 
             }
@@ -222,6 +226,7 @@ public class ConflictRegionDAO {
                 + ORIGINALV2STOPLINE + " = ? "
                 + V1SIZE + " = ? "
                 + V2SIZE + " = ? "
+                + DEVELOPERDECISION + " = ? "
                 + "WHERE ID = ?";
 
         System.out.println(sql);
@@ -247,7 +252,8 @@ public class ConflictRegionDAO {
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
             stmt.setInt(16, conflictRegion.getV1Size());
             stmt.setInt(17, conflictRegion.getV2Size());
-            stmt.setInt(18, id);
+            stmt.setString(18,conflictRegion.getDeveloperDecision());
+            stmt.setInt(19, id);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
