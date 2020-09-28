@@ -67,19 +67,8 @@ class ChartLine extends Component {
   // }
   
   componentDidUpdate(prevProps,prevState) {
-    console.log('componentDidUpdate')
 
-    console.log('prevprops')
-    console.log(prevProps.data)
-    console.log('prevState')
-    console.log(prevState)
-    console.log('this.props.data')
-    console.log(this.props.data)
-    console.log('this.state.data')
-    console.log(this.state)
     if (this.props.data !== prevState.data) {
-      console.log('imprimindo data')
-      console.log(this.props.data)
       this.setState({ data: this.props.data })
 
       this.setState({
@@ -90,8 +79,6 @@ class ChartLine extends Component {
         }
       })
 
-      console.log('zoomDomain')
-      console.log(this.state.zoomDomain)
 
       this.setState({
         maximaX: this.state.data.map(
@@ -103,8 +90,6 @@ class ChartLine extends Component {
           (dataset) => Math.max(...dataset.map((d) => d.y))
         )
       })
-      console.log('imprimindo maximaY')
-      console.log(this.state.maximaY)
 
     }
   }
@@ -149,12 +134,11 @@ class ChartLine extends Component {
                   ))} */}
           {this.props.data.map((d, i) => (
             <VictoryLine
-              {...console.log(this.props.data)}
               key={i}
               data={d}
               style={{
                 data: {
-                  stroke: this.state.colors[i]
+                  stroke: this.props.colors[i].color
                 }
               }}
               x={this.handleSwitch()}
@@ -192,7 +176,7 @@ class ChartLine extends Component {
               data={d}
               style={{
                 data: {
-                  stroke: this.state.colors[i]
+                  stroke: this.props.colors[i].color
                 }
               }}
               labels={({ datum }) => datum.y}

@@ -65,10 +65,13 @@ export default class Project extends Component {
       { name: 'NVAR' }, { name: 'SI' }, { name: 'VG' }],
 
       colors: [],
+      index: 1,
+      colorsIndex: [],
+
 
       data: [],
 
-      
+
       projectMetricsChart: [],
       packageMetricsChart: [],
       classMetricsChart: [],
@@ -105,21 +108,42 @@ export default class Project extends Component {
     return cor_aleatoria
   }
 
+  gerarCorBranch = () => {
+    let metricCheck = null
+    const colors = []
+    this.state.data.map((metric, index) => {
+      if (metricCheck === null) {
+        colors.push(this.state.colors(index))
+      }
+      else if (metric)
+        metricCheck = metric
+    })
+  }
+
   componentDidMount = () => {
+
+    for (let index = 0; index < 200; index++) {
+      const colors = this.state.colors
+      colors[index] = this.gerarCor()
+      this.setState({ colors })
+    }
+
     axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
+        const metricDescription = { 'metricName': 'TLOC', 'color': this.state.colors[0], 'index': 0, 'checkMetric': this.props.nameProject.name }
         res.data.map((branch) => {
           data.push(branch)
+          this.state.colorsIndex.push(metricDescription)
         })
-        this.setState({ data: data});
+        this.setState({ data: data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
         })
-        this.setState({projectTLOC: true})
+        this.setState({ projectTLOC: true })
       })
-      
-    this.getMetricDescription('TLOC', 'project')
+
+    this.getMetricDescription('TLOC', this.props.nameProject.name)
 
     axios.get(`namePackage/` + this.props.nameProject.name)
       .then(res => {
@@ -127,11 +151,6 @@ export default class Project extends Component {
         this.setState({ packageTree })
       })
 
-    for (let index = 0; index < 200; index++) {
-      const colors = this.state.colors
-      colors[index] = this.gerarCor()
-      this.setState({ colors })
-    }
   }
 
   getMetricDescription = (metricName, checkMetric) => {
@@ -192,7 +211,7 @@ export default class Project extends Component {
       this.state.data.map((metrics, index) => {
         console.log(index)
         console.log(this.state.data.length)
-        
+
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
             metricCheck = true
@@ -204,12 +223,39 @@ export default class Project extends Component {
           metricCheck = false
         }
       })
-        console.log(indexArray.length)
-        this.state.data.splice(indexArray[0], indexArray.length)
-      
-      this.RemoveMetricDescription(metricName, 'project')
-    }
 
+      this.adjustColors(metricName, this.props.nameProject.name)
+
+      console.log(indexArray.length)
+      this.state.data.splice(indexArray[0], indexArray.length)
+
+      this.RemoveMetricDescription(metricName, this.props.nameProject.name)
+    }
+  }
+
+  adjustColors = (metricName, checkMetric) => {
+
+    let size = 0
+    let firstEncounter = null
+
+    this.state.colorsIndex.map((color, index) => {
+      if (color.metricName === metricName && color.checkMetric === checkMetric) {
+        if (firstEncounter === null) {
+          firstEncounter = index
+        }
+        size = size + 1
+      }
+    })
+    this.state.colorsIndex.splice(firstEncounter, size)
+
+    this.state.colorsIndex.map((color, colorIndex) => {
+      if (firstEncounter <= colorIndex) {
+        color.color = this.state.colors[color.index - 1]
+        color.index = color.index = 1
+      }
+    })
+
+    this.setState({index: this.state.index - 1})
   }
 
 
@@ -218,16 +264,21 @@ export default class Project extends Component {
     await axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
+        const metricDescription = { 'metricName': metric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': this.props.nameProject.name }
         res.data.map((branch) => {
           data.push(branch)
+          this.state.colorsIndex.push(metricDescription)
         })
-        this.setState({ data: data});
+        this.setState({ data: data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
         })
       })
-    this.getMetricDescription(metric.metricName, 'project')
+    this.getMetricDescription(metric.metricName, this.props.nameProject.name)
+    this.setState({ index: this.state.index + 1 })
   }
+
+
 
   addPackageMetric = (event, metricName, packageName, packageIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
@@ -272,6 +323,9 @@ export default class Project extends Component {
           metricCheck = false
         }
       })
+
+      this.adjustColors(metricName, packageName)
+
       const packageSplit = packageName.split('.');
       if (packageSplit.length !== 1) {
         packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
@@ -289,7 +343,10 @@ export default class Project extends Component {
     await axios.get(`metric/package/` + this.props.nameProject.name + `/` + packageMetric.packageName + `/` + packageMetric.metricName)
       .then(res => {
         const data = this.state.data
+        const metricDescription = { 'metricName': packageMetric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': packageMetric.packageName }
         data.push(res.data[0])
+        console.log(this.state.colors[this.state.index])
+        this.state.colorsIndex.push(metricDescription)
         this.setState({ data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
@@ -303,6 +360,7 @@ export default class Project extends Component {
     }
 
     this.getMetricDescription(packageMetric.metricName, packageMetric.packageName);
+    this.setState({ index: this.state.index + 1 })
 
   }
 
@@ -421,6 +479,7 @@ export default class Project extends Component {
     //   })
     // })
 
+
     this.state.projectMetricsChart.map((projectMetric) => {
       this.handleChangeProject(projectMetric)
     })
@@ -450,10 +509,12 @@ export default class Project extends Component {
   clearChart = () => {
     //this.setState({ data: [] })
     const dataSize = this.state.data.length
-    this.state.data.splice(0,dataSize)
+    this.state.data.splice(0, dataSize)
     this.setState({ metricsDescriptions: [] })
     this.setState({ projectTloc: false })
     this.setState({ packageTree: this.clearMenuPackage() })
+    this.setState({ colorsIndex: [] })
+    this.setState({ index: 0 })
 
   }
 
@@ -502,7 +563,7 @@ export default class Project extends Component {
         </div>
 
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} colors={this.state.colors} switch={this.state.checkSwitch} maximaY={this.state.maximaY} />
+          <Chart data={this.state.data} colors={this.state.colorsIndex} switch={this.state.checkSwitch} maximaY={this.state.maximaY} />
         </div>
       </div >
     );
