@@ -30,6 +30,7 @@ create table ConflictRegion(
   originalV2StopLine int,
   typesOfConflicts text,
   outmostedTypesOfConflicts text,
+  developerDecision varchar(15),
 
 	PRIMARY KEY (ID)
 

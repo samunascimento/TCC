@@ -63,6 +63,8 @@ public class ConflictRegion {
         this.typesOfConflicts = typesOfConflicts;
         this.outmostedTypesOfConflicts = outmostedTypesOfConflicts;
         this.developerDecision = developerDecision;
+        this.developerDecision = new DeveloperDecision("VERSION1");
+        
     }
     
     public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
