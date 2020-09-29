@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +36,9 @@ public class ConflictFileDAO {
 
     public int insert(ConflictFile conflictFile) throws SQLException {
 
+        ConflictRegionDAO conflictRegionDAO = new ConflictRegionDAO(connection);
+        ConflictRegionConflictFileDAO conflictRegionConflictFileDAO = new ConflictRegionConflictFileDAO(connection);
+
         String sql = "INSERT INTO conflctiFile "
                 + "(" + FILENAME + ", " + FILEPATH + ", " + INSIDEFILEPATH + ", "
                 + EXTRAFILENAME + ", " + EXTRAFILEPATH + ", " + EXTRAINSIDEFILEPATH + ") "
@@ -57,7 +61,15 @@ public class ConflictFileDAO {
 
             result.next();
 
-            return result.getInt(1);
+            int conflictFileID = result.getInt(1);
+
+            for (ConflictRegion conflictRegion : conflictFile.getConflictRegion()) {
+                int conflictRegionId = conflictRegionDAO.insert(conflictRegion);
+                conflictRegionConflictFileDAO.insert(conflictFileID, conflictRegionId);
+
+            }
+
+            return conflictFileID;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

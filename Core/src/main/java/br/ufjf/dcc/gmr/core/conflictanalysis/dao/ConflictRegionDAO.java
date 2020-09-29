@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,6 +48,12 @@ public class ConflictRegionDAO {
 
     public int insert(ConflictRegion conflictRegion) throws SQLException {
 
+        SyntaxStructureDAO syntaxStructureDAO = new SyntaxStructureDAO(connection);
+        SyntaxStructureConflictRegionOutmostedsyntaxV1DAO structureConflictRegionOutmostedsyntaxV1DAO = new SyntaxStructureConflictRegionOutmostedsyntaxV1DAO(connection);
+        SyntaxStructureConflictRegionOutmostedSyntaxV2DAO structureConflictRegionOutmostedsyntaxV2DAO = new SyntaxStructureConflictRegionOutmostedSyntaxV2DAO(connection);
+        SyntaxStructureConflictRegionSyntaxV1DAO syntaxStructureConflictRegionSyntaxV1DAO = new SyntaxStructureConflictRegionSyntaxV1DAO(connection);
+        SyntaxStructureConflictRegionSyntaxV2DAO syntaxStructureConflictRegionSyntaxV2DAO = new SyntaxStructureConflictRegionSyntaxV2DAO(connection);
+
         String sql = "INSERT INTO conflctiFile "
                 + "(" + RAWTEXT + ", " + BEFORECONTEXT + ", " + AFTERCONTEXT + ", "
                 + V1 + ", " + V2 + ", " + SOLUTION + ", " + TYPESOFCONFLICTS + ", " + OUTMOSTEDTYPESOFCONFLICTS + ", "
@@ -78,13 +85,39 @@ public class ConflictRegionDAO {
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
             stmt.setInt(16, conflictRegion.getV1Size());
             stmt.setInt(17, conflictRegion.getV2Size());
-            stmt.setString(18,conflictRegion.getDeveloperDecision());
+            stmt.setString(18, conflictRegion.getDeveloperDecision());
 
             ResultSet result = stmt.executeQuery();
 
             result.next();
 
-            return result.getInt(1);
+            int conflictRegionID = result.getInt(1);
+
+            for (SyntaxStructure outmostedV1 : conflictRegion.getSyntaxV1Outmost()) {
+                int outmostedV1Id = syntaxStructureDAO.insert(outmostedV1);
+                syntaxStructureConflictRegionSyntaxV1DAO.insert(outmostedV1Id, conflictRegionID);
+
+            }
+
+            for (SyntaxStructure outmostedV2 : conflictRegion.getSyntaxV2Outmost()) {
+                int outmostedV2Id = syntaxStructureDAO.insert(outmostedV2);
+                syntaxStructureConflictRegionSyntaxV1DAO.insert(outmostedV2Id, conflictRegionID);
+
+            }
+
+            for (SyntaxStructure syntaxV1 : conflictRegion.getSyntaxV1()) {
+                int syntaxV1Id = syntaxStructureDAO.insert(syntaxV1);
+                syntaxStructureConflictRegionSyntaxV1DAO.insert(syntaxV1Id, conflictRegionID);
+
+            }
+
+            for (SyntaxStructure syntaxV2 : conflictRegion.getSyntaxV2()) {
+                int syntaxV2Id = syntaxStructureDAO.insert(syntaxV2);
+                syntaxStructureConflictRegionSyntaxV1DAO.insert(syntaxV2Id, conflictRegionID);
+
+            }
+
+            return conflictRegionID;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -252,7 +285,7 @@ public class ConflictRegionDAO {
             stmt.setInt(15, conflictRegion.getOriginalV2StopLine());
             stmt.setInt(16, conflictRegion.getV1Size());
             stmt.setInt(17, conflictRegion.getV2Size());
-            stmt.setString(18,conflictRegion.getDeveloperDecision());
+            stmt.setString(18, conflictRegion.getDeveloperDecision());
             stmt.setInt(19, id);
 
             stmt.executeUpdate();

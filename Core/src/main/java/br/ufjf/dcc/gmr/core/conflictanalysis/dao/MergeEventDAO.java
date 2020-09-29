@@ -71,13 +71,11 @@ public class MergeEventDAO {
             CommitData MergeEventHash = mergeEvent.getHash();
             int hashID = commitDataDAO.insert(MergeEventHash);
             commitDataMergeEventHashDAO.insert(hashID, mergeEventID);
-            
-               for (ConflictFile conflictFiles : mergeEvent.getConflictFiles()) {
+
+            for (ConflictFile conflictFiles : mergeEvent.getConflictFiles()) {
                 int conflictID = conflictFileDAO.insert(conflictFiles);
                 commitDataMergeEventParentsDAO.insert(conflictID, mergeEventID);
             }
-          
-            
 
             return mergeEventID;
         } catch (SQLException e) {
