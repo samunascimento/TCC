@@ -295,82 +295,81 @@ public class MetricDao {
         return null;
     }
 
-//    private class Merge {
-//
-//        private int versionID;
-//        private int count;
-//
-//        /**
-//         * @return the parentID
-//         */
-//        public int getVersionID() {
-//            return versionID;
-//        }
-//
-//        /**
-//         * @param parentID the parentID to set
-//         */
-//        public void setVersionID(int versionID) {
-//            this.versionID = versionID;
-//        }
-//
-//        /**
-//         * @return the count
-//         */
-//        public int getCount() {
-//            return count;
-//        }
-//
-//        /**
-//         * @param count the count to set
-//         */
-//        public void setCount(int count) {
-//            this.count = count;
-//        }
-//
-//    }
-//
-//    public List<Merge> getMerges() throws SQLException {
-//
-//        Merge merge = new Merge();
-//
-//        List<Merge> merges = new ArrayList<>();
-//
-//        String sql = "select ph.version_id,count(ph.version_id) from tb_projectmetrics tp \n"
-//                + "inner join tb_project_version pv\n"
-//                + "on tp.id = pv.project_id \n"
-//                + "inner join tb_versionmetrics v\n"
-//                + "on v.id = pv.version_id \n"
-//                + "inner join tb_parents_hash ph\n"
-//                + "on v.id = ph.version_id \n"
-//                + "group by ph.version_id\n"
-//                + "having count(ph.version_id) > 1\n"
-//                + "order by ph.version_id ";
-//
-//        PreparedStatement stmt = null;
-//
-//        ResultSet resultSet = null;
-//
-//        try {
-//            stmt = connection.prepareStatement(sql);
-//            resultSet = stmt.executeQuery();
-//            while (resultSet.next()) {
-//                merge.setVersionID(resultSet.getInt("version_id"));
-//                merge.setCount(resultSet.getInt("count"));
-//                merges.add(merge);
-//            }
-//
-//            return merges;
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            if (stmt != null) {
-//                stmt.close();
-//            }
-//        }
-//
-//    }
+    private class Merge {
+
+        private int versionID;
+        private int count;
+
+        /**
+         * @return the parentID
+         */
+        public int getVersionID() {
+            return versionID;
+        }
+
+        /**
+         * @param parentID the parentID to set
+         */
+        public void setVersionID(int versionID) {
+            this.versionID = versionID;
+        }
+
+        /**
+         * @return the count
+         */
+        public int getCount() {
+            return count;
+        }
+
+        /**
+         * @param count the count to set
+         */
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+    }
+
+    public List<Merge> getMerges(String nameProject) throws SQLException {
+
+        List<Merge> merges = new ArrayList<>();
+
+        String sql = "select ph.version_id, count(ph.version_id)\n"
+                + "from tb_projectmetrics tp\n"
+                + "inner join tb_project_version pv on tp.id = pv.project_id\n"
+                + "inner join tb_versionmetrics v on v.id = pv.version_id\n"
+                + "inner join tb_parents_hash ph on v.id = ph.version_id\n"
+                + "where tp.projectname = " + "\'" + nameProject + "\'"
+                + "group by ph.version_id\n"
+                + "having count(ph.version_id) > 1\n"
+                + "order by ph.version_id";
+
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                Merge merge = new Merge();
+                merge.setVersionID(resultSet.getInt("version_id"));
+                merge.setCount(resultSet.getInt("count"));
+                merges.add(merge);
+            }
+
+            return merges;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+
+    }
+
     private class Branch {
 
         private int parentID;
@@ -453,6 +452,8 @@ public class MetricDao {
 
         List<Branch> branches = getBranches(nameProject);
 
+        List<Merge> merges = getMerges(nameProject);
+
         List<Integer> finalPoints = new ArrayList<>();
 
         boolean checkMerge = false;
@@ -475,7 +476,7 @@ public class MetricDao {
                 + "on v.id = pv.version_id\n"
                 + "left join tb_metric tm \n"
                 + "on v.tlocid = tm.id\n"
-                +"where tp.projectname = " + "\'" + nameProject + "\'"
+                + "where tp.projectname = " + "\'" + nameProject + "\'"
                 + "order by  v.commitid";
 
         try {
@@ -509,14 +510,28 @@ public class MetricDao {
                 }
 
                 if (checkFirstBranch == true && checkBranch == false) {
-                    System.out.println(resultSet.getInt("parent_id"));
+                    int merge = -1;
                     if (checkListPoints == false) {
                         chartLines.add(listPoints);
                         checkListPoints = true;
                     }
+                    for (int j = 0; j < merges.size(); j++) {
+                        if (merges.get(j).getVersionID() == resultSet.getInt("parent_id")) {
+                            System.out.println(merges.get(j).getVersionID());
+                            merge = merges.get(j).getVersionID();
+                        }
+                    }
 
                     for (int i = 0; i < chartLines.size(); i++) {
-                        if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+
+                        if ((chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) && merge != -1) {
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            Date versionDate = new Date(versionTimestamp.getTime());
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                            break;
+
+                        }
+                        else if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             Date versionDate = new Date(versionTimestamp.getTime());
                             chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
@@ -526,7 +541,6 @@ public class MetricDao {
 
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    System.out.println(listPoints);
                     listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
 
                 }
@@ -541,9 +555,6 @@ public class MetricDao {
             }
         }
     }
-
-
- 
 
     public List<List<Point>> selectPackageMetrics(String nameProject, String namePackage, String nameMetric) throws SQLException {
 
@@ -583,7 +594,7 @@ public class MetricDao {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, resultSet.getString("sha"),0,0));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), 0, 0));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                     Date versionDate = new Date(versionTimestamp.getTime());

@@ -63,6 +63,7 @@ public class ConflictRegion {
         this.typesOfConflicts = typesOfConflicts;
         this.outmostedTypesOfConflicts = outmostedTypesOfConflicts;
         this.developerDecision = developerDecision;
+        
     }
     
     public ConflictRegion(List<String> rawText, List<String> beforeContext, List<String> afterContext, List<String> v1, List<String> v2, List<String> solution, int beginLine, int separatorLine,
@@ -205,6 +206,10 @@ public class ConflictRegion {
 
     public void setDeveloperDecision(DeveloperDecision developerDecision) {
         this.developerDecision = developerDecision;
+    }
+    
+    public void setDeveloperDecision(String developerDecision) {
+        this.developerDecision = DeveloperDecision.getEnum(developerDecision);
     }
 
     public String getRawText() {
