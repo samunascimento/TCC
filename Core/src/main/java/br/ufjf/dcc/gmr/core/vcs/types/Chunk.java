@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class Chunk {
 
-
     private boolean conflict;
     private Line begin;
     private Line separator;

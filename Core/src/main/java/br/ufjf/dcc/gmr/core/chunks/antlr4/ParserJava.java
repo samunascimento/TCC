@@ -26,88 +26,167 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import br.ufjf.dcc.gmr.core.chunks.jung.*;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
+import br.ufjf.dcc.gmr.core.vcs.types.Version;
 
 public class ParserJava {
 
     private static boolean reachedEnd = false;
     private GlobalEnviroment globalEnviroment;
+    private static Version version;
+    private static String pathProject;
 
     public ParserJava() {
         this.globalEnviroment = new GlobalEnviroment();
+        this.version = new Version();
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        List<List> pathAndOpenViewList = view();
-        List<Boolean> booleanList = pathAndOpenViewList.get(0);
-        List<String> pathsList = pathAndOpenViewList.get(1);
-        ParserJava parserJava = new ParserJava();
+    public ParserJava(Version version, String pathProject) {
+        this.version = version;
+        this.globalEnviroment = new GlobalEnviroment();
+        this.pathProject = pathProject;
+    }
 
-        int j = 0, i = 0;
+    public static void main(String[] args) throws Exception {
 
-        ASTExtractor1(pathsList, booleanList, parserJava.getGlobalEnviroment());
+//        GlobalEnviroment parent1 = new GlobalEnviroment();
+//        GlobalEnviroment parent2 = new GlobalEnviroment();
+//
+//        int cont = 1;
+//
+//        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
+//
+//        for (String parent : version.getParent()) {
+//
+//            Git.reset(ParserJava.pathProject, true, false, false, null);
+//            Git.clean(ParserJava.pathProject, true, 0);
+//            Git.checkout(parent, ParserJava.pathProject);
+//
+//            ParserJava parserJava = new ParserJava();
+//
+//            int j = 0, i = 0;
+//
+//            ASTExtractor1(javaFiles, parserJava.getGlobalEnviroment());
+//
+//            ASTExtractor2(javaFiles, parserJava.getGlobalEnviroment());
+//
+//            ASTExtractor3(javaFiles, parserJava.getGlobalEnviroment());
+//
+//            Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
+//
+//            for (String pathAST1 : javaFiles) {
+//                for (String pathAST2 : javaFiles) {
+//                    TypeBinding ast1 = new TypeBinding();
+//                    TypeBinding ast2 = new TypeBinding();
+//
+//                    for (String path : paths) {
+//                        if (pathAST1.endsWith(replaceAll(path, File.separator))) {
+//                            ast1 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
+//                        }
+//                    }
+//
+//                    for (String path : paths) {
+//                        if (pathAST2.endsWith(replaceAll(path, File.separator))) {
+//                            ast2 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
+//                        }
+//                    }
+//
+//                    if (j != i) {
+//                        System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
+//                        compare(ast1, ast2, parserJava.getGlobalEnviroment());
+//                    }
+//                    i++;
+//                }
+//                i = 0;
+//                j++;
+//
+//            }
+//
+//            System.out.println("***************GlobalEnviromentTypes***************");
+//            for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
+//                System.out.println(value);
+//
+//            }
+//            if (cont == 1) {
+//                parent1 = parserJava.getGlobalEnviroment();
+//            } else if (cont == 2) {
+//                parent2 = parserJava.getGlobalEnviroment();
+//            }
+//            
+//            
+//           
+//        }
+//        
+//         
+//         
+//        for (MyFile myFile : version.getFile()) {
+//            
+//            List<FileDiff> fileDiffList = Git.diff(pathProject, , , myFile.getContent().size());
+//            
+//            for (br.ufjf.dcc.gmr.core.vcs.types.Chunk chunck : myFile.getChuncks()) {
+//
+//                Chunk chunkA = new Chunk();
+//                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
+//                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
+//                chunkA.setType(myFile.getPath());
+//                chunkA.setLanguageConstruct(parent1.findLanguageConstructs(chunkA));
+//
+//                Chunk chunkB = new Chunk();
+//                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
+//                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
+//                chunkA.setType(myFile.getPath());
+//                chunkA.setLanguageConstruct(parent2.findLanguageConstructs(chunkA));
+//
+//                ConflictChunk conflictChunk = new ConflictChunk();
+//                conflictChunk.setChunkVersion1(chunkA);
+//                conflictChunk.setChunkVersion2(chunkB);
+//
+//            }
+//        }
 
-        ASTExtractor2(pathsList, parserJava.getGlobalEnviroment());
+//        Chunk chunkA = new Chunk();
+//        chunkA.setLineBegin(26);
+//        chunkA.setLineEnd(31);
+//        chunkA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+//        chunkA.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkA));
+//        ConflictChunk conflictChunkA = new ConflictChunk();
+//        conflictChunkA.setChunkVersion1(chunkA);
+//
+//        Chunk chunkB = new Chunk();
+//        chunkB.setLineBegin(32);
+//        chunkB.setLineEnd(45);
+//        chunkB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
+//        chunkB.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkB));
+//        ConflictChunk conflictChunkB = new ConflictChunk();
+//        conflictChunkB.setChunkVersion1(chunkB);
+//
+//        List<ConflictChunk> conflictChunkList = new ArrayList<>();
+//        conflictChunkList.add(conflictChunkA);
+//        conflictChunkList.add(conflictChunkB);
+//
+//        Main jung = new Main(parserJava.getGlobalEnviroment(), conflictChunkList, paths);
+//        jung.main(args);
+    }
 
-        ASTExtractor3(pathsList, parserJava.getGlobalEnviroment());
+    private static List<Chunk> getChunkBinding(ParserJava parserJava) {
 
-        Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
-
-        for (String pathAST1 : pathsList) {
-            for (String pathAST2 : pathsList) {
-                TypeBinding ast1 = new TypeBinding();
-                TypeBinding ast2 = new TypeBinding();
-
-                for (String path : paths) {
-                    if (pathAST1.endsWith(replaceAll(path, File.separator))) {
-                        ast1 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
-                    }
-                }
-
-                for (String path : paths) {
-                    if (pathAST2.endsWith(replaceAll(path, File.separator))) {
-                        ast2 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
-                    }
-                }
-
-                if (j != i) {
-                    System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
-                    compare(ast1, ast2, parserJava.getGlobalEnviroment());
-                }
-                i++;
+        List<Chunk> listChunk = new ArrayList<>();
+        for (MyFile myFile : version.getFile()) {
+            for (br.ufjf.dcc.gmr.core.vcs.types.Chunk chunk : myFile.getChuncks()) {
+                Chunk chunkBinding = new Chunk();
+                chunkBinding.setLineBegin(chunk.getBegin().getLineNumber());
+                chunkBinding.setLineEnd(chunk.getEnd().getLineNumber());
+                chunkBinding.setType(myFile.getPath());
+                chunkBinding.setText(chunk.getContent());
+                chunkBinding.setLanguageConstruct(parserJava.getGlobalEnviroment().findLanguageConstructs(chunkBinding));
+                listChunk.add(chunkBinding);
             }
-            i = 0;
-            j++;
-
         }
 
-        System.out.println("***************GlobalEnviromentTypes***************");
-        for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
-            System.out.println(value);
-
-        }
-
-          Chunk chunkA = new Chunk();
-        chunkA.setLineBegin(26);
-        chunkA.setLineEnd(31);
-        chunkA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-        chunkA.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkA)); 
-        ConflictChunk conflictChunkA = new ConflictChunk(); 
-        conflictChunkA.setChunkVersion1(chunkA);
-        
-        Chunk chunkB = new Chunk();
-        chunkB.setLineBegin(32);
-        chunkB.setLineEnd(45);
-        chunkB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-        chunkB.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkB));     
-        ConflictChunk conflictChunkB = new ConflictChunk(); 
-        conflictChunkB.setChunkVersion1(chunkB);
-        
-       List<ConflictChunk> conflictChunkList = new ArrayList<>();
-       conflictChunkList.add(conflictChunkA);
-       conflictChunkList.add(conflictChunkB);
-        
-        Main jung = new Main(parserJava.getGlobalEnviroment(), conflictChunkList, paths);
-        jung.main(args);
+        return null;
     }
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
@@ -144,10 +223,6 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
         System.out.println("***************Chunks***************");
 
-      
-        
-        
-        
     }
 
     private static List<String> javaFiles(String dir) {
@@ -163,55 +238,8 @@ public class ParserJava {
         }
         return javaFiles;
     }
-
-    private static List<List> view() throws InterruptedException {
-        List<List> returnList = new ArrayList<>();
-        List<Boolean> booleanReturnList = new ArrayList<>();
-
-        JPanel panel = new JPanel(new BorderLayout());
-
-        JPanel checkBoxPanel = new JPanel();
-
-        JFrame mainFrame = new JFrame();
-        mainFrame.add(panel);
-        mainFrame.setExtendedState(MAXIMIZED_BOTH);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JButton closeButton = new JButton("close");
-
-        List<JCheckBox> list = new ArrayList<>();
-
-        closeButton.addActionListener(new CloseButtonActionPerformed(list, booleanReturnList, mainFrame, ParserJava.reachedEnd));
-
-        JScrollPane scrollPane = new JScrollPane(checkBoxPanel);
-
-        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
-
-        //List<String> javaFiles = javaFiles("C:\\Users\\icout\\OneDrive\\Documentos\\NetBeansProjects\\exemple");
-        int i = 0;
-        for (String javaFile : javaFiles) {
-            JCheckBox checkBox = new JCheckBox(i + ": " + javaFile);
-            checkBoxPanel.add(checkBox);
-            list.add(checkBox);
-            i++;
-        }
-        checkBoxPanel.setLayout(new GridLayout(list.size(), 1));
-        mainFrame.setLayout(new GridLayout());
-
-        panel.add(scrollPane);
-        panel.add(closeButton, BorderLayout.SOUTH);
-
-        returnList.add(booleanReturnList);
-        returnList.add(javaFiles);
-
-        mainFrame.setVisible(true);
-        while (ParserJava.reachedEnd == false) {
-            Thread.sleep(1000);
-        }
-        return returnList;
-    }
-
-    private static void ASTExtractor1(List<String> pathList, List<Boolean> openTreeList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
+    
+    private static void ASTExtractor1(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
         List<String> unprocessed = null;
         List<String> copyPathList = new ArrayList<>(pathList);
         do {
@@ -226,10 +254,6 @@ public class ParserJava {
 
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.setSize(new Dimension(500, 600));
-
-                if (openTreeList.get(i)) {
-                    viewer.open();
-                }
 
                 Visitor1 visitor = new Visitor1(globalEnviroment);
 
@@ -320,6 +344,34 @@ public class ParserJava {
      */
     public void setGlobalEnviroment(GlobalEnviroment aGlobalEnviroment) {
         globalEnviroment = aGlobalEnviroment;
+    }
+
+    /**
+     * @return the version
+     */
+    public Version getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    /**
+     * @return the pathProject
+     */
+    public String getPathProject() {
+        return pathProject;
+    }
+
+    /**
+     * @param pathProject the pathProject to set
+     */
+    public void setPathProject(String pathProject) {
+        this.pathProject = pathProject;
     }
 
 }

@@ -126,10 +126,6 @@ public class InitProject implements Runnable {
             Git.clean(pathProject, true, 0);
             Git.checkout(firstParent, pathProject);
 
-            if (result.getSHA().startsWith("21da4207")) {
-                System.out.println("");
-            }
-
             if (Git.isFailedMerge(pathProject, firstParent, secondParent)) {
 
                 List<MyFile> statusUnmerged = Git.statusUnmerged(pathProject);
@@ -225,20 +221,3 @@ public class InitProject implements Runnable {
     }
 
 }
-
-/*List<Formats> list = new ArrayList<>();
-        List<Version> versionList = new ArrayList<>();
-
-        try {
-            list = Git.logAll(pathProject);
-        } catch (IOException | LocalRepositoryNotAGitRepository | ParseException e) {
-        }
-
-        for (Formats item : list) {
-            Version version;
-            version = new Version(item.getCommitHash(), item.getAuthorName(), item.getAuthorDate(), Git.parent(project.getPath(), item.getCommitHash()).size() > 1, Git.parent(project.getPath(), item.getCommitHash()), item.getCommitDescription());
-
-            versionList.add(version);
-        }
-
-        project.setVersions(versionList);*/

@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.controller;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.Dimension;
@@ -25,6 +26,8 @@ public class TableMouseListener extends MouseAdapter {
         Version version = getView().getProject().getVersions().get(row);
         getView().paintTree(version);
         this.view.getTree().setVisible(true);
+        
+        ParserJava parserJava = new ParserJava(version, this.view.getProject().getPath());
     }
 
     /**

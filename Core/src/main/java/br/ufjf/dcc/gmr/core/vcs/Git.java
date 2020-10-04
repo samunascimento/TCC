@@ -1166,6 +1166,7 @@ public class Git {
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @param unified
+     * @param unifiedSize This parameter defines how much context lines appears
      * @return return the FileDiff list
      * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
      * exception that occurs when the repository is not a git repository
@@ -1176,7 +1177,7 @@ public class Git {
      * wrong commit hash
      *
      */
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget, boolean unified)
+    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget, boolean unified, int unifiedSize)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<FileDiff> result = new ArrayList<>();
@@ -1186,7 +1187,7 @@ public class Git {
         if (!unified) {
             command = "git diff " + commitSource + " " + commitTarget;
         } else {
-            command = "git diff " + commitSource + " " + commitTarget + "--unified";
+            command = "git diff --unified="+ unifiedSize + " " + commitSource + " " + commitTarget;
         }
 
         CLIExecution execution = CLIExecute.execute(command, directory);

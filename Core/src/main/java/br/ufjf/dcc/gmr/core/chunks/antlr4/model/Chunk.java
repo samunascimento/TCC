@@ -9,11 +9,11 @@ public class Chunk {
     private int lineEnd;
     private int columnBegin;
     private int columnEnd;
-    private String text;
+    private List<String> text;
     private String type;
     private List<BaseBinding> languageConstruct;
     
-    public Chunk(int lineBegin, int lineEnd, int columnBegin, int columnEnd, String text, String type) {
+    public Chunk(int lineBegin, int lineEnd, int columnBegin, int columnEnd, List<String> text, String type) {
         this.lineBegin = lineBegin;
         this.lineEnd = lineEnd;
         this.columnBegin = columnBegin;
@@ -84,14 +84,14 @@ public class Chunk {
     /**
      * @return the text
      */
-    public String getText() {
+    public List<String> getText() {
         return text;
     }
 
     /**
      * @param text the text to set
      */
-    public void setText(String text) {
+    public void setText(List<String> text) {
         this.text = text;
     }
 
