@@ -22,17 +22,18 @@ public class Point {
     private String nameMethod;
     private String metricName;
     private Date versionDate;
+    private String dateString;
     private String sha;
     
     //project
 
-    public Point(int x, Double y,String nameProject, String metricName,Date versionDate, String sha, int versionID, int parentID) {
+    public Point(int x, Double y,String nameProject, String metricName,String dateString, String sha, int versionID, int parentID) {
 
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
         this.metricName = metricName;
-        this.versionDate = versionDate;
+        this.dateString = dateString;
 
         this.versionID = versionID;
         this.parentID = parentID;
@@ -43,45 +44,45 @@ public class Point {
 
     //package
 
-    public Point(int x, Double y,String nameProject, String namePackage,String metricName,Date versionDate, String sha, int versionID, int parentID) {
+    public Point(int x, Double y,String nameProject, String namePackage,String metricName,String dateString, String sha, int versionID, int parentID) {
 
         this.x = x;
         this.y = y;
         this.nameProject = nameProject;
         this.namePackage = namePackage;
         this.metricName = metricName;
-        this.versionDate = versionDate;
+        this.dateString = dateString;
         this.versionID = versionID;
         this.parentID = parentID;
         this.sha = sha;
     }
     
-    //class
-    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate, int versionID, int parentID){
-        this.x = x;
-        this.y = y;
-        this.nameProject = nameProject;
-        this.namePackage = namePackage;
-        this.nameClass = nameClass;
-        this.metricName = metricName;
-        this.versionDate = versionDate;
-        this.versionID = versionID;
-        this.parentID = parentID;
-    }
-    
-    //method
-    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate, int versionID,int parentID){
-        this.x = x;
-        this.y = y;
-        this.nameProject = nameProject;
-        this.namePackage = namePackage;
-        this.nameClass = nameClass;
-        this.nameMethod = nameMethod;
-        this.metricName = metricName;
-        this.versionDate = versionDate;
-        this.versionID = versionID;
-        this.parentID = parentID;
-    }
+//    //class;
+//    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate, int versionID, int parentID){
+//        this.x = x;
+//        this.y = y;
+//        this.nameProject = nameProject;
+//        this.namePackage = namePackage;
+//        this.nameClass = nameClass;
+//        this.metricName = metricName;
+//        this.versionDate = versionDate;
+//        this.versionID = versionID;
+//        this.parentID = parentID;
+//    }
+//    
+//    //method
+//    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate, int versionID,int parentID){
+//        this.x = x;
+//        this.y = y;
+//        this.nameProject = nameProject;
+//        this.namePackage = namePackage;
+//        this.nameClass = nameClass;
+//        this.nameMethod = nameMethod;
+//        this.metricName = metricName;
+//        this.versionDate = versionDate;
+//        this.versionID = versionID;
+//        this.parentID = parentID;
+//    }
 
     public Point(int i, double aDouble, Object object, String string, String string0, Date versionDate) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
