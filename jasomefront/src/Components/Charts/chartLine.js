@@ -102,11 +102,12 @@ class ChartLine extends Component {
     if (this.props.switch) {
       return "x"
     } else {
-      return "versionDate"
+      return "dateString"
     }
   }
 
   render() {
+    {console.log(this.props.data)}
     return (
       <div>
         <VictoryChart
@@ -179,6 +180,8 @@ class ChartLine extends Component {
                   stroke: this.props.colors[i].color
                 }
               }}
+              x={this.handleSwitch()}
+              y="y"
               labels={({ datum }) => datum.y}
               labelComponent={
                 <VictoryTooltip
