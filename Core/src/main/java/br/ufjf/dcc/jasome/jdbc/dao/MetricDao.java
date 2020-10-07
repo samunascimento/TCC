@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -526,22 +527,30 @@ public class MetricDao {
 
                         if ((chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) && merge != -1) {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            Date versionDate = new Date(versionTimestamp.getTime());
-                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            //Date versionDate = new Date(versionTimestamp.getTime());
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
                             break;
 
                         }
                         else if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            Date versionDate = new Date(versionTimestamp.getTime());
-                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
                         }
                     }
                 } else {
 
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
                     Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
 
                 }
             }
@@ -593,12 +602,18 @@ public class MetricDao {
             while (resultSet.next()) {
                 if (resultSet.getString("packageName") != null) {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                    Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), versionDate, resultSet.getString("sha"), 0, 0));
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            //Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), 0, 0));
                 } else {
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                    Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), null, null, null, null, versionDate, resultSet.getString("sha"), 0, 0));
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            //Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(resultSet.getInt("commitID"), null, null, null, null, dateString, resultSet.getString("sha"), 0, 0));
                 }
 //                cont++;
 
