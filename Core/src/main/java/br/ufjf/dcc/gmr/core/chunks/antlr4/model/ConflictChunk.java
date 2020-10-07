@@ -5,14 +5,6 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.model;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.BaseBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
-import java.util.List;
-
-/**
- *
- * @author felip
- */
 public class ConflictChunk {
 
     private Chunk beforeContext;

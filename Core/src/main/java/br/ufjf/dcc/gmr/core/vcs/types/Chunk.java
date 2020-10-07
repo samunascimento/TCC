@@ -3,10 +3,6 @@ package br.ufjf.dcc.gmr.core.vcs.types;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author icout
- */
 public class Chunk {
 
     private boolean conflict;
@@ -14,8 +10,15 @@ public class Chunk {
     private Line separator;
     private Line end;
     private List<String> content;
+    /*
+        tirar content 
+        migrar as informações do conflictChunk 
+        apagar a classe conflictChunk
+        renomear essa classe para conflictChunk
+        remover booleano conflict
+        mover path do outro chunk para este chunk
+     */
     private String label;
-    
 
     public Chunk() {
         conflict = false;
@@ -24,10 +27,8 @@ public class Chunk {
         separator = new Line();
         content = new ArrayList<>();
     }
-    
-    
-    
-        /**
+
+    /**
      * @return the conflict
      */
     public boolean isConflict() {
@@ -110,13 +111,10 @@ public class Chunk {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
     @Override
     public String toString() {
-        return  this.label;
+        return this.label;
     }
 
-    
-    
-    
 }

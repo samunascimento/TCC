@@ -3,11 +3,10 @@ package br.ufjf.dcc.gmr.core.chunks.controller;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TableMouseListener extends MouseAdapter {
     
@@ -28,6 +27,12 @@ public class TableMouseListener extends MouseAdapter {
         this.view.getTree().setVisible(true);
         
         ParserJava parserJava = new ParserJava(version, this.view.getProject().getPath());
+        String[] args = null;
+        try {
+            parserJava.main(args);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**

@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
@@ -28,8 +27,6 @@ import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.stream.Stream;
-
 public class ParserJava {
 
     private static boolean reachedEnd = false;
@@ -37,9 +34,8 @@ public class ParserJava {
     private static Version version;
     private static String pathProject;
 
-    public ParserJava() {
+    public ParserJava(Version version) {
         this.globalEnviroment = new GlobalEnviroment();
-        this.version = new Version();
     }
 
     public ParserJava(Version version, String pathProject) {
@@ -52,7 +48,6 @@ public class ParserJava {
 
         GlobalEnviroment parent1 = new GlobalEnviroment();
         GlobalEnviroment parent2 = new GlobalEnviroment();
-        List<List<String>> fileList = new ArrayList<>();
         int cont = 1;
 
         List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
@@ -63,7 +58,7 @@ public class ParserJava {
             Git.clean(ParserJava.pathProject, true, 0);
             Git.checkout(parent, ParserJava.pathProject);
 
-            ParserJava parserJava = new ParserJava();
+            ParserJava parserJava = new ParserJava(version);
 
             int j = 0, i = 0;
 
@@ -115,16 +110,18 @@ public class ParserJava {
             }
 
             for (int y = 0; y < version.getFile().size(); y++) {
-
-                fileList.get(i).add(createDiffFile(version.getFile().get(i).getPath(), (char) cont));
+                
+                //fileList.get(i).add(createDiffFile(version.getFile().get(i).getPath(), (char) cont));
             }
 
         }
 
+        System.out.println("teste");
         for (int y = 0; y < version.getFile().size(); y++) {
-
-            List<FileDiff> fileDiffList = Git.diff(pathProject, fileList.get(y).get(0),fileList.get(y).get(1), true, version.getFile().get(y).getContent().size());
-            
+//            List<FileDiff> fileDiffList = Git.diff(pathProject, fileList.get(y).get(0),fileList.get(y).get(1), true, version.getFile().get(y).getContent().size());
+//            for (FileDiff fileDiff : fileDiffList) {
+//                System.out.println(fileDiff.getArroba());
+//            }
 //            for (br.ufjf.dcc.gmr.core.vcs.types.Chunk chunck : version.getFile().get(y).getChuncks()) {
 //
 //                Chunk chunkA = new Chunk();
@@ -187,7 +184,7 @@ public class ParserJava {
         return null;
     }
 
-    private static String createDiffFile(String path, Char extendsName) throws IOException {
+    private static String createDiffFile(String path, char extendsName) throws IOException {
 
         File file = new File(path);
         BufferedReader reader = new BufferedReader(new FileReader(file));
