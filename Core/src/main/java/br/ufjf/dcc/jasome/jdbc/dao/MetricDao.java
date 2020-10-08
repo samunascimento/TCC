@@ -534,8 +534,7 @@ public class MetricDao {
                             chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
                             break;
 
-                        }
-                        else if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+                        } else if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
                             Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
                             String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
                             //String dateString = "new Date(".concat(formatter).concat(")");
@@ -546,9 +545,9 @@ public class MetricDao {
                 } else {
 
                     Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
-                            //String dateString = "new Date(".concat(formatter).concat(")");
-                            String dateString = formatter;
+                    String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                    //String dateString = "new Date(".concat(formatter).concat(")");
+                    String dateString = formatter;
                     Date versionDate = new Date(versionTimestamp.getTime());
                     listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), resultSet.getString("projectname"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
 
@@ -570,55 +569,126 @@ public class MetricDao {
         List<List<Point>> chartLines = new ArrayList<>();
 
         Set<String> packageNames = new HashSet<>();
+        
+        List<Branch> branches = getBranches(nameProject);
+
+        List<Merge> merges = getMerges(nameProject);
+
+        List<Integer> finalPoints = new ArrayList<>();
+        
+        boolean checkBranch = false;
+        boolean checkFirstBranch = false;
+        boolean checkListPoints = false;
 
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
 
-        String sql = "select v.id,d.packagename, e.name, e.value,v.versiondate, v.sha,v.authorname, v.commitID,v.sha \n"
+        String sql = "select a.id, a.projectname, d.packagename, e.name, e.value, e.description, v.id, v.versiondate, v.sha,v.authorname, v.commitID, ph.version_id, ph.parent_id\n"
+                + "\n"
                 + "from tb_projectmetrics as a\n"
+                + "\n"
                 + "inner join tb_project_version as b\n"
+                + "\n"
                 + "on a.id = b.project_id\n"
+                + "\n"
                 + "inner join tb_version_package as c \n"
+                + "\n"
                 + "on b.version_id = c.version_id\n"
+                + "\n"
+                + "left join tb_parents_hash ph\n"
+                + "\n"
+                + "on b.version_id = ph.version_id \n"
+                + "\n"
                 + "left join tb_versionmetrics as v\n"
+                + "\n"
                 + "on v.id = b.version_id --alt\n"
+                + "\n"
                 + "left join tb_packagemetrics as d \n"
+                + "\n"
                 + "on c.package_id = d.id\n"
+                + "\n"
                 + "left join tb_metric as e \n"
+                + "\n"
                 + "on\n"
                 + "d." + nameMetric + "id = e.id \n"
                 + "where a.projectname = " + "\'" + nameProject + "\'" + "and d.packagename = '" + namePackage + "' or d.packagename is null \n"
                 + "order by b.version_id";
 
-        int idIndex;
-
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
-            int id;
-//            int cont = 0;
+
+            resultSet = stmt.executeQuery();
             List<Point> listPoints = new ArrayList<>();
             while (resultSet.next()) {
-                if (resultSet.getString("packageName") != null) {
-                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
-                            //String dateString = "new Date(".concat(formatter).concat(")");
-                            String dateString = formatter;
-                            //Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), 0, 0));
-                } else {
-                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
-                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
-                            //String dateString = "new Date(".concat(formatter).concat(")");
-                            String dateString = formatter;
-                            //Date versionDate = new Date(versionTimestamp.getTime());
-                    listPoints.add(new Point(resultSet.getInt("commitID"), null, null, null, null, dateString, resultSet.getString("sha"), 0, 0));
-                }
-//                cont++;
 
+                checkBranch = false;
+
+                for (int i = 0; i < branches.size(); i++) {
+                    if (branches.get(i).getParentID() == resultSet.getInt("parent_id")) {
+                        checkBranch = true;
+                        checkFirstBranch = true;
+                        if (checkListPoints == false) {
+                            chartLines.add(listPoints);
+                        }
+                        for (int j = 0; j < chartLines.size(); j++) {
+                            if (chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+                                checkListPoints = false;
+                                Point point = chartLines.get(j).get(chartLines.get(j).size() - 1);
+                                finalPoints.add(chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID());
+                                listPoints = new ArrayList();
+                                listPoints.add(point);
+
+                            }
+                        }
+                    }
+                }
+
+                if (checkFirstBranch == true && checkBranch == false) {
+                    int merge = -1;
+                    if (checkListPoints == false) {
+                        chartLines.add(listPoints);
+                        checkListPoints = true;
+                    }
+                    for (int j = 0; j < merges.size(); j++) {
+                        if (merges.get(j).getVersionID() == resultSet.getInt("parent_id")) {
+                            System.out.println(merges.get(j).getVersionID());
+                            merge = merges.get(j).getVersionID();
+                        }
+                    }
+
+                    for (int i = 0; i < chartLines.size(); i++) {
+
+                        if ((chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) && merge != -1) {
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            //Date versionDate = new Date(versionTimestamp.getTime());
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                            break;
+
+                        } else if (chartLines.get(i).get(chartLines.get(i).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
+                            Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                            String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                            //String dateString = "new Date(".concat(formatter).concat(")");
+                            String dateString = formatter;
+                            chartLines.get(i).add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+                        }
+                    }
+                } else {
+
+                    Timestamp versionTimestamp = resultSet.getTimestamp("versiondate");
+                    String formatter = new SimpleDateFormat("yyyy,M,d").format(versionTimestamp);
+                    //String dateString = "new Date(".concat(formatter).concat(")");
+                    String dateString = formatter;
+                    Date versionDate = new Date(versionTimestamp.getTime());
+                    listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
+
+                }
             }
-            chartLines.add(listPoints);
+
             return chartLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -226,7 +226,6 @@ export default class Project extends Component {
 
       this.adjustColors(metricName, this.props.nameProject.name)
 
-      console.log(indexArray.length)
       this.state.data.splice(indexArray[0], indexArray.length)
 
       this.RemoveMetricDescription(metricName, this.props.nameProject.name)
@@ -246,16 +245,33 @@ export default class Project extends Component {
         size = size + 1
       }
     })
+    console.log(size)
+    console.log(firstEncounter)
     this.state.colorsIndex.splice(firstEncounter, size)
 
+    console.log(this.state.colorsIndex)
+    console.log(this.state.data)
+
+    let index = null
+
     this.state.colorsIndex.map((color, colorIndex) => {
-      if (firstEncounter <= colorIndex) {
-        color.color = this.state.colors[color.index - 1]
-        color.index = color.index = 1
+      if (firstEncounter <= colorIndex && index === null) {
+        index = colorIndex
       }
     })
 
-    this.setState({index: this.state.index - 1})
+    if (index !== null) {
+      for (let i = index; i < this.state.colorsIndex.length; i++) {
+        console.log(this.state.colorsIndex[i])
+        this.state.colorsIndex[i].index = this.state.colorsIndex[i].index - 1
+        console.log(this.state.colorsIndex[i].index)
+        console.log(this.state.colors[this.state.colorsIndex[i].index])
+        this.state.colorsIndex[i].color = this.state.colors[this.state.colorsIndex[i].index]
+        break;
+      }
+    }
+
+    this.setState({ index: this.state.index - 1 })
   }
 
 
@@ -269,6 +285,7 @@ export default class Project extends Component {
           data.push(branch)
           this.state.colorsIndex.push(metricDescription)
         })
+        console.log(this.state.colorsIndex)
         this.setState({ data: data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
@@ -312,6 +329,8 @@ export default class Project extends Component {
         metricCheck = false
       }
 
+      let indexArray = []
+
       this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
@@ -319,12 +338,15 @@ export default class Project extends Component {
           }
         })
         if (metricCheck === true) {
+          indexArray.push(index)
           this.state.data.splice(index, 1)
           metricCheck = false
         }
       })
 
       this.adjustColors(metricName, packageName)
+
+      this.state.data.splice(indexArray[0], indexArray.length)
 
       const packageSplit = packageName.split('.');
       if (packageSplit.length !== 1) {
@@ -344,9 +366,11 @@ export default class Project extends Component {
       .then(res => {
         const data = this.state.data
         const metricDescription = { 'metricName': packageMetric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': packageMetric.packageName }
-        data.push(res.data[0])
-        console.log(this.state.colors[this.state.index])
-        this.state.colorsIndex.push(metricDescription)
+        res.data.map((branch) => {
+          data.push(branch)
+          this.state.colorsIndex.push(metricDescription)
+        })
+        console.log(this.state.colorsIndex)
         this.setState({ data });
         this.setState({
           maximaY: this.getMaximaY(this.state.data)
