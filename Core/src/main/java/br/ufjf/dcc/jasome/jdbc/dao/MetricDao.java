@@ -461,6 +461,7 @@ public class MetricDao {
         boolean checkBranch = false;
         boolean checkFirstBranch = false;
         boolean checkListPoints = false;
+        boolean checkNoBranchs = false;
         int count = 0;
 
         PreparedStatement stmt = null;
@@ -496,6 +497,7 @@ public class MetricDao {
                         checkFirstBranch = true;
                         if (checkListPoints == false) {
                             chartLines.add(listPoints);
+                            checkNoBranchs = true;
                         }
                         for (int j = 0; j < chartLines.size(); j++) {
                             if (chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
@@ -515,6 +517,7 @@ public class MetricDao {
                     if (checkListPoints == false) {
                         chartLines.add(listPoints);
                         checkListPoints = true;
+                        checkNoBranchs = true;
                     }
                     for (int j = 0; j < merges.size(); j++) {
                         if (merges.get(j).getVersionID() == resultSet.getInt("parent_id")) {
@@ -553,6 +556,9 @@ public class MetricDao {
 
                 }
             }
+            if(checkNoBranchs == false){
+                chartLines.add(listPoints);
+            }
 
             return chartLines;
         } catch (SQLException e) {
@@ -579,6 +585,7 @@ public class MetricDao {
         boolean checkBranch = false;
         boolean checkFirstBranch = false;
         boolean checkListPoints = false;
+        boolean checkNoBranchs = false;
 
         PreparedStatement stmt = null;
 
@@ -631,6 +638,7 @@ public class MetricDao {
                         checkFirstBranch = true;
                         if (checkListPoints == false) {
                             chartLines.add(listPoints);
+                            checkNoBranchs = true;
                         }
                         for (int j = 0; j < chartLines.size(); j++) {
                             if (chartLines.get(j).get(chartLines.get(j).size() - 1).getVersionID() == resultSet.getInt("parent_id")) {
@@ -649,11 +657,11 @@ public class MetricDao {
                     int merge = -1;
                     if (checkListPoints == false) {
                         chartLines.add(listPoints);
+                        checkNoBranchs = true;
                         checkListPoints = true;
                     }
                     for (int j = 0; j < merges.size(); j++) {
                         if (merges.get(j).getVersionID() == resultSet.getInt("parent_id")) {
-                            System.out.println(merges.get(j).getVersionID());
                             merge = merges.get(j).getVersionID();
                         }
                     }
@@ -685,8 +693,11 @@ public class MetricDao {
                     String dateString = formatter;
                     Date versionDate = new Date(versionTimestamp.getTime());
                     listPoints.add(new Point(resultSet.getInt("commitID"), resultSet.getDouble("value"), null, resultSet.getString("packagename"), resultSet.getString("name"), dateString, resultSet.getString("sha"), resultSet.getInt("version_id"), resultSet.getInt("parent_id")));
-
+                    System.out.println(listPoints.size());
                 }
+            }
+            if(checkNoBranchs == false){
+                chartLines.add(listPoints);
             }
 
             return chartLines;
