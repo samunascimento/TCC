@@ -6,7 +6,7 @@
 package br.ufjf.dcc.gmr.core.chunks.jung;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
+import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 
 public class Vertex {
     
@@ -23,7 +23,7 @@ public class Vertex {
     
     @Override
     public String toString(){
-        String txt = "Arquivo: "+conflictChunk.getChunkVersion1().getType()+" || Intervalo de Linhas : ";
+        String txt = "Arquivo: "+conflictChunk.getPath()+" || Intervalo de Linhas : ";
         txt+= conflictChunk.getBeforeContext().getLineBegin()+" até "+conflictChunk.getBeforeContext().getLineEnd();
         
         return txt;

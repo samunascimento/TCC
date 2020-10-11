@@ -14,7 +14,7 @@ public class MyFile {
     private Status status;
     private String type;
     private boolean renamed;
-    private List<Chunk> chuncks;
+    private List<ConflictChunk> chuncks;
     private List<String> content;
 
     public MyFile() {
@@ -89,14 +89,14 @@ public class MyFile {
     /**
      * @return the chuncks
      */
-    public List<Chunk> getChuncks() {
+    public List<ConflictChunk> getChuncks() {
         return chuncks;
     }
 
     /**
      * @param chuncks the chuncks to set
      */
-    public void setChuncks(List<Chunk> chuncks) {
+    public void setChuncks(List<ConflictChunk> chuncks) {
         this.chuncks = chuncks;
     }
 

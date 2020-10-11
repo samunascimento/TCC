@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.view;
 
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
-import br.ufjf.dcc.gmr.core.vcs.types.Chunk;
+import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
@@ -109,7 +109,7 @@ public final class View extends JFrame {
         DefaultMutableTreeNode fileTree = new DefaultMutableTreeNode(file);//encontrar caminho relativo
 
         for (int i = 0; i < file.getChuncks().size(); i++) {
-            Chunk chunk = file.getChuncks().get(i);
+            ConflictChunk chunk = file.getChuncks().get(i);
             DefaultMutableTreeNode chunkTree = new DefaultMutableTreeNode(chunk);
             fileTree.add(chunkTree);
         }

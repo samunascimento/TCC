@@ -74,10 +74,10 @@ public class InitProject implements Runnable {
         return content;
     }
 
-    private static List<Chunk> createConflictChunksList(String filePath) {
+    private static List<ConflictChunk> createConflictChunksList(String filePath) {
 
-        List<Chunk> result = new ArrayList<>();
-        Chunk chunk = new Chunk();
+        List<ConflictChunk> result = new ArrayList<>();
+        ConflictChunk chunk = new ConflictChunk();
 
         List<String> content = readFile(filePath);
 
@@ -86,7 +86,7 @@ public class InitProject implements Runnable {
         for (int i = 0; i < content.size(); i++) {
 
             if (content.get(i).startsWith("<<<<<<<")) {
-                chunk = new Chunk();
+                chunk = new ConflictChunk();
                 chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i + 1));
             }
 
@@ -96,7 +96,8 @@ public class InitProject implements Runnable {
 
             if (content.get(i).startsWith(">>>>>>>")) {
                 chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
-                chunk.setContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                chunk.setErrorContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                chunk.setPath(filePath);
                 chunk.setLabel("CC" + (++chunkNumber));
                 result.add(chunk);
             }

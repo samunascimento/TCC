@@ -2,7 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.jung;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.ConflictChunk;
+import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.*;
 import edu.uci.ics.jung.graph.util.EdgeType;

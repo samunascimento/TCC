@@ -18,11 +18,11 @@ public class GlobalEnviroment {
      * @param end
      * @return
      */
-    public List<BaseBinding> findLanguageConstructs(Chunk languageConstruct) {
+    public List<BaseBinding> findLanguageConstructs(String path, Chunk languageConstruct) {
 
         List<BaseBinding> result = new ArrayList<>();
 
-        TypeBinding typeBinding = enviroment.get(languageConstruct.getType());
+        TypeBinding typeBinding = enviroment.get(path);
 
         //Add imports, attributes and methodDeclaration in result object. MethodCalls, LocalVariables and LocalVariablesUsage are inside MethodDeclaration
         for (ImportBinding importBinding : typeBinding.getImports()) {

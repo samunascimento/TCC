@@ -9,8 +9,7 @@ public class Chunk {
     private int lineEnd;
     private int columnBegin;
     private int columnEnd;
-    private List<String> text;
-    private String path;
+    private List<String> text;   
     private List<BaseBinding> languageConstruct;
     
     public Chunk(int lineBegin, int lineEnd, int columnBegin, int columnEnd, List<String> text, String type) {
@@ -19,7 +18,7 @@ public class Chunk {
         this.columnBegin = columnBegin;
         this.columnEnd = columnEnd;
         this.text = text;
-        this.path = type;
+
     }
 
     public Chunk() {
@@ -93,20 +92,6 @@ public class Chunk {
      */
     public void setText(List<String> text) {
         this.text = text;
-    }
-
-    /**
-     * @return the type
-     */
-    public String getType() {
-        return path;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.path = type;
     }
 
     public List<BaseBinding> getLanguageConstruct() {

@@ -27,6 +27,7 @@ import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+
 public class ParserJava {
 
     private static boolean reachedEnd = false;
@@ -110,7 +111,7 @@ public class ParserJava {
             }
 
             for (int y = 0; y < version.getFile().size(); y++) {
-                
+
                 //fileList.get(i).add(createDiffFile(version.getFile().get(i).getPath(), (char) cont));
             }
 
@@ -122,15 +123,15 @@ public class ParserJava {
 //            for (FileDiff fileDiff : fileDiffList) {
 //                System.out.println(fileDiff.getArroba());
 //            }
-//            for (br.ufjf.dcc.gmr.core.vcs.types.Chunk chunck : version.getFile().get(y).getChuncks()) {
+//            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunck : version.getFile().get(y).getChuncks()) {
 //
-//                Chunk chunkA = new Chunk();
+//                ConflictChunk chunkA = new ConflictChunk();
 //                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
 //                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
 //                chunkA.setType(myFile.getPath());
 //                chunkA.setLanguageConstruct(parent1.findLanguageConstructs(chunkA));
 //
-//                Chunk chunkB = new Chunk();
+//                ConflictChunk chunkB = new ConflictChunk();
 //                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
 //                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
 //                chunkA.setType(myFile.getPath());
@@ -142,7 +143,7 @@ public class ParserJava {
 //
 //            }
         }
-//        Chunk chunkA = new Chunk();
+//        ConflictChunk chunkA = new ConflictChunk();
 //        chunkA.setLineBegin(26);
 //        chunkA.setLineEnd(31);
 //        chunkA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
@@ -150,7 +151,7 @@ public class ParserJava {
 //        ConflictChunk conflictChunkA = new ConflictChunk();
 //        conflictChunkA.setChunkVersion1(chunkA);
 //
-//        Chunk chunkB = new Chunk();
+//        ConflictChunk chunkB = new ConflictChunk();
 //        chunkB.setLineBegin(32);
 //        chunkB.setLineEnd(45);
 //        chunkB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
@@ -170,13 +171,11 @@ public class ParserJava {
 
         List<Chunk> listChunk = new ArrayList<>();
         for (MyFile myFile : version.getFile()) {
-            for (br.ufjf.dcc.gmr.core.vcs.types.Chunk chunk : myFile.getChuncks()) {
+            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunk : myFile.getChuncks()) {
                 Chunk chunkBinding = new Chunk();
                 chunkBinding.setLineBegin(chunk.getBegin().getLineNumber());
                 chunkBinding.setLineEnd(chunk.getEnd().getLineNumber());
-                chunkBinding.setType(myFile.getPath());
-                chunkBinding.setText(chunk.getContent());
-                chunkBinding.setLanguageConstruct(parserJava.getGlobalEnviroment().findLanguageConstructs(chunkBinding));
+                chunkBinding.setLanguageConstruct(parserJava.getGlobalEnviroment().findLanguageConstructs(chunk.getPath(), chunkBinding));
                 listChunk.add(chunkBinding);
             }
         }
