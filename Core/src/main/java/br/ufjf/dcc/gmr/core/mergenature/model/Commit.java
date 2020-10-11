@@ -20,14 +20,14 @@ public class Commit {
     
     /**
      * Normal constructor 
-     * @param id              Id for databases
-     * @param message         The message that was written for commit description.
-     * @param commitHash      The unique code (hash) for commit.
-     * @param author          The person who originally wrote the code.
-     * @param authorDate      This date notes when this commit was originally made.
-     * @param committer       The person who committed the code on behalf of the 
-     *                        original author.
-     * @param committerDate   This date notes when this commit was commited.
+     * @param id                Id for databases
+     * @param message           The message that was written for commit description.
+     * @param commitHash        The unique code (hash) for commit.
+     * @param author            The person who originally wrote the code.
+     * @param authorDate        This date notes when this commit was originally made.
+     * @param committer         The person who committed the code on behalf of the 
+     *                          original author.
+     * @param committerDate     This date notes when this commit was commited.
      */
     public Commit(int id, String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
         this.id = id;
@@ -41,13 +41,13 @@ public class Commit {
     
     /**
      * No id constructor 
-     * @param message         The message that was written for commit description.
-     * @param commitHash      The unique code (hash) for commit.
-     * @param author          The person who originally wrote the code.
-     * @param authorDate      This date notes when this commit was originally made.
-     * @param committer       The person who committed the code on behalf of the 
-     *                        original author.
-     * @param committerDate   This date notes when this commit was commited.
+     * @param message           The message that was written for commit description.
+     * @param commitHash        The unique code (hash) for commit.
+     * @param author            The person who originally wrote the code.
+     * @param authorDate        This date notes when this commit was originally made.
+     * @param committer         The person who committed the code on behalf of the 
+     *                          original author.
+     * @param committerDate     This date notes when this commit was commited.
      */
     public Commit(String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
         this.message = message;
