@@ -26,6 +26,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Switch from '@material-ui/core/Switch';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ReactLoading from "react-loading";
 
 
 import { PropTypes } from 'prop-types';
@@ -41,6 +42,8 @@ export default class Project extends Component {
       projectTloc: true,
 
       loadingState: false,
+
+      pointsCount: 0,
 
 
       packageMetrics: [{ name: 'TLOC' }, { name: 'A' }, { name: 'CCRC' }, { name: 'Ca', }, { name: 'Ce', }, { name: 'DMS', }, { name: 'I', }, { name: 'NOC', }, { name: 'NOI', },
@@ -120,7 +123,9 @@ export default class Project extends Component {
     })
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+
+    let pointsCount = 0;
 
     for (let index = 0; index < 200; index++) {
       const colors = this.state.colors
@@ -128,12 +133,13 @@ export default class Project extends Component {
       this.setState({ colors })
     }
 
-    axios.get(`metric/version/` + this.props.nameProject.name)
+    await axios.get(`metric/version/` + this.props.nameProject.name)
       .then(res => {
         const data = this.state.data
         const metricDescription = { 'metricName': 'TLOC', 'color': this.state.colors[0], 'index': 0, 'checkMetric': this.props.nameProject.name }
         res.data.map((branch) => {
           data.push(branch)
+          pointsCount = pointsCount + branch.length
           this.state.colorsIndex.push(metricDescription)
         })
         this.setState({ data: data });
@@ -150,6 +156,10 @@ export default class Project extends Component {
         const packageTree = res.data
         this.setState({ packageTree })
       })
+
+    setTimeout(() => {
+      this.setState({ loadingState: true });
+    }, 20 * pointsCount);
 
   }
 
@@ -283,6 +293,7 @@ export default class Project extends Component {
         const metricDescription = { 'metricName': metric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': this.props.nameProject.name }
         res.data.map((branch) => {
           data.push(branch)
+          this.state.pointsCount = this.state.pointsCount + branch.length
           this.state.colorsIndex.push(metricDescription)
         })
         console.log(this.state.colorsIndex)
@@ -293,6 +304,7 @@ export default class Project extends Component {
       })
     this.getMetricDescription(metric.metricName, this.props.nameProject.name)
     this.setState({ index: this.state.index + 1 })
+
   }
 
 
@@ -368,6 +380,8 @@ export default class Project extends Component {
         const metricDescription = { 'metricName': packageMetric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': packageMetric.packageName }
         res.data.map((branch) => {
           data.push(branch)
+          this.state.pointsCount = this.state.pointsCount + branch.length;
+          console.log(this.state.pointsCount)
           this.state.colorsIndex.push(metricDescription)
         })
         console.log(this.state.colorsIndex)
@@ -477,44 +491,33 @@ export default class Project extends Component {
 
   // }
 
-  generateChart = async () => {
+  generateChart = () => {
 
-    // this.setStateAsync({ loadingState: true })
+    this.setState({ pointsCount: 0 })
+    this.setState({ loadingState: false })
 
-    // console.log(this.state.loadingState)
-
-    // this.teste();
-
-    // console.log(this.state.loadingState)
-
-    // await this.setStateAsync({ loadingState: false })
-
-    // console.log(this.state.loadingState)
-
-
-    // this.setState({
-    //   loadingState: true
-    // }, () => {
-    //   console.log('teste')
-    //   await this.teste().then(() => {
-    //     console.log('teste')
-    //     this.setState({ loadingState: false })
-
-    //   })
-    // })
-
-
-    this.state.projectMetricsChart.map((projectMetric) => {
+    this.state.projectMetricsChart.map((projectMetric, index) => {
       this.handleChangeProject(projectMetric)
+
     })
-    this.state.packageMetricsChart.map((packageMetric) => {
+
+    this.state.packageMetricsChart.map((packageMetric, index) => {
       this.handleChangePackage(packageMetric);
     })
     this.setState({ projectMetricsChart: [] })
 
     this.setState({ packageMetricsChart: [] })
 
-    // this.state.loadingState = false
+  }
+
+  loading = async () => {
+    await this.generateChart();
+
+    setTimeout(() => {
+      setTimeout(() => {
+        this.setState({ loadingState: true });
+      }, 10 * this.state.pointsCount);
+    }, 1000);
   }
 
   clearMenuPackage = () => {
@@ -531,7 +534,6 @@ export default class Project extends Component {
   }
 
   clearChart = () => {
-    //this.setState({ data: [] })
     const dataSize = this.state.data.length
     this.state.data.splice(0, dataSize)
     this.setState({ metricsDescriptions: [] })
@@ -582,23 +584,20 @@ export default class Project extends Component {
             packageTree={this.state.packageTree} packageMetrics={this.state.packageMetrics} addPackageMetric={this.addPackageMetric}
             classTree={this.state.classTree} classMetrics={this.state.classMetrics} handleChangeClass={this.handleChangeClass}
             methodTree={this.state.methodTree} methodMetrics={this.state.methodMetrics} handleChangeMethod={this.handleChangeMethod}
-            generateChart={this.generateChart} clearChart={this.clearChart} />
+            generateChart={this.loading} clearChart={this.clearChart} />
           <Caption metricsDescriptions={this.state.metricsDescriptions} colors={this.state.colors} />
         </div>
-
         <div className="App" style={{ width: '80%', height: '100%' }}>
-          <Chart data={this.state.data} colors={this.state.colorsIndex} switch={this.state.checkSwitch} maximaY={this.state.maximaY} />
+          {!this.state.loadingState ? (
+            <ReactLoading style={{ marginRight: '12%', padding: '10% 35% 35% 35%' }} type={"bars"} color={"black"} />
+          ) : (
+              <>
+                <Chart data={this.state.data} colors={this.state.colorsIndex} switch={this.state.checkSwitch} maximaY={this.state.maximaY} />
+              </>
+            )}
         </div>
+
       </div >
     );
   }
 }
-
-// Project.propTypes = {
-//   data: PropTypes.arrayOf(PropTypes.shape({
-//     x: PropTypes.number,
-//     y: PropTypes.number,
-//     name: PropTypes.string,
-//     versionDate: PropTypes.string
-//   })),
-// }
