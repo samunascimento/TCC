@@ -31,6 +31,7 @@ import ReactLoading from "react-loading";
 
 import { PropTypes } from 'prop-types';
 import { branch } from 'recompose';
+import { color } from 'd3';
 
 export default class Project extends Component {
   constructor(props) {
@@ -67,9 +68,26 @@ export default class Project extends Component {
       { name: 'IOvars' }, { name: 'MCLC' }, { name: 'NBD' }, { name: 'NCOMP' }, { name: 'NOP' },
       { name: 'NVAR' }, { name: 'SI' }, { name: 'VG' }],
 
-      colors: [],
+      //inicializando colors com 15 cores
+      //vetor de cores para representar cada métrica
+      colors: [
+        '#FF0000',
+        '#000000',
+        '#088A29',
+        '#0404B4',
+        '#29220A',
+        '#D7DF01',
+        '#FE2EC8',
+        '#FF4000',
+        '#6E6E6E',
+        '#8000FF',
+        '#2E9AFE',
+        '#2EFEC8',
+        '#F7819F',
+        '#0B614B',
+        '#0A0A2A'],
       index: 1,
-      colorsIndex: [],
+      colorsIndex: [], 
 
 
       data: [],
@@ -127,7 +145,7 @@ export default class Project extends Component {
 
     let pointsCount = 0;
 
-    for (let index = 0; index < 200; index++) {
+    for (let index = 15; index < 200; index++) {
       const colors = this.state.colors
       colors[index] = this.gerarCor()
       this.setState({ colors })
@@ -255,12 +273,11 @@ export default class Project extends Component {
         size = size + 1
       }
     })
-    console.log(size)
+    console.log('size:' + size)
     console.log(firstEncounter)
     this.state.colorsIndex.splice(firstEncounter, size)
 
-    console.log(this.state.colorsIndex)
-    console.log(this.state.data)
+    console.log('colorsIndex:' + this.state.colorsIndex)
 
     let index = null
 
@@ -272,9 +289,9 @@ export default class Project extends Component {
 
     if (index !== null) {
       for (let i = index; i < this.state.colorsIndex.length; i++) {
-        console.log(this.state.colorsIndex[i])
+        console.log('colorsIndex[]:' + this.state.colorsIndex[i])
         this.state.colorsIndex[i].index = this.state.colorsIndex[i].index - 1
-        console.log(this.state.colorsIndex[i].index)
+        console.log('colorsIndex[-1]:'+this.state.colorsIndex[i].index)
         console.log(this.state.colors[this.state.colorsIndex[i].index])
         this.state.colorsIndex[i].color = this.state.colors[this.state.colorsIndex[i].index]
         break;

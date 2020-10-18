@@ -25,11 +25,12 @@ class ChartLine extends Component {
     this.state = {
       data: [],
       colors: this.props.colors,
-      zoomDomain: {
-        x: [1, this.props.data.map(
-          (dataset) => Math.max(...dataset.map((d) => d.x))
-        )]
-      },
+      zoomDomain: { x: [new Date(1990, 1, 1), new Date(2009, 1, 1)] },
+      // zoomDomain: {
+      //   x: [1, this.props.data.map(
+      //     (dataset) => Math.max(...dataset.map((d) => d.x))
+      //   )]
+      // },
       metric: false,
       maximaY: this.props.maximaY,
       nameX: ""
@@ -72,12 +73,16 @@ class ChartLine extends Component {
       this.setState({ data: this.props.data })
 
       this.setState({
-        zoomDomain: {
-          x: [1, this.props.data.map(
-            (dataset) => Math.max(...dataset.map((d) => d.x))
-          )]
-        }
+        zoomDomain: { x: [new Date(2019, 1, 1), new Date(2021, 1, 1)] },
       })
+
+      // this.setState({
+      //   zoomDomain: {
+      //     x: [1, this.props.data.map(
+      //       (dataset) => Math.max(...dataset.map((d) => d.x))
+      //     )]
+      //   }
+      // })
 
 
       this.setState({
