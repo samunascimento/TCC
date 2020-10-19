@@ -57,19 +57,20 @@ public class Point {
         this.sha = sha;
     }
     
-//    //class;
-//    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,Date versionDate, int versionID, int parentID){
-//        this.x = x;
-//        this.y = y;
-//        this.nameProject = nameProject;
-//        this.namePackage = namePackage;
-//        this.nameClass = nameClass;
-//        this.metricName = metricName;
-//        this.versionDate = versionDate;
-//        this.versionID = versionID;
-//        this.parentID = parentID;
-//    }
-//    
+    //class;
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String metricName,String dateString,String sha,int versionID, int parentID){
+        this.x = x;
+        this.y = y;
+        this.nameProject = nameProject;
+        this.namePackage = namePackage;
+        this.nameClass = nameClass;
+        this.metricName = metricName;
+        this.dateString = dateString;
+        this.versionID = versionID;
+        this.parentID = parentID;
+        this.sha = sha;
+    }
+    
 //    //method
 //    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate, int versionID,int parentID){
 //        this.x = x;
