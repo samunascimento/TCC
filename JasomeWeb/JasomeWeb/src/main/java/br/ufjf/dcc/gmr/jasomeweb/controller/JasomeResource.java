@@ -7,6 +7,7 @@
 package br.ufjf.dcc.gmr.jasomeweb.controller;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -90,6 +91,20 @@ public class JasomeResource {
         return listJ;
     }
     
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("projects/nameClass/{nameProject}")
+    public String getNameClass(@PathParam("nameProject") String nameProject) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        ArrayList<ClassMetrics> listClass = new ArrayList<>();
+        Gson g = new Gson();
+        listClass = dao.selectClassName(nameProject);
+        connection.close();
+        String listJ = g.toJson(listClass);
+        return listJ;
+    }
+    
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,6 +131,20 @@ public class JasomeResource {
         MetricDao dao = new MetricDao(connection);
         Gson g = new GsonBuilder().serializeNulls().create(); //para adicionar valores NULL
         List<List<Point>> selectPackageMetrics = dao.selectPackageMetrics(nameProject,namePackage,nameMetric);
+        connection.close();
+        String listJ = g.toJson(selectPackageMetrics);
+        return listJ;
+    }
+    
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("projects/metric/class/{nameProject}/{namePackage}/{nameClass}/{nameMetric}")
+    public String getMetricClass(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameClass") String nameClass,@PathParam("nameMetric") String nameMetric) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        Gson g = new GsonBuilder().serializeNulls().create(); //para adicionar valores NULL
+        List<List<Point>> selectPackageMetrics = dao.selectClassMetrics(nameProject,namePackage,nameClass,nameMetric);
         connection.close();
         String listJ = g.toJson(selectPackageMetrics);
         return listJ;
