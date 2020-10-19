@@ -75,6 +75,11 @@ public class ClassMetrics {
     public ClassMetrics() {
         this.listMethodsMetrics = new ArrayList<>();
     }
+    
+     public ClassMetrics(int id,String nameClass){
+        this.id = id;
+        this.name = nameClass;
+    };
 
     public List<MethodMetrics> getListMethodsMetrics() {
         return listMethodsMetrics;
