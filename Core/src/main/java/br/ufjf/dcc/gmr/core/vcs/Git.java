@@ -971,22 +971,25 @@ public class Git {
 
     /**
      * Give all commits that is merges and their parents in the form:
-     * HASH[space]PARENT1[space]PARENT2
+     * HASH[bar]PARENT1[space]PARENT2
      *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
      * @return Return a List String that goes contains all commits that is
      * merges
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
      */
-    public static List<String> giveAllMerges(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
-        CLIExecution cliE = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h,%p", repositoryPath);
+    public static List<String> giveAllMerges(String repositoryPath) throws IOException {
+        CLIExecution cliE;
+        try {
+            cliE = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h/%p", repositoryPath);
+        } catch (IOException ex) {
+            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+        }
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
+                    throw new IOException("This path is not a Git repository!");
                 }
             }
         }
@@ -1000,47 +1003,35 @@ public class Git {
      * can be merged like branches and commits
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @param abort This parameter is a boolean that indicates if user wants to
-     * abort the conflict if happend
-     * @param returnToMaster This parameter is a boolean that indicates if user
-     * wants to return to master after merge
      * @return Returns a boolean that indicates if the merge is confliting
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws NoRemoteForTheCurrentBranch
-     * @throws ThereIsNoMergeInProgress
-     * @throws ThereIsNoMergeToAbort
-     * @throws AlreadyUpToDate
-     * @throws NotSomethingWeCanMerge
-     * @throws IOException
-     * @throws CheckoutError
      */
-    public static boolean mergeIsConflicting(String entity, String repositoryPath, boolean abort, boolean returnToMaster) throws LocalRepositoryNotAGitRepository, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge, IOException, CheckoutError {
-        CLIExecution cliE = CLIExecute.execute("git merge --no-edit " + entity, repositoryPath);
+    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException{
+        CLIExecution cliE;
+        CLIExecute.execute("git checkout " + parent1, repositoryPath);
+        try {
+            cliE = CLIExecute.execute("git merge --no-edit " + parent2, repositoryPath);
+        } catch (IOException ex) {
+            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+        }
         boolean check = false;
         if (!cliE.getError().isEmpty()) {
             for (String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
+                    throw new IOException("This path is not a Git repository!");
                 } else if (line.contains("No remote for the current branch.")) {
-                    throw new NoRemoteForTheCurrentBranch(line);
+                    throw new IOException(line);
                 } else if (line.contains("There is no merge in progress")) {
-                    throw new ThereIsNoMergeInProgress(line);
+                    throw new IOException(line);
                 } else if (line.contains("There is no merge to abort")) {
-                    throw new ThereIsNoMergeToAbort(line);
+                    throw new IOException(line);
                 } else if (line.contains("Already up to date")) {
-                    throw new AlreadyUpToDate(line);
+                    throw new IOException(line);
                 } else if (line.contains("not something we can merge")) {
-                    throw new NotSomethingWeCanMerge(line);
+                    throw new IOException(line);
                 }
             }
         } else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
             check = true;
-            if (abort) {
-                mergeAbort(repositoryPath);
-            }
-        }
-        if ((returnToMaster && !check) || (returnToMaster && check && abort)) {
-            Git.checkout("master", repositoryPath);
         }
         return check;
     }
@@ -1065,41 +1056,50 @@ public class Git {
      *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @param parents This parameter is a List<String> that contains the hash of
+     * @param parents This parameter is a String[] that contains the hash of
      * the parents
-     * @return Return a List<String> that goes contains all commits that is
+     * @return Return a String that goes contains all commits that is
      * merges
      * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
      */
-    public static String mergeBaseCommand(String repositoryPath, List<String> parents) throws IOException, LocalRepositoryNotAGitRepository {
+    public static String mergeBaseCommand(String repositoryPath, String[] parents) throws IOException{
         String command = "git merge-base ";
         for (String str : parents) {
             command = command + str + " ";
         }
-        CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
+        CLIExecution cliE;
+        try {
+            cliE = CLIExecute.execute(command, repositoryPath);
+        } catch (IOException ex) {
+            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+        }
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
+                    throw new IOException("This path is not a Git repository!");
                 }
             }
         }
-        return cliE.getOutput().toString().replace("[", "").replace("]", "");
+        return cliE.getOutput().get(0);
     }
+    
 
-    public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException, LocalRepositoryNotAGitRepository {
+    public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException{
         String command = "git merge-base " + parent1 + " " + parent2;
-        CLIExecution cliE = CLIExecute.execute(command, repositoryPath);
+        CLIExecution cliE;
+        try {
+            cliE = CLIExecute.execute(command, repositoryPath);
+        } catch (IOException ex) {
+            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+        }
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
                 if (string.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
+                    throw new IOException("This path is not a Git repository!");
                 }
             }
         }
-        return cliE.getOutput().toString().replace("[", "").replace("]", "");
+        return cliE.getOutput().get(0);
     }
 
     /**
@@ -1116,14 +1116,8 @@ public class Git {
      * @param document this parameter is used in case of a mixed reset and is
      * the "document" that the command will remove
      * @return return true if the command was executed and false if not
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repositorypath is wrong
-     * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidDocument exception to
-     * Invalid document
-     *
      */
-    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, LocalRepositoryNotAGitRepository, InvalidDocument {
+    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException{
 
         String command = "git reset ";
 
@@ -1142,10 +1136,10 @@ public class Git {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
 
-                    throw new LocalRepositoryNotAGitRepository();
+                    throw new IOException("This path is not a Git repository!");
                 }
                 if (line.contains("fatal: ambiguous argument")) {
-                    throw new InvalidDocument();
+                    throw new IOException("The document is invalid!");
                 }
 
             }

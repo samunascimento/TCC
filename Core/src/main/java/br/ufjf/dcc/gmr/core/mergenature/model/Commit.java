@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class to record basic info about commits
@@ -56,6 +59,23 @@ public class Commit {
         this.authorDate = authorDate;
         this.committer = committer;
         this.committerDate = committerDate;
+    }
+    
+    /**
+     * 
+     * @param hash              The hash of the commit
+     * @param repositoryPath    The path of the Git repository where the commit is
+     * @throws IOException      If repositoryPath is not a path in system or the path
+     *                          is not a Git repository
+     */
+    public Commit(String hash, String repositoryPath) throws IOException {
+        List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
+        this.message = info.get(5);
+        this.commitHash = info.get(0);
+        this.author = info.get(1);
+        this.authorDate = new Date(Long.parseLong(info.get(2)) * 1000);
+        this.committer = info.get(3);
+        this.committerDate = new Date(Long.parseLong(info.get(4)) * 1000);
     }
 
     public Commit() {

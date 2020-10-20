@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictFile;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +58,8 @@ public class Merge {
     }
 
     public Merge() {
-    
+        this.parents = new ArrayList<>();
+        this.conflictFiles = new ArrayList<>();
     }
 
     public int getId() {
