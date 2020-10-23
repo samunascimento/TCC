@@ -198,11 +198,11 @@ export default class chartMenu extends Component {
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                             >
                                                 {this.props.classTree.map((classes, classIndex) => (
-                                                    <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                                                    <TreeItem title={classes.nameClass} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.nameClass}</span>}>
                                                         <FormGroup>
                                                             {this.props.classMetrics.map((metric) => (
                                                                 <FormControlLabel
-                                                                    control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.props.addClassMetric(event, metric.name, classes.name, classIndex)} name={metric.name} color="primary" />}
+                                                                    control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.props.addClassMetric(event, metric.name, classes.namePackage, classes.nameClass, classIndex)} name={metric.name} color="primary" />}
                                                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                                                 />
                                                             ))}

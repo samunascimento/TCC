@@ -363,7 +363,7 @@ export default class Project extends Component {
 
       this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
-          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === null)) {
             metricCheck = true
             colorsCheck = true
           }
@@ -422,7 +422,7 @@ export default class Project extends Component {
 
   }
 
-  addClassMetric = (event, metricName, className, classIndex) => {
+  addClassMetric = (event, metricName, packageName, className, classIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
     this.state.classTree[classIndex][metricName] = !this.state.classTree[classIndex][metricName]
@@ -430,7 +430,7 @@ export default class Project extends Component {
     if (event.target.checked === true) {
 
 
-      const metric = { 'metricName': metricName, 'className': className }
+      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className }
       const classMetricsChart = this.state.classMetricsChart;
       classMetricsChart.push(metric)
       this.setState({ classMetricsChart })
@@ -442,7 +442,7 @@ export default class Project extends Component {
       let metricCheck = false
       let metricIndex = 1
       this.state.classMetricsChart.map((metric, index) => {
-        if (metric.metricName === metricName && metric.className === className) {
+        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className ) {
           metricCheck = true
           metricIndex = index
         }
@@ -457,7 +457,7 @@ export default class Project extends Component {
 
       this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
-          if ((metric !== null) && (metric.metricName === metricName) && (metric.className === className)) {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === className)) {
             metricCheck = true
             colorsCheck = true
           }
@@ -487,7 +487,7 @@ export default class Project extends Component {
 
   handleChangeClass = async (classMetric) => {
 
-    await axios.get(`metric/class/` + this.props.nameProject.name + `/` + classMetric.className + `/` + classMetric.classMetric)
+    await axios.get(`metric/class/` + this.props.nameProject.name + `/` + classMetric.packageName + '/' + classMetric.className + `/` + classMetric.metricName)
       .then(res => {
         const data = this.state.data
         const metricDescription = { 'metricName': classMetric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': classMetric.className }
