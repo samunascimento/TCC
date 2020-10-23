@@ -87,7 +87,7 @@ export default class Project extends Component {
         '#0B614B',
         '#0A0A2A'],
       index: 1,
-      colorsIndex: [], 
+      colorsIndex: [],
 
 
       data: [],
@@ -206,6 +206,51 @@ export default class Project extends Component {
     }
   }
 
+  adjustColors = (metricName, checkMetric) => {
+
+    let size = 0;
+    let firstEncounter = null;
+
+    // for(let i = 0; i<this.state.data.size; i++){
+    //   if(this.state.data[i][0].)
+    // }
+
+    this.state.colorsIndex.map((color, index) => {
+      if (color.metricName === metricName && color.checkMetric === checkMetric) {
+        if (firstEncounter === null) {
+          firstEncounter = index
+        }
+        size = size + 1
+      }
+    })
+    console.log('size:' + size)
+    console.log(firstEncounter)
+    this.state.colorsIndex.splice(firstEncounter, size)
+
+    console.log('colorsIndex:' + this.state.colorsIndex)
+
+    let index = null
+
+    this.state.colorsIndex.map((color, colorIndex) => {
+      if (firstEncounter <= colorIndex && index === null) {
+        index = colorIndex
+      }
+    })
+
+    if (index !== null) {
+      for (let i = index; i < this.state.colorsIndex.length; i++) {
+        console.log('colorsIndex[]:' + this.state.colorsIndex[i])
+        this.state.colorsIndex[i].index = this.state.colorsIndex[i].index - 1
+        console.log('colorsIndex[-1]:' + this.state.colorsIndex[i].index)
+        console.log(this.state.colors[this.state.colorsIndex[i].index])
+        this.state.colorsIndex[i].color = this.state.colors[this.state.colorsIndex[i].index]
+        break;
+      }
+    }
+
+    this.setState({ index: this.state.index - 1 })
+  }
+
   addProjectMetric = (event, metricName) => {
 
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
@@ -235,72 +280,31 @@ export default class Project extends Component {
       }
 
       let indexArray = []
+      let colorsCheck = false
 
       this.state.data.map((metrics, index) => {
-        console.log(index)
-        console.log(this.state.data.length)
 
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.nameProject === this.state.projectName)) {
-            metricCheck = true
+            metricCheck = true;
+            colorsCheck = true;
           }
         })
-        console.log(metricCheck)
         if (metricCheck === true) {
           indexArray.push(index)
           metricCheck = false
         }
       })
 
-      this.adjustColors(metricName, this.props.nameProject.name)
+      if (colorsCheck == true) {
+        this.adjustColors(metricName, this.props.nameProject.name)
+      }
 
       this.state.data.splice(indexArray[0], indexArray.length)
 
       this.RemoveMetricDescription(metricName, this.props.nameProject.name)
     }
   }
-
-  adjustColors = (metricName, checkMetric) => {
-
-    let size = 0
-    let firstEncounter = null
-
-    this.state.colorsIndex.map((color, index) => {
-      if (color.metricName === metricName && color.checkMetric === checkMetric) {
-        if (firstEncounter === null) {
-          firstEncounter = index
-        }
-        size = size + 1
-      }
-    })
-    console.log('size:' + size)
-    console.log(firstEncounter)
-    this.state.colorsIndex.splice(firstEncounter, size)
-
-    console.log('colorsIndex:' + this.state.colorsIndex)
-
-    let index = null
-
-    this.state.colorsIndex.map((color, colorIndex) => {
-      if (firstEncounter <= colorIndex && index === null) {
-        index = colorIndex
-      }
-    })
-
-    if (index !== null) {
-      for (let i = index; i < this.state.colorsIndex.length; i++) {
-        console.log('colorsIndex[]:' + this.state.colorsIndex[i])
-        this.state.colorsIndex[i].index = this.state.colorsIndex[i].index - 1
-        console.log('colorsIndex[-1]:'+this.state.colorsIndex[i].index)
-        console.log(this.state.colors[this.state.colorsIndex[i].index])
-        this.state.colorsIndex[i].color = this.state.colors[this.state.colorsIndex[i].index]
-        break;
-      }
-    }
-
-    this.setState({ index: this.state.index - 1 })
-  }
-
 
   handleChangeProject = async (metric) => {
 
@@ -323,8 +327,6 @@ export default class Project extends Component {
     this.setState({ index: this.state.index + 1 })
 
   }
-
-
 
   addPackageMetric = (event, metricName, packageName, packageIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
@@ -359,21 +361,24 @@ export default class Project extends Component {
       }
 
       let indexArray = []
+      let colorsCheck = false
 
       this.state.data.map((metrics, index) => {
         metrics.map((metric, index) => {
           if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName)) {
             metricCheck = true
+            colorsCheck = true
           }
         })
         if (metricCheck === true) {
           indexArray.push(index)
-          this.state.data.splice(index, 1)
           metricCheck = false
         }
       })
 
-      this.adjustColors(metricName, packageName)
+      if (colorsCheck == true) {
+        this.adjustColors(metricName, packageName)
+      }
 
       this.state.data.splice(indexArray[0], indexArray.length)
 
@@ -486,27 +491,6 @@ export default class Project extends Component {
   handleChangeSwitch = (event) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
   };
-
-
-  //   setStateAsync(state) {
-  //     return new Promise((resolve) => {
-  //       this.setState(state, resolve)
-  //     });
-  //   }
-
-  //   teste = () => {
-
-  //     this.state.projectMetricsChart.map((projectMetric) => {
-  //       this.handleChangeProject(projectMetric)
-  //     })
-  //     this.state.packageMetricsChart.map((packageMetric) => {
-  //       this.handleChangePackage(packageMetric);
-  //     })
-  //     this.setState({ projectMetricsChart: [] })
-
-  //     this.setState({ packageMetricsChart: [] })
-
-  // }
 
   generateChart = () => {
 
