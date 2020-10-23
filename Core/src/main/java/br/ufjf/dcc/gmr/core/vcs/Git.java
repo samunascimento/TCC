@@ -82,7 +82,7 @@ public class Git {
         }
 
         //log method formatting
-        command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
+        command = command.concat("--pretty=format:%H");
         List<Formats> list = new ArrayList<>();
         Formats model = null;
 
@@ -94,19 +94,18 @@ public class Git {
                 }
             }
         }
-        //size: Number of Parameters
-        String array[];
+       
+        
         int i = 0;
         for (String line : execution.getOutput()) {
-            array = line.split(",", 4);
-            String authorName = array[0];
-            String commitHash = array[1];
-            String authorDate = array[2];
-            String commitDescription = array[3];
-
+            String commitHash = line;
+            String authorName = getCommitInfo(commitHash, repositoryPath, "%an");
+            String authorDate = getCommitInfo(commitHash, repositoryPath, "%ai");
+            String commitDescription = getCommitInfo(commitHash, repositoryPath, "%s");
             //Split Date
             //System.out.println("autorDate: " + authorDate);
-            array = array[2].split(" ", 3);
+            String array[];
+            array = authorDate.split(" ", 3);
             String dateForm = array[0];
             String time = array[1];
             String timeZone = array[2];
@@ -342,7 +341,6 @@ public class Git {
      */
     public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
 
-
         String command = "git clone " + url;
         if (name != null) {
             command = command.concat(" ").concat(name);
@@ -406,15 +404,7 @@ public class Git {
         }
 
         execution = CLIExecute.execute(command, repositoryPath);
-//        if (quiet && !remotePull && !verbose) {
-//            command = "git pull --quiet";
-//        } else if (!quiet && !remotePull && verbose) {
-//            command = "git pull --verbose";
-//        } else if (!quiet && remotePull && !verbose) {
-//            command = "git pull " + remoteName + " " + branch;
-//        } else if (!quiet && !remotePull && !verbose) {
-//            command = "git pull";
-//        }
+
         execution = CLIExecute.execute(command, repositoryPath);
 
         if (!execution.getError().isEmpty()) {
@@ -1005,7 +995,7 @@ public class Git {
      * directory where the command will be executed
      * @return Returns a boolean that indicates if the merge is confliting
      */
-    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException{
+    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException {
         CLIExecution cliE;
         CLIExecute.execute("git checkout " + parent1, repositoryPath);
         try {
@@ -1052,17 +1042,30 @@ public class Git {
     }
 
     /**
+     * 
+     * @param commitHash
+     * @param repositoryPath
+     * @param pattern
+     * @return
+     * @throws IOException 
+     */
+    public static String getCommitInfo(String commitHash, String repositoryPath, String pattern) throws IOException {
+        String command = "git show " + commitHash + " --pretty=" + pattern + " -s";
+        return CLIExecute.execute(command, repositoryPath).getOutput().get(0);
+    }
+
+    
+    /**
      * Find a common ancestor of the parents
      *
      * @param repositoryPath This parameter is a String that contains the
      * directory where the command will be executed
-     * @param parents This parameter is a String[] that contains the hash of
-     * the parents
-     * @return Return a String that goes contains all commits that is
-     * merges
+     * @param parents This parameter is a String[] that contains the hash of the
+     * parents
+     * @return Return a String that goes contains all commits that is merges
      * @throws IOException
      */
-    public static String mergeBaseCommand(String repositoryPath, String[] parents) throws IOException{
+    public static String mergeBaseCommand(String repositoryPath, String[] parents) throws IOException {
         String command = "git merge-base ";
         for (String str : parents) {
             command = command + str + " ";
@@ -1082,9 +1085,8 @@ public class Git {
         }
         return cliE.getOutput().get(0);
     }
-    
 
-    public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException{
+    public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException {
         String command = "git merge-base " + parent1 + " " + parent2;
         CLIExecution cliE;
         try {
@@ -1117,7 +1119,7 @@ public class Git {
      * the "document" that the command will remove
      * @return return true if the command was executed and false if not
      */
-    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException{
+    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException {
 
         String command = "git reset ";
 
@@ -1181,7 +1183,7 @@ public class Git {
         if (!unified) {
             command = "git diff " + commitSource + " " + commitTarget;
         } else {
-            command = "git diff --unified="+ unifiedSize + " " + commitSource + " " + commitTarget;
+            command = "git diff --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
         }
 
         CLIExecution execution = CLIExecute.execute(command, directory);
@@ -1206,17 +1208,17 @@ public class Git {
                     i++;
                     aux = new FileDiff();
                 }
-                
+
                 if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
                     continue;
                 }
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+'&& line.charAt(3) == ' ') {
+                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
                     String c = line.substring(5);
                     aux.setFilePathTarget(c);
                 } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                     String c = line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-'&& line.charAt(3) == ' ') {
+                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                     String c = line.substring(5);
                     aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
@@ -1290,7 +1292,7 @@ public class Git {
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
-        String  [] command = {"git", "diff", "--unified=0",fileSource,fileTarget};
+        String[] command = {"git", "diff", "--unified=0", fileSource, fileTarget};
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
@@ -1385,7 +1387,7 @@ public class Git {
         }
         return false;
     }
-    
+
     public static boolean renamedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         List<String> output;
@@ -1395,7 +1397,7 @@ public class Git {
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
             if (line.startsWith("R")) {
-                String[] c = line.split("\t");   
+                String[] c = line.split("\t");
                 if (fileSource.contains(c[1])) {
                     return true;
                 }
