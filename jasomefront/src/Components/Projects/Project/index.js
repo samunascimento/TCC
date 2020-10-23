@@ -99,7 +99,7 @@ export default class Project extends Component {
       methodMetricsChart: [],
 
       packageTree: [],
-      classTree: [{ name: 'MetricDao', id: 1 }, { name: 'ClassDao', id: 2 }, { name: 'PackageDaO', id: 3 }, { name: 'versionDao', id: 4 }, { name: 'ProjectDao', id: 5 }, { name: 'Teste', id: 6 }, { name: 'teste1', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
+      classTree: [],
       methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
 
 
@@ -173,6 +173,11 @@ export default class Project extends Component {
       .then(res => {
         const packageTree = res.data
         this.setState({ packageTree })
+      })
+    axios.get(`nameClass/` + this.props.nameProject.name)
+      .then(res => {
+        const classTree = res.data
+        this.setState({ classTree })
       })
 
     setTimeout(() => {
