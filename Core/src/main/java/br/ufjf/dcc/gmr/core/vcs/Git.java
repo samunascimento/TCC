@@ -82,7 +82,7 @@ public class Git {
         }
 
         //log method formatting
-        command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
+        command = command.concat("--pretty=format:\"%an#%H#%ai#%s\"");
         List<Formats> list = new ArrayList<>();
         Formats model = null;
 
@@ -98,12 +98,11 @@ public class Git {
         String array[];
         int i = 0;
         for (String line : execution.getOutput()) {
-            array = line.split(",", 4);
+            array = line.split("#", 4);
             String authorName = array[0];
             String commitHash = array[1];
             String authorDate = array[2];
             String commitDescription = array[3];
-
             //Split Date
             //System.out.println("autorDate: " + authorDate);
             array = array[2].split(" ", 3);
