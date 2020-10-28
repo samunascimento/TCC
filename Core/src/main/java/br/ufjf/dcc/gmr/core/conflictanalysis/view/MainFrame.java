@@ -58,7 +58,8 @@ public class MainFrame extends JFrame {
         this.setTitle("Analysis of Merge Conflicts in Git Repositories");
         this.setResizable(true);
         this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 35, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 35));
-        this.setMinimumSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 35, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 35)));
+        this.setMinimumSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()) - 100, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 100)));
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         this.setLocationRelativeTo(null);
         this.startGenerators();
         this.startCouplers();
