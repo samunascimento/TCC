@@ -181,7 +181,10 @@ public class ReadXMLUsingSAX extends DefaultHandler {
             methodMetrics.setConstructor(atts.getValue(0));
             methodMetrics.setLineEnd(atts.getValue(1));
             methodMetrics.setLineStart(atts.getValue(2));
-            methodMetrics.setName(atts.getValue(3));
+            String aux = atts.getValue(3);
+            String []methodName = aux.split("\\(");
+            methodName = methodName[0].split(" ");
+            methodMetrics.setName(methodName[methodName.length-1]);
         } else if (tagAtual.equals("Metric")) {
             metric = new Metric();
 

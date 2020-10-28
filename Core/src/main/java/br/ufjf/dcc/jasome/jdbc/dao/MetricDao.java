@@ -7,6 +7,8 @@ package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageClass;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageClassMethod;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
@@ -297,49 +299,41 @@ public class MetricDao {
         return null;
     }
     
-    public ArrayList<ClassMetrics> selectClassName(String nameProject) throws SQLException {
-        Set<String> metricNames = new HashSet<>();
-
-        Set<String> classNames = new HashSet<>();
-
+    public ArrayList<PackageClass> selectClassName(String nameProject) throws SQLException {
         PreparedStatement stmt = null;
 
         ResultSet resultSet = null;
 
-        ArrayList<ClassMetrics> listClass = new ArrayList<>();
-        ClassMetrics classMetrics = null;
+        ArrayList<PackageClass> listPackageClass = new ArrayList<>();
 
-        String sql = "select c.id ,c.classname \n" +
-                "from tb_projectmetrics p\n" +
-                "inner join tb_project_version pv\n" +
-                "on p.id = pv.project_id \n" +
-                "inner join tb_version_package vp\n" +
-                "on pv.version_id = vp.version_id \n" +
-                "inner join tb_packagemetrics pk\n" +
-                "on vp.package_id = pk.id\n" +
-                "inner join tb_package_class pc\n" +
-                "on pk.id = pc.package_id \n" +
-                "inner join tb_classmetrics c\n" +
-                "on c.id = pc.class_id \n" +
-                "where p.projectname = " + "\'" + nameProject + "\'";
-       
+        PackageClass packageClass;
+        
+        String sql = "select distinct pk.packagename ,c.classname \n" +
+                    "from tb_projectmetrics p\n" +
+                    "inner join tb_project_version pv\n" +
+                    "on p.id = pv.project_id \n" +
+                    "inner join tb_version_package vp\n" +
+                    "on pv.version_id = vp.version_id \n" +
+                    "inner join tb_packagemetrics pk\n" +
+                    "on vp.package_id = pk.id\n" +
+                    "inner join tb_package_class pc\n" +
+                    "on pk.id = pc.package_id \n" +
+                    "inner join tb_classmetrics c\n" +
+                    "on c.id = pc.class_id \n" +
+                    "where p.projectname = " + "\'" + nameProject + "\'";
 
         try {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             int id = 1;
             while (resultSet.next()) {
-                classNames.add(resultSet.getString("classname"));
+               packageClass = new PackageClass(resultSet.getString("packagename"), resultSet.getString("classname"));
+               listPackageClass.add(packageClass);
             }
 
-            for (String className : classNames) {
-                resultSet = stmt.executeQuery();
-                classMetrics = new ClassMetrics(id, className);
-                id++;
-                listClass.add(classMetrics);
-            }
+            
 
-            return listClass;
+            return listPackageClass;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IndexOutOfBoundsException e) {
@@ -351,6 +345,58 @@ public class MetricDao {
         }
         return null;
     }
+    
+     public ArrayList<PackageClassMethod> selectMethodName(String nameProject) throws SQLException {
+        PreparedStatement stmt = null;
+
+        ResultSet resultSet = null;
+
+        ArrayList<PackageClassMethod> listPackageClassMethod = new ArrayList<>();
+
+        PackageClassMethod packageClassMethod;
+        
+        String sql = "select pk.packagename , c.classname ,mm.methodname \n" +
+                    "from tb_projectmetrics p\n" +
+                    "inner join tb_project_version pv\n" +
+                    "on p.id = pv.project_id \n" +
+                    "inner join tb_version_package vp\n" +
+                    "on pv.version_id = vp.version_id \n" +
+                    "inner join tb_packagemetrics pk\n" +
+                    "on vp.package_id = pk.id\n" +
+                    "inner join tb_package_class pc\n" +
+                    "on pk.id = pc.package_id \n" +
+                    "inner join tb_classmetrics c\n" +
+                    "on c.id = pc.class_id\n" +
+                    "inner join tb_class_method cm\n" +
+                    "on cm.class_id = c.id \n" +
+                    "inner join tb_methodmetrics mm\n" +
+                    "on cm.method_id = mm.id \n" +
+                    "where p.projectname = " + "\'" + nameProject + "\'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            int id = 1;
+            while (resultSet.next()) {
+               packageClassMethod = new PackageClassMethod(resultSet.getString("packagename"), resultSet.getString("classname"),resultSet.getString("methodname"));
+               listPackageClassMethod.add(packageClassMethod);
+            }
+
+            
+
+            return listPackageClassMethod;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return null;
+    }
+    
+    
 
     private class Merge {
 

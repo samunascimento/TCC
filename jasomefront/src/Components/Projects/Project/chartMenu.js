@@ -44,7 +44,8 @@ export default class chartMenu extends Component {
             projectTloc: this.props.projectTloc,
 
             addProjectMetric: this.props.addProjectMetric,
-            addPackageMetric: this.props.addPackageMetric,        
+            addPackageMetric: this.props.addPackageMetric, 
+            addClassMetrics: this.props.addClassMetric,       
             handleChangeClass: this.props.handleChangeClass,
             handleChangeMethod: this.props.handleChangeMethod,
 
@@ -196,12 +197,12 @@ export default class chartMenu extends Component {
                                                 defaultCollapseIcon={<ExpandMoreIcon />}
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                             >
-                                                {this.props.classTree.map((classes, index) => (
-                                                    <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                                                {this.props.classTree.map((classes, classIndex) => (
+                                                    <TreeItem title={classes.nameClass} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.nameClass}</span>}>
                                                         <FormGroup>
                                                             {this.props.classMetrics.map((metric) => (
                                                                 <FormControlLabel
-                                                                    control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.props.handleChangeClass(event, metric.name, index)} name={metric.name} color="primary" />}
+                                                                    control={<Checkbox checked={classes[metric.name]} onChange={(event) => this.props.addClassMetric(event, metric.name, classes.namePackage, classes.nameClass, classIndex)} name={metric.name} color="primary" />}
                                                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                                                 />
                                                             ))}

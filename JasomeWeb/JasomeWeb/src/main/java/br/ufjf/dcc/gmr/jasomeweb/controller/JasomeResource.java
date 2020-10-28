@@ -9,6 +9,8 @@ package br.ufjf.dcc.gmr.jasomeweb.controller;
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageClass;
+import br.ufjf.dcc.gmr.core.jasome.model.PackageClassMethod;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
@@ -97,11 +99,25 @@ public class JasomeResource {
     public String getNameClass(@PathParam("nameProject") String nameProject) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
-        ArrayList<ClassMetrics> listClass = new ArrayList<>();
+        ArrayList<PackageClass> listPackageClass = new ArrayList<>();
         Gson g = new Gson();
-        listClass = dao.selectClassName(nameProject);
+        listPackageClass = dao.selectClassName(nameProject);
         connection.close();
-        String listJ = g.toJson(listClass);
+        String listJ = g.toJson(listPackageClass);
+        return listJ;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("projects/nameMethod/{nameProject}")
+    public String getNameMethod(@PathParam("nameProject") String nameProject) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        ArrayList<PackageClassMethod> listPackageClassMethod = new ArrayList<>();
+        Gson g = new Gson();
+        listPackageClassMethod = dao.selectMethodName(nameProject);
+        connection.close();
+        String listJ = g.toJson(listPackageClassMethod);
         return listJ;
     }
     
