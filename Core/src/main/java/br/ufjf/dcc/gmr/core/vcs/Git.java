@@ -1290,7 +1290,7 @@ public class Git {
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
         System.out.println("\""+fileSource+"\"");
-        String  [] command = {"git", "diff", "--unified=0","\'"+fileSource+"\'","\'"+fileTarget+"\'"};
+        String  [] command = {"git", "diff", "--unified=0","\""+fileSource+"\"","\""+fileTarget+"\""};
         CLIExecution execution = CLIExecute.execute(command, directory);
 
         if (!execution.getError().isEmpty()) {
