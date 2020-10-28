@@ -398,7 +398,7 @@ public class ConflictRegion {
     }
 
     public String getConflictForm() {
-        return this.beforeContext + this.rawText + this.afterContext;
+        return this.beforeContext + "\n" + this.rawText + "\n" + this.afterContext;
     }
 
     public String getSolutionForm() {

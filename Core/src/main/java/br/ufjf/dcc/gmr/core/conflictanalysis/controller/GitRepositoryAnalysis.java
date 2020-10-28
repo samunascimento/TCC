@@ -241,7 +241,7 @@ public class GitRepositoryAnalysis {
         for (String merge : allMerges) {
             this.catchCommits(merge);
             Git.checkout(this.processData.parents.get(0).getCommitHash(), this.repositoryPath);
-            if (Git.mergeIsConflicting(this.processData.parents.get(1).getCommitHash(), this.processData.parents.get(2).getCommitHash(), repositoryPath)) {
+            if (Git.mergeIsConflicting(this.processData.parents.get(0).getCommitHash(), this.processData.parents.get(1).getCommitHash(), repositoryPath)) {
                 this.secondProcessingLayer();
             }
             this.resetRepository();
@@ -317,7 +317,7 @@ public class GitRepositoryAnalysis {
     }
 
     private void catchCommits(String merge) throws IOException, LocalRepositoryNotAGitRepository {
-        String[] stringArray = merge.split(",");
+        String[] stringArray = merge.split("/");
         this.processData.hash = new CommitData(stringArray[0], this.repositoryPath);
         stringArray = stringArray[1].split(" ");
         this.processData.parents.add(new CommitData(stringArray[0], this.repositoryPath));
