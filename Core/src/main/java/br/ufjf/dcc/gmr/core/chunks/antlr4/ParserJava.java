@@ -7,8 +7,11 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
+import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber.fillOneFileDiff;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
+import static org.apache.commons.io.FilenameUtils.normalize;
 
 public class ParserJava {
 
@@ -49,9 +54,21 @@ public class ParserJava {
 
         GlobalEnviroment parent1 = new GlobalEnviroment();
         GlobalEnviroment parent2 = new GlobalEnviroment();
-        int cont = 1;
+        int cont = 0;
 
-        List<String> javaFiles = javaFiles("src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/analysis");
+        //Definindo os arquivos com erros
+        List<String> javaFiles = new ArrayList<>();
+        for (MyFile myFile : version.getFile()) {
+            String filePath = myFile.getPath();
+            javaFiles.add(filePath);
+        }
+
+        List<String> filesToCheckParent1 = new ArrayList<>();
+        List<String> filesToCheckParent2 = new ArrayList<>();
+
+        String pathRepositoryCopy = "";
+        String pathRepositoryCopy1 = "";
+        String pathRepositoryCopy2 = "";
 
         for (String parent : version.getParent()) {
 
@@ -62,13 +79,40 @@ public class ParserJava {
             ParserJava parserJava = new ParserJava(version);
 
             int j = 0, i = 0;
+            String nameNewDir;
 
-            ASTExtractor1(javaFiles, parserJava.getGlobalEnviroment());
+            if (cont == 0) {
+                nameNewDir = "parent1";
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy1 = pathRepositoryCopy;
+            } else {
+                nameNewDir = "parent2";
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy2 = pathRepositoryCopy;
+            }
 
-            ASTExtractor2(javaFiles, parserJava.getGlobalEnviroment());
+            File cloneDirectory = new File(pathRepositoryCopy);
+            if (cloneDirectory.isDirectory()) {
+                List<String> jaja = javaFiles(pathRepositoryCopy);
 
-            ASTExtractor3(javaFiles, parserJava.getGlobalEnviroment());
+                for (String javaFile : javaFiles) {
+                    String[] split = javaFile.split("/");
+                    for (String string : jaja) {
+                        if (string.endsWith(split[split.length - 1])) {
+                            if (cont == 0) {
+                                filesToCheckParent1.add(string);
+                            } else {
+                                filesToCheckParent2.add(string);
+                            }
 
+                        }
+                    }
+                }
+            }
+
+            System.out.println(pathRepositoryCopy);
+
+            ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());
             Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
 
             for (String pathAST1 : javaFiles) {
@@ -104,44 +148,48 @@ public class ParserJava {
                 System.out.println(value);
 
             }
-            if (cont == 1) {
+
+            if (cont == 0) {
                 parent1 = parserJava.getGlobalEnviroment();
-            } else if (cont == 2) {
+
+            } else if (cont == 1) {
                 parent2 = parserJava.getGlobalEnviroment();
             }
 
-            for (int y = 0; y < version.getFile().size(); y++) {
-
-                //fileList.get(i).add(createDiffFile(version.getFile().get(i).getPath(), (char) cont));
-            }
+            cont++;
 
         }
 
         System.out.println("teste");
         for (int y = 0; y < version.getFile().size(); y++) {
-//            List<FileDiff> fileDiffList = Git.diff(pathProject, fileList.get(y).get(0),fileList.get(y).get(1), true, version.getFile().get(y).getContent().size());
+            normalize(pathRepositoryCopy1);
+            List<String> fileDiffList = Git.auxiliarDiffFile(pathRepositoryCopy1+"/", filesToCheckParent1.get(y), filesToCheckParent2.get(y));
+            System.out.println("");
+//            List<String> fileDiffList = Git.auxiliarDiffStat(pathProject, filesParent1.get(y), filesParent2.get(y));
+//            System.out.println("");
+//            
 //            for (FileDiff fileDiff : fileDiffList) {
-//                System.out.println(fileDiff.getArroba());
-//            }
-//            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunck : version.getFile().get(y).getChuncks()) {
-//
-//                ConflictChunk chunkA = new ConflictChunk();
-//                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
-//                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
-//                chunkA.setType(myFile.getPath());
-//                chunkA.setLanguageConstruct(parent1.findLanguageConstructs(chunkA));
-//
-//                ConflictChunk chunkB = new ConflictChunk();
-//                chunkA.setLineBegin(chunck.getBegin().getLineNumber());
-//                chunkA.setLineEnd(chunck.getEnd().getLineNumber());
-//                chunkA.setType(myFile.getPath());
-//                chunkA.setLanguageConstruct(parent2.findLanguageConstructs(chunkA));
-//
-//                ConflictChunk conflictChunk = new ConflictChunk();
-//                conflictChunk.setChunkVersion1(chunkA);
-//                conflictChunk.setChunkVersion2(chunkB);
-//
-//            }
+//                            System.out.println(fileDiff.getArroba());
+//                        }
+//                        for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunck : version.getFile().get(y).getChuncks()) {
+//            
+//                            ConflictChunk chunkA = new ConflictChunk();
+//                            chunkA.setLineBegin(chunck.getBegin().getLineNumber());
+//                            chunkA.setLineEnd(chunck.getEnd().getLineNumber());
+//                            chunkA.setType(myFile.getPath());
+//                            chunkA.setLanguageConstruct(parent1.findLanguageConstructs(chunkA));
+//            
+//                            ConflictChunk chunkB = new ConflictChunk();
+//                            chunkA.setLineBegin(chunck.getBegin().getLineNumber());
+//                            chunkA.setLineEnd(chunck.getEnd().getLineNumber());
+//                            chunkA.setType(myFile.getPath());
+//                            chunkA.setLanguageConstruct(parent2.findLanguageConstructs(chunkA));
+//            
+//                            ConflictChunk conflictChunk = new ConflictChunk();
+//                            conflictChunk.setChunkVersion1(chunkA);
+//                            conflictChunk.setChunkVersion2(chunkB);
+//            
+//                        }
         }
 //        ConflictChunk chunkA = new ConflictChunk();
 //        chunkA.setLineBegin(26);
@@ -165,6 +213,15 @@ public class ParserJava {
 //
 //        Main jung = new Main(parserJava.getGlobalEnviroment(), conflictChunkList, paths);
 //        jung.main(args);
+
+        File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
+
+        try {
+            FileUtils.deleteDirectory(dirParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static List<Chunk> getChunkBinding(ParserJava parserJava) {
@@ -183,22 +240,21 @@ public class ParserJava {
         return null;
     }
 
-    private static String createDiffFile(String path, char extendsName) throws IOException {
+    private static String createDiffRepository(String path, String pasta) throws IOException {
 
-        File file = new File(path);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String source = path;
+        File srcDir = new File(source);
 
-        String fileCopy = file.getName() + extendsName;
-        String fileWriterPath = "src/main/java/br/ufjf/dcc/gmr/core/chunks/fileDiffs/" + fileCopy + ".txt";
-        FileWriter fileWriter = new FileWriter(fileWriterPath);
+        String destination = "/home/felipepe/Área de Trabalho/projetos/sandbox/" + pasta;
+        File destDir = new File(destination);
 
-        for (String i = reader.readLine(); i != null; i = reader.readLine()) {
-            fileWriter.write(i + "\n");
+        try {
+            FileUtils.copyDirectory(srcDir, destDir);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        fileWriter.close();
-
-        return fileWriterPath;
+        return destination;
     }
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
@@ -249,6 +305,14 @@ public class ParserJava {
             }
         }
         return javaFiles;
+    }
+
+    private static void ASTExtractor(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException {
+        ASTExtractor1(pathList, globalEnviroment);
+
+        ASTExtractor2(pathList, globalEnviroment);
+
+        ASTExtractor3(pathList, globalEnviroment);
     }
 
     private static void ASTExtractor1(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException, HeadlessException, RecognitionException {
@@ -320,7 +384,7 @@ public class ParserJava {
         String aux = "";
         aux = aux.concat(str);
         str = "";
-        for (String string : aux.split("\\.")) {
+        for (String string : aux.split(".")) {
             if (!string.equals("java")) {
                 str = str.concat(string).concat(replace);
             } else {
