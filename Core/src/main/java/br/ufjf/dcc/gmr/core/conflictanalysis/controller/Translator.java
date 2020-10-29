@@ -249,13 +249,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("PackageDeclaration")
-                    || list.contains("PackageName")
-                    || list.contains("PackageOrTypeName")) {
+            if (list.contains("PackageDeclaration")) {
                 mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
                 list.remove("PackageDeclaration");
-                list.remove("PackageName");
-                list.remove("PackageOrTypeName");
+
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
