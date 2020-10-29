@@ -263,7 +263,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitPackageName(Java9Parser.PackageNameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -275,7 +275,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitPackageOrTypeName(Java9Parser.PackageOrTypeNameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
