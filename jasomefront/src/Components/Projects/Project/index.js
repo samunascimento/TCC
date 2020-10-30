@@ -100,7 +100,7 @@ export default class Project extends Component {
 
       packageTree: [],
       classTree: [],
-      methodTree: [{ name: 'runRepository', id: 1 }, { name: 'select', id: 2 }, { name: 'insert', id: 3 }, { name: 'update', id: 4 }, { name: 'delete', id: 5 }, { name: 'getConnection', id: 6 }, { name: 'teste4', id: 7 }, { name: 'teste2', id: 8 }, { name: 'teste3', id: 9 }, { name: 'teste4', id: 10 }],
+      methodTree: [],
 
 
       checkSwitch: true,
@@ -178,6 +178,11 @@ export default class Project extends Component {
       .then(res => {
         const classTree = res.data
         this.setState({ classTree })
+      })
+    axios.get(`nameMethod/` + this.props.nameProject.name)
+      .then(res => {
+        const methodTree = res.data
+        this.setState({ methodTree })
       })
 
     setTimeout(() => {

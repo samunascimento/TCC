@@ -11,41 +11,43 @@ package br.ufjf.dcc.gmr.core.jasome.model;
  */
 public class PackageClassMethod {
     
-    private String packagename;
-    private String classname;
-    private String methodname;
+    private String packageName;
+    private String className;
+    private String methodName;
+    private int id;
 
     public PackageClassMethod() {
     }
 
-    public PackageClassMethod(String packagename, String classname, String methodname) {
-        this.packagename = packagename;
-        this.classname = classname;
-        this.methodname = methodname;
+    public PackageClassMethod(String packageName, String className, String methodName, int id) {
+        this.packageName = packageName;
+        this.className = className;
+        this.methodName = methodName;
+        this.id = id;
     }
 
-    public String getPackagename() {
-        return packagename;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setPackagename(String packagename) {
-        this.packagename = packagename;
+    public void setPackageName(String packagename) {
+        this.packageName = packagename;
     }
 
-    public String getClassname() {
-        return classname;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClassname(String classname) {
-        this.classname = classname;
+    public void setClassName(String classname) {
+        this.className = classname;
     }
 
     public String getMethodname() {
-        return methodname;
+        return methodName;
     }
 
-    public void setMethodname(String methodname) {
-        this.methodname = methodname;
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
     
 }
