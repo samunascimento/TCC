@@ -7,8 +7,6 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
-import static br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber.fillOneFileDiff;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import org.apache.commons.io.FileUtils;

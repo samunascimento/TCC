@@ -82,7 +82,7 @@ public class Git {
         }
 
         //log method formatting
-        command = command.concat("--pretty=format:%H");
+        command = command.concat("--pretty=format:%H,%ai,%an");
         List<Formats> list = new ArrayList<>();
         Formats model = null;
 
@@ -98,9 +98,11 @@ public class Git {
         
         int i = 0;
         for (String line : execution.getOutput()) {
-            String commitHash = line;
-            String authorName = getCommitInfo(commitHash, repositoryPath, "%an");
-            String authorDate = getCommitInfo(commitHash, repositoryPath, "%ai");
+            
+            String[] split = line.split(",", 3);
+            String commitHash = split[0];
+            String authorDate = split[1];
+            String authorName = split[2];
             String commitDescription = getCommitInfo(commitHash, repositoryPath, "%s");
             //Split Date
             //System.out.println("autorDate: " + authorDate);
@@ -1289,15 +1291,25 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
+    
+    
+    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, RepositoryNotFound, ParseException {
+        List<Formats> logAll = logAll("/Users/gleiph/sandbox/pasta expaco/parent1");
+        
+        for (Formats log : logAll) {
+            System.out.println(log);
+        }
+    }
+    
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         //System.out.println("\""+fileSource+"\"");
-        //String  [] command = {"git", "diff", "--unified=0","\""+fileSource+"\"","\""+fileTarget+"\""};
+        String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
 
-        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
+//        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
 
-        CLIExecution execution = CLIExecute.execute(command, directory);
+        CLIExecution execution = CLIExecute.execute(command);
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {

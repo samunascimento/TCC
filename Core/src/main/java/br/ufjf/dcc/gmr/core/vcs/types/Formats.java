@@ -45,4 +45,11 @@ public class Formats {
     public String getCommitDescription() {
         return commitDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Formats{" + "authorName=" + authorName + ", commitHash=" + commitHash + ", authorDate=" + authorDate + ", commitDescription=" + commitDescription + '}';
+    }
+    
+    
 }
