@@ -227,8 +227,8 @@ export default class chartMenu extends Component {
                                                 defaultCollapseIcon={<ExpandMoreIcon />}
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                             >
-                                                {this.props.classTree.map((classes) => (
-                                                    <TreeItem title={classes.name} nodeId={classes.id} label={<span style={{ fontSize: '16px' }}>{classes.name}</span>}>
+                                                {this.props.methodTree.map((method) => (
+                                                    <TreeItem title={method.methodName} nodeId={method.id} label={<span style={{ fontSize: '16px' }}>{method.methodName}</span>}>
                                                         <FormGroup>
                                                             {this.props.classMetrics.map((metric) => (
                                                                 <FormControlLabel

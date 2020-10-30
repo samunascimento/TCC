@@ -327,8 +327,9 @@ public class MetricDao {
             resultSet = stmt.executeQuery();
             int id = 1;
             while (resultSet.next()) {
-               packageClass = new PackageClass(resultSet.getString("packagename"), resultSet.getString("classname"));
+               packageClass = new PackageClass(resultSet.getString("packagename"), resultSet.getString("classname"), id);
                listPackageClass.add(packageClass);
+               id++;
             }
 
             
@@ -355,7 +356,7 @@ public class MetricDao {
 
         PackageClassMethod packageClassMethod;
         
-        String sql = "select pk.packagename , c.classname ,mm.methodname \n" +
+        String sql = "select distinct pk.packagename , c.classname ,mm.methodname \n" +
                     "from tb_projectmetrics p\n" +
                     "inner join tb_project_version pv\n" +
                     "on p.id = pv.project_id \n" +
@@ -377,8 +378,9 @@ public class MetricDao {
             resultSet = stmt.executeQuery();
             int id = 1;
             while (resultSet.next()) {
-               packageClassMethod = new PackageClassMethod(resultSet.getString("packagename"), resultSet.getString("classname"),resultSet.getString("methodname"));
+               packageClassMethod = new PackageClassMethod(resultSet.getString("packagename"), resultSet.getString("classname"),resultSet.getString("methodname"), id);
                listPackageClassMethod.add(packageClassMethod);
+               id++;
             }
 
             
@@ -858,7 +860,7 @@ public class MetricDao {
                     "on class.id = pc.class_id \n" +
                     "left join tb_metric as e \n" +
                     "on\n" +
-                    "d." + nameMetric + "id = e.id \n" +
+                    "class." + nameMetric + "id = e.id \n" +
                     "where a.projectname = " + "\'" + nameProject + "\'" + "and (class.classname = '" + nameClass + "' or class.classname is null ) and (d.packagename = '" + namePackage + "' or d.packagename is null)\n" +
                     "order by b.version_id";
 
