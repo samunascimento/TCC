@@ -4,8 +4,6 @@ import { NotFound } from './Errors'
 import Projects from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
-import axios from 'axios'
-
 
 export default class extends Component {
   state = {
@@ -17,7 +15,6 @@ export default class extends Component {
     console.log(projects);
     this.setState({ projects })
   }
-
   render() {
     const { projects } = this.state
 
@@ -25,7 +22,7 @@ export default class extends Component {
       <Layout projects={projects}>
         <Switch>
           <Route exact path="/" render={() => <div>Home</div>} />
-          <Route exact path="/metric" component={ListMetric} />
+          <Route exact path="/metric" component={ListMetric}/>
           <Route path="/projects" render={
             props => <Projects {...props} projects={projects} />
           } />
