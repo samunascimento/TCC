@@ -347,12 +347,6 @@ public class ConflictRegion {
                 this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
             this.generateTypeOfConflict(filePath);
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
-            throw new IOException();
-        } catch (CheckoutError ex) {
-            System.out.println("ERROR: CheckoutError error!");
-            throw new IOException();
         } catch (IOException ex) {
             throw new IOException();
         }
@@ -386,12 +380,6 @@ public class ConflictRegion {
                 this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
             this.generateTypeOfConflict(filePath);
-        } catch (LocalRepositoryNotAGitRepository ex) {
-            System.out.println("ERROR: LocalRepositoryNotAGitRepository error!");
-            throw new IOException();
-        } catch (CheckoutError ex) {
-            System.out.println("ERROR: CheckoutError error!");
-            throw new IOException();
         } catch (IOException ex) {
             throw new IOException();
         }
