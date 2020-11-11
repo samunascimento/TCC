@@ -94,11 +94,10 @@ public class Git {
                 }
             }
         }
-       
-        
+
         int i = 0;
         for (String line : execution.getOutput()) {
-            
+
             String[] split = line.split(",", 3);
             String commitHash = split[0];
             String authorDate = split[1];
@@ -744,6 +743,30 @@ public class Git {
 
     }
 
+    public static List<String> merge(String otherCommit, String repositoryPath) throws IOException {
+        String command = "git merge " + otherCommit;
+        CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+        if (!execution.getError().isEmpty()) {
+            for (String line : execution.getError()) {
+                if (line.contains("No remote for the current branch.")) {
+                    throw new IOException(line);
+                } else if (line.contains("There is no merge in progress")) {
+                    throw new IOException(line);
+                } else if (line.contains("There is no merge to abort")) {
+                    throw new IOException(line);
+                } else if (line.contains("Already up to date")) {
+                    throw new IOException(line);
+                } else if (line.contains("not something we can merge")) {
+                    throw new IOException(line);
+                } else if (line.contains("Automatic merge went well; stopped before committing as requested")) {
+                    throw new IOException(line);
+                }
+            }
+            return null;
+        }
+        return execution.getOutput();
+    }
+
     public static boolean isFailedMerge(String projectPath, String SHALeft, String SHARight) throws IOException, LocalRepositoryNotAGitRepository, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
         Git.reset(projectPath, true, false, false, null);
         Git.clean(projectPath, true, 0);
@@ -943,19 +966,15 @@ public class Git {
      * repository
      * @throws CheckoutError if entity does not exist in repository
      */
-    public static boolean checkout(String entity, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, CheckoutError {
+    public static boolean checkout(String entity, String repositoryPath) throws IOException {
         CLIExecution cliE = null;
         boolean check = true;
         cliE = CLIExecute.execute("git checkout " + entity, repositoryPath);
         if (!cliE.getError().isEmpty()) {
-            for (String string : cliE.getError()) {
-                if (string.contains("not a git repository")) {
-                    check = false;
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (string.contains("did not match any file(s) known to git")) {
-                    check = false;
-                    throw new CheckoutError(string);
-                }
+            if (cliE.getError().toString().contains("not a git repository")) {
+                throw new IOException(cliE.getError().toString());
+            } else if (cliE.getError().toString().contains("did not match any file(s) known to git")) {
+                throw new IOException(cliE.getError().toString());
             }
         }
         return check;
@@ -1044,19 +1063,18 @@ public class Git {
     }
 
     /**
-     * 
+     *
      * @param commitHash
      * @param repositoryPath
      * @param pattern
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public static String getCommitInfo(String commitHash, String repositoryPath, String pattern) throws IOException {
         String command = "git show " + commitHash + " --pretty=" + pattern + " -s";
         return CLIExecute.execute(command, repositoryPath).getOutput().get(0);
     }
 
-    
     /**
      * Find a common ancestor of the parents
      *
@@ -1291,26 +1309,23 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
-    
-    
     public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, RepositoryNotFound, ParseException {
         List<Formats> logAll = logAll("/Users/gleiph/sandbox/pasta expaco/parent1");
-        
+
         for (Formats log : logAll) {
             System.out.println(log);
         }
     }
-    
+
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         //System.out.println("\""+fileSource+"\"");
-        String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
-
-//        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
+        //String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
+        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
         
-        CLIExecution execution = CLIExecute.execute(command);
-
+        CLIExecution execution = CLIExecute.execute(command, directory);
+        
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {

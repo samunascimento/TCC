@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class Project {
     }
 
     public Project() {
-    
+        this.merges = new ArrayList<>();
     }
     
     public int getId() {

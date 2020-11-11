@@ -1,6 +1,16 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Auxiliaries methods for MergeNature
@@ -9,7 +19,19 @@ import java.io.File;
  * @since 14-10-2020
  */
 public class MergeNatureTools {
-    
+
+    public static List<String> getFileContent(String folderPath) throws FileNotFoundException, IOException {
+        List<String> content = new ArrayList<>();
+        File file = new File(folderPath);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String st;
+        while ((st = br.readLine()) != null) {
+            content.add(st);
+        }
+        br.close();
+        return content;
+    }
+
     public static boolean isDirectory(File file) {
         if (file.isDirectory()) {
             return true;
@@ -17,7 +39,7 @@ public class MergeNatureTools {
             return false;
         }
     }
-    
+
     public static boolean isDirectory(String path) {
         File file = new File(path);
         if (file.isDirectory()) {
@@ -26,5 +48,35 @@ public class MergeNatureTools {
             return false;
         }
     }
-    
+
+    public static void prepareAnalysis(String repositoryPath) {
+        try {
+            Git.reset(repositoryPath, true, false, false, null);
+        } catch (IOException ex) {
+        }
+        try {
+            Git.clean(repositoryPath, true, 0);
+        } catch (IOException ex) {
+        } catch (UnknownSwitch ex) {
+        } catch (RefusingToClean ex) {
+        } catch (IsOutsideRepository ex) {
+        }
+
+    }
+
+    public static String getULROfProjectFromConfig(String repositoryPath) throws IOException {
+        try {
+            String url = "Unknow";
+            for (String line : getFileContent(repositoryPath)) {
+                if (line.startsWith("\turl = ")) {
+                    String[] split = line.split("= ");
+                    url = split[split.length - 1];
+                    break;
+                }
+            }
+            return url;
+        } catch (FileNotFoundException ex) {
+            return "Unknow";
+        }
+    }
 }
