@@ -1308,7 +1308,7 @@ public class Git {
         String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
 
 //        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
-
+        
         CLIExecution execution = CLIExecute.execute(command);
 
         if (!execution.getError().isEmpty()) {
@@ -1329,7 +1329,29 @@ public class Git {
         return execution.getOutput();
 
     }
+    
+    public static List<String> fileDiffExample(String initialFile, String finalFile, String repository) throws IOException {
+        
+        List<String> result = new ArrayList<>();
+        String [] command = {"git", "diff",  initialFile, finalFile};
 
+        CLIExecution cmdOutput = CLIExecute.execute(command, repository);
+        //CMDOutput cmdOutput = CMD.cmdArray(repository, command);
+        
+        if (cmdOutput.getError().isEmpty()) {
+
+            for (String line : cmdOutput.getOutput()) {
+                result.add(line);
+                
+            }
+
+            return result;
+
+        } else {
+            return null;
+        }
+
+    }
     /**
      * This method receive two files and returns the difference between them,
      * using the "name-status" command, and returns the output.

@@ -160,9 +160,11 @@ public class ParserJava {
 
         System.out.println("teste");
         for (int y = 0; y < version.getFile().size(); y++) {
-            normalize(pathRepositoryCopy1);
-            List<String> fileDiffList = Git.auxiliarDiffFile(pathRepositoryCopy1+"/", filesToCheckParent1.get(y), filesToCheckParent2.get(y));
-            System.out.println("");
+                     List<String> fileDiffList = Git.fileDiffExample(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
+            for (String string : fileDiffList) {
+                System.out.println(string);
+            }
+
 //            List<String> fileDiffList = Git.auxiliarDiffStat(pathProject, filesParent1.get(y), filesParent2.get(y));
 //            System.out.println("");
 //            
