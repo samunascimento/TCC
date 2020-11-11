@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.DiffAnalyze;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -158,13 +159,12 @@ public class ParserJava {
 
         }
 
-        System.out.println("teste");
         for (int y = 0; y < version.getFile().size(); y++) {
-                     List<String> fileDiffList = Git.fileDiffExample(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            for (String string : fileDiffList) {
-                System.out.println(string);
-            }
-
+            List<String> fileDiffList = Git.fileDiffExample(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
+            DiffAnalyze diffAnalyze = new DiffAnalyze();
+            diffAnalyze.setModifiedLines(fileDiffList);
+            version.getFile().get(y).setDiffAnalyze(diffAnalyze);
+            
 //            List<String> fileDiffList = Git.auxiliarDiffStat(pathProject, filesParent1.get(y), filesParent2.get(y));
 //            System.out.println("");
 //            
@@ -245,7 +245,7 @@ public class ParserJava {
         String source = path;
         File srcDir = new File(source);
 
-        String destination = "/home/felipepe/Área de Trabalho/projetos/sandbox/" + pasta;
+        String destination = "/home/felipepe/Documentos/projetos/sandbox/" + pasta;
         File destDir = new File(destination);
 
         try {

@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.vcs.types;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.DiffAnalyze;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class MyFile {
     private boolean renamed;
     private List<ConflictChunk> chuncks;
     private List<String> content;
+    private DiffAnalyze diffAnalyze;
 
     public MyFile() {
         path = new String();
@@ -23,6 +25,7 @@ public class MyFile {
         type = new String();
         renamed = false;
         chuncks = new ArrayList<>();
+        diffAnalyze = new DiffAnalyze();
     }
 
     public MyFile(String path, Status status) {
@@ -138,6 +141,20 @@ public class MyFile {
         }
 
         return javaClassName;
+    }
+
+    /**
+     * @return the diffAnalyze
+     */
+    public DiffAnalyze getDiffAnalyze() {
+        return diffAnalyze;
+    }
+
+    /**
+     * @param diffAnalyze the diffAnalyze to set
+     */
+    public void setDiffAnalyze(DiffAnalyze diffAnalyze) {
+        this.diffAnalyze = diffAnalyze;
     }
 
 }
