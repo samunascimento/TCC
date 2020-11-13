@@ -1351,8 +1351,9 @@ public class Git {
     public static List<String> fileDiffExample(String initialFile, String finalFile, String repository) throws IOException {
         
         List<String> result = new ArrayList<>();
-        String [] command = {"git", "diff",  initialFile, finalFile};
-
+        //String [] command;
+        //command = {"git", "diff", ,"\"" + initialFile + "\"", "\""+finalFile+"\""};
+        String command = "git" + " diff " + initialFile + " " + finalFile;
         CLIExecution cmdOutput = CLIExecute.execute(command, repository);
         //CMDOutput cmdOutput = CMD.cmdArray(repository, command);
         

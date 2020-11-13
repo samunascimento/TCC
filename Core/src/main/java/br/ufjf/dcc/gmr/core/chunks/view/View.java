@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.chunks.view;
 
+
+import br.ufjf.dcc.gmr.core.chunks.controller.JMenuJungActionListener;
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
+import br.ufjf.dcc.gmr.core.chunks.jungtwo.JungFrame;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
 import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import java.awt.BorderLayout;
@@ -18,6 +21,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 public final class View extends JFrame {
 
+    
     private JFrame chooserFrame;
     private JPanel leftPanel;
     private JPanel rightPanel;
@@ -32,11 +36,13 @@ public final class View extends JFrame {
     private JMenu menuFile;
     private JMenu menuOptions;
     private JMenuItem submenu;
+    private JMenuItem submenuJung;
     private InitProject initProject;
     private Project project;
     private JTree tree;
     private int screenWidth;
     private int screenHight;
+    private JungFrame jungFrame;
 
     View() {
         this.tree = new JTree();
@@ -53,11 +59,14 @@ public final class View extends JFrame {
         this.textArea = new JTextArea();
         this.progressBar = new JProgressBar();
         this.submenu = new JMenuItem();
+        this.submenuJung = new JMenuItem();
         this.initProject = new InitProject();
         this.project = new Project();
         this.chooserFrame = new JFrame();
         this.screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
         this.screenHight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
+        this.jungFrame = new JungFrame();
+        
     }
 
     private void paintTreePane() {
@@ -136,7 +145,10 @@ public final class View extends JFrame {
         this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
         this.submenu.addActionListener(new MenuFileActionListener(this));
         this.submenu.setText("Open Repository");
+        this.submenuJung.addActionListener(new JMenuJungActionListener(this.jungFrame));
+        this.submenuJung.setText("Open Jung");
         this.menuFile.add(this.submenu);
+        this.menuFile.add(this.submenuJung);
         this.menuFile.setText("File");
         this.menuBar.add(this.menuFile);
         this.menuOptions.addMouseListener(new MenuOptionsActionListener(this));
@@ -321,7 +333,14 @@ public final class View extends JFrame {
     public JScrollPane getTreePane() {
         return treePane;
     }
-
+    
+    /**
+     * @return the SubmenuJung
+     */
+    public JMenuItem getSubmenuJung(){
+        return submenuJung;
+    }
+    
     /**
      * @param chooser the chooser to set
      */
@@ -439,5 +458,12 @@ public final class View extends JFrame {
      */
     public void setMenuOptions(JMenu menuOptions) {
         this.menuOptions = menuOptions;
+    }
+    
+    /**
+     * @param submenuJung  the submenuJung to set
+     */
+    public void SetSubmenuJung(JMenuItem submenuJung){
+        this.submenuJung = submenuJung;
     }
 }
