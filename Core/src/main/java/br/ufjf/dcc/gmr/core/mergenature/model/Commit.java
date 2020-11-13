@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class Commit {
     
+    public static final Commit NO_EXIST = new Commit();
+    
     private int id;
     private String message;
     private String commitHash;

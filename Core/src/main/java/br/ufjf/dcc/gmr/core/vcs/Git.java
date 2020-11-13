@@ -1103,6 +1103,9 @@ public class Git {
                 }
             }
         }
+        if(cliE.getOutput().isEmpty()){
+            return "No ancestor";
+        }
         return cliE.getOutput().get(0);
     }
 

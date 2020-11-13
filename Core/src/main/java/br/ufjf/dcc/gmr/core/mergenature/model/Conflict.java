@@ -110,5 +110,12 @@ public class Conflict {
     }
     
     
-    
+    @Override
+    public String toString() {
+        return "ID: " + id
+                + "\nPARENT 1 FILE PATH: " + parent1FilePath
+                + "\nPARENT 2 FILE PATH: " + parent2FilePath
+                + "\nANCESTOR FILE PATH: " + ancestorFilePath
+                + "\nCONFLICT TYPE: " + conflictType.toString();
+    }
 }
