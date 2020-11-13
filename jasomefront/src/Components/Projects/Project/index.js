@@ -5,8 +5,8 @@ import ChartMenu from './chartMenu'
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-//import Chart from './../../Charts/newChart';
-import Chart from './../../Charts/chartLine';
+import Chart from './../../Charts/newChart';
+//import Chart from './../../Charts/chartLine';
 import Caption from './chartCaption'
 import ListSubheader from '@material-ui/core/ListSubheader';
 import axios from 'axios';

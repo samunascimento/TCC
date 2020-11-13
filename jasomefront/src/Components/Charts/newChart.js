@@ -14,86 +14,95 @@ import {
     VictoryScatter
 } from 'victory'
 
-import { PropTypes } from 'prop-types';
-
 const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+// 10000 points (10 / 0.001 = 10000) - see what happens when you render 50k or 100k
+const allData = _.range(0, 10, 0.001).map(x => ({
+	x: x,
+  y: Math.sin(Math.PI*x/2) * x / 10
+}));
 
-class ChartLine extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: []
-        }
-        this.entireDomain = this.getEntireDomain(props);
-        this.state = {
-            zoomedXDomain: this.entireDomain.x,
-        };
-        console.log('tetse')
-        console.log(props);
+class ChartLine extends React.Component {
+  constructor(props) {
+  	super();
+    this.entireDomain = this.getEntireDomain(props);
+   	this.state = {
+    	zoomedXDomain: this.entireDomain.x,
+    };
+  }
+	onDomainChange(domain) {
+  	this.setState({
+    	zoomedXDomain: domain.x,
+    });
+  }
+  getData() {
+  	const { zoomedXDomain } = this.state;
+    const { data} = this.props;
+    console.log("data aqui")
+    console.log(data);
+  	const filtered = data.filter(
+    	(d) => (d.x >= zoomedXDomain[0] && d.x <= zoomedXDomain[1]));
+
+    if (filtered.length > 100 ) {
+      const k = Math.ceil(filtered.length / 100);
+    	return filtered.filter(
+      	(d, i) => ((i % k) === 0)
+      );
     }
-
-    onDomainChange(domain) {
-        this.setState({
-            zoomedXDomain: domain.x,
-        });
-    }
-
-    /*componentDidUpdate(prevProps, prevState) {
-
-        if (this.props.data !== prevState.data) {
-            this.setState({ data: this.props.data })
-
-            this.setState({
-                zoomDomain: { x: [new Date(2019, 1, 1), new Date(2021, 1, 1)] },
-            })
-
-            this.setState({
-                maximaX: this.state.data.map(
-                    (dataset) => Math.max(...dataset.map((d) => d.x))
-                )
-            })
-            this.setState({
-                maximaY: this.state.data.map(
-                    (dataset) => Math.max(...dataset.map((d) => d.y))
-                )
-            })
-
-        }
-    }*/
-
-    getEntireDomain(props) {
-        const { data } = props.data;
-        console.log('entrou aqui')
-        console.log(props.data);
-        return {
-            y: [_.minBy(data, d => d.y).y, _.maxBy(data, d => d.y).y],
-            //y: [_.minBy(data, d => d.y), _.maxBy(data, d => d.y)],
-            x: [data[0].x, _.last(data).x]
-        };
-    }
-
-    getData() {
-        const { zoomedXDomain } = this.state;
-        const { data } = this.props.data;
-        return data.filter(
-            // is d "between" the ends of the visible x-domain?
-            (d) => (d.x >= zoomedXDomain[0] && d.x <= zoomedXDomain[1]));
-    }
-
-    render() {
-        return (
-            <VictoryChart
-                domain={this.entireDomain}
-                containerComponent={<VictoryZoomContainer
-                    zoomDimension="x"
-                    onZoomDomainChange={this.onDomainChange.bind(this)}
-                />}
+    console.log("entrou aqui")
+    console.log(filtered)
+    return data;
+  }
+  getEntireDomain(props) {
+  	//const { data } = props.data;
+    return {
+    	y: [_.minBy(props.data, d => d.y), _.maxBy(props.data, d => d.y)],
+      x: [ props.data[0].x, _.last(props.data).x ]
+    };
+  }
+  getZoomFactor() {
+    const { zoomedXDomain } = this.state;
+    const factor = 10 / (zoomedXDomain[1] - zoomedXDomain[0]);
+    return _.round(factor, factor < 3 ? 1 : 0);
+  }
+	render() {
+    const renderedData = this.getData();
+  	return (
+    	<div>
+        <VictoryChart
+          //domain={this.entireDomain}
+          containerComponent={<VictoryZoomContainer
+            //zoomDimension="x"
+            onZoomDomainChange={this.onDomainChange.bind(this)}
+            //minimumZoom={{x: 1/10000}}
+          />}
+        >
+         {renderedData.map((d, i) => (
+            <VictoryLine
+              key={i}
+              data={d}
+              style={{
+                data: {
+                  stroke: this.props.colors[i].color
+                }
+              }}
+            //   x={this.handleSwitch()}
+            //   y="y"
             >
-                <VictoryScatter data={this.getData()} />
-            </VictoryChart>
-        );
-    }
+            </VictoryLine>
+
+          ))}
+        </VictoryChart>
+        {/* <div>
+          {this.getZoomFactor()}x zoom;
+          rendering {renderedData.length} of {this.props.data.length}
+        </div> */}
+      </div>
+    );
+  }
 }
-//ReactDOM.render(<ChartLine data={allData}/>, mountNode);
+
+//ReactDOM.render(<CustomChart data={allData} 
+//maxPoints={120} />, mountNode);
+
 export default ChartLine;
