@@ -22,12 +22,12 @@ export default class RTLOC extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>RTLOC (Total de linhas de código bruto)</ListItemText>
+          <ListItemText><b>RTLOC (Total de linhas de código bruto)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                     O número real de linhas de código em uma classe, usando os números de linha do próprio arquivo. 
                 </ListItemText>

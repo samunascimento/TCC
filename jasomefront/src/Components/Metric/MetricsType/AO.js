@@ -22,12 +22,12 @@ export default class AO extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AO (Número de atributos substituídos)</ListItemText>
+          <ListItemText><b>AO (Número de atributos substituídos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Atributos na classe que substituem atributos herdados de outra forma (classe)
                 </ListItemText>

@@ -22,12 +22,12 @@ export default class MO extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>MO (Número de métodos substituídos)</ListItemText>
+          <ListItemText><b>MO (Número de métodos substituídos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Métodos na classe que substituem um método (classe) herdado de outra forma
                 </ListItemText>

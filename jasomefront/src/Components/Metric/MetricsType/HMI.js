@@ -22,12 +22,12 @@ export default class HMI extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>HMI (Número de métodos ocultos herdados)</ListItemText>
+          <ListItemText><b>HMI (Número de métodos ocultos herdados)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de métodos herdados (mas não substituídos) que não são públicos (classe)
                 </ListItemText>

@@ -22,12 +22,12 @@ export default class NPM extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NPM (Número de métodos públicos)</ListItemText>
+          <ListItemText><b>NPM (Número de métodos públicos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de métodos públicos(classe)
                 </ListItemText>

@@ -22,12 +22,12 @@ export default class MD extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>MD (Número de métodos definidos)</ListItemText>
+          <ListItemText><b>MD (Número de métodos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Métodos definidos dentro da classe (o mesmo que NMA) (classe)
                 </ListItemText>

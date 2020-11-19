@@ -22,12 +22,12 @@ export default class TLOC extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>TLOC (Total de linhas de código)</ListItemText>
+          <ListItemText><b>TLOC (Total de linhas de código)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                   O número total de linhas de código, ignorando comentários, espaços em branco e diferenças de formatação (projeto, pacote, classe, método)
                 </ListItemText>

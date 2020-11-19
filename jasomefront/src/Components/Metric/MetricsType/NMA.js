@@ -22,12 +22,12 @@ export default class NMA extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NMA (Número de métodos adicionados à herança)</ListItemText>
+          <ListItemText><b>NMA (Número de métodos adicionados à herança)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de métodos que uma classe herda adiciona à hierarquia de herança; métodos definidos na classe que não substituíram ou herdaram (classe)
                 </ListItemText>
