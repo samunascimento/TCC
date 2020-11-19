@@ -7,7 +7,10 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  * @since 09-11-2020
  */
 public enum ConflictType {
-    CONTENT, COINCIDENCE_ADDING, FILE_RENAME, DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE;
+    
+    CONTENT, COINCIDENCE_ADDING, FILE_RENAME, 
+    DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE, 
+    P1_RENAMED_P2_ADD, P2_RENAMED_P1_ADD;
     
     public static ConflictType getEnumFromInt(int value) {
         switch (value) {
@@ -28,6 +31,12 @@ public enum ConflictType {
             }
             case 6: {
                 return ConflictType.RENAME_DELETE;
+            }
+            case 7: {
+                return ConflictType.P1_RENAMED_P2_ADD;
+            }
+            case 8: {
+                return ConflictType.P2_RENAMED_P1_ADD;
             }
             default: {
                 return null;
@@ -54,6 +63,12 @@ public enum ConflictType {
             }
             case "RENAME_DELETE": {
                 return ConflictType.RENAME_DELETE;
+            }
+            case "P1_RENAMED_P2_ADD": {
+                return ConflictType.P1_RENAMED_P2_ADD;
+            }
+            case "P2_RENAMED_P1_ADD": {
+                return ConflictType.P2_RENAMED_P1_ADD;
             }
             default: {
                 return null;

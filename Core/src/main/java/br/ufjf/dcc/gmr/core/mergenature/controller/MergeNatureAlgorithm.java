@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
+import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
@@ -71,9 +74,10 @@ public class MergeNatureAlgorithm {
 
     private Merge mergeLayer(Project project, String logLine, String repositoryPath) throws IOException {
 
-        Merge merge = new Merge();;
+        Merge merge = new Merge();
         String[] auxStringArray;
         List<String> mergeMessage;
+        String auxString;
 
         merge.setProject(project);
         auxStringArray = logLine.split("/");
@@ -85,14 +89,20 @@ public class MergeNatureAlgorithm {
         for (String parent : auxStringArray) {
             merge.addParent(new Commit(parent, repositoryPath));
         }
+        auxString = Git.mergeBaseCommand(repositoryPath, auxStringArray);
+        if ("No ancestor".equals(auxString)) {
+            merge.setAncestor(Commit.NO_EXIST);
+        } else {
+            merge.setAncestor(new Commit(auxString, repositoryPath));
+        }
         merge.setAncestor(new Commit(Git.mergeBaseCommand(repositoryPath, auxStringArray), repositoryPath));
         if (merge.getMergeType() != MergeType.OCTOPUS_MERGE) {
             Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getCommitHash(), repositoryPath);
             if (mergeMessage.contains("Automatic merge failed; fix conflicts and then commit the result.")) {
-                for (String line : mergeMessage) {
-                    if (line.contains("CONFLICT") && !line.contains("CONFLICT (content)") && !line.contains("CONFLICT (add/add)")) {
-                        System.out.println(line);
+                for (String conflictMessage : mergeMessage) {
+                    if (conflictMessage.contains("CONFLICT")) {
+                        merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
                     }
                 }
                 Git.reset(repositoryPath, true, false, false, null);
@@ -100,9 +110,32 @@ public class MergeNatureAlgorithm {
                 merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE);
             }
         }
-        
+
         return merge;
 
+    }
+
+    private Conflict conflictLayer(Merge merge, String conflictMessage, String repositoryPath) throws IOException {
+
+        Conflict conflict = MergeMessageReader.getConflictFromMessage(conflictMessage);
+
+        conflict.setMerge(merge);
+
+        if (conflict.getConflictType() == ConflictType.CONTENT
+                || conflict.getConflictType() == ConflictType.COINCIDENCE_ADDING
+                || conflict.getConflictType() == ConflictType.FILE_RENAME) {
+            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(conflict.getParent1FilePath()), repositoryPath));
+        }
+
+        return conflict;
+    }
+
+    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) {
+        List<ConflictRegion> conflictRegions = new ArrayList<>();
+        for(int i = 0; i < fileContent.size(); i++){
+            
+        }
+        return null;
     }
 
 }

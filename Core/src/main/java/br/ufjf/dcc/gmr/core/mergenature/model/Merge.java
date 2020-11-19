@@ -16,7 +16,7 @@ public class Merge {
     private Commit merge;
     private List<Commit> parents;
     private Commit ancestor;
-    private List<ConflictFile> conflictFiles;
+    private List<Conflict> conflicts;
     private MergeType mergeType;
     
     /**
@@ -26,16 +26,16 @@ public class Merge {
      * @param merge             The data of the merge
      * @param parents           The data of all parents
      * @param ancestor          The data of the ancestor of the parents (merge base)
-     * @param conflictFiles     List of all files involved in a merge conflict
+     * @param conflicts     List of all files involved in a merge conflict
      * @param mergeType         The type of the merge
      */ 
-    public Merge(int id, Project project, Commit merge, List<Commit> parents, Commit ancestor, List<ConflictFile> conflictFiles, MergeType mergeType) {
+    public Merge(int id, Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
         this.id = id;
         this.project = project;
         this.merge = merge;
         this.parents = parents;
         this.ancestor = ancestor;
-        this.conflictFiles = conflictFiles;
+        this.conflicts = conflicts;
         this.mergeType = mergeType;
     }
     
@@ -45,21 +45,21 @@ public class Merge {
      * @param merge             The data of the merge
      * @param parents           The data of all parents
      * @param ancestor          The data of the ancestor of the parents (merge base)
-     * @param conflictFiles     List of all files involved in a merge conflict
+     * @param conflicts     List of all files involved in a merge conflict
      * @param mergeType         The type of the merge
      */ 
-    public Merge(Project project, Commit merge, List<Commit> parents, Commit ancestor, List<ConflictFile> conflictFiles, MergeType mergeType) {
+    public Merge(Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
         this.project = project;
         this.merge = merge;
         this.parents = parents;
         this.ancestor = ancestor;
-        this.conflictFiles = conflictFiles;
+        this.conflicts = conflicts;
         this.mergeType = mergeType;
     }
 
     public Merge() {
         this.parents = new ArrayList<>();
-        this.conflictFiles = new ArrayList<>();
+        this.conflicts = new ArrayList<>();
     }
 
     public int getId() {
@@ -106,16 +106,16 @@ public class Merge {
         this.ancestor = ancestor;
     }
 
-    public List<ConflictFile> getConflictFiles() {
-        return conflictFiles;
+    public List<Conflict> getConflicts() {
+        return conflicts;
     }
 
-    public void setConflictFiles(List<ConflictFile> conflictFiles) {
-        this.conflictFiles = conflictFiles;
+    public void setConflicts(List<Conflict> conflicts) {
+        this.conflicts = conflicts;
     }
     
-    public void addConflictFile(ConflictFile conflictFile){
-        this.conflictFiles.add(conflictFile);
+    public void addConflicts(Conflict conflicts){
+        this.conflicts.add(conflicts);
     }
 
     public MergeType getMergeType() {

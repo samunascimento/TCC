@@ -1,7 +1,5 @@
 package br.ufjf.dcc.gmr.core.chunks.view;
 
-
-import br.ufjf.dcc.gmr.core.chunks.controller.JMenuJungActionListener;
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.chunks.jungtwo.JungFrame;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
@@ -21,7 +19,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 public final class View extends JFrame {
 
-    
     private JFrame chooserFrame;
     private JPanel leftPanel;
     private JPanel rightPanel;

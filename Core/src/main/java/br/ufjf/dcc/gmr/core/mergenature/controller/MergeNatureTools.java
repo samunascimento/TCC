@@ -20,9 +20,9 @@ import java.util.List;
  */
 public class MergeNatureTools {
 
-    public static List<String> getFileContent(String folderPath) throws FileNotFoundException, IOException {
+    public static List<String> getFileContent(String filePath) throws FileNotFoundException, IOException {
         List<String> content = new ArrayList<>();
-        File file = new File(folderPath);
+        File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         while ((st = br.readLine()) != null) {
@@ -77,6 +77,29 @@ public class MergeNatureTools {
             return url;
         } catch (FileNotFoundException ex) {
             return "Unknow";
+        }
+    }
+
+    public static boolean checkIfIsBegin(String line) {
+        if (line.startsWith("<<<<<<< HEAD")) {
+            if (line.replaceAll("<<<<<<< HEAD", "").equals("")) {
+                return true;
+            } else if (line.replaceAll("<<<<<<< HEAD", "").startsWith(":") && line.replaceAll("<<<<<<< HEAD", "").length() > 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean checkIfIsEnd(String line) {
+        String[] auxStringArray = line.split(" ");
+        if (line.startsWith(">>>>>>> ") && auxStringArray[0].equals(">>>>>>>"))  {
+            return true;
+        } else {
+            return false;
         }
     }
 }

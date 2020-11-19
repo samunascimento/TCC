@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
@@ -209,7 +210,7 @@ public class ConflictRegion {
     }
     
     public void setDeveloperDecision(String developerDecision) {
-        this.developerDecision = DeveloperDecision.getEnum(developerDecision);
+        this.developerDecision = DeveloperDecision.getEnumFromString(developerDecision);
     }
 
     public String getRawText() {

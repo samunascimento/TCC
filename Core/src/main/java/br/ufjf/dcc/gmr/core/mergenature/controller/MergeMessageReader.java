@@ -20,7 +20,10 @@ public class MergeMessageReader {
             return doubleRenameType(message);
         } else if (message.contains("(modify/delete)")) {
             return modifyDeleteType(message);
+        } else if (message.contains("(rename/delete)")) {
+            return renameDeleteType(message);
         } else {
+            System.out.println("NOVA MESSAGEM OBTIDA:\n" + message + "\n");
             return null;
         }
     }
@@ -42,7 +45,7 @@ public class MergeMessageReader {
         String[] auxStringArray = message.split("in ");
         result.setParent1FilePath(auxStringArray[auxStringArray.length - 1]);
         result.setParent2FilePath(auxStringArray[auxStringArray.length - 1]);
-        result.setAncestorFilePath(auxStringArray[auxStringArray.length - 1]);
+        result.setAncestorFilePath("Absent");
         result.setConflictType(ConflictType.COINCIDENCE_ADDING);
         return result;
     }
@@ -57,25 +60,27 @@ public class MergeMessageReader {
     in branch "HEAD" rename "test/unit/voldemort/store/filesystem/FilesystemStorageEngineTest.java"->"test/unit/voldemort/store/configuration/ConfigurationStorageEngineTest.java" 
     in "f4122146d4c2903041c2474ee09efe21087b8be9"
     
-    */
+     */
     private static Conflict doubleRenameType(String message) {
         Conflict result = new Conflict();
         String[] auxStringArray = message.split(": ");
+        String auxString;
         if (auxStringArray[auxStringArray.length - 1].contains("Rename directory")) {
-            String auxString = auxStringArray[auxStringArray.length - 1].replaceAll("Rename directory ", "");
-            auxStringArray = auxString.split(".");
-            result.setAncestorFilePath(auxStringArray[0].split("->")[0]);
-            auxString = auxStringArray[0].split("->")[1];
-            if(auxString.contains(" in HEAD")){
-                result.setParent1FilePath(auxString.replaceAll(" in HEAD", ""));
-                result.setParent2FilePath(auxStringArray[1].split("->")[1].split(" in")[0]);
-            } else {
-                result.setParent2FilePath(auxString.split(" in")[0]);
-                result.setParent1FilePath(auxStringArray[1].split("->")[1].split(" in")[0]);
-            }
+            auxString = auxStringArray[auxStringArray.length - 1].replaceAll("Rename directory ", "");
             result.setConflictType(ConflictType.DIRECTORY_RENAME);
         } else {
-
+            auxString = auxStringArray[auxStringArray.length - 1].replaceAll("Rename ", "").replaceAll("\"", "").replaceAll(" rename ", ". ").replaceAll("branch ", "");
+            result.setConflictType(ConflictType.FILE_RENAME);
+        }
+        auxStringArray = auxString.split(". ");
+        result.setAncestorFilePath(auxStringArray[0].split("->")[0]);
+        auxString = auxStringArray[0].split("->")[1];
+        if (auxString.contains(" in HEAD")) {
+            result.setParent1FilePath(auxString.replaceAll(" in HEAD", ""));
+            result.setParent2FilePath(auxStringArray[1].split("->")[1].split(" in")[0]);
+        } else {
+            result.setParent2FilePath(auxString.split(" in")[0]);
+            result.setParent1FilePath(auxStringArray[1].split("->")[1].split(" in")[0]);
         }
         return result;
     }
@@ -104,6 +109,63 @@ public class MergeMessageReader {
         }
         result.setAncestorFilePath(auxStringArray[0]);
         result.setConflictType(ConflictType.MODIFY_DELETE);
+        return result;
+    }
+    
+    /*
+    
+    CONFLICT (rename/delete): runtime/Go/src/antlr4/TraceListener.go deleted in HEAD and renamed to 
+    runtime/Go/src/antlr/TraceListener.go in 31d21ff4db8ddcf76bae1b865cd568621bfd5b4d. Version 
+    31d21ff4db8ddcf76bae1b865cd568621bfd5b4d of runtime/Go/src/antlr/TraceListener.go left in tree.
+    
+    CONFLICT (rename/delete): src/java/voldemort/store/filesystem/package.html deleted in 
+    f4122146d4c2903041c2474ee09efe21087b8be9 and renamed to src/java/voldemort/store/textfile/package.html 
+    in HEAD. Version HEAD of src/java/voldemort/store/textfile/package.html left in tree.
+    
+    runtime/Go/src/antlr/TraceListener.go in 31d21ff4db8ddcf76bae1b865cd568621bfd5b4d
+    
+    */
+    private static Conflict renameDeleteType(String message) {
+        Conflict result = new Conflict();
+        String[] auxStringArray = message.split(": ")[1].split(". ");
+        String auxString = auxStringArray[0];
+        auxStringArray = auxString.split(" and renamed to ")[0].split(" deleted in ");
+        if(auxStringArray[1] == "HEAD"){
+            result.setAncestorFilePath(auxStringArray[0]);
+            result.setParent1FilePath("Absent");
+            auxStringArray = auxString.split(" and renamed to ")[0].split(" in ");
+            result.setParent2FilePath(auxStringArray[0]);
+        } else {
+            result.setAncestorFilePath(auxStringArray[0]);
+            result.setParent2FilePath("Absent");
+            auxStringArray = auxString.split(" and renamed to ")[0].split(" in ");
+            result.setParent1FilePath(auxStringArray[0]);
+        }
+        result.setConflictType(ConflictType.RENAME_DELETE);
+        return result;
+    }
+    
+    /*
+    
+    CONFLICT (rename/add): Rename 
+    tool/src/org/antlr/v4/codegen/model/LL1StarBlock.java->runtime/Cpp/runtime/atn/PrecedencePredicateTransition.cpp 
+    in 014d9fd59397ab6434ce29447ef8d27e558a38e5.  Added runtime/Cpp/runtime/atn/PrecedencePredicateTransition.cpp in HEAD
+    
+    */
+    private static Conflict renameAddType(String message) {
+        Conflict result = new Conflict();
+        String[] auxStringArray = message.split(": Rename")[1].split(". ");
+        String auxString = auxStringArray[0];
+        auxStringArray = auxString.split("->");
+        result.setAncestorFilePath(auxStringArray[0]);
+        if(auxStringArray[1].contains("in HEAD")){
+            result.setConflictType(ConflictType.P1_RENAMED_P2_ADD);
+        } else {
+            result.setConflictType(ConflictType.P2_RENAMED_P1_ADD);
+        }
+        auxString = auxStringArray[1].split(" in ")[0];
+        result.setParent1FilePath(auxString);
+        result.setParent2FilePath(auxString);
         return result;
     }
 

@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufjf.dcc.gmr.core.vcs;
+package br.ufjf.dcc.gmr.core.chunks.jungtwo;
 
 /**
  *
- * @author felip
+ * @author onofre
  */
-public class GitDiffFunctions {
+public class Edge {
     
+    public Edge(){
+        
+    }
 }
