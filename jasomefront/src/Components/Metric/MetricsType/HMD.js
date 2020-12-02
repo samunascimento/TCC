@@ -22,12 +22,12 @@ export default class HMD extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>HMD (Número de métodos ocultos definidos)</ListItemText>
+          <ListItemText><b>HMD (Número de métodos ocultos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de métodos definidos que não são públicos (classe)
                 </ListItemText>

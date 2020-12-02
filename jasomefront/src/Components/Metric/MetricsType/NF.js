@@ -22,12 +22,12 @@ export default class NF extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NF (Número de atributos)</ListItemText>
+          <ListItemText><b>NF (Número de atributos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de campos / atributos (classe)
                 </ListItemText>

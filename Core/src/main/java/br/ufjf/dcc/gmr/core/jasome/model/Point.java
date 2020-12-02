@@ -71,23 +71,23 @@ public class Point {
         this.sha = sha;
     }
     
-//    //method
-//    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,Date versionDate, int versionID,int parentID){
-//        this.x = x;
-//        this.y = y;
-//        this.nameProject = nameProject;
-//        this.namePackage = namePackage;
-//        this.nameClass = nameClass;
-//        this.nameMethod = nameMethod;
-//        this.metricName = metricName;
-//        this.versionDate = versionDate;
-//        this.versionID = versionID;
-//        this.parentID = parentID;
-//    }
+    //method
 
-    public Point(int i, double aDouble, Object object, String string, String string0, Date versionDate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Point(int x,Double y,String nameProject, String namePackage,String nameClass,String nameMethod,String metricName,String dateString,String sha,int versionID, int parentID) {
+        this.x = x;
+        this.y = y;
+        this.versionID = versionID;
+        this.parentID = parentID;
+        this.nameProject = nameProject;
+        this.namePackage = namePackage;
+        this.nameClass = nameClass;
+        this.nameMethod = nameMethod;
+        this.metricName = metricName;
+        this.dateString = dateString;
+        this.sha = sha;
     }
+    
+    
     public int getX() {
         return x;
     }

@@ -22,12 +22,12 @@ export default class MI extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>MI (Número de métodos herdados)</ListItemText>
+          <ListItemText><b>MI (Número de métodos herdados)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Métodos herdados, mas não substituídos (classe)
                 </ListItemText>

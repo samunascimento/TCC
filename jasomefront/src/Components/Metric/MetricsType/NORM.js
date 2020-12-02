@@ -22,12 +22,12 @@ export default class NORM extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NORM (Número de métodos substituídos)</ListItemText>
+          <ListItemText><b>NORM (Número de métodos substituídos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de métodos que uma classe substitui ou implementa de uma classe pai (classe)
                 </ListItemText>

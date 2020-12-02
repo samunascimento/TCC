@@ -22,12 +22,12 @@ export default class AI extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AI (Número de atributos herdados)</ListItemText>
+          <ListItemText><b>AI (Número de atributos herdados)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Atributos herdados, mas não substituídos (classe)
                 </ListItemText>

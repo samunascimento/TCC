@@ -168,6 +168,20 @@ public class JasomeResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("projects/metric/method/{nameProject}/{namePackage}/{nameClass}/{nameMethod}/{nameMetric}")
+    public String getMetricClass(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameClass") String nameClass,@PathParam("nameMethod") String nameMethod,@PathParam("nameMetric") String nameMetric) throws SQLException{
+        Connection connection = ConnectionFactory.getConnection();
+        MetricDao dao = new MetricDao(connection);
+        System.out.println(nameProject +" "+ namePackage+" "+ nameClass+" "+nameMethod +" "+ nameMetric);
+        Gson g = new GsonBuilder().serializeNulls().create(); //para adicionar valores NULL
+        List<List<Point>> selectMethodMetrics = dao.selectMethodMetrics(nameProject, namePackage, nameClass, nameMethod, nameMetric);
+        connection.close();
+        String listJ = g.toJson(selectMethodMetrics);
+        return listJ;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("projects/metric/description/{nameMetric}")
     public String getMetricPackage(@PathParam("nameProject") String nameProject,@PathParam("nameMetric") String nameMetric) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
@@ -179,6 +193,14 @@ public class JasomeResource {
         return listJ;
     }
        
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("projects/metric/post/{caminho}")
+    public void recebeCaminho(final @PathParam("caminho") String caminho) {
+        System.out.println("CAMINHO: " + caminho);
+    }
+    
     /**
      * PUT method for updating or creating an instance of JasomeResource
      *

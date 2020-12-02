@@ -99,8 +99,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!--<mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>-->
-                            <mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>--> 
+                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>--> 
                         </manifest>
                     </archive>
                 </configuration>
@@ -110,8 +110,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!--<mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>-->
-                            <mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>-->
+                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>-->
                         </manifest>
                     </archive>
                     <descriptorRefs>

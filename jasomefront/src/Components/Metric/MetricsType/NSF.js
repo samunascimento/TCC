@@ -22,12 +22,12 @@ export default class NSF extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NSF (Número de atributos estáticos)</ListItemText>
+          <ListItemText><b>NSF (Número de atributos estáticos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de atributos estáticos (classe)
                 </ListItemText>

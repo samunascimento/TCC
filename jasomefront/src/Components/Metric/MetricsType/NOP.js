@@ -22,12 +22,12 @@ export default class NOP extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NOP (Número de parâmetros)</ListItemText>
+          <ListItemText><b>NOP (Número de parâmetros)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de parâmetros que um método leva (método)
                 </ListItemText>

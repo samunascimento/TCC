@@ -22,12 +22,12 @@ export default class NM extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NM (Número de métodos)</ListItemText>
+          <ListItemText><b>NM (Número de métodos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de métodos (classe)
                 </ListItemText>

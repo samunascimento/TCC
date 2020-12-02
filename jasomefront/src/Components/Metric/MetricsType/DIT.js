@@ -22,12 +22,12 @@ export default class DIT extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>DIT (Profundidade da árvore de herança)</ListItemText>
+          <ListItemText><b>DIT (Profundidade da árvore de herança)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 A profundidade máxima da hierarquia de herança para uma classe. (classe)
                 </ListItemText>

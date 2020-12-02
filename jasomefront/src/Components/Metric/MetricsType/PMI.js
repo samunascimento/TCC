@@ -22,12 +22,12 @@ export default class PMI extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>PMI (Número de métodos públicos herdados)</ListItemText>
+          <ListItemText><b>PMI (Número de métodos públicos herdados)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de métodos herdados (mas não substituídos) que são públicos (classe)
                 </ListItemText>
