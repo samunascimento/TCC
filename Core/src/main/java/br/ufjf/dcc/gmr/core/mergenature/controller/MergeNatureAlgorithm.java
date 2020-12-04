@@ -7,6 +7,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
@@ -132,8 +133,51 @@ public class MergeNatureAlgorithm {
 
     private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) {
         List<ConflictRegion> conflictRegions = new ArrayList<>();
+        ConflictRegion conflictRegion;
+        String auxString = "";
         for(int i = 0; i < fileContent.size(); i++){
-            
+            if(MergeNatureTools.checkIfIsBegin(fileContent.get(i))){
+                conflictRegion = new ConflictRegion();
+                for(int j = i - contextLines; j != i; j++){
+                    if(j > -1){
+                        auxString = auxString + "\n" + fileContent.get(j);
+                    } else if (j == -1){
+                        auxString = auxString + "\n<SOF>";
+                    }
+                }
+                conflictRegion.setBeforeContext(auxString.replaceFirst("\n", ""));
+                auxString = "";
+                conflictRegion.setBeginLine(i+1);
+                i++;
+                while(!MergeNatureTools.checkIfIsSeparator(fileContent.get(i))){
+                    auxString = auxString + "\n" + fileContent.get(i);
+                    i++;
+                }
+                conflictRegion.setV1Text(auxString.replaceFirst("\n", ""));
+                auxString = "";
+                conflictRegion.setSeparatorLine(i+1);
+                i++;
+                while(!MergeNatureTools.checkIfIsEnd(fileContent.get(i))){
+                    auxString = auxString + "\n" + fileContent.get(i);
+                    i++;
+                }
+                conflictRegion.setV2Text(auxString.replaceFirst("\n", ""));
+                auxString = "";
+                conflictRegion.setEndLine(i+1);
+                i++;
+                for(int j = i; j < i + contextLines; j++){
+                    if(j < fileContent.size()){
+                        auxString = auxString + "\n" + fileContent.get(j);
+                    } else {
+                        auxString = auxString + "\n<EOF>";
+                        i = j;
+                        break;
+                    }
+                }
+                conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
+                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, conflictRegion.getBeginLine() - contextLines - 1, conflictRegion.getEndLine() + contextLines - 1)));
+                
+            }
         }
         return null;
     }
