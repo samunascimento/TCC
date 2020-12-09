@@ -451,7 +451,7 @@ public class ReturnNewLineNumber {
     }
 private static int startingLineAdapated(String a) {
 
-        if (a.contains("-")) {
+        if (a.charAt(9)== '-') {
             String c[];
             c = a.split("-");
             a = c[1];
@@ -469,7 +469,7 @@ private static int startingLineAdapated(String a) {
             int startingLine;
             startingLine = Integer.parseInt(g[0]);
 
-            return startingLine+1;
+            return startingLine;
         } else {
             String c[];
             c = a.split("\\+");
@@ -483,7 +483,7 @@ private static int startingLineAdapated(String a) {
             int startingLine;
             startingLine = Integer.parseInt(g[0]);
 
-            return startingLine+1;
+            return startingLine;
 
         }
     }
