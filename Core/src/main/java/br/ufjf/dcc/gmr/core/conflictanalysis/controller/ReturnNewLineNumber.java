@@ -363,13 +363,10 @@ public class ReturnNewLineNumber {
         return os.startsWith("Windows");
     }
 
+    /*-----------------------------*//* Funções Novas Refatoramento*//*----------------------------------------------------*/
 
-
-
-/*-----------------------------*//* Funções Novas Refatoramento*//*----------------------------------------------------*/
-
-     public static int initReturnNewLineNumberAdapted(String directory, String commit,
-             String filePath, int originalLineNumber)
+    public static int initReturnNewLineNumberAdapted(String directory, String commit,
+            String filePath, int originalLineNumber)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, ImpossibleLineNumber {
 
         if (originalLineNumber < 0) {
@@ -392,9 +389,9 @@ public class ReturnNewLineNumber {
         }
 
         return (originalLineNumber + i);
-     }
-   
-     private static List<FileDiff> fillOneFileDiffAdapted(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
+    }
+
+    private static List<FileDiff> fillOneFileDiffAdapted(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
 
         List<FileDiff> chunks = new ArrayList<>();
         List<String> output = new ArrayList<>();
@@ -429,17 +426,17 @@ public class ReturnNewLineNumber {
             } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                currentLine++;
             } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                 String c = line.substring(5);
                 if (c.endsWith("\t") || c.endsWith("\n")) {
                     c = c.substring(0, c.length() - 1);
                 }
-
+                
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                 String c = line.substring(1);
                 aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
-                currentLine++;
             } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                 currentLine = startingLineAdapated(line);
             }
@@ -449,18 +446,28 @@ public class ReturnNewLineNumber {
 
         return chunks;
     }
-private static int startingLineAdapated(String a) {
 
-        if (a.charAt(9)== '-') {
+    private static int startingLineAdapated(String a) {
+
+        if (a.charAt(9) == '-') {
             String c[];
             c = a.split("-");
             a = c[1];
-            String g[];
-            if (a.contains(",")) {
-                g = a.split(",");
-                if (g[0].contains("+")) {
-                    g = g[0].split("\\+");
-                    g[0] = g[0].replace(" ", "");
+            String[] g = null;
+            if (a.contains(",") || a.contains("@")) {
+                if (a.contains(",")) {
+                    g = a.split(",");
+                    if (g[0].contains("+")) {
+                        g = g[0].split("\\+");
+                        g[0] = g[0].replace(" ", "");
+                    }
+                }
+                if (a.contains("@")) {
+                    g = a.split("@");
+                    if (g[0].contains("+")) {
+                        g = g[0].split("\\+");
+                        g[0] = g[0].replace(" ", "");
+                    }
                 }
             } else {
                 g = a.split("\\+");
@@ -474,20 +481,27 @@ private static int startingLineAdapated(String a) {
             String c[];
             c = a.split("\\+");
             a = c[1];
-            String g[];
-            if (a.contains(",")) {
-                g = a.split(",");
+            String g[] = null;
+            if (a.contains(",") || a.contains("@")) {
+                if (a.contains(",")) {
+                    g = a.split(",");
+                } else {
+                    g = a.split("@");
+                    g[0] = g[0].replace(" ", "");
+                }
             } else {
                 g = a.split("/+");
             }
             int startingLine;
+            
             startingLine = Integer.parseInt(g[0]);
 
             return startingLine;
 
         }
     }
-     private static int processingChunkModifiedLineAdapted(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
+
+    private static int processingChunkModifiedLineAdapted(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
 
         int cont = 0;
         int j = 0;
@@ -519,15 +533,15 @@ private static int startingLineAdapated(String a) {
             if (chunk.get(j).getLines().get(i).getLineNumber() > originalLineNumber) {
                 return cont;
             } else {
-                if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
-                    cont--;
-                }
                 if (chunk.get(j).getLines().get(i).getType() == LineType.DELETED) {
+                    cont++;
+                }
+                if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
 
-                    if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber()) {
+                    if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber() ) {
                         return REMOVED_LINE;
                     } else {
-                        cont++;
+                        cont--;
                     }
                 }
             }
