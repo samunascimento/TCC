@@ -518,7 +518,7 @@ public class ConflictRegion {
 
     private DeveloperDecision generateDeveloperDecision(List<String> solution, List<String> v1, List<String> v2) {
         if (solution.contains("DELETED")) {
-            return DeveloperDecision.DELETED;
+            return DeveloperDecision.FILE_DELETED;
         } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {

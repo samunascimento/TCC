@@ -1006,6 +1006,27 @@ public class Git {
         }
         return cliE.getOutput();
     }
+    
+    public static List<String> getFileContentFromCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException{
+        CLIExecution cliE;
+        try {
+            cliE = CLIExecute.execute("git show" + commit + ":" + filePathProjectAsRoot, repositoryPath);
+        } catch (IOException ex) {
+            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+        }
+        if (!cliE.getError().isEmpty()) {
+            for (String string : cliE.getError()) {
+                if (string.contains("fatal: Invalid object name")) {
+                    throw new IOException("Commit do not exist in this repository!");
+                }
+                if (string.contains("fatal: Path")) {
+                    throw new IOException("This file do not exist in this commit!");
+                }
+            }
+            throw new IOException("Unknow error!");
+        }
+        return cliE.getOutput();
+    }
 
     /**
      * Do a merge and verify if is a conflict

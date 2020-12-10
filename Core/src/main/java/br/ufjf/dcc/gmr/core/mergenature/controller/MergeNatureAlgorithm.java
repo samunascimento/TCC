@@ -1,9 +1,16 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
+import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
+import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
+import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
@@ -131,42 +138,42 @@ public class MergeNatureAlgorithm {
         return conflict;
     }
 
-    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) {
+    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) throws IOException {
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
         String auxString = "";
-        for(int i = 0; i < fileContent.size(); i++){
-            if(MergeNatureTools.checkIfIsBegin(fileContent.get(i))){
+        for (int i = 0; i < fileContent.size(); i++) {
+            if (MergeNatureTools.checkIfIsBegin(fileContent.get(i))) {
                 conflictRegion = new ConflictRegion();
-                for(int j = i - contextLines; j != i; j++){
-                    if(j > -1){
+                for (int j = i - contextLines; j != i; j++) {
+                    if (j > -1) {
                         auxString = auxString + "\n" + fileContent.get(j);
-                    } else if (j == -1){
+                    } else if (j == -1) {
                         auxString = auxString + "\n<SOF>";
                     }
                 }
                 conflictRegion.setBeforeContext(auxString.replaceFirst("\n", ""));
                 auxString = "";
-                conflictRegion.setBeginLine(i+1);
+                conflictRegion.setBeginLine(i + 1);
                 i++;
-                while(!MergeNatureTools.checkIfIsSeparator(fileContent.get(i))){
+                while (!MergeNatureTools.checkIfIsSeparator(fileContent.get(i))) {
                     auxString = auxString + "\n" + fileContent.get(i);
                     i++;
                 }
                 conflictRegion.setV1Text(auxString.replaceFirst("\n", ""));
                 auxString = "";
-                conflictRegion.setSeparatorLine(i+1);
+                conflictRegion.setSeparatorLine(i + 1);
                 i++;
-                while(!MergeNatureTools.checkIfIsEnd(fileContent.get(i))){
+                while (!MergeNatureTools.checkIfIsEnd(fileContent.get(i))) {
                     auxString = auxString + "\n" + fileContent.get(i);
                     i++;
                 }
                 conflictRegion.setV2Text(auxString.replaceFirst("\n", ""));
                 auxString = "";
-                conflictRegion.setEndLine(i+1);
+                conflictRegion.setEndLine(i + 1);
                 i++;
-                for(int j = i; j < i + contextLines; j++){
-                    if(j < fileContent.size()){
+                for (int j = i; j < i + contextLines; j++) {
+                    if (j < fileContent.size()) {
                         auxString = auxString + "\n" + fileContent.get(j);
                     } else {
                         auxString = auxString + "\n<EOF>";
@@ -176,10 +183,81 @@ public class MergeNatureAlgorithm {
                 }
                 conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
                 conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, conflictRegion.getBeginLine() - contextLines - 1, conflictRegion.getEndLine() + contextLines - 1)));
-                
+                conflictRegion = solutionLayer(conflictRegion, repositoryPath);
+                conflictRegions.add(conflictRegion);
             }
         }
         return null;
+    }
+
+    private ConflictRegion solutionLayer(ConflictRegion conflictRegion, String repositoryPath) throws IOException {
+        String mergeCommit = conflictRegion.getConflict().getMerge().getMerge().getCommitHash();
+        String parentFilePath = conflictRegion.getConflict().getParent1FilePath();
+        int solutionFirstLine;
+        int solutionFinalLine;
+        try {
+            solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
+            solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() + 1);
+            if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+                parentFilePath = conflictRegion.getConflict().getParent2FilePath();
+                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
+                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() + 1);
+                if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+                    conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
+                    return conflictRegion;
+                }
+            }
+            if (solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+                conflictRegion.setSolutionText("The context was altered, so the solution to the conflict is imprecise.");
+                conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);
+            } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
+                conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n\n" + conflictRegion.getRawConflict());
+                conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
+            } else {
+                if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
+                    conflictRegion.setSolutionText("DIFF PROBLEM!");
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
+                } else {
+                    conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine + 1, solutionFinalLine - 1)));
+                    conflictRegion = developerDecisionLayer(conflictRegion);
+                }
+            }
+        } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
+            throw new IOException(ex);
+        }
+        return conflictRegion;
+    }
+
+    private ConflictRegion developerDecisionLayer(ConflictRegion conflictRegion) {
+        String solution = conflictRegion.getSolutionText().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+        String v1 = conflictRegion.getV1Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+        String v2 = conflictRegion.getV2Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+
+        if (solution.equals("")) {
+            conflictRegion.setDeveloperDecision(DeveloperDecision.NONE);
+        } else if (solution.equals(v1.concat(v2)) || solution.equals(v2.concat(v1))) {
+            conflictRegion.setDeveloperDecision(DeveloperDecision.CONCATENATION);
+        } else if (solution.equals(v1)) {
+            conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION1);
+        } else if (solution.equals(v2)) {
+            conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION2);
+        } else {
+            solution = conflictRegion.getSolutionText().replaceAll(" ", "").replaceAll("\t", "");
+            for(String solutionLine : solution.split("\n")){
+                if(!(v1.contains(solutionLine) || v2.contains(solutionLine))){
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.NEWCODE);
+                    return conflictRegion;
+                }
+            }
+            conflictRegion.setDeveloperDecision(DeveloperDecision.COMBINATION);
+        } 
+        return conflictRegion;
+    }
+
+    private ConflictRegion antlr4Layer(ConflictRegion conflictRegion) {
+
+        return conflictRegion;
     }
 
 }

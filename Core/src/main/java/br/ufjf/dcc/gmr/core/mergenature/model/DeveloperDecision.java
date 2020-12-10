@@ -6,7 +6,7 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  */
 public enum DeveloperDecision {
 
-    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, DELETED, POSTPONED;
+    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED, DIFF_PROBLEM;
 
     public static DeveloperDecision getEnumFromString(String value) {
         switch (value) {
@@ -31,11 +31,14 @@ public enum DeveloperDecision {
             case "IMPRECISE": {
                 return IMPRECISE;
             }
-            case "DELETED": {
-                return DELETED;
+            case "FILE_DELETED": {
+                return FILE_DELETED;
             }
             case "POSTPONED": {
                 return POSTPONED;
+            }
+            case "DIFF_PROBLEM": {
+                return DIFF_PROBLEM;
             }
             default: {
                 return null;
@@ -68,10 +71,13 @@ public enum DeveloperDecision {
                 return IMPRECISE;
             }
             case 8: {
-                return DELETED;
+                return FILE_DELETED;
             }
             case 9: {
                 return POSTPONED;
+            }
+            case 10: {
+                return DIFF_PROBLEM;
             }
             default: {
                 return null;

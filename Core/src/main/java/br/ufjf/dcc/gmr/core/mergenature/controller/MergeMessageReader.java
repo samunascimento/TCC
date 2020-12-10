@@ -129,8 +129,6 @@ public class MergeMessageReader {
     f4122146d4c2903041c2474ee09efe21087b8be9 and renamed to src/java/voldemort/store/textfile/package.html 
     in HEAD. Version HEAD of src/java/voldemort/store/textfile/package.html left in tree.
     
-    runtime/Go/src/antlr/TraceListener.go in 31d21ff4db8ddcf76bae1b865cd568621bfd5b4d
-    
      */
     private static Conflict renameDeleteType(String message) {
         Conflict result = new Conflict();
