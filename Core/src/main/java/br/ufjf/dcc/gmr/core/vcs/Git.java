@@ -6,6 +6,7 @@ import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.*;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.types.*;
 import java.io.IOException;
 import java.text.ParseException;
@@ -1010,7 +1011,7 @@ public class Git {
     public static List<String> getFileContentFromCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException{
         CLIExecution cliE;
         try {
-            cliE = CLIExecute.execute("git show" + commit + ":" + filePathProjectAsRoot, repositoryPath);
+            cliE = CLIExecute.execute("git show " + commit + ":" + filePathProjectAsRoot, repositoryPath);
         } catch (IOException ex) {
             throw new IOException("The \"repositoryPath\" is not a path in your system!");
         }
@@ -1023,7 +1024,7 @@ public class Git {
                     throw new IOException("This file do not exist in this commit!");
                 }
             }
-            throw new IOException("Unknow error!");
+            throw new IOException("Unknow error!\n" + ListUtils.getTextListStringToString(cliE.getError()));
         }
         return cliE.getOutput();
     }
