@@ -9,7 +9,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PackageBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.PrimitiveTypes;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.AttributeDeclaratinBinding;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;

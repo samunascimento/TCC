@@ -5,7 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 
 /**
  *

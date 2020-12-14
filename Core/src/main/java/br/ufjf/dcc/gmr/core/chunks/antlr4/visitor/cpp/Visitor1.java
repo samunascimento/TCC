@@ -5,8 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14BaseVisitor;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 

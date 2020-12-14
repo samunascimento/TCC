@@ -5,12 +5,12 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Lexer;
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp.CPP14Parser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.visitors.CPPVisitor;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.SSCShelf;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
+import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class AST {
 
-    public static SSCShelf analyzeCPPSyntaxTree(String filePath, boolean openTree ) throws IOException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree ) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -53,7 +53,7 @@ public class AST {
             }
             //----------------------------------------------------------------------*/
             return null;
-//            return new SSCShelf(visitor.getList(), comments);
+//            return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
