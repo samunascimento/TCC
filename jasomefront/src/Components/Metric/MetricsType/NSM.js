@@ -22,12 +22,12 @@ export default class NSM extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NSM (Número de métodos estáticos)</ListItemText>
+          <ListItemText><b>NSM (Número de métodos estáticos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de métodos estáticos(classe)
                 </ListItemText>

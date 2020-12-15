@@ -1,5 +1,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.model;
 
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
@@ -321,7 +323,7 @@ public class ConflictRegion {
     }
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String v1Commit, String v2Commit) throws IOException {
-        SSCShelf shelf;
+        ANTLR4Results shelf;
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
@@ -331,7 +333,7 @@ public class ConflictRegion {
                 this.outmostedSyntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                shelf = ConflictAnalysisTools.getANTLR4ResultsInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 this.syntaxV1 = shelf.getAll();
                 this.outmostedSyntaxV1 = shelf.getAllOutmosted();
             }
@@ -343,7 +345,7 @@ public class ConflictRegion {
                 this.outmostedSyntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
+                shelf = ConflictAnalysisTools.getANTLR4ResultsInInterval(filePath, this.originalV2StartLine, this.originalV2StopLine);
                 this.syntaxV2 = shelf.getAll();
                 this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
@@ -354,7 +356,7 @@ public class ConflictRegion {
     }
 
     public void setSyntaxV1SyntaxV2(String repositoryPath, String filePath, String extraFilePath, String v1Commit, String v2Commit) throws IOException {
-        SSCShelf shelf;
+        ANTLR4Results shelf;
         try {
             if (this.originalV1StartLine == 0) {
                 this.syntaxV1 = new ArrayList<>();
@@ -364,7 +366,7 @@ public class ConflictRegion {
                 this.outmostedSyntaxV1 = null;
             } else {
                 Git.checkout(v1Commit, repositoryPath);
-                shelf = ConflictAnalysisTools.getStructureTypeInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
+                shelf = ConflictAnalysisTools.getANTLR4ResultsInInterval(filePath, this.originalV1StartLine, this.originalV1StopLine);
                 this.syntaxV1 = shelf.getAll();
                 this.outmostedSyntaxV1 = shelf.getAllOutmosted();
             }
@@ -376,7 +378,7 @@ public class ConflictRegion {
                 this.outmostedSyntaxV2 = null;
             } else {
                 Git.checkout(v2Commit, repositoryPath);
-                shelf = ConflictAnalysisTools.getStructureTypeInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
+                shelf = ConflictAnalysisTools.getANTLR4ResultsInInterval(extraFilePath, this.originalV2StartLine, this.originalV2StopLine);
                 this.syntaxV2 = shelf.getAll();
                 this.outmostedSyntaxV2 = shelf.getAllOutmosted();
             }
@@ -518,7 +520,7 @@ public class ConflictRegion {
 
     private DeveloperDecision generateDeveloperDecision(List<String> solution, List<String> v1, List<String> v2) {
         if (solution.contains("DELETED")) {
-            return DeveloperDecision.DELETED;
+            return DeveloperDecision.FILE_DELETED;
         } else if (solution.isEmpty()) {
             return DeveloperDecision.IMPRECISE;
         } else if (solution.size() == 2) {

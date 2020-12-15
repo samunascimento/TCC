@@ -22,12 +22,12 @@ export default class NOC extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NOC (Número de classes)</ListItemText>
+          <ListItemText><b>NOC (Número de classes)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de classes dentro de um pacote (pacote)
                 </ListItemText>

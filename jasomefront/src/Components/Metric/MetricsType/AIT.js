@@ -22,12 +22,12 @@ export default class AIT extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AIT (Número total de atributos herdados)</ListItemText>
+          <ListItemText><b>AIT (Número total de atributos herdados)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Atributos herdados em geral (classe)
                 </ListItemText>

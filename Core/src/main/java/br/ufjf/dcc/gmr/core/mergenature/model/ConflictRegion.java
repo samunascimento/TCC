@@ -10,6 +10,7 @@ public class ConflictRegion {
     
     private int id;
     private Conflict conflict;
+    private String rawConflict;
     
     //IN CONFLICT
     private String beforeContext;   // BEFORE CONTEXT
@@ -34,6 +35,7 @@ public class ConflictRegion {
      * Normal constructor
      * @param id                            Id for databases
      * @param conflict                      The conflict that the conflictRegion belongs
+     * @param rawConflict                   The entire conflict with context
      * @param beforeContext                 The context before the conflict
      * @param beginLine                     The line that has the begin marker
      * @param v1Text                        The parent 1 text in the conflict region
@@ -48,7 +50,7 @@ public class ConflictRegion {
      * @param originalV1FirstLine           The line first line of v1 in parent 1
      * @param originalV2FirstLine           The line first line of v2 in parent 2
      */
-    public ConflictRegion(int id, Conflict conflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public ConflictRegion(int id, Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.id = id;
         this.conflict = conflict;
         this.beforeContext = beforeContext;
@@ -69,6 +71,7 @@ public class ConflictRegion {
     /**
      * No id constructor
      * @param conflict                      The conflict that the conflictRegion belongs
+     * @param rawConflict                   The entire conflict with context
      * @param beforeContext                 The context before the conflict
      * @param beginLine                     The line that has the begin marker
      * @param v1Text                        The parent 1 text in the conflict region
@@ -83,7 +86,7 @@ public class ConflictRegion {
      * @param originalV1FirstLine           The line first line of v1 in parent 1
      * @param originalV2FirstLine           The line first line of v2 in parent 2
      */
-    public ConflictRegion(Conflict conflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public ConflictRegion(Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.conflict = conflict;
         this.beforeContext = beforeContext;
         this.beginLine = beginLine;
@@ -120,6 +123,14 @@ public class ConflictRegion {
         this.conflict = conflict;
     }
 
+    public String getRawConflict() {
+        return rawConflict;
+    }
+
+    public void setRawConflict(String rawConflict) {
+        this.rawConflict = rawConflict;
+    }
+    
     public String getBeforeContext() {
         return beforeContext;
     }
@@ -223,11 +234,5 @@ public class ConflictRegion {
     public void setOriginalV2FirstLine(int originalV2FirstLine) {
         this.originalV2FirstLine = originalV2FirstLine;
     }
-    
-    
-    
-    
-    
-            
     
 }

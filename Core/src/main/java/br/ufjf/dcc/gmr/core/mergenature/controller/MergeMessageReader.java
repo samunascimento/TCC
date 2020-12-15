@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
+import java.io.File;
 
 /**
  * Class to interpret the message of the merge to catch conflict
@@ -22,6 +23,12 @@ public class MergeMessageReader {
             return modifyDeleteType(message);
         } else if (message.contains("(rename/delete)")) {
             return renameDeleteType(message);
+        } else if (message.contains("(rename/add)")) {
+            return renameAddType(message);
+        } else if (message.contains("(file location)")) {
+            return fileLocationType(message);
+        } else if (message.contains("(submodule)")) {
+            return submoduleType(message);
         } else {
             System.out.println("NOVA MESSAGEM OBTIDA:\n" + message + "\n");
             return null;
@@ -72,7 +79,7 @@ public class MergeMessageReader {
             auxString = auxStringArray[auxStringArray.length - 1].replaceAll("Rename ", "").replaceAll("\"", "").replaceAll(" rename ", ". ").replaceAll("branch ", "");
             result.setConflictType(ConflictType.FILE_RENAME);
         }
-        auxStringArray = auxString.split(". ");
+        auxStringArray = auxString.split("\\. ");
         result.setAncestorFilePath(auxStringArray[0].split("->")[0]);
         auxString = auxStringArray[0].split("->")[1];
         if (auxString.contains(" in HEAD")) {
@@ -111,7 +118,7 @@ public class MergeMessageReader {
         result.setConflictType(ConflictType.MODIFY_DELETE);
         return result;
     }
-    
+
     /*
     
     CONFLICT (rename/delete): runtime/Go/src/antlr4/TraceListener.go deleted in HEAD and renamed to 
@@ -122,15 +129,13 @@ public class MergeMessageReader {
     f4122146d4c2903041c2474ee09efe21087b8be9 and renamed to src/java/voldemort/store/textfile/package.html 
     in HEAD. Version HEAD of src/java/voldemort/store/textfile/package.html left in tree.
     
-    runtime/Go/src/antlr/TraceListener.go in 31d21ff4db8ddcf76bae1b865cd568621bfd5b4d
-    
-    */
+     */
     private static Conflict renameDeleteType(String message) {
         Conflict result = new Conflict();
-        String[] auxStringArray = message.split(": ")[1].split(". ");
+        String[] auxStringArray = message.split(": ")[1].split("\\. ");
         String auxString = auxStringArray[0];
         auxStringArray = auxString.split(" and renamed to ")[0].split(" deleted in ");
-        if(auxStringArray[1] == "HEAD"){
+        if (auxStringArray[1] == "HEAD") {
             result.setAncestorFilePath(auxStringArray[0]);
             result.setParent1FilePath("Absent");
             auxStringArray = auxString.split(" and renamed to ")[0].split(" in ");
@@ -144,21 +149,21 @@ public class MergeMessageReader {
         result.setConflictType(ConflictType.RENAME_DELETE);
         return result;
     }
-    
+
     /*
     
     CONFLICT (rename/add): Rename 
     tool/src/org/antlr/v4/codegen/model/LL1StarBlock.java->runtime/Cpp/runtime/atn/PrecedencePredicateTransition.cpp 
     in 014d9fd59397ab6434ce29447ef8d27e558a38e5.  Added runtime/Cpp/runtime/atn/PrecedencePredicateTransition.cpp in HEAD
     
-    */
+     */
     private static Conflict renameAddType(String message) {
         Conflict result = new Conflict();
-        String[] auxStringArray = message.split(": Rename")[1].split(". ");
+        String[] auxStringArray = message.split(": Rename")[1].split("\\. ");
         String auxString = auxStringArray[0];
         auxStringArray = auxString.split("->");
         result.setAncestorFilePath(auxStringArray[0]);
-        if(auxStringArray[1].contains("in HEAD")){
+        if (auxStringArray[1].contains("in HEAD")) {
             result.setConflictType(ConflictType.P1_RENAMED_P2_ADD);
         } else {
             result.setConflictType(ConflictType.P2_RENAMED_P1_ADD);
@@ -166,6 +171,46 @@ public class MergeMessageReader {
         auxString = auxStringArray[1].split(" in ")[0];
         result.setParent1FilePath(auxString);
         result.setParent2FilePath(auxString);
+        return result;
+    }
+
+    /*
+    
+    CONFLICT (file location): folder/file2.txt added in HEAD inside a directory that was renamed in branch1, 
+    folderRenamed/file2.txt.
+    
+     */
+    private static Conflict fileLocationType(String message) {
+        Conflict result = new Conflict();
+        result.setConflictType(ConflictType.FILE_LOCATION);
+        message = message + " ";
+        String[] auxStringArray = message.split("(file location): ");
+        String auxString = auxStringArray[1].replaceAll(" added in ", " ").replaceAll(" inside a directory that was renamed in ", " ").replaceAll(", suggesting it should perhaps be moved to ", " ").replaceAll("\\. ", "");
+        auxStringArray = auxString.split(" ");
+        auxString = auxStringArray[0].split(File.separator)[auxStringArray[0].split(File.separator).length - 1];
+        result.setAncestorFilePath(auxStringArray[0].replace(auxString, ""));
+        if (auxStringArray[1] == "HEAD") {
+            result.setParent1FilePath(auxStringArray[0]);
+            result.setParent2FilePath(auxStringArray[3]);
+        } else {
+            result.setParent1FilePath(auxStringArray[3]);
+            result.setParent2FilePath(auxStringArray[0]);
+        }
+        return result;
+    }
+
+    /*
+    
+    CONFLICT (submodule): Merge conflict in reference/antlr4
+    
+     */
+    private static Conflict submoduleType(String message) {
+        Conflict result = new Conflict();
+        String[] auxStringArray = message.split("in ");
+        result.setParent1FilePath(auxStringArray[auxStringArray.length - 1]);
+        result.setParent2FilePath(auxStringArray[auxStringArray.length - 1]);
+        result.setAncestorFilePath("Absent");
+        result.setConflictType(ConflictType.SUBMODULE);
         return result;
     }
 

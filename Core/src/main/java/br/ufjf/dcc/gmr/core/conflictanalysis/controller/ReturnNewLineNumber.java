@@ -363,4 +363,190 @@ public class ReturnNewLineNumber {
         return os.startsWith("Windows");
     }
 
+    /*-----------------------------*//* Funções Novas Refatoramento*//*----------------------------------------------------*/
+
+    public static int initReturnNewLineNumberAdapted(String directory, String commit,
+            String filePath, int originalLineNumber)
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, PathDontExist, EmptyOutput, ImpossibleLineNumber {
+
+        if (originalLineNumber < 0) {
+            throw new ImpossibleLineNumber();
+        }
+        List<FileDiff> chunks = fillOneFileDiffAdapted(directory, commit, filePath);
+
+        if (chunks == null) {
+            return REMOVED_FILE;
+        }
+        if (chunks.isEmpty()) {
+            return POSTPONED;
+        }
+        int i;
+
+        i = processingChunkModifiedLineAdapted(chunks, originalLineNumber, filePath.replace(directory, ""));
+
+        if (i == REMOVED_LINE) {
+            return REMOVED_LINE;
+        }
+
+        return (originalLineNumber + i);
+    }
+
+    private static List<FileDiff> fillOneFileDiffAdapted(String directory, String pathSource, String pathTarget) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
+
+        List<FileDiff> chunks = new ArrayList<>();
+        List<String> output = new ArrayList<>();
+
+        FileDiff aux = new FileDiff();
+        int currentLine = 0;
+        output = Git.auxiliarDiffFile(directory, pathSource, pathTarget);
+        if (output == null) {
+            return null;
+        }
+        if (output.isEmpty()) {
+            return new ArrayList<>();
+        }
+        String line;
+        for (int i = 0; i < output.size(); i++) {
+            line = output.get(i);
+            if (line.startsWith("diff --") && currentLine != 0) {
+
+                chunks.add(aux);
+                aux = new FileDiff();
+            }
+
+            if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
+                continue;
+            }
+            if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
+                String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
+                aux.setFilePathTarget(c);
+            } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                currentLine++;
+            } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
+                String c = line.substring(5);
+                if (c.endsWith("\t") || c.endsWith("\n")) {
+                    c = c.substring(0, c.length() - 1);
+                }
+                
+                aux.setFilePathSource(c);
+            } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                String c = line.substring(1);
+                aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+            } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                currentLine = startingLineAdapated(line);
+            }
+
+        }
+        chunks.add(aux);
+
+        return chunks;
+    }
+
+    private static int startingLineAdapated(String a) {
+
+        if (a.charAt(9) == '-') {
+            String c[];
+            c = a.split("-");
+            a = c[1];
+            String[] g = null;
+            if (a.contains(",") || a.contains("@")) {
+                if (a.contains(",")) {
+                    g = a.split(",");
+                    if (g[0].contains("+")) {
+                        g = g[0].split("\\+");
+                        g[0] = g[0].replace(" ", "");
+                    }
+                }
+                if (a.contains("@")) {
+                    g = a.split("@");
+                    if (g[0].contains("+")) {
+                        g = g[0].split("\\+");
+                        g[0] = g[0].replace(" ", "");
+                    }
+                }
+            } else {
+                g = a.split("\\+");
+                g[0] = g[0].replace(" ", "");
+            }
+            int startingLine;
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+        } else {
+            String c[];
+            c = a.split("\\+");
+            a = c[1];
+            String g[] = null;
+            if (a.contains(",") || a.contains("@")) {
+                if (a.contains(",")) {
+                    g = a.split(",");
+                } else {
+                    g = a.split("@");
+                    g[0] = g[0].replace(" ", "");
+                }
+            } else {
+                g = a.split("/+");
+            }
+            int startingLine;
+            
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+
+        }
+    }
+
+    private static int processingChunkModifiedLineAdapted(List<FileDiff> chunk, int originalLineNumber, String filePath) throws PathDontExist {
+
+        int cont = 0;
+        int j = 0;
+
+        boolean os = isWindows();
+
+        if (os) {
+            for (int i = 0; i < chunk.size(); i++) {
+                if (chunk.get(i).getFilePathSource().contains("\\\\")) {
+                    String c = windowsPath(chunk.get(i).getFilePathSource());
+                    chunk.get(i).setFilePathSource(c);
+                }
+                if (chunk.get(i).getFilePathTarget().contains("\\\\")) {
+                    String c = windowsPath(chunk.get(i).getFilePathTarget());
+                    chunk.get(i).setFilePathTarget(c);
+                }
+            }
+        }
+
+        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
+            if (j + 1 >= chunk.size()) {
+                throw new PathDontExist();
+            }
+            j++;
+        }
+
+        for (int i = 0; i < chunk.get(j).getLines().size(); i++) {
+
+            if (chunk.get(j).getLines().get(i).getLineNumber() > originalLineNumber) {
+                return cont;
+            } else {
+                if (chunk.get(j).getLines().get(i).getType() == LineType.DELETED) {
+                    cont++;
+                }
+                if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
+
+                    if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber() ) {
+                        return REMOVED_LINE;
+                    } else {
+                        cont--;
+                    }
+                }
+            }
+        }
+        return cont;
+    }
+
 }

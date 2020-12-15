@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.java.*;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParserBaseVisitor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;

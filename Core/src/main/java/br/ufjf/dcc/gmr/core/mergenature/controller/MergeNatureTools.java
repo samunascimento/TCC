@@ -93,6 +93,10 @@ public class MergeNatureTools {
             return false;
         }
     }
+    
+    public static boolean checkIfIsSeparator(String line) {
+        return line.replaceAll("=======", "").equals("") && line.startsWith("=======");
+    }
 
     public static boolean checkIfIsEnd(String line) {
         String[] auxStringArray = line.split(" ");

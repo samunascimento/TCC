@@ -22,12 +22,12 @@ export default class AD extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AD (Número de atributos definidos)</ListItemText>
+          <ListItemText><b>AD (Número de atributos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Atributos definidos dentro da classe (igual a NMA) (classe)
                 </ListItemText>

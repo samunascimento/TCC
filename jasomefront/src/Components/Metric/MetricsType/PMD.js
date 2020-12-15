@@ -22,12 +22,12 @@ export default class PMD extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>PMD (Número de métodos públicos definidos)</ListItemText>
+          <ListItemText><b>PMD (Número de métodos públicos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de métodos definidos que são públicos (classe)
                 </ListItemText>

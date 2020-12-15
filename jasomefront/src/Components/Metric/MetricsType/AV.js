@@ -22,12 +22,12 @@ export default class AV extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AV (Número de atributos públicos definidos)</ListItemText>
+          <ListItemText><b>AV (Número de atributos públicos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de atributos definidos que são públicos (classe)
                 </ListItemText>

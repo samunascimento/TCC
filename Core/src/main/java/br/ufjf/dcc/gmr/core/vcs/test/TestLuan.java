@@ -1,13 +1,19 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
+import java.io.IOException;
+
 /**
  *
- * @author luand
+ * @author Luan
  */
 public class TestLuan {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+         ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval("/home/luan/Github/teste.py", 1, 3);
+        
     }
 
 }

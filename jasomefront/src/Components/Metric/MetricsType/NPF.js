@@ -22,12 +22,12 @@ export default class NPF extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>NPF (Número de atributos públicos)</ListItemText>
+          <ListItemText><b>NPF (Número de atributos públicos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 O número de atributos públicos (classe)
                 </ListItemText>

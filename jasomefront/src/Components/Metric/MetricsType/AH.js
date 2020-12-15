@@ -22,12 +22,12 @@ export default class AH extends Component {
     return(
       <>  
        <ListItem button onClick={this.handleClick}>
-          <ListItemText>AH (Número de atributos ocultos definidos)</ListItemText>
+          <ListItemText><b>AH (Número de atributos ocultos definidos)</b></ListItemText>
             {openMetrics ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={openMetrics} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button>
+              <ListItem>
                 <ListItemText>
                 Número de atributos definidos que não são públicos (classe)
                 </ListItemText>

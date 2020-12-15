@@ -6,7 +6,7 @@
 package br.ufjf.dcc.gmr.core.conflictanalysis.dao;
 
 import br.ufjf.dcc.gmr.core.conflictanalysis.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.conflictanalysis.model.SyntaxStructure;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
