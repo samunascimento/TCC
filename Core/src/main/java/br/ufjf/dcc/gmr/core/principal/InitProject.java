@@ -25,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
+
 /**
  *
  * @author felip
@@ -53,33 +54,13 @@ public class InitProject implements Runnable {
 
     }
 
-    private static List<String> readFile(String filePath) {
-
-        List<String> content = new ArrayList<>();
-        String linha;
-
-        try {
-
-            FileReader fr = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(fr);
-
-            while ((linha = br.readLine()) != null) {
-                content.add(linha);
-            }
-        } catch (IOException e) {
-            System.out.println("filePath: " + filePath);
-            e.printStackTrace();
-        }
-
-        return content;
-    }
 
     private static List<ConflictChunk> createConflictChunksList(String filePath) {
 
         List<ConflictChunk> result = new ArrayList<>();
         ConflictChunk chunk = new ConflictChunk();
 
-        List<String> content = readFile(filePath);
+        List<String> content = ListUtils.readFile(filePath);
 
         int chunkNumber = 0;
 
@@ -109,8 +90,8 @@ public class InitProject implements Runnable {
 
         MyFile result = file;
         result.setType(null);
-        result.setChuncks(createConflictChunksList(result.getPath()));
-        result.setContent(readFile(result.getPath()));
+        result.setChunks(createConflictChunksList(result.getPath()));
+        result.setContent(ListUtils.readFile(result.getPath()));
         return result;
     }
 

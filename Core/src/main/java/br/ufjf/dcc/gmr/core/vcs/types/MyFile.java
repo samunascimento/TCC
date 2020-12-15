@@ -15,7 +15,7 @@ public class MyFile {
     private Status status;
     private String type;
     private boolean renamed;
-    private List<ConflictChunk> chuncks;
+    private List<ConflictChunk> chunks;
     private List<String> content;
     private DiffAnalyze diffAnalyze;
 
@@ -24,7 +24,7 @@ public class MyFile {
         status = Status.UNTRACKED;
         type = new String();
         renamed = false;
-        chuncks = new ArrayList<>();
+        chunks = new ArrayList<>();
         diffAnalyze = new DiffAnalyze();
     }
 
@@ -90,17 +90,17 @@ public class MyFile {
     }
 
     /**
-     * @return the chuncks
+     * @return the chunks
      */
-    public List<ConflictChunk> getChuncks() {
-        return chuncks;
+    public List<ConflictChunk> getChunks() {
+        return chunks;
     }
 
     /**
-     * @param chuncks the chuncks to set
+     * @param chunks the chuncks to set
      */
-    public void setChuncks(List<ConflictChunk> chuncks) {
-        this.chuncks = chuncks;
+    public void setChunks(List<ConflictChunk> chunks) {
+        this.chunks = chunks;
     }
 
     /**
