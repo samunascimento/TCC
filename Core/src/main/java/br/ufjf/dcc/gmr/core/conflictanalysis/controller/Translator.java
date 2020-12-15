@@ -595,6 +595,21 @@ public class Translator {
 
         List<String> mainList = new ArrayList<>();
 
+        if (list.contains("Extension not parseble!")) {
+            mainList.add("Extension not parseble!");
+        } else {
+            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Nothing")) {
+                mainList.add(LanguageConstructsTypes.BLANK);
+                list.remove("Nothing");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (!list.isEmpty()) {
+                mainList.add(LanguageConstructsTypes.OTHER);
+            }
+        }
+
         return mainList;
     }
 
