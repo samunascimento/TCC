@@ -281,7 +281,7 @@ public class ConflictAnalysisTools {
             } else if (filePath.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePath);
             } else {
-                return null;
+                return new ANTLR4Results(null, null, null, null);
             }
             for (SyntaxStructure ss : results.getNormalAnalysis()) {
                 if (ss.getStartLine() >= start && ss.getStopLine() <= stop) {
