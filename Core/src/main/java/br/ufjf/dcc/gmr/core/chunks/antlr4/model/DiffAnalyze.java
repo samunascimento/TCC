@@ -25,10 +25,18 @@ public class DiffAnalyze {
     public void setModifiedLines(List<String> fileDiff) {
 
         for (String string : fileDiff) {
-            if (string.substring(0, 1) == "+ ") {
-                added.add(string);
-            } else if (string.substring(0, 1) == "- ") {
-                removed.add(string);
+            if (string.length() > 1) {
+                if (string.substring(0, 2).equals("+ ")) {
+                    added.add(string);
+                } else if (string.substring(0, 2).equals("- ")) {
+                    removed.add(string);
+                }
+            }else if(string.length() == 1){
+                 if (string.substring(0, 1).equals("+")) {
+                    added.add(string);
+                } else if (string.substring(0, 1).equals("-")) {
+                    removed.add(string);
+                }
             }
 
         }

@@ -1,5 +1,8 @@
 package br.ufjf.dcc.gmr.core.utils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +66,27 @@ public class ListUtils {
             }
         }
         return raw;
+    }
+    
+       public static List<String> readFile(String filePath) {
+
+        List<String> content = new ArrayList<>();
+        String linha;
+
+        try {
+
+            FileReader fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr);
+
+            while ((linha = br.readLine()) != null) {
+                content.add(linha);
+            }
+        } catch (IOException e) {
+            System.out.println("filePath: " + filePath);
+            e.printStackTrace();
+        }
+
+        return content;
     }
 
 }

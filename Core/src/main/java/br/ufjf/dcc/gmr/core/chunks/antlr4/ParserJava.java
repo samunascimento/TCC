@@ -6,8 +6,10 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.model.DiffAnalyze;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
+import br.ufjf.dcc.gmr.core.chunks.jung.Main;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +25,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
@@ -35,6 +38,7 @@ import static org.apache.commons.io.FilenameUtils.normalize;
 public class ParserJava {
 
     private static boolean reachedEnd = false;
+
     private GlobalEnviroment globalEnviroment;
     private static Version version;
     private static String pathProject;
@@ -64,6 +68,9 @@ public class ParserJava {
 
         List<String> filesToCheckParent1 = new ArrayList<>();
         List<String> filesToCheckParent2 = new ArrayList<>();
+
+        List<List<String>> filesToStringParent1 = new ArrayList<>();
+        List<List<String>> filesToStringParent2 = new ArrayList<>();
 
         String pathRepositoryCopy = "";
         String pathRepositoryCopy1 = "";
@@ -150,13 +157,132 @@ public class ParserJava {
 
             if (cont == 0) {
                 parent1 = parserJava.getGlobalEnviroment();
+                for (String path : filesToCheckParent1) {
+                    filesToStringParent1.add(ListUtils.readFile(path));
+                }
 
             } else if (cont == 1) {
                 parent2 = parserJava.getGlobalEnviroment();
+                for (String path : filesToCheckParent2) {
+                    filesToStringParent2.add(ListUtils.readFile(path));
+                }
             }
 
             cont++;
 
+        }
+
+        int context = 10;
+
+        for (int i = 0; i < version.getFile().size(); i++) {
+            for (int z = 0; z < version.getFile().get(i).getChunks().size(); z++) {
+
+                int begin = version.getFile().get(i).getChunks().get(z).getBegin().getLineNumber();
+                int end = version.getFile().get(i).getChunks().get(z).getEnd().getLineNumber();
+
+                version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(begin - context);
+                version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineEnd(begin - 1);
+
+                version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end - 1);
+                version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(end + context);
+
+                int beforeBegin = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineBegin();
+                int beforeEnd = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineEnd();
+
+                int afterBegin = version.getFile().get(i).getChunks().get(z).getAfterContext().getLineBegin();
+                int afterEnd = version.getFile().get(i).getChunks().get(z).getAfterContext().getLineEnd();
+                boolean notConflict = true;
+                for (int j = 0; j < version.getFile().get(i).getContent().size(); j++) {
+
+                    if ((version.getFile().get(i).getContent().get(j).contains("<<<<<<<"))) {
+                        notConflict = false;
+
+                    }
+                    if (version.getFile().get(i).getContent().get(j).contains(">>>>>>>")) {
+                        notConflict = true;
+
+                    }
+                    if ((j > beforeBegin && j < beforeEnd && notConflict)) {
+
+                        version.getFile().get(i).getChunks().get(z).getBeforeContext().getText().add(version.getFile().get(i).getContent().get(j));
+                    }
+
+                    if (j < afterEnd && j > afterBegin && notConflict) {
+
+                        version.getFile().get(i).getChunks().get(z).getAfterContext().getText().add(version.getFile().get(i).getContent().get(j));
+                    }
+                }
+
+            }
+        }
+
+        boolean foundAfterContext = false;
+        int validate = 0;
+//        for (int i = 0; i < filesToStringParent1.size(); i++) {
+//            for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
+//                for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
+//                    for (int z=0; z < conflictChunk.getBeforeContext().getText().size(); z++) {
+//                        if (filesToStringParent1.get(i).get(j).equals(conflictChunk.getBeforeContext().getText().get(z)) && validate == j) {
+//                            conflictChunk.getChunkVersion1().setLineBegin(j+1);
+//                            validate++;
+//                        }
+//                    }
+//                    for (String line : conflictChunk.getAfterContext().getText()) {
+//                        if (filesToStringParent1.get(i).get(j).equals(line) && !foundAfterContext) {
+//                            conflictChunk.getChunkVersion1().setLineEnd(j+1);
+//                            foundAfterContext = true;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+        for (int i = 0; i < filesToStringParent1.size(); i++) {
+            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
+                for (int j = 0, z = 0; j < filesToStringParent1.get(i).size(); j++) {
+                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
+                    if (beforeContext.equals(filesToStringParent1.get(i).get(j))) {
+                        z++;
+                        conflictChunk.getChunkVersion1().setLineBegin(j + 1);
+                    }
+                    if (z == conflictChunk.getBeforeContext().getText().size()) {
+                        break;
+                    }
+                }
+
+                for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
+
+                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
+                        conflictChunk.getChunkVersion1().setLineEnd(j + 1);
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        for (int i = 0; i < filesToStringParent2.size(); i++) {
+            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
+                for (int j = 0, z = 0; j < filesToStringParent2.get(i).size(); j++) {
+                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
+                    if (beforeContext.equals(filesToStringParent2.get(i).get(j))) {
+                        z++;
+                        conflictChunk.getChunkVersion2().setLineBegin(j + 1);
+                    }
+                    if (z == conflictChunk.getBeforeContext().getText().size()) {
+                        break;
+                    }
+                }
+
+                for (int j = 0; j < filesToStringParent2.get(i).size(); j++) {
+
+                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
+                        conflictChunk.getChunkVersion2().setLineEnd(j + 1);
+                        break;
+                    }
+                }
+
+            }
         }
 
         for (int y = 0; y < version.getFile().size(); y++) {
@@ -164,55 +290,21 @@ public class ParserJava {
             DiffAnalyze diffAnalyze = new DiffAnalyze();
             diffAnalyze.setModifiedLines(fileDiffList);
             version.getFile().get(y).setDiffAnalyze(diffAnalyze);
+
             
-//            List<String> fileDiffList = Git.auxiliarDiffStat(pathProject, filesParent1.get(y), filesParent2.get(y));
-//            System.out.println("");
-//            
-//            for (FileDiff fileDiff : fileDiffList) {
-//                            System.out.println(fileDiff.getArroba());
-//                        }
-//                        for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunck : version.getFile().get(y).getChuncks()) {
-//            
-//                            ConflictChunk chunkA = new ConflictChunk();
-//                            chunkA.setLineBegin(chunck.getBegin().getLineNumber());
-//                            chunkA.setLineEnd(chunck.getEnd().getLineNumber());
-//                            chunkA.setType(myFile.getPath());
-//                            chunkA.setLanguageConstruct(parent1.findLanguageConstructs(chunkA));
-//            
-//                            ConflictChunk chunkB = new ConflictChunk();
-//                            chunkA.setLineBegin(chunck.getBegin().getLineNumber());
-//                            chunkA.setLineEnd(chunck.getEnd().getLineNumber());
-//                            chunkA.setType(myFile.getPath());
-//                            chunkA.setLanguageConstruct(parent2.findLanguageConstructs(chunkA));
-//            
-//                            ConflictChunk conflictChunk = new ConflictChunk();
-//                            conflictChunk.setChunkVersion1(chunkA);
-//                            conflictChunk.setChunkVersion2(chunkB);
-//            
-//                        }
+
+            for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
+                
+               chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs((String) parent1.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion1()));
+               chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs((String) parent2.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion2()));
+               
+            }
+
         }
-//        ConflictChunk chunkA = new ConflictChunk();
-//        chunkA.setLineBegin(26);
-//        chunkA.setLineEnd(31);
-//        chunkA.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-//        chunkA.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkA));
-//        ConflictChunk conflictChunkA = new ConflictChunk();
-//        conflictChunkA.setChunkVersion1(chunkA);
-//
-//        ConflictChunk chunkB = new ConflictChunk();
-//        chunkB.setLineBegin(32);
-//        chunkB.setLineEnd(45);
-//        chunkB.setType("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java");
-//        chunkB.setLanguageConstruct(parserJava.globalEnviroment.findLanguageConstructs(chunkB));
-//        ConflictChunk conflictChunkB = new ConflictChunk();
-//        conflictChunkB.setChunkVersion1(chunkB);
-//
-//        List<ConflictChunk> conflictChunkList = new ArrayList<>();
-//        conflictChunkList.add(conflictChunkA);
-//        conflictChunkList.add(conflictChunkB);
-//
-//        Main jung = new Main(parserJava.getGlobalEnviroment(), conflictChunkList, paths);
-//        jung.main(args);
+
+
+        Main jung = new Main(parent1, parent2, version.getFile().get(0).getChunks(), parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet() );
+        jung.main(args);
 
         File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
 
@@ -228,7 +320,9 @@ public class ParserJava {
 
         List<Chunk> listChunk = new ArrayList<>();
         for (MyFile myFile : version.getFile()) {
-            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunk : myFile.getChuncks()) {
+
+            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunk
+                    : myFile.getChunks()) {
                 Chunk chunkBinding = new Chunk();
                 chunkBinding.setLineBegin(chunk.getBegin().getLineNumber());
                 chunkBinding.setLineEnd(chunk.getEnd().getLineNumber());
@@ -237,7 +331,7 @@ public class ParserJava {
             }
         }
 
-        return null;
+        return listChunk;
     }
 
     private static String createDiffRepository(String path, String pasta) throws IOException {
@@ -257,6 +351,19 @@ public class ParserJava {
         return destination;
     }
 
+    //TODO
+    //
+    //Achar as linhas originais: 
+    // primera linha pré e pós marcação de conflito
+    // encontrar essas linhas na v1 e v2
+    // pegar bindings entre os intervalos nas v1 e v2
+    // comparar modificações v1 do chunk 1 com v2 chunk 1,2
+    // comparar modificações v2 do chunk 1 com v1 chunk 1,2
+    //
+    //Bindings trocar para na linhas originais
+    //Compara-las para verificar dependencias
+    //BaseMerge ( Checar mudanças estruturais )
+    //
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
         System.out.println("***************MethodDeclarationAST1***************");

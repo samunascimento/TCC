@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.conflictanalysis.view.MainFrame;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.util.ArrayList;

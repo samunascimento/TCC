@@ -447,10 +447,14 @@ public class ConflictRegion {
                 auxOutmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
                 auxTypesOfConflicts = Translator.CPPTranslator(rawList);
-                auxOutmostedTypesOfConflicts = Translator.JavaTranslator(outmostedRawList);
+                auxOutmostedTypesOfConflicts = Translator.CPPTranslator(outmostedRawList);
             } else if (filePath.endsWith(".py")) {
                 auxTypesOfConflicts = rawList;
                 auxOutmostedTypesOfConflicts = outmostedRawList;
+                /*
+                Versão com translator
+                auxTypesOfConflicts =Translator.PythonTranslator(rawList);
+                auxOutmostedTypesOfConflicts = Translator.PythonTranslator(outmostedRawList);*/
             } else {
                 auxTypesOfConflicts = rawList;
                 auxOutmostedTypesOfConflicts = outmostedRawList;

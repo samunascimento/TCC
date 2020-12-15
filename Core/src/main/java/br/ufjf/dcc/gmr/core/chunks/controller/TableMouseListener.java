@@ -31,7 +31,7 @@ public class TableMouseListener extends MouseAdapter {
         try {
             parserJava.main(args);
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 

@@ -21,14 +21,18 @@ import javax.swing.JFrame;
 
 public class Main {
 
-    private static GlobalEnviroment globalEnviroment;
+    private static GlobalEnviroment parent1;
+    private static GlobalEnviroment parent2;
     private static List<ConflictChunk> conflictChunkList;
-    private static Set<String> paths;
+    private static Set<String> paths1;
+    private static Set<String> paths2;
 
-    public Main(GlobalEnviroment globalEnviroment, List<ConflictChunk> conflictChunkList, Set paths) {
-        Main.globalEnviroment = globalEnviroment;
-        this.conflictChunkList = conflictChunkList;
-        Main.paths = paths;
+    public Main(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, Set paths1, Set paths2) {
+        Main.parent1 = parent1;
+        Main.parent2 = parent2;
+        Main.conflictChunkList = conflictChunkList;
+        Main.paths1 = paths1;
+        Main.paths2 = paths2;
     }
 
     public static void main(String[] args) {
@@ -114,19 +118,5 @@ public class Main {
 
     }
 
-    public static GlobalEnviroment getGlobalEnviroment() {
-        return globalEnviroment;
-    }
 
-    public static void setGlobalEnviroment(GlobalEnviroment aGlobalEnviroment) {
-        globalEnviroment = aGlobalEnviroment;
-    }
-
-    public static Set<String> getPaths() {
-        return paths;
-    }
-
-    public static void setPaths(Set<String> aPaths) {
-        paths = aPaths;
-    }
 }
