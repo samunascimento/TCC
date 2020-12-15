@@ -6,6 +6,8 @@ import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
@@ -19,6 +21,7 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,7 +136,7 @@ public class MergeNatureAlgorithm {
             conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(conflict.getParent1FilePath()), repositoryPath));
         }
         if (!conflict.getConflictRegions().isEmpty()) {
-            conflict = antlr4Layer(conflict);
+            conflict = antlr4Layer(conflict, repositoryPath);
         }
 
         return conflict;
@@ -306,8 +309,72 @@ public class MergeNatureAlgorithm {
 
     }
 
-    private Conflict antlr4Layer(Conflict conflict) {
+    private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException {
+        String parent1FilePath = conflict.getParent1FilePath();
+        ANTLR4Results parent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflict.getMerge().getParents().get(0).getCommitHash(), repositoryPath);
+        if (parent1Results == null) {
+            for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                conflictRegion.setStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
+                conflictRegion.setOutmostedStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
+            }
+            return conflict;
+        } else {
+            String parent2FilePath = conflict.getParent2FilePath();
+            ANTLR4Results parent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
+            if (parent2Results == null) {
+                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                    conflictRegion.setStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
+                    conflictRegion.setOutmostedStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
+                }
+                return conflict;
+            } else {
+                List<String> v1Structures;
+                List<String> v1OutmostedStructures;
+                List<String> v2Structures;
+                List<String> v2OutmostedStructures;
+                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                    if (conflictRegion.getOriginalV1FirstLine() < 0 || conflictRegion.getOriginalV2FirstLine() < 0) {
+                        conflictRegion.setStructures("DIFF PROBLEM!");
+                        conflictRegion.setOutmostedStructures("DIFF PROBLEM!");
+                    } else {
+                        v1Structures = new ArrayList<>();
+                        v1OutmostedStructures = new ArrayList<>();
+                        v2Structures = new ArrayList<>();
+                        v2OutmostedStructures = new ArrayList<>();
+                        if (conflictRegion.getOriginalV1FirstLine() == 0) {
+                            v1Structures.add("Blank");
+                            v1OutmostedStructures.add("Blank");
+                        } else {
+                            parent1Results = ANTLR4Tools.fillOutmost(parent1Results, conflictRegion.getOriginalV1FirstLine(), conflictRegion.getOriginalV1FinalLine());
+                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath);
+                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath);
+                        }
+                        if (conflictRegion.getOriginalV2FirstLine() == 0) {
+                            v2Structures.add("Blank");
+                            v2OutmostedStructures.add("Blank");
+                        } else {
+                            parent2Results = ANTLR4Tools.fillOutmost(parent2Results, conflictRegion.getOriginalV2FirstLine(), conflictRegion.getOriginalV2FinalLine());
+                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath);
+                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath);
+                        }
+                        for (String str : v2Structures) {
+                            if (!v1Structures.contains(str)) {
+                                v1Structures.add(str);
+                            }
+                        }
+                        for (String str : v2OutmostedStructures) {
+                            if (!v1OutmostedStructures.contains(str)) {
+                                v1OutmostedStructures.add(str);
+                            }
+                        }
+                        Collections.sort(v1Structures);
+                        Collections.sort(v1OutmostedStructures);
+                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures));
+                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1OutmostedStructures));
+                    }
+                }
+            }
+        }
         return conflict;
     }
-
 }
