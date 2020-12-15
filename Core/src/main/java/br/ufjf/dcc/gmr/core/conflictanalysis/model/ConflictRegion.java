@@ -449,8 +449,12 @@ public class ConflictRegion {
                 auxTypesOfConflicts = Translator.CPPTranslator(rawList);
                 auxOutmostedTypesOfConflicts = Translator.CPPTranslator(outmostedRawList);
             } else if (filePath.endsWith(".py")) {
+                auxTypesOfConflicts = rawList;
+                auxOutmostedTypesOfConflicts = outmostedRawList;
+                /*
+                Versão com translator
                 auxTypesOfConflicts =Translator.PythonTranslator(rawList);
-                auxOutmostedTypesOfConflicts = Translator.PythonTranslator(outmostedRawList);
+                auxOutmostedTypesOfConflicts = Translator.PythonTranslator(outmostedRawList);*/
             } else {
                 auxTypesOfConflicts = rawList;
                 auxOutmostedTypesOfConflicts = outmostedRawList;

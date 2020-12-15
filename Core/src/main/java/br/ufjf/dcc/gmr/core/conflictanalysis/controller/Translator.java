@@ -605,9 +605,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (!list.isEmpty()) {
+            /*if (!list.isEmpty()) {
                 mainList.add(LanguageConstructsTypes.OTHER);
-            }
+            }*/
         }
 
         return mainList;
