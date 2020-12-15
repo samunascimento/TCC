@@ -453,8 +453,9 @@ public class ConflictRegion {
                 auxOutmostedTypesOfConflicts = outmostedRawList;
                 /*
                 Versão com translator
+                */
                 auxTypesOfConflicts =Translator.PythonTranslator(rawList);
-                auxOutmostedTypesOfConflicts = Translator.PythonTranslator(outmostedRawList);*/
+                auxOutmostedTypesOfConflicts = Translator.PythonTranslator(outmostedRawList);
             } else {
                 auxTypesOfConflicts = rawList;
                 auxOutmostedTypesOfConflicts = outmostedRawList;

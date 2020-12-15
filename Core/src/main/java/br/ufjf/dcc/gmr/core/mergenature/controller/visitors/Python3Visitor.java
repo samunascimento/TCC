@@ -177,7 +177,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitFlow_stmt(Python3Parser.Flow_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 

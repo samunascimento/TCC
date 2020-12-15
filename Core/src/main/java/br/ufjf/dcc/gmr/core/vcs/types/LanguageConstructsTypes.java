@@ -43,7 +43,7 @@ public class LanguageConstructsTypes {
     public static final String METHOD_SIGNATURE = "MethodSignature"; 
     public static final String NAMESPACE = "Namespace";
     public static final String PACKAGE_DECLARATION = "PackageDeclaration"; 
-    public static final String POINTER = "Pointer";//-
+    public static final String POINTER = "Pointer";
     public static final String RETURN_STATEMENT = "ReturnStatement";   
     public static final String STATIC_INITIALIZER = "StaticInitializer";
     public static final String SWITCH_STATEMENT = "SwitchStatement"; 
