@@ -12,6 +12,7 @@ import java.util.List;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
+import java.io.File;
 
 /**
  * Class created to implement a method to get the Line number of a old archive
@@ -432,7 +433,7 @@ public class ReturnNewLineNumber {
                 if (c.endsWith("\t") || c.endsWith("\n")) {
                     c = c.substring(0, c.length() - 1);
                 }
-                
+
                 aux.setFilePathSource(c);
             } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                 String c = line.substring(1);
@@ -481,19 +482,20 @@ public class ReturnNewLineNumber {
             String c[];
             c = a.split("\\+");
             a = c[1];
-            String g[] = null;
-            if (a.contains(",") || a.contains("@")) {
-                if (a.contains(",")) {
-                    g = a.split(",");
+            String g[] = a.split(" @@ ");
+            if (g[0].contains(",") || g[0].contains("@")) {
+                if (g[0].contains(",")) {
+                    g = g[0].split(",");
+                    g[0] = g[0].replace(" ", "");
                 } else {
-                    g = a.split("@");
+                    g = g[0].split("@");
                     g[0] = g[0].replace(" ", "");
                 }
             } else {
-                g = a.split("/+");
+                g = g[0].split("/+");
             }
             int startingLine;
-            
+
             startingLine = Integer.parseInt(g[0]);
 
             return startingLine;
@@ -521,7 +523,7 @@ public class ReturnNewLineNumber {
             }
         }
 
-        while (!chunk.get(j).getFilePathSource().equals(filePath)) {
+        while (!chunk.get(j).getFilePathSource().equals(File.separator + filePath)) {
             if (j + 1 >= chunk.size()) {
                 throw new PathDontExist();
             }
@@ -538,7 +540,7 @@ public class ReturnNewLineNumber {
                 }
                 if (chunk.get(j).getLines().get(i).getType() == LineType.ADDED) {
 
-                    if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber() ) {
+                    if (originalLineNumber == chunk.get(j).getLines().get(i).getLineNumber()) {
                         return REMOVED_LINE;
                     } else {
                         cont--;

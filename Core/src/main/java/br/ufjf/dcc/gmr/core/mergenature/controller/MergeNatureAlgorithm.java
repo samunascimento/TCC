@@ -41,17 +41,21 @@ public class MergeNatureAlgorithm {
     public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
+        this.project = null;
     }
 
     public void startAlgorithm() {
         try {
             this.project = projectLayer();
-            System.out.println("");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
+    public Project getProject() {
+        return project;
+    }
+    
     private Project projectLayer() throws IOException {
 
         Project project = new Project();
@@ -72,9 +76,13 @@ public class MergeNatureAlgorithm {
         } else {
             System.out.println("Downloading analysis is not avaliable!");
         }
-
+        MergeNatureTools.prepareAnalysis(repositoryPath);
+        List<String> log = Git.giveAllMerges(repositoryPath);
+        System.out.println(log.size());
+        int i = 0;
         for (String logLine : Git.giveAllMerges(repositoryPath)) {
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            System.out.println(++i);
         }
 
         return project;
@@ -133,7 +141,7 @@ public class MergeNatureAlgorithm {
         if (conflict.getConflictType() == ConflictType.CONTENT
                 || conflict.getConflictType() == ConflictType.COINCIDENCE_ADDING
                 || conflict.getConflictType() == ConflictType.FILE_RENAME) {
-            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(conflict.getParent1FilePath()), repositoryPath));
+            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(repositoryPath + conflict.getParent1FilePath()), repositoryPath));
         }
         if (!conflict.getConflictRegions().isEmpty()) {
             conflict = antlr4Layer(conflict, repositoryPath);
@@ -149,6 +157,7 @@ public class MergeNatureAlgorithm {
         for (int i = 0; i < fileContent.size(); i++) {
             if (MergeNatureTools.checkIfIsBegin(fileContent.get(i))) {
                 conflictRegion = new ConflictRegion();
+                conflictRegion.setConflict(conflict);
                 for (int j = i - contextLines; j != i; j++) {
                     if (j > -1) {
                         auxString = auxString + "\n" + fileContent.get(j);
@@ -186,7 +195,7 @@ public class MergeNatureAlgorithm {
                     }
                 }
                 conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
-                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, conflictRegion.getBeginLine() - contextLines - 1, conflictRegion.getEndLine() + contextLines - 1)));
+                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, conflictRegion.getBeginLine() - conflictRegion.getBeforeContextSize() - 1, conflictRegion.getEndLine() + conflictRegion.getAfterContextSize() - 1)));
                 conflictRegion = solutionLayer(conflictRegion, repositoryPath);
                 conflictRegion = originalLinesLayer(conflictRegion, repositoryPath);
                 conflictRegions.add(conflictRegion);

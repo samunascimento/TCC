@@ -134,6 +134,16 @@ public class ConflictRegion {
     public String getBeforeContext() {
         return beforeContext;
     }
+    
+    public int getBeforeContextSize() {
+        int size = 0;
+        for(String str : beforeContext.split("\n")){
+            if(!str.equals("<SOF>")){
+                size++;
+            }
+        }
+        return size;
+    }
 
     public void setBeforeContext(String beforeContext) {
         this.beforeContext = beforeContext;
@@ -181,6 +191,16 @@ public class ConflictRegion {
 
     public String getAfterContext() {
         return afterContext;
+    }
+    
+    public int getAfterContextSize() {
+        int size = 0;
+        for(String str : afterContext.split("\n")){
+            if(!str.equals("<EOF>")){
+                size++;
+            }
+        }
+        return size;
     }
 
     public void setAfterContext(String afterContext) {
