@@ -102,7 +102,7 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
-        if (filePathProjectAsRoot.endsWith(".java")) {
+        if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
             String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
@@ -147,7 +147,7 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
-        if (filePathProjectAsRoot.endsWith(".java")) {
+        if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
@@ -197,9 +197,9 @@ public class ANTLR4Tools {
             if (filePathProjectAsRoot.endsWith(".java")) {
                 results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
-                results = analyzeCPPSyntaxTree(filePathProjectAsRoot);
+                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePathProjectAsRoot);
+                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else {
                 return null;
             }

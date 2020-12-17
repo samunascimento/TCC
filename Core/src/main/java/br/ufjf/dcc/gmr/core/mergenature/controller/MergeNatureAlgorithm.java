@@ -117,6 +117,7 @@ public class MergeNatureAlgorithm {
             Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getCommitHash(), repositoryPath);
             if (mergeMessage.contains("Automatic merge failed; fix conflicts and then commit the result.")) {
+                merge.setMergeType(MergeType.CONFLICTED_MERGE);
                 for (String conflictMessage : mergeMessage) {
                     if (conflictMessage.contains("CONFLICT")) {
                         merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
@@ -215,11 +216,11 @@ public class MergeNatureAlgorithm {
             int solutionFinalLine;
             try {
                 solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() + 1);
+                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getEndLine() + 1);
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = conflictRegion.getConflict().getParent2FilePath();
                     solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() + 1);
+                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getEndLine() + 1);
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
