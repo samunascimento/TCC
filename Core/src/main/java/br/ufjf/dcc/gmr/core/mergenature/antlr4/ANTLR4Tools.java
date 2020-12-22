@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Parser;
 import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
+import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.JavaVisitor;
@@ -31,7 +32,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * @since 14-12-2020
  */
 public class ANTLR4Tools {
-    
+
     public static ANTLR4Results analyzeJavaSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".java")) {
             List<SyntaxStructure> comments;
@@ -101,7 +102,7 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
-        if (filePathProjectAsRoot.endsWith(".java")) {
+        if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
             String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
@@ -146,7 +147,7 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
-        if (filePathProjectAsRoot.endsWith(".java")) {
+        if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
@@ -196,9 +197,9 @@ public class ANTLR4Tools {
             if (filePathProjectAsRoot.endsWith(".java")) {
                 results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
-                results = analyzeCPPSyntaxTree(filePathProjectAsRoot);
+                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePathProjectAsRoot);
+                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else {
                 return null;
             }
@@ -297,7 +298,6 @@ public class ANTLR4Tools {
         }
         results.setOutmostedCommentAnalysis(outmostedFilteredComments);
         return results;
-
     }
 
     public static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
@@ -334,6 +334,34 @@ public class ANTLR4Tools {
             }
             return rawList;
         }
+    }
+
+    public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath) {
+        List<String> translatedList;
+        List<String> untranslatedList = new ArrayList<>();
+        if (rawList.isEmpty()) {
+            translatedList = new ArrayList<>();
+            translatedList.add("Nothing");
+        } else {
+            for (SyntaxStructure struc : rawList) {
+                if (!untranslatedList.contains(struc.getStructureType())) {
+                    untranslatedList.add(struc.getStructureType());
+                }
+            }
+            if (filePath.endsWith(".java")) {
+                translatedList = Translator.JavaTranslator(untranslatedList);
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+                translatedList = Translator.CPPTranslator(untranslatedList);
+            } else if (filePath.endsWith(".py")) {
+                translatedList = Translator.PythonTranslator(untranslatedList);
+            } else {
+                return null;
+            }
+            if(rawList.get(0).getWarning()){
+                translatedList.add("WARNING!");
+            }
+        }
+        return translatedList;
     }
     
 }

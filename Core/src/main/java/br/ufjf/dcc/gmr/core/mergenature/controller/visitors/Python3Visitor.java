@@ -123,19 +123,19 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitStmt(Python3Parser.StmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitSimple_stmt(Python3Parser.Simple_stmtContext ctx) {
-        process(ctx);
+       // process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitSmall_stmt(Python3Parser.Small_stmtContext ctx) {
-        process(ctx);
+       // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -177,7 +177,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitFlow_stmt(Python3Parser.Flow_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -201,7 +201,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitYield_stmt(Python3Parser.Yield_stmtContext ctx) {
-        process(ctx);
+       process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -273,13 +273,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAssert_stmt(Python3Parser.Assert_stmtContext ctx) {
-        process(ctx);
+       process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitCompound_stmt(Python3Parser.Compound_stmtContext ctx) {
-       // process(ctx);
+        process(ctx);
         return super.visitChildren(ctx);
     }
 

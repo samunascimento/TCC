@@ -134,6 +134,16 @@ public class ConflictRegion {
     public String getBeforeContext() {
         return beforeContext;
     }
+    
+    public int getBeforeContextSize() {
+        int size = 0;
+        for(String str : beforeContext.split("\n")){
+            if(!str.equals("<SOF>")){
+                size++;
+            }
+        }
+        return size;
+    }
 
     public void setBeforeContext(String beforeContext) {
         this.beforeContext = beforeContext;
@@ -182,6 +192,16 @@ public class ConflictRegion {
     public String getAfterContext() {
         return afterContext;
     }
+    
+    public int getAfterContextSize() {
+        int size = 0;
+        for(String str : afterContext.split("\n")){
+            if(!str.equals("<EOF>")){
+                size++;
+            }
+        }
+        return size;
+    }
 
     public void setAfterContext(String afterContext) {
         this.afterContext = afterContext;
@@ -222,6 +242,10 @@ public class ConflictRegion {
     public int getOriginalV1FirstLine() {
         return originalV1FirstLine;
     }
+    
+    public int getOriginalV1FinalLine() {
+        return (originalV1FirstLine + (separatorLine - beginLine - 2));
+    }
 
     public void setOriginalV1FirstLine(int originalV1FirstLine) {
         this.originalV1FirstLine = originalV1FirstLine;
@@ -229,6 +253,10 @@ public class ConflictRegion {
 
     public int getOriginalV2FirstLine() {
         return originalV2FirstLine;
+    }
+    
+    public int getOriginalV2FinalLine() {
+        return (originalV2FirstLine + (endLine - separatorLine - 2));
     }
 
     public void setOriginalV2FirstLine(int originalV2FirstLine) {

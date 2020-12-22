@@ -67,7 +67,7 @@ public class MergeNatureTools {
     public static String getULROfProjectFromConfig(String repositoryPath) throws IOException {
         try {
             String url = "Unknow";
-            for (String line : getFileContent(repositoryPath)) {
+            for (String line : getFileContent(repositoryPath + ".git/config")) {
                 if (line.startsWith("\turl = ")) {
                     String[] split = line.split("= ");
                     url = split[split.length - 1];

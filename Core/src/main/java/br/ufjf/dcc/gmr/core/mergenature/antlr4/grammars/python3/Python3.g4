@@ -169,11 +169,25 @@ augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
 del_stmt: 'del' exprlist;
 pass_stmt: 'pass';
 flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
+
+//Brake && Yeld ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 break_stmt: 'break';
-continue_stmt: 'continue';
-return_stmt: 'return' (testlist)?;
 yield_stmt: yield_expr;
+//------------------------------------------------------------------------------
+
+//Continue +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+continue_stmt: 'continue';
+//------------------------------------------------------------------------------
+
+//Return +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+return_stmt: 'return' (testlist)?;
+//------------------------------------------------------------------------------
+
+//Throw-------------------------------------------------------------------------
 raise_stmt: 'raise' (test ('from' test)?)?;
+//------------------------------------------------------------------------------
+
+// Imports ---------------------------------------------------------------------
 import_stmt: import_name | import_from;
 import_name: 'import' dotted_as_names;
 // note below: the ('.' | '...') is necessary because '...' is tokenized as ELLIPSIS
@@ -184,26 +198,46 @@ dotted_as_name: dotted_name ('as' NAME)?;
 import_as_names: import_as_name (',' import_as_name)* (',')?;
 dotted_as_names: dotted_as_name (',' dotted_as_name)*;
 dotted_name: NAME ('.' NAME)*;
+//------------------------------------------------------------------------------
+
+
 global_stmt: 'global' NAME (',' NAME)*;
 nonlocal_stmt: 'nonlocal' NAME (',' NAME)*;
 assert_stmt: 'assert' test (',' test)?;
 
 compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | decorated | async_stmt;
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
+
+//IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if_stmt: 'if' test ':' suite ('elif' test ':' suite)* ('else' ':' suite)?;
+//------------------------------------------------------------------------------
+
+//While+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 while_stmt: 'while' test ':' suite ('else' ':' suite)?;
+//------------------------------------------------------------------------------
+
+//For+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 for_stmt: 'for' exprlist 'in' testlist ':' suite ('else' ':' suite)?;
+//------------------------------------------------------------------------------
+
+//Try+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 try_stmt: ('try' ':' suite
            ((except_clause ':' suite)+
             ('else' ':' suite)?
             ('finally' ':' suite)? |
            'finally' ':' suite));
+//------------------------------------------------------------------------------
+
+//With++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 with_stmt: 'with' with_item (',' with_item)*  ':' suite;
 with_item: test ('as' expr)?;
+//------------------------------------------------------------------------------
+
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
 suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
 
+//Logical tests ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 test: or_test ('if' or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
 lambdef: 'lambda' (varargslist)? ':' test;
@@ -211,6 +245,8 @@ lambdef_nocond: 'lambda' (varargslist)? ':' test_nocond;
 or_test: and_test ('or' and_test)*;
 and_test: not_test ('and' not_test)*;
 not_test: 'not' not_test | comparison;
+//------------------------------------------------------------------------------
+
 comparison: expr (comp_op expr)*;
 // <> isn't actually a valid comparison operator in Python. It's here for the
 // sake of a __future__ import described in PEP 401 (which really works :-)
