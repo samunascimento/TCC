@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.chunks.jung.Main;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
+import br.ufjf.dcc.gmr.core.utils.DiffTranslator;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -216,8 +217,8 @@ public class ParserJava {
             }
         }
 
-        boolean foundAfterContext = false;
-        int validate = 0;
+//        boolean foundAfterContext = false;
+//        int validate = 0;
 //        for (int i = 0; i < filesToStringParent1.size(); i++) {
 //            for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
 //                for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
@@ -236,74 +237,71 @@ public class ParserJava {
 //                }
 //            }
 //        }
-
-        for (int i = 0; i < filesToStringParent1.size(); i++) {
-            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
-                for (int j = 0, z = 0; j < filesToStringParent1.get(i).size(); j++) {
-                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
-                    if (beforeContext.equals(filesToStringParent1.get(i).get(j))) {
-                        z++;
-                        conflictChunk.getChunkVersion1().setLineBegin(j + 1);
-                    }
-                    if (z == conflictChunk.getBeforeContext().getText().size()) {
-                        break;
-                    }
-                }
-
-                for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
-
-                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
-                        conflictChunk.getChunkVersion1().setLineEnd(j + 1);
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        for (int i = 0; i < filesToStringParent2.size(); i++) {
-            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
-                for (int j = 0, z = 0; j < filesToStringParent2.get(i).size(); j++) {
-                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
-                    if (beforeContext.equals(filesToStringParent2.get(i).get(j))) {
-                        z++;
-                        conflictChunk.getChunkVersion2().setLineBegin(j + 1);
-                    }
-                    if (z == conflictChunk.getBeforeContext().getText().size()) {
-                        break;
-                    }
-                }
-
-                for (int j = 0; j < filesToStringParent2.get(i).size(); j++) {
-
-                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
-                        conflictChunk.getChunkVersion2().setLineEnd(j + 1);
-                        break;
-                    }
-                }
-
-            }
-        }
-
+//        for (int i = 0; i < filesToStringParent1.size(); i++) {
+//            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
+//                for (int j = 0, z = 0; j < filesToStringParent1.get(i).size(); j++) {
+//                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
+//                    if (beforeContext.equals(filesToStringParent1.get(i).get(j))) {
+//                        z++;
+//                        conflictChunk.getChunkVersion1().setLineBegin(j + 1);
+//                    }
+//                    if (z == conflictChunk.getBeforeContext().getText().size()) {
+//                        break;
+//                    }
+//                }
+//
+//                for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
+//
+//                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
+//                        conflictChunk.getChunkVersion1().setLineEnd(j + 1);
+//                        break;
+//                    }
+//                }
+//
+//            }
+//        }
+//
+//        for (int i = 0; i < filesToStringParent2.size(); i++) {
+//            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
+//                for (int j = 0, z = 0; j < filesToStringParent2.get(i).size(); j++) {
+//                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
+//                    if (beforeContext.equals(filesToStringParent2.get(i).get(j))) {
+//                        z++;
+//                        conflictChunk.getChunkVersion2().setLineBegin(j + 1);
+//                    }
+//                    if (z == conflictChunk.getBeforeContext().getText().size()) {
+//                        break;
+//                    }
+//                }
+//
+//                for (int j = 0; j < filesToStringParent2.get(i).size(); j++) {
+//
+//                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
+//                        conflictChunk.getChunkVersion2().setLineEnd(j + 1);
+//                        break;
+//                    }
+//                }
+//
+//            }
+//        }
         for (int y = 0; y < version.getFile().size(); y++) {
-            List<String> fileDiffList = Git.fileDiffExample(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            DiffAnalyze diffAnalyze = new DiffAnalyze();
-            diffAnalyze.setModifiedLines(fileDiffList);
-            version.getFile().get(y).setDiffAnalyze(diffAnalyze);
-
-            
+            DiffTranslator diffTranslator = new DiffTranslator();
+            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
+            diffTranslator.findIntervals(version, true);
+            diffTranslator = new DiffTranslator();
+            diffTranslator.translator(filesToCheckParent2.get(y), filesToCheckParent1.get(y), pathRepositoryCopy1);
+            diffTranslator.findIntervals(version, false);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
-                
-               chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs((String) parent1.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion1()));
-               chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs((String) parent2.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion2()));
-               
+
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs((String) parent1.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs((String) parent2.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion2()));
+
             }
 
         }
 
-
-        Main jung = new Main(parent1, parent2, version.getFile().get(0).getChunks(), parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet() );
+        Main jung = new Main(parent1, parent2, version.getFile().get(0).getChunks(), parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
         jung.main(args);
 
         File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
