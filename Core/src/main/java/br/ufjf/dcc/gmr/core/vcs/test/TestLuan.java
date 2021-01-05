@@ -13,7 +13,7 @@ public class TestLuan {
 
     public static void main(String[] args) throws IOException {
 
-         ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval("/home/luan/Github/teste.py", 1, 3);
+         ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval("/home/luan/Github/teste.py", 1, 34);
          
     }
 
