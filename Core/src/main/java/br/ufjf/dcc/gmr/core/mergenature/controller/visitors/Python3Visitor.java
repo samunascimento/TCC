@@ -279,7 +279,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitCompound_stmt(Python3Parser.Compound_stmtContext ctx) {
-        process(ctx);
+       // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -333,7 +333,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitSuite(Python3Parser.SuiteContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 

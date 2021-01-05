@@ -15,8 +15,15 @@ public class TestLuan {
     public static void main(String[] args) throws IOException {
 
          ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval("/home/luan/Github/teste.py", 1, 34);
-         for (SyntaxStructure outmostedCommentAnalysi : teste.getOutmostedCommentAnalysis()) {
-             System.out.println(outmostedCommentAnalysi.toString());
+         
+         /*for (SyntaxStructure outmostedAnalysi : teste.getNormalAnalysis()) {
+             System.out.println(outmostedAnalysi.getForm());
+             System.out.println("------------------------------------ \n");
+            
+        }*/
+          for (SyntaxStructure outmostedAnalysi : teste.getOutmostedNormalAnalysis()) {
+             System.out.println(outmostedAnalysi.getForm());
+             System.out.println("------------------------------------ \n");
             
         }
     }

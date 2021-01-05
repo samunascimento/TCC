@@ -639,6 +639,10 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
             //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Classdef")) {
+                mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
+                list.remove("Classdef");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -683,18 +687,23 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Dotted ?
+            
             if (list.contains("import_stmt")
                     || list.contains("import_name")
                     || list.contains("import_from")
                     || list.contains("import_as_name")
-                    || list.contains("import_as_names")) {
+                    || list.contains("import_as_names")
+                    || list.contains("Dotted_as_name")
+                    || list.contains("Dotted_name")
+                    ) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
                 list.remove("import_stmt");
                 list.remove("import_name");
                 list.remove("import_from");
                 list.remove("import_as_name");
                 list.remove("import_as_names");
+                list.remove("Dotted_as_name");
+                list.remove("Dotted_name");
             }
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
@@ -702,6 +711,14 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            
+            if(list.contains("funcdef")){
+                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
+                list.remove("funcdef");
+            }
+            
+            
+            
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
