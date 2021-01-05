@@ -22,19 +22,19 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
     private boolean warning;
 
     public List<SyntaxStructure> getList() {
-        return list;  
+        return list;
     }
 
     public Python3Visitor(boolean warning) {
         list = new ArrayList<>();
-         this.warning = warning;
+        this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
-        
+
         //Adding texte
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
@@ -129,13 +129,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitSimple_stmt(Python3Parser.Simple_stmtContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitSmall_stmt(Python3Parser.Small_stmtContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -201,7 +201,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitYield_stmt(Python3Parser.Yield_stmtContext ctx) {
-       process(ctx);
+        process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -273,13 +273,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAssert_stmt(Python3Parser.Assert_stmtContext ctx) {
-       process(ctx);
+        process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitCompound_stmt(Python3Parser.Compound_stmtContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -339,13 +339,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitTest(Python3Parser.TestContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitTest_nocond(Python3Parser.Test_nocondContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -393,7 +393,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitStar_expr(Python3Parser.Star_exprContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -405,7 +405,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitXor_expr(Python3Parser.Xor_exprContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -417,13 +417,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitShift_expr(Python3Parser.Shift_exprContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitArith_expr(Python3Parser.Arith_exprContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -447,7 +447,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAtom_expr(Python3Parser.Atom_exprContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -459,7 +459,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitTestlist_comp(Python3Parser.Testlist_compContext ctx) {
-      //  process(ctx);
+        //  process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -489,13 +489,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitExprlist(Python3Parser.ExprlistContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitTestlist(Python3Parser.TestlistContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -549,7 +549,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitYield_expr(Python3Parser.Yield_exprContext ctx) {
-      //  process(ctx);
+        //  process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -557,6 +557,12 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
     public Object visitYield_arg(Python3Parser.Yield_argContext ctx) {
         process(ctx);
         return super.visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIf_(Python3Parser.If_Context ctx) {
+        process(ctx);
+        return super.visitIf_(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

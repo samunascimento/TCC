@@ -171,6 +171,12 @@ public class Translator {
                 list.remove("FieldModifier");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Finally_")) {
+                mainList.add(LanguageConstructsTypes.FINALLY);
+                list.remove("Finally_");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ForStatement")
                     || list.contains("ForStatementNoShortIf")
@@ -599,177 +605,166 @@ public class Translator {
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Nothing")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
                 list.remove("Nothing");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-            //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-            //Foi decidido adicionar o Yeld como break devido a similaridade!
-            if (list.contains("break_stmt")
-                    || list.contains("yield_stmt")) {
+            //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       
+            if (list.contains("Break_stmt")
+                  ) {
                 mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
-                list.remove("break_stmt");
-                list.remove("yield_stmt");
+                list.remove("Break_stmt");
+                
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-            
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //aparentemente é o except
+             if (list.contains("Except_clause")) {
+                mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
+                list.remove("Except_clause");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Classdef")) {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
                 list.remove("Classdef");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("continue_stmt")) {
+            if (list.contains("Continue_stmt")) {
                 mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
-                list.remove("continue_stmt");
+                list.remove("Continue_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no do on python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //DELET+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-               if (list.contains("del_stmt")) {
+            if (list.contains("Del_stmt")) {
                 mainList.add(LanguageConstructsTypes.DELETE_STATEMENT);
-                list.remove("del_stmt");
+                list.remove("Del_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+            //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("for_stmt")) {
+            if (list.contains("For_stmt")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
-                list.remove("for_stmt");
+                list.remove("For_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("if_stmt")) {
+            if (list.contains("If_stmt")
+                    || list.contains("If_")) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
-                list.remove("if_stmt");
+                list.remove("If_stmt");
+                list.remove("If_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-            if (list.contains("import_stmt")
-                    || list.contains("import_name")
-                    || list.contains("import_from")
-                    || list.contains("import_as_name")
-                    || list.contains("import_as_names")
+            if (list.contains("Import_stmt")
+                    || list.contains("Import_name")
+                    || list.contains("Import_from")
+                    || list.contains("Import_as_name")
+                    || list.contains("Import_as_names")
                     || list.contains("Dotted_as_name")
-                    || list.contains("Dotted_name")
-                    ) {
+                    || list.contains("Dotted_name")) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
-                list.remove("import_stmt");
-                list.remove("import_name");
-                list.remove("import_from");
-                list.remove("import_as_name");
-                list.remove("import_as_names");
+                list.remove("Import_stmt");
+                list.remove("Import_name");
+                list.remove("Import_from");
+                list.remove("Import_as_name");
+                list.remove("Import_as_names");
                 list.remove("Dotted_as_name");
                 list.remove("Dotted_name");
             }
             //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
-            if(list.contains("funcdef")){
+            if (list.contains("Funcdef")) {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
-                list.remove("funcdef");
+                list.remove("Funcdef");
             }
-            
-            
-            
+
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Não tem
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("raise_stmt")) {
+            if (list.contains("Raise_stmt")) {
                 mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
-                list.remove("raise_stmt");
+                list.remove("Raise_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("try_stmt")) {
+            if (list.contains("Try_stmt")) {
                 mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
-                list.remove("try_stmt");
+                list.remove("Try_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("return_stmt")) {
+            if (list.contains("Return_stmt")) {
                 mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-                list.remove("return_stmt");
+                list.remove("Return_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WARNING!")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
+            //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+              if (list.contains("Yield_stmt")) {
+                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
+                list.remove("Yield_stmt");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("while_stmt")) {
+            if (list.contains("While_stmt")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
-                list.remove("while_stmt");
+                list.remove("While_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

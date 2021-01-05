@@ -304,6 +304,18 @@ public class Python3BaseListener implements Python3Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterContinue_stmt(Python3Parser.Continue_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -323,18 +335,6 @@ public class Python3BaseListener implements Python3Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitReturn_stmt(Python3Parser.Return_stmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -503,6 +503,18 @@ public class Python3BaseListener implements Python3Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAsync_stmt(Python3Parser.Async_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIf_(Python3Parser.If_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIf_(Python3Parser.If_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

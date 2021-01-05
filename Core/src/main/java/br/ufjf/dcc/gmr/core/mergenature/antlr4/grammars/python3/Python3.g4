@@ -166,8 +166,14 @@ testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
 augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' |
             '<<=' | '>>=' | '**=' | '//=');
 // For normal and annotated assignments, additional restrictions enforced by the interpreter
+
+
+//Delete +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 del_stmt: 'del' exprlist;
+//------------------------------------------------------------------------------
+
 pass_stmt: 'pass';
+
 flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
 
 //Brake && Yeld ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -209,7 +215,8 @@ compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef 
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
 
 //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-if_stmt: 'if' test ':' suite ('elif' test ':' suite)* ('else' ':' suite)?;
+if_ : 'if' ;
+if_stmt: if_ test ':' suite ('elif' test ':' suite)* ('else' ':' suite)?;
 //------------------------------------------------------------------------------
 
 //While+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -238,7 +245,7 @@ except_clause: 'except' (test ('as' NAME)?)?;
 suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
 
 //Logical tests ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-test: or_test ('if' or_test 'else' test)? | lambdef;
+test: or_test (if_ or_test 'else' test)? | lambdef;
 test_nocond: or_test | lambdef_nocond;
 lambdef: 'lambda' (varargslist)? ':' test;
 lambdef_nocond: 'lambda' (varargslist)? ':' test_nocond;
@@ -297,7 +304,7 @@ argument: ( test (comp_for)? |
 
 comp_iter: comp_for | comp_if;
 comp_for: (ASYNC)? 'for' exprlist 'in' or_test (comp_iter)?;
-comp_if: 'if' test_nocond (comp_iter)?;
+comp_if: if_ test_nocond (comp_iter)?;
 
 // not used in grammar, but may appear in "node" passed from Parser to Compiler
 encoding_decl: NAME;
