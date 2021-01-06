@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.3-1102-jdbc41</version>
+            <version>42.2.13</version>
         </dependency>
         <dependency> 
             <groupId>org.antlr</groupId> 
@@ -74,14 +74,14 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/cpp</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/antlr4/grammars/cpp</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.conflictanalysis.antlr4.grammars.cpp</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3</argument>
                     </arguments>
                     <includes>
-                        <include>CPP14.g4</include>
+                        <include>Python3.g4</include>
                     </includes>
                 </configuration>
                 <executions>

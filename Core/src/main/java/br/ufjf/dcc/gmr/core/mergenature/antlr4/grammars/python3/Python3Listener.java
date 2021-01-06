@@ -248,6 +248,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitBreak_stmt(Python3Parser.Break_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#yield_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterYield_stmt(Python3Parser.Yield_stmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#yield_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitYield_stmt(Python3Parser.Yield_stmtContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#continue_stmt}.
 	 * @param ctx the parse tree
 	 */
@@ -267,16 +277,6 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitReturn_stmt(Python3Parser.Return_stmtContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Python3Parser#yield_stmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterYield_stmt(Python3Parser.Yield_stmtContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Python3Parser#yield_stmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitYield_stmt(Python3Parser.Yield_stmtContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#raise_stmt}.
 	 * @param ctx the parse tree
@@ -417,6 +417,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAsync_stmt(Python3Parser.Async_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Python3Parser#if_}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_(Python3Parser.If_Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#if_}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_(Python3Parser.If_Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#if_stmt}.
 	 * @param ctx the parse tree

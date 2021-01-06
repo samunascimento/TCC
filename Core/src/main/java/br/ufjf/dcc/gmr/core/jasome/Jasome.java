@@ -36,7 +36,7 @@ public class Jasome {
         try {
             //JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
             //analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\teste\\UFJF");
-            analyze(null, null, null, "D:\\Github\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "D:\\Github\\ProjetosTeste\\voldemort");
+            analyze(null, null, null, "C:\\Users\\anton\\Documents\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\minecrowdcontrol");
             //analyze(null, null, null, "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
