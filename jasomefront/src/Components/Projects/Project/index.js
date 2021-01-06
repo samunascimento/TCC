@@ -177,11 +177,15 @@ export default class Project extends Component {
     axios.get(`nameClass/` + this.props.nameProject.name)
       .then(res => {
         const classTree = res.data
+        console.log('imprimindo classTree')
+        console.log(classTree)
         this.setState({ classTree })
       })
     axios.get(`nameMethod/` + this.props.nameProject.name)
       .then(res => {
         const methodTree = res.data
+        console.log('imprimindo methodTree')
+        console.log(methodTree)
         this.setState({ methodTree })
       })
 
@@ -434,9 +438,10 @@ export default class Project extends Component {
 
     if (event.target.checked === true) {
 
-
       const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className }
       const classMetricsChart = this.state.classMetricsChart;
+      console.log('print metric class')
+      console.log(metric)
       classMetricsChart.push(metric)
       this.setState({ classMetricsChart })
 
@@ -507,7 +512,8 @@ export default class Project extends Component {
           maximaY: this.getMaximaY(this.state.data)
         })
       })
-
+      console.log('teste')
+      console.log(classMetric.className);
       const classSplit = classMetric.className.split('.');
       if (classSplit.length !== 1) {
         classMetric.className = classSplit[0].concat('...').concat(classSplit[classSplit.length - 1])
@@ -517,34 +523,101 @@ export default class Project extends Component {
       this.setState({ index: this.state.index + 1 })
   };
 
-  handleChangeMethod = (event, metricName) => {
-    this.setState({ ...this.state, [event.target.name]: event.target.checked });
-    if (event.target.checked === true) {
-      axios.get(`metric/method/` + this.props.nameProject.name)
-        .then(res => {
-          let metricCheck = false
-          const data = []
-          const methodPoints = res.data;
-          methodPoints.map((metrics) => {
-            metrics.map((metric, index) => {
-              if ((metric !== null) && (metric.metricName === metricName)) { //modificar isso aqui depois
-                metricCheck = true
-              }
-            })
-            if (metricCheck === true) {
-              data.push(metrics)
-            }
-            metricCheck = false;
-          })
-          this.setState({ data });
+  handleChangeMethod = async (methodMetric) => {
+
+    await axios.get(`metric/method/` + this.props.nameProject.name + `/` + methodMetric.packageName + `/` + methodMetric.className + '/' + methodMetric.methodName + `/` + methodMetric.metricName)
+      .then(res => {
+        console.log('Primeira verificacao')
+        console.log(methodMetric.methodName)
+
+        const data = this.state.data
+        console.log('Verifica aqui')
+        console.log(data);
+        const metricDescription = { 'metricName': methodMetric.metricName, 'color': this.state.colors[this.state.index], 'index': this.state.index, 'checkMetric': methodMetric.methodName }
+        res.data.map((branch) => {
+          data.push(branch)
+          this.state.pointsCount = this.state.pointsCount + branch.length;
+          console.log(this.state.pointsCount)
+          this.state.colorsIndex.push(metricDescription)
+          console.log(data)
         })
+        this.setState({ data });
+        this.setState({
+          maximaY: this.getMaximaY(this.state.data)
+        })
+      })
+
+      console.log('esta esta' + methodMetric.methodName)
+      const methodSplit = methodMetric.methodName.split('.');
+      if (methodSplit.length !== 1) {
+        methodMetric.methodName = methodSplit[0].concat('...').concat(methodSplit[methodSplit.length - 1])
+      }
+  
+      this.getMetricDescription(methodMetric.metricName, methodMetric.methodName);
+      this.setState({ index: this.state.index + 1 })
+  };
+
+  addMethodMetric = (event, metricName, packageName, className, methodName, methodIndex) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+
+    this.state.methodTree[methodIndex][metricName] = !this.state.methodTree[methodIndex][metricName]
+    console.log('imprime nomes')
+    console.log(packageName,className,methodName)
+    if (event.target.checked === true) {
+      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className , 'methodName': methodName}
+      const methodMetricsChart = this.state.methodMetricsChart;
+      methodMetricsChart.push(metric)
+      console.log('print metric method')
+      console.log(metric)
+      this.setState({ methodMetricsChart })
+
     }
+
     else if (event.target.checked === false) {
 
-      const data = [];
-      this.setState({ data });
+      let metricCheck = false
+      let metricIndex = 1
+      this.state.methodMetricsChart.map((metric, index) => {
+        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className && metric.methodName == methodName) {
+          metricCheck = true
+          metricIndex = index
+        }
+      })
+      if (metricCheck === true) {
+        this.state.methodMetricsChart.splice(metricIndex, 1)
+        metricCheck = false
+      }
+
+      let indexArray = []
+      let colorsCheck = false
+
+      this.state.data.map((metrics, index) => {
+        metrics.map((metric, index) => {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === className) && (metric.nameMethod === methodName)) {
+            metricCheck = true
+            colorsCheck = true
+          }
+        })
+        if (metricCheck === true) {
+          indexArray.push(index)
+          metricCheck = false
+        }
+      })
+
+      if (colorsCheck == true) {
+        this.adjustColors(metricName, methodName)
+      }
+
+      this.state.data.splice(indexArray[0], indexArray.length)
+
+      const methodSplit = methodName.split('.');
+      if (methodSplit.length !== 1) {
+        methodName = methodSplit[0].concat('...').concat(methodSplit[methodSplit.length - 1])
+      }
+      this.RemoveMetricDescription(metricName, methodName);
 
     }
+
   }
 
   handleChangeSwitch = (event) => {
@@ -567,6 +640,10 @@ export default class Project extends Component {
 
     this.state.classMetricsChart.map((classMetric, index) => {
       this.handleChangeClass(classMetric);
+    })
+
+    this.state.methodMetricsChart.map((methodMetric, index) => {
+      this.handleChangeMethod(methodMetric);
     })
 
     this.setState({ projectMetricsChart: [] })
@@ -612,6 +689,18 @@ export default class Project extends Component {
     return classTree;
   }
 
+  clearMenuMethod = () => {
+    const methodTree = [];
+    this.state.methodTree.map((methodItem, methodIndex) => {
+      methodTree.push(methodItem)
+      this.state.methodMetrics.map((metric, metricIndex) => {
+        methodTree[methodIndex][metric.name] = false
+      })
+    })
+    
+    return methodTree;
+  }
+
   clearChart = () => {
     const dataSize = this.state.data.length
     this.state.data.splice(0, dataSize)
@@ -619,6 +708,7 @@ export default class Project extends Component {
     this.setState({ projectTloc: false })
     this.setState({ packageTree: this.clearMenuPackage() })
     this.setState({ classTree : this.clearMenuClass() })
+    this.setState({ methodTree : this.clearMenuMethod() })
     this.setState({ colorsIndex: [] })
     this.setState({ index: 0 })
 
@@ -663,7 +753,7 @@ export default class Project extends Component {
           <ChartMenu projectTloc={this.state.projectTloc} addProjectMetric={this.addProjectMetric}
             packageTree={this.state.packageTree} packageMetrics={this.state.packageMetrics} addPackageMetric={this.addPackageMetric}
             classTree={this.state.classTree} classMetrics={this.state.classMetrics} addClassMetric={this.addClassMetric}
-            methodTree={this.state.methodTree} methodMetrics={this.state.methodMetrics} handleChangeMethod={this.handleChangeMethod}
+            methodTree={this.state.methodTree} methodMetrics={this.state.methodMetrics} addMethodMetric={this.addMethodMetric}
             generateChart={this.loading} clearChart={this.clearChart} />
 
           <Caption metricsDescriptions={this.state.metricsDescriptions} colors={this.state.colors} />
