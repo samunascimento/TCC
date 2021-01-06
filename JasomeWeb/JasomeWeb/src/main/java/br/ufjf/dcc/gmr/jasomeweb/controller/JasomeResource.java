@@ -169,7 +169,7 @@ public class JasomeResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("projects/metric/method/{nameProject}/{namePackage}/{nameClass}/{nameMethod}/{nameMetric}")
-    public String getMetricClass(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameClass") String nameClass,@PathParam("nameMethod") String nameMethod,@PathParam("nameMetric") String nameMetric) throws SQLException{
+    public String getMetricMethod(@PathParam("nameProject") String nameProject,@PathParam("namePackage") String namePackage ,@PathParam("nameClass") String nameClass,@PathParam("nameMethod") String nameMethod,@PathParam("nameMetric") String nameMetric) throws SQLException{
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
         System.out.println(nameProject +" "+ namePackage+" "+ nameClass+" "+nameMethod +" "+ nameMetric);
