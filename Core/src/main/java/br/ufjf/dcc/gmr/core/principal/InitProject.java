@@ -68,16 +68,16 @@ public class InitProject implements Runnable {
 
             if (content.get(i).startsWith("<<<<<<<")) {
                 chunk = new ConflictChunk();
-                chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i + 1));
+                chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i ));
             }
 
             if (content.get(i).startsWith("=======")) {
-                chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i + 1));
+                chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i ));
             }
 
             if (content.get(i).startsWith(">>>>>>>")) {
-                chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i + 1));
-                chunk.setErrorContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber() - 1, chunk.getEnd().getLineNumber() - 1));
+                chunk.setEnd(new Line(ListUtils.getSubList(content, i, i), i));
+                chunk.setErrorContent(ListUtils.getSubList(content, chunk.getBegin().getLineNumber(), chunk.getEnd().getLineNumber()));
                 chunk.setPath(filePath);
                 chunk.setLabel("CC" + (++chunkNumber));
                 result.add(chunk);

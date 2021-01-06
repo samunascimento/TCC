@@ -287,10 +287,7 @@ public class ParserJava {
         for (int y = 0; y < version.getFile().size(); y++) {
             DiffTranslator diffTranslator = new DiffTranslator();
             diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version, true);
-            diffTranslator = new DiffTranslator();
-            diffTranslator.translator(filesToCheckParent2.get(y), filesToCheckParent1.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version, false);
+            diffTranslator.findIntervals(version);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
 
