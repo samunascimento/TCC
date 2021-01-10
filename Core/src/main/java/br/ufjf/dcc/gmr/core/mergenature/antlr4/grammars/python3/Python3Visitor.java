@@ -155,6 +155,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBreak_stmt(Python3Parser.Break_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#yield_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitYield_stmt(Python3Parser.Yield_stmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#continue_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -166,12 +172,6 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitReturn_stmt(Python3Parser.Return_stmtContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Python3Parser#yield_stmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitYield_stmt(Python3Parser.Yield_stmtContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#raise_stmt}.
 	 * @param ctx the parse tree
@@ -256,6 +256,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAsync_stmt(Python3Parser.Async_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Python3Parser#if_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_(Python3Parser.If_Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#if_stmt}.
 	 * @param ctx the parse tree

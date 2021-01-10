@@ -45,7 +45,8 @@ export default class chartMenu extends Component {
 
             addProjectMetric: this.props.addProjectMetric,
             addPackageMetric: this.props.addPackageMetric, 
-            addClassMetrics: this.props.addClassMetric,       
+            addClassMetrics: this.props.addClassMetric,   
+            addMethodMetrics: this.props.addMethodMetric,    
             handleChangeClass: this.props.handleChangeClass,
             handleChangeMethod: this.props.handleChangeMethod,
 
@@ -56,7 +57,7 @@ export default class chartMenu extends Component {
             classMetrics: this.props.classMetrics,
 
             methodTree: this.props.methodTree,
-            methodMetrics:this.props.methodMetrics,
+            methodMetrics: this.props.methodMetrics,
 
             generatechart: this.props.generateChart,
             clearChart: this.props.clearChart,
@@ -221,18 +222,18 @@ export default class chartMenu extends Component {
                             <Collapse in={this.state.openMethod} timeout="auto" unmountOnExit>
                                 <Paper style={{ maxHeight: 300, overflow: 'auto', border: '1px solid grey' }}>
                                     <List component="div" disablePadding>
-                                        <ListItem button className={this.state.menu.nested}>
+                                        <ListItem button methodName={this.state.menu.nested}>
                                             <TreeView
                                                 className={this.state.root}
                                                 defaultCollapseIcon={<ExpandMoreIcon />}
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                             >
-                                                {this.props.methodTree.map((method) => (
-                                                    <TreeItem title={method.methodName} nodeId={method.id} label={<span style={{ fontSize: '16px' }}>{method.methodName}</span>}>
+                                                {this.props.methodTree.map((methods,methodIndex) => (
+                                                    <TreeItem title={methods.methodName} nodeId={methods.id} label={<span style={{ fontSize: '16px' }}>{methods.methodName}</span>}>
                                                         <FormGroup>
-                                                            {this.props.classMetrics.map((metric) => (
+                                                            {this.props.methodMetrics.map((metric) => (
                                                                 <FormControlLabel
-                                                                    control={<Checkbox onChange={(event) => this.props.handleChangeMethod(event, metric.name)} name={metric.name} color="primary" />}
+                                                                    control={<Checkbox onChange={(event) => this.props.addMethodMetric(event, metric.name, methods.packageName, methods.className,methods.methodName, methodIndex)} name={metric.name} color="primary" />}
                                                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                                                 />
                                                             ))}

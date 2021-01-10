@@ -28,25 +28,29 @@ public class DiffTranslator {
         this.addOpList = new ArrayList<>();
     }
 
-    public void findIntervals(Version version, boolean isFirstVersion) {
+    public void findIntervals(Version version) {
 
         for (MyFile myFile : version.getFile()) {
             for (ConflictChunk chunk : myFile.getChunks()) {
                 int removeSizeBefore = 0;
-                while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size()-1 > removeSizeBefore) {
+                int addSizeBefore = 0;
+                while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
                     removeSizeBefore++;
-                }
 
-                int BeginChunk = chunk.getBegin().getLineNumber() - removeSizeBefore;
-                int EndChunk = chunk.getEnd().getLineNumber() - removeSizeBefore;
-                if (isFirstVersion) {
-                    chunk.getChunkVersion1().setLineBegin(BeginChunk);
-                    chunk.getChunkVersion1().setLineEnd(EndChunk);
-                } else {
-                    chunk.getChunkVersion2().setLineBegin(BeginChunk);
-                    chunk.getChunkVersion2().setLineEnd(EndChunk);
                 }
+                while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
+                    addSizeBefore++;
+                }
+                int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - addSizeBefore;
+                int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - addSizeBefore;
+                chunk.getChunkVersion1().setLineBegin(BeginChunk);
+                chunk.getChunkVersion1().setLineEnd(EndChunk);
 
+                BeginChunk = (chunk.getSeparator().getLineNumber() + 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+                EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+                chunk.getChunkVersion2().setLineBegin(BeginChunk);
+                chunk.getChunkVersion2().setLineEnd(EndChunk);
+                
             }
         }
 

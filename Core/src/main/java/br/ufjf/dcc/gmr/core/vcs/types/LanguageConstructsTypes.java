@@ -33,6 +33,7 @@ public class LanguageConstructsTypes {
     public static final String ENUM_VALUE = "EnumValue";
     public static final String FIELD = "Field"; 
     public static final String FOR_STATEMENT = "ForStatement"; 
+    public static final String FINALLY = "Finally";
     public static final String IF_STATEMENT = "IfStatement";
     public static final String IMPORT_DECLARATION = "Import"; 
     public static final String INTERFACE_DECLARATION = "InterfaceDeclaration";
@@ -52,6 +53,7 @@ public class LanguageConstructsTypes {
     public static final String TRY_STATEMENT = "TryStatement"; 
     public static final String VARIABLE = "Variable"; 
     public static final String WHILE_STATEMENT = "WhileStatement"; 
+    public static final String YELD_STATEMENT = "YeldStatement"; //Python exclusive
     public static final String OTHER = "Other";
     public static final String ERROR = "Error"; 
 }
