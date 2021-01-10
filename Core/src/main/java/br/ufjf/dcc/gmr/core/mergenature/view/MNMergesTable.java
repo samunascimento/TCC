@@ -1,0 +1,112 @@
+package br.ufjf.dcc.gmr.core.mergenature.view;
+
+import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
+import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ * The frame to the GUI of Merge Nature's algorithm
+ *
+ * @author João Pedro Lima
+ * @since 07-01-2021
+ */
+public class MNMergesTable extends JPanel {
+
+    private MNProjectPanel projectPanel;
+    private List<Merge> merges;
+    private JTable table;
+
+    public MNMergesTable(MNProjectPanel projectPanel, List<Merge> merges) {
+        this.projectPanel = projectPanel;
+        this.merges = merges;
+        set();
+    }
+
+    private void set() {
+        this.setOpaque(false);
+        this.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        table = new JTable(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Hash", "Conflict Regions", "Conflict"
+                }
+        ) {
+            Class[] types = new Class[]{
+                String.class, Integer.class, Boolean.class
+            };
+            boolean[] canEdit = new boolean[]{
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        setDefaultModel();
+        table.getColumnModel().getColumn(2).setPreferredWidth(30);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() > 1) {
+                    projectPanel.upadateMergePanel(merges.get(table.getSelectedRow()));
+                }
+            }
+        });
+        table.setBackground(MNFrame.PRIMARY_COLOR);
+        table.setForeground(MNFrame.SECUNDARY_COLOR);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        JScrollPane scroll = new JScrollPane(table);
+        this.add(scroll, gbc);
+
+        JButton setFilter = new JButton("Set Filter");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        this.add(setFilter, gbc);
+
+        JButton resetFilter = new JButton("Reset Filter");
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        this.add(resetFilter, gbc);
+    }
+
+    private void setDefaultModel() {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        for (Merge merge : merges) {
+            model.addRow(new Object[]{
+                merge.getMerge().getShortCommitHash(),
+                merge.getNumberOfConflictRegions(),
+                merge.getMergeType() == MergeType.CONFLICTED_MERGE
+            });
+        }
+    }
+
+}

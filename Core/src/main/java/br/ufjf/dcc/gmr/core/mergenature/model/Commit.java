@@ -103,6 +103,10 @@ public class Commit {
     public String getCommitHash() {
         return commitHash;
     }
+    
+    public String getShortCommitHash() {
+        return commitHash.substring(0, 7);
+    }
 
     public void setCommitHash(String commitHash) {
         this.commitHash = commitHash;
@@ -138,6 +142,17 @@ public class Commit {
 
     public void setCommitterDate(Date committerDate) {
         this.committerDate = committerDate;
+    }
+    
+    
+    @Override
+    public String toString(){
+        return "Title: " + message + "\n"
+                + "Hash: " + commitHash + "\n"
+                + "Author: " + author + "\n"
+                + "Author Date: " + authorDate + "\n"
+                + "Committer: " + committer + "\n"
+                + "Committer Date: " + committerDate;
     }
 
 }

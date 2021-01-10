@@ -99,8 +99,7 @@ public class MergeNatureTools {
     }
 
     public static boolean checkIfIsEnd(String line) {
-        String[] auxStringArray = line.split(" ");
-        if (line.startsWith(">>>>>>> ") && auxStringArray[0].equals(">>>>>>>"))  {
+        if (line.startsWith(">>>>>>> "))  {
             return true;
         } else {
             return false;

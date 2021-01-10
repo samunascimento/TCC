@@ -27,7 +27,6 @@ public class ListUtils {
     public static List<String> getSubList(List<String> content, int begin, int end) {
 
         List<String> result = new ArrayList<>();
-
         for (int i = begin; i <= end; i++) {
             result.add(content.get(i));
         }
@@ -67,8 +66,8 @@ public class ListUtils {
         }
         return raw;
     }
-    
-       public static List<String> readFile(String filePath) {
+
+    public static List<String> readFile(String filePath) {
 
         List<String> content = new ArrayList<>();
         String linha;
@@ -88,6 +87,5 @@ public class ListUtils {
 
         return content;
     }
-       
 
 }
