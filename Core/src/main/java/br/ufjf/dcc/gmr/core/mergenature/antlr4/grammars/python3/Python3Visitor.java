@@ -269,11 +269,23 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_stmt(Python3Parser.If_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#while_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_(Python3Parser.While_Context ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#while_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitWhile_stmt(Python3Parser.While_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Python3Parser#for_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_(Python3Parser.For_Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#for_stmt}.
 	 * @param ctx the parse tree
@@ -286,6 +298,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTry_stmt(Python3Parser.Try_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Python3Parser#with_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWith_(Python3Parser.With_Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#with_stmt}.
 	 * @param ctx the parse tree

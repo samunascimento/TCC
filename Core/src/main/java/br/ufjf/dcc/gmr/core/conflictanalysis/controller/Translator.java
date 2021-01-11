@@ -673,9 +673,11 @@ public class Translator {
             //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("For_stmt")) {
+            if (list.contains("For_stmt")
+                || list.contains("For_")    ) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("For_stmt");
+                list.remove("For_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -762,9 +764,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("While_stmt")) {
+            if (list.contains("While_stmt")
+                    || list.contains("While_")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
                 list.remove("While_stmt");
+                list.remove("While_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -532,6 +532,18 @@ public class Python3BaseListener implements Python3Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhile_(Python3Parser.While_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhile_(Python3Parser.While_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterWhile_stmt(Python3Parser.While_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -539,6 +551,18 @@ public class Python3BaseListener implements Python3Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitWhile_stmt(Python3Parser.While_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFor_(Python3Parser.For_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor_(Python3Parser.For_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -563,6 +587,18 @@ public class Python3BaseListener implements Python3Listener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTry_stmt(Python3Parser.Try_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWith_(Python3Parser.With_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWith_(Python3Parser.With_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

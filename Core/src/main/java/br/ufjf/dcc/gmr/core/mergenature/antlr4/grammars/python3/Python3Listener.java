@@ -438,6 +438,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitIf_stmt(Python3Parser.If_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#while_}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_(Python3Parser.While_Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#while_}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_(Python3Parser.While_Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#while_stmt}.
 	 * @param ctx the parse tree
 	 */
@@ -447,6 +457,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWhile_stmt(Python3Parser.While_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Python3Parser#for_}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_(Python3Parser.For_Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#for_}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_(Python3Parser.For_Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#for_stmt}.
 	 * @param ctx the parse tree
@@ -467,6 +487,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTry_stmt(Python3Parser.Try_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Python3Parser#with_}.
+	 * @param ctx the parse tree
+	 */
+	void enterWith_(Python3Parser.With_Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#with_}.
+	 * @param ctx the parse tree
+	 */
+	void exitWith_(Python3Parser.With_Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#with_stmt}.
 	 * @param ctx the parse tree

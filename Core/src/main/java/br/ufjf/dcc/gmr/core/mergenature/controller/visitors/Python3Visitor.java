@@ -565,4 +565,20 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         return super.visitIf_(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Object visitWith_(Python3Parser.With_Context ctx) {
+        return super.visitWith_(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFor_(Python3Parser.For_Context ctx) {
+        return super.visitFor_(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitWhile_(Python3Parser.While_Context ctx) {
+        return super.visitWhile_(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }
