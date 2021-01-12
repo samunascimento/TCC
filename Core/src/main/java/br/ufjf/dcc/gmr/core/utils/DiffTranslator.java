@@ -34,13 +34,21 @@ public class DiffTranslator {
             for (ConflictChunk chunk : myFile.getChunks()) {
                 int removeSizeBefore = 0;
                 int addSizeBefore = 0;
-                while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
-                    removeSizeBefore++;
+
+                if (removeOpList.size() > 0) {
+                    while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
+                        removeSizeBefore++;
+
+                    }
 
                 }
-                while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
-                    addSizeBefore++;
+
+                if (addOpList.size() > 0) {
+                    while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
+                        addSizeBefore++;
+                    }
                 }
+
                 int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - addSizeBefore;
                 int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - addSizeBefore;
                 chunk.getChunkVersion1().setLineBegin(BeginChunk);
@@ -50,7 +58,7 @@ public class DiffTranslator {
                 EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
                 chunk.getChunkVersion2().setLineBegin(BeginChunk);
                 chunk.getChunkVersion2().setLineEnd(EndChunk);
-                
+
             }
         }
 
