@@ -1,4 +1,5 @@
 import numpy as np  #Import(V)
+from enum import Enum  
 
 def funTeste(a): #functiondefinition
     a=a**2
@@ -13,6 +14,12 @@ class Testeclasse: #class
     i = 12345 #variable
     def f(self):
         return 'hello world'
+        
+class Animal(Enum):	#enum ---- Verificar
+    ant = 1
+    bee = 2
+    cat = 3
+    dog = 4        
 
 if __name__ == '__main__': #maindeclaration
     a= 40
@@ -21,6 +28,8 @@ if __name__ == '__main__': #maindeclaration
     while(True):    #whilecall (V)
         print("test")
         break #break (V)
+    
+    x = float(1) #cast    
 
     for x in range(1,2): #for (V)
         continue #continue (V)
@@ -34,6 +43,12 @@ if __name__ == '__main__': #maindeclaration
         print("Something went wrong")
     finally:#Finally(V)
         print("The 'try except' is finished")
+    
+    
+    try:
+    	open('database.sqlite')
+    except IOError:
+    	raise RuntimeError from None    #Throw(V)
 
 
 
@@ -45,16 +60,16 @@ if __name__ == '__main__': #maindeclaration
      ASSERT_STATEMENT
      ASSIGNMENT    // No teste 
      BREAK_STATEMENT  // No teste // pegando
-     CAST_EXPRESSION 
+     CAST_EXPRESSION // No teste
      CATCH_CLAUSE  // No teste // pegando
      CLASS_DECLARATION  // No teste 
      CLASS_SIGNATURE  // No teste 
      COMMENT // No teste 
      CONTINUE_STATEMENT  // No teste // pegando
      DELETE_STATEMENT // No teste // pegando
-     ENUM_DECLARATION 
-     ENUM_SIGNATURE 
-     ENUM_VALUE 
+     ENUM_DECLARATION // No teste
+     ENUM_SIGNATURE // No teste
+     ENUM_VALUE // No teste
      FIELD 
      FOR_STATEMENT  // No teste // pegando
      FINALLY  // No teste // pegando
@@ -72,9 +87,9 @@ if __name__ == '__main__': #maindeclaration
      RETURN_STATEMENT  // No teste // pegando
      STATIC_INITIALIZER 
      SYNCHRONIZED_STATEMENT 
-     THROW_STATEMENT 
+     THROW_STATEMENT // No teste // pegando
      TRY_STATEMENT  // No teste // pegando
-     VARIABLE 
+     VARIABLE  // No teste
      WHILE_STATEMENT // No teste // pegando
      YELD_STATEMENT  // No teste // pegando
 

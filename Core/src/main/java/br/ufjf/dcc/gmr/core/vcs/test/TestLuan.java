@@ -20,15 +20,15 @@ public class TestLuan {
 
         File projectPath = new File("resources/test.py");
 
-        ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),28, 34);
+        ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),48,51);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();
 
-        for (SyntaxStructure outmostedAnalysi : teste.getOutmostedNormalAnalysis()) {
-            toTranslate.add(outmostedAnalysi.getStructureType());
+        for (SyntaxStructure outmostedAnalysis : teste.getOutmostedNormalAnalysis()) {
+            toTranslate.add(outmostedAnalysis.getStructureType());
 
-            System.out.println(outmostedAnalysi.getForm());
+            System.out.println(outmostedAnalysis.getForm());
             System.out.println("--------------------- \n");
         }
 
