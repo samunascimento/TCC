@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,25 +11,26 @@ import java.util.List;
  * @since 09-11-2020
  */
 public class Conflict {
-    
+
     private int id;
     private String parent1FilePath;
     private String parent2FilePath;
     private String ancestorFilePath;
     private List<ConflictRegion> conflictRegions;
     private ConflictType conflictType;
-    private Merge merge;
-    
+    private transient Merge merge;
+
     /**
      * Normal constructor
-     * @param id                    Id for databases
-     * @param parent1FilePath       The name of the file in parent 1 commit
-     * @param parent2FilePath       The name of the file in parent 2 commit
-     * @param ancestorFilePath      The name of the file in ancestor commit
-     * @param conflictRegions       A list that contains all conflict regions
-     *                              in a file, can be empty
-     * @param conflictType          The type of conflict
-     * @param merge                 The merge that the conflict belongs
+     *
+     * @param id Id for databases
+     * @param parent1FilePath The name of the file in parent 1 commit
+     * @param parent2FilePath The name of the file in parent 2 commit
+     * @param ancestorFilePath The name of the file in ancestor commit
+     * @param conflictRegions A list that contains all conflict regions in a
+     * file, can be empty
+     * @param conflictType The type of conflict
+     * @param merge The merge that the conflict belongs
      */
     public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, Merge merge) {
         this.id = id;
@@ -39,7 +41,7 @@ public class Conflict {
         this.conflictType = conflictType;
         this.merge = merge;
     }
-    
+
     public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
@@ -52,7 +54,7 @@ public class Conflict {
     public Conflict() {
         this.conflictRegions = new ArrayList<>();
     }
-    
+
     public int getId() {
         return id;
     }
@@ -65,6 +67,10 @@ public class Conflict {
         return parent1FilePath;
     }
 
+    public String getParent1FileName() {
+        return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1];
+    }
+
     public void setParent1FilePath(String parent1FilePath) {
         this.parent1FilePath = parent1FilePath;
     }
@@ -73,12 +79,20 @@ public class Conflict {
         return parent2FilePath;
     }
 
+    public String getParent2FileName() {
+        return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1];
+    }
+
     public void setParent2FilePath(String parent2FilePath) {
         this.parent2FilePath = parent2FilePath;
     }
 
     public String getAncestorFilePath() {
         return ancestorFilePath;
+    }
+
+    public String getAncestorFileName() {
+        return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1];
     }
 
     public void setAncestorFilePath(String ancestorFilePath) {
@@ -108,14 +122,13 @@ public class Conflict {
     public void setMerge(Merge merge) {
         this.merge = merge;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "ID: " + id
-                + "\nPARENT 1 FILE PATH: " + parent1FilePath
-                + "\nPARENT 2 FILE PATH: " + parent2FilePath
-                + "\nANCESTOR FILE PATH: " + ancestorFilePath
-                + "\nCONFLICT TYPE: " + conflictType.toString();
+        return "Parent 1's file: " + parent1FilePath
+                + "\nParent 2's file: " + parent2FilePath
+                + "\nAncestor's file: " + ancestorFilePath
+                + "\nConflict Type: " + conflictType.toString()
+                + "\nConflict Regions: " + conflictRegions.size();
     }
 }

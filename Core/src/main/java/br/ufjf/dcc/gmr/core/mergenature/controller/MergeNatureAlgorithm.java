@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.JProgressBar;
 
 /**
  * The main algorithm of merge nature, its function is catch all merges, all
@@ -34,14 +35,23 @@ import java.util.List;
  */
 public class MergeNatureAlgorithm {
 
-    String repositoryLocation;
-    int contextLines;
-    Project project;
+    private String repositoryLocation;
+    private int contextLines;
+    private Project project;
+    private JProgressBar progressBar;
 
     public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
         this.project = null;
+        this.progressBar = null;
+    }
+
+    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, JProgressBar progressBar) {
+        this.repositoryLocation = repositoryLocation;
+        this.contextLines = contextLines;
+        this.project = null;
+        this.progressBar = progressBar;
     }
 
     public void startAlgorithm() {
@@ -55,7 +65,7 @@ public class MergeNatureAlgorithm {
     public Project getProject() {
         return project;
     }
-    
+
     private Project projectLayer() throws IOException {
 
         Project project = new Project();
@@ -78,11 +88,22 @@ public class MergeNatureAlgorithm {
         }
         MergeNatureTools.prepareAnalysis(repositoryPath);
         List<String> log = Git.giveAllMerges(repositoryPath);
-        System.out.println(log.size());
-        int i = 0;
+        int numberOfMerges = log.size();
+        int status = 0;
+        if (this.progressBar != null) {
+            this.progressBar.setMinimum(1);
+            progressBar.setIndeterminate(false);
+            this.progressBar.setMaximum(numberOfMerges);
+        }
+        System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : Git.giveAllMerges(repositoryPath)) {
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            System.out.println(++i);
+            if (this.progressBar != null) {
+                this.progressBar.setValue(++status);
+                System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
+            } else {
+                System.out.println("[" + project.getName() + "] " + ++status + File.separator + numberOfMerges + " merges processed...");
+            }
         }
 
         return project;
@@ -231,14 +252,14 @@ public class MergeNatureAlgorithm {
                     conflictRegion.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
                     conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);
                 } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
-                    conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n\n" + conflictRegion.getRawConflict());
+                    conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getRawConflict());
                     conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
                 } else {
                     if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
                         conflictRegion.setSolutionText("DIFF PROBLEM!");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
                     } else {
-                        conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine + 1, solutionFinalLine - 1)));
+                        conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine -1, solutionFinalLine - 1)));
                         conflictRegion = developerDecisionLayer(conflictRegion);
                     }
                 }

@@ -243,7 +243,7 @@ public class MainFrame extends JFrame {
         if (check == JFileChooser.APPROVE_OPTION) {
             String[] auxArray = jfc.getSelectedFile().getPath().split("/");
             try {
-                this.addPanelWithX(new MergePanel(auxArray[auxArray.length - 1], GSONClass.read(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
+                this.addPanelWithX(new MergePanel(auxArray[auxArray.length - 1], GSONClass.readMergeEvent(jfc.getSelectedFile().getPath())), auxArray[auxArray.length - 1]);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
             }

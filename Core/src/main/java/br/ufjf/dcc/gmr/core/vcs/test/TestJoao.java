@@ -15,10 +15,10 @@ public class TestJoao {
 
     public static void main(String[] args) throws Exception {
 
-        //MainFrame frame = new MainFrame();
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm("/home/joao_lima/Git/Cobaia/", 1);
+        MainFrame frame = new MainFrame();
+        /*MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm("/home/joao_lima/Git/Cobaia/", 1);
         algorithm.startAlgorithm();
-        System.out.println("");
+        System.out.println("");*/
         
 
     }

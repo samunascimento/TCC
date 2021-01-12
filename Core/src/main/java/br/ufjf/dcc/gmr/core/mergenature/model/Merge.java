@@ -12,7 +12,7 @@ import java.util.List;
 public class Merge {
     
     private int id;
-    private Project project;
+    private transient Project project;
     private Commit merge;
     private List<Commit> parents;
     private Commit ancestor;
@@ -60,6 +60,20 @@ public class Merge {
     public Merge() {
         this.parents = new ArrayList<>();
         this.conflicts = new ArrayList<>();
+    }
+    
+    public int getNumberOfConflictRegions() {
+        if (mergeType == MergeType.CONFLICTED_MERGE) {
+            int i = 0;
+            for (Conflict conflict : this.getConflicts()) {
+                if (conflict.getConflictRegions() != null) {
+                    i += conflict.getConflictRegions().size();
+                }
+            }
+            return i;
+        } else {
+            return 0;
+        }
     }
 
     public int getId() {

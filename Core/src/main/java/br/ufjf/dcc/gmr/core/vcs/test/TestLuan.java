@@ -18,9 +18,9 @@ public class TestLuan {
 
     public static void main(String[] args) throws IOException {
 
-        File projectPath = new File("resources/teste.py");
+        File projectPath = new File("resources/test.py");
 
-        ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),33, 34);
+        ANTLR4Results teste = ConflictAnalysisTools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),28, 34);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();
