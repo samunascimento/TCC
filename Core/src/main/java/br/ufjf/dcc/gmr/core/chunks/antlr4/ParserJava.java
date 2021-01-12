@@ -284,6 +284,8 @@ public class ParserJava {
 //
 //            }
 //        }
+        List<ConflictChunk> conflictChunkList = new ArrayList<>();
+
         for (int y = 0; y < version.getFile().size(); y++) {
             DiffTranslator diffTranslator = new DiffTranslator();
             diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
@@ -295,12 +297,12 @@ public class ParserJava {
                 chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs((String) parent2.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion2()));
 
             }
+            conflictChunkList.addAll(version.getFile().get(y).getChunks());
 
         }
-
-        Main jung = new Main(parent1, parent2, version.getFile().get(0).getChunks(), parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
+        
+        Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
         jung.main(args);
-
         File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
 
         try {
