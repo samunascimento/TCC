@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.DiffAnalyze;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -27,14 +26,8 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
-import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import static org.apache.commons.io.FilenameUtils.normalize;
 
 public class ParserJava {
 
