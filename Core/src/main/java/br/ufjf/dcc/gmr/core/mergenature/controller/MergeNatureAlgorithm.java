@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ReturnNewLineNumber;
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
@@ -173,6 +172,7 @@ public class MergeNatureAlgorithm {
     }
 
     private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) throws IOException {
+        String[] auxArray;
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
         String auxString = "";
@@ -202,6 +202,11 @@ public class MergeNatureAlgorithm {
                 while (!MergeNatureTools.checkIfIsEnd(fileContent.get(i))) {
                     auxString = auxString + "\n" + fileContent.get(i);
                     i++;
+                }
+                if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
+                    auxArray = fileContent.get(i).split(":");
+                    conflict.setParent2FilePath(auxArray[auxArray.length - 1]);
+                    conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
                 }
                 conflictRegion.setV2Text(auxString.replaceFirst("\n", ""));
                 auxString = "";
@@ -236,12 +241,12 @@ public class MergeNatureAlgorithm {
             int solutionFirstLine;
             int solutionFinalLine;
             try {
-                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getEndLine() + 1);
+                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
+                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = conflictRegion.getConflict().getParent2FilePath();
-                    solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit, parentFilePath, conflictRegion.getEndLine() + 1);
+                    solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
+                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
@@ -259,7 +264,7 @@ public class MergeNatureAlgorithm {
                         conflictRegion.setSolutionText("DIFF PROBLEM!");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
                     } else {
-                        conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine -1, solutionFinalLine - 1)));
+                        conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine - 1, solutionFinalLine - 1)));
                         conflictRegion = developerDecisionLayer(conflictRegion);
                     }
                 }
@@ -306,7 +311,7 @@ public class MergeNatureAlgorithm {
             int conflictV1Line = conflictRegion.getBeginLine() + 1;
             int originalV1FirstLine;
             try {
-                originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent1Commit, parent1FilePath, conflictV1Line);
+                originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent1Commit + ":" + parent1FilePath, parent1FilePath, conflictV1Line);
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
@@ -324,7 +329,7 @@ public class MergeNatureAlgorithm {
             int conflictV2Line = conflictRegion.getSeparatorLine() + 1;
             int originalV2FirstLine;
             try {
-                originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent2Commit, parent2FilePath, conflictV2Line);
+                originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent2Commit + ":" + parent2FilePath, parent2FilePath, conflictV2Line);
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
@@ -342,8 +347,8 @@ public class MergeNatureAlgorithm {
 
     private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException {
         String parent1FilePath = conflict.getParent1FilePath();
-        ANTLR4Results parent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflict.getMerge().getParents().get(0).getCommitHash(), repositoryPath);
-        if (parent1Results == null) {
+        ANTLR4Results rawParent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflict.getMerge().getParents().get(0).getCommitHash(), repositoryPath);
+        if (rawParent1Results == null) {
             for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                 conflictRegion.setStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
                 conflictRegion.setOutmostedStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
@@ -351,16 +356,18 @@ public class MergeNatureAlgorithm {
             return conflict;
         } else {
             String parent2FilePath = conflict.getParent2FilePath();
-            ANTLR4Results parent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
-            if (parent2Results == null) {
+            ANTLR4Results rawParent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
+            if (rawParent2Results == null) {
                 for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                     conflictRegion.setStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
                     conflictRegion.setOutmostedStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
                 }
                 return conflict;
             } else {
+                ANTLR4Results parent1Results;
                 List<String> v1Structures;
                 List<String> v1OutmostedStructures;
+                ANTLR4Results parent2Results;
                 List<String> v2Structures;
                 List<String> v2OutmostedStructures;
                 for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
@@ -376,7 +383,7 @@ public class MergeNatureAlgorithm {
                             v1Structures.add("Blank");
                             v1OutmostedStructures.add("Blank");
                         } else {
-                            parent1Results = ANTLR4Tools.fillOutmost(parent1Results, conflictRegion.getOriginalV1FirstLine(), conflictRegion.getOriginalV1FinalLine());
+                            parent1Results = ANTLR4Tools.filterAndGetOutmost(rawParent1Results, conflictRegion.getOriginalV1FirstLine(), conflictRegion.getOriginalV1FinalLine());
                             v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath);
                             v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath);
                         }
@@ -384,7 +391,7 @@ public class MergeNatureAlgorithm {
                             v2Structures.add("Blank");
                             v2OutmostedStructures.add("Blank");
                         } else {
-                            parent2Results = ANTLR4Tools.fillOutmost(parent2Results, conflictRegion.getOriginalV2FirstLine(), conflictRegion.getOriginalV2FinalLine());
+                            parent2Results = ANTLR4Tools.filterAndGetOutmost(rawParent2Results, conflictRegion.getOriginalV2FirstLine(), conflictRegion.getOriginalV2FinalLine());
                             v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath);
                             v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath);
                         }
@@ -401,7 +408,7 @@ public class MergeNatureAlgorithm {
                         Collections.sort(v1Structures);
                         Collections.sort(v1OutmostedStructures);
                         conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures));
-                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1OutmostedStructures));
+                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures));
                     }
                 }
             }

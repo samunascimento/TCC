@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 
+import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
@@ -8,8 +9,6 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Parser;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.JavaVisitor;
@@ -44,10 +43,10 @@ public class ANTLR4Tools {
             JavaVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new JavaVisitor(true);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new JavaVisitor(false);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -71,7 +70,7 @@ public class ANTLR4Tools {
                 visitor = new Java9Visitor(false);
             }
             visitor.visit(tree);
-            comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -89,10 +88,10 @@ public class ANTLR4Tools {
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new Java9Visitor(false);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, false);
+                comments = getCommentsFromChannel2(tokens, false);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -116,7 +115,7 @@ public class ANTLR4Tools {
                 visitor = new CPPVisitor(false);
             }
             visitor.visit(tree);
-            comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -134,10 +133,10 @@ public class ANTLR4Tools {
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new CPPVisitor(false);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -161,7 +160,7 @@ public class ANTLR4Tools {
                 visitor = new Python3Visitor(false);
             }
             visitor.visit(tree);
-            comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -179,10 +178,10 @@ public class ANTLR4Tools {
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new Python3Visitor(false);
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -238,7 +237,7 @@ public class ANTLR4Tools {
                 }
             }
             isOutmost = true;
-            outmostedNormalAnalysis = getOutmostStructures(results.getNormalAnalysis(), start, stop);
+            outmostedNormalAnalysis = getOutmostStructures(normalAnalysis);
             for (SyntaxStructure comment : commentAnalysis) {
                 isOutmost = true;
                 for (SyntaxStructure ss : outmostedNormalAnalysis) {
@@ -262,7 +261,6 @@ public class ANTLR4Tools {
     public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning) throws IOException {
         List<SyntaxStructure> result = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
-            Token token = tokens.get(index);
             List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
             for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
                 if (hiddenTokensToLeft.get(i).getChannel() == 2) {
@@ -274,66 +272,67 @@ public class ANTLR4Tools {
         return result;
     }
 
-    public static ANTLR4Results fillOutmost(ANTLR4Results results, int beginLine, int endLine) {
-        List<SyntaxStructure> filteredComments = new ArrayList<>();
-        List<SyntaxStructure> outmostedFilteredComments = new ArrayList<>();
-        boolean isOutmost;
-        results.setOutmostedNormalAnalysis(getOutmostStructures(results.getNormalAnalysis(), beginLine, endLine));
-        for (SyntaxStructure ss : results.getCommentAnalysis()) {
-            if ((ss.getStartLine() >= beginLine && ss.getStartLine() <= endLine) || (ss.getStopLine() >= beginLine && ss.getStopLine() <= endLine)) {
-                filteredComments.add(ss);
+    public static ANTLR4Results filterAndGetOutmost(ANTLR4Results inputResults, int beginLine, int endLine) {
+
+        List<SyntaxStructure> normalAnalysis = new ArrayList<>();
+        List<SyntaxStructure> commentAnalysis = new ArrayList<>();
+        List<SyntaxStructure> outmostedNormalAnalysis = new ArrayList<>();
+        List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
+        boolean isOutmost = false;
+
+        for (SyntaxStructure ss : inputResults.normalAnalysis) {
+            if (ss.getStartLine() >= beginLine && ss.getStopLine() <= endLine) {
+                normalAnalysis.add(ss);
             }
         }
-        for (SyntaxStructure comment : filteredComments) {
+
+        outmostedNormalAnalysis = getOutmostStructures(new ArrayList<>(normalAnalysis));
+
+        for (SyntaxStructure ss : inputResults.commentAnalysis) {
+            if (ss.getStartLine() >= beginLine && ss.getStartLine() <= endLine || ss.getStopLine() >= beginLine && ss.getStopLine() <= endLine) {
+                commentAnalysis.add(ss);
+            }
+        }
+
+        for (SyntaxStructure comment : commentAnalysis) {
             isOutmost = true;
-            for (SyntaxStructure ss : outmostedFilteredComments) {
-                if (ss.getStartCharIndex() <= comment.getStartCharIndex() && ss.getStopCharIndex() >= comment.getStopCharIndex()) {
+            for (SyntaxStructure outmostedNormal : outmostedNormalAnalysis) {
+                if (comment.getStartCharIndex() >= outmostedNormal.getStartCharIndex() && comment.getStopCharIndex() <= outmostedNormal.getStopCharIndex()) {
                     isOutmost = false;
                     break;
                 }
             }
-            if (isOutmost) {
-                outmostedFilteredComments.add(comment);
+            if(isOutmost){
+                outmostedCommentAnalysis.add(comment);
             }
         }
-        results.setOutmostedCommentAnalysis(outmostedFilteredComments);
-        return results;
+
+        return new ANTLR4Results(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis);
     }
 
-    public static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList, int beginLine, int endLine) {
-        if ((beginLine < 1 || endLine < 1) || rawList == null) {
-            return null;
-        } else {
-            List<SyntaxStructure> list = new ArrayList();
-            SyntaxStructure auxStructure = null;
-            for (SyntaxStructure ss : rawList) {
-                if (!(ss.getStartLine() >= beginLine && ss.getStopLine() <= endLine)) {
-                    list.add(ss);
-                }
-            }
-            for (SyntaxStructure ssList : list) {
-                rawList.remove(ssList);
-            }
-            list.clear();
-            if (!rawList.isEmpty()) {
-                for (int i = 0; i < rawList.size(); i++) {
-                    for (int j = i + 1; j < rawList.size(); j++) {
-                        if ((rawList.get(i).getStartCharIndex() <= rawList.get(j).getStartCharIndex()
-                                && rawList.get(i).getStopCharIndex() >= rawList.get(j).getStopCharIndex())
-                                && !rawList.get(i).equals(rawList.get(j))) {
-                            list.add(rawList.get(j));
-                        }
-                        if (rawList.get(i).getStopCharIndex() < rawList.get(j).getStartCharIndex()) {
-                            break;
-                        }
+    public static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList) {
+        List<SyntaxStructure> result = rawList;
+        List<SyntaxStructure> toRemove = new ArrayList();
+        toRemove.clear();
+        if (!result.isEmpty()) {
+            for (int i = 0; i < result.size(); i++) {
+                for (int j = i + 1; j < result.size(); j++) {
+                    if ((result.get(i).getStartCharIndex() <= result.get(j).getStartCharIndex()
+                            && result.get(i).getStopCharIndex() >= result.get(j).getStopCharIndex())
+                            && !result.get(i).equals(result.get(j))) {
+                        toRemove.add(result.get(j));
+                    }
+                    if (result.get(i).getStopCharIndex() < result.get(j).getStartCharIndex()) {
+                        break;
                     }
                 }
             }
-            for (SyntaxStructure ssList : list) {
-                rawList.remove(ssList);
-            }
-            return rawList;
         }
+        for (SyntaxStructure ssList : toRemove) {
+            result.remove(ssList);
+        }
+        return result;
+
     }
 
     public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath) {
@@ -357,11 +356,11 @@ public class ANTLR4Tools {
             } else {
                 return null;
             }
-            if(rawList.get(0).getWarning()){
+            if (rawList.get(0).getWarning()) {
                 translatedList.add("WARNING!");
             }
         }
         return translatedList;
     }
-    
+
 }

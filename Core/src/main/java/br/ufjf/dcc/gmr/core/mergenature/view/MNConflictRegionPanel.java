@@ -2,14 +2,14 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 
 /**
@@ -90,9 +90,23 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridwidth = 2;
         this.add(structuresTextArea, gbc);
 
+        JRadioButton useOutmost = new JRadioButton("Show only outmost");
+        useOutmost.setBackground(MNFrame.PRIMARY_COLOR);
+        useOutmost.setForeground(MNFrame.SECUNDARY_COLOR);
+        useOutmost.addActionListener((ActionEvent evt) -> {
+            if (useOutmost.isSelected()) {
+                structuresTextArea.setText(region.getOutmostedStructures());
+            } else {
+                structuresTextArea.setText(region.getStructures());
+            }
+        });
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        this.add(useOutmost, gbc);
+
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
