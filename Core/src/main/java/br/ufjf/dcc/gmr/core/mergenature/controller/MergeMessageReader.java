@@ -184,7 +184,7 @@ public class MergeMessageReader {
         Conflict result = new Conflict();
         result.setConflictType(ConflictType.FILE_LOCATION);
         message = message + " ";
-        String[] auxStringArray = message.split("(file location): ");
+        String[] auxStringArray = message.split(": ");
         String auxString = auxStringArray[1].replaceAll(" added in ", " ").replaceAll(" inside a directory that was renamed in ", " ").replaceAll(", suggesting it should perhaps be moved to ", " ").replaceAll("\\. ", "");
         auxStringArray = auxString.split(" ");
         auxString = auxStringArray[0].split(File.separator)[auxStringArray[0].split(File.separator).length - 1];

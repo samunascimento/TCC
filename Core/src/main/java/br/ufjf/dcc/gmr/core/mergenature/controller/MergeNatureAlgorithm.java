@@ -96,7 +96,9 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : Git.giveAllMerges(repositoryPath)) {
-            project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            if (status == 6) {
+                project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            }
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -302,12 +304,12 @@ public class MergeNatureAlgorithm {
     }
 
     private ConflictRegion originalLinesLayer(ConflictRegion conflictRegion, String repositoryPath) throws IOException {
-
+        String parent1FilePath = conflictRegion.getConflict().getParent1FilePath();
+        String parent2FilePath = conflictRegion.getConflict().getParent2FilePath();
         if (conflictRegion.getBeginLine() + 1 == conflictRegion.getSeparatorLine()) {
             conflictRegion.setOriginalV1FirstLine(0);
         } else {
             String parent1Commit = conflictRegion.getConflict().getMerge().getParents().get(0).getCommitHash();
-            String parent1FilePath = conflictRegion.getConflict().getParent1FilePath();
             int conflictV1Line = conflictRegion.getBeginLine() + 1;
             int originalV1FirstLine;
             try {
@@ -325,11 +327,10 @@ public class MergeNatureAlgorithm {
             conflictRegion.setOriginalV2FirstLine(0);
         } else {
             String parent2Commit = conflictRegion.getConflict().getMerge().getParents().get(1).getCommitHash();
-            String parent2FilePath = conflictRegion.getConflict().getParent2FilePath();
             int conflictV2Line = conflictRegion.getSeparatorLine() + 1;
             int originalV2FirstLine;
             try {
-                originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent2Commit + ":" + parent2FilePath, parent2FilePath, conflictV2Line);
+                originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent2Commit + ":" + parent2FilePath, parent1FilePath, conflictV2Line);
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
