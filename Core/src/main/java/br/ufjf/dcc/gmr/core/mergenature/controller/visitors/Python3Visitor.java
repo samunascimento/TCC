@@ -525,8 +525,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         if (arglist != null) {
             List<Python3Parser.ArgumentContext> arguments = arglist.argument();
 
-            for (Python3Parser.ArgumentContext argument : arguments) {
-                System.out.println(argument.getText());
+            for (Python3Parser.ArgumentContext argument : arguments) {                
                 if (argument.getText().contains("Enum") || argument.getText().contains("IntEnum")) {
 
                     specialProcess(ctx, "Enum");
