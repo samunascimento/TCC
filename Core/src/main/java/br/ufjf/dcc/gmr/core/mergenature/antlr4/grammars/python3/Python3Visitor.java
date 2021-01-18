@@ -227,6 +227,18 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDotted_name(Python3Parser.Dotted_nameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#array}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray(Python3Parser.ArrayContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Python3Parser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment(Python3Parser.AssignmentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
