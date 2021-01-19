@@ -548,6 +548,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitExcept_clause(Python3Parser.Except_clauseContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#finally_clause}.
+	 * @param ctx the parse tree
+	 */
+	void enterFinally_clause(Python3Parser.Finally_clauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#finally_clause}.
+	 * @param ctx the parse tree
+	 */
+	void exitFinally_clause(Python3Parser.Finally_clauseContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#suite}.
 	 * @param ctx the parse tree
 	 */

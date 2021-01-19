@@ -622,4 +622,10 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         return super.visitChildren(ctx);
     }
 
+    @Override
+    public Object visitFinally_clause(Python3Parser.Finally_clauseContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx); 
+    }
+    
 }

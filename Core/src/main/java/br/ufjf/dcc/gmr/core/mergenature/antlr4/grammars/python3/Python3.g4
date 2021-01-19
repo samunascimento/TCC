@@ -244,8 +244,8 @@ for_stmt: for_ exprlist 'in' testlist ':' suite ('else' ':' suite)?;
 try_stmt: ('try' ':' suite
            ((except_clause ':' suite)+
             ('else' ':' suite)?
-            ('finally' ':' suite)? |
-           'finally' ':' suite));
+            (finally_clause ':' suite)? |
+           finally_clause':' suite));
 //------------------------------------------------------------------------------
 
 //With++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -256,6 +256,7 @@ with_item: test ('as' expr)?;
 
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
+finally_clause: 'finally';
 suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
 
 //Logical tests ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
