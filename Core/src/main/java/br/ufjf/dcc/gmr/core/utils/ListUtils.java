@@ -16,11 +16,11 @@ public class ListUtils {
         if (text == null) {
             return null;
         } else {
-            String result = "";
+            StringBuilder result = new StringBuilder("");
             for (String line : text) {
-                result = result + "\n" + line;
+                result.append("\n").append(line);
             }
-            return result.replaceFirst("\n", "");
+            return result.toString().replaceFirst("\n", "");
         }
     }
 

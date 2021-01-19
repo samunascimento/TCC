@@ -1007,8 +1007,8 @@ public class Git {
         }
         return cliE.getOutput();
     }
-    
-    public static List<String> getFileContentFromCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException{
+
+    public static List<String> getFileContentFromCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException, FileNotExistInCommitException {
         CLIExecution cliE;
         try {
             cliE = CLIExecute.execute("git show " + commit + ":" + filePathProjectAsRoot, repositoryPath);
@@ -1021,12 +1021,26 @@ public class Git {
                     throw new IOException("Commit do not exist in this repository!");
                 }
                 if (string.contains("fatal: Path")) {
-                    throw new IOException("This file do not exist in this commit!");
+                    throw new FileNotExistInCommitException(commit, filePathProjectAsRoot, repositoryPath);
                 }
             }
             throw new IOException("Unknow error!\n" + ListUtils.getTextListStringToString(cliE.getError()));
         }
         return cliE.getOutput();
+    }
+
+    public static boolean fileExistInCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException {
+        try {
+            if (getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath).isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (IOException ex) {
+            throw ex;
+        } catch (FileNotExistInCommitException ex) {
+            return false;
+        }
     }
 
     /**
@@ -1125,7 +1139,7 @@ public class Git {
                 }
             }
         }
-        if(cliE.getOutput().isEmpty()){
+        if (cliE.getOutput().isEmpty()) {
             return "No ancestor";
         }
         return cliE.getOutput().get(0);
@@ -1348,9 +1362,9 @@ public class Git {
         //System.out.println("\""+fileSource+"\"");
         //String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
         String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
-        
+
         CLIExecution execution = CLIExecute.execute(command, directory);
-        
+
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
@@ -1369,21 +1383,21 @@ public class Git {
         return execution.getOutput();
 
     }
-    
+
     public static List<String> fileDiffExample(String initialFile, String finalFile, String repository) throws IOException {
-        
+
         List<String> result = new ArrayList<>();
         //String [] command;
         //command = {"git", "diff", ,"\"" + initialFile + "\"", "\""+finalFile+"\""};
         String command = "git" + " diff " + initialFile + " " + finalFile;
         CLIExecution cmdOutput = CLIExecute.execute(command, repository);
         //CMDOutput cmdOutput = CMD.cmdArray(repository, command);
-        
+
         if (cmdOutput.getError().isEmpty()) {
 
             for (String line : cmdOutput.getOutput()) {
                 result.add(line);
-                
+
             }
 
             return result;
@@ -1393,6 +1407,7 @@ public class Git {
         }
 
     }
+
     /**
      * This method receive two files and returns the difference between them,
      * using the "name-status" command, and returns the output.

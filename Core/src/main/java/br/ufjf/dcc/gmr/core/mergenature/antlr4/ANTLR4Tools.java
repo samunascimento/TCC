@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 
+import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
@@ -18,6 +19,8 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -57,12 +60,22 @@ public class ANTLR4Tools {
 
     public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
         if (filePathProjectAsRoot.endsWith(".java")) {
-            String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            String fileContent;
+            try {
+                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            } catch (FileNotExistInCommitException ex) {
+                throw new IOException(ex);
+            }
             List<SyntaxStructure> comments;
             Java9Lexer lexer = new Java9Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
-            ParseTree tree = parser.compilationUnit();
+            ParseTree tree = null;
+            try {
+                tree = parser.compilationUnit();
+            } catch (Exception ex) {
+                System.out.println("");
+            }
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
@@ -102,7 +115,12 @@ public class ANTLR4Tools {
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
         if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
-            String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            String fileContent;
+            try {
+                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            } catch (FileNotExistInCommitException ex) {
+                throw new IOException(ex);
+            }
             List<SyntaxStructure> comments;
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -147,7 +165,12 @@ public class ANTLR4Tools {
 
     public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
         if (filePathProjectAsRoot.endsWith(".py")) {
-            String fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            String fileContent;
+            try {
+                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            } catch (FileNotExistInCommitException ex) {
+                throw new IOException(ex);
+            }
             List<SyntaxStructure> comments;
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -302,7 +325,7 @@ public class ANTLR4Tools {
                     break;
                 }
             }
-            if(isOutmost){
+            if (isOutmost) {
                 outmostedCommentAnalysis.add(comment);
             }
         }

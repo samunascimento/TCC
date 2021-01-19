@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
+import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -96,9 +97,7 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : Git.giveAllMerges(repositoryPath)) {
-            if (status == 6) {
-                project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            }
+            project.addMerge(mergeLayer(project, logLine, repositoryPath));
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -145,14 +144,12 @@ public class MergeNatureAlgorithm {
                         merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
                     }
                 }
-                Git.reset(repositoryPath, true, false, false, null);
+                MergeNatureTools.prepareAnalysis(repositoryPath);
             } else {
                 merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE);
             }
         }
-
         return merge;
-
     }
 
     private Conflict conflictLayer(Merge merge, String conflictMessage, String repositoryPath) throws IOException {
@@ -207,8 +204,10 @@ public class MergeNatureAlgorithm {
                 }
                 if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
-                    conflict.setParent2FilePath(auxArray[auxArray.length - 1]);
-                    conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
+                    if (Git.fileExistInCommit(conflict.getMerge().getParents().get(1).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
+                        conflict.setParent2FilePath(auxArray[auxArray.length - 1]);
+                        conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
+                    }
                 }
                 conflictRegion.setV2Text(auxString.replaceFirst("\n", ""));
                 auxString = "";
@@ -270,7 +269,7 @@ public class MergeNatureAlgorithm {
                         conflictRegion = developerDecisionLayer(conflictRegion);
                     }
                 }
-            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
+            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber | FileNotExistInCommitException ex) {
                 throw new IOException(ex);
             }
         }
@@ -319,7 +318,6 @@ public class MergeNatureAlgorithm {
             }
             conflictRegion.setOriginalV1FirstLine(originalV1FirstLine);
         }
-
         if (conflictRegion.getOriginalV1FirstLine() < 0) {
             conflictRegion.setOriginalV1FirstLine(-1);
             conflictRegion.setOriginalV2FirstLine(-1);
@@ -334,7 +332,7 @@ public class MergeNatureAlgorithm {
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
-            if (conflictRegion.getOriginalV2FirstLine() < 0) {
+            if (originalV2FirstLine < 0) {
                 conflictRegion.setOriginalV1FirstLine(-1);
                 conflictRegion.setOriginalV2FirstLine(-1);
             } else {
@@ -347,35 +345,37 @@ public class MergeNatureAlgorithm {
     }
 
     private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException {
-        String parent1FilePath = conflict.getParent1FilePath();
-        ANTLR4Results rawParent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflict.getMerge().getParents().get(0).getCommitHash(), repositoryPath);
-        if (rawParent1Results == null) {
+        if (conflict.getConflictRegions().get(0).getOriginalV1FirstLine() < 0) {
             for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                conflictRegion.setStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
-                conflictRegion.setOutmostedStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
+                conflictRegion.setStructures("Untreatable git's error");
+                conflictRegion.setStructures("Untreatable git's error");
             }
-            return conflict;
         } else {
-            String parent2FilePath = conflict.getParent2FilePath();
-            ANTLR4Results rawParent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
-            if (rawParent2Results == null) {
+            String parent1FilePath = conflict.getParent1FilePath();
+            ANTLR4Results rawParent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflict.getMerge().getParents().get(0).getCommitHash(), repositoryPath);
+            if (rawParent1Results == null) {
                 for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                    conflictRegion.setStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
-                    conflictRegion.setOutmostedStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
+                    conflictRegion.setStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
+                    conflictRegion.setOutmostedStructures(conflict.getParent1FilePath() + " has an extension not parseable!");
                 }
                 return conflict;
             } else {
-                ANTLR4Results parent1Results;
-                List<String> v1Structures;
-                List<String> v1OutmostedStructures;
-                ANTLR4Results parent2Results;
-                List<String> v2Structures;
-                List<String> v2OutmostedStructures;
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                    if (conflictRegion.getOriginalV1FirstLine() < 0 || conflictRegion.getOriginalV2FirstLine() < 0) {
-                        conflictRegion.setStructures("DIFF PROBLEM!");
-                        conflictRegion.setOutmostedStructures("DIFF PROBLEM!");
-                    } else {
+                String parent2FilePath = conflict.getParent2FilePath();
+                ANTLR4Results rawParent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
+                if (rawParent2Results == null) {
+                    for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                        conflictRegion.setStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
+                        conflictRegion.setOutmostedStructures(conflict.getParent2FilePath() + " has an extension not parseable!");
+                    }
+                    return conflict;
+                } else {
+                    ANTLR4Results parent1Results;
+                    List<String> v1Structures;
+                    List<String> v1OutmostedStructures;
+                    ANTLR4Results parent2Results;
+                    List<String> v2Structures;
+                    List<String> v2OutmostedStructures;
+                    for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                         v1Structures = new ArrayList<>();
                         v1OutmostedStructures = new ArrayList<>();
                         v2Structures = new ArrayList<>();
