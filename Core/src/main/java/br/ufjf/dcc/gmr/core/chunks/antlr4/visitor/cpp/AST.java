@@ -7,9 +7,9 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.ConflictAnalysisTools;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,10 +40,10 @@ public class AST {
             Visitor1 visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Visitor1();
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true);
             } else {
                 visitor = new Visitor1();
-                comments = ConflictAnalysisTools.getCommentsFromChannel2(tokens, true);
+                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true);
             }
             visitor.visit(tree);
            //Imprimir_arvore-------------------------------------------------------

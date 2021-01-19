@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.conflictanalysis.controller.GSONClass;
+import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;

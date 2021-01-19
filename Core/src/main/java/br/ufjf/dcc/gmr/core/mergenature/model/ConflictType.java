@@ -11,7 +11,7 @@ public enum ConflictType {
     CONTENT, COINCIDENCE_ADDING, FILE_RENAME, 
     DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE, 
     P1_RENAMED_P2_ADD, P2_RENAMED_P1_ADD, FILE_LOCATION,
-    SUBMODULE;
+    SUBMODULE, CONTENT_WITH_UNILATERAL_RENAMNING;
     
     public static ConflictType getEnumFromInt(int value) {
         switch (value) {
@@ -44,6 +44,9 @@ public enum ConflictType {
             }
             case 10: {
                 return ConflictType.SUBMODULE;
+            }
+            case 11: {
+                return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
             }
             default: {
                 return null;
@@ -82,6 +85,9 @@ public enum ConflictType {
             }
             case "SUBMODULE": {
                 return ConflictType.SUBMODULE;
+            }
+            case "CONTENT_WITH_UNILATERAL_RENAMNING": {
+                return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
             }
             default: {
                 return null;

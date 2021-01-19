@@ -22,7 +22,7 @@ class Animal(Enum):	#enum ---- Verificar
     dog = 4        
 
 if __name__ == '__main__': #maindeclaration
-    a= 40
+    a= 40 #assignment
     b=funTeste(a) #functioncall
 
     while(True):    #whilecall (V)
@@ -35,7 +35,7 @@ if __name__ == '__main__': #maindeclaration
         continue #continue (V)
 
     del a #delete (V)
-    array =['teste','de','arrays'] #array
+    array =['teste','de','arrays'] #array   
 
     try: #try(V)
         print(x)
@@ -55,8 +55,8 @@ if __name__ == '__main__': #maindeclaration
         """  #comments
      ANNOTATION 
      ANNOTATION_TYPE_MEMBER_DECLARATION
-     ARRAY_ACCESS // No teste 
-     ARRAY_INITIALIZER  // No teste 
+     ARRAY_ACCESS // No teste //não existe
+     ARRAY_INITIALIZER  // No teste // pegando
      ASSERT_STATEMENT
      ASSIGNMENT    // No teste 
      BREAK_STATEMENT  // No teste // pegando

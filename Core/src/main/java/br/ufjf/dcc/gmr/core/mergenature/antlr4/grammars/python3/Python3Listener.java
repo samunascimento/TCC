@@ -368,6 +368,26 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitDotted_name(Python3Parser.Dotted_nameContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#array}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray(Python3Parser.ArrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#array}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray(Python3Parser.ArrayContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Python3Parser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment(Python3Parser.AssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment(Python3Parser.AssignmentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree
 	 */
