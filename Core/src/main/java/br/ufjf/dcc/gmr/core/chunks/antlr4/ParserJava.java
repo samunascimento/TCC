@@ -282,16 +282,21 @@ public class ParserJava {
         for (int y = 0; y < version.getFile().size(); y++) {
             DiffTranslator diffTranslator = new DiffTranslator();
             diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version);
-
+            diffTranslator.findIntervals(version, y);
+            
+            String keyPath = "";
+            keyPath = keyPath + version.getFile().get(y);
+            
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
-
-                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs((String) parent1.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion1()));
-                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs((String) parent2.getEnviroment().keySet().toArray()[y], chunk.getChunkVersion2()));
+                
+                
+                
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs( keyPath, chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs( keyPath, chunk.getChunkVersion2()));
 
             }
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
-
+      
         }
         
         Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());

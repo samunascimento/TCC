@@ -33,6 +33,7 @@ public class Main {
         Main.conflictChunkList = conflictChunkList;
         Main.paths1 = paths1;
         Main.paths2 = paths2;
+        Main.dependencyMatrix = new DependencyMatrix(conflictChunkList.size());
     }
 
     public static void main(String[] args) {
@@ -75,74 +76,86 @@ public class Main {
         int id = 0, line = 0, row = 0;
         for (Vertex verticeA : vertices) {
             for (Vertex verticeB : vertices) {
+                
+                
                 if (!verticeA.equals(verticeB)) {
                     List<DependencyType> concat = new ArrayList<>();
                     //VerticeA's ChunkVersionOne dependencies check with VerticeB Chunks
                     A = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion1(), verticeB.getConflictChunk().getChunkVersion1());
                     B = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion1(), verticeB.getConflictChunk().getChunkVersion2());
-                    
+
                     //VerticeA's ChunkVersionTwo  dependencies check with VerticeB Chunks
                     C = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion2(), verticeB.getConflictChunk().getChunkVersion1());
                     D = verifyChunksDependencies(verticeA.getConflictChunk().getChunkVersion2(), verticeB.getConflictChunk().getChunkVersion2());
-                    
-                    if(!A.get(0).equals(DependencyType.NO_DEPENDENCY))
+
+                    if (!A.get(0).equals(DependencyType.NO_DEPENDENCY)) {
                         concat = A;
-                    if(!B.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3){
+                    }
+                    if (!B.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3) {
                         for (DependencyType dependencyType : B) {
-                            if(concat.contains(dependencyType))
+                            if (!concat.contains(dependencyType)) {
                                 concat.add(dependencyType);
+                            }
                         }
                     }
-                    
-                    if(!C.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3){
+
+                    if (!C.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3) {
                         for (DependencyType dependencyType : C) {
-                            if(concat.contains(dependencyType))
+                            if (!concat.contains(dependencyType)) {
                                 concat.add(dependencyType);
+                            }
                         }
                     }
-                    
-                    if(!D.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3){
+
+                    if (!D.get(0).equals(DependencyType.NO_DEPENDENCY) && concat.size() < 3) {
                         for (DependencyType dependencyType : D) {
-                            if(concat.contains(dependencyType))
+                            if (!concat.contains(dependencyType)) {
                                 concat.add(dependencyType);
+                            }
                         }
                     }
-                        
+
                     //if last one versionChunk are dependencies with verticeB versionchunks, we create a edge between both
-                    if (!A.get(0).equals(DependencyType.NO_DEPENDENCY) || 
-                            !B.get(0).equals(DependencyType.NO_DEPENDENCY) || 
-                            !C.get(0).equals(DependencyType.NO_DEPENDENCY) ||
-                            !D.get(0).equals(DependencyType.NO_DEPENDENCY)) {
+                    if (!A.get(0).equals(DependencyType.NO_DEPENDENCY)
+                            || !B.get(0).equals(DependencyType.NO_DEPENDENCY)
+                            || !C.get(0).equals(DependencyType.NO_DEPENDENCY)
+                            || !D.get(0).equals(DependencyType.NO_DEPENDENCY)) {
                         Edge edge = new Edge();
                         edge.setId(id);
                         id++;
                         graph.addEdge(edge, verticeA, verticeB, EdgeType.DIRECTED);
                         dependencyMatrix.getMatrix()[row][line] = concat;
                     }
+
                 }
                 line++;
             }
             row++;
+            line=0;
         }
-
+        System.out.println(dependencyMatrix);
     }
 
     public static List<DependencyType> verifyChunksDependencies(Chunk chunkA, Chunk chunkB) {
-        
+
         List<BaseBinding> sourceBinding = new ArrayList<>();
         List<BaseBinding> targetBinding = new ArrayList<>();
         List<DependencyType> list = new ArrayList<>();
         sourceBinding = chunkA.getLanguageConstruct();
         targetBinding = chunkB.getLanguageConstruct();
 
-        if (Dependencies.atributeDependsOn(sourceBinding, targetBinding).equals(DependencyType.ATRIBUTE_USAGE_DECLARATION))
+        if (Dependencies.atributeDependsOn(sourceBinding, targetBinding).equals(DependencyType.ATRIBUTE_USAGE_DECLARATION)) {
             list.add(DependencyType.ATRIBUTE_USAGE_DECLARATION);
-        if(Dependencies.methodDependsOn(sourceBinding, targetBinding).equals(DependencyType.METHOD_CALL_DECLARATION))
+        }
+        if (Dependencies.methodDependsOn(sourceBinding, targetBinding).equals(DependencyType.METHOD_CALL_DECLARATION)) {
             list.add(DependencyType.METHOD_CALL_DECLARATION);
-        if(Dependencies.variableDependsOn(sourceBinding, targetBinding).equals(DependencyType.VARIABLE_USAGE_DECLARATION))
+        }
+        if (Dependencies.variableDependsOn(sourceBinding, targetBinding).equals(DependencyType.VARIABLE_USAGE_DECLARATION)) {
             list.add(DependencyType.VARIABLE_USAGE_DECLARATION);
-        if(list.isEmpty())
+        }
+        if (list.isEmpty()) {
             list.add(DependencyType.NO_DEPENDENCY);
+        }
         return list;
     }
 }

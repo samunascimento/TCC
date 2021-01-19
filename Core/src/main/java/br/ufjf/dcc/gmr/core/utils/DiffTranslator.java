@@ -28,38 +28,41 @@ public class DiffTranslator {
         this.addOpList = new ArrayList<>();
     }
 
-    public void findIntervals(Version version) {
+    public void findIntervals(Version version, int fileID) {
 
-        for (MyFile myFile : version.getFile()) {
-            for (ConflictChunk chunk : myFile.getChunks()) {
-                int removeSizeBefore = 0;
-                int addSizeBefore = 0;
+        MyFile myFile = version.getFile().get(fileID);
 
-                if (removeOpList.size() > 0) {
-                    while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
-                        removeSizeBefore++;
+        for (ConflictChunk chunk : myFile.getChunks()) {
+            int removeSizeBefore = 0;
+            int addSizeBefore = 0;
 
-                    }
+            if (removeOpList.size() > 0) {
+                while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
+                    removeSizeBefore++;
 
                 }
-
-                if (addOpList.size() > 0) {
-                    while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
-                        addSizeBefore++;
-                    }
-                }
-
-                int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - addSizeBefore;
-                int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - addSizeBefore;
-                chunk.getChunkVersion1().setLineBegin(BeginChunk);
-                chunk.getChunkVersion1().setLineEnd(EndChunk);
-
-                BeginChunk = (chunk.getSeparator().getLineNumber() + 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
-                EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
-                chunk.getChunkVersion2().setLineBegin(BeginChunk);
-                chunk.getChunkVersion2().setLineEnd(EndChunk);
 
             }
+            int aux = 0;
+            if (addOpList.size() > 0) {
+                while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
+
+                    aux += addOpList.get(addSizeBefore).getSize();
+
+                    addSizeBefore++;
+                }
+            }
+
+            int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - aux;
+            int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - aux;
+            chunk.getChunkVersion1().setLineBegin(BeginChunk);
+            chunk.getChunkVersion1().setLineEnd(EndChunk);
+
+            BeginChunk = (chunk.getSeparator().getLineNumber() + 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+            EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+            chunk.getChunkVersion2().setLineBegin(BeginChunk);
+            chunk.getChunkVersion2().setLineEnd(EndChunk);
+
         }
 
     }
@@ -71,7 +74,7 @@ public class DiffTranslator {
 
         List<String> fileDiffExample = Git.fileDiffExample(initialFile, finalFile, repository);
 
-        for (int i = 0; i < fileDiffExample.size(); i++) {
+        for (int i = 4; i < fileDiffExample.size(); i++) {
 
             String line = fileDiffExample.get(i);
 
@@ -95,12 +98,12 @@ public class DiffTranslator {
 
                 currentLine = initialLine;
 
-            } else if (line.startsWith("- ")) {
+            } else if (line.startsWith("-")) {
 
                 RemoveOperation removeOp = new RemoveOperation(currentLine);
                 currentLine++;
                 removeOpList.add(removeOp);
-            } else if (line.startsWith("+ ")) {
+            } else if (line.startsWith("+")) {
 
                 int size = 1;
 
@@ -109,6 +112,7 @@ public class DiffTranslator {
 
                 AddOperation addOp = new AddOperation(currentLine, size);
                 addOpList.add(addOp);
+
             } else {
                 currentLine++;
             }
