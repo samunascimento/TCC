@@ -24,7 +24,7 @@ public class Vertex {
     @Override
     public String toString(){
         String txt = "Arquivo: "+conflictChunk.getPath()+" || Intervalo de Linhas : ";
-        txt+= conflictChunk.getBeforeContext().getLineBegin()+" até "+conflictChunk.getBeforeContext().getLineEnd();
+        txt+= conflictChunk.getBegin().getLineNumber() +" até "+conflictChunk.getEnd().getLineNumber();
         
         return txt;
     }

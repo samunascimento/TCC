@@ -29,6 +29,10 @@ public class ANTLR4Results {
         this.outmostedCommentAnalysis = null;
     }
 
+    public ANTLR4Results() {
+
+    }
+
     public List<SyntaxStructure> getNormalAnalysis() {
         return normalAnalysis;
     }

@@ -159,7 +159,7 @@ stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
-expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) |
+expr_stmt:assignment| testlist_star_expr (annassign | augassign (yield_expr|testlist) | 
                      ('=' (yield_expr|testlist_star_expr))*);
 annassign: ':' test ('=' test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
@@ -210,6 +210,14 @@ dotted_name: NAME ('.' NAME)*;
 //------------------------------------------------------------------------------
 
 
+//Array+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+array:'[' (testlist_comp)? ']';
+//------------------------------------------------------------------------------
+
+//Assignment+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+assignment: atom '=' atom;
+//------------------------------------------------------------------------------
+
 global_stmt: 'global' NAME (',' NAME)*;
 nonlocal_stmt: 'nonlocal' NAME (',' NAME)*;
 assert_stmt: 'assert' test (',' test)?;
@@ -236,8 +244,8 @@ for_stmt: for_ exprlist 'in' testlist ':' suite ('else' ':' suite)?;
 try_stmt: ('try' ':' suite
            ((except_clause ':' suite)+
             ('else' ':' suite)?
-            ('finally' ':' suite)? |
-           'finally' ':' suite));
+            (finally_clause ':' suite)? |
+           finally_clause':' suite));
 //------------------------------------------------------------------------------
 
 //With++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -248,6 +256,7 @@ with_item: test ('as' expr)?;
 
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
+finally_clause: 'finally';
 suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
 
 //Logical tests ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -274,10 +283,10 @@ term: factor (('*'|'@'|'/'|'%'|'//') factor)*;
 factor: ('+'|'-'|'~') factor | power;
 power: atom_expr ('**' factor)?;
 atom_expr: (AWAIT)? atom trailer*;
-atom: ('(' (yield_expr|testlist_comp)? ')' |
-       '[' (testlist_comp)? ']' |
+atom:       array | 
+        ('(' (yield_expr|testlist_comp)? ')' |     
        '{' (dictorsetmaker)? '}' |
-       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False');
+       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False') |;
 testlist_comp: (test|star_expr) ( comp_for | (',' (test|star_expr))* (',')? );
 trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;
 subscriptlist: subscript (',' subscript)* (',')?;

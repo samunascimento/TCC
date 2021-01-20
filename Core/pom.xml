@@ -99,7 +99,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>
                             <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>--> 
                         </manifest>
                     </archive>
@@ -110,7 +110,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.cli.CLIParameters</mainClass>
+                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>
                             <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>-->
                         </manifest>
                     </archive>

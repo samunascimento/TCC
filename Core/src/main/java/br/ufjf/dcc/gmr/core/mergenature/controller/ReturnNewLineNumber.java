@@ -1,4 +1,4 @@
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 import br.ufjf.dcc.gmr.core.exception.EmptyOutput;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;

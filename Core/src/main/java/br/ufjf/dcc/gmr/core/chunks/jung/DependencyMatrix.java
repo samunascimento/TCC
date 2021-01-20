@@ -10,9 +10,12 @@ public class DependencyMatrix {
     private List<DependencyType>[][] matrix;
     private int size;
     public DependencyMatrix(int size) {
+        
+        this.matrix = new ArrayList[size][size];
+        
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                this.matrix[i][j] = new ArrayList<>();
+                this.matrix[i][j] = new ArrayList<DependencyType>();
             }
         }
         this.size = size;

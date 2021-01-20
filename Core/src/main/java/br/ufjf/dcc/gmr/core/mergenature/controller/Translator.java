@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package br.ufjf.dcc.gmr.core.conflictanalysis.controller;
+package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -605,12 +600,19 @@ public class Translator {
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Array")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
+                list.remove("Array");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Assignment")) {
+                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+                list.remove("Assignment");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Nothing")) {
@@ -618,24 +620,19 @@ public class Translator {
                 list.remove("Nothing");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       
-            if (list.contains("Break_stmt")
-                  ) {
+            if (list.contains("Break_stmt")) {
                 mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
                 list.remove("Break_stmt");
-                
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-             if (list.contains("Except_clause")) {
+            if (list.contains("Except_clause")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
                 list.remove("Except_clause");
             }
@@ -646,7 +643,6 @@ public class Translator {
                 list.remove("Classdef");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -655,7 +651,6 @@ public class Translator {
                 list.remove("Continue_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no do on python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -667,14 +662,22 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Enum")) {
+                mainList.add(LanguageConstructsTypes.DELETE_STATEMENT);
+                list.remove("Enum");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+             if (list.contains("Finally_clause")) {
+                mainList.add(LanguageConstructsTypes.FINALLY);
+                list.remove("Finally_clause");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("For_stmt")
-                || list.contains("For_")    ) {
+                    || list.contains("For_")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("For_stmt");
                 list.remove("For_");
@@ -688,7 +691,6 @@ public class Translator {
                 list.remove("If_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Import_stmt")
                     || list.contains("Import_name")
@@ -706,8 +708,7 @@ public class Translator {
                 list.remove("Dotted_as_name");
                 list.remove("Dotted_name");
             }
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -715,9 +716,9 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Funcdef");
             }
-
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //There is no package on pythons
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -756,9 +757,8 @@ public class Translator {
 
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
             //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-              if (list.contains("Yield_stmt")) {
+            if (list.contains("Yield_stmt")) {
                 mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
                 list.remove("Yield_stmt");
             }
