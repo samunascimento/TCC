@@ -74,9 +74,10 @@ public class AST {
     }
     
     public static void main(String args[]) throws IOException{
+
         String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
         analyzeCPPSyntaxTree(path, true);
-        
+      
         
     }
 }
