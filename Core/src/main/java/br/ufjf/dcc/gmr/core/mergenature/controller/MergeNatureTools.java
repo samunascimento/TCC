@@ -19,6 +19,10 @@ import java.util.List;
  * @since 14-10-2020
  */
 public class MergeNatureTools {
+    
+    public static String getRawForm(String string){
+        return string.replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+    }
 
     public static List<String> getFileContent(String filePath) throws FileNotFoundException, IOException {
         List<String> content = new ArrayList<>();

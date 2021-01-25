@@ -52,7 +52,7 @@ public class MergeMessageReader {
         String[] auxStringArray = message.split("in ");
         result.setParent1FilePath(auxStringArray[auxStringArray.length - 1]);
         result.setParent2FilePath(auxStringArray[auxStringArray.length - 1]);
-        result.setAncestorFilePath("Absent");
+        result.setAncestorFilePath(null);
         result.setConflictType(ConflictType.COINCIDENCE_ADDING);
         return result;
     }
@@ -108,11 +108,11 @@ public class MergeMessageReader {
         String[] auxStringArray = message.split(": ");
         auxStringArray = auxStringArray[auxStringArray.length - 1].split(" deleted in ");
         if (auxStringArray[auxStringArray.length - 1].startsWith("HEAD")) {
-            result.setParent1FilePath("Absent");
+            result.setParent1FilePath(null);
             result.setParent2FilePath(auxStringArray[0]);
         } else {
             result.setParent1FilePath(auxStringArray[0]);
-            result.setParent2FilePath("Absent");
+            result.setParent2FilePath(null);
         }
         result.setAncestorFilePath(auxStringArray[0]);
         result.setConflictType(ConflictType.MODIFY_DELETE);
@@ -133,18 +133,15 @@ public class MergeMessageReader {
     private static Conflict renameDeleteType(String message) {
         Conflict result = new Conflict();
         String[] auxStringArray = message.split(": ")[1].split("\\. ");
-        String auxString = auxStringArray[0];
-        auxStringArray = auxString.split(" and renamed to ")[0].split(" deleted in ");
-        if (auxStringArray[1] == "HEAD") {
-            result.setAncestorFilePath(auxStringArray[0]);
-            result.setParent1FilePath("Absent");
-            auxStringArray = auxString.split(" and renamed to ")[0].split(" in ");
-            result.setParent2FilePath(auxStringArray[0]);
+        String auxString = auxStringArray[0].replaceAll(" deleted in ", " ").replaceAll(" and renamed to ", " ").replaceAll(" in ", " ");
+        auxStringArray = auxString.split(" ");
+        result.setAncestorFilePath(auxStringArray[0]);
+        if(auxStringArray[1].equals("HEAD")){
+            result.setParent1FilePath(null);
+            result.setParent2FilePath(auxStringArray[2]);
         } else {
-            result.setAncestorFilePath(auxStringArray[0]);
-            result.setParent2FilePath("Absent");
-            auxStringArray = auxString.split(" and renamed to ")[0].split(" in ");
-            result.setParent1FilePath(auxStringArray[0]);
+            result.setParent1FilePath(auxStringArray[2]);
+            result.setParent2FilePath(null);
         }
         result.setConflictType(ConflictType.RENAME_DELETE);
         return result;
@@ -209,7 +206,7 @@ public class MergeMessageReader {
         String[] auxStringArray = message.split("in ");
         result.setParent1FilePath(auxStringArray[auxStringArray.length - 1]);
         result.setParent2FilePath(auxStringArray[auxStringArray.length - 1]);
-        result.setAncestorFilePath("Absent");
+        result.setAncestorFilePath(null);
         result.setConflictType(ConflictType.SUBMODULE);
         return result;
     }

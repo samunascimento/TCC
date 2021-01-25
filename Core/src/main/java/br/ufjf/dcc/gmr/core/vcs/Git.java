@@ -745,7 +745,7 @@ public class Git {
     }
 
     public static List<String> merge(String otherCommit, String repositoryPath) throws IOException {
-        String command = "git merge " + otherCommit;
+        String command = "git merge --allow-unrelated-histories " + otherCommit;
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
@@ -1118,7 +1118,7 @@ public class Git {
      * directory where the command will be executed
      * @param parents This parameter is a String[] that contains the hash of the
      * parents
-     * @return Return a String that goes contains all commits that is merges
+     * @return Return a String that goes contains the ancestor
      * @throws IOException
      */
     public static String mergeBaseCommand(String repositoryPath, String[] parents) throws IOException {

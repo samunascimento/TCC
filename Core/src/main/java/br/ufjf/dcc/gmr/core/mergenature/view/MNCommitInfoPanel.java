@@ -20,12 +20,14 @@ public class MNCommitInfoPanel extends JPanel {
 
     private Commit merge;
     private List<Commit> parents;
+    private Commit ancestor;
     private JTextArea textArea;
     private JComboBox comboBox;
 
-    public MNCommitInfoPanel(Commit merge, List<Commit> parents) {
+    public MNCommitInfoPanel(Commit merge, List<Commit> parents, Commit ancestor) {
         this.merge = merge;
         this.parents = parents;
+        this.ancestor = ancestor;
         set();
     }
 
@@ -55,6 +57,7 @@ public class MNCommitInfoPanel extends JPanel {
         for (Commit parent : parents) {
             comboBox.addItem("Parent " + (++i));
         }
+        comboBox.addItem("Ancestor");
         comboBox.addActionListener((ActionEvent evt) -> {
             switchCommit();
         });
@@ -64,13 +67,14 @@ public class MNCommitInfoPanel extends JPanel {
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(comboBox, gbc);
-        
 
     }
 
     private void switchCommit() {
         if (comboBox.getSelectedIndex() == 0) {
             textArea.setText(merge.toString());
+        } else if (comboBox.getSelectedIndex() == comboBox.getItemCount() - 1) {
+            textArea.setText(ancestor.toString());
         } else {
             textArea.setText(parents.get(comboBox.getSelectedIndex() - 1).toString());
         }
