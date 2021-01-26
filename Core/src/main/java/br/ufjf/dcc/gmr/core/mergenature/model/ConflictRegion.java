@@ -161,9 +161,13 @@ public class ConflictRegion {
         return beginLine;
     }
     
+    public int getBeginIndex() {
+        return beginLine - 1;
+    }
+
     public String getBeginText() {
-        for(String str : rawConflict.replaceAll("\n", " \n").split("\n")){
-            if(str.startsWith("<<<<<<< HEAD")){
+        for (String str : rawConflict.replaceAll("\n", " \n").split("\n")) {
+            if (str.startsWith("<<<<<<< HEAD")) {
                 return str;
             }
         }
@@ -185,6 +189,10 @@ public class ConflictRegion {
     public int getSeparatorLine() {
         return separatorLine;
     }
+    
+    public int getSeparatorIndex() {
+        return separatorLine - 1;
+    }
 
     public void setSeparatorLine(int separatorLine) {
         this.separatorLine = separatorLine;
@@ -202,9 +210,13 @@ public class ConflictRegion {
         return endLine;
     }
     
+    public int getEndIndex() {
+        return endLine - 1;
+    }
+
     public String getEndText() {
-        for(String str : rawConflict.replaceAll("\n", " \n").split("\n")){
-            if(MergeNatureTools.checkIfIsEnd(str)){
+        for (String str : rawConflict.replaceAll("\n", " \n").split("\n")) {
+            if (MergeNatureTools.checkIfIsEnd(str)) {
                 return str;
             }
         }
@@ -235,6 +247,22 @@ public class ConflictRegion {
 
     public String getSolutionText() {
         return solutionText;
+    }
+
+    public String getSolutionTextWithoutContext() {
+        if (developerDecision != DeveloperDecision.IMPRECISE
+                && developerDecision != DeveloperDecision.FILE_DELETED
+                && developerDecision != DeveloperDecision.POSTPONED
+                && developerDecision != DeveloperDecision.DIFF_PROBLEM) {
+            String[] auxArray = solutionText.split("\n");
+            StringBuilder result = new StringBuilder("");
+            for (int i = 1; i < auxArray.length - 1; i++) {
+                result.append("\n").append(auxArray[i]);
+            }
+            return result.toString().replaceFirst("\n", "");
+        } else {
+            return solutionText;
+        }
     }
 
     public void setSolutionText(String solutionText) {

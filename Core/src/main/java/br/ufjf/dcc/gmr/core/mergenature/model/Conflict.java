@@ -64,11 +64,23 @@ public class Conflict {
     }
 
     public String getParent1FilePath() {
-        return parent1FilePath;
+        if (parent1FilePath == null) {
+            return "Absent";
+        } else {
+            return parent1FilePath;
+        }
     }
 
     public String getParent1FileName() {
-        return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1];
+        if (parent1FilePath == null) {
+            return "Absent";
+        } else {
+            if (parent1FilePath.endsWith(File.separator)) {
+                return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1] + File.separator;
+            } else {
+                return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1];
+            }
+        }
     }
 
     public void setParent1FilePath(String parent1FilePath) {
@@ -76,11 +88,23 @@ public class Conflict {
     }
 
     public String getParent2FilePath() {
-        return parent2FilePath;
+        if (parent2FilePath == null) {
+            return "Absent";
+        } else {
+            return parent2FilePath;
+        }
     }
 
     public String getParent2FileName() {
-        return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1];
+        if (parent2FilePath == null) {
+            return "Absent";
+        } else {
+            if (parent2FilePath.endsWith(File.separator)) {
+                return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1] + File.separator;
+            } else {
+                return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1];
+            }
+        }
     }
 
     public void setParent2FilePath(String parent2FilePath) {
@@ -88,11 +112,23 @@ public class Conflict {
     }
 
     public String getAncestorFilePath() {
-        return ancestorFilePath;
+        if (ancestorFilePath == null) {
+            return "Absent";
+        } else {
+            return ancestorFilePath;
+        }
     }
 
     public String getAncestorFileName() {
-        return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1];
+        if (ancestorFilePath == null) {
+            return "Absent";
+        } else {
+            if (ancestorFilePath.endsWith(File.separator)) {
+                return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1] + File.separator;
+            } else {
+                return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1];
+            }
+        }
     }
 
     public void setAncestorFilePath(String ancestorFilePath) {
@@ -125,9 +161,9 @@ public class Conflict {
 
     @Override
     public String toString() {
-        return "Parent 1's file: " + parent1FilePath
-                + "\nParent 2's file: " + parent2FilePath
-                + "\nAncestor's file: " + ancestorFilePath
+        return "Parent 1's file: " + getParent1FilePath()
+                + "\nParent 2's file: " + getParent2FilePath()
+                + "\nAncestor's file: " + getAncestorFilePath()
                 + "\nConflict Type: " + conflictType.toString()
                 + "\nConflict Regions: " + conflictRegions.size();
     }

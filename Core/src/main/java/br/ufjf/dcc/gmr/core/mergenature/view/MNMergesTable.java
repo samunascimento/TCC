@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
+import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -11,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -40,14 +43,14 @@ public class MNMergesTable extends JPanel {
         table = new JTable(new DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Hash", "Conflict Regions", "Conflict"
+                    "", "Hash", "Conflict Regions", "Conflict"
                 }
         ) {
             Class[] types = new Class[]{
-                String.class, Integer.class, Boolean.class
+                Integer.class, String.class, Integer.class, Boolean.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -59,7 +62,12 @@ public class MNMergesTable extends JPanel {
             }
         });
         setDefaultModel();
-        table.getColumnModel().getColumn(2).setPreferredWidth(30);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.LEFT);
+        table.setDefaultRenderer(table.getColumnClass(0), renderer);
+        table.getColumnModel().getColumn(0).setPreferredWidth(25);
+        table.getColumnModel().getColumn(1).setPreferredWidth(33);
+        table.getColumnModel().getColumn(3).setPreferredWidth(17);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -98,13 +106,16 @@ public class MNMergesTable extends JPanel {
         this.add(resetFilter, gbc);
     }
 
+    int index = 0;
+
     private void setDefaultModel() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (Merge merge : merges) {
             model.addRow(new Object[]{
+                ++index,
                 merge.getMerge().getShortCommitHash(),
                 merge.getNumberOfConflictRegions(),
-                merge.getMergeType() == MergeType.CONFLICTED_MERGE
+                (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)
             });
         }
     }

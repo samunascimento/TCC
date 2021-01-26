@@ -35,11 +35,24 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
         aux = aux[aux.length - 1].split("\\(");
 
-        //Adding texte
+        //Adding text
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+
+    }
+
+    public void specialProcess(ParserRuleContext ctx, String newType) {
+
+        //Getting structure type
+        String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
+        aux = aux[aux.length - 1].split("\\(");
+
+        //Adding text
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");;
+        //Adding in list
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText, warning));
 
     }
 
@@ -381,7 +394,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitComparison(Python3Parser.ComparisonContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -429,19 +442,19 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitTerm(Python3Parser.TermContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitFactor(Python3Parser.FactorContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitPower(Python3Parser.PowerContext ctx) {
-        process(ctx);
+        // process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -453,7 +466,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAtom(Python3Parser.AtomContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -507,6 +520,20 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitClassdef(Python3Parser.ClassdefContext ctx) {
+        Python3Parser.ArglistContext arglist = ctx.arglist();
+
+        if (arglist != null) {
+            List<Python3Parser.ArgumentContext> arguments = arglist.argument();
+
+            for (Python3Parser.ArgumentContext argument : arguments) {
+                if (argument.getText().contains("Enum") || argument.getText().contains("IntEnum")) {
+
+                    specialProcess(ctx, "Enum");
+                    return super.visitChildren(ctx);
+                }
+            }
+        }
+
         process(ctx);
         return super.visitChildren(ctx);
     }
@@ -567,18 +594,44 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitWith_(Python3Parser.With_Context ctx) {
-        return super.visitWith_(ctx); //To change body of generated methods, choose Tools | Templates.
+        process(ctx);
+        return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitFor_(Python3Parser.For_Context ctx) {
-        return super.visitFor_(ctx); //To change body of generated methods, choose Tools | Templates.
+        process(ctx);
+        return super.visitChildren(ctx);
     }
 
     @Override
     public Object visitWhile_(Python3Parser.While_Context ctx) {
-        return super.visitWhile_(ctx); //To change body of generated methods, choose Tools | Templates.
+        process(ctx);
+        return super.visitChildren(ctx);
     }
 
-    
+    @Override
+    public Object visitArray(Python3Parser.ArrayContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitAssignment(Python3Parser.AssignmentContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFinally_clause(Python3Parser.Finally_clauseContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitAssert_(Python3Parser.Assert_Context ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+
 }

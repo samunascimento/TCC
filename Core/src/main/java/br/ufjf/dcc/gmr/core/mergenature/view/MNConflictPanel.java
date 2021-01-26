@@ -57,11 +57,15 @@ public class MNConflictPanel extends JPanel {
 
         conflictComboBox = new JComboBox();
         for (Conflict conflict : conflicts) {
-            conflictComboBox.addItem(conflict.getParent1FileName());
+            if (!conflict.getParent1FileName().equals("Absent")) {
+                conflictComboBox.addItem(conflict.getParent1FileName() + " (" + conflict.getConflictRegions().size() + " regions)");
+            } else {
+                conflictComboBox.addItem(conflict.getParent2FileName() + " (" + conflict.getConflictRegions().size() + " regions)");
+            }
+
         }
         conflictComboBox.addActionListener((ActionEvent evt) -> {
             switchConflict();
-            switchRegion();
         });
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -76,7 +80,7 @@ public class MNConflictPanel extends JPanel {
             for (ConflictRegion region : conflicts.get(0).getConflictRegions()) {
                 regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
             }
-            if(conflicts.get(0).getConflictRegions().isEmpty()){
+            if (conflicts.get(0).getConflictRegions().isEmpty()) {
                 mergePanel.updateConflictRegion(null);
             } else {
                 mergePanel.updateConflictRegion(conflicts.get(0).getConflictRegions().get(0));
@@ -104,19 +108,22 @@ public class MNConflictPanel extends JPanel {
                 regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
             }
             textArea.setText(conflicts.get(conflictComboBox.getSelectedIndex()).toString());
-            switchRegion();
         }
+        switchRegion();
 
     }
 
     private void switchRegion() {
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
             if (regionComboBox.getSelectedIndex() >= 0 && regionComboBox.getSelectedIndex() < conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().size()) {
-                mergePanel.updateConflictRegion(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().get(regionComboBox.getSelectedIndex()));
+                if(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().isEmpty()){
+                    mergePanel.updateConflictRegion(null);
+                } else {
+                    mergePanel.updateConflictRegion(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().get(regionComboBox.getSelectedIndex()));
+                }
             }
         }
-        
-        
+
     }
 
 }
