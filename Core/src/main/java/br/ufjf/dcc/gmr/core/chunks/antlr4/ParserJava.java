@@ -6,6 +6,9 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.chunks.jung.Main;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.utils.DiffTranslator;
@@ -46,14 +49,13 @@ public class ParserJava {
         this.globalEnviroment = new GlobalEnviroment();
         this.pathProject = pathProject;
     }
-
+    
     public static void main(String[] args) throws Exception {
 
         GlobalEnviroment parent1 = new GlobalEnviroment();
         GlobalEnviroment parent2 = new GlobalEnviroment();
-        int cont = 0;
 
-        //Definindo os arquivos com erros
+        //Definindo os arquivos com conflitos
         List<String> javaFiles = new ArrayList<>();
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
@@ -62,14 +64,61 @@ public class ParserJava {
 
         List<String> filesToCheckParent1 = new ArrayList<>();
         List<String> filesToCheckParent2 = new ArrayList<>();
-
         List<List<String>> filesToStringParent1 = new ArrayList<>();
         List<List<String>> filesToStringParent2 = new ArrayList<>();
 
         String pathRepositoryCopy = "";
         String pathRepositoryCopy1 = "";
         String pathRepositoryCopy2 = "";
+        
+        extractParents(filesToCheckParent1, filesToCheckParent2, filesToStringParent1, filesToStringParent2, pathRepositoryCopy, pathRepositoryCopy1, pathRepositoryCopy2,javaFiles, parent1, parent2);
+        
+        setBeforeAndAfterContext();
+        
 
+        List<ConflictChunk> conflictChunkList = new ArrayList<>();
+        
+        createConflictChunkList(conflictChunkList, filesToCheckParent1, filesToCheckParent2, pathRepositoryCopy1, parent1, parent2);
+        
+
+        createJungGraph(parent1, parent2, conflictChunkList, args);
+
+    }
+    
+    private static void createConflictChunkList(List<ConflictChunk> conflictChunkList, List<String> filesToCheckParent1, List<String> filesToCheckParent2, String pathRepositoryCopy1, GlobalEnviroment parent1, GlobalEnviroment parent2) throws IOException{
+        for (int y = 0; y < version.getFile().size(); y++) {
+            DiffTranslator diffTranslator = new DiffTranslator();
+            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
+            diffTranslator.findIntervals(version, y);
+
+            String keyPath = "";
+            keyPath = keyPath + version.getFile().get(y);
+
+            for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
+
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(keyPath, chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(keyPath, chunk.getChunkVersion2()));
+
+            }
+            conflictChunkList.addAll(version.getFile().get(y).getChunks());
+
+        }
+    }
+    
+    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args){
+        Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
+        jung.main(args);
+        File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
+
+        try {
+            FileUtils.deleteDirectory(dirParent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void extractParents(List<String> filesToCheckParent1, List<String> filesToCheckParent2, List<List<String>> filesToStringParent1, List<List<String>> filesToStringParent2, String pathRepositoryCopy, String pathRepositoryCopy1, String pathRepositoryCopy2, List<String> javaFiles, GlobalEnviroment parent1, GlobalEnviroment parent2) throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+        int cont = 0;
         for (String parent : version.getParent()) {
 
             Git.reset(ParserJava.pathProject, true, false, false, null);
@@ -142,7 +191,6 @@ public class ParserJava {
                 j++;
 
             }
-
             System.out.println("***************GlobalEnviromentTypes***************");
             for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
                 System.out.println(value);
@@ -165,7 +213,10 @@ public class ParserJava {
             cont++;
 
         }
-
+    }
+    
+    
+    private static void setBeforeAndAfterContext(){
         int context = 10;
 
         for (int i = 0; i < version.getFile().size(); i++) {
@@ -209,125 +260,9 @@ public class ParserJava {
 
             }
         }
-
-//        boolean foundAfterContext = false;
-//        int validate = 0;
-//        for (int i = 0; i < filesToStringParent1.size(); i++) {
-//            for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
-//                for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
-//                    for (int z=0; z < conflictChunk.getBeforeContext().getText().size(); z++) {
-//                        if (filesToStringParent1.get(i).get(j).equals(conflictChunk.getBeforeContext().getText().get(z)) && validate == j) {
-//                            conflictChunk.getChunkVersion1().setLineBegin(j+1);
-//                            validate++;
-//                        }
-//                    }
-//                    for (String line : conflictChunk.getAfterContext().getText()) {
-//                        if (filesToStringParent1.get(i).get(j).equals(line) && !foundAfterContext) {
-//                            conflictChunk.getChunkVersion1().setLineEnd(j+1);
-//                            foundAfterContext = true;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        for (int i = 0; i < filesToStringParent1.size(); i++) {
-//            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
-//                for (int j = 0, z = 0; j < filesToStringParent1.get(i).size(); j++) {
-//                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
-//                    if (beforeContext.equals(filesToStringParent1.get(i).get(j))) {
-//                        z++;
-//                        conflictChunk.getChunkVersion1().setLineBegin(j + 1);
-//                    }
-//                    if (z == conflictChunk.getBeforeContext().getText().size()) {
-//                        break;
-//                    }
-//                }
-//
-//                for (int j = 0; j < filesToStringParent1.get(i).size(); j++) {
-//
-//                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
-//                        conflictChunk.getChunkVersion1().setLineEnd(j + 1);
-//                        break;
-//                    }
-//                }
-//
-//            }
-//        }
-//
-//        for (int i = 0; i < filesToStringParent2.size(); i++) {
-//            for (ConflictChunk conflictChunk : version.getFile().get(i).getChunks()) {
-//                for (int j = 0, z = 0; j < filesToStringParent2.get(i).size(); j++) {
-//                    String beforeContext = conflictChunk.getBeforeContext().getText().get(z);
-//                    if (beforeContext.equals(filesToStringParent2.get(i).get(j))) {
-//                        z++;
-//                        conflictChunk.getChunkVersion2().setLineBegin(j + 1);
-//                    }
-//                    if (z == conflictChunk.getBeforeContext().getText().size()) {
-//                        break;
-//                    }
-//                }
-//
-//                for (int j = 0; j < filesToStringParent2.get(i).size(); j++) {
-//
-//                    if (conflictChunk.getAfterContext().getText().contains(filesToStringParent1.get(i).get(j).toString())) {
-//                        conflictChunk.getChunkVersion2().setLineEnd(j + 1);
-//                        break;
-//                    }
-//                }
-//
-//            }
-//        }
-        List<ConflictChunk> conflictChunkList = new ArrayList<>();
-
-        for (int y = 0; y < version.getFile().size(); y++) {
-            DiffTranslator diffTranslator = new DiffTranslator();
-            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version, y);
-            
-            String keyPath = "";
-            keyPath = keyPath + version.getFile().get(y);
-            
-            for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
-                
-                
-                
-                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs( keyPath, chunk.getChunkVersion1()));
-                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs( keyPath, chunk.getChunkVersion2()));
-
-            }
-            conflictChunkList.addAll(version.getFile().get(y).getChunks());
-      
-        }
-        
-        Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
-        jung.main(args);
-        File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
-
-        try {
-            FileUtils.deleteDirectory(dirParent);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
-
-    private static List<Chunk> getChunkBinding(ParserJava parserJava) {
-
-        List<Chunk> listChunk = new ArrayList<>();
-        for (MyFile myFile : version.getFile()) {
-
-            for (br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk chunk
-                    : myFile.getChunks()) {
-                Chunk chunkBinding = new Chunk();
-                chunkBinding.setLineBegin(chunk.getBegin().getLineNumber());
-                chunkBinding.setLineEnd(chunk.getEnd().getLineNumber());
-                chunkBinding.setLanguageConstruct(parserJava.getGlobalEnviroment().findLanguageConstructs(chunk.getPath(), chunkBinding));
-                listChunk.add(chunkBinding);
-            }
-        }
-
-        return listChunk;
-    }
+    
+    
 
     private static String createDiffRepository(String path, String pasta) throws IOException {
 
@@ -346,19 +281,6 @@ public class ParserJava {
         return destination;
     }
 
-    //TODO
-    //
-    //Achar as linhas originais: 
-    // primera linha pré e pós marcação de conflito
-    // encontrar essas linhas na v1 e v2
-    // pegar bindings entre os intervalos nas v1 e v2
-    // comparar modificações v1 do chunk 1 com v2 chunk 1,2
-    // comparar modificações v2 do chunk 1 com v1 chunk 1,2
-    //
-    //Bindings trocar para na linhas originais
-    //Compara-las para verificar dependencias
-    //BaseMerge ( Checar mudanças estruturais )
-    //
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
         System.out.println("***************MethodDeclarationAST1***************");
