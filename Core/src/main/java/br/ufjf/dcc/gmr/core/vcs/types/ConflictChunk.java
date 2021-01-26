@@ -12,14 +12,13 @@ public class ConflictChunk {
     private String path;
     private List<String> errorContent;
 
-
     private Chunk beforeContext;
     private Chunk chunkVersion1;
     private Chunk chunkVersion2;
     private Chunk afterContext;
     private String label;
 
-    public ConflictChunk(Line begin, Line separator, Line end, String path,List<String> errorContent, Chunk beforeContext, Chunk chunkVersion1, Chunk chunkVersion2, Chunk afterContext, String label) {
+    public ConflictChunk(Line begin, Line separator, Line end, String path, List<String> errorContent, Chunk beforeContext, Chunk chunkVersion1, Chunk chunkVersion2, Chunk afterContext, String label) {
         this.begin = begin;
         this.separator = separator;
         this.end = end;
@@ -45,22 +44,14 @@ public class ConflictChunk {
         this.label = "";
     }
 
-    /*
-        tirar content 
-        migrar as informações do conflictChunk 
-        apagar a classe conflictChunk
-        renomear essa classe para conflictChunk
-        remover booleano conflict
-        mover path do outro chunk para este chunk
-     */
-    
-        public List<String> getErrorContent() {
+    public List<String> getErrorContent() {
         return errorContent;
     }
 
     public void setErrorContent(List<String> errorContent) {
         this.errorContent = errorContent;
     }
+
     public Line getBegin() {
         return begin;
     }
