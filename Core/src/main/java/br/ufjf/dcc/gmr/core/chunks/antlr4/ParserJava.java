@@ -38,7 +38,7 @@ public class ParserJava {
     private GlobalEnviroment globalEnviroment;
     private static Version version;
     private static String pathProject;
-    private static int context;
+    private static int context = 0;
 
     public ParserJava(Version version) {
         this.globalEnviroment = new GlobalEnviroment();
