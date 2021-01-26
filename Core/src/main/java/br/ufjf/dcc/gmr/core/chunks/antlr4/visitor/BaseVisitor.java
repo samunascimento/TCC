@@ -52,6 +52,12 @@ public class BaseVisitor {
                 extendedClass = globalEnviroment.getEnviroment().get(name);
             }
 
+            if (typeBinding.getExtendClass() == null) {
+                
+                name = packageName.concat(".").concat(typeExtends.getText()).concat(".java");
+                extendedClass = init();
+            }
+
             if (extendedClass != null) {
                 typeBinding.setExtendClass(extendedClass);
             }
@@ -63,7 +69,19 @@ public class BaseVisitor {
 
         return false;
     }
+    
+    public TypeBinding init() {
+               
+        TypeBinding typeBinding = new TypeBinding();
+        typeBinding.setExtendClass(null);
+        typeBinding.setAttributes(null);
+        typeBinding.setImports(null);
+        typeBinding.setMethodsBinding(null);
+        typeBinding.setPackageBinding(null);
+        typeBinding.setName("EXTERNAL_PACKAGE");
+        return typeBinding;
 
+    }
     public void visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx, GlobalEnviroment globalEnviroment, MethodDeclarationBinding mdbGeneral, String packageName, String className) {
 
         List<AttributeDeclaratinBinding> parameters = new ArrayList<>();
@@ -71,7 +89,7 @@ public class BaseVisitor {
 
         mdbGeneral.setName(ctx.IDENTIFIER().getText());
         mdbGeneral.setCtx(ctx);
-        
+
         List<Modifier> modifiers = extractModifier(ctx);
         mdbGeneral.setModifier(modifiers);
 

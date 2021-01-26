@@ -66,6 +66,17 @@ public class DiffTranslator {
         }
 
     }
+    
+    public int changeLineToOriginalFileContext(int line){
+        
+        
+        
+        
+        
+        
+        
+        return 0;
+    }
 
     public void translator(String initialFile, String finalFile, String repository) throws IOException {
 
