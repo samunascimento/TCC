@@ -12,9 +12,9 @@ import java.util.List;
  * @since 10-10-2020
  */
 public class Commit {
-    
+
     public static final Commit NO_EXIST = new Commit();
-    
+
     private int id;
     private String message;
     private String commitHash;
@@ -22,17 +22,18 @@ public class Commit {
     private Date authorDate;
     private String committer;
     private Date committerDate;
-    
+
     /**
-     * Normal constructor 
-     * @param id                Id for databases
-     * @param message           The message that was written for commit description.
-     * @param commitHash        The unique code (hash) for commit.
-     * @param author            The person who originally wrote the code.
-     * @param authorDate        This date notes when this commit was originally made.
-     * @param committer         The person who committed the code on behalf of the 
-     *                          original author.
-     * @param committerDate     This date notes when this commit was commited.
+     * Normal constructor
+     *
+     * @param id Id for databases
+     * @param message The message that was written for commit description.
+     * @param commitHash The unique code (hash) for commit.
+     * @param author The person who originally wrote the code.
+     * @param authorDate This date notes when this commit was originally made.
+     * @param committer The person who committed the code on behalf of the
+     * original author.
+     * @param committerDate This date notes when this commit was commited.
      */
     public Commit(int id, String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
         this.id = id;
@@ -43,16 +44,17 @@ public class Commit {
         this.committer = committer;
         this.committerDate = committerDate;
     }
-    
+
     /**
-     * No id constructor 
-     * @param message           The message that was written for commit description.
-     * @param commitHash        The unique code (hash) for commit.
-     * @param author            The person who originally wrote the code.
-     * @param authorDate        This date notes when this commit was originally made.
-     * @param committer         The person who committed the code on behalf of the 
-     *                          original author.
-     * @param committerDate     This date notes when this commit was commited.
+     * No id constructor
+     *
+     * @param message The message that was written for commit description.
+     * @param commitHash The unique code (hash) for commit.
+     * @param author The person who originally wrote the code.
+     * @param authorDate This date notes when this commit was originally made.
+     * @param committer The person who committed the code on behalf of the
+     * original author.
+     * @param committerDate This date notes when this commit was commited.
      */
     public Commit(String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
         this.message = message;
@@ -62,13 +64,13 @@ public class Commit {
         this.committer = committer;
         this.committerDate = committerDate;
     }
-    
+
     /**
-     * 
-     * @param hash              The hash of the commit
-     * @param repositoryPath    The path of the Git repository where the commit is
-     * @throws IOException      If repositoryPath is not a path in system or the path
-     *                          is not a Git repository
+     *
+     * @param hash The hash of the commit
+     * @param repositoryPath The path of the Git repository where the commit is
+     * @throws IOException If repositoryPath is not a path in system or the path
+     * is not a Git repository
      */
     public Commit(String hash, String repositoryPath) throws IOException {
         List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
@@ -103,7 +105,7 @@ public class Commit {
     public String getCommitHash() {
         return commitHash;
     }
-    
+
     public String getShortCommitHash() {
         return commitHash.substring(0, 7);
     }
@@ -143,16 +145,19 @@ public class Commit {
     public void setCommitterDate(Date committerDate) {
         this.committerDate = committerDate;
     }
-    
-    
+
     @Override
-    public String toString(){
-        return "Title: " + message + "\n"
-                + "Hash: " + commitHash + "\n"
-                + "Author: " + author + "\n"
-                + "Author Date: " + authorDate + "\n"
-                + "Committer: " + committer + "\n"
-                + "Committer Date: " + committerDate;
+    public String toString() {
+        if (this == NO_EXIST) {
+            return "Don't exist a commit that does this function!";
+        } else {
+            return "Title: " + message + "\n"
+                    + "Hash: " + commitHash + "\n"
+                    + "Author: " + author + "\n"
+                    + "Author Date: " + authorDate + "\n"
+                    + "Committer: " + committer + "\n"
+                    + "Committer Date: " + committerDate;
+        }
     }
 
 }

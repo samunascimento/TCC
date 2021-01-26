@@ -116,6 +116,7 @@ public class MergeNatureAlgorithm {
         String[] auxStringArray;
         List<String> mergeMessage;
         String auxString;
+        boolean unrelatedHistories = false;
 
         merge.setProject(project);
         auxStringArray = logLine.split("/");
@@ -130,15 +131,20 @@ public class MergeNatureAlgorithm {
         auxString = Git.mergeBaseCommand(repositoryPath, auxStringArray);
         if ("No ancestor".equals(auxString)) {
             merge.setAncestor(Commit.NO_EXIST);
+            unrelatedHistories = true;
+
         } else {
             merge.setAncestor(new Commit(auxString, repositoryPath));
         }
-        merge.setAncestor(new Commit(Git.mergeBaseCommand(repositoryPath, auxStringArray), repositoryPath));
         if (merge.getMergeType() != MergeType.OCTOPUS_MERGE) {
             Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getCommitHash(), repositoryPath);
             if (mergeMessage.contains("Automatic merge failed; fix conflicts and then commit the result.")) {
-                merge.setMergeType(MergeType.CONFLICTED_MERGE);
+                if (unrelatedHistories) {
+                    merge.setMergeType(MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES);
+                } else {
+                    merge.setMergeType(MergeType.CONFLICTED_MERGE);
+                }
                 for (String conflictMessage : mergeMessage) {
                     if (conflictMessage.contains("CONFLICT")) {
                         merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
@@ -146,8 +152,14 @@ public class MergeNatureAlgorithm {
                 }
                 MergeNatureTools.prepareAnalysis(repositoryPath);
             } else {
-                merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE);
+                if (unrelatedHistories) {
+                    merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES);
+                } else {
+                    merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE);
+                }
             }
+        } else if (unrelatedHistories) {
+            merge.setMergeType(MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES);
         }
         return merge;
     }
@@ -223,7 +235,9 @@ public class MergeNatureAlgorithm {
                     }
                 }
                 conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
-                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, conflictRegion.getBeginLine() - conflictRegion.getBeforeContextSize() - 1, conflictRegion.getEndLine() + conflictRegion.getAfterContextSize() - 1)));
+                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
+                        conflictRegion.getBeginIndex() - conflictRegion.getBeforeContextSize(),
+                        conflictRegion.getEndIndex() + conflictRegion.getAfterContextSize())));
                 conflictRegion = solutionLayer(conflictRegion, repositoryPath);
                 conflictRegion = originalLinesLayer(conflictRegion, repositoryPath);
                 conflictRegions.add(conflictRegion);
@@ -242,12 +256,12 @@ public class MergeNatureAlgorithm {
             int solutionFirstLine;
             int solutionFinalLine;
             try {
-                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
+                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit + ":" + parentFilePath, parentFilePath, conflictRegion.getBeginLine() - 1);
+                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit + ":" + parentFilePath, parentFilePath, conflictRegion.getEndLine() + 1);
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = conflictRegion.getConflict().getParent2FilePath();
-                    solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberFile(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
+                    solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
+                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
@@ -277,9 +291,9 @@ public class MergeNatureAlgorithm {
     }
 
     private ConflictRegion developerDecisionLayer(ConflictRegion conflictRegion) {
-        String solution = conflictRegion.getSolutionText().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
-        String v1 = conflictRegion.getV1Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
-        String v2 = conflictRegion.getV2Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+        String solution = MergeNatureTools.getRawForm(conflictRegion.getSolutionTextWithoutContext());
+        String v1 = MergeNatureTools.getRawForm(conflictRegion.getV1Text());
+        String v2 = MergeNatureTools.getRawForm(conflictRegion.getV2Text());
 
         if (solution.equals("")) {
             conflictRegion.setDeveloperDecision(DeveloperDecision.NONE);

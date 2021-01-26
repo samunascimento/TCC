@@ -599,6 +599,7 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // Conferir com Gleiph
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array")) {
@@ -607,6 +608,12 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("assert_")
+                    || list.contains("assert_stmt")) {
+                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+                list.remove("assert_");
+                list.remove("assert_stmt");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Assignment")) {
@@ -630,6 +637,7 @@ public class Translator {
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+               //Ajuda
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Except_clause")) {
@@ -660,7 +668,6 @@ public class Translator {
                 list.remove("Del_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Enum")) {
                 mainList.add(LanguageConstructsTypes.DELETE_STATEMENT);
@@ -668,9 +675,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //Importação, ver Gleiph
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-             if (list.contains("Finally_clause")) {
+            if (list.contains("Finally_clause")) {
                 mainList.add(LanguageConstructsTypes.FINALLY);
                 list.remove("Finally_clause");
             }
@@ -710,6 +718,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //Python doesn't have interface because of the included multiple inheritance
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Funcdef")) {
@@ -721,11 +730,13 @@ public class Translator {
             //There is no package on pythons
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //objects initialized insides classes are considered statics, see with Gleiph!
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
+            //Synchronized Statement++++++++++++++++++++++++++++++++++++++++++++
+            //There is no Synchronized Statement on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Raise_stmt")) {
@@ -733,28 +744,24 @@ public class Translator {
                 list.remove("Raise_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Try_stmt")) {
                 mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
                 list.remove("Try_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Return_stmt")) {
                 mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
                 list.remove("Return_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WARNING!")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -772,9 +779,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            /*if (!list.isEmpty()) {
+            if (!list.isEmpty()) {
                 mainList.add(LanguageConstructsTypes.OTHER);
-            }*/
+            }
         }
 
         return mainList;

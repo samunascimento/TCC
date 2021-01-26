@@ -43,6 +43,7 @@ public final class View extends JFrame {
     private int screenWidth;
     private int screenHight;
     private JungFrame jungFrame;
+    private int contextLines;
 
     View() {
         this.tree = new JTree();
@@ -199,6 +200,14 @@ public final class View extends JFrame {
         frame.setPreferredSize(new Dimension(frame.getScreenWidth(), frame.getScreenHight()));
         frame.paintMainPanel();
         frame.setVisible(true);
+    }
+    
+    public int getContextLines() {
+        return contextLines;
+    }
+
+    public void setContextLines(int contextLines) {
+        this.contextLines = contextLines;
     }
 
     /**
