@@ -528,12 +528,9 @@ POWER_ASSIGN : '**=';
 IDIV_ASSIGN : '//=';
 
 SKIP_
- : ( SPACES ) -> skip
+ : ( SPACES | LINE_JOINING  ) -> skip
  ;
 
-CHANNEL2_
- : ( COMMENT | LINE_JOINING ) -> channel(2)
- ;
 
 UNKNOWN_CHAR
  : .
@@ -675,8 +672,8 @@ fragment SPACES
  : [ \t]+
  ;
 
-fragment COMMENT
- : '#' ~[\r\n\f]*
+ LINE_COMMENT
+ : '#' ~[\r\n\f]* -> channel(2)
  ;
 
 fragment LINE_JOINING

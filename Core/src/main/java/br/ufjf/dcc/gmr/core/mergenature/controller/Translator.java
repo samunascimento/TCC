@@ -599,7 +599,7 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Conferir com Gleiph
+            //There is no ANNOTATION on python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array")) {
@@ -637,7 +637,7 @@ public class Translator {
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-               //Ajuda
+            //Ajuda
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Except_clause")) {
@@ -652,6 +652,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+              if ( list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("LineComment");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Continue_stmt")) {

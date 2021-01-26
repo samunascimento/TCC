@@ -46,10 +46,10 @@ public class ANTLR4Tools {
             JavaVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new JavaVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             } else {
                 visitor = new JavaVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -83,7 +83,7 @@ public class ANTLR4Tools {
                 visitor = new Java9Visitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -101,10 +101,10 @@ public class ANTLR4Tools {
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             } else {
                 visitor = new Java9Visitor(false);
-                comments = getCommentsFromChannel2(tokens, false);
+                comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -133,7 +133,7 @@ public class ANTLR4Tools {
                 visitor = new CPPVisitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -151,10 +151,10 @@ public class ANTLR4Tools {
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
                 visitor = new CPPVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -183,7 +183,7 @@ public class ANTLR4Tools {
                 visitor = new Python3Visitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -201,10 +201,10 @@ public class ANTLR4Tools {
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             } else {
                 visitor = new Python3Visitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -281,13 +281,13 @@ public class ANTLR4Tools {
         }
     }
 
-    public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning) throws IOException {
+    public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning, Language language) throws IOException {
         List<SyntaxStructure> result = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
             List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
             for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
                 if (hiddenTokensToLeft.get(i).getChannel() == 2) {
-                    result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning));
+                    result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning, language));
 
                 }
             }

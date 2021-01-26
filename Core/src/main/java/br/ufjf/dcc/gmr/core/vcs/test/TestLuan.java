@@ -21,12 +21,12 @@ public class TestLuan {
         
         File projectPath = new File("resources/test.py");
 
-        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),43,44);
+        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),31,32);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();
 
-        for (SyntaxStructure outmostedAnalysis : teste.getOutmostedNormalAnalysis()) {
+        for (SyntaxStructure outmostedAnalysis : teste.getAll()) {
             toTranslate.add(outmostedAnalysis.getStructureType());
 
             System.out.println(outmostedAnalysis.getForm());

@@ -52,7 +52,7 @@ if __name__ == '__main__': #maindeclaration
 
 
 
-        """  #comments
+     """  #comments
      ANNOTATION 
      ANNOTATION_TYPE_MEMBER_DECLARATION
      ARRAY_ACCESS // No teste //não existe
