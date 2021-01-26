@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -39,6 +38,7 @@ public class ParserJava {
     private GlobalEnviroment globalEnviroment;
     private static Version version;
     private static String pathProject;
+    private static int context;
 
     public ParserJava(Version version) {
         this.globalEnviroment = new GlobalEnviroment();
@@ -217,8 +217,6 @@ public class ParserJava {
     
     
     private static void setBeforeAndAfterContext(){
-        int context = 10;
-
         for (int i = 0; i < version.getFile().size(); i++) {
             for (int z = 0; z < version.getFile().get(i).getChunks().size(); z++) {
 
@@ -472,6 +470,14 @@ public class ParserJava {
      */
     public void setPathProject(String pathProject) {
         this.pathProject = pathProject;
+    }
+    
+    public static int getContext() {
+        return context;
+    }
+
+    public static void setContext(int context) {
+        ParserJava.context = context;
     }
 
 }
