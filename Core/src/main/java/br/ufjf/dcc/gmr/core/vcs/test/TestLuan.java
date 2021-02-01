@@ -19,7 +19,7 @@ public class TestLuan {
     public static void main(String[] args) throws IOException {
        
         
-        File projectPath = new File("resources/test.py");
+    /*    File projectPath = new File("resources/test.py");
 
         ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),31,32);
 
@@ -38,6 +38,24 @@ public class TestLuan {
         for (String string : toTranslate) {
             System.out.println(string);
         }
-         
+     */
+
+    ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval("/home/luan/Github/InputHelper.cs",1,100);
+
+         List<String> toTranslate;
+        toTranslate = new ArrayList<String>();
+
+        for (SyntaxStructure outmostedAnalysis : teste.getAll()) {
+            toTranslate.add(outmostedAnalysis.getStructureType());
+
+            System.out.println(outmostedAnalysis.getForm());
+            System.out.println("--------------------- \n");
+        }
+
+        toTranslate = Translator.CSharpTranslator(toTranslate);
+
+        for (String string : toTranslate) {
+            System.out.println(string);
+        }
     }
 }

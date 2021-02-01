@@ -760,18 +760,12 @@ public class Translator {
                 list.remove("Return_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WARNING!")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Yield_stmt")) {
-                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
-                list.remove("Yield_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -781,6 +775,12 @@ public class Translator {
                 list.remove("While_stmt");
                 list.remove("While_");
             }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Yield_stmt")) {
+                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
+                list.remove("Yield_stmt");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (!list.isEmpty()) {
@@ -788,6 +788,328 @@ public class Translator {
             }
         }
 
+        return mainList;
+    }
+    
+     public static List<String> CSharpTranslator(List<String> list) {
+        List<String> mainList = new ArrayList<>();
+        if (list.contains("Extension not parseble!")) {
+            mainList.add("Extension not parseble!");
+        } else {
+            //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ANNOTATION_TYPE_MEMBER_DECLARATION);
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ANNOTATION);
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Array_initializer")
+                    ) {
+                mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
+                list.remove("Array_initializer");
+            }
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Nothing")) {
+                mainList.add(LanguageConstructsTypes.BLANK);
+                list.remove("Nothing");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("BreakStatement")) {
+                mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
+                list.remove("BreakStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+            //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
+                list.remove("");
+            }
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("MultiLineComment")
+                    || list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("MultiLineComment");
+                list.remove("LineComment");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("ContinueStatement")) {
+                mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
+                list.remove("ContinueStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("DoStatement")) {
+                mainList.add(LanguageConstructsTypes.DO_STATEMENT);
+                list.remove("DoStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //ENUMS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
+                list.remove("");
+            }
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
+                list.remove("");
+            }
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.ENUM_VALUE);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.FIELD);
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Finally_clause")) {
+                mainList.add(LanguageConstructsTypes.FINALLY);
+                list.remove("Finally_clause");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("ForStatement")
+                    || list.contains("ForeachStatement")
+                  ) {
+                mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
+                list.remove("ForStatement");
+                list.remove("ForeachStatement");
+      
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("IfStatement")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.IF_STATEMENT);
+                list.remove("IfStatement");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
+                list.remove("");
+            } else if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.INTERFACE_SIGNATURE);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
+                list.remove("");
+            }
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
+                list.remove("");
+            }
+            if (list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
+                list.remove("");
+                list.remove("");
+            }
+            if (list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
+                list.remove("");
+
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("ReturnStatement")) {
+                mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
+                list.remove("ReturnStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.STATIC_INITIALIZER);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("SwitchStatement")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
+                list.remove("SwitchStatement");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //SYNCHRONIZED_STATEMENT+++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")) {
+                mainList.add(LanguageConstructsTypes.SYNCHRONIZED_STATEMENT);
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("ThrowStatement")) {
+                mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
+                list.remove("ThrowStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("TryStatement")
+                    ) {
+                mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
+                list.remove("TryStatement");
+             
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.VARIABLE);
+                list.remove("");
+               
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("WhileStatement")
+                    || list.contains("")
+                    || list.contains("")) {
+                mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
+                list.remove("WhileStatement");
+                list.remove("");
+                list.remove("");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("WARNING!")) {
+                mainList.add(LanguageConstructsTypes.ERROR);
+                list.remove("WARNING!");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+            //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("YieldStatement")) {
+                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
+                list.remove("YieldStatement");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (!list.isEmpty()) {
+                mainList.add(LanguageConstructsTypes.OTHER);
+            }
+        }
         return mainList;
     }
 
