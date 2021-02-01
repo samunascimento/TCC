@@ -17,10 +17,24 @@ export default class Home extends Component{
             </div>
             <div style={{display:'flex', padding: '100px 0px 0px 16px'}}>
                 <Typography variant='h6'>
+                    Nome do projeto:
+                </Typography>
+                <TextField 
+                    id="projectName" 
+                    type="text"
+                    placeholder="Nome"
+                    style={{
+                        width: '50%',
+                        padding: '0px 0px 0px 10px'
+                    }}
+                />
+            </div>
+            <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
+                <Typography variant='h6'>
                     Caminho para o projeto:
                 </Typography>
                 <TextField 
-                    id="project" 
+                    id="projectPath" 
                     type="text"
                     placeholder="Projeto"
                     style={{

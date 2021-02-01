@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.controller;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -23,7 +24,6 @@ public class MenuOptionsActionListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent me) {
         String aux = JOptionPane.showInputDialog("Context lines:");
-        int contextLines = 0;
         while (true) {
             try {
                 if(aux.equals(JOptionPane.CANCEL_OPTION)){
@@ -33,7 +33,7 @@ public class MenuOptionsActionListener extends MouseAdapter {
                 break;
             }
             try {
-                contextLines = Integer.parseInt(aux);
+                ParserJava.setContext(Integer.parseInt(aux));
                 break;
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(view, "Type only numbers.");

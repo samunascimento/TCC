@@ -1,5 +1,8 @@
 package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -27,24 +30,48 @@ public class SyntaxStructure {
         this.warning = warning;
     }
 
-    public SyntaxStructure(Token token, boolean warning) {
+    /*
+    0 = Java
+    1 = CPP
+    2 = Pyhton
+     */
+    public SyntaxStructure(Token token, boolean warning, Language language) {
         this.startLine = token.getLine();
         this.stopLine = (token.getLine() + token.getText().split("\n").length - 1);
         this.startCharIndex = token.getStartIndex();
         this.stopCharIndex = token.getStopIndex();
-        if (token.getType() == 117) {
-            this.structureType = "MultiLineComment";
+        if (language == Language.JAVA) {
+            if (token.getType() == Java9Lexer.MULTI_LINE_COMMENT) {
+                this.structureType = "MultiLineComment";
+            } else if (token.getType() == Java9Lexer.LINE_COMMENT) {
+                this.structureType = "LineComment";
+            }
+        } else if (language == Language.CPP) {
+            if (token.getType() == CPP14Lexer.BlockComment) {
+                this.structureType = "BlockComment";
+            } else if (token.getType() == CPP14Lexer.LineComment) {
+                this.structureType = "LineComment";
+            }
+        } else if (language == Language.PYTHON) {
+            if (token.getType() == Python3Lexer.LINE_COMMENT) {
+                this.structureType = "LineComment";
+            }
+            //Multi line comments in python are arrays with no variable, we are working on it
+
         } else {
-            this.structureType = "LineComment";
+
+            this.structureType = "Unknown";
         }
+
         this.text = token.getText();
+
         this.warning = warning;
     }
 
     public SyntaxStructure() {
-        
+
     }
-    
+
     public int getStartLine() {
         return startLine;
     }
@@ -108,7 +135,7 @@ public class SyntaxStructure {
     public void setWarning(boolean warning) {
         this.warning = warning;
     }
-    
+
     public boolean isOneLine() {
         if (startLine == stopLine) {
             return true;

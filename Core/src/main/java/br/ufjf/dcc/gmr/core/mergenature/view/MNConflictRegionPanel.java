@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,8 +53,39 @@ public class MNConflictRegionPanel extends JPanel {
         conflictLabel.setOpaque(false);
         this.add(conflictLabel, gbc);
 
+        JLabel altenativeView = new JLabel("Show alternative view");
+        altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
+        altenativeView.setForeground(Color.CYAN);
+        altenativeView.setOpaque(false);
+        altenativeView.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new MNAlternativeViewFrame(region);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                altenativeView.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                altenativeView.setForeground(Color.CYAN);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+        gbc.gridy = 2;
+        this.add(altenativeView, gbc);
+
         JPanel conflictPanel = getConflictTextArea();
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         this.add(conflictPanel, gbc);
 
@@ -60,7 +93,7 @@ public class MNConflictRegionPanel extends JPanel {
         solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionLabel.setOpaque(false);
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
         this.add(solutionLabel, gbc);
 
@@ -69,7 +102,7 @@ public class MNConflictRegionPanel extends JPanel {
         solutionTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
         solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionTextArea.setEditable(false);
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         this.add(solutionTextArea, gbc);
 
@@ -77,7 +110,7 @@ public class MNConflictRegionPanel extends JPanel {
         structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
-        gbc.gridy = 4;
+        gbc.gridy = 6;
         gbc.gridwidth = 1;
         this.add(structuresLabel, gbc);
 
@@ -86,7 +119,7 @@ public class MNConflictRegionPanel extends JPanel {
         structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresTextArea.setEditable(false);
         structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-        gbc.gridy = 5;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         this.add(structuresTextArea, gbc);
 
@@ -100,13 +133,13 @@ public class MNConflictRegionPanel extends JPanel {
                 structuresTextArea.setText(region.getStructures());
             }
         });
-        gbc.gridy = 6;
+        gbc.gridy = 8;
         gbc.gridwidth = 1;
         this.add(useOutmost, gbc);
 
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
-        gbc.gridy = 7;
+        gbc.gridy = 9;
         gbc.gridwidth = 2;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;

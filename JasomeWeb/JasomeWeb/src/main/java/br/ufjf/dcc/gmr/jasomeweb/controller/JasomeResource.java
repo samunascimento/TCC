@@ -7,7 +7,6 @@
 package br.ufjf.dcc.gmr.jasomeweb.controller;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
-import br.ufjf.dcc.gmr.core.jasome.model.ClassMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClass;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClassMethod;
@@ -20,9 +19,7 @@ import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -33,7 +30,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.cli.*;
 
 /**
  * REST Web Service
@@ -195,11 +191,11 @@ public class JasomeResource {
        
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("projects/metric/post/{caminho}")
-    public void recebeCaminho(final @PathParam("caminho") String caminho) {
-        System.out.println("CAMINHO: " + caminho);
+    @Path("projects/{nameProject}/{sourceDir}")
+    public void insertProject(final @PathParam("nameProject") String nome, final @PathParam("sourceDir") String caminho) {
+        System.out.println("Nome: "+nome+"Caminho: " + caminho);
     }
+    
     
     /**
      * PUT method for updating or creating an instance of JasomeResource

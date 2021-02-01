@@ -76,7 +76,7 @@ class Layout extends Component {
         </Hidden>
         <MenuList>
           <MenuItem component={Link} to="/" selected={'/' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
-            Home
+            Cadastro
           </MenuItem>
           <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
             Metric

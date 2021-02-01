@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.Language;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,10 +41,10 @@ public class AST {
             Visitor2 visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Visitor2();
-                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true);
+                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
                 visitor = new Visitor2();
-                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true);
+                comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
            //Imprimir_arvore-------------------------------------------------------

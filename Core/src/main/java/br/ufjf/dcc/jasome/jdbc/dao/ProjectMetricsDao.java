@@ -5,7 +5,6 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
-import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

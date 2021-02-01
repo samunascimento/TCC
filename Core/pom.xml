@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.13</version>
+            <version>42.2.18</version>
         </dependency>
         <dependency> 
             <groupId>org.antlr</groupId> 
@@ -74,14 +74,15 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp</argument>
                     </arguments>
                     <includes>
-                        <include>Python3.g4</include>
+                        <include>CSharpLexer.g4</include>
+                        <include>CSharpParser.g4</include>
                     </includes>
                 </configuration>
                 <executions>

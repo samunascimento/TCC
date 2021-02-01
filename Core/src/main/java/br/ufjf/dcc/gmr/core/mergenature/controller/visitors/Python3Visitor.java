@@ -525,7 +525,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         if (arglist != null) {
             List<Python3Parser.ArgumentContext> arguments = arglist.argument();
 
-            for (Python3Parser.ArgumentContext argument : arguments) {                
+            for (Python3Parser.ArgumentContext argument : arguments) {
                 if (argument.getText().contains("Enum") || argument.getText().contains("IntEnum")) {
 
                     specialProcess(ctx, "Enum");
@@ -625,7 +625,14 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
     @Override
     public Object visitFinally_clause(Python3Parser.Finally_clauseContext ctx) {
         process(ctx);
-        return super.visitChildren(ctx); 
+        return super.visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitAssert_(Python3Parser.Assert_Context ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
     }
     
+
 }

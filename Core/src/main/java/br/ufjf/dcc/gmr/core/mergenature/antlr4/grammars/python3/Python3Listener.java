@@ -388,6 +388,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitAssignment(Python3Parser.AssignmentContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#assert_}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssert_(Python3Parser.Assert_Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#assert_}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssert_(Python3Parser.Assert_Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree
 	 */

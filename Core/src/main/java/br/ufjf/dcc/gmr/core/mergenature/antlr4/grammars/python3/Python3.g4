@@ -176,7 +176,7 @@ pass_stmt: 'pass';
 
 flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
 
-//Brake ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Break ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 break_stmt: 'break';
 //------------------------------------------------------------------------------
 
@@ -214,13 +214,17 @@ dotted_name: NAME ('.' NAME)*;
 array:'[' (testlist_comp)? ']';
 //------------------------------------------------------------------------------
 
-//Assignment+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Assignment++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 assignment: atom '=' atom;
+//------------------------------------------------------------------------------
+
+//Assert++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+assert_: 'assert';
 //------------------------------------------------------------------------------
 
 global_stmt: 'global' NAME (',' NAME)*;
 nonlocal_stmt: 'nonlocal' NAME (',' NAME)*;
-assert_stmt: 'assert' test (',' test)?;
+assert_stmt: assert_  test (',' test)?;
 
 compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | decorated | async_stmt;
 async_stmt: ASYNC (funcdef | with_stmt | for_stmt);
@@ -524,12 +528,9 @@ POWER_ASSIGN : '**=';
 IDIV_ASSIGN : '//=';
 
 SKIP_
- : ( SPACES ) -> skip
+ : ( SPACES | LINE_JOINING  ) -> skip
  ;
 
-CHANNEL2_
- : ( COMMENT | LINE_JOINING ) -> channel(2)
- ;
 
 UNKNOWN_CHAR
  : .
@@ -671,8 +672,8 @@ fragment SPACES
  : [ \t]+
  ;
 
-fragment COMMENT
- : '#' ~[\r\n\f]*
+ LINE_COMMENT
+ : '#' ~[\r\n\f]* -> channel(2)
  ;
 
 fragment LINE_JOINING
