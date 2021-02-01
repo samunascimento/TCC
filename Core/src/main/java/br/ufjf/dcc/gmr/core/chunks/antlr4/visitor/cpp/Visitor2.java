@@ -5,8 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -16,12 +16,12 @@ import org.antlr.v4.runtime.Token;
  *
  * @author ketleen
  */
-public class Visitor1 extends CPP14BaseVisitor<Object> {
-    private TypeBinding typeBinding;
+public class Visitor2 extends CPP14BaseVisitor<Object> {
+        TypeBinding typeBinding;
     
-    public Visitor1() {
-        this.typeBinding = new TypeBinding();
-    }
+        public Visitor2() {
+            this.typeBinding = new TypeBinding();
+        }
 
     public static void log(ParserRuleContext ctx){
         Token start = ctx.getStart();
@@ -81,13 +81,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
 //            log(ctx);
-          String imports = ctx.getText();
-           if(imports.contains("include")){
-               String[] name = imports.split("include");
-//               System.out.println(name[1]);
-               ImportBinding importBinding = new ImportBinding(name[1]);
-           }
-            return visitChildren(ctx);
+              return visitChildren(ctx);
         }
 
         @Override
@@ -357,6 +351,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitNoptrnewdeclarator(CPP14Parser.NoptrnewdeclaratorContext ctx) {
 //            log(ctx);
+           
             return visitChildren(ctx);
         }
 
@@ -927,6 +922,26 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) {
 //            log(ctx);
+            int cont= 0;
+            for(int i =0; i < ctx.getChildCount(); i++){
+                if(ctx.getChild(i) instanceof CPP14Parser.ParametersandqualifiersContext){
+                    System.out.println("metodos?: "+ ctx.getText());
+                    cont++;
+                }
+            }
+            if(cont == 0){
+                for(int i =0; i < ctx.getParent().getChildCount(); i++){
+                    if(ctx.getParent().getChild(i) instanceof CPP14Parser.ParametersandqualifiersContext){
+                        System.out.println("metodos: "+ ctx.getParent().getText());
+                        cont++;
+                    }
+                }
+                if(cont==0){
+                    System.out.println("Atributo: "+ ctx.getText());
+                }
+            }
+            
+            
             return visitChildren(ctx);
         }
 
@@ -1071,8 +1086,6 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitClassname(CPP14Parser.ClassnameContext ctx) {
 //            log(ctx);
-            this.typeBinding.setName(ctx.getText());
-            System.out.println(ctx.getText());
             return visitChildren(ctx);
         }
 
@@ -1400,4 +1413,3 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
             return visitChildren(ctx);
         }
 }
-
