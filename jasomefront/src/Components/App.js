@@ -4,7 +4,8 @@ import { NotFound } from './Errors'
 import Projects from './Projects'
 import Layout from './Layout'
 import ListMetric from './Metric'
-import Home from './Home';
+import InsertProject from './Insert/InsertProject'
+import InsertLogin from './Insert/InsertLogin'
 
 export default class extends Component {
   state = {
@@ -22,7 +23,8 @@ export default class extends Component {
     return <BrowserRouter>
       <Layout projects={projects}>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/insert/login" component={InsertLogin}/>
+          <Route exact path="/insert/projeto" component={InsertProject}/>
           <Route exact path="/metric" component={ListMetric}/>
           <Route path="/projects" render={
             props => <Projects {...props} projects={projects} />

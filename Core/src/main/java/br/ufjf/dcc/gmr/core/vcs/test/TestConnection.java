@@ -44,7 +44,7 @@ public class TestConnection {
         project.setId(projectId);
         
         
-
+        /*
         Metric metric = new Metric();
         metric.setName("name");
         metric.setDescription("description");
@@ -71,7 +71,7 @@ public class TestConnection {
         for (VersionMetrics versionMetrics : select) {
             System.out.println(versionMetrics.toString());    
         }
-        
+        */
         
     }
 

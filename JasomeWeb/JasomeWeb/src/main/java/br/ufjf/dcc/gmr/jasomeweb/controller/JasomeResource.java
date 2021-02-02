@@ -189,11 +189,11 @@ public class JasomeResource {
         return listJ;
     }
        
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("projects/{nameProject}/{sourceDir}")
-    public void insertProject(final @PathParam("nameProject") String nome, final @PathParam("sourceDir") String caminho) {
-        System.out.println("Nome: "+nome+"Caminho: " + caminho);
+    @Path("projects/{nameProject}")
+    public void insertProject(final @PathParam("nameProject") String nome) {
+        System.out.println("Nome: "+nome);
     }
     
     
