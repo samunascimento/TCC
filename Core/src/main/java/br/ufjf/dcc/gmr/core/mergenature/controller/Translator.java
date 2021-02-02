@@ -637,7 +637,10 @@ public class Translator {
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Ajuda
+                 if (list.contains("Cast")) {
+                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
+                list.remove("Cast");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Except_clause")) {
@@ -679,7 +682,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Importação, ver Gleiph
+            ////There is no field on python grammar
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Finally_clause")) {
@@ -734,7 +737,7 @@ public class Translator {
             //There is no package on pythons
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //objects initialized insides classes are considered statics, see with Gleiph!
+            //objects initialized insides classes are considered statics!
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
