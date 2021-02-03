@@ -17,10 +17,18 @@ import org.antlr.v4.runtime.Token;
  * @author ketleen
  */
 public class Visitor2 extends CPP14BaseVisitor<Object> {
-        TypeBinding typeBinding;
+        private TypeBinding typeBinding;
+        
+        private String typeS;
+        private String modifierS;
+        
+        private String className;
     
         public Visitor2() {
             this.typeBinding = new TypeBinding();
+            this.typeS = "";
+            this.modifierS = "";
+            this.className = "";
         }
 
     public static void log(ParserRuleContext ctx){
@@ -188,7 +196,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
 
         @Override
         public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
-            log(ctx);
+            //log(ctx);
             return visitChildren(ctx);
         }
 
@@ -664,6 +672,9 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitSimpletypespecifier(CPP14Parser.SimpletypespecifierContext ctx) {
 //            log(ctx);
+            
+            this.typeS = ctx.getText();
+            
             return visitChildren(ctx);
         }
 
@@ -906,10 +917,37 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
 //            log(ctx);
             return visitChildren(ctx);
         }
-
+        
+        public boolean findChildPd(ParserRuleContext ctx) {
+            if(ctx.getText().contains("("))
+                return true;
+            return false;
+        }
+        
+        public boolean findParentPd(ParserRuleContext ctx) {
+            if(ctx.getParent() == null)
+                return false;
+            
+            if(ctx.getParent() instanceof CPP14Parser.ParameterdeclarationContext)
+                return true;
+            
+            return findParentPd(ctx.getParent());
+        }
+        
         @Override
         public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
   //    log(ctx);
+  
+            if(findChildPd(ctx))
+                System.out.println("metodo: "  + this.modifierS + " " + this.typeS  + " " + ctx.getText());
+            else{
+                if(!findParentPd(ctx))
+                    System.out.println("atributo: " +  this.modifierS + " " + this.typeS  + " " + ctx.getText());
+                else
+                    System.out.println("\tparametros: " + this.typeS  + " " + ctx.getText());
+            }
+            
+            this.typeS = "";
             return visitChildren(ctx);
         }
 
@@ -918,29 +956,28 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
 //            log(ctx);
             return visitChildren(ctx);
         }
-
+        
         @Override
         public Object visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) {
 //            log(ctx);
-            int cont= 0;
-            for(int i =0; i < ctx.getChildCount(); i++){
+            /*int cont = 0;
+            for(int i = 0; i < ctx.getChildCount(); i++){
                 if(ctx.getChild(i) instanceof CPP14Parser.ParametersandqualifiersContext){
-                    System.out.println("metodos?: "+ ctx.getText());
+                    System.out.println("metodo: "  + this.modifierS + " " + this.typeS  + " " + ctx.getText());
                     cont++;
                 }
             }
-            if(cont == 0){
-                for(int i =0; i < ctx.getParent().getChildCount(); i++){
-                    if(ctx.getParent().getChild(i) instanceof CPP14Parser.ParametersandqualifiersContext){
-                        System.out.println("metodos: "+ ctx.getParent().getText());
-                        cont++;
-                    }
-                }
-                if(cont==0){
-                    System.out.println("Atributo: "+ ctx.getText());
-                }
-            }
             
+            if(ctx.getParent() instanceof CPP14Parser.NoptrdeclaratorContext) {
+                cont++;
+            }
+            if(cont == 0) {
+                if(!findParentPd(ctx))
+                    System.out.println("atributo: " +  this.modifierS + " " + this.typeS  + " " + ctx.getText());
+                //else
+                    //System.out.println("parametros: " + this.typeS  + " " + ctx.getText());
+            }*/
+                
             
             return visitChildren(ctx);
         }
@@ -1103,7 +1140,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
 
         @Override
         public Object visitClassheadname(CPP14Parser.ClassheadnameContext ctx) {
-//            log(ctx);
+//            log(ctx);        
             return visitChildren(ctx);
         }
 
@@ -1194,6 +1231,9 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitAccessspecifier(CPP14Parser.AccessspecifierContext ctx) {
 //            log(ctx);
+            
+            this.modifierS = ctx.getText();
+
             return visitChildren(ctx);
         }
 
