@@ -25,7 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  *
  * @author felip
@@ -54,7 +53,6 @@ public class InitProject implements Runnable {
 
     }
 
-
     private static List<ConflictChunk> createConflictChunksList(String filePath) {
 
         List<ConflictChunk> result = new ArrayList<>();
@@ -68,11 +66,11 @@ public class InitProject implements Runnable {
 
             if (content.get(i).startsWith("<<<<<<<")) {
                 chunk = new ConflictChunk();
-                chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i ));
+                chunk.setBegin(new Line(ListUtils.getSubList(content, i, i), i));
             }
 
             if (content.get(i).startsWith("=======")) {
-                chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i ));
+                chunk.setSeparator(new Line(ListUtils.getSubList(content, i, i), i));
             }
 
             if (content.get(i).startsWith(">>>>>>>")) {
@@ -171,11 +169,14 @@ public class InitProject implements Runnable {
         DefaultTableModel model = (DefaultTableModel) this.view.getTable().getModel();
         for (int i = 0; i < versions.size(); i++) {
             Version version = versions.get(i);
-            model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
+          
+                model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
+            
+
         }
 
         this.view.getTable().setModel(model);
-        
+
         this.view.getSplitPane().setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         this.view.getSplitPane().setLeftComponent(this.view.getLeftPanel());
         this.view.getSplitPane().setRightComponent(this.view.getRightPanel());

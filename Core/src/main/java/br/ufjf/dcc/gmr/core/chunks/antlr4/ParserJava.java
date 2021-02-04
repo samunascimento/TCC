@@ -37,55 +37,51 @@ public class ParserJava {
 
     private GlobalEnviroment globalEnviroment;
     private static Version version;
-    private static String pathProject;
+    private static String pathProject = "";
     private static int context = 0;
+    private static String pathRepositoryCopy = "";
+    private static String pathRepositoryCopy1 = "";
+    private static String pathRepositoryCopy2 = "";
+    private static List<String> filesToCheckParent1 = new ArrayList<>();
+    private static List<String> filesToCheckParent2 = new ArrayList<>();
+    private static List<List<String>> filesToStringParent1 = new ArrayList<>();
+    private static List<List<String>> filesToStringParent2 = new ArrayList<>();
+    private static GlobalEnviroment parent1 = new GlobalEnviroment();
+    private static GlobalEnviroment parent2 = new GlobalEnviroment();
+    private static List<String> javaFiles = new ArrayList<>();
+    private static List<ConflictChunk> conflictChunkList = new ArrayList<>();
 
     public ParserJava(Version version) {
+        this.version = version;
         this.globalEnviroment = new GlobalEnviroment();
+
     }
 
     public ParserJava(Version version, String pathProject) {
         this.version = version;
         this.globalEnviroment = new GlobalEnviroment();
         this.pathProject = pathProject;
+
     }
-    
+
     public static void main(String[] args) throws Exception {
 
-        GlobalEnviroment parent1 = new GlobalEnviroment();
-        GlobalEnviroment parent2 = new GlobalEnviroment();
-
         //Definindo os arquivos com conflitos
-        List<String> javaFiles = new ArrayList<>();
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
             javaFiles.add(filePath);
         }
 
-        List<String> filesToCheckParent1 = new ArrayList<>();
-        List<String> filesToCheckParent2 = new ArrayList<>();
-        List<List<String>> filesToStringParent1 = new ArrayList<>();
-        List<List<String>> filesToStringParent2 = new ArrayList<>();
+        extractParents();
 
-        String pathRepositoryCopy = "";
-        String pathRepositoryCopy1 = "";
-        String pathRepositoryCopy2 = "";
-        
-        extractParents(filesToCheckParent1, filesToCheckParent2, filesToStringParent1, filesToStringParent2, pathRepositoryCopy, pathRepositoryCopy1, pathRepositoryCopy2,javaFiles, parent1, parent2);
-        
         setBeforeAndAfterContext();
-        
 
-        List<ConflictChunk> conflictChunkList = new ArrayList<>();
-        
-        createConflictChunkList(conflictChunkList, filesToCheckParent1, filesToCheckParent2, pathRepositoryCopy1, parent1, parent2);
-        
+        createConflictChunkList();
 
-        createJungGraph(parent1, parent2, conflictChunkList, args);
-
+//        createJungGraph(parent1, parent2, conflictChunkList, args);
     }
-    
-    private static void createConflictChunkList(List<ConflictChunk> conflictChunkList, List<String> filesToCheckParent1, List<String> filesToCheckParent2, String pathRepositoryCopy1, GlobalEnviroment parent1, GlobalEnviroment parent2) throws IOException{
+
+    private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
             DiffTranslator diffTranslator = new DiffTranslator();
             diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
@@ -104,11 +100,11 @@ public class ParserJava {
 
         }
     }
-    
-    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args){
+
+    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args) {
         Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
         jung.main(args);
-        File dirParent = new File("/home/felipepe/Área de Trabalho/projetos/sandbox/");
+        File dirParent = new File("/Documentos/projetos/sandbox/");
 
         try {
             FileUtils.deleteDirectory(dirParent);
@@ -117,7 +113,7 @@ public class ParserJava {
         }
     }
 
-    private static void extractParents(List<String> filesToCheckParent1, List<String> filesToCheckParent2, List<List<String>> filesToStringParent1, List<List<String>> filesToStringParent2, String pathRepositoryCopy, String pathRepositoryCopy1, String pathRepositoryCopy2, List<String> javaFiles, GlobalEnviroment parent1, GlobalEnviroment parent2) throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
+    private static void extractParents() throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
         int cont = 0;
         for (String parent : version.getParent()) {
 
@@ -133,11 +129,11 @@ public class ParserJava {
             if (cont == 0) {
                 nameNewDir = "parent1";
                 pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
-                pathRepositoryCopy1 = pathRepositoryCopy;
+                ParserJava.pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
                 nameNewDir = "parent2";
                 pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
-                pathRepositoryCopy2 = pathRepositoryCopy;
+                ParserJava.pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
             File cloneDirectory = new File(pathRepositoryCopy);
@@ -214,20 +210,32 @@ public class ParserJava {
 
         }
     }
-    
-    
-    private static void setBeforeAndAfterContext(){
+
+    private static void setBeforeAndAfterContext() {
         for (int i = 0; i < version.getFile().size(); i++) {
             for (int z = 0; z < version.getFile().get(i).getChunks().size(); z++) {
 
                 int begin = version.getFile().get(i).getChunks().get(z).getBegin().getLineNumber();
                 int end = version.getFile().get(i).getChunks().get(z).getEnd().getLineNumber();
 
-                version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(begin - context);
                 version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineEnd(begin - 1);
+                if ((begin - context) > 0) {
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(begin - context);
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent(begin - context, begin - 1, version.getFile().get(i)));
 
-                version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end - 1);
-                version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(end + context);
+                } else {
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(0);
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent(0, begin - 1, version.getFile().get(i)));
+                }
+
+                if ((end + context) < version.getFile().get(i).getContent().size()) {
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(end + context);
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, end + context, version.getFile().get(i)));
+                } else {
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(version.getFile().get(i).getContent().size()-1);
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, version.getFile().get(i).getContent().size()-1, version.getFile().get(i)));
+                }
+                version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end + 1);
 
                 int beforeBegin = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineBegin();
                 int beforeEnd = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineEnd();
@@ -259,8 +267,17 @@ public class ParserJava {
             }
         }
     }
-    
-    
+
+    private static List<String> setContextContent(int begin, int end, MyFile file) {
+
+        List<String> result = new ArrayList<>();
+
+        for (int i = begin; i < end - 1; i++) {
+            result.add(file.getContent().get(i));
+        }
+
+        return result;
+    }
 
     private static String createDiffRepository(String path, String pasta) throws IOException {
 
@@ -352,10 +369,11 @@ public class ParserJava {
 
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.setSize(new Dimension(500, 600));
-
+                // viewer.open();
                 Visitor1 visitor = new Visitor1(globalEnviroment);
 
                 visitor.visit(tree);
+
                 if (visitor.isError()) {
                     unprocessed.add(copyPathList.get(i));
                 }
@@ -471,13 +489,97 @@ public class ParserJava {
     public void setPathProject(String pathProject) {
         this.pathProject = pathProject;
     }
-    
+
     public static int getContext() {
         return context;
     }
 
     public static void setContext(int context) {
         ParserJava.context = context;
+    }
+
+    /**
+     * @return the filesToCheckParent1
+     */
+    public List<String> getFilesToCheckParent1() {
+        return filesToCheckParent1;
+    }
+
+    /**
+     * @param filesToCheckParent1 the filesToCheckParent1 to set
+     */
+    public void setFilesToCheckParent1(List<String> filesToCheckParent1) {
+        this.filesToCheckParent1 = filesToCheckParent1;
+    }
+
+    /**
+     * @return the filesToCheckParent2
+     */
+    public List<String> getFilesToCheckParent2() {
+        return filesToCheckParent2;
+    }
+
+    /**
+     * @param filesToCheckParent2 the filesToCheckParent2 to set
+     */
+    public void setFilesToCheckParent2(List<String> filesToCheckParent2) {
+        this.filesToCheckParent2 = filesToCheckParent2;
+    }
+
+    /**
+     * @return the filesToStringParent1
+     */
+    public List<List<String>> getFilesToStringParent1() {
+        return filesToStringParent1;
+    }
+
+    /**
+     * @param filesToStringParent1 the filesToStringParent1 to set
+     */
+    public void setFilesToStringParent1(List<List<String>> filesToStringParent1) {
+        this.filesToStringParent1 = filesToStringParent1;
+    }
+
+    /**
+     * @return the filesToStringParent2
+     */
+    public List<List<String>> getFilesToStringParent2() {
+        return filesToStringParent2;
+    }
+
+    /**
+     * @param filesToStringParent2 the filesToStringParent2 to set
+     */
+    public void setFilesToStringParent2(List<List<String>> filesToStringParent2) {
+        this.filesToStringParent2 = filesToStringParent2;
+    }
+
+    /**
+     * @return the parent1
+     */
+    public GlobalEnviroment getParent1() {
+        return parent1;
+    }
+
+    /**
+     * @param parent1 the parent1 to set
+     */
+    public void setParent1(GlobalEnviroment parent1) {
+        this.parent1 = parent1;
+    }
+
+    /**
+     * @return the parent2
+     */
+    public GlobalEnviroment getParent2() {
+        return parent2;
+    }
+
+    /**
+     * @param parent2 the parent2 to set
+     */
+    public void setParent2(GlobalEnviroment parent2) {
+        this.parent2 = parent2;
     }
 
 }

@@ -66,17 +66,45 @@ public class DiffTranslator {
         }
 
     }
-    
-    public int changeLineToOriginalFileContext(int line){
-        
-        
-        
-        
-        
-        
-        
-        return 0;
-    }
+//
+//    public int changeLineToOriginalFileContext(int line, boolean version) {
+//
+//        if (version) {
+//            int removeSizeBefore = 0;
+//            if (removeOpList.size() > 0) {
+//                while (removeOpList.get(removeSizeBefore).getLine() < line && removeOpList.size() - 1 > removeSizeBefore) {
+//                    removeSizeBefore++;
+//
+//                }
+//
+//                return line;
+//
+//            }
+//        } else {
+//            int addSizeBefore = 0;
+//            int aux = 0;
+//            if (addOpList.size() > 0) {
+//                while (addOpList.get(addSizeBefore).getLine() < line && addOpList.size() - 1 > addSizeBefore) {
+//
+//                    aux += addOpList.get(addSizeBefore).getSize();
+//
+//                    addSizeBefore++;
+//                }
+//            }
+//
+////            int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - aux;
+////            int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - aux;
+////            chunk.getChunkVersion1().setLineBegin(BeginChunk);
+////            chunk.getChunkVersion1().setLineEnd(EndChunk);
+////
+////            BeginChunk = (chunk.getSeparator().getLineNumber() + 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+////            EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
+////            chunk.getChunkVersion2().setLineBegin(BeginChunk);
+////            chunk.getChunkVersion2().setLineEnd(EndChunk);
+//          
+//        }
+//          return 0;
+//    }
 
     public void translator(String initialFile, String finalFile, String repository) throws IOException {
 

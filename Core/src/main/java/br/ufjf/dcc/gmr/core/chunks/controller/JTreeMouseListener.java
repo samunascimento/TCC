@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.controller;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
@@ -28,22 +29,31 @@ public class JTreeMouseListener extends MouseAdapter {
         if (selectedNode != null) {
             ConflictChunk chunk = null;
             try {
+                chunk = (ConflictChunk) selectedNode.getUserObject();
                 List<String> afterContext = chunk.getAfterContext().getText();
                 List<String> beforeContext = chunk.getBeforeContext().getText();
-                chunk = (ConflictChunk) selectedNode.getUserObject();
-                for(int i = view.getContextLines(); i > 0; i--){
-                    String content = afterContext.get(i);
-                    getTextArea().setText(getTextArea().getText() + content + "\n");
+
+                int i = chunk.getBeforeContext().getLineBegin();
+                for (String content : beforeContext) {
+                    getTextArea().setText(getTextArea().getText() + i + " - " + content + "\n");
+                    i++;
                 }
+
+                i = chunk.getBegin().getLineNumber();
                 for (String content : chunk.getErrorContent()) {
-                    getTextArea().setText(getTextArea().getText() + content + "\n");
+
+                    getTextArea().setText(getTextArea().getText() + i + " * " + content + "\n");
+                    i++;
                 }
-                for(int i = 0; i < view.getContextLines(); i++){
-                    String content = beforeContext.get(i);
-                    getTextArea().setText(getTextArea().getText() + content + "\n");
+                
+                i = chunk.getAfterContext().getLineBegin();
+                for (String content : afterContext) {
+                    getTextArea().setText(getTextArea().getText() + i + " - " + content + "\n");
+                    i++;
                 }
+               
             } catch (Exception e) {
-                //when the selected node is not a chunck
+                e.printStackTrace();
             }
 
         }
