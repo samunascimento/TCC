@@ -1,4 +1,5 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,8 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 10-10-2020
  */
-public class Merge {
-    
+public class Merge implements Cloneable {
+
     private int id;
     private transient Project project;
     private Commit merge;
@@ -17,17 +18,18 @@ public class Merge {
     private Commit ancestor;
     private List<Conflict> conflicts;
     private MergeType mergeType;
-    
+
     /**
      * Normal constructor
-     * @param id                Id for databases
-     * @param project           The project that the merge belongs
-     * @param merge             The data of the merge
-     * @param parents           The data of all parents
-     * @param ancestor          The data of the ancestor of the parents (merge base)
-     * @param conflicts     List of all files involved in a merge conflict
-     * @param mergeType         The type of the merge
-     */ 
+     *
+     * @param id Id for databases
+     * @param project The project that the merge belongs
+     * @param merge The data of the merge
+     * @param parents The data of all parents
+     * @param ancestor The data of the ancestor of the parents (merge base)
+     * @param conflicts List of all files involved in a merge conflict
+     * @param mergeType The type of the merge
+     */
     public Merge(int id, Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
         this.id = id;
         this.project = project;
@@ -37,16 +39,17 @@ public class Merge {
         this.conflicts = conflicts;
         this.mergeType = mergeType;
     }
-    
+
     /**
      * No id constructor
-     * @param project           The project that the merge belongs
-     * @param merge             The data of the merge
-     * @param parents           The data of all parents
-     * @param ancestor          The data of the ancestor of the parents (merge base)
-     * @param conflicts     List of all files involved in a merge conflict
-     * @param mergeType         The type of the merge
-     */ 
+     *
+     * @param project The project that the merge belongs
+     * @param merge The data of the merge
+     * @param parents The data of all parents
+     * @param ancestor The data of the ancestor of the parents (merge base)
+     * @param conflicts List of all files involved in a merge conflict
+     * @param mergeType The type of the merge
+     */
     public Merge(Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
         this.project = project;
         this.merge = merge;
@@ -56,11 +59,21 @@ public class Merge {
         this.mergeType = mergeType;
     }
 
+    public Merge(Merge merge) {
+        this.id = merge.getId();
+        this.project = merge.getProject();
+        this.merge = merge.getMerge();
+        this.parents = merge.getParents();
+        this.ancestor = merge.getAncestor();
+        this.conflicts = merge.getConflicts();
+        this.mergeType = merge.getMergeType();
+    }
+
     public Merge() {
         this.parents = new ArrayList<>();
         this.conflicts = new ArrayList<>();
     }
-    
+
     public int getNumberOfConflictRegions() {
         if (mergeType == MergeType.CONFLICTED_MERGE) {
             int i = 0;
@@ -126,8 +139,8 @@ public class Merge {
     public void setConflicts(List<Conflict> conflicts) {
         this.conflicts = conflicts;
     }
-    
-    public void addConflicts(Conflict conflicts){
+
+    public void addConflicts(Conflict conflicts) {
         this.conflicts.add(conflicts);
     }
 

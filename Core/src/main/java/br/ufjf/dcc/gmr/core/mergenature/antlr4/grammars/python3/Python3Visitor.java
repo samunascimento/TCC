@@ -245,6 +245,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssert_(Python3Parser.Assert_Context ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#cast}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCast(Python3Parser.CastContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -4,6 +4,8 @@ import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpLexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
@@ -11,6 +13,7 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Parser;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
+import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CSVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.JavaVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Python3Visitor;
@@ -18,9 +21,11 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -46,10 +51,10 @@ public class ANTLR4Tools {
             JavaVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new JavaVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             } else {
                 visitor = new JavaVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -83,7 +88,7 @@ public class ANTLR4Tools {
                 visitor = new Java9Visitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -101,10 +106,10 @@ public class ANTLR4Tools {
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Java9Visitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
             } else {
                 visitor = new Java9Visitor(false);
-                comments = getCommentsFromChannel2(tokens, false);
+                comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -133,7 +138,7 @@ public class ANTLR4Tools {
                 visitor = new CPPVisitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -151,10 +156,10 @@ public class ANTLR4Tools {
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
                 visitor = new CPPVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -183,7 +188,7 @@ public class ANTLR4Tools {
                 visitor = new Python3Visitor(false);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true);
+            comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -201,12 +206,74 @@ public class ANTLR4Tools {
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             } else {
                 visitor = new Python3Visitor(false);
-                comments = getCommentsFromChannel2(tokens, true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             }
             visitor.visit(tree);
+            return new ANTLR4Results(visitor.getList(), comments);
+        } else {
+            throw new IOException();
+        }
+    }
+
+    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+        if (filePathProjectAsRoot.endsWith(".cs")) {
+            String fileContent;
+            try {
+                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
+            } catch (FileNotExistInCommitException ex) {
+                throw new IOException(ex);
+            }
+            List<SyntaxStructure> comments;
+            CSharpLexer lexer = new CSharpLexer(new ANTLRInputStream(fileContent));
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CSharpParser parser = new CSharpParser(tokens);
+            ParseTree tree = parser.compilation_unit();
+            CSVisitor visitor;
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                visitor = new CSVisitor(true);
+            } else {
+                visitor = new CSVisitor(false);
+            }
+            visitor.visit(tree);
+             //Imprimir_arvore-------------------------------------------------------
+            
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            
+            //----------------------------------------------------------------------*/
+            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            return new ANTLR4Results(visitor.getList(), comments);
+        } else {
+            throw new IOException();
+        }
+    }
+
+    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePath) throws IOException {
+        if (filePath.endsWith(".cs")) {
+            List<SyntaxStructure> comments;
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            CSharpLexer lexer = new CSharpLexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CSharpParser parser = new CSharpParser(tokens);
+            ParseTree tree = parser.compilation_unit();
+            CSVisitor visitor;
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                visitor = new CSVisitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            } else {
+                visitor = new CSVisitor(false);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            }
+            visitor.visit(tree);
+            //Imprimir_arvore-------------------------------------------------------
+            
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            
+            //----------------------------------------------------------------------*/
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -222,6 +289,8 @@ public class ANTLR4Tools {
                 results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+            } else if ((filePathProjectAsRoot.endsWith(".cs"))) {
+                results = analyzeCSharpSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else {
                 return null;
             }
@@ -246,6 +315,8 @@ public class ANTLR4Tools {
                 results = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePath);
+            } else if ((filePath.endsWith(".cs"))) {
+                results = analyzeCSharpSyntaxTree(filePath);
             } else {
                 return null;
             }
@@ -281,13 +352,13 @@ public class ANTLR4Tools {
         }
     }
 
-    public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning) throws IOException {
+    public static List<SyntaxStructure> getCommentsFromChannel2(CommonTokenStream tokens, boolean warning, Language language) throws IOException {
         List<SyntaxStructure> result = new ArrayList<>();
         for (int index = 0; index < tokens.size(); index++) {
             List<Token> hiddenTokensToLeft = tokens.getHiddenTokensToLeft(index, 2);
             for (int i = 0; hiddenTokensToLeft != null && i < hiddenTokensToLeft.size(); i++) {
                 if (hiddenTokensToLeft.get(i).getChannel() == 2) {
-                    result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning));
+                    result.add(new SyntaxStructure(hiddenTokensToLeft.get(i), warning, language));
 
                 }
             }
@@ -376,6 +447,9 @@ public class ANTLR4Tools {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
+            }
+            if (filePath.endsWith(".cs")) {
+                translatedList = Translator.CSharpTranslator(untranslatedList);
             } else {
                 return null;
             }

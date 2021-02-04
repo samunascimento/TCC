@@ -2,14 +2,20 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
@@ -49,19 +55,66 @@ public class MNConflictRegionPanel extends JPanel {
         conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         conflictLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         conflictLabel.setOpaque(false);
+        gbc.gridwidth = 2;
         this.add(conflictLabel, gbc);
 
-        JPanel conflictPanel = getConflictTextArea();
+        JLabel altenativeView = new JLabel("Show alternative view");
+        altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
+        altenativeView.setForeground(Color.CYAN);
+        altenativeView.setOpaque(false);
+        altenativeView.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() >= 2) {
+                    startAlternativeView();
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                altenativeView.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                altenativeView.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                altenativeView.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                altenativeView.setForeground(Color.CYAN);
+            }
+        });
         gbc.gridy = 1;
-        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        this.add(altenativeView, gbc);
+
+        JPanel lateralAjust = new JPanel();
+        lateralAjust.setOpaque(false);
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        this.add(lateralAjust, gbc);
+
+        JPanel conflictPanel = getConflictTextArea();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         this.add(conflictPanel, gbc);
 
         JLabel solutionLabel = new JLabel("Solution: " + region.getDeveloperDecision());
         solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionLabel.setOpaque(false);
-        gbc.gridy = 2;
-        gbc.gridwidth = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
         this.add(solutionLabel, gbc);
 
         JTextArea solutionTextArea = new JTextArea(region.getSolutionText());
@@ -69,16 +122,16 @@ public class MNConflictRegionPanel extends JPanel {
         solutionTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
         solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionTextArea.setEditable(false);
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 3;
         this.add(solutionTextArea, gbc);
 
         JLabel structuresLabel = new JLabel("Structures");
         structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
-        gbc.gridy = 4;
-        gbc.gridwidth = 1;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
         this.add(structuresLabel, gbc);
 
         JTextArea structuresTextArea = new JTextArea(region.getStructures());
@@ -86,8 +139,8 @@ public class MNConflictRegionPanel extends JPanel {
         structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresTextArea.setEditable(false);
         structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridy = 6;
+        gbc.gridwidth = 3;
         this.add(structuresTextArea, gbc);
 
         JRadioButton useOutmost = new JRadioButton("Show only outmost");
@@ -100,14 +153,15 @@ public class MNConflictRegionPanel extends JPanel {
                 structuresTextArea.setText(region.getStructures());
             }
         });
-        gbc.gridy = 6;
-        gbc.gridwidth = 1;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
         this.add(useOutmost, gbc);
 
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
-        gbc.gridy = 7;
-        gbc.gridwidth = 2;
+        gbc.gridy = 8;
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         this.add(bottonAjust, gbc);
@@ -165,7 +219,92 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridy = 4;
         panel.add(afterContext, gbc);
 
+        JPanel bottonAjust = new JPanel();
+        bottonAjust.setOpaque(false);
+        gbc.gridy = 5;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(bottonAjust, gbc);
+
         return panel;
+    }
+
+    private void startAlternativeView() {
+
+        JFrame alternativeView = new JFrame();
+
+        alternativeView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        alternativeView.setTitle("(" + region.getBeginLine() + " - " + region.getEndLine() + ")");
+        alternativeView.setResizable(true);
+        alternativeView.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
+        alternativeView.setMinimumSize(new Dimension(800, 450));
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setOpaque(true);
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+
+        JLabel conflictLabel = new JLabel("Conflict Region");
+        conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
+        conflictLabel.setForeground(MNFrame.SECUNDARY_COLOR);
+        conflictLabel.setOpaque(false);
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(conflictLabel, gbc);
+
+        JLabel solutionLabel = new JLabel("Solution: " + region.getDeveloperDecision());
+        solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
+        solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
+        solutionLabel.setOpaque(false);
+        gbc.gridx = 1;
+        mainPanel.add(solutionLabel, gbc);
+        
+        JLabel structuresLabel = new JLabel("Structures");
+        structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
+        structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
+        structuresLabel.setOpaque(false);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        mainPanel.add(structuresLabel, gbc);
+
+        JPanel conflictPanel = getConflictTextArea();
+        JScrollPane conflictScroll = new JScrollPane(conflictPanel);
+        conflictScroll.getViewport().setBackground(MNFrame.PRIMARY_COLOR);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 10;
+        gbc.fill = GridBagConstraints.BOTH;
+        mainPanel.add(conflictScroll, gbc);
+
+        JTextArea solutionTextArea = new JTextArea(region.getSolutionText());
+        JScrollPane solutionScroll = new JScrollPane(solutionTextArea);
+        solutionTextArea.setBackground(MNFrame.PRIMARY_COLOR);
+        solutionTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
+        solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
+        solutionTextArea.setEditable(false);
+        gbc.gridx = 1;
+        mainPanel.add(solutionScroll, gbc);
+        
+        JTextArea structuresTextArea = new JTextArea(("\n" + region.getStructures()).replaceAll("\n", ", ").replaceFirst(", ", "") + "\n\n");
+        JScrollPane structuresScroll = new JScrollPane(structuresTextArea);
+        structuresScroll.getViewport().setBackground(MNFrame.PRIMARY_COLOR);
+        structuresScroll.setPreferredSize(new Dimension(30, 60));
+        structuresTextArea.setBackground(MNFrame.PRIMARY_COLOR);
+        structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
+        structuresTextArea.setEditable(false);
+        structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1;
+        mainPanel.add(structuresScroll, gbc);
+
+        alternativeView.add(mainPanel);
+        alternativeView.setVisible(true);
     }
 
 }

@@ -2,9 +2,9 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
-import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -26,11 +26,13 @@ public class MNMergesTable extends JPanel {
 
     private MNProjectPanel projectPanel;
     private List<Merge> merges;
+    private List<Merge> filteredList;
     private JTable table;
 
     public MNMergesTable(MNProjectPanel projectPanel, List<Merge> merges) {
         this.projectPanel = projectPanel;
         this.merges = merges;
+        this.filteredList = merges;
         set();
     }
 
@@ -61,7 +63,7 @@ public class MNMergesTable extends JPanel {
                 return canEdit[columnIndex];
             }
         });
-        setDefaultModel();
+        setTableModel(this.filteredList);
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.LEFT);
         table.setDefaultRenderer(table.getColumnClass(0), renderer);
@@ -72,7 +74,7 @@ public class MNMergesTable extends JPanel {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() > 1) {
-                    projectPanel.upadateMergePanel(merges.get(table.getSelectedRow()));
+                    projectPanel.upadateMergePanel(filteredList.get(table.getSelectedRow()));
                 }
             }
         });
@@ -88,6 +90,9 @@ public class MNMergesTable extends JPanel {
         this.add(scroll, gbc);
 
         JButton setFilter = new JButton("Set Filter");
+        setFilter.addActionListener((ActionEvent evt) -> {
+            new MNProjectFilterFrame(merges, this);
+        });
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -97,6 +102,9 @@ public class MNMergesTable extends JPanel {
         this.add(setFilter, gbc);
 
         JButton resetFilter = new JButton("Reset Filter");
+        resetFilter.addActionListener((ActionEvent evt) -> {
+            setTableModel(this.merges);
+        });
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -106,11 +114,13 @@ public class MNMergesTable extends JPanel {
         this.add(resetFilter, gbc);
     }
 
-    int index = 0;
-
-    private void setDefaultModel() {
+    public void setTableModel(List<Merge> mergeList) {
+        this.filteredList = mergeList;
+        int index = 0;
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        for (Merge merge : merges) {
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        for (Merge merge : mergeList) {
             model.addRow(new Object[]{
                 ++index,
                 merge.getMerge().getShortCommitHash(),

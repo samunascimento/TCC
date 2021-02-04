@@ -5,7 +5,6 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
-import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,8 +27,8 @@ public class ProjectMetricsDao {
     public int insert(ProjectMetrics projectMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_projectMetrics "
-                + "(id,sourceDir,projectname) "
-                + "VALUES (?,?,?) "
+                + "(sourceDir,projectname) "
+                + "VALUES (?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -39,9 +38,8 @@ public class ProjectMetricsDao {
         try {
             stmt = connection.prepareStatement(sql);
             //set value
-            stmt.setInt(1, projectMetrics.getId());
-            stmt.setString(2, projectMetrics.getSourceDir());
-            stmt.setString(3, projectMetrics.getName());
+            stmt.setString(1, projectMetrics.getSourceDir());
+            stmt.setString(2, projectMetrics.getName());
             tableKeys = stmt.executeQuery();
             tableKeys.next();
 

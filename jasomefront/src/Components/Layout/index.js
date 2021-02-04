@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import {
   AppBar, Toolbar, IconButton, Typography, Hidden,
-  Drawer, CssBaseline, MenuList, MenuItem
+  Drawer, CssBaseline, MenuList, MenuItem, List
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { Menu } from '@material-ui/icons'
@@ -54,6 +54,13 @@ class Layout extends Component {
   state = {
     mobileOpen: false,
     to: null,
+    openInsert: false
+
+  }
+
+  handleClickInsert = () => {
+    const openInsert = !this.state.openInsert;
+    this.setState({ openInsert })
   }
 
   handleClickProject = () => {
@@ -67,7 +74,7 @@ class Layout extends Component {
 
   render() {
     const { classes, location: { pathname }, children, projects } = this.props
-    const { mobileOpen } = this.state
+    const { mobileOpen, openInsert } = this.state
 
     const drawer = (
       <div>
@@ -75,9 +82,20 @@ class Layout extends Component {
           <div className={classes.toolbar} />
         </Hidden>
         <MenuList>
-          <MenuItem component={Link} to="/" selected={'/' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
-            Home
+          <MenuItem onClick={this.handleClickInsert} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
+            Cadastros
+            {this.state.openInsert ? <ExpandLess/> : <ExpandMore/>}
           </MenuItem>
+          <Collapse in={openInsert} timeout="auto" unmountOnExit>
+            <MenuList>
+              <MenuItem component={Link} to="/insert/projeto" selected={'/insert/projeto' === pathname}>
+                Cadastro de Projeto 
+              </MenuItem>
+              <MenuItem component={Link} to="/insert/login" selected={'/insert/login' === pathname}>
+                Cadastro de Login
+              </MenuItem>
+            </MenuList>
+          </Collapse>
           <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
             Metric
           </MenuItem>

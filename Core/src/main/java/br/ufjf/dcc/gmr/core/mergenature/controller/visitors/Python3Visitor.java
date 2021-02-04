@@ -634,4 +634,13 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         return super.visitChildren(ctx);
     }
 
+    @Override
+    public Object visitCast(Python3Parser.CastContext ctx)  {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+
+
+ 
+
 }

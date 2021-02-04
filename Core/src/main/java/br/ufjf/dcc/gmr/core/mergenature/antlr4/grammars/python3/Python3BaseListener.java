@@ -484,6 +484,18 @@ public class Python3BaseListener implements Python3Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCast(Python3Parser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCast(Python3Parser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterGlobal_stmt(Python3Parser.Global_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}

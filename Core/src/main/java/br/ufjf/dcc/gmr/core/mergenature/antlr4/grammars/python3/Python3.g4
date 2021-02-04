@@ -159,7 +159,7 @@ stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
-expr_stmt:assignment| testlist_star_expr (annassign | augassign (yield_expr|testlist) | 
+expr_stmt:assignment|cast| testlist_star_expr (annassign | augassign (yield_expr|testlist) | 
                      ('=' (yield_expr|testlist_star_expr))*);
 annassign: ':' test ('=' test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
@@ -220,6 +220,14 @@ assignment: atom '=' atom;
 
 //Assert++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 assert_: 'assert';
+//------------------------------------------------------------------------------
+
+//Cast++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cast: atom '=' + 'int' + '(' |
+              atom '=' + 'float' + '(' |
+              atom '=' + 'complex' + '(' |
+              atom '=' + 'long' + '(' |
+              atom '=' + 'str' + '(' ;
 //------------------------------------------------------------------------------
 
 global_stmt: 'global' NAME (',' NAME)*;
@@ -528,12 +536,9 @@ POWER_ASSIGN : '**=';
 IDIV_ASSIGN : '//=';
 
 SKIP_
- : ( SPACES ) -> skip
+ : ( SPACES | LINE_JOINING  ) -> skip
  ;
 
-CHANNEL2_
- : ( COMMENT | LINE_JOINING ) -> channel(2)
- ;
 
 UNKNOWN_CHAR
  : .
@@ -675,8 +680,8 @@ fragment SPACES
  : [ \t]+
  ;
 
-fragment COMMENT
- : '#' ~[\r\n\f]*
+ LINE_COMMENT
+ : '#' ~[\r\n\f]* -> channel(2)
  ;
 
 fragment LINE_JOINING

@@ -10,7 +10,7 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 09-11-2020
  */
-public class Conflict {
+public class Conflict implements Cloneable {
 
     private int id;
     private String parent1FilePath;
@@ -49,6 +49,15 @@ public class Conflict {
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
         this.merge = merge;
+    }
+    
+    public Conflict(Conflict conflict) {
+        this.parent1FilePath = conflict.getParent1FilePath();
+        this.parent2FilePath = conflict.getParent2FilePath();
+        this.ancestorFilePath = conflict.getAncestorFilePath();
+        this.conflictRegions = conflict.getConflictRegions();
+        this.conflictType = conflict.getConflictType();
+        this.merge = conflict.getMerge();
     }
 
     public Conflict() {
@@ -142,6 +151,10 @@ public class Conflict {
     public void setConflictRegions(List<ConflictRegion> conflictRegions) {
         this.conflictRegions = conflictRegions;
     }
+    
+    public void addConflictRegion(ConflictRegion conflictRegion) {
+        this.conflictRegions.add(conflictRegion);
+    }
 
     public ConflictType getConflictType() {
         return conflictType;
@@ -167,4 +180,5 @@ public class Conflict {
                 + "\nConflict Type: " + conflictType.toString()
                 + "\nConflict Regions: " + conflictRegions.size();
     }
+
 }
