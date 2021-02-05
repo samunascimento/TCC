@@ -36,6 +36,7 @@ public class JTreeMouseListener extends MouseAdapter {
 
                 int i = chunk.getBeforeContext().getLineBegin();
                 for (String content : beforeContext) {
+                    clearTable(this.view.getTable1());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable1().setModel(model);
@@ -44,7 +45,7 @@ public class JTreeMouseListener extends MouseAdapter {
 
                 i = chunk.getBegin().getLineNumber();
                 for (String content : chunk.getErrorContent()) {
-
+                    clearTable(this.view.getTable2());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable2().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable2().setModel(model);
@@ -53,6 +54,7 @@ public class JTreeMouseListener extends MouseAdapter {
                 
                 i = chunk.getAfterContext().getLineBegin();
                 for (String content : afterContext) {
+                    clearTable(this.view.getTable3());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable3().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable3().setModel(model);

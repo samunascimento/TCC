@@ -5,43 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="change view`s textArea to 3 tables">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_8_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_19_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_ibm_icu_icu4j_58_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_cli_commons_cli_1_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_jung_jung_algorithms_2_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_jung_jung_api_2_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_jung_jung_graph_impl_2_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_jung_jung_visualization_2_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_abego_treelayout_org_abego_treelayout_core_1_0_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_ST4_4_0_8.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr4_4_7_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr4_runtime_4_7_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_antlr_antlr_runtime_3_5_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_checkerframework_checker_qual_3_5_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_glassfish_javax_json_1_0_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_postgresql_postgresql_42_2_18.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/Core.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/teste.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../jasomefront/.idea/jasomefront.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Core.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/cli/CLIParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/db/ConnectionFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/db/ConnectionFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestAntonio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestAntonio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestBeatriz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestBeatriz.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/test/TestConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/types/ConflictChunk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/types/ConflictChunk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/types/MyFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/vcs/types/MyFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,8 +114,16 @@
       <workItem from="1612461141841" duration="87000" />
       <workItem from="1612461273635" duration="1510000" />
       <workItem from="1612561155480" duration="58000" />
-      <workItem from="1612561233482" duration="1967000" />
+      <workItem from="1612561233482" duration="2288000" />
     </task>
+    <task id="LOCAL-00001" summary="change view`s textArea to 3 tables">
+      <created>1612563210246</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1612563210246</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
