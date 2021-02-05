@@ -38,8 +38,8 @@ public class JTreeMouseListener extends MouseAdapter {
                 List<String> beforeContext = chunk.getBeforeContext().getText();
 
                 int i = chunk.getBeforeContext().getLineBegin();
+                clearTable(this.view.getTable1());
                 for (String content : beforeContext) {
-                    clearTable(this.view.getTable1());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable1().setModel(model);
@@ -47,14 +47,13 @@ public class JTreeMouseListener extends MouseAdapter {
                 }
 
                 i = chunk.getBegin().getLineNumber();
+                clearTable(this.view.getTable1());
                 for (String content : chunk.getErrorContent()) {
-
                     int index_row;
                     Component comp = this.view.getTable1().prepareRenderer(this.view.getTable1().getCellRenderer(
                             this.view.getTable1().getRowCount()-1, 0),
                             this.view.getTable1().getRowCount()-1, 0);
                     comp.setBackground(Color.GRAY);
-                    clearTable(this.view.getTable1());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable1().setModel(model);
@@ -62,8 +61,8 @@ public class JTreeMouseListener extends MouseAdapter {
                 }
                 
                 i = chunk.getAfterContext().getLineBegin();
+                clearTable(this.view.getTable1());
                 for (String content : afterContext) {
-                    clearTable(this.view.getTable1());
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable1().setModel(model);
