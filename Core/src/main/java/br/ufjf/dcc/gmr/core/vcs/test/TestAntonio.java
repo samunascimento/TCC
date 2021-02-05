@@ -1,8 +1,9 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
-import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.Formats;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;

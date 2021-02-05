@@ -4,11 +4,10 @@
  * and open the template in the editor.
  */
 package br.ufjf.dcc.gmr.core.db;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
-import org.apache.commons.cli.*;
 
 
 /**

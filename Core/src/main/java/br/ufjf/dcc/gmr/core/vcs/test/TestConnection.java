@@ -12,6 +12,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;

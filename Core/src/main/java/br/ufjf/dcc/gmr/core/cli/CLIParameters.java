@@ -5,30 +5,12 @@
  */
 package br.ufjf.dcc.gmr.core.cli;
 
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExistInDataBase;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
-import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
+import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.jasome.Jasome;
-import java.io.File;
+import org.apache.commons.cli.*;
+
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 
 /**
  *

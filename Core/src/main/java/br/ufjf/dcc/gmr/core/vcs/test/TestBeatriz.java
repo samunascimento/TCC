@@ -1,9 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
-import java.awt.GridLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *

@@ -6,13 +6,13 @@ import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.chunks.jungtwo.JungFrame;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
 import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import java.awt.*;
 import javax.swing.*;
 import br.ufjf.dcc.gmr.core.vcs.types.Project;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.Toolkit;
+
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -29,6 +29,9 @@ public final class View extends JFrame {
     private JSplitPane splitPane;
     private JSplitPane splitPaneInside;
     private JTable table;
+    private JTable table1;
+    private JTable table2;
+    private JTable table3;
     private JTextArea textArea;
     private JFileChooser chooser;
     private JProgressBar progressBar;
@@ -48,6 +51,9 @@ public final class View extends JFrame {
     View() {
         this.tree = new JTree();
         this.table = new JTable();
+        this.table1 = new JTable();
+        this.table2 = new JTable();
+        this.table3 = new JTable();
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
@@ -141,7 +147,25 @@ public final class View extends JFrame {
         model.addColumn("status");
         this.table.setModel(model);
     }
-
+    private void paintTable1() {
+        this.table1.addMouseListener(new TableMouseListener(this));
+        DefaultTableModel model = (DefaultTableModel) this.table1.getModel();
+        model.addColumn("before conflict");
+        this.table1.setModel(model);
+    }
+    private void paintTable2() {
+        this.table2.addMouseListener(new TableMouseListener(this));
+        DefaultTableModel model = (DefaultTableModel) this.table2.getModel();
+        model.addColumn("conflict");
+        this.table2.setModel(model);
+        this.table2.setBackground(Color.GRAY);
+    }
+    private void paintTable3() {
+        this.table3.addMouseListener(new TableMouseListener(this));
+        DefaultTableModel model = (DefaultTableModel) this.table3.getModel();
+        model.addColumn("after conflict");
+        this.table3.setModel(model);
+    }
     private void paintMenuBar() {
         this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
         this.submenu.addActionListener(new MenuFileActionListener(this));
@@ -172,7 +196,9 @@ public final class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
-        this.rightPanel.add(new JScrollPane(getTextArea()), BorderLayout.CENTER);
+        this.rightPanel.add(new JScrollPane(this.table1), BorderLayout.NORTH);
+        this.rightPanel.add(new JScrollPane(this.table2), BorderLayout.CENTER);
+        this.rightPanel.add(new JScrollPane(this.table3), BorderLayout.SOUTH);
 
         this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
@@ -185,7 +211,9 @@ public final class View extends JFrame {
         paintRightPanel();
         paintTreePane();
         paintTable();
-        paintTextArea();
+        paintTable1();
+        paintTable2();
+        paintTable3();
         paintChooser();
         paintProgressBar();
         paintPanel();
@@ -474,5 +502,29 @@ public final class View extends JFrame {
      */
     public void SetSubmenuJung(JMenuItem submenuJung){
         this.submenuJung = submenuJung;
+    }
+
+    public JTable getTable1() {
+        return table1;
+    }
+
+    public void setTable1(JTable table1) {
+        this.table1 = table1;
+    }
+
+    public JTable getTable2() {
+        return table2;
+    }
+
+    public void setTable2(JTable table2) {
+        this.table2 = table2;
+    }
+
+    public JTable getTable3() {
+        return table3;
+    }
+
+    public void setTable3(JTable table3) {
+        this.table3 = table3;
     }
 }

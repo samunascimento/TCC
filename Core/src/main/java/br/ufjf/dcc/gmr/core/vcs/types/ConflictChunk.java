@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.types;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -7,7 +7,8 @@ import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class JTreeMouseListener extends MouseAdapter {
@@ -35,20 +36,26 @@ public class JTreeMouseListener extends MouseAdapter {
 
                 int i = chunk.getBeforeContext().getLineBegin();
                 for (String content : beforeContext) {
-                    getTextArea().setText(getTextArea().getText() + i + " - " + content + "\n");
+                    DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
+                    model.addRow(new String[]{i + " - " + content + "\n"});
+                    this.view.getTable1().setModel(model);
                     i++;
                 }
 
                 i = chunk.getBegin().getLineNumber();
                 for (String content : chunk.getErrorContent()) {
 
-                    getTextArea().setText(getTextArea().getText() + i + " * " + content + "\n");
+                    DefaultTableModel model = (DefaultTableModel) this.view.getTable2().getModel();
+                    model.addRow(new String[]{i + " - " + content + "\n"});
+                    this.view.getTable2().setModel(model);
                     i++;
                 }
                 
                 i = chunk.getAfterContext().getLineBegin();
                 for (String content : afterContext) {
-                    getTextArea().setText(getTextArea().getText() + i + " - " + content + "\n");
+                    DefaultTableModel model = (DefaultTableModel) this.view.getTable3().getModel();
+                    model.addRow(new String[]{i + " - " + content + "\n"});
+                    this.view.getTable3().setModel(model);
                     i++;
                 }
                
@@ -57,6 +64,10 @@ public class JTreeMouseListener extends MouseAdapter {
             }
 
         }
+    }
+
+    private void clearTable(JTable table) {
+        for (DefaultTableModel model = (DefaultTableModel) table.getModel(); table.getRowCount() > 0; model.removeRow(table.getRowCount() - 1));
     }
 
     /**
