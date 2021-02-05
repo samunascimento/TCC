@@ -30,8 +30,6 @@ public final class View extends JFrame {
     private JSplitPane splitPaneInside;
     private JTable table;
     private JTable table1;
-    private JTable table2;
-    private JTable table3;
     private JTextArea textArea;
     private JFileChooser chooser;
     private JProgressBar progressBar;
@@ -52,8 +50,6 @@ public final class View extends JFrame {
         this.tree = new JTree();
         this.table = new JTable();
         this.table1 = new JTable();
-        this.table2 = new JTable();
-        this.table3 = new JTable();
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         this.treePane = new JScrollPane(getTree());
@@ -149,22 +145,12 @@ public final class View extends JFrame {
     }
     private void paintTable1() {
         this.table1.addMouseListener(new TableMouseListener(this));
+        this.table1.setShowGrid(false);
+        this.table1.setShowHorizontalLines(false);
+        this.table1.setShowVerticalLines(false);
         DefaultTableModel model = (DefaultTableModel) this.table1.getModel();
         model.addColumn("before conflict");
         this.table1.setModel(model);
-    }
-    private void paintTable2() {
-        this.table2.addMouseListener(new TableMouseListener(this));
-        DefaultTableModel model = (DefaultTableModel) this.table2.getModel();
-        model.addColumn("conflict");
-        this.table2.setModel(model);
-        this.table2.setBackground(Color.GRAY);
-    }
-    private void paintTable3() {
-        this.table3.addMouseListener(new TableMouseListener(this));
-        DefaultTableModel model = (DefaultTableModel) this.table3.getModel();
-        model.addColumn("after conflict");
-        this.table3.setModel(model);
     }
     private void paintMenuBar() {
         this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
@@ -196,9 +182,7 @@ public final class View extends JFrame {
         this.add(menuBar, BorderLayout.NORTH);
         this.add(this.progressBar, BorderLayout.SOUTH);
 
-        this.rightPanel.add(new JScrollPane(this.table1), BorderLayout.NORTH);
-        this.rightPanel.add(new JScrollPane(this.table2), BorderLayout.CENTER);
-        this.rightPanel.add(new JScrollPane(this.table3), BorderLayout.SOUTH);
+        this.rightPanel.add(new JScrollPane(this.table1), BorderLayout.CENTER);
 
         this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
 
@@ -212,8 +196,6 @@ public final class View extends JFrame {
         paintTreePane();
         paintTable();
         paintTable1();
-        paintTable2();
-        paintTable3();
         paintChooser();
         paintProgressBar();
         paintPanel();
@@ -510,21 +492,5 @@ public final class View extends JFrame {
 
     public void setTable1(JTable table1) {
         this.table1 = table1;
-    }
-
-    public JTable getTable2() {
-        return table2;
-    }
-
-    public void setTable2(JTable table2) {
-        this.table2 = table2;
-    }
-
-    public JTable getTable3() {
-        return table3;
-    }
-
-    public void setTable3(JTable table3) {
-        this.table3 = table3;
     }
 }
