@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="change view`s textArea to 1 table">
+    <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="clear table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +48,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="database.data.csv.formats" />
   </component>
   <component name="RunManager" selected="Application.View">
     <configuration name="ParserJava" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -125,7 +125,7 @@
       <workItem from="1612461141841" duration="87000" />
       <workItem from="1612461273635" duration="1510000" />
       <workItem from="1612561155480" duration="58000" />
-      <workItem from="1612561233482" duration="7093000" />
+      <workItem from="1612561233482" duration="8055000" />
     </task>
     <task id="LOCAL-00001" summary="change view`s textArea to 3 tables">
       <created>1612563210246</created>
@@ -148,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612567833601</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="clear table">
+      <created>1612568911649</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1612568911649</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,7 +176,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="change view`s textArea to 3 tables" />
     <MESSAGE value="change view`s textArea to 1 table" />
-    <option name="LAST_COMMIT_MESSAGE" value="change view`s textArea to 1 table" />
+    <MESSAGE value="clear table" />
+    <option name="LAST_COMMIT_MESSAGE" value="clear table" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
