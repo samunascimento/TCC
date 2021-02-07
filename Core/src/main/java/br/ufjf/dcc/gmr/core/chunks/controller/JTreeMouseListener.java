@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -48,11 +49,7 @@ public class JTreeMouseListener extends MouseAdapter {
 
                 i = chunk.getBegin().getLineNumber();
                 for (String content : chunk.getErrorContent()) {
-                    int index_row;
-                    Component comp = this.view.getTable1().prepareRenderer(this.view.getTable1().getCellRenderer(
-                            this.view.getTable1().getRowCount()-1, 0),
-                            this.view.getTable1().getRowCount()-1, 0);
-                    comp.setBackground(Color.GRAY);
+                    getTableCellRendererComponent(this.view.getTable1(),i + " - " + content + "\n", this.view.getTable1().getRowCount(), 0);
                     DefaultTableModel model = (DefaultTableModel) this.view.getTable1().getModel();
                     model.addRow(new String[]{i + " - " + content + "\n"});
                     this.view.getTable1().setModel(model);
@@ -71,6 +68,12 @@ public class JTreeMouseListener extends MouseAdapter {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Component getTableCellRendererComponent(JTable table, String value, int row, int column) {
+        Component comp = table.getCellRenderer(row, column).getTableCellRendererComponent(table, value, false, false, row, column);
+        comp.setBackground(Color.gray);
+        return comp;
     }
 
     private void clearTable(JTable table) {
