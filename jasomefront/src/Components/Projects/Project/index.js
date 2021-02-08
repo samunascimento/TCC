@@ -1,37 +1,12 @@
-import React, { Component, Fragment, useState } from 'react'
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
+import React, { Component } from 'react'
 import ChartMenu from './chartMenu'
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Chart from './../../Charts/newChart';
 //import Chart from './../../Charts/chartLine';
 import Caption from './chartCaption'
-import ListSubheader from '@material-ui/core/ListSubheader';
 import axios from 'axios';
-import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TreeItem from '@material-ui/lab/TreeItem';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Collapse from '@material-ui/core/Collapse';
-import ListItemText from '@material-ui/core/ListItemText';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
 import Switch from '@material-ui/core/Switch';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactLoading from "react-loading";
-
-
-import { PropTypes } from 'prop-types';
-import { branch } from 'recompose';
-import { color } from 'd3';
 
 export default class Project extends Component {
   constructor(props) {

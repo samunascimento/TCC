@@ -7,6 +7,7 @@
 package br.ufjf.dcc.gmr.jasomeweb.controller;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.jasome.model.Login;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClass;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClassMethod;
@@ -14,6 +15,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
+import br.ufjf.dcc.jasome.jdbc.dao.LoginDao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.Connection;
@@ -188,14 +190,27 @@ public class JasomeResource {
         String listJ = g.toJson(description);
         return listJ;
     }
-       
+     
+    //AJUSTAR ESSE ENDPOINT
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("projects/{nameProject}")
-    public void insertProject(final @PathParam("nameProject") String nome) {
+    @Path("projects/{name}")
+    public void insertProject(final @PathParam("name") String nome) {
         System.out.println("Nome: "+nome);
     }
     
+    @POST
+    @Path("login/{user}/{pass}")
+    public void insertLogin(final @PathParam("user") String user, final @PathParam("pass") String pass) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        LoginDao dao = new LoginDao(connection);
+        Login login = new Login();
+        login.setUser(user);
+        login.setPass(pass);
+        dao.insert(login);
+        connection.close(); 
+        //System.out.println("user: "+user+", pass: "+pass);
+    }
     
     /**
      * PUT method for updating or creating an instance of JasomeResource

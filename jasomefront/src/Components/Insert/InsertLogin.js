@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 export default class InsertLogin extends Component{
 
@@ -19,7 +20,8 @@ export default class InsertLogin extends Component{
                         Usuário:
                     </Typography>
                     <TextField 
-                        id="projectName" 
+                        id="user"
+                        name="user" 
                         type="text"
                         placeholder="Usuário"
                         style={{
@@ -33,23 +35,10 @@ export default class InsertLogin extends Component{
                         Senha:
                     </Typography>
                     <TextField 
-                        id="projectPath" 
+                        id="pass"
+                        name="pass" 
                         type="password"
                         placeholder="Senha"
-                        style={{
-                            width: '50%',
-                            padding: '0px 0px 0px 10px'
-                        }}
-                    />
-                </div>
-                <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
-                    <Typography variant='h6'>
-                        Confirmação de Senha:
-                    </Typography>
-                    <TextField 
-                        id="projectPath" 
-                        type="password"
-                        placeholder="Confirmação de senha"
                         style={{
                             width: '50%',
                             padding: '0px 0px 0px 10px'

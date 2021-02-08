@@ -10,7 +10,7 @@ DROP TABLE tb_versionMetrics;
 DROP TABLE tb_projectMetrics;
 DROP TABLE tb_metric;
 DROP TABLE tb_description;
-
+DROP TABLE tb_login;
 
 CREATE TABLE tb_metric (
     ID Serial NOT NULL,
@@ -249,6 +249,12 @@ CREATE TABLE tb_description (
     name text,
     description varchar (255)
 );
+
+CREATE TABLE tb_login(
+	id Serial PRIMARY KEY,
+	login text NOT NULL,
+	pass text NOT NULL
+)
 
 INSERT INTO tb_description (name, description)
 VALUES
