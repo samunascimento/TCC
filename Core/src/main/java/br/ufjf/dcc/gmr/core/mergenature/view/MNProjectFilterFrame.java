@@ -6,7 +6,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
-import static br.ufjf.dcc.gmr.core.mergenature.view.MNFrame.MAX_BOUNDS;
+import br.ufjf.dcc.gmr.core.mergenature.view.MNFrame;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -85,7 +85,7 @@ public class MNProjectFilterFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Set filter");
         this.setResizable(true);
-        this.setBounds(100, 100, MAX_BOUNDS.width - 200, MAX_BOUNDS.height - 200);
+        this.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
         this.setMinimumSize(new Dimension(500, 300));
         this.setLayout(new GridBagLayout());
 
@@ -231,8 +231,8 @@ public class MNProjectFilterFrame extends JFrame {
         boolean check;
         Merge auxMerge;
         Conflict auxConflict;
-        List<Merge> filteredList = new ArrayList<>();
-        List<Merge> auxList;
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        List<RelationMergeOrginalCR> auxList;
         List<MergeType> mergeTypeList = new ArrayList<>();
         List<ConflictType> conflictTypeList = new ArrayList<>();
         List<DeveloperDecision> developerDecisionList = new ArrayList<>();
@@ -319,7 +319,6 @@ public class MNProjectFilterFrame extends JFrame {
             developerDecisionList.add(DeveloperDecision.DIFF_PROBLEM);
         }
 
-        filteredList = new ArrayList<>();
         for (Merge merge : defaultList) {
             if (mergeTypeList.contains(merge.getMergeType())) {
                 auxMerge = new Merge(merge);
@@ -333,10 +332,14 @@ public class MNProjectFilterFrame extends JFrame {
                                 auxConflict.addConflictRegion(conflictRegion);
                             }
                         }
-                        auxMerge.addConflicts(auxConflict);
+                        if (!auxConflict.getConflictRegions().isEmpty()) {
+                            auxMerge.addConflicts(auxConflict);
+                        }
                     }
                 }
-                filteredList.add(auxMerge);
+                if (!auxMerge.getConflicts().isEmpty()) {
+                    filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
+                }
             }
         }
         if (!filteredList.isEmpty()) {
@@ -346,7 +349,7 @@ public class MNProjectFilterFrame extends JFrame {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).getNumberOfConflictRegions() >= auxList.get(j).getNumberOfConflictRegions()) {
+                        if (filteredList.get(i).merge.getNumberOfConflictRegions() >= auxList.get(j).merge.getNumberOfConflictRegions()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
@@ -363,7 +366,7 @@ public class MNProjectFilterFrame extends JFrame {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).getConflicts().size() >= auxList.get(j).getConflicts().size()) {
+                        if (filteredList.get(i).merge.getConflicts().size() >= auxList.get(j).merge.getConflicts().size()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
@@ -379,7 +382,7 @@ public class MNProjectFilterFrame extends JFrame {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).getMerge().getCommitterDate().getTime() >= auxList.get(j).getMerge().getCommitterDate().getTime()) {
+                        if (filteredList.get(i).merge.getMerge().getCommitterDate().getTime() >= auxList.get(j).merge.getMerge().getCommitterDate().getTime()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
@@ -392,13 +395,32 @@ public class MNProjectFilterFrame extends JFrame {
                 filteredList = auxList;
             }
 
-            if (descendingOrder.isSelected()) {
+            if (ascendingOrder.isSelected()) {
                 Collections.reverse(filteredList);
             }
         }
 
-        panel.setTableModel(filteredList);
+        List<Merge> mergeResult = new ArrayList<>();
+        List<String> originalCR = new ArrayList<>();
+        for (RelationMergeOrginalCR data : filteredList) {
+            mergeResult.add(data.merge);
+            originalCR.add(data.originalCR);
+        }
+
+        panel.setTableModel(mergeResult, originalCR);
         this.dispose();
+
+    }
+
+    private class RelationMergeOrginalCR {
+
+        public Merge merge;
+        public String originalCR;
+
+        public RelationMergeOrginalCR(Merge merge, String originalCR) {
+            this.merge = merge;
+            this.originalCR = originalCR;
+        }
 
     }
 

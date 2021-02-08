@@ -49,7 +49,7 @@ public class MNMergesTable extends JPanel {
                 }
         ) {
             Class[] types = new Class[]{
-                Integer.class, String.class, Integer.class, Boolean.class
+                Integer.class, String.class, String.class, Boolean.class
             };
             boolean[] canEdit = new boolean[]{
                 false, false, false, false
@@ -125,6 +125,22 @@ public class MNMergesTable extends JPanel {
                 ++index,
                 merge.getMerge().getShortCommitHash(),
                 merge.getNumberOfConflictRegions(),
+                (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)
+            });
+        }
+    }
+
+    public void setTableModel(List<Merge> mergeList, List<String> originalConflictRegions) {
+        this.filteredList = mergeList;
+        int index = 0;
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        for (Merge merge : mergeList) {
+            model.addRow(new Object[]{
+                ++index,
+                merge.getMerge().getShortCommitHash(),
+                merge.getNumberOfConflictRegions() + "/" + originalConflictRegions.get(index - 1),
                 (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)
             });
         }

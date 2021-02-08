@@ -75,7 +75,7 @@ public class Merge implements Cloneable {
     }
 
     public int getNumberOfConflictRegions() {
-        if (mergeType == MergeType.CONFLICTED_MERGE) {
+        if (mergeType == MergeType.CONFLICTED_MERGE || mergeType == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
             int i = 0;
             for (Conflict conflict : this.getConflicts()) {
                 if (conflict.getConflictRegions() != null) {
