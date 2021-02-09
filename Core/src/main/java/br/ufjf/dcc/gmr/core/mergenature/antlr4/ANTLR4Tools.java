@@ -447,8 +447,7 @@ public class ANTLR4Tools {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
-            }
-            if (filePath.endsWith(".cs")) {
+            }else if (filePath.endsWith(".cs")) {
                 translatedList = Translator.CSharpTranslator(untranslatedList);
             } else {
                 return null;
