@@ -440,13 +440,19 @@ simple_embedded_statement
 	| expression ';'                                              #expressionStatement
 
 	// selection statements
+        | IF #if_
 	| IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)?               #ifStatement
-    | SWITCH OPEN_PARENS expression CLOSE_PARENS OPEN_BRACE switch_section* CLOSE_BRACE           #switchStatement
+        | SWITCH #switch_
+        | SWITCH OPEN_PARENS expression CLOSE_PARENS OPEN_BRACE switch_section* CLOSE_BRACE           #switchStatement
 
     // iteration statements
-	| WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
-	| DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS ';'                                 #doStatement
-	| FOR OPEN_PARENS for_initializer? ';' expression? ';' for_iterator? CLOSE_PARENS embedded_statement  #forStatement
+       
+        | WHILE #while_
+	| WHILE  OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
+	| DO #do_
+        | DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS ';'                                 #doStatement
+	| FOR #for_
+        | FOR OPEN_PARENS for_initializer? ';' expression? ';' for_iterator? CLOSE_PARENS embedded_statement  #forStatement
 	| AWAIT? FOREACH OPEN_PARENS local_variable_type identifier IN expression CLOSE_PARENS embedded_statement    #foreachStatement
 
     // jump statements
@@ -1145,9 +1151,12 @@ struct_definition
 	;
 
 interface_definition
-	: INTERFACE identifier variant_type_parameter_list? interface_base?
+	: interface_signature variant_type_parameter_list? interface_base?
 	    type_parameter_constraints_clauses? class_body ';'?
 	;
+interface_signature
+        :   INTERFACE identifier
+        ;
 
 enum_definition
 	: ENUM identifier enum_base? enum_body ';'?
@@ -1187,9 +1196,12 @@ constructor_declaration
 	;
 
 method_declaration // lamdas from C# 6
-	: method_member_name type_parameter_list? OPEN_PARENS formal_parameter_list? CLOSE_PARENS
+	: method_signature OPEN_PARENS formal_parameter_list? CLOSE_PARENS
 	    type_parameter_constraints_clauses? (method_body | right_arrow throwable_expression ';')
 	;
+method_signature
+        :method_member_name type_parameter_list?
+        ;
 
 method_member_name
 	: (identifier | identifier '::' identifier) (type_argument_list? '.' identifier)*

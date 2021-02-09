@@ -635,12 +635,26 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpressionStatement(CSharpParser.ExpressionStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code if_}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_(CSharpParser.If_Context ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ifStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitIfStatement(CSharpParser.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code switch_}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitch_(CSharpParser.Switch_Context ctx);
 	/**
 	 * Visit a parse tree produced by the {@code switchStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
@@ -649,6 +663,13 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSwitchStatement(CSharpParser.SwitchStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code while_}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_(CSharpParser.While_Context ctx);
+	/**
 	 * Visit a parse tree produced by the {@code whileStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree
@@ -656,12 +677,26 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhileStatement(CSharpParser.WhileStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code do_}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDo_(CSharpParser.Do_Context ctx);
+	/**
 	 * Visit a parse tree produced by the {@code doStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDoStatement(CSharpParser.DoStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code for_}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_(CSharpParser.For_Context ctx);
 	/**
 	 * Visit a parse tree produced by the {@code forStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
@@ -1485,6 +1520,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInterface_definition(CSharpParser.Interface_definitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CSharpParser#interface_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInterface_signature(CSharpParser.Interface_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CSharpParser#enum_definition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1544,6 +1585,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMethod_declaration(CSharpParser.Method_declarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CSharpParser#method_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethod_signature(CSharpParser.Method_signatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CSharpParser#method_member_name}.
 	 * @param ctx the parse tree

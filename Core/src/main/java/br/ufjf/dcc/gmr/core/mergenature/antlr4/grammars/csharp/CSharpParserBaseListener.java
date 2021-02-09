@@ -1228,6 +1228,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIf_(CSharpParser.If_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIf_(CSharpParser.If_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIfStatement(CSharpParser.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1235,6 +1247,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIfStatement(CSharpParser.IfStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSwitch_(CSharpParser.Switch_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSwitch_(CSharpParser.Switch_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1252,6 +1276,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhile_(CSharpParser.While_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhile_(CSharpParser.While_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterWhileStatement(CSharpParser.WhileStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1264,6 +1300,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDo_(CSharpParser.Do_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDo_(CSharpParser.Do_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDoStatement(CSharpParser.DoStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1271,6 +1319,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDoStatement(CSharpParser.DoStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFor_(CSharpParser.For_Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor_(CSharpParser.For_Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2884,6 +2944,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEnum_definition(CSharpParser.Enum_definitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -2999,6 +3071,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMethod_declaration(CSharpParser.Method_declarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethod_signature(CSharpParser.Method_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethod_signature(CSharpParser.Method_signatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
