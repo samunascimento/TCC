@@ -20,6 +20,7 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,8 +75,7 @@ public class MergeNatureAlgorithm {
 
         if (MergeNatureTools.isDirectory(repositoryLocation)) {
             repositoryPath = this.repositoryLocation;
-            auxStringArray = this.repositoryLocation.split(File.separator);
-            project.setName(auxStringArray[auxStringArray.length - 1]);
+            project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
             project.setUrl(MergeNatureTools.getULROfProjectFromConfig(repositoryLocation));
             if (project.getUrl().equals("Unknow")) {
                 project.setOrganization("Unknow");
