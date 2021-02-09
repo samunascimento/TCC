@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -26,7 +25,7 @@ import javax.swing.JTextArea;
  */
 public class MNConflictRegionPanel extends JPanel {
 
-    private GridBagConstraints INSIDE_CONSTRAINTS;
+    private static GridBagConstraints INSIDE_CONSTRAINTS;
     private ConflictRegion region;
 
     public MNConflictRegionPanel(ConflictRegion region) {
@@ -65,9 +64,7 @@ public class MNConflictRegionPanel extends JPanel {
         altenativeView.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() >= 2) {
-                    startAlternativeView();
-                }
+                MNAlternativeView.openAlternativeView(region);
             }
 
             @Override
@@ -104,7 +101,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         this.add(lateralAjust, gbc);
 
-        JPanel conflictPanel = getConflictTextArea();
+        JPanel conflictPanel = getConflictTextArea(this.region);
         gbc.gridx = 0;
         gbc.gridy = 2;
         this.add(conflictPanel, gbc);
@@ -168,7 +165,7 @@ public class MNConflictRegionPanel extends JPanel {
 
     }
 
-    private JPanel getConflictTextArea() {
+    public static JPanel getConflictTextArea(ConflictRegion region) {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -227,84 +224,6 @@ public class MNConflictRegionPanel extends JPanel {
         panel.add(bottonAjust, gbc);
 
         return panel;
-    }
-
-    private void startAlternativeView() {
-
-        JFrame alternativeView = new JFrame();
-
-        alternativeView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        alternativeView.setTitle("(" + region.getBeginLine() + " - " + region.getEndLine() + ")");
-        alternativeView.setResizable(true);
-        alternativeView.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
-        alternativeView.setMinimumSize(new Dimension(800, 450));
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setOpaque(true);
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
-
-        JLabel conflictLabel = new JLabel("Conflict Region");
-        conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
-        conflictLabel.setForeground(MNFrame.SECUNDARY_COLOR);
-        conflictLabel.setOpaque(false);
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainPanel.add(conflictLabel, gbc);
-
-        JLabel solutionLabel = new JLabel("Solution: " + region.getDeveloperDecision());
-        solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
-        solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
-        solutionLabel.setOpaque(false);
-        gbc.gridx = 1;
-        mainPanel.add(solutionLabel, gbc);
-        
-        JLabel structuresLabel = new JLabel("Structures");
-        structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
-        structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
-        structuresLabel.setOpaque(false);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        mainPanel.add(structuresLabel, gbc);
-
-        JPanel conflictPanel = getConflictTextArea();
-        JScrollPane conflictScroll = new JScrollPane(conflictPanel);
-        conflictScroll.getViewport().setBackground(MNFrame.PRIMARY_COLOR);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1;
-        gbc.weighty = 10;
-        gbc.fill = GridBagConstraints.BOTH;
-        mainPanel.add(conflictScroll, gbc);
-
-        JTextArea solutionTextArea = new JTextArea(region.getSolutionText());
-        JScrollPane solutionScroll = new JScrollPane(solutionTextArea);
-        solutionTextArea.setBackground(MNFrame.PRIMARY_COLOR);
-        solutionTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-        solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
-        solutionTextArea.setEditable(false);
-        gbc.gridx = 1;
-        mainPanel.add(solutionScroll, gbc);
-        
-        JTextArea structuresTextArea = new JTextArea(("\n" + region.getStructures()).replaceAll("\n", ", ").replaceFirst(", ", "") + "\n\n");
-        JScrollPane structuresScroll = new JScrollPane(structuresTextArea);
-        structuresScroll.getViewport().setBackground(MNFrame.PRIMARY_COLOR);
-        structuresScroll.setPreferredSize(new Dimension(30, 60));
-        structuresTextArea.setBackground(MNFrame.PRIMARY_COLOR);
-        structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
-        structuresTextArea.setEditable(false);
-        structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1;
-        mainPanel.add(structuresScroll, gbc);
-
-        alternativeView.add(mainPanel);
-        alternativeView.setVisible(true);
     }
 
 }
