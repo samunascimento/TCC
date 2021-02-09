@@ -238,11 +238,11 @@ public class ANTLR4Tools {
                 visitor = new CSVisitor(false);
             }
             visitor.visit(tree);
-             //Imprimir_arvore-------------------------------------------------------
-            
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
-            
+            //Imprimir_arvore-------------------------------------------------------
+
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.open();
+
             //----------------------------------------------------------------------*/
             comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             return new ANTLR4Results(visitor.getList(), comments);
@@ -269,10 +269,10 @@ public class ANTLR4Tools {
             }
             visitor.visit(tree);
             //Imprimir_arvore-------------------------------------------------------
-            
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
-            
+
+            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            viewer.open();
+
             //----------------------------------------------------------------------*/
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
@@ -447,8 +447,7 @@ public class ANTLR4Tools {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
-            }
-            if (filePath.endsWith(".cs")) {
+            } else if (filePath.endsWith(".cs")) {
                 translatedList = Translator.CSharpTranslator(untranslatedList);
             } else {
                 return null;
