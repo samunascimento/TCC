@@ -2512,6 +2512,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterInterface_base(CSharpParser.Interface_baseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -2591,6 +2603,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEnum_member_declaration(CSharpParser.Enum_member_declarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEnum_signature(CSharpParser.Enum_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnum_signature(CSharpParser.Enum_signatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2939,18 +2963,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInterface_definition(CSharpParser.Interface_definitionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInterface_signature(CSharpParser.Interface_signatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

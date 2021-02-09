@@ -795,19 +795,17 @@ public class Translator {
         return mainList;
     }
 
-    /* TO Do
+    /* TO DO
     * Verificar static
     * Ajustar cast
-    * ver Annotation
-    * Assert
     * ARRAY_ACCESS
     * ajeitar case
-    * SYNCHRONIZED_STATEMENT
-    *
-    */
- /*
+    * import
+    * class
+    
     * Verificar method signature
     * verificar interface signature
+    * principalmente verificar enum signature
      */
     public static List<String> CSharpTranslator(List<String> list) {
         List<String> mainList = new ArrayList<>();
@@ -815,16 +813,7 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.ANNOTATION_TYPE_MEMBER_DECLARATION);
-                list.remove("");
-
-            }
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.ANNOTATION);
-                list.remove("");
-
-            }
+//  https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array_initializer")) {
@@ -839,10 +828,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
-                list.remove("");
-            }
+//https://docs.microsoft.com/pt-br/visualstudio/debugger/assertions-in-managed-code?view=vs-2019
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Assignment")
@@ -898,7 +884,6 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //comentarios em c# são iguais comentarios em java "//" e "/**/"
             if (list.contains("MultiLineComment")
                     || list.contains("LineComment")) {
@@ -922,25 +907,23 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUMS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Enum_member_declaration")) {
+            if (list.contains("Enum_definition")) {
                 mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
-                list.remove("Enum_member_declaration");
-            }
-            /*Verificar outros dois*/
-            if (list.contains("")) {
+                list.remove("Enum_definition");
+            }            
+            if (list.contains("Enum_signature")) {
                 mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
-                list.remove("");
+                list.remove("Enum_signature");
             }
-            if (list.contains("")) {
+            if (list.contains("Enum_member_declaration")) {
                 mainList.add(LanguageConstructsTypes.ENUM_VALUE);
-                list.remove("");
+                list.remove("Enum_member_declaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Field_declaration")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("Field_declaration");
-
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -969,26 +952,16 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")
-                    || list.contains("")
-                    || list.contains("")
-                    || list.contains("")
-                    || list.contains("")) {
-                mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
-                list.remove("");
-                list.remove("");
-                list.remove("");
-                list.remove("");
-            }
+        
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Interface definition é o declaration ? parece que sim, mas verificar
+        // Interface definition é o declaration ? parece que sim, mas verificar
             if (list.contains("Interface_definition")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
                 list.remove("Interface_definition");
-            } else if (list.contains("")) {
+            } else if (list.contains("interface_signature")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_SIGNATURE);
-                list.remove("");
+                list.remove("interface_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1027,7 +1000,6 @@ public class Translator {
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")
                     || list.contains("Switch_section")
-                    || list.contains("Switch_label")
                     || list.contains("Switch_expression")
                     || list.contains("Switch_expression_arms")
                     || list.contains("Switch_expression_arm")
@@ -1035,7 +1007,6 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
                 list.remove("SwitchStatement");
                 list.remove("Switch_section");
-                list.remove("Switch_label");
                 list.remove("Switch_expression");
                 list.remove("Switch_expression_arms");
                 list.remove("Switch_expression_arm");
@@ -1043,10 +1014,8 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SYNCHRONIZED_STATEMENT+++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.SYNCHRONIZED_STATEMENT);
-                list.remove("");
-            }
+            
+            // it seems to do not exist on c#, read better: https://stackoverflow.com/questions/541194/c-sharp-version-of-javas-synchronized-keyword#:~:text=39-,Does%20c%23%20have%20its%20own%20version%20of%20the%20java%20%22synchronized,on%20synchronously%20across%20asynchronous%20threads.
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ThrowStatement")) {

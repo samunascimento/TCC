@@ -59,7 +59,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitBase_type(CSharpParser.Base_typeContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1607,6 +1607,12 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitInterface_signature(CSharpParser.Interface_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitEnum_signature(CSharpParser.Enum_signatureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
