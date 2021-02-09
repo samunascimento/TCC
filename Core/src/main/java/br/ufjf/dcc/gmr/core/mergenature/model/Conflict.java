@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,10 +84,10 @@ public class Conflict implements Cloneable {
         if (parent1FilePath == null) {
             return "Absent";
         } else {
-            if (parent1FilePath.endsWith(File.separator)) {
-                return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1] + File.separator;
+            if (parent1FilePath.endsWith("/")) {
+                return Paths.get(parent1FilePath).getFileName().toString() + "/";
             } else {
-                return parent1FilePath.split(File.separator)[parent1FilePath.split(File.separator).length - 1];
+                return Paths.get(parent1FilePath).getFileName().toString();
             }
         }
     }
@@ -108,10 +108,10 @@ public class Conflict implements Cloneable {
         if (parent2FilePath == null) {
             return "Absent";
         } else {
-            if (parent2FilePath.endsWith(File.separator)) {
-                return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1] + File.separator;
+            if (parent2FilePath.endsWith("/")) {
+                return Paths.get(parent2FilePath).getFileName().toString() + "/";
             } else {
-                return parent2FilePath.split(File.separator)[parent2FilePath.split(File.separator).length - 1];
+                return Paths.get(parent2FilePath).getFileName().toString();
             }
         }
     }
@@ -132,10 +132,10 @@ public class Conflict implements Cloneable {
         if (ancestorFilePath == null) {
             return "Absent";
         } else {
-            if (ancestorFilePath.endsWith(File.separator)) {
-                return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1] + File.separator;
+            if (ancestorFilePath.endsWith("/")) {
+                return Paths.get(ancestorFilePath).getFileName().toString() + "/";
             } else {
-                return ancestorFilePath.split(File.separator)[ancestorFilePath.split(File.separator).length - 1];
+                return Paths.get(ancestorFilePath).getFileName().toString();
             }
         }
     }

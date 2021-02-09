@@ -523,7 +523,7 @@ public class ReturnNewLineNumber {
             }
         }
 
-        while (!(chunk.get(j).getFilePathSource().equals(File.separator + filePath) || chunk.get(j).getFilePathTarget().equals(File.separator + filePath))) {
+        while (!(chunk.get(j).getFilePathSource().equals("/" + filePath) || chunk.get(j).getFilePathTarget().equals("/" + filePath))) {
             if (j + 1 >= chunk.size()) {
                 throw new PathDontExist();
             }
