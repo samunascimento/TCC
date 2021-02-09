@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.mergenature.controller;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import java.io.File;
+import java.nio.file.Paths;
 
 /**
  * Class to interpret the message of the merge to catch conflict
@@ -183,10 +184,8 @@ public class MergeMessageReader {
         message = message + " ";
         String[] auxStringArray = message.split(": ");
         String auxString = auxStringArray[1].replaceAll(" added in ", " ").replaceAll(" inside a directory that was renamed in ", " ").replaceAll(", suggesting it should perhaps be moved to ", " ").replaceAll("\\. ", "");
-        auxStringArray = auxString.split(" ");
-        auxString = auxStringArray[0].split(File.separator)[auxStringArray[0].split(File.separator).length - 1];
-        result.setAncestorFilePath(auxStringArray[0].replace(auxString, ""));
-        if (auxStringArray[1] == "HEAD") {
+        result.setAncestorFilePath(Paths.get(auxString).getParent().getFileName().toString());
+        if (auxStringArray[1].equals("HEAD")) {
             result.setParent1FilePath(auxStringArray[0]);
             result.setParent2FilePath(auxStringArray[3]);
         } else {

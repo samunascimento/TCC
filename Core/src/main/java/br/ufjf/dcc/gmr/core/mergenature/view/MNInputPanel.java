@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.nio.file.Paths;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -133,7 +134,7 @@ public class MNInputPanel extends JPanel {
         if (project.endsWith(".git")) {
             return project.split("/")[project.split("/").length - 1].replaceAll("\\.git", "");
         } else {
-            return project.split(File.separator)[project.split(File.separator).length - 1];
+            return Paths.get(project).getFileName().toString();
         }
     }
 

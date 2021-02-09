@@ -211,6 +211,7 @@ public class ParserJava {
         }
     }
 
+    //aqui ta setando só o numero da linha por enquanto pelo visto
     private static void setBeforeAndAfterContext() {
         for (int i = 0; i < version.getFile().size(); i++) {
             for (int z = 0; z < version.getFile().get(i).getChunks().size(); z++) {
@@ -219,9 +220,11 @@ public class ParserJava {
                 int end = version.getFile().get(i).getChunks().get(z).getEnd().getLineNumber();
 
                 version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineEnd(begin - 1);
-                if ((begin - context) > 0) {
-                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(begin - context);
-                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent(begin - context, begin - 1, version.getFile().get(i)));
+               
+                if (((begin - 1) - context) > 0) {
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin((begin - 1) - context);
+                    version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent((begin - 1) - context, begin - 1, version.getFile().get(i)));
+                    // aqui ele pega as strings /\
 
                 } else {
                     version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin(0);
@@ -232,38 +235,11 @@ public class ParserJava {
                     version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(end + context);
                     version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, end + context, version.getFile().get(i)));
                 } else {
-                    version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(version.getFile().get(i).getContent().size()-1);
-                    version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, version.getFile().get(i).getContent().size()-1, version.getFile().get(i)));
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setLineEnd(version.getFile().get(i).getContent().size() - 1);
+                    version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, version.getFile().get(i).getContent().size() - 1, version.getFile().get(i)));
                 }
                 version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end + 1);
-
-                int beforeBegin = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineBegin();
-                int beforeEnd = version.getFile().get(i).getChunks().get(z).getBeforeContext().getLineEnd();
-
-                int afterBegin = version.getFile().get(i).getChunks().get(z).getAfterContext().getLineBegin();
-                int afterEnd = version.getFile().get(i).getChunks().get(z).getAfterContext().getLineEnd();
-                boolean notConflict = true;
-                for (int j = 0; j < version.getFile().get(i).getContent().size(); j++) {
-
-                    if ((version.getFile().get(i).getContent().get(j).contains("<<<<<<<"))) {
-                        notConflict = false;
-
-                    }
-                    if (version.getFile().get(i).getContent().get(j).contains(">>>>>>>")) {
-                        notConflict = true;
-
-                    }
-                    if ((j > beforeBegin && j < beforeEnd && notConflict)) {
-
-                        version.getFile().get(i).getChunks().get(z).getBeforeContext().getText().add(version.getFile().get(i).getContent().get(j));
-                    }
-
-                    if (j < afterEnd && j > afterBegin && notConflict) {
-
-                        version.getFile().get(i).getChunks().get(z).getAfterContext().getText().add(version.getFile().get(i).getContent().get(j));
-                    }
-                }
-
+               
             }
         }
     }
@@ -272,7 +248,7 @@ public class ParserJava {
 
         List<String> result = new ArrayList<>();
 
-        for (int i = begin; i < end - 1; i++) {
+        for (int i = begin; i <= end; i++) {
             result.add(file.getContent().get(i));
         }
 
