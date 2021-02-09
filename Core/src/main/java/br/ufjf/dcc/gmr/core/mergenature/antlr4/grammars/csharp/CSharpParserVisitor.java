@@ -1304,6 +1304,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariance_annotation(CSharpParser.Variance_annotationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CSharpParser#interface_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInterface_signature(CSharpParser.Interface_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CSharpParser#interface_base}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -1345,6 +1351,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEnum_member_declaration(CSharpParser.Enum_member_declarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CSharpParser#enum_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnum_signature(CSharpParser.Enum_signatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CSharpParser#global_attribute_section}.
 	 * @param ctx the parse tree
@@ -1519,12 +1531,6 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInterface_definition(CSharpParser.Interface_definitionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link CSharpParser#interface_signature}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInterface_signature(CSharpParser.Interface_signatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CSharpParser#enum_definition}.
 	 * @param ctx the parse tree

@@ -2178,6 +2178,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitVariance_annotation(CSharpParser.Variance_annotationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CSharpParser#interface_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterInterface_signature(CSharpParser.Interface_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#interface_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitInterface_signature(CSharpParser.Interface_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CSharpParser#interface_base}.
 	 * @param ctx the parse tree
 	 */
@@ -2247,6 +2257,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEnum_member_declaration(CSharpParser.Enum_member_declarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#enum_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnum_signature(CSharpParser.Enum_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#enum_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnum_signature(CSharpParser.Enum_signatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CSharpParser#global_attribute_section}.
 	 * @param ctx the parse tree
@@ -2537,16 +2557,6 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInterface_definition(CSharpParser.Interface_definitionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link CSharpParser#interface_signature}.
-	 * @param ctx the parse tree
-	 */
-	void enterInterface_signature(CSharpParser.Interface_signatureContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link CSharpParser#interface_signature}.
-	 * @param ctx the parse tree
-	 */
-	void exitInterface_signature(CSharpParser.Interface_signatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CSharpParser#enum_definition}.
 	 * @param ctx the parse tree

@@ -894,6 +894,10 @@ variance_annotation
 	: IN | OUT
 	;
 
+interface_signature
+        :   INTERFACE identifier
+        ;
+
 interface_base
 	: ':' interface_type_list
 	;
@@ -928,6 +932,10 @@ enum_body
 enum_member_declaration
 	: attributes? identifier ('=' expression)?
 	;
+
+enum_signature
+:   ENUM identifier
+;
 
 //B.2.12 Delegates
 
@@ -1154,12 +1162,10 @@ interface_definition
 	: interface_signature variant_type_parameter_list? interface_base?
 	    type_parameter_constraints_clauses? class_body ';'?
 	;
-interface_signature
-        :   INTERFACE identifier
-        ;
+
 
 enum_definition
-	: ENUM identifier enum_base? enum_body ';'?
+	: enum_signature enum_base? enum_body ';'?
 	;
 
 delegate_definition
