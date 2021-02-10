@@ -2538,6 +2538,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitClass_definition(CSharpParser.Class_definitionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CSharpParser#class_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterClass_signature(CSharpParser.Class_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#class_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitClass_signature(CSharpParser.Class_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CSharpParser#struct_definition}.
 	 * @param ctx the parse tree
 	 */

@@ -440,9 +440,9 @@ simple_embedded_statement
 	| expression ';'                                              #expressionStatement
 
 	// selection statements
-        | IF #if_
+        | IF   #if_
 	| IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)?               #ifStatement
-        | SWITCH #switch_
+        | SWITCH                                                                       #switch_
         | SWITCH OPEN_PARENS expression CLOSE_PARENS OPEN_BRACE switch_section* CLOSE_BRACE           #switchStatement
 
     // iteration statements
@@ -1149,9 +1149,12 @@ keyword
 // -------------------- extra rules for modularization --------------------------------
 
 class_definition
-	: CLASS identifier type_parameter_list? class_base? type_parameter_constraints_clauses?
-	    class_body ';'?
+	: class_signature class_body ';'?
 	;
+
+class_signature
+        :CLASS identifier type_parameter_list? class_base? type_parameter_constraints_clauses?
+        ;
 
 struct_definition
 	: (READONLY | REF)? STRUCT identifier type_parameter_list? struct_interfaces? type_parameter_constraints_clauses?
@@ -1202,11 +1205,10 @@ constructor_declaration
 	;
 
 method_declaration // lamdas from C# 6
-	: method_signature OPEN_PARENS formal_parameter_list? CLOSE_PARENS
-	    type_parameter_constraints_clauses? (method_body | right_arrow throwable_expression ';')
+	: method_signature type_parameter_constraints_clauses? (method_body | right_arrow throwable_expression ';')
 	;
 method_signature
-        :method_member_name type_parameter_list?
+        :method_member_name type_parameter_list? OPEN_PARENS formal_parameter_list? CLOSE_PARENS
         ;
 
 method_member_name
