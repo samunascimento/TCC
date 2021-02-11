@@ -253,8 +253,9 @@ CREATE TABLE tb_description (
 CREATE TABLE tb_login(
 	id Serial PRIMARY KEY,
 	login text NOT NULL,
-	pass text NOT NULL
-)
+	pass text NOT NULL,
+	type text NOT NULL
+);
 
 INSERT INTO tb_description (name, description)
 VALUES

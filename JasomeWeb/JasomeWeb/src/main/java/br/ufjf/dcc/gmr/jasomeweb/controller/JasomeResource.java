@@ -214,8 +214,6 @@ public class JasomeResource {
         String caminhoJasome = dirJasome;
         try {
             dao.executeProject(caminhoJasome, url);
-            System.out.println("param1:" + nome);
-            System.out.println("param2:" + url);
         } catch (IsOutsideRepository ex) {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -247,16 +245,16 @@ public class JasomeResource {
     }
 
     @POST
-    @Path("login/{user}/{pass}")
-    public void insertLogin(final @PathParam("user") String user, final @PathParam("pass") String pass) throws SQLException {
+    @Path("login/{user}/{pass}/{type}")
+    public void insertLogin(final @PathParam("user") String user, final @PathParam("pass") String pass, final @PathParam("type") String type) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         LoginDao dao = new LoginDao(connection);
         Login login = new Login();
         login.setUser(user);
         login.setPass(pass);
+        login.setType(type);
         dao.insert(login);
         connection.close();
-        //System.out.println("user: "+user+", pass: "+pass);
     }
 
     /**
