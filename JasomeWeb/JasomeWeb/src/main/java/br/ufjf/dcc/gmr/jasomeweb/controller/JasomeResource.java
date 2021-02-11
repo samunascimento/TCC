@@ -207,10 +207,11 @@ public class JasomeResource {
     @POST
     @Path("/projects/create")
     public void create(@HeaderParam("param1") String nome,
-            @HeaderParam("param2") String url) {
+            @HeaderParam("param2") String url,
+            @HeaderParam("param3") String dirJasome){
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
-        String caminhoJasome = "C:\\Users\\anton\\Documents\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome";
+        String caminhoJasome = dirJasome;
         try {
             dao.executeProject(caminhoJasome, url);
             System.out.println("param1:" + nome);
