@@ -38,12 +38,12 @@ public class AST {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
-            Visitor2 visitor;
+            Visitor3 visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Visitor2();
+                visitor = new Visitor3();
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
-                visitor = new Visitor2();
+                visitor = new Visitor3();
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
@@ -76,7 +76,7 @@ public class AST {
     
     public static void main(String args[]) throws IOException{
 
-        String path = "/home/ketleen/Documentos/grafos-master/header/Grafo.h";
+        String path = "/home/ketleen/Documentos/grafos-master/Grafo.cpp";
         analyzeCPPSyntaxTree(path, true);
       
         

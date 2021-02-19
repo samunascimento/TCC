@@ -29,7 +29,7 @@ public class MethodDeclationBinding extends BaseBinding{
         this.returnBinding = null;
         this.ctx = null;
     }
-    
+
     
 
     public List<String> getModifier() {
