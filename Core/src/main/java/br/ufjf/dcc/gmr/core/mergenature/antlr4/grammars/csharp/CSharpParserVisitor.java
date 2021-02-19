@@ -1520,6 +1520,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClass_definition(CSharpParser.Class_definitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CSharpParser#class_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClass_signature(CSharpParser.Class_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CSharpParser#struct_definition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

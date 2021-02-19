@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.jasome.model;
 public class Login {
     private String user;
     private String pass;
+    private String type;
     private int id;
 
     /**
@@ -49,6 +50,20 @@ public class Login {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
     
 }

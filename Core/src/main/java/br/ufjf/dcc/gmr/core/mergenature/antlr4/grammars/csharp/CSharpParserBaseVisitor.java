@@ -1725,6 +1725,13 @@ public class CSharpParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitClass_signature(CSharpParser.Class_signatureContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitStruct_definition(CSharpParser.Struct_definitionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

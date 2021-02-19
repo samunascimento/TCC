@@ -20,10 +20,12 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JProgressBar;
+import java.text.DecimalFormat;
 
 /**
  * The main algorithm of merge nature, its function is catch all merges, all
@@ -35,6 +37,7 @@ import javax.swing.JProgressBar;
  */
 public class MergeNatureAlgorithm {
 
+    private final static DecimalFormat df2 = new DecimalFormat("#.##");
     private String repositoryLocation;
     private int contextLines;
     private Project project;
@@ -71,11 +74,12 @@ public class MergeNatureAlgorithm {
         Project project = new Project();
         String[] auxStringArray;
         String repositoryPath = "";
+        long beforeUsedMem;
+        long afterUsedMem;
 
         if (MergeNatureTools.isDirectory(repositoryLocation)) {
             repositoryPath = this.repositoryLocation;
-            auxStringArray = this.repositoryLocation.split(File.separator);
-            project.setName(auxStringArray[auxStringArray.length - 1]);
+            project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
             project.setUrl(MergeNatureTools.getULROfProjectFromConfig(repositoryLocation));
             if (project.getUrl().equals("Unknow")) {
                 project.setOrganization("Unknow");
@@ -97,7 +101,14 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : Git.giveAllMerges(repositoryPath)) {
+
+            beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            System.out.println("Before: " + beforeUsedMem + " bytes");
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            System.out.println("After: " + afterUsedMem + " bytes");
+            System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
+
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -235,9 +246,13 @@ public class MergeNatureAlgorithm {
                     }
                 }
                 conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
-                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
-                        conflictRegion.getBeginIndex() - conflictRegion.getBeforeContextSize(),
-                        conflictRegion.getEndIndex() + conflictRegion.getAfterContextSize())));
+                try {
+                    conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
+                            conflictRegion.getBeginIndex() - conflictRegion.getBeforeContextSize(),
+                            conflictRegion.getEndIndex() + conflictRegion.getAfterContextSize())));
+                } catch (IndexOutOfBoundsException ex) {
+                    System.out.println("");
+                }
                 conflictRegion = solutionLayer(conflictRegion, repositoryPath);
                 conflictRegion = originalLinesLayer(conflictRegion, repositoryPath);
                 conflictRegions.add(conflictRegion);

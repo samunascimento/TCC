@@ -22,8 +22,8 @@ public class LoginDao {
     public int insert(Login login) throws SQLException {
 
         String sql = "INSERT INTO tb_login "
-                + "(login,pass) "
-                + "VALUES (?,?) "
+                + "(login,pass,type) "
+                + "VALUES (?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -35,6 +35,7 @@ public class LoginDao {
             //set value
             stmt.setString(1, login.getUser());
             stmt.setString(2, login.getPass());
+            stmt.setString(3, login.getType());
             tableKeys = stmt.executeQuery();
             tableKeys.next();
 
@@ -68,9 +69,11 @@ public class LoginDao {
                 int id = resultSet.getInt("id");
                 String user = resultSet.getString("user");
                 String pass = resultSet.getString("pass");
+                String type = resultSet.getString("type");
                 login.setId(id);
                 login.setUser(user);
                 login.setPass(pass);
+                login.setType(type);
                 listLogin.add(login);
             }
             return listLogin;
@@ -100,9 +103,11 @@ public class LoginDao {
             int loginId = resultSet.getInt("id");
             String user = resultSet.getString("user");
             String pass = resultSet.getString("pass");
+            String type = resultSet.getString("type");
             login.setId(id);
             login.setUser(user);
             login.setPass(pass);
+            login.setType(type);
             return login;
 
         } catch (SQLException e) {

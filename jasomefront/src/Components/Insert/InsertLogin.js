@@ -6,8 +6,22 @@ import axios from 'axios';
 
 export default class InsertLogin extends Component{
 
-    render(){
+    state = {
+        type: '',
+        
+        user: '',
 
+        pass: ''
+    }
+
+
+    onSubmit(){
+        //axios.post(`http://localhost:8080/JasomeWeb/webresources/jasome/login/`+this.state.user+`/`+this.state.pass+`/`+this.state.type)
+        console.log(this.state.user);
+        console.log(this.state.pass);
+    }
+
+    render(){
         return(
             <>
                 <div>
@@ -20,8 +34,9 @@ export default class InsertLogin extends Component{
                         Usuário:
                     </Typography>
                     <TextField 
-                        id="user"
-                        name="user" 
+                        id={this.state.user}
+                        name={this.state.user}
+                        onInput={(e) => this.setState({user: e.target.value})}
                         type="text"
                         placeholder="Usuário"
                         style={{
@@ -35,8 +50,9 @@ export default class InsertLogin extends Component{
                         Senha:
                     </Typography>
                     <TextField 
-                        id="pass"
-                        name="pass" 
+                        id={this.state.pass}
+                        name={this.state.pass}
+                        onInput={(e) => this.setState({pass: e.target.value})}
                         type="password"
                         placeholder="Senha"
                         style={{
@@ -45,8 +61,24 @@ export default class InsertLogin extends Component{
                         }}
                     />
                 </div>
+                <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
+                    <Typography variant='h6'>
+                        Type:
+                    </Typography>
+                    <TextField 
+                        id={this.state.type}
+                        name={this.state.type}
+                        onInput={(e) => this.setState({type: e.target.value})}
+                        type="text"
+                        placeholder="Tipo"
+                        style={{
+                            width: '50%',
+                            padding: '0px 0px 0px 10px'
+                        }}
+                    />
+                </div>
                 <div style={{ margin: '30px 0px 0px 16px',}}>
-                    <Button color='primary' variant='contained' size='medium'>
+                    <Button color='primary' variant='contained' size='medium' type='submit' onClick={() => this.onSubmit()}>
                         Cadastrar
                     </Button>
                 </div>

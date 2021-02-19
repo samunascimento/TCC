@@ -27,7 +27,7 @@ public class MNAlternativeView {
 
         //Frame
         JFrame alternativeView = new JFrame();
-        alternativeView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        alternativeView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         alternativeView.setTitle("(" + region.getBeginLine() + " - " + region.getEndLine() + ")");
         alternativeView.setResizable(true);
         alternativeView.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
@@ -157,10 +157,6 @@ public class MNAlternativeView {
         //END
         alternativeView.setVisible(true);
 
-    }
-
-    public static void main(String[] args) {
-        openAlternativeView(null);
     }
 
 }

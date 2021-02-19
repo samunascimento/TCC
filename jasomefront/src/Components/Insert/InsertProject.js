@@ -41,6 +41,20 @@ export default class InsertProject extends Component{
                         }}
                     />
                 </div>
+                <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
+                    <Typography variant='h6'>
+                        Caminho para o jasome:
+                    </Typography>
+                    <TextField 
+                        id="jasomePath" 
+                        type="text"
+                        placeholder="Projeto"
+                        style={{
+                            width: '50%',
+                            padding: '0px 0px 0px 10px'
+                        }}
+                    />
+                </div>
                 <div style={{ margin: '30px 0px 0px 16px',}}>
                     <Button color='primary' variant='contained' size='medium'>
                         Cadastrar

@@ -5,6 +5,16 @@
  */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
+import br.ufjf.dcc.gmr.core.exception.CheckoutError;
+import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
+import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
+import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
+import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExistInDataBase;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.jasome.Jasome;
 import br.ufjf.dcc.gmr.core.jasome.model.Metric;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClass;
 import br.ufjf.dcc.gmr.core.jasome.model.PackageClassMethod;
@@ -19,7 +29,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -1121,4 +1133,10 @@ public class MetricDao {
 //        System.out.println("CHEGOU NA CLASSE DAO");
 //        analyze(null, null, null, "D:\\Github\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", path);
 //    }
+    
+    
+    public void executeProject(String dirJasome,String dirProject) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase{
+        Jasome jasome = new Jasome();
+        jasome.analyze(null, null, null, dirJasome, dirProject);
+    }
 }
