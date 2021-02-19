@@ -85,9 +85,14 @@ public class ParserJava {
         for (int y = 0; y < version.getFile().size(); y++) {
             DiffTranslator diffTranslator = new DiffTranslator();
             diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version, y);
-
+            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, true);
+            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, true);
+            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, false);
+            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, false);
+            
             String keyPath = "";
+            
+            diffTranslator.findIntervals(version, y);
             keyPath = keyPath + version.getFile().get(y);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
@@ -220,7 +225,7 @@ public class ParserJava {
                 int end = version.getFile().get(i).getChunks().get(z).getEnd().getLineNumber();
 
                 version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineEnd(begin - 1);
-               
+
                 if (((begin - 1) - context) > 0) {
                     version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin((begin - 1) - context);
                     version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent((begin - 1) - context, begin - 1, version.getFile().get(i)));
@@ -239,7 +244,7 @@ public class ParserJava {
                     version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, version.getFile().get(i).getContent().size() - 1, version.getFile().get(i)));
                 }
                 version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end + 1);
-               
+
             }
         }
     }
