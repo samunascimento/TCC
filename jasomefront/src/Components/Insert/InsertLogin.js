@@ -16,9 +16,13 @@ export default class InsertLogin extends Component{
 
 
     onSubmit(){
-        //axios.post(`http://localhost:8080/JasomeWeb/webresources/jasome/login/`+this.state.user+`/`+this.state.pass+`/`+this.state.type)
-        console.log(this.state.user);
-        console.log(this.state.pass);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'user': this.state.user, 'pass': this.state.pass, 'type' : this.state.type},
+            body: JSON.stringify({ title: 'React POST Request Example' })
+        };
+        fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', requestOptions)
+            .then(response => response.json())
     }
 
     render(){

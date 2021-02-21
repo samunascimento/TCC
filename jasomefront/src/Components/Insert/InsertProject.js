@@ -5,6 +5,24 @@ import Button from '@material-ui/core/Button';
 
 export default class InsertProject extends Component{
 
+    state = {
+        name: '',
+        
+        url: '',
+
+        dirJasome: ''
+    }
+
+    onSubmit(){
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome},
+            //body: JSON.stringify({ title: 'React POST Request Example' })
+        };
+        fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', requestOptions)
+            .then(response => response.json())
+    }
+
     render(){
         return(
             <>
@@ -18,7 +36,9 @@ export default class InsertProject extends Component{
                         Nome do projeto:
                     </Typography>
                     <TextField 
-                        id="projectName" 
+                        id={this.state.name}
+                        name={this.state.name}
+                        onInput={(e) => this.setState({name: e.target.value})} 
                         type="text"
                         placeholder="Nome"
                         style={{
@@ -32,9 +52,11 @@ export default class InsertProject extends Component{
                         Caminho para o projeto:
                     </Typography>
                     <TextField 
-                        id="projectPath" 
+                        id={this.state.url}
+                        name={this.state.url}
+                        onInput={(e) => this.setState({url: e.target.value})} 
                         type="text"
-                        placeholder="Projeto"
+                        placeholder="Caminho para o projeto"
                         style={{
                             width: '50%',
                             padding: '0px 0px 0px 10px'
@@ -46,9 +68,11 @@ export default class InsertProject extends Component{
                         Caminho para o jasome:
                     </Typography>
                     <TextField 
-                        id="jasomePath" 
+                        id={this.state.dirJasome}
+                        name={this.state.dirJasome}
+                        onInput={(e) => this.setState({dirJasome: e.target.value})} 
                         type="text"
-                        placeholder="Projeto"
+                        placeholder="Caminho para o jasome"
                         style={{
                             width: '50%',
                             padding: '0px 0px 0px 10px'
@@ -56,7 +80,7 @@ export default class InsertProject extends Component{
                     />
                 </div>
                 <div style={{ margin: '30px 0px 0px 16px',}}>
-                    <Button color='primary' variant='contained' size='medium'>
+                    <Button color='primary' variant='contained' size='medium' type='submit' onClick={() => this.onSubmit()}>
                         Cadastrar
                     </Button>
                 </div>
