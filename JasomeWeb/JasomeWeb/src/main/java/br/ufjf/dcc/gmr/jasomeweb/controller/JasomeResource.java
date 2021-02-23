@@ -206,14 +206,16 @@ public class JasomeResource {
     //AJUSTAR ESSE ENDPOINT
     @POST
     @Path("/projects/create")
-    public void create(@HeaderParam("param1") String nome,
-            @HeaderParam("param2") String url,
-            @HeaderParam("param3") String dirJasome){
+    public void create(@HeaderParam("nome") String nome,
+            @HeaderParam("url") String url,
+            @HeaderParam("dirJasome") String dirJasome){
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
+        
         String caminhoJasome = dirJasome;
         try {
             dao.executeProject(caminhoJasome, url);
+            System.out.println("Cadastrou.");
         } catch (IsOutsideRepository ex) {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -245,8 +247,8 @@ public class JasomeResource {
     }
 
     @POST
-    @Path("login/{user}/{pass}/{type}")
-    public void insertLogin(final @PathParam("user") String user, final @PathParam("pass") String pass, final @PathParam("type") String type) throws SQLException {
+    @Path("login/")
+    public void insertLogin(@HeaderParam("user") String user, @HeaderParam("pass") String pass, @HeaderParam("type") String type) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         LoginDao dao = new LoginDao(connection);
         Login login = new Login();
@@ -254,6 +256,7 @@ public class JasomeResource {
         login.setPass(pass);
         login.setType(type);
         dao.insert(login);
+        System.out.println("Inseriu.");
         connection.close();
     }
 
