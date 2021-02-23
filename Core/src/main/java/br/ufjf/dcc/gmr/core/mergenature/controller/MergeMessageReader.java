@@ -137,7 +137,7 @@ public class MergeMessageReader {
         String auxString = auxStringArray[0].replaceAll(" deleted in ", " ").replaceAll(" and renamed to ", " ").replaceAll(" in ", " ");
         auxStringArray = auxString.split(" ");
         result.setAncestorFilePath(auxStringArray[0]);
-        if(auxStringArray[1].equals("HEAD")){
+        if (auxStringArray[1].equals("HEAD")) {
             result.setParent1FilePath(null);
             result.setParent2FilePath(auxStringArray[2]);
         } else {
@@ -175,24 +175,33 @@ public class MergeMessageReader {
     /*
     
     CONFLICT (file location): folder/file2.txt added in HEAD inside a directory that was renamed in branch1, 
-    folderRenamed/file2.txt.
+    suggesting it should perhaps be moved to folderRenamed/file2.txt.
+    
+    CONFLICT (file location): tool/test/org/antlr/v4/test/rt/gen/grammars/ParserExec/ParserProperty.st added
+    in HEAD inside a directory that was renamed in e248be48d14ccce15f79d3623bd131de2082c99f, suggesting it
+    should perhaps be moved to
+    antlr4-testgen-maven-plugin/resources/org/antlr4/runtime/test/templates/ParserExec/ParserProperty.st.
     
      */
     private static Conflict fileLocationType(String message) {
-        Conflict result = new Conflict();
-        result.setConflictType(ConflictType.FILE_LOCATION);
-        message = message + " ";
-        String[] auxStringArray = message.split(": ");
-        String auxString = auxStringArray[1].replaceAll(" added in ", " ").replaceAll(" inside a directory that was renamed in ", " ").replaceAll(", suggesting it should perhaps be moved to ", " ").replaceAll("\\. ", "");
-        result.setAncestorFilePath(Paths.get(auxString).getParent().getFileName().toString());
-        if (auxStringArray[1].equals("HEAD")) {
-            result.setParent1FilePath(auxStringArray[0]);
-            result.setParent2FilePath(auxStringArray[3]);
-        } else {
-            result.setParent1FilePath(auxStringArray[3]);
-            result.setParent2FilePath(auxStringArray[0]);
+        try {
+            Conflict result = new Conflict();
+            result.setConflictType(ConflictType.FILE_LOCATION);
+            result.setAncestorFilePath(null);
+            message = message.split(": ")[1].replaceAll(" added in", "").replaceAll(" inside a directory that was renamed in", "").replaceAll(", suggesting it should perhaps be moved to", "");
+            String[] auxStringArray = message.split(" ");
+            if (auxStringArray[1].equals("HEAD")) {
+                result.setParent1FilePath(auxStringArray[0]);
+                result.setParent2FilePath(auxStringArray[3]);
+            } else {
+                result.setParent1FilePath(auxStringArray[3]);
+                result.setParent2FilePath(auxStringArray[0]);
+            }
+            return result;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println("");
+            throw ex;
         }
-        return result;
     }
 
     /*

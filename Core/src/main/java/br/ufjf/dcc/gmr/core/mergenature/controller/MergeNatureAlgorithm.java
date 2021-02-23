@@ -108,7 +108,6 @@ public class MergeNatureAlgorithm {
             afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             System.out.println("After: " + afterUsedMem + " bytes");
             System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
-
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -158,7 +157,12 @@ public class MergeNatureAlgorithm {
                 }
                 for (String conflictMessage : mergeMessage) {
                     if (conflictMessage.contains("CONFLICT")) {
-                        merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
+                        try {
+                            merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
+                        } catch (OutOfMemoryError er) {
+                            merge.setConflicts(new ArrayList<>());
+                            merge.setMergeType(MergeType.OUT_OF_MEMORY);
+                        }
                     }
                 }
                 MergeNatureTools.prepareAnalysis(repositoryPath);
@@ -175,7 +179,7 @@ public class MergeNatureAlgorithm {
         return merge;
     }
 
-    private Conflict conflictLayer(Merge merge, String conflictMessage, String repositoryPath) throws IOException {
+    private Conflict conflictLayer(Merge merge, String conflictMessage, String repositoryPath) throws IOException, OutOfMemoryError {
 
         Conflict conflict = MergeMessageReader.getConflictFromMessage(conflictMessage);
 
@@ -373,7 +377,7 @@ public class MergeNatureAlgorithm {
 
     }
 
-    private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException {
+    private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException, OutOfMemoryError {
         if (conflict.getConflictRegions().get(0).getOriginalV1FirstLine() < 0) {
             for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                 conflictRegion.setStructures("Untreatable git's error");
