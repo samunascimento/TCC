@@ -77,24 +77,29 @@ public class ParserJava {
 
         createConflictChunkList();
 
-//        createJungGraph(parent1, parent2, conflictChunkList, args);
+        createJungGraph(parent1, parent2, conflictChunkList, args);
     }
 
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
-//            DiffTranslator diffTranslator = new DiffTranslator();
-//            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, true);
-//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, true);
-//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, false);
-//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, false);
-//            
+
             String keyPath = "";
-            
-            //diffTranslator.findIntervals(version, y);
+
             keyPath = keyPath + version.getFile().get(y);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
+                List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
+                int version1[] = new int[2];
+                int version2[] = new int[2];
+
+                version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
+                version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
+
+                chunk.getChunkVersion1().setLineBegin(version1[0]);
+                chunk.getChunkVersion2().setLineBegin(version2[0]);
+
+                chunk.getChunkVersion1().setLineEnd(version1[1]);
+                chunk.getChunkVersion2().setLineEnd(version2[1]);
 
                 chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(keyPath, chunk.getChunkVersion1()));
                 chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(keyPath, chunk.getChunkVersion2()));
@@ -103,6 +108,55 @@ public class ParserJava {
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
 
         }
+    }
+
+    private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
+
+        int result[] = new int[2];
+        int preContext = 0;
+        int posContext = 0;
+        List<String> targetContent = ListUtils.readFile(targetFile);
+
+        for (int i = 0; !targetContent.get(i).equals(sourceBlock.get(sourceBlock.size() - 1)); i++) {
+
+            if (targetContent.get(i).equals(sourceBlock.get(0))) {
+                preContext = i - 1;
+            }
+            posContext = i;
+        }
+        posContext += 2;
+        if (sourceBlock.size() == 1) {
+            preContext = posContext - 2;
+        }
+
+        result[0] = preContext;
+        result[1] = posContext;
+
+        return result;
+    }
+
+    private static List<List<String>> cutConflitcContent(List<String> content) {
+
+        List<List<String>> result = new ArrayList<>();
+
+        List<String> aux = new ArrayList<>();
+        int i = 1;
+        while (!content.get(i).contains("=======")) {
+
+            aux.add(content.get(i));
+            i++;
+        }
+        result.add(aux);
+        aux = new ArrayList<>();
+        i++;
+        while (!content.get(i).contains(">>>>>>>")) {
+            aux.add(content.get(i));
+            i++;
+        }
+        result.add(aux);
+
+        return result;
+
     }
 
     private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args) {
