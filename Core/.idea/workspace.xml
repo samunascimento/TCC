@@ -7,6 +7,8 @@
     <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="clear table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/controller/JTreeMouseListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/view/View.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp/CSharpParser.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp/CSharpParser.interp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,6 +119,8 @@
       <workItem from="1612561155480" duration="58000" />
       <workItem from="1612561233482" duration="10098000" />
       <workItem from="1612660374160" duration="27000" />
+      <workItem from="1612904064094" duration="30000" />
+      <workItem from="1613388695034" duration="60000" />
     </task>
     <task id="LOCAL-00001" summary="change view`s textArea to 3 tables">
       <created>1612563210246</created>

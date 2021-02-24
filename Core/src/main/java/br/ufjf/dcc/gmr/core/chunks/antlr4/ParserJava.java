@@ -65,7 +65,6 @@ public class ParserJava {
     }
 
     public static void main(String[] args) throws Exception {
-
         //Definindo os arquivos com conflitos
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
@@ -85,6 +84,7 @@ public class ParserJava {
         for (int y = 0; y < version.getFile().size(); y++) {
 
             String keyPath = "";
+
             keyPath = keyPath + version.getFile().get(y);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
@@ -181,7 +181,7 @@ public class ParserJava {
 
             ParserJava parserJava = new ParserJava(version);
 
-            int j = 0, i = 0;
+            int j = 0, i = 0;   
             String nameNewDir;
 
             if (cont == 0) {
@@ -318,9 +318,9 @@ public class ParserJava {
         String source = path;
         File srcDir = new File(source);
 
-        String destination = "/home/felipepe/Documentos/projetos/sandbox/" + pasta;
+        String destination = "sandbox" + pasta;
         File destDir = new File(destination);
-
+        
         try {
             FileUtils.copyDirectory(srcDir, destDir);
         } catch (IOException e) {

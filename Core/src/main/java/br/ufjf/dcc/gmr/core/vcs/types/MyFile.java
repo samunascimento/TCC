@@ -123,7 +123,7 @@ public class MyFile {
         String javaClassName = "";
         String[] aux = this.path.split("java", 2);
         if (aux.length == 2) {
-            aux = aux[1].split(File.separator);
+            aux = aux[1].split("/");
 
             for (String string : aux) {
                 if (string.equals("")) {
