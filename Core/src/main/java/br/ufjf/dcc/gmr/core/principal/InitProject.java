@@ -171,8 +171,6 @@ public class InitProject implements Runnable {
             Version version = versions.get(i);
           
                 model.addRow(new String[]{version.getSHA(), version.getStatus().toString()});
-            
-
         }
 
         this.view.getTable().setModel(model);

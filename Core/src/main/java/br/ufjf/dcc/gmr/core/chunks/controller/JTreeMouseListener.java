@@ -70,6 +70,7 @@ public class JTreeMouseListener extends MouseAdapter {
                 e.printStackTrace();
             }
         }
+        this.view.getTable1().setVisible(true);
     }
 
     public Component getTableCellRendererComponent(JTable table, String value, int row, int column) {

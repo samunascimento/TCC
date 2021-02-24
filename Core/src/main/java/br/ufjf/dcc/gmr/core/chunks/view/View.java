@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.chunks.view;
 
-
 import br.ufjf.dcc.gmr.core.chunks.controller.JMenuJungActionListener;
 import br.ufjf.dcc.gmr.core.chunks.controller.*;
 import br.ufjf.dcc.gmr.core.chunks.jungtwo.JungFrame;
@@ -21,7 +20,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 public final class View extends JFrame {
 
-    
     private JFrame chooserFrame;
     private JPanel leftPanel;
     private JPanel rightPanel;
@@ -36,6 +34,10 @@ public final class View extends JFrame {
     JMenuBar menuBar;
     private JMenu menuFile;
     private JMenu menuOptions;
+
+    private JMenu menuFilter;
+    private JCheckBoxMenuItem menuFilterCheckBox;
+
     private JMenuItem submenu;
     private JMenuItem submenuJung;
     private InitProject initProject;
@@ -59,6 +61,9 @@ public final class View extends JFrame {
         this.menuBar = new JMenuBar();
         this.menuFile = new JMenu();
         this.menuOptions = new JMenu();
+        this.menuFilter = new JMenu();
+        this.menuFilterCheckBox = new JCheckBoxMenuItem("Show only conflic commits");
+
         this.textArea = new JTextArea();
         this.progressBar = new JProgressBar();
         this.submenu = new JMenuItem();
@@ -72,23 +77,23 @@ public final class View extends JFrame {
     }
 
     private void paintTreePane() {
-        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
-        this.treePane.setPreferredSize(new Dimension(180, leftPanelHight));
-        this.treePane.setVisible(false);
+        int leftPanelHight = (int) this.getLeftPanel().getPreferredSize().getHeight();
+        this.getTreePane().setPreferredSize(new Dimension(180, leftPanelHight));
+        this.getTreePane().setVisible(false);
     }
 
     private void paintLeftPanel() {
         int menuBarHight = (int) this.menuBar.getPreferredSize().getHeight();
-        this.leftPanel.setLayout(new BorderLayout());
-        this.leftPanel.setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
-        this.leftPanel.setVisible(false);
+        this.getLeftPanel().setLayout(new BorderLayout());
+        this.getLeftPanel().setPreferredSize(new Dimension(300, getScreenHight() - menuBarHight));
+        this.getLeftPanel().setVisible(false);
     }
 
     private void paintRightPanel() {
-        this.rightPanel.setLayout(new BorderLayout());
-        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
-        int leftPanelWidth = (int) this.leftPanel.getPreferredSize().getWidth();
-        this.rightPanel.setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
+        this.getRightPanel().setLayout(new BorderLayout());
+        int leftPanelHight = (int) this.getLeftPanel().getPreferredSize().getHeight();
+        int leftPanelWidth = (int) this.getLeftPanel().getPreferredSize().getWidth();
+        this.getRightPanel().setPreferredSize(new Dimension(getScreenWidth() - leftPanelWidth, leftPanelHight));
     }
 
     public void paintTree(Version version) {
@@ -96,24 +101,24 @@ public final class View extends JFrame {
         if (files.size() > 0) {
             DefaultMutableTreeNode shaTree = new DefaultMutableTreeNode(version.getSHA());
             DefaultTreeModel model = new DefaultTreeModel(shaTree);
-            this.tree.setModel(model);
-            this.tree.addMouseListener(new JTreeMouseListener(this, version));
-            this.tree.setShowsRootHandles(true);
+            this.getTree().setModel(model);
+            this.getTree().addMouseListener(new JTreeMouseListener(this, version));
+            this.getTree().setShowsRootHandles(true);
             for (MyFile file : files) {
                 shaTree.add(createNodes(file));
             }
-            this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+            this.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         } else {
             DefaultMutableTreeNode emptyNode = new DefaultMutableTreeNode("Empty tree");
             DefaultTreeModel model = new DefaultTreeModel(emptyNode);
-            this.tree.setModel(model);
+            this.getTree().setModel(model);
         }
-        this.tree.setVisible(true);
-        int leftPanelHight = (int) this.leftPanel.getPreferredSize().getHeight();
-        this.leftPanel.setPreferredSize(new Dimension(500, leftPanelHight));
-        this.treePane.setVisible(true);
-        this.treePane.updateUI();
-        this.leftPanel.updateUI();
+        this.getTree().setVisible(true);
+        int leftPanelHight = (int) this.getLeftPanel().getPreferredSize().getHeight();
+        this.getLeftPanel().setPreferredSize(new Dimension(500, leftPanelHight));
+        this.getTreePane().setVisible(true);
+        this.getTreePane().updateUI();
+        this.getLeftPanel().updateUI();
     }
 
     private DefaultMutableTreeNode createNodes(MyFile file) {
@@ -128,62 +133,71 @@ public final class View extends JFrame {
     }
 
     private void paintChooser() {
-        this.chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        this.chooser.setCurrentDirectory(new java.io.File(""));
-        this.chooser.setRequestFocusEnabled(false);
-        this.chooser.addActionListener(new ChooserActionPerformed(this));
-        this.chooser.setVisible(false);
+        this.getChooser().setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        this.getChooser().setCurrentDirectory(new java.io.File(""));
+        this.getChooser().setRequestFocusEnabled(false);
+        this.getChooser().addActionListener(new ChooserActionPerformed(this));
+        this.getChooser().setVisible(false);
     }
 
     private void paintTable() {
-        this.table.addMouseListener(new TableMouseListener(this));
-        DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+        this.getTable().addMouseListener(new TableMouseListener(this));
+        DefaultTableModel model = (DefaultTableModel) this.getTable().getModel();
         model.addColumn("sha");
         model.addColumn("status");
-        this.table.setModel(model);
-    }
-    private void paintTable1() {
-        this.table1.addMouseListener(new TableMouseListener(this));
-        this.table1.setShowGrid(false);
-        this.table1.setShowHorizontalLines(false);
-        this.table1.setShowVerticalLines(false);
-        DefaultTableModel model = (DefaultTableModel) this.table1.getModel();
-        model.addColumn("before conflict");
-        this.table1.setModel(model);
-    }
-    private void paintMenuBar() {
-        this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
-        this.submenu.addActionListener(new MenuFileActionListener(this));
-        this.submenu.setText("Open Repository");
-        this.submenuJung.addActionListener(new JMenuJungActionListener(this.jungFrame));
-        this.submenuJung.setText("Open Jung");
-        this.menuFile.add(this.submenu);
-        this.menuFile.add(this.submenuJung);
-        this.menuFile.setText("File");
-        this.menuBar.add(this.menuFile);
-        this.menuOptions.addMouseListener(new MenuOptionsActionListener(this));
-        this.menuOptions.setText("Options");
-        this.menuBar.add(this.menuOptions);
+        this.getTable().setModel(model);
     }
 
-    private void paintTextArea() {
-        this.textArea.setLayout(new BorderLayout());
-        this.textArea.setEditable(false);
+    private void paintTable1() {
+        this.getTable1().setVisible(false);
+        this.getTable1().addMouseListener(new TableMouseListener(this));
+        this.getTable1().setShowGrid(false);
+        this.getTable1().setShowHorizontalLines(false);
+        this.getTable1().setShowVerticalLines(false);
+        DefaultTableModel model = (DefaultTableModel) this.getTable1().getModel();
+        model.addColumn("before conflict");
+        this.getTable1().setModel(model);
+    }
+
+    private void paintMenuBar() {
+        this.menuBar.setPreferredSize(new Dimension(getScreenWidth(), 30));
+
+        this.submenu.addActionListener(new MenuFileActionListener(this));
+        this.submenu.setText("Open Repository");
+
+        this.submenuJung.addActionListener(new JMenuJungActionListener(this.getJungFrame()));
+        this.submenuJung.setText("Open Jung");
+
+        this.menuFile.add(this.getSubmenu());
+        this.menuFile.add(this.getSubmenuJung());
+        this.menuFile.setText("File");
+
+        this.menuOptions.addMouseListener(new MenuOptionsActionListener(this));
+        this.menuOptions.setText("Options");
+
+        this.menuFilter.setText("Filter");
+        this.menuFilter.add(this.getMenuFilterCheckBox());
+
+        this.menuFilterCheckBox.addActionListener(new MenuFilterActionListener(this));
+
+        this.menuBar.add(this.getMenuFile());
+        this.menuBar.add(this.getMenuOptions());
+        this.menuBar.add(this.getMenuFilter());
     }
 
     private void paintProgressBar() {
-        this.progressBar.setPreferredSize(new Dimension(getScreenWidth(), 50));
-        this.progressBar.setStringPainted(true);
-        this.progressBar.setVisible(false);
+        this.getProgressBar().setPreferredSize(new Dimension(getScreenWidth(), 50));
+        this.getProgressBar().setStringPainted(true);
+        this.getProgressBar().setVisible(false);
     }
 
     private void paintPanel() {
         this.add(menuBar, BorderLayout.NORTH);
-        this.add(this.progressBar, BorderLayout.SOUTH);
+        this.add(this.getProgressBar(), BorderLayout.SOUTH);
 
-        this.rightPanel.add(new JScrollPane(this.table1), BorderLayout.CENTER);
+        this.getRightPanel().add(new JScrollPane(this.getTable1()), BorderLayout.CENTER);
 
-        this.chooserFrame.add(this.chooser, BorderLayout.CENTER);
+        this.getChooserFrame().add(this.getChooser(), BorderLayout.CENTER);
 
         this.setVisible(true);
     }
@@ -210,7 +224,7 @@ public final class View extends JFrame {
         frame.paintMainPanel();
         frame.setVisible(true);
     }
-    
+
     public int getContextLines() {
         return contextLines;
     }
@@ -321,7 +335,7 @@ public final class View extends JFrame {
      * @return the submenu
      */
     public JMenuItem getSubmenuFile() {
-        return submenu;
+        return getSubmenu();
     }
 
     /**
@@ -351,14 +365,14 @@ public final class View extends JFrame {
     public JScrollPane getTreePane() {
         return treePane;
     }
-    
+
     /**
      * @return the SubmenuJung
      */
-    public JMenuItem getSubmenuJung(){
+    public JMenuItem getSubmenuJung() {
         return submenuJung;
     }
-    
+
     /**
      * @param chooser the chooser to set
      */
@@ -433,7 +447,7 @@ public final class View extends JFrame {
      * @param submenu the submenu to set
      */
     public void setSubmenuFile(JMenuItem submenu) {
-        this.submenu = submenu;
+        this.setSubmenu(submenu);
     }
 
     /**
@@ -477,12 +491,12 @@ public final class View extends JFrame {
     public void setMenuOptions(JMenu menuOptions) {
         this.menuOptions = menuOptions;
     }
-    
+
     /**
-     * @param submenuJung  the submenuJung to set
+     * @param submenuJung the submenuJung to set
      */
-    public void SetSubmenuJung(JMenuItem submenuJung){
-        this.submenuJung = submenuJung;
+    public void SetSubmenuJung(JMenuItem submenuJung) {
+        this.setSubmenuJung(submenuJung);
     }
 
     public JTable getTable1() {
@@ -491,5 +505,41 @@ public final class View extends JFrame {
 
     public void setTable1(JTable table1) {
         this.table1 = table1;
+    }
+
+    public JMenu getMenuFilter() {
+        return menuFilter;
+    }
+
+    public void setMenuFilter(JMenu menuFilter) {
+        this.menuFilter = menuFilter;
+    }
+
+    public JCheckBoxMenuItem getMenuFilterCheckBox() {
+        return menuFilterCheckBox;
+    }
+
+    public void setMenuFilterCheckBox(JCheckBoxMenuItem menuFilterCheckBox) {
+        this.menuFilterCheckBox = menuFilterCheckBox;
+    }
+
+    public JMenuItem getSubmenu() {
+        return submenu;
+    }
+
+    public void setSubmenu(JMenuItem submenu) {
+        this.submenu = submenu;
+    }
+
+    public void setSubmenuJung(JMenuItem submenuJung) {
+        this.submenuJung = submenuJung;
+    }
+
+    public JungFrame getJungFrame() {
+        return jungFrame;
+    }
+
+    public void setJungFrame(JungFrame jungFrame) {
+        this.jungFrame = jungFrame;
     }
 }
