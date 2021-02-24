@@ -5,18 +5,12 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.controller;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava;
 import br.ufjf.dcc.gmr.core.chunks.view.View;
-import br.ufjf.dcc.gmr.core.principal.InitProject;
 import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
