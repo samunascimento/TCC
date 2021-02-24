@@ -28,79 +28,41 @@ public class DiffTranslator {
         this.addOpList = new ArrayList<>();
     }
 
-    public void findIntervals(Version version, int fileID) {
-
-        MyFile myFile = version.getFile().get(fileID);
-
-        for (ConflictChunk chunk : myFile.getChunks()) {
-            int removeSizeBefore = 0;
-            int addSizeBefore = 0;
-
-            if (removeOpList.size() > 0) {
-                while (removeOpList.get(removeSizeBefore).getLine() < chunk.getBegin().getLineNumber() && removeOpList.size() - 1 > removeSizeBefore) {
-                    removeSizeBefore++;
-
-                }
-
-            }
-            int aux = 0;
-            if (addOpList.size() > 0) {
-                while (addOpList.get(addSizeBefore).getLine() < chunk.getBegin().getLineNumber() && addOpList.size() - 1 > addSizeBefore) {
-
-                    aux += addOpList.get(addSizeBefore).getSize();
-
-                    addSizeBefore++;
-                }
-            }
-
-            int BeginChunk = (chunk.getBegin().getLineNumber() + 1) - aux;
-            int EndChunk = (chunk.getSeparator().getLineNumber() - 1) - aux;
-            chunk.getChunkVersion1().setLineBegin(BeginChunk);
-            chunk.getChunkVersion1().setLineEnd(EndChunk);
-
-            BeginChunk = (chunk.getSeparator().getLineNumber() + 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
-            EndChunk = (chunk.getEnd().getLineNumber() - 1) - (chunk.getSeparator().getLineNumber() - chunk.getBegin().getLineNumber()) - removeSizeBefore;
-            chunk.getChunkVersion2().setLineBegin(BeginChunk);
-            chunk.getChunkVersion2().setLineEnd(EndChunk);
-
-        }
-
-    }
-
-    public int findLines(int originalLine, boolean parent) {
+    public int findLines(String sourceFile, String targetFile, int originalLine) {
 
         int result = 0;
-        int adds = 0;
-        int removes = 0;
 
-        // parent A, we look to minus '-' signals
-        if (parent) {
-            removes = countRemoves(originalLine);
-            adds = countAdds(originalLine);
+        List<String> sourceContent = ListUtils.readFile(sourceFile);
+        List<String> targetContent = ListUtils.readFile(targetFile);
 
-            result = originalLine - removes + adds;
+        result = originalLine - countAdds(originalLine+1) + countRemoves(originalLine+1);
+
+        if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
+            return result;
 
         } else {
-            //parent B, we look to plus '+' signals
-            removes = countRemoves(originalLine);
-            adds = countAdds(originalLine);
-            result = originalLine - adds;
+            result = originalLine - countRemoves(originalLine+1) + countAdds(originalLine+1);
+            if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
+                return result;
+            }
 
         }
-        return result;
 
+        return 0;
     }
 
     private int countAdds(int line) {
         int result = 0;
+
         int j;
-        for (int i = 0; addOpList.get(i).getLine() < line; i++) {
+
+        for (int i = 0; addOpList.get(i).getLine() <= line; i++) {
             j = 0;
             while (j < addOpList.get(i).getSize()) {
-                result++;
-              
+                j++;
+
             }
-            result = j;
+            result += j;
         }
 
         return result;
@@ -109,7 +71,7 @@ public class DiffTranslator {
     private int countRemoves(int line) {
         int result = 0;
 
-        for (int i = 0; removeOpList.get(i).getLine() < line; i++) {
+        for (int i = 0; removeOpList.get(i).getLine() <= line; i++) {
             result++;
         }
 
@@ -145,7 +107,6 @@ public class DiffTranslator {
                 aux = auxArray[0];
 
                 initialLine = Integer.parseInt(aux);
-
                 currentLine = initialLine;
 
             } else if (line.startsWith("-")) {
