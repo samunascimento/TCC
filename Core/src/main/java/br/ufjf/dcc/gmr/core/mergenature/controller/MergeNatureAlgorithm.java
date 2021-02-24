@@ -100,7 +100,8 @@ public class MergeNatureAlgorithm {
             this.progressBar.setMaximum(numberOfMerges);
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
-        for (String logLine : Git.giveAllMerges(repositoryPath)) {
+        for (String logLine : log) {
+            System.out.println("Current merge: " +  logLine);
             beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             System.out.println("Before: " + beforeUsedMem + " bytes");
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
