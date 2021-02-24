@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GlobalEnviroment {
 
@@ -21,8 +22,20 @@ public class GlobalEnviroment {
     public List<BaseBinding> findLanguageConstructs(String path, Chunk languageConstruct) {
 
         List<BaseBinding> result = new ArrayList<>();
-
-        TypeBinding typeBinding = enviroment.get(path);
+        
+        
+        String aux = path.replaceAll("/", ".");
+        String replacedPath = "";
+        Set<String> keySet = enviroment.keySet();
+        
+        for(int i=0; i < keySet.size(); i++){
+            if(aux.contains((String) keySet.toArray()[i])){
+                replacedPath = (String) keySet.toArray()[i];
+            }
+        }
+        
+        
+        TypeBinding typeBinding = enviroment.get(replacedPath);
 
         //Add imports, attributes and methodDeclaration in result object. MethodCalls, LocalVariables and LocalVariablesUsage are inside MethodDeclaration
         for (ImportBinding importBinding : typeBinding.getImports()) {

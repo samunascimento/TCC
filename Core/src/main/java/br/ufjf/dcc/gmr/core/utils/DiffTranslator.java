@@ -35,20 +35,22 @@ public class DiffTranslator {
         List<String> sourceContent = ListUtils.readFile(sourceFile);
         List<String> targetContent = ListUtils.readFile(targetFile);
 
-        result = originalLine - countAdds(originalLine+1) + countRemoves(originalLine+1);
-
-        if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
-            return result;
-
-        } else {
-            result = originalLine - countRemoves(originalLine+1) + countAdds(originalLine+1);
+        result = originalLine - countAdds(originalLine + 1) + countRemoves(originalLine + 1);
+        if (result < targetContent.size() - 1) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
+
             }
 
         }
 
-        return 0;
+        result = originalLine - countRemoves(originalLine + 1) + countAdds(originalLine + 1);
+        if (result < targetContent.size() - 1) {
+            if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
+                return result;
+            }
+        }
+        return -1;
     }
 
     private int countAdds(int line) {
@@ -56,14 +58,15 @@ public class DiffTranslator {
 
         int j;
 
-        for (int i = 0; addOpList.get(i).getLine() <= line; i++) {
+        for (int i = 0; addOpList.get(i).getLine() <= line && i < addOpList.size() - 1; i++) {
             j = 0;
-            while (j < addOpList.get(i).getSize()) {
+            while (j != addOpList.get(i).getSize()) {
                 j++;
 
             }
             result += j;
         }
+        result += addOpList.get(addOpList.size() - 1).getSize();
 
         return result;
     }
@@ -71,10 +74,9 @@ public class DiffTranslator {
     private int countRemoves(int line) {
         int result = 0;
 
-        for (int i = 0; removeOpList.get(i).getLine() <= line; i++) {
+        for (int i = 0; removeOpList.get(i).getLine() < line && i < removeOpList.size() - 1; i++) {
             result++;
         }
-
         return result;
 
     }

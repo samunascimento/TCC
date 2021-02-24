@@ -84,16 +84,30 @@ public class ParserJava {
         for (int y = 0; y < version.getFile().size(); y++) {
 
             String keyPath = "";
-
-            keyPath = keyPath + version.getFile().get(y);
+            keyPath = keyPath.concat(version.getFile().get(y).getPath());
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
                 int version2[] = new int[2];
 
-                version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
-                version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
+                if (conflictContent.get(0).size() == 0) {
+                    version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
+                    version1[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version2[0]);
+                    version1[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version2[1]);
+
+                } else {
+                    if (conflictContent.get(1).size() == 0) {
+                        version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
+                        version2[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y),  version1[0]);
+                        version2[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y),  version1[1]);
+
+                    } else {
+                        version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
+                        version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
+                    }
+
+                }
 
                 chunk.getChunkVersion1().setLineBegin(version1[0]);
                 chunk.getChunkVersion2().setLineBegin(version2[0]);
@@ -110,24 +124,40 @@ public class ParserJava {
         }
     }
 
+    private static int foundLine(String sourcePath, String targetPath, int sourceLine) throws IOException {
+
+        int result;
+        DiffTranslator diffTranslator = new DiffTranslator();
+        diffTranslator.translator(sourcePath, targetPath, pathProject);
+        result = diffTranslator.findLines(sourcePath, targetPath, sourceLine);
+
+        return result;
+    }
+
     private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
 
         int result[] = new int[2];
+        result[0] = 0;
+        result[1] = 0;
+        
         int preContext = 0;
         int posContext = 0;
         List<String> targetContent = ListUtils.readFile(targetFile);
+        boolean flag = true;
+        int j = 0;
+        for (int i = 0; flag; i++) {
 
-        for (int i = 0; !targetContent.get(i).equals(sourceBlock.get(sourceBlock.size() - 1)); i++) {
+            if (targetContent.get(i).equals(sourceBlock.get(j))) {
+                j++;
 
-            if (targetContent.get(i).equals(sourceBlock.get(0))) {
-                preContext = i - 1;
+            }
+            if (j == sourceBlock.size()) {
+                flag = false;
             }
             posContext = i;
         }
-        posContext += 2;
-        if (sourceBlock.size() == 1) {
-            preContext = posContext - 2;
-        }
+        preContext = posContext - j;
+        posContext += 1;
 
         result[0] = preContext;
         result[1] = posContext;
@@ -181,17 +211,17 @@ public class ParserJava {
 
             ParserJava parserJava = new ParserJava(version);
 
-            int j = 0, i = 0;   
+            int j = 0, i = 0;
             String nameNewDir;
 
             if (cont == 0) {
                 nameNewDir = "parent1";
                 pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
-                ParserJava.pathRepositoryCopy1 = pathRepositoryCopy;
+                pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
                 nameNewDir = "parent2";
                 pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
-                ParserJava.pathRepositoryCopy2 = pathRepositoryCopy;
+                pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
             File cloneDirectory = new File(pathRepositoryCopy);
@@ -207,7 +237,6 @@ public class ParserJava {
                             } else {
                                 filesToCheckParent2.add(string);
                             }
-
                         }
                     }
                 }
@@ -320,7 +349,7 @@ public class ParserJava {
 
         String destination = "sandbox" + pasta;
         File destDir = new File(destination);
-        
+
         try {
             FileUtils.copyDirectory(srcDir, destDir);
         } catch (IOException e) {
