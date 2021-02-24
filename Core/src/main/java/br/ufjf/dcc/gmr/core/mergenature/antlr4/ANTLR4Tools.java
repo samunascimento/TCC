@@ -308,7 +308,7 @@ public class ANTLR4Tools {
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + repositoryPath + filePathProjectAsRoot + " does not exist in!");
             throw ex;
-        }
+        } 
     }
 
     public static ANTLR4Results getANTLR4ResultsInInterval(String filePath, int start, int stop) throws IOException {

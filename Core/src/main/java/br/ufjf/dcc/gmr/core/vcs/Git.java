@@ -747,7 +747,7 @@ public class Git {
     public static List<String> merge(String otherCommit, String repositoryPath) throws IOException {
         String command = "git merge --allow-unrelated-histories " + otherCommit;
         CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
+        if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
             for (String line : execution.getError()) {
                 if (line.contains("No remote for the current branch.")) {
                     throw new IOException(line);
