@@ -32,7 +32,7 @@ public class ChooserActionPerformed implements ActionListener {
         this.view.setInitProject(initProject);
         Thread run = new Thread(initProject);
         run.start();
-        
+        this.view.getProgressBar().setValue(0);
     }
 
     @SuppressWarnings("empty-statement")

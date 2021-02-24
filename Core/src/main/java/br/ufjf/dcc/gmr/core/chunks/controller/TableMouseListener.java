@@ -5,8 +5,6 @@ import br.ufjf.dcc.gmr.core.chunks.view.View;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TableMouseListener extends MouseAdapter {
     
@@ -22,7 +20,15 @@ public class TableMouseListener extends MouseAdapter {
         if (row < 0) {
             row = 0;
         }
-        Version version = getView().getProject().getVersions().get(row);
+        Version version = new Version();
+        String SHA = this.view.getTable().getModel().getValueAt(row, 0).toString();
+        for (Version aux : getView().getProject().getVersions()) {
+            if(aux.getSHA().equals(SHA)){
+                version = aux;
+                break;
+            }
+        }
+        
         getView().paintTree(version);
         this.view.getTree().setVisible(true);
         

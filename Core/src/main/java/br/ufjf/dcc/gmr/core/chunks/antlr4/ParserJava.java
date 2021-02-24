@@ -361,7 +361,7 @@ public class ParserJava {
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
-        System.out.println("***************MethodDeclarationAST1***************");
+        /*System.out.println("***************MethodDeclarationAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
             System.out.println(methodDeclarationBinding.toString());
         }
@@ -385,13 +385,13 @@ public class ParserJava {
                 System.out.println(methodCall);
             }
         }
-
-        System.out.println("***************Dependencies***************");
-        System.out.println("--------------AST1 --> AST2--------------");
+*/
+        //System.out.println("***************Dependencies***************");
+        //System.out.println("--------------AST1 --> AST2--------------");
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
-        System.out.println("--------------AST2 --> AST1--------------");
+        //System.out.println("--------------AST2 --> AST1--------------");
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
-        System.out.println("***************Chunks***************");
+        //System.out.println("***************Chunks***************");
 
     }
 
