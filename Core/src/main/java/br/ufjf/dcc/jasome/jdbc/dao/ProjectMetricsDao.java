@@ -187,4 +187,28 @@ public class ProjectMetricsDao {
             }
         }
     }
+    
+    public List<String> isProjectRegistered(String nameProject) throws SQLException {
+        List<String> names = new ArrayList<>();
+        String sql = "SELECT * FROM tb_projectMetrics";
+
+        ResultSet resultSet = null;
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                String projectName = resultSet.getString("projectName");
+                names.add(projectName);
+            }
+            return names;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }

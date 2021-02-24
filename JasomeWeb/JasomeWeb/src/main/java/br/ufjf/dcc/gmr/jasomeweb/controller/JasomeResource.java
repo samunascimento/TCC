@@ -26,6 +26,7 @@ import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.jasome.jdbc.dao.LoginDao;
+import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -268,5 +269,21 @@ public class JasomeResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
+    }
+    
+    @GET
+    @Path("projects/get/{projectName}")
+    public boolean isProjectRegistered(@PathParam("projectName") String projectName) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        System.out.println(projectName);
+        ProjectMetricsDao dao = new ProjectMetricsDao(connection);
+        List<String> names = dao.isProjectRegistered(projectName);
+        boolean isProjectIn = false;
+        for (String name : names) {
+            if(name.equalsIgnoreCase(projectName))
+                isProjectIn = true;
+        }
+        connection.close();
+        return isProjectIn;
     }
 }

@@ -14,13 +14,13 @@ export default class InsertProject extends Component{
     }
 
     onSubmit(){
-        const requestOptions = {
+        const request = {
             method: 'POST',
-            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome},
-            //body: JSON.stringify({ title: 'React POST Request Example' })
+            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
         };
-        fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', requestOptions)
-            .then(response => response.json())
+
+        
+        fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', request)
     }
 
     render(){

@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Alert from '@material-ui/lab/Alert';
 
 export default class InsertLogin extends Component{
 
@@ -16,13 +18,11 @@ export default class InsertLogin extends Component{
 
 
     onSubmit(){
-        const requestOptions = {
+        const request = {
             method: 'POST',
-            headers: { 'user': this.state.user, 'pass': this.state.pass, 'type' : this.state.type},
-            body: JSON.stringify({ title: 'React POST Request Example' })
+            headers: { 'user': this.state.user, 'pass': this.state.pass, 'type' : this.state.type}
         };
-        fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', requestOptions)
-            .then(response => response.json())
+        fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', request)
     }
 
     render(){
@@ -69,17 +69,21 @@ export default class InsertLogin extends Component{
                     <Typography variant='h6'>
                         Type:
                     </Typography>
-                    <TextField 
+                    <Select
                         id={this.state.type}
-                        name={this.state.type}
-                        onInput={(e) => this.setState({type: e.target.value})}
-                        type="text"
-                        placeholder="Tipo"
+                        defaultValue={'SELECT'}
+                        onChange={(e) => this.setState({type: e.target.value})}
                         style={{
                             width: '50%',
-                            padding: '0px 0px 0px 10px'
+                            padding: '0px 0px 0px 16px'
                         }}
-                    />
+
+                    >
+                        <MenuItem value={'SELECT'}>SELECIONE...</MenuItem>
+                        <MenuItem value={'ADM'}>ADMINISTRADOR</MenuItem>
+                        <MenuItem value={'DEV'}>DEVELOPER</MenuItem>
+                        <MenuItem value={'USER'}>USER</MenuItem>
+                    </Select>
                 </div>
                 <div style={{ margin: '30px 0px 0px 16px',}}>
                     <Button color='primary' variant='contained' size='medium' type='submit' onClick={() => this.onSubmit()}>
