@@ -63,7 +63,7 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
         if (filePathProjectAsRoot.endsWith(".java")) {
             String fileContent;
             try {
@@ -78,8 +78,8 @@ public class ANTLR4Tools {
             ParseTree tree = null;
             try {
                 tree = parser.compilationUnit();
-            } catch (Exception ex) {
-                System.out.println("");
+            } catch (OutOfMemoryError ex) {
+                throw ex;
             }
             Java9Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
@@ -118,7 +118,7 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
         if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
             String fileContent;
             try {
@@ -130,7 +130,12 @@ public class ANTLR4Tools {
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
-            ParseTree tree = parser.translationunit();
+            ParseTree tree;
+            try {
+                tree = parser.translationunit();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
@@ -168,7 +173,7 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
         if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent;
             try {
@@ -180,7 +185,12 @@ public class ANTLR4Tools {
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
-            ParseTree tree = parser.file_input();
+            ParseTree tree;
+            try {
+                tree = parser.file_input();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
@@ -238,7 +248,7 @@ public class ANTLR4Tools {
                 visitor = new CSVisitor(false);
             }
             visitor.visit(tree);
-            //Imprimir_arvore-------------------------------------------------------
+            /*/Imprimir_arvore-------------------------------------------------------
 
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
@@ -268,7 +278,7 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
-            //Imprimir_arvore-------------------------------------------------------
+            /*/Imprimir_arvore-------------------------------------------------------
 
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();
@@ -280,7 +290,7 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+    public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
         try {
             ANTLR4Results results;
             if (filePathProjectAsRoot.endsWith(".java")) {
@@ -298,7 +308,7 @@ public class ANTLR4Tools {
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + repositoryPath + filePathProjectAsRoot + " does not exist in!");
             throw ex;
-        }
+        } 
     }
 
     public static ANTLR4Results getANTLR4ResultsInInterval(String filePath, int start, int stop) throws IOException {

@@ -9,7 +9,8 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
 public enum MergeType {
 
     CONFLICTED_MERGE, NOT_CONFLICTED_MERGE, OCTOPUS_MERGE, 
-    CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, OCTOPUS_MERGE_OF_UNRELATED_HISTORIES;
+    CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, OCTOPUS_MERGE_OF_UNRELATED_HISTORIES,
+    OUT_OF_MEMORY;
 
     public static MergeType getEnumFromInt(int value) {
         switch (value) {
@@ -30,6 +31,9 @@ public enum MergeType {
             }
             case 6: {
                 return MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES;
+            }
+            case 7: {
+                return MergeType.OUT_OF_MEMORY;
             }
             default: {
                 return null;
@@ -56,6 +60,9 @@ public enum MergeType {
             }
             case "OCTOPUS_MERGE_OF_UNRELATED_HISTORIES": {
                 return MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES;
+            }
+            case "OUT_OF_MEMORY": {
+                return MergeType.OUT_OF_MEMORY;
             }
             default: {
                 return null;

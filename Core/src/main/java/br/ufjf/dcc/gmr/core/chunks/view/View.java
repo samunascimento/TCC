@@ -69,7 +69,6 @@ public final class View extends JFrame {
         this.screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20;
         this.screenHight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20;
         this.jungFrame = new JungFrame();
-        
     }
 
     private void paintTreePane() {

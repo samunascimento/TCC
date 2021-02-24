@@ -65,7 +65,6 @@ public class ParserJava {
     }
 
     public static void main(String[] args) throws Exception {
-
         //Definindo os arquivos com conflitos
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
@@ -83,11 +82,16 @@ public class ParserJava {
 
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
-            DiffTranslator diffTranslator = new DiffTranslator();
-            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
-            diffTranslator.findIntervals(version, y);
-
+//            DiffTranslator diffTranslator = new DiffTranslator();
+//            diffTranslator.translator(filesToCheckParent1.get(y), filesToCheckParent2.get(y), pathRepositoryCopy1);
+//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, true);
+//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, true);
+//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getBegin().getLineNumber() - 1, false);
+//            diffTranslator.findLines(version.getFile().get(y).getChunks().get(0).getEnd().getLineNumber() - 1, false);
+//            
             String keyPath = "";
+            
+            //diffTranslator.findIntervals(version, y);
             keyPath = keyPath + version.getFile().get(y);
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
@@ -123,7 +127,7 @@ public class ParserJava {
 
             ParserJava parserJava = new ParserJava(version);
 
-            int j = 0, i = 0;
+            int j = 0, i = 0;   
             String nameNewDir;
 
             if (cont == 0) {
@@ -220,7 +224,7 @@ public class ParserJava {
                 int end = version.getFile().get(i).getChunks().get(z).getEnd().getLineNumber();
 
                 version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineEnd(begin - 1);
-               
+
                 if (((begin - 1) - context) > 0) {
                     version.getFile().get(i).getChunks().get(z).getBeforeContext().setLineBegin((begin - 1) - context);
                     version.getFile().get(i).getChunks().get(z).getBeforeContext().setText(setContextContent((begin - 1) - context, begin - 1, version.getFile().get(i)));
@@ -239,7 +243,7 @@ public class ParserJava {
                     version.getFile().get(i).getChunks().get(z).getAfterContext().setText(setContextContent(end + 1, version.getFile().get(i).getContent().size() - 1, version.getFile().get(i)));
                 }
                 version.getFile().get(i).getChunks().get(z).getAfterContext().setLineBegin(end + 1);
-               
+
             }
         }
     }
@@ -260,9 +264,9 @@ public class ParserJava {
         String source = path;
         File srcDir = new File(source);
 
-        String destination = "/home/felipepe/Documentos/projetos/sandbox/" + pasta;
+        String destination = "sandbox" + pasta;
         File destDir = new File(destination);
-
+        
         try {
             FileUtils.copyDirectory(srcDir, destDir);
         } catch (IOException e) {
