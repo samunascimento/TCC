@@ -406,68 +406,7 @@ export default class Project extends Component {
 
   }
 
-  addClassMetric = (event, metricName, packageName, className, classIndex) => {
-    this.setState({ ...this.state, [event.target.name]: event.target.checked });
-
-    this.state.classTree[classIndex][metricName] = !this.state.classTree[classIndex][metricName]
-
-    if (event.target.checked === true) {
-
-      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className }
-      const classMetricsChart = this.state.classMetricsChart;
-      console.log('print metric class')
-      console.log(metric)
-      classMetricsChart.push(metric)
-      this.setState({ classMetricsChart })
-
-    }
-
-    else if (event.target.checked === false) {
-
-      let metricCheck = false
-      let metricIndex = 1
-      this.state.classMetricsChart.map((metric, index) => {
-        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className ) {
-          metricCheck = true
-          metricIndex = index
-        }
-      })
-      if (metricCheck === true) {
-        this.state.classMetricsChart.splice(metricIndex, 1)
-        metricCheck = false
-      }
-
-      let indexArray = []
-      let colorsCheck = false
-
-      this.state.data.map((metrics, index) => {
-        metrics.map((metric, index) => {
-          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === className)) {
-            metricCheck = true
-            colorsCheck = true
-          }
-        })
-        if (metricCheck === true) {
-          indexArray.push(index)
-          metricCheck = false
-        }
-      })
-
-      if (colorsCheck == true) {
-        this.adjustColors(metricName, className)
-      }
-
-      this.state.data.splice(indexArray[0], indexArray.length)
-
-      const classSplit = className.split('.');
-      if (classSplit.length !== 1) {
-        className = classSplit[0].concat('...').concat(classSplit[classSplit.length - 1])
-      }
-      this.RemoveMetricDescription(metricName, className);
-
-    }
-
-  }
+  
 
 
   handleChangeClass = async (classMetric) => {
@@ -532,19 +471,20 @@ export default class Project extends Component {
       this.setState({ index: this.state.index + 1 })
   };
 
-  addMethodMetric = (event, metricName, packageName, className, methodName, methodIndex) => {
+  addPackageMetric = (event, metricName, packageName, packageIndex) => {
     this.setState({ ...this.state, [event.target.name]: event.target.checked });
 
-    this.state.methodTree[methodIndex][metricName] = !this.state.methodTree[methodIndex][metricName]
-    console.log('imprime nomes')
-    console.log(packageName,className,methodName)
+    this.state.packageTree[packageIndex][metricName] = !this.state.packageTree[packageIndex][metricName]
+
     if (event.target.checked === true) {
-      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className , 'methodName': methodName}
-      const methodMetricsChart = this.state.methodMetricsChart;
-      methodMetricsChart.push(metric)
-      console.log('print metric method')
-      console.log(metric)
-      this.setState({ methodMetricsChart })
+
+
+      const metric = { 'metricName': metricName, 'packageName': packageName }
+      const packageMetricsChart = this.state.packageMetricsChart;
+      packageMetricsChart.push(metric)
+      this.setState({ packageMetricsChart })
+
+
 
     }
 
@@ -552,8 +492,136 @@ export default class Project extends Component {
 
       let metricCheck = false
       let metricIndex = 1
+      this.state.packageMetricsChart.map((metric, index) => {
+        if (metric.metricName === metricName && metric.packageName === packageName) {
+          metricCheck = true
+          metricIndex = index
+        }
+      })
+      if (metricCheck === true) {
+        this.state.packageMetricsChart.splice(metricIndex, 1)
+        metricCheck = false
+      }
+
+      let indexArray = []
+      let colorsCheck = false
+
+      this.state.data.map((metrics, index) => {
+        metrics.map((metric, index) => {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === null)) {
+            metricCheck = true
+            colorsCheck = true
+          }
+        })
+        if (metricCheck === true) {
+          indexArray.push(index)
+          metricCheck = false
+        }
+      })
+
+      if (colorsCheck == true) {
+        this.adjustColors(metricName, packageName)
+      }
+
+      this.state.data.splice(indexArray[0], indexArray.length)
+
+      const packageSplit = packageName.split('.');
+      if (packageSplit.length !== 1) {
+        packageName = packageSplit[0].concat('...').concat(packageSplit[packageSplit.length - 1])
+      }
+      this.RemoveMetricDescription(metricName, packageName);
+
+    }
+
+
+  }
+
+  addClassMetric = (event, metricName, packageName, className, classIndex) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+
+    this.state.classTree[classIndex][metricName] = !this.state.classTree[classIndex][metricName]
+
+    if (event.target.checked === true) {
+
+      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className }
+      const classMetricsChart = this.state.classMetricsChart;
+      console.log('print metric class')
+      console.log(metric)
+      classMetricsChart.push(metric)
+      this.setState({ classMetricsChart })
+
+    }
+
+    else if (event.target.checked === false) {
+
+      let metricCheck = false
+      let metricIndex = 1
+      this.state.classMetricsChart.map((metric, index) => {
+        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className ) {
+          metricCheck = true
+          metricIndex = index
+        }
+      })
+      if (metricCheck === true) {
+        this.state.classMetricsChart.splice(metricIndex, 1)
+        metricCheck = false
+      }
+
+      let indexArray = []
+      let colorsCheck = false
+
+      this.state.data.map((metrics, index) => {
+        metrics.map((metric, index) => {
+          if ((metric !== null) && (metric.metricName === metricName) && (metric.namePackage === packageName) && (metric.nameClass === className)) {
+            metricCheck = true
+            colorsCheck = true
+          }
+        })
+        if (metricCheck === true) {
+          indexArray.push(index)
+          metricCheck = false
+        }
+      })
+
+      if (colorsCheck == true) {
+        this.adjustColors(metricName, className)
+      }
+
+      this.state.data.splice(indexArray[0], indexArray.length)
+
+      const classSplit = className.split('.');
+      if (classSplit.length !== 1) {
+        className = classSplit[0].concat('...').concat(classSplit[classSplit.length - 1])
+      }
+      this.RemoveMetricDescription(metricName, className);
+
+    }
+
+  }
+
+  addMethodMetric = (event, metricName, packageName, className, methodName, methodIndex) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+
+    this.state.methodTree[methodIndex][metricName] = !this.state.methodTree[methodIndex][metricName]
+
+    if (event.target.checked === true) {
+      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+
+      const metric = { 'metricName': metricName, 'packageName':packageName, 'className': className, 'methodName': methodName}
+      const methodMetricsChart = this.state.methodMetricsChart;
+      console.log('print metric class')
+      console.log(metric)
+      methodMetricsChart.push(metric)
+      this.setState({ methodMetricsChart })
+
+    }
+
+    else if (event.target.checked === false) {
+      console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+      let metricCheck = false
+      let metricIndex = 1
       this.state.methodMetricsChart.map((metric, index) => {
-        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className && metric.methodName == methodName) {
+        if (metric.metricName === metricName && metric.packageName === packageName && metric.className === className && metric.methodName === methodName) {
           metricCheck = true
           metricIndex = index
         }
@@ -626,6 +694,8 @@ export default class Project extends Component {
     this.setState({ packageMetricsChart: [] })
 
     this.setState({classMetricsChart: []})
+
+    this.setState({ methodMetricsChart: []})    
 
   }
 

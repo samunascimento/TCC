@@ -233,7 +233,7 @@ export default class chartMenu extends Component {
                                                         <FormGroup>
                                                             {this.props.methodMetrics.map((metric) => (
                                                                 <FormControlLabel
-                                                                    control={<Checkbox onChange={(event) => this.props.addMethodMetric(event, metric.name, methods.packageName, methods.className,methods.methodName, methodIndex)} name={metric.name} color="primary" />}
+                                                                    control={<Checkbox checked={methods[metric.name]} onChange={(event) => this.props.addMethodMetric(event, metric.name, methods.packageName, methods.className,methods.methodName, methodIndex)} name={metric.name} color="primary" />}
                                                                     label={<span style={{ fontSize: '14px' }}>{metric.name}</span>}
                                                                 />
                                                             ))}
