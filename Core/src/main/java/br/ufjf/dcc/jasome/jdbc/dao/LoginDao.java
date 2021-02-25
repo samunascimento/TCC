@@ -118,4 +118,28 @@ public class LoginDao {
             }
         }
     }
+    
+    public List<String> isUserRegistered() throws SQLException {
+        List<String> users = new ArrayList<>();
+        String sql = "SELECT * FROM tb_login";
+
+        ResultSet resultSet = null;
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                String user = resultSet.getString("login");
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }

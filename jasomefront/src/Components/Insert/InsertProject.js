@@ -13,13 +13,12 @@ export default class InsertProject extends Component{
         dirJasome: ''
     }
 
+
     onSubmit(){
         const request = {
             method: 'POST',
             headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
         };
-
-        
         fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', request)
     }
 

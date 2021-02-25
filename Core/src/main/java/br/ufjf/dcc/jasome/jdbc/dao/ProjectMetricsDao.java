@@ -188,7 +188,7 @@ public class ProjectMetricsDao {
         }
     }
     
-    public List<String> isProjectRegistered(String nameProject) throws SQLException {
+    public List<String> isProjectRegistered() throws SQLException {
         List<String> names = new ArrayList<>();
         String sql = "SELECT * FROM tb_projectMetrics";
 

@@ -1,19 +1,12 @@
-import React, { Component, Fragment, useState } from 'react'
+import React, { Component } from 'react'
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import Fade from '@material-ui/core/Fade';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import index from './index'
 //import Chart from './../../Charts/chart';
-import Chart from './../../Charts/chartLine';
-import Caption from './chartCaption'
-import ListSubheader from '@material-ui/core/ListSubheader';
-import axios from 'axios';
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid';
-import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -25,11 +18,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import Switch from '@material-ui/core/Switch';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-import { PropTypes } from 'prop-types';
-
 
 export default class chartMenu extends Component {
     constructor(props) {

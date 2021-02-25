@@ -277,7 +277,7 @@ public class JasomeResource {
         Connection connection = ConnectionFactory.getConnection();
         System.out.println(projectName);
         ProjectMetricsDao dao = new ProjectMetricsDao(connection);
-        List<String> names = dao.isProjectRegistered(projectName);
+        List<String> names = dao.isProjectRegistered();
         boolean isProjectIn = false;
         for (String name : names) {
             if(name.equalsIgnoreCase(projectName))
@@ -285,5 +285,21 @@ public class JasomeResource {
         }
         connection.close();
         return isProjectIn;
+    }
+    
+    @GET
+    @Path("login/get/{user}")
+    public boolean isUserRegistered(@PathParam("user") String user) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        System.out.println(user);
+        LoginDao dao = new LoginDao(connection);
+        List<String> users = dao.isUserRegistered();
+        boolean isUserIn = false;
+        for (String userName : users) {
+            if(userName.equalsIgnoreCase(user))
+                isUserIn = true;
+        }
+        connection.close();
+        return isUserIn;
     }
 }
