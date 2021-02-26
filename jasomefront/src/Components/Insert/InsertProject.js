@@ -11,26 +11,33 @@ export default class InsertProject extends Component{
         
         url: '',
 
-        dirJasome: ''
+        dirJasome: '',
+
+        isProjectIn: false
     }
 
-    onSubmit() {
-        const url = 'https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/'
-        const data = {}
+    onSubmit(){
+        const request = {
+            method: 'POST',
+            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
+        };
+        
+        if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === ''){
+            alert('Há campos vazios.');
+        }else {
+            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
+            .then((data) => {
+                this.setState({ isProjectIn: data.data })
+            if(this.state.isProjectIn === true)
+                alert('Esse projeto já está cadastrado.')
+            else{
+                fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
+                alert('Cadastrado com sucesso.')
+            }
+                
+            })
 
-        axios.post(url, data, {
-            headers: {
-                'Authorization': {},
-            },
-            data: {'name': this.state.name, 'url': this.state.url, 'dirJasome': this.state.dirJasome}
-        })
-        // const request = {
-        //     method: 'POST',
-        //     headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
-        // };
-
-
-        // fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', request)
+        }
     }
 
     render(){
@@ -94,6 +101,7 @@ export default class InsertProject extends Component{
                         Cadastrar
                     </Button>
                 </div>
+                {loading ? <LoadingSpinner /> : <ResultsTable results={data} />}
             </>
         );
     }

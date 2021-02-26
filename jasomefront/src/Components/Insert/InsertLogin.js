@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Alert from '@material-ui/lab/Alert';
+import axios from 'axios';
 
 export default class InsertLogin extends Component{
 
@@ -13,16 +13,33 @@ export default class InsertLogin extends Component{
         
         user: '',
 
-        pass: ''
-    }
+        pass: '',
 
+        isUserin: false
+    }
 
     onSubmit(){
         const request = {
             method: 'POST',
             headers: { 'user': this.state.user, 'pass': this.state.pass, 'type' : this.state.type}
         };
-        fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', request)
+        
+        if(this.state.user === '' || this.state.pass === '' || this.state.type === ''){
+            alert('Há campos vazios.');
+        }else {
+            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/login/get/'+this.state.user)
+            .then((data) => {
+                this.setState({ isUserin: data.data })
+            if(this.state.isUserin === true)
+                alert('Esse usuário já está cadastrado.')
+            else{
+                fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', request)
+                alert('Cadastrado com sucesso.')
+            }
+                
+            })
+
+        }
     }
 
     render(){

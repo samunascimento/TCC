@@ -207,7 +207,7 @@ public class JasomeResource {
     //AJUSTAR ESSE ENDPOINT
     @POST
     @Path("/projects/create")
-    public void create(@HeaderParam("nome") String nome,
+    public void create(@HeaderParam("name") String name,
             @HeaderParam("url") String url,
             @HeaderParam("dirJasome") String dirJasome){
         Connection connection = ConnectionFactory.getConnection();
