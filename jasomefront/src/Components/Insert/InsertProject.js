@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import axios from 'axios'
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class InsertProject extends Component{
 
@@ -13,7 +14,9 @@ export default class InsertProject extends Component{
 
         dirJasome: '',
 
-        isProjectIn: false
+        isProjectIn: false,
+
+        loading: false
     }
 
     onSubmit(){
@@ -25,18 +28,21 @@ export default class InsertProject extends Component{
         if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === ''){
             alert('Há campos vazios.');
         }else {
-            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
-            .then((data) => {
-                this.setState({ isProjectIn: data.data })
-            if(this.state.isProjectIn === true)
-                alert('Esse projeto já está cadastrado.')
-            else{
-                fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
-                alert('Cadastrado com sucesso.')
-            }
-                
-            })
-
+                axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
+                .then((data) => {
+                    this.setState({ isProjectIn: data.data })
+                    if(this.state.isProjectIn === true)
+                        alert('Esse projeto já está cadastrado.')
+                    else{
+                        this.setState({ loading: true }, () => {
+                            fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
+                            .then(() => {
+                                this.setState({ loading: false })
+                            })
+                        })
+                        alert('Cadastrado com sucesso.')    
+                    }
+                })
         }
     }
 
@@ -101,7 +107,7 @@ export default class InsertProject extends Component{
                         Cadastrar
                     </Button>
                 </div>
-                {loading ? <LoadingSpinner /> : <ResultsTable results={data} />}
+                {this.state.loading ? <CircularProgress /> : '' }
             </>
         );
     }
