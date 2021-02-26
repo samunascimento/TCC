@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import axios from 'axios'
 
 export default class InsertProject extends Component{
 
@@ -13,13 +14,23 @@ export default class InsertProject extends Component{
         dirJasome: ''
     }
 
+    onSubmit() {
+        const url = 'https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/'
+        const data = {}
 
-    onSubmit(){
-        const request = {
-            method: 'POST',
-            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
-        };
-        fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', request)
+        axios.post(url, data, {
+            headers: {
+                'Authorization': {},
+            },
+            data: {'name': this.state.name, 'url': this.state.url, 'dirJasome': this.state.dirJasome}
+        })
+        // const request = {
+        //     method: 'POST',
+        //     headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
+        // };
+
+
+        // fetch('https://localhost:8080/JasomeWeb/webresources/jasome/projects/create/', request)
     }
 
     render(){
