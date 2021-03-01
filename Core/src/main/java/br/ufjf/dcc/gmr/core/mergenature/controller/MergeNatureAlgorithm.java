@@ -18,6 +18,8 @@ import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -26,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JProgressBar;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The main algorithm of merge nature, its function is catch all merges, all
@@ -42,6 +46,8 @@ public class MergeNatureAlgorithm {
     private int contextLines;
     private Project project;
     private JProgressBar progressBar;
+
+    private boolean solutionFileWasRenamed;
 
     public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
         this.repositoryLocation = repositoryLocation;
@@ -101,7 +107,7 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            System.out.println("Current merge: " +  logLine);
+            System.out.println("Current merge: " + logLine);
             beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             System.out.println("Before: " + beforeUsedMem + " bytes");
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
@@ -188,7 +194,13 @@ public class MergeNatureAlgorithm {
         if (conflict.getConflictType() == ConflictType.CONTENT
                 || conflict.getConflictType() == ConflictType.COINCIDENCE_ADDING
                 || conflict.getConflictType() == ConflictType.FILE_RENAME) {
-            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(repositoryPath + conflict.getParent1FilePath()), repositoryPath));
+            List<IntegerInterval> contextIntervals = new ArrayList<>();
+            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(repositoryPath + conflict.getParent1FilePath()), repositoryPath, contextIntervals));
+            if (contextIntervals != null) {
+                conflict.setHasOutsideAlterations(outsideAlterationsLayer(conflict, repositoryPath, contextIntervals));
+            } else {
+                conflict.setHasOutsideAlterations(true);
+            }
         }
         if (!conflict.getConflictRegions().isEmpty()) {
             conflict = antlr4Layer(conflict, repositoryPath);
@@ -197,20 +209,26 @@ public class MergeNatureAlgorithm {
         return conflict;
     }
 
-    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) throws IOException {
+    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
         String[] auxArray;
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
         String auxString = "";
+        int beforeContextSize;
+        int afterContextSize;
         for (int i = 0; i < fileContent.size(); i++) {
             if (MergeNatureTools.checkIfIsBegin(fileContent.get(i))) {
+                beforeContextSize = 0;
+                afterContextSize = 0;
                 conflictRegion = new ConflictRegion();
                 conflictRegion.setConflict(conflict);
                 for (int j = i - contextLines; j != i; j++) {
                     if (j > -1) {
                         auxString = auxString + "\n" + fileContent.get(j);
+                        beforeContextSize++;
                     } else if (j == -1) {
                         auxString = auxString + "\n<SOF>";
+                        break;
                     }
                 }
                 conflictRegion.setBeforeContext(auxString.replaceFirst("\n", ""));
@@ -243,6 +261,7 @@ public class MergeNatureAlgorithm {
                 for (int j = i; j < i + contextLines; j++) {
                     if (j < fileContent.size()) {
                         auxString = auxString + "\n" + fileContent.get(j);
+                        afterContextSize++;
                     } else {
                         auxString = auxString + "\n<EOF>";
                         i = j;
@@ -250,14 +269,10 @@ public class MergeNatureAlgorithm {
                     }
                 }
                 conflictRegion.setAfterContext(auxString.replaceFirst("\n", ""));
-                try {
-                    conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
-                            conflictRegion.getBeginIndex() - conflictRegion.getBeforeContextSize(),
-                            conflictRegion.getEndIndex() + conflictRegion.getAfterContextSize())));
-                } catch (IndexOutOfBoundsException ex) {
-                    System.out.println("");
-                }
-                conflictRegion = solutionLayer(conflictRegion, repositoryPath);
+                conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
+                        conflictRegion.getBeginIndex() - beforeContextSize,
+                        conflictRegion.getEndIndex() + afterContextSize)));
+                conflictRegion = solutionLayer(conflictRegion, repositoryPath, contextIntervals);
                 conflictRegion = originalLinesLayer(conflictRegion, repositoryPath);
                 conflictRegions.add(conflictRegion);
             }
@@ -265,10 +280,11 @@ public class MergeNatureAlgorithm {
         return conflictRegions;
     }
 
-    private ConflictRegion solutionLayer(ConflictRegion conflictRegion, String repositoryPath) throws IOException {
+    private ConflictRegion solutionLayer(ConflictRegion conflictRegion, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
         if (conflictRegion.getBeforeContext().endsWith("<SOF>") || conflictRegion.getAfterContext().startsWith("<EOF>")) {
             conflictRegion.setSolutionText("The context is not a line, the solution cannot be obtained accurately");
             conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);
+            contextIntervals = null;
         } else {
             String mergeCommit = conflictRegion.getConflict().getMerge().getMerge().getCommitHash();
             String parentFilePath = conflictRegion.getConflict().getParent1FilePath();
@@ -284,20 +300,31 @@ public class MergeNatureAlgorithm {
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
+                        contextIntervals = null;
                         return conflictRegion;
+                    } else {
+                        solutionFileWasRenamed = true;
                     }
+                } else {
+                    solutionFileWasRenamed = false;
                 }
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+                    contextIntervals = null;
                     conflictRegion.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
                     conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);
                 } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
+                    contextIntervals = null;
                     conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getRawConflict());
                     conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
                 } else {
                     if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
+                        contextIntervals = null;
                         conflictRegion.setSolutionText("DIFF PROBLEM!");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
                     } else {
+                        if (contextIntervals != null) {
+                            contextIntervals.add(new IntegerInterval(solutionFirstLine, solutionFinalLine));
+                        }
                         conflictRegion.setSolutionText(ListUtils.getTextListStringToString(ListUtils.getSubList(Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath), solutionFirstLine - 1, solutionFinalLine - 1)));
                         conflictRegion = developerDecisionLayer(conflictRegion);
                     }
@@ -377,6 +404,44 @@ public class MergeNatureAlgorithm {
 
     }
 
+    private boolean outsideAlterationsLayer(Conflict conflict, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
+        boolean insideOfConflict = false;
+        List<FileDiff> fileDiffs;
+        try {
+            if (solutionFileWasRenamed) {
+                fileDiffs = Git.diff(repositoryPath,
+                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
+                        conflict.getParent2FilePath(), true, contextLines);
+            } else {
+                fileDiffs = Git.diff(repositoryPath,
+                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
+                        conflict.getParent2FilePath(), true, contextLines);
+            }
+        } catch (LocalRepositoryNotAGitRepository ex) {
+            throw new IOException("LocalRepositoryNotAGitRepository was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
+                    + "This error cannot occur in this point of algorithm otherwise it would already happened.");
+        } catch (InvalidCommitHash ex) {
+            throw new IOException("InvalidCommitHash was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
+                    + "This error probably (no certainty) occur because the version of the file in the solution has drastically, changed something like renaming or deletion,\n"
+                    + "so this cannot occur here otherwise it would already happened.");
+        }
+        for (FileDiff fileDiff : fileDiffs) {
+            for (LineInformation line : fileDiff.getLines()) {
+                insideOfConflict = false;
+                for (IntegerInterval contextInterval : contextIntervals) {
+                    if(contextInterval.begin < line.getLineNumber() && contextInterval.end > line.getLineNumber()){
+                        insideOfConflict = true;
+                        break;
+                    }
+                }
+                if(!insideOfConflict){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException, OutOfMemoryError {
         if (conflict.getConflictRegions().get(0).getOriginalV1FirstLine() < 0) {
             for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
@@ -448,5 +513,17 @@ public class MergeNatureAlgorithm {
             }
         }
         return conflict;
+    }
+
+    private class IntegerInterval {
+
+        int begin;
+        int end;
+
+        public IntegerInterval(int begin, int end) {
+            this.begin = begin;
+            this.end = end;
+        }
+
     }
 }

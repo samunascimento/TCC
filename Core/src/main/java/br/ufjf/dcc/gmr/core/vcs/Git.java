@@ -1251,9 +1251,10 @@ public class Git {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
-                }
-                if (line.contains("fatal: ambiguous argument")) {
+                } else if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidCommitHash();
+                } else {
+                    throw new IOException(execution.getError().toString());
                 }
             }
         } else {
