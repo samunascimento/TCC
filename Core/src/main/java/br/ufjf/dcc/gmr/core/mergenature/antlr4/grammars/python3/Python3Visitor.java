@@ -539,6 +539,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassdef(Python3Parser.ClassdefContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#classSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassSignature(Python3Parser.ClassSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#arglist}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

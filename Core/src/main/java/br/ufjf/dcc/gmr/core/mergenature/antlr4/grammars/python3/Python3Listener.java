@@ -888,6 +888,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitClassdef(Python3Parser.ClassdefContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#classSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassSignature(Python3Parser.ClassSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#classSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassSignature(Python3Parser.ClassSignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#arglist}.
 	 * @param ctx the parse tree
 	 */

@@ -669,4 +669,12 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
         process(ctx);
         return super.visitChildren(ctx);
     }
+
+    @Override
+    public Object visitClassSignature(Python3Parser.ClassSignatureContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
+    
+    
 }

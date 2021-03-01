@@ -1,4 +1,4 @@
-/*
+ /*
  * The MIT License (MIT)
  *
  * Copyright (c) 2014 by Bart Kiers
@@ -312,7 +312,8 @@ dictorsetmaker: ( ((test ':' test | '**' expr)
                   ((test | star_expr)
                    (comp_for | (',' (test | star_expr))* (',')?)) );
 
-classdef: 'class' NAME ('(' (arglist)? ')')? ':' suite;
+classdef: classSignature suite;
+classSignature: 'class' NAME ('(' (arglist)? ')')? ':';
 
 arglist: argument (',' argument)*  (',')?;
 

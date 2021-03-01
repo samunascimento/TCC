@@ -592,8 +592,8 @@ public class Translator {
     }
 
     /*
-    * Variable problem was solved
-    * Function call tough, how to ?
+    * All signatures are done, except the enum one, but with the workarounds used to verify it, it is impossible to do
+    * It is not possible to get method or enum calls
     */
     public static List<String> PythonTranslator(List<String> list) {
 
@@ -657,6 +657,10 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
                 list.remove("Classdef");
             }
+            if (list.contains("ClassSignature")) {
+                mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
+                list.remove("ClassSignature");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("LineComment")) {
@@ -681,7 +685,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Enum")) {
-                mainList.add(LanguageConstructsTypes.DELETE_STATEMENT);
+                mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
                 list.remove("Enum");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -746,7 +750,6 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //objects initialized insides classes are considered statics!
-
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no switch on Python
