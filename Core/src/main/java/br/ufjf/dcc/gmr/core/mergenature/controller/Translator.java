@@ -591,6 +591,10 @@ public class Translator {
         return mainList;
     }
 
+    /*
+    * Variable problem was solved
+    * Function call tough, how to ?
+    */
     public static List<String> PythonTranslator(List<String> list) {
 
         List<String> mainList = new ArrayList<>();
@@ -732,6 +736,10 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Funcdef");
             }
+            if (list.contains("funcSignature")) {
+                mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
+                list.remove("funcSignature");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no package on pythons
@@ -765,7 +773,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-                    
+                     if (list.contains("Variable!")) {
+                mainList.add(LanguageConstructsTypes.VARIABLE);
+                list.remove("Variable");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WARNING!")) {

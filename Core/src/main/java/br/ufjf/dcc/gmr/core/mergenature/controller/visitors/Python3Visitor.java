@@ -11,12 +11,29 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
  * @author luand
  */
 public class Python3Visitor extends Python3BaseVisitor<Object> {
+
+    /*
+    * Function that verifies if there is an especial charactere on an string
+     */
+    public boolean containsSpecialCharacter(String s) {
+        if (s == null || s.trim().isEmpty()) {
+            return true;
+        }
+        String specialChars = "/*!@#$%^&*()\"{}[]|\\?/<>,.";
+        for (int i = 0; i < s.length(); i++) {
+            if (specialChars.contains(s.substring(i, 1))) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private List<SyntaxStructure> list;
     private boolean warning;
@@ -466,8 +483,15 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAtom(Python3Parser.AtomContext ctx) {
-        //process(ctx);
+        if (ctx.getChildCount() > 0 && ctx.getChild(0) != null) {
+            if (ctx.children.size() == 1 && (ctx.getChild(0).getText().charAt(0) == '-' || Character.isAlphabetic(ctx.getChild(0).getText().charAt(0)))
+                    && (!containsSpecialCharacter(ctx.getChild(0).getText()))) {
+                specialProcess(ctx, "Variable");
+            }
+        }
+
         return super.visitChildren(ctx);
+
     }
 
     @Override
@@ -618,7 +642,7 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAssignment(Python3Parser.AssignmentContext ctx) {
-        process(ctx);
+        //process(ctx);
         return super.visitChildren(ctx);
     }
 
@@ -635,12 +659,14 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
     }
 
     @Override
-    public Object visitCast(Python3Parser.CastContext ctx)  {
+    public Object visitCast(Python3Parser.CastContext ctx) {
         process(ctx);
         return super.visitChildren(ctx);
     }
 
-
- 
-
+    @Override
+    public Object visitFuncSignature(Python3Parser.FuncSignatureContext ctx) {
+        process(ctx);
+        return super.visitChildren(ctx);
+    }
 }

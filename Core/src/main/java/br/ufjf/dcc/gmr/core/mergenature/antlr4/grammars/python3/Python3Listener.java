@@ -88,6 +88,16 @@ public interface Python3Listener extends ParseTreeListener {
 	 */
 	void exitFuncdef(Python3Parser.FuncdefContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Python3Parser#funcSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncSignature(Python3Parser.FuncSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Python3Parser#funcSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncSignature(Python3Parser.FuncSignatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Python3Parser#parameters}.
 	 * @param ctx the parse tree
 	 */

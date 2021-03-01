@@ -59,6 +59,12 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFuncdef(Python3Parser.FuncdefContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Python3Parser#funcSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncSignature(Python3Parser.FuncSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Python3Parser#parameters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
