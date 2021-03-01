@@ -7477,6 +7477,9 @@ public class Python3Parser extends Parser {
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
+		public ArglistContext arglist() {
+			return getRuleContext(ArglistContext.class,0);
+		}
 		public ClassdefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -7499,12 +7502,37 @@ public class Python3Parser extends Parser {
 	public final ClassdefContext classdef() throws RecognitionException {
 		ClassdefContext _localctx = new ClassdefContext(_ctx, getState());
 		enterRule(_localctx, 174, RULE_classdef);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(1154);
 			classSignature();
-			setState(1155);
+			setState(1160);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==OPEN_PAREN) {
+				{
+				setState(1155);
+				match(OPEN_PAREN);
+				setState(1157);
+				_errHandler.sync(this);
+				switch ( getInterpreter().adaptivePredict(_input,167,_ctx) ) {
+				case 1:
+					{
+					setState(1156);
+					arglist();
+					}
+					break;
+				}
+				setState(1159);
+				match(CLOSE_PAREN);
+				}
+			}
+
+			setState(1162);
+			match(COLON);
+			setState(1163);
 			suite();
 			}
 		}
@@ -7521,9 +7549,6 @@ public class Python3Parser extends Parser {
 
 	public static class ClassSignatureContext extends ParserRuleContext {
 		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
-		public ArglistContext arglist() {
-			return getRuleContext(ArglistContext.class,0);
-		}
 		public ClassSignatureContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -7546,38 +7571,13 @@ public class Python3Parser extends Parser {
 	public final ClassSignatureContext classSignature() throws RecognitionException {
 		ClassSignatureContext _localctx = new ClassSignatureContext(_ctx, getState());
 		enterRule(_localctx, 176, RULE_classSignature);
-		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(1157);
+			setState(1165);
 			match(CLASS);
-			setState(1158);
-			match(NAME);
-			setState(1164);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==OPEN_PAREN) {
-				{
-				setState(1159);
-				match(OPEN_PAREN);
-				setState(1161);
-				_errHandler.sync(this);
-				switch ( getInterpreter().adaptivePredict(_input,167,_ctx) ) {
-				case 1:
-					{
-					setState(1160);
-					arglist();
-					}
-					break;
-				}
-				setState(1163);
-				match(CLOSE_PAREN);
-				}
-			}
-
 			setState(1166);
-			match(COLON);
+			match(NAME);
 			}
 		}
 		catch (RecognitionException re) {
@@ -8254,7 +8254,7 @@ public class Python3Parser extends Parser {
 		"\3X\3X\3X\3X\5X\u0459\nX\3X\3X\3X\3X\3X\3X\3X\3X\5X\u0463\nX\7X\u0465"+
 		"\nX\fX\16X\u0468\13X\3X\5X\u046b\nX\5X\u046d\nX\3X\3X\5X\u0471\nX\3X\3"+
 		"X\3X\3X\5X\u0477\nX\7X\u0479\nX\fX\16X\u047c\13X\3X\5X\u047f\nX\5X\u0481"+
-		"\nX\5X\u0483\nX\3Y\3Y\3Y\3Z\3Z\3Z\3Z\5Z\u048c\nZ\3Z\5Z\u048f\nZ\3Z\3Z"+
+		"\nX\5X\u0483\nX\3Y\3Y\3Y\5Y\u0488\nY\3Y\5Y\u048b\nY\3Y\3Y\3Y\3Z\3Z\3Z"+
 		"\3[\3[\3[\7[\u0496\n[\f[\16[\u0499\13[\3[\5[\u049c\n[\3\\\3\\\5\\\u04a0"+
 		"\n\\\3\\\3\\\3\\\3\\\3\\\3\\\3\\\3\\\5\\\u04aa\n\\\3]\3]\5]\u04ae\n]\3"+
 		"^\5^\u04b1\n^\3^\3^\3^\3^\3^\5^\u04b8\n^\3_\3_\3_\5_\u04bd\n_\3`\3`\3"+
@@ -8284,7 +8284,7 @@ public class Python3Parser extends Parser {
 		"\2\2\u0098\u03cc\3\2\2\2\u009a\u03ce\3\2\2\2\u009c\u03d4\3\2\2\2\u009e"+
 		"\u03f7\3\2\2\2\u00a0\u03fb\3\2\2\2\u00a2\u0418\3\2\2\2\u00a4\u041a\3\2"+
 		"\2\2\u00a6\u0430\3\2\2\2\u00a8\u0432\3\2\2\2\u00aa\u0438\3\2\2\2\u00ac"+
-		"\u0447\3\2\2\2\u00ae\u0482\3\2\2\2\u00b0\u0484\3\2\2\2\u00b2\u0487\3\2"+
+		"\u0447\3\2\2\2\u00ae\u0482\3\2\2\2\u00b0\u0484\3\2\2\2\u00b2\u048f\3\2"+
 		"\2\2\u00b4\u0492\3\2\2\2\u00b6\u04a9\3\2\2\2\u00b8\u04ad\3\2\2\2\u00ba"+
 		"\u04b0\3\2\2\2\u00bc\u04b9\3\2\2\2\u00be\u04be\3\2\2\2\u00c0\u04c0\3\2"+
 		"\2\2\u00c2\u04c7\3\2\2\2\u00c4\u00ca\7/\2\2\u00c5\u00ca\5 \21\2\u00c6"+
@@ -8616,45 +8616,46 @@ public class Python3Parser extends Parser {
 		"\2\2\u047c\u047a\3\2\2\2\u047d\u047f\7>\2\2\u047e\u047d\3\2\2\2\u047e"+
 		"\u047f\3\2\2\2\u047f\u0481\3\2\2\2\u0480\u0472\3\2\2\2\u0480\u047a\3\2"+
 		"\2\2\u0481\u0483\3\2\2\2\u0482\u0458\3\2\2\2\u0482\u0470\3\2\2\2\u0483"+
-		"\u00af\3\2\2\2\u0484\u0485\5\u00b2Z\2\u0485\u0486\5v<\2\u0486\u00b1\3"+
-		"\2\2\2\u0487\u0488\7\'\2\2\u0488\u048e\7\60\2\2\u0489\u048b\7<\2\2\u048a"+
-		"\u048c\5\u00b4[\2\u048b\u048a\3\2\2\2\u048b\u048c\3\2\2\2\u048c\u048d"+
-		"\3\2\2\2\u048d\u048f\7=\2\2\u048e\u0489\3\2\2\2\u048e\u048f\3\2\2\2\u048f"+
-		"\u0490\3\2\2\2\u0490\u0491\7?\2\2\u0491\u00b3\3\2\2\2\u0492\u0497\5\u00b6"+
-		"\\\2\u0493\u0494\7>\2\2\u0494\u0496\5\u00b6\\\2\u0495\u0493\3\2\2\2\u0496"+
-		"\u0499\3\2\2\2\u0497\u0495\3\2\2\2\u0497\u0498\3\2\2\2\u0498\u049b\3\2"+
-		"\2\2\u0499\u0497\3\2\2\2\u049a\u049c\7>\2\2\u049b\u049a\3\2\2\2\u049b"+
-		"\u049c\3\2\2\2\u049c\u00b5\3\2\2\2\u049d\u049f\5x=\2\u049e\u04a0\5\u00ba"+
-		"^\2\u049f\u049e\3\2\2\2\u049f\u04a0\3\2\2\2\u04a0\u04aa\3\2\2\2\u04a1"+
-		"\u04a2\5x=\2\u04a2\u04a3\7B\2\2\u04a3\u04a4\5x=\2\u04a4\u04aa\3\2\2\2"+
-		"\u04a5\u04a6\7A\2\2\u04a6\u04aa\5x=\2\u04a7\u04a8\7;\2\2\u04a8\u04aa\5"+
-		"x=\2\u04a9\u049d\3\2\2\2\u04a9\u04a1\3\2\2\2\u04a9\u04a5\3\2\2\2\u04a9"+
-		"\u04a7\3\2\2\2\u04aa\u00b7\3\2\2\2\u04ab\u04ae\5\u00ba^\2\u04ac\u04ae"+
-		"\5\u00bc_\2\u04ad\u04ab\3\2\2\2\u04ad\u04ac\3\2\2\2\u04ae\u00b9\3\2\2"+
-		"\2\u04af\u04b1\7-\2\2\u04b0\u04af\3\2\2\2\u04b0\u04b1\3\2\2\2\u04b1\u04b2"+
-		"\3\2\2\2\u04b2\u04b3\7\31\2\2\u04b3\u04b4\5\u00aaV\2\u04b4\u04b5\7\32"+
-		"\2\2\u04b5\u04b7\5\u0080A\2\u04b6\u04b8\5\u00b8]\2\u04b7\u04b6\3\2\2\2"+
-		"\u04b7\u04b8\3\2\2\2\u04b8\u00bb\3\2\2\2\u04b9\u04ba\5^\60\2\u04ba\u04bc"+
-		"\5z>\2\u04bb\u04bd\5\u00b8]\2\u04bc\u04bb\3\2\2\2\u04bc\u04bd\3\2\2\2"+
-		"\u04bd\u00bd\3\2\2\2\u04be\u04bf\7\60\2\2\u04bf\u00bf\3\2\2\2\u04c0\u04c2"+
-		"\7(\2\2\u04c1\u04c3\5\u00c2b\2\u04c2\u04c1\3\2\2\2\u04c2\u04c3\3\2\2\2"+
-		"\u04c3\u00c1\3\2\2\2\u04c4\u04c5\7\17\2\2\u04c5\u04c8\5x=\2\u04c6\u04c8"+
-		"\5\u00acW\2\u04c7\u04c4\3\2\2\2\u04c7\u04c6\3\2\2\2\u04c8\u00c3\3\2\2"+
-		"\2\u00b5\u00c9\u00cd\u00cf\u00d8\u00e1\u00e4\u00eb\u00f1\u00fe\u0104\u010b"+
-		"\u0111\u0115\u011b\u0121\u0125\u012c\u012e\u0130\u0135\u0137\u0139\u013d"+
-		"\u0143\u0147\u014e\u0150\u0152\u0157\u0159\u015e\u0163\u0169\u016d\u0173"+
-		"\u0179\u017d\u0184\u0186\u0188\u018d\u018f\u0191\u0195\u019b\u019f\u01a6"+
-		"\u01a8\u01aa\u01af\u01b1\u01b7\u01be\u01c2\u01ce\u01d7\u01dc\u01e0\u01e3"+
-		"\u01e5\u01eb\u01ef\u01f4\u01f8\u01fc\u020a\u0214\u021a\u021c\u0220\u0229"+
-		"\u0230\u0232\u023b\u0240\u0245\u024c\u0250\u0257\u025f\u0264\u0272\u0277"+
-		"\u027f\u0284\u028c\u0291\u0299\u029e\u02a6\u02ab\u02af\u02b7\u02c0\u02c7"+
-		"\u02d2\u02d8\u02e7\u02ed\u02f8\u0305\u0310\u0315\u031b\u0321\u032b\u0334"+
-		"\u033a\u033c\u0346\u034a\u0352\u0355\u0359\u035d\u0364\u036e\u0376\u037c"+
-		"\u0384\u0394\u039e\u03a6\u03ae\u03b6\u03be\u03c6\u03cc\u03d1\u03d4\u03da"+
-		"\u03e1\u03e6\u03ee\u03f4\u03f7\u03fb\u0401\u0405\u0409\u040b\u040f\u0418"+
-		"\u041f\u0423\u0427\u042b\u042e\u0430\u0434\u0438\u043d\u0441\u0445\u044c"+
-		"\u0450\u0458\u0462\u0466\u046a\u046c\u0470\u0476\u047a\u047e\u0480\u0482"+
-		"\u048b\u048e\u0497\u049b\u049f\u04a9\u04ad\u04b0\u04b7\u04bc\u04c2\u04c7";
+		"\u00af\3\2\2\2\u0484\u048a\5\u00b2Z\2\u0485\u0487\7<\2\2\u0486\u0488\5"+
+		"\u00b4[\2\u0487\u0486\3\2\2\2\u0487\u0488\3\2\2\2\u0488\u0489\3\2\2\2"+
+		"\u0489\u048b\7=\2\2\u048a\u0485\3\2\2\2\u048a\u048b\3\2\2\2\u048b\u048c"+
+		"\3\2\2\2\u048c\u048d\7?\2\2\u048d\u048e\5v<\2\u048e\u00b1\3\2\2\2\u048f"+
+		"\u0490\7\'\2\2\u0490\u0491\7\60\2\2\u0491\u00b3\3\2\2\2\u0492\u0497\5"+
+		"\u00b6\\\2\u0493\u0494\7>\2\2\u0494\u0496\5\u00b6\\\2\u0495\u0493\3\2"+
+		"\2\2\u0496\u0499\3\2\2\2\u0497\u0495\3\2\2\2\u0497\u0498\3\2\2\2\u0498"+
+		"\u049b\3\2\2\2\u0499\u0497\3\2\2\2\u049a\u049c\7>\2\2\u049b\u049a\3\2"+
+		"\2\2\u049b\u049c\3\2\2\2\u049c\u00b5\3\2\2\2\u049d\u049f\5x=\2\u049e\u04a0"+
+		"\5\u00ba^\2\u049f\u049e\3\2\2\2\u049f\u04a0\3\2\2\2\u04a0\u04aa\3\2\2"+
+		"\2\u04a1\u04a2\5x=\2\u04a2\u04a3\7B\2\2\u04a3\u04a4\5x=\2\u04a4\u04aa"+
+		"\3\2\2\2\u04a5\u04a6\7A\2\2\u04a6\u04aa\5x=\2\u04a7\u04a8\7;\2\2\u04a8"+
+		"\u04aa\5x=\2\u04a9\u049d\3\2\2\2\u04a9\u04a1\3\2\2\2\u04a9\u04a5\3\2\2"+
+		"\2\u04a9\u04a7\3\2\2\2\u04aa\u00b7\3\2\2\2\u04ab\u04ae\5\u00ba^\2\u04ac"+
+		"\u04ae\5\u00bc_\2\u04ad\u04ab\3\2\2\2\u04ad\u04ac\3\2\2\2\u04ae\u00b9"+
+		"\3\2\2\2\u04af\u04b1\7-\2\2\u04b0\u04af\3\2\2\2\u04b0\u04b1\3\2\2\2\u04b1"+
+		"\u04b2\3\2\2\2\u04b2\u04b3\7\31\2\2\u04b3\u04b4\5\u00aaV\2\u04b4\u04b5"+
+		"\7\32\2\2\u04b5\u04b7\5\u0080A\2\u04b6\u04b8\5\u00b8]\2\u04b7\u04b6\3"+
+		"\2\2\2\u04b7\u04b8\3\2\2\2\u04b8\u00bb\3\2\2\2\u04b9\u04ba\5^\60\2\u04ba"+
+		"\u04bc\5z>\2\u04bb\u04bd\5\u00b8]\2\u04bc\u04bb\3\2\2\2\u04bc\u04bd\3"+
+		"\2\2\2\u04bd\u00bd\3\2\2\2\u04be\u04bf\7\60\2\2\u04bf\u00bf\3\2\2\2\u04c0"+
+		"\u04c2\7(\2\2\u04c1\u04c3\5\u00c2b\2\u04c2\u04c1\3\2\2\2\u04c2\u04c3\3"+
+		"\2\2\2\u04c3\u00c1\3\2\2\2\u04c4\u04c5\7\17\2\2\u04c5\u04c8\5x=\2\u04c6"+
+		"\u04c8\5\u00acW\2\u04c7\u04c4\3\2\2\2\u04c7\u04c6\3\2\2\2\u04c8\u00c3"+
+		"\3\2\2\2\u00b5\u00c9\u00cd\u00cf\u00d8\u00e1\u00e4\u00eb\u00f1\u00fe\u0104"+
+		"\u010b\u0111\u0115\u011b\u0121\u0125\u012c\u012e\u0130\u0135\u0137\u0139"+
+		"\u013d\u0143\u0147\u014e\u0150\u0152\u0157\u0159\u015e\u0163\u0169\u016d"+
+		"\u0173\u0179\u017d\u0184\u0186\u0188\u018d\u018f\u0191\u0195\u019b\u019f"+
+		"\u01a6\u01a8\u01aa\u01af\u01b1\u01b7\u01be\u01c2\u01ce\u01d7\u01dc\u01e0"+
+		"\u01e3\u01e5\u01eb\u01ef\u01f4\u01f8\u01fc\u020a\u0214\u021a\u021c\u0220"+
+		"\u0229\u0230\u0232\u023b\u0240\u0245\u024c\u0250\u0257\u025f\u0264\u0272"+
+		"\u0277\u027f\u0284\u028c\u0291\u0299\u029e\u02a6\u02ab\u02af\u02b7\u02c0"+
+		"\u02c7\u02d2\u02d8\u02e7\u02ed\u02f8\u0305\u0310\u0315\u031b\u0321\u032b"+
+		"\u0334\u033a\u033c\u0346\u034a\u0352\u0355\u0359\u035d\u0364\u036e\u0376"+
+		"\u037c\u0384\u0394\u039e\u03a6\u03ae\u03b6\u03be\u03c6\u03cc\u03d1\u03d4"+
+		"\u03da\u03e1\u03e6\u03ee\u03f4\u03f7\u03fb\u0401\u0405\u0409\u040b\u040f"+
+		"\u0418\u041f\u0423\u0427\u042b\u042e\u0430\u0434\u0438\u043d\u0441\u0445"+
+		"\u044c\u0450\u0458\u0462\u0466\u046a\u046c\u0470\u0476\u047a\u047e\u0480"+
+		"\u0482\u0487\u048a\u0497\u049b\u049f\u04a9\u04ad\u04b0\u04b7\u04bc\u04c2"+
+		"\u04c7";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

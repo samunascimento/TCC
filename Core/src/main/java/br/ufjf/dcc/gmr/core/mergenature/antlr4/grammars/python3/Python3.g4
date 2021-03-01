@@ -312,8 +312,8 @@ dictorsetmaker: ( ((test ':' test | '**' expr)
                   ((test | star_expr)
                    (comp_for | (',' (test | star_expr))* (',')?)) );
 
-classdef: classSignature suite;
-classSignature: 'class' NAME ('(' (arglist)? ')')? ':';
+classdef: classSignature ('(' (arglist)? ')')? ':' suite;
+classSignature: 'class' NAME ;
 
 arglist: argument (',' argument)*  (',')?;
 

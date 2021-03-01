@@ -593,7 +593,7 @@ public class Translator {
 
     /*
     * All signatures are done, except the enum one, but with the workarounds used to verify it, it is impossible to do
-    * It is not possible to get method or enum calls
+    * I was not capable to get the method or enum calls
     */
     public static List<String> PythonTranslator(List<String> list) {
 
@@ -809,6 +809,7 @@ public class Translator {
         return mainList;
     }
 
+    
     /* TO DO
     * Verificar static
     * Ajustar cast

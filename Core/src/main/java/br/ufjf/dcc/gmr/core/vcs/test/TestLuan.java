@@ -21,7 +21,7 @@ public class TestLuan {
         
      File projectPath = new File("resources/test.py");
 
-        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),4,6);
+        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(),18,22);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();
