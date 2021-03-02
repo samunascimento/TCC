@@ -50,6 +50,7 @@ public class MNProjectFilterFrame extends JFrame {
     private JCheckBox conflictedMergeOfUnrelatedHistories = new JCheckBox("Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox notConflictedMergeOfUnrelatedHistories = new JCheckBox("Not Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox octopusMergeOfUnrelatedHistories = new JCheckBox("Octopus Merge Of Unrelated Histories", true);
+    private JCheckBox outOfMemory = new JCheckBox("Out of Memory", true);
 
     private JCheckBox content = new JCheckBox("Content", true);
     private JCheckBox coincidenceAdding = new JCheckBox("Coincidence Adding", true);
@@ -149,6 +150,8 @@ public class MNProjectFilterFrame extends JFrame {
         mergeTypePanel.add(notConflictedMergeOfUnrelatedHistories, gbc);
         gbc.gridy++;
         mergeTypePanel.add(octopusMergeOfUnrelatedHistories, gbc);
+        gbc.gridy++;
+        mergeTypePanel.add(outOfMemory, gbc);
 
         gbc.gridy = 0;
         conflictTypePanel.add(content, gbc);
@@ -254,6 +257,9 @@ public class MNProjectFilterFrame extends JFrame {
         }
         if (octopusMergeOfUnrelatedHistories.isSelected()) {
             mergeTypeList.add(MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES);
+        }
+        if (outOfMemory.isSelected()) {
+            mergeTypeList.add(MergeType.OUT_OF_MEMORY);
         }
         if (content.isSelected()) {
             conflictTypeList.add(ConflictType.CONTENT);

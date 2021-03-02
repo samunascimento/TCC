@@ -63,7 +63,7 @@ public class MNMergePanel extends JPanel {
         NEPanel.setOpaque(false);
         NEPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         NEPanel.setLayout(new GridBagLayout());
-        NEPanel.add(new MNCommitInfoPanel(merge.getMerge(), merge.getParents(), merge.getAncestor()), INSIDE_CONSTRAINTS);
+        NEPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;

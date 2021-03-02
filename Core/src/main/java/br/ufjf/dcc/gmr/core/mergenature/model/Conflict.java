@@ -31,7 +31,7 @@ public class Conflict {
      * @param conflictRegions A list that contains all conflict regions in a
      * file, can be empty
      * @param conflictType The type of conflict
-     * @param hasOutsideAlterations Indicates if the developer who made the 
+     * @param hasOutsideAlterations Indicates if the developer who made the
      * merge did alterations outside of any conflict
      * @param merge The merge that the conflict belongs
      */
@@ -187,11 +187,22 @@ public class Conflict {
 
     @Override
     public String toString() {
-        return "Parent 1's file: " + getParent1FilePath()
-                + "\nParent 2's file: " + getParent2FilePath()
-                + "\nAncestor's file: " + getAncestorFilePath()
-                + "\nConflict Type: " + conflictType.toString()
-                + "\nConflict Regions: " + conflictRegions.size();
+        if (hasOutsideAlterations) {
+            return "Parent 1's file: " + getParent1FilePath()
+                    + "\nParent 2's file: " + getParent2FilePath()
+                    + "\nAncestor's file: " + getAncestorFilePath()
+                    + "\nConflict Type: " + conflictType.toString()
+                    + "\nConflict Regions: " + conflictRegions.size()
+                    + "\nHas Outside Alterations: YES";
+        } else {
+            return "Parent 1's file: " + getParent1FilePath()
+                    + "\nParent 2's file: " + getParent2FilePath()
+                    + "\nAncestor's file: " + getAncestorFilePath()
+                    + "\nConflict Type: " + conflictType.toString()
+                    + "\nConflict Regions: " + conflictRegions.size()
+                    + "\nHas Outside Alterations: NO";
+        }
+
     }
 
 }
