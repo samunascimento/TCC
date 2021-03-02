@@ -966,7 +966,6 @@ public class Translator {
         
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        // Interface definition é o declaration ? parece que sim, mas verificar
             if (list.contains("Interface_definition")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
                 list.remove("Interface_definition");
@@ -988,9 +987,11 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
                 list.remove("Interface_member_declaration");
             }
-            if (list.contains("Method_invocation")) {
+            if (list.contains("Method_invocation")
+                || list.contains("Member_access")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("Method_invocation");
+                list.remove("Member_access");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
