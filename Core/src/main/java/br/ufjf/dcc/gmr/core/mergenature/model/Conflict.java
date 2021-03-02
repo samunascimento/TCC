@@ -10,7 +10,7 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 09-11-2020
  */
-public class Conflict implements Cloneable {
+public class Conflict {
 
     private int id;
     private String parent1FilePath;
@@ -18,6 +18,7 @@ public class Conflict implements Cloneable {
     private String ancestorFilePath;
     private List<ConflictRegion> conflictRegions;
     private ConflictType conflictType;
+    private boolean hasOutsideAlterations;
     private transient Merge merge;
 
     /**
@@ -30,10 +31,22 @@ public class Conflict implements Cloneable {
      * @param conflictRegions A list that contains all conflict regions in a
      * file, can be empty
      * @param conflictType The type of conflict
+     * @param hasOutsideAlterations Indicates if the developer who made the 
+     * merge did alterations outside of any conflict
      * @param merge The merge that the conflict belongs
      */
-    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, Merge merge) {
+    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, Merge merge) {
         this.id = id;
+        this.parent1FilePath = parent1FilePath;
+        this.parent2FilePath = parent2FilePath;
+        this.ancestorFilePath = ancestorFilePath;
+        this.conflictRegions = conflictRegions;
+        this.conflictType = conflictType;
+        this.hasOutsideAlterations = hasOutsideAlterations;
+        this.merge = merge;
+    }
+
+    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
@@ -42,21 +55,13 @@ public class Conflict implements Cloneable {
         this.merge = merge;
     }
 
-    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, Merge merge) {
-        this.parent1FilePath = parent1FilePath;
-        this.parent2FilePath = parent2FilePath;
-        this.ancestorFilePath = ancestorFilePath;
-        this.conflictRegions = conflictRegions;
-        this.conflictType = conflictType;
-        this.merge = merge;
-    }
-    
     public Conflict(Conflict conflict) {
         this.parent1FilePath = conflict.getParent1FilePath();
         this.parent2FilePath = conflict.getParent2FilePath();
         this.ancestorFilePath = conflict.getAncestorFilePath();
         this.conflictRegions = conflict.getConflictRegions();
         this.conflictType = conflict.getConflictType();
+        this.hasOutsideAlterations = conflict.hasOutsideAlterations();
         this.merge = conflict.getMerge();
     }
 
@@ -151,7 +156,7 @@ public class Conflict implements Cloneable {
     public void setConflictRegions(List<ConflictRegion> conflictRegions) {
         this.conflictRegions = conflictRegions;
     }
-    
+
     public void addConflictRegion(ConflictRegion conflictRegion) {
         this.conflictRegions.add(conflictRegion);
     }
@@ -162,6 +167,14 @@ public class Conflict implements Cloneable {
 
     public void setConflictType(ConflictType conflictType) {
         this.conflictType = conflictType;
+    }
+
+    public boolean hasOutsideAlterations() {
+        return hasOutsideAlterations;
+    }
+
+    public void setHasOutsideAlterations(boolean hasOutsideAlterations) {
+        this.hasOutsideAlterations = hasOutsideAlterations;
     }
 
     public Merge getMerge() {
