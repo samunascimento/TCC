@@ -411,11 +411,11 @@ public class MergeNatureAlgorithm {
             if (solutionFileWasRenamed) {
                 fileDiffs = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
-                        conflict.getParent2FilePath(), true, contextLines);
+                        conflict.getParent1FilePath(), true, contextLines);
             } else {
                 fileDiffs = Git.diff(repositoryPath,
-                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
-                        conflict.getParent2FilePath(), true, contextLines);
+                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
+                        conflict.getParent1FilePath(), true, contextLines);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             throw new IOException("LocalRepositoryNotAGitRepository was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
