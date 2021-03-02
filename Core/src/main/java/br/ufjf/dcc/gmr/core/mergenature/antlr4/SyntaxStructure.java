@@ -31,11 +31,7 @@ public class SyntaxStructure {
         this.warning = warning;
     }
 
-    /*
-    0 = Java
-    1 = CPP
-    2 = Pyhton
-     */
+
     public SyntaxStructure(Token token, boolean warning, Language language) {
         this.startLine = token.getLine();
         this.stopLine = (token.getLine() + token.getText().split("\n").length - 1);
