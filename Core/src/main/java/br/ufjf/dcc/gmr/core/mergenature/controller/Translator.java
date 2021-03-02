@@ -594,6 +594,7 @@ public class Translator {
     /*
     * All signatures are done, except the enum one, but with the workarounds used to verify it, it is impossible to do
     * I was not capable to get the method or enum calls
+    * class signature can't have arglist or enum wont work, it now has just the name and "class" identifier
     */
     public static List<String> PythonTranslator(List<String> list) {
 
@@ -830,12 +831,12 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
                 list.remove("Array_initializer");
             }
-            if (list.contains("")
+           /* if (list.contains("")
                     || list.contains("")
                     || list.contains("")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
                 list.remove("");
-            }
+            }*/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //https://docs.microsoft.com/pt-br/visualstudio/debugger/assertions-in-managed-code?view=vs-2019
@@ -861,16 +862,16 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
+            /*if (list.contains("")) {
                 mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
                 list.remove("");
-            }
+            }*/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
+           /* if (list.contains("")) {
                 mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
                 list.remove("");
-            }
+            }*/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Catch_clauses")
@@ -888,10 +889,10 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
                 list.remove("Class_definition");
             }
-            if (list.contains("")) {
+           /* if (list.contains("")) {
                 mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
                 list.remove("");
-            }
+            }*/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //comentarios em c# são iguais comentarios em java "//" e "/**/"

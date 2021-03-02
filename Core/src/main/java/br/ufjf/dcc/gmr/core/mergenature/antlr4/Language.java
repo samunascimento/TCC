@@ -10,5 +10,5 @@ package br.ufjf.dcc.gmr.core.mergenature.antlr4;
  * @author luan
  */
 public enum Language {
-    JAVA,PYTHON,CPP;
+    JAVA,PYTHON,CPP,CSHARP;
 }

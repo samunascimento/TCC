@@ -254,7 +254,7 @@ public class ANTLR4Tools {
             viewer.open();
 
             //----------------------------------------------------------------------*/
-            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -272,10 +272,10 @@ public class ANTLR4Tools {
             CSVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CSVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
             } else {
                 visitor = new CSVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
             }
             visitor.visit(tree);
             /*/Imprimir_arvore-------------------------------------------------------
@@ -375,7 +375,7 @@ public class ANTLR4Tools {
         }
         return result;
     }
-
+    
     public static ANTLR4Results filterAndGetOutmost(ANTLR4Results inputResults, int beginLine, int endLine) {
 
         List<SyntaxStructure> normalAnalysis = new ArrayList<>();

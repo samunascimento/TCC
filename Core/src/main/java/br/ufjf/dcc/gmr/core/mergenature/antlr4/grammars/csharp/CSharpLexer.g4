@@ -18,11 +18,11 @@ private boolean verbatium;
 
 BYTE_ORDER_MARK: '\u00EF\u00BB\u00BF';
 
-SINGLE_LINE_DOC_COMMENT: '///' InputCharacter*    -> channel(COMMENTS_CHANNEL);
-EMPTY_DELIMITED_DOC_COMMENT: '/***/'              -> channel(COMMENTS_CHANNEL);
-DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(COMMENTS_CHANNEL);
-SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(COMMENTS_CHANNEL);
-DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(COMMENTS_CHANNEL);
+SINGLE_LINE_DOC_COMMENT: '///' InputCharacter*    -> channel(2);
+EMPTY_DELIMITED_DOC_COMMENT: '/***/'              -> channel(2);
+DELIMITED_DOC_COMMENT:       '/**' ~'/' .*? '*/'  -> channel(2);
+SINGLE_LINE_COMMENT:     '//'  InputCharacter*    -> channel(2);
+DELIMITED_COMMENT:       '/*'  .*? '*/'           -> channel(2);
 
 WHITESPACES:   (Whitespace | NewLine)+            -> channel(HIDDEN);
 SHARP:         '#'                                -> mode(DIRECTIVE_MODE);
