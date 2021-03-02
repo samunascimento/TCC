@@ -30,8 +30,6 @@ public class MethodDeclationBinding extends BaseBinding{
         this.ctx = null;
     }
 
-    
-
     public List<String> getModifier() {
         return modifier;
     }

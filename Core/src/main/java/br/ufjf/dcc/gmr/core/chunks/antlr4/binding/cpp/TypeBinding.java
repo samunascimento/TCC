@@ -11,7 +11,10 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
  */
 public class TypeBinding extends BaseBinding{
 
+    public TypeBinding(String name) {
+        super(name);
+    }
+
     public TypeBinding() {
     }
-   
 }

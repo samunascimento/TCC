@@ -18,18 +18,10 @@ import org.antlr.v4.runtime.Token;
 
 public class Visitor3 extends CPP14BaseVisitor<Object> {
 
-//        private TypeBinding typeBinding;
-//        
-//        private String typeS;
-//        private String modifierS;
-//        
-//        private String className;
+        private String typeS;
     
         public Visitor3() {
-//            this.typeBinding = new TypeBinding();
-//            this.typeS = "";
-//            this.modifierS = "";
-//            this.className = "";
+            this.typeS = "";
         }
 
     public static void log(ParserRuleContext ctx){
@@ -644,7 +636,20 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             return visitChildren(ctx);
         }
 
-        @Override
+        public String returnText(CPP14Parser.DeclspecifierseqContext ctx) {
+            String specifier = "";
+            
+            for(int i = 0; i < ctx.getChildCount(); i++) {
+                if(ctx.getChild(i) instanceof CPP14Parser.DeclspecifierContext)
+                    specifier += ctx.getChild(i).getText();
+                if(ctx.getChild(i) instanceof CPP14Parser.DeclspecifierseqContext)
+                    specifier += " " + returnText((CPP14Parser.DeclspecifierseqContext) ctx.getChild(i));
+            }
+            
+            return specifier;
+        }
+        
+         @Override
         public Object visitDeclspecifier(CPP14Parser.DeclspecifierContext ctx) {
 //            log(ctx);
             return visitChildren(ctx);
@@ -653,6 +658,8 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitDeclspecifierseq(CPP14Parser.DeclspecifierseqContext ctx) {
 //            log(ctx);
+            if(!(ctx.getParent() instanceof CPP14Parser.DeclspecifierseqContext))
+                this.typeS = returnText(ctx);
             return visitChildren(ctx);
         }
 
@@ -980,9 +987,33 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             return visitChildren(ctx);
         }
 
+        public boolean findParentPointerDeclaration(ParserRuleContext ctx) {
+            if(ctx.getParent() == null)
+                return false;
+
+            if(ctx.getParent() instanceof CPP14Parser.PointerdeclarationContext)
+                return true;
+
+            return findParentPointerDeclaration(ctx.getParent());
+        }
+    
+        public boolean findParentVariableDeclaration(ParserRuleContext ctx) {
+            if(ctx.getParent() == null)
+                return false;
+
+            if(ctx.getParent() instanceof CPP14Parser.VariabledeclarationContext)
+                return true;
+
+            return findParentVariableDeclaration(ctx.getParent());
+        }
+        
         @Override
         public Object visitPtrdeclarator(CPP14Parser.PtrdeclaratorContext ctx) {
 //            log(ctx);
+            if(findParentPointerDeclaration(ctx) || findParentVariableDeclaration(ctx)) 
+                if(!(ctx.getParent() instanceof CPP14Parser.PtrdeclaratorContext))
+                    System.out.println("Variavel: " + this.typeS + " " + ctx.getText());
+
             return visitChildren(ctx);
         }
         
