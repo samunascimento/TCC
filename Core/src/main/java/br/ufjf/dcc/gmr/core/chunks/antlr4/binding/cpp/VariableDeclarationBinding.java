@@ -27,4 +27,10 @@ public class VariableDeclarationBinding extends BaseBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
+    
+    
+   @Override
+    public String toString(){
+        return this.getTypeBinding().getName()+ " " + super.getName() ;
+    }
 }

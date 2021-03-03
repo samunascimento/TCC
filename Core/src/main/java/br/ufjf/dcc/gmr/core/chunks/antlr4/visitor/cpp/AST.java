@@ -30,7 +30,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class AST {
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree ) throws IOException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -47,12 +47,16 @@ public class AST {
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
-           //Imprimir_arvore-------------------------------------------------------
-            if(openTree){
+            //Imprimir_arvore-------------------------------------------------------
+            if (openTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
             //----------------------------------------------------------------------*/
+            for (int i = 0; i < visitor.getVariableDeclaration().size(); i++) {
+                System.out.println(visitor.getVariableDeclaration().get(i));
+            }
+
             return null;
 //            return new ANTLR4Results(visitor.getList(), comments);
         } else {
@@ -60,12 +64,13 @@ public class AST {
         }
     }
 //trocar e arrumar .java para .cpp e .h
+
     private static List<String> cppFiles(String dir) {
         List<String> cppFiles = new ArrayList<>();
         File file = new File(dir);
         File[] files = file.listFiles();
         for (File file1 : files) {
-            if (file1.isFile() && file1.getAbsolutePath().endsWith(".cpp")||file1.getAbsolutePath().endsWith(".h")) {
+            if (file1.isFile() && file1.getAbsolutePath().endsWith(".cpp") || file1.getAbsolutePath().endsWith(".h")) {
                 cppFiles.add(file1.getAbsolutePath());
             } else if (file1.isDirectory()) {
                 cppFiles.addAll(cppFiles(file1.getAbsolutePath()));
@@ -73,12 +78,20 @@ public class AST {
         }
         return cppFiles;
     }
-    
-    public static void main(String args[]) throws IOException{
 
-        String path = "/home/ketleen/Documentos/grafos-master/Grafo.cpp";
+    public static void main(String args[]) throws IOException {
+
+        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
         analyzeCPPSyntaxTree(path, true);
-      
+
+        /*
+            lista declaraçao de variavel; (nome e tipo) OK
+            lista de chamada ou uso de variavel; (nome)
+            
+            lista de declaraçao de metodos; (nome e tipo, e qnt de paremetro) 
+            lista de chamada de metodos;
         
+            "considerar o Variable Declaration"
+         */
     }
 }
