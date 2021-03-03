@@ -1233,7 +1233,7 @@ public class Git {
      *
      */
     public static List<FileDiff> diff(String directory, String commitSource, String commitTarget, boolean unified, int unifiedSize)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
+            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, FileNotExistInCommitException {
 
         List<FileDiff> result = new ArrayList<>();
         int i = 0;
@@ -1253,7 +1253,9 @@ public class Git {
                     throw new LocalRepositoryNotAGitRepository();
                 } else if (line.contains("fatal: ambiguous argument")) {
                     throw new InvalidCommitHash();
-                } else {
+                } else if (line.contains("fatal: Path \\")) {
+                    throw new FileNotExistInCommitException("The archive looked upon cannot be found on this merge, maybe the path is exchanged ");
+                }else {
                     throw new IOException(execution.getError().toString());
                 }
             }

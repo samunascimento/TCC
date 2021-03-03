@@ -591,11 +591,6 @@ public class Translator {
         return mainList;
     }
 
-    /*
-    * All signatures are done, except the enum one, but with the workarounds used to verify it, it is impossible to do
-    * I was not capable to get the method or enum calls
-    * class signature can't have arglist or enum wont work, it now has just the name and "class" identifier
-    */
     public static List<String> PythonTranslator(List<String> list) {
 
         List<String> mainList = new ArrayList<>();
@@ -824,7 +819,7 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//  https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/
+    //  https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array_initializer")) {
@@ -839,7 +834,8 @@ public class Translator {
             }*/
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//https://docs.microsoft.com/pt-br/visualstudio/debugger/assertions-in-managed-code?view=vs-2019
+    //  
+    https://docs.microsoft.com/pt-br/visualstudio/debugger/assertions-in-managed-code?view=vs-2019
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Assignment")

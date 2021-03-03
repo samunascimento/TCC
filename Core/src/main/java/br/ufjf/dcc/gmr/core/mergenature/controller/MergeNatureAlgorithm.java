@@ -410,11 +410,11 @@ public class MergeNatureAlgorithm {
         try {
             if (solutionFileWasRenamed) {
                 fileDiffs = Git.diff(repositoryPath,
-                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
+                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
                         conflict.getParent1FilePath(), true, contextLines);
             } else {
                 fileDiffs = Git.diff(repositoryPath,
-                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
+                        conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
                         conflict.getParent1FilePath(), true, contextLines);
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -424,6 +424,8 @@ public class MergeNatureAlgorithm {
             throw new IOException("InvalidCommitHash was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
                     + "This error probably (no certainty) occur because the version of the file in the solution has drastically, changed something like renaming or deletion,\n"
                     + "so this cannot occur here otherwise it would already happened.");
+        } catch (FileNotExistInCommitException ex) { 
+           throw new IOException();
         }
         for (FileDiff fileDiff : fileDiffs) {
             for (LineInformation line : fileDiff.getLines()) {
