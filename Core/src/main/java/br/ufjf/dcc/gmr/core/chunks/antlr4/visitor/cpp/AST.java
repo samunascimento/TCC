@@ -7,15 +7,12 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.Language;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +78,7 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String path = "/Users/gleiph/Desktop/main.cpp";
         analyzeCPPSyntaxTree(path, true);
 
         /*

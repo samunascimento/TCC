@@ -30,7 +30,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         this.variableDeclaration = new ArrayList<>();
         this.methodCallBinding = new ArrayList<>();
     }
-    
+
     public List<VariableDeclarationBinding> getVariableDeclaration() {
         return variableDeclaration;
     }
@@ -52,7 +52,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
 //            log(ctx);
-        
+
         if (ctx.getText().contains("->")) {
             int aux = 0;
             if (ctx.getText().contains("(")) {
@@ -100,7 +100,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 TypeBinding typeS = new TypeBinding(this.typeString);
                 VariableDeclarationBinding variavel = new VariableDeclarationBinding(ctx.getText(), typeS);
                 variableDeclaration.add(variavel);
-                
+
                 System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
             }
         }
@@ -607,9 +607,66 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         return visitChildren(ctx);
     }
 
+    public void expression(CPP14Parser.ExpressionContext ctx) throws NullPointerException {
+
+        System.out.println(ctx.getText());
+
+        String name;
+        if (ctx.expression() != null) {
+            name = assigmentExpression(ctx.assignmentexpression());
+            System.out.println("Variavel: " + name);
+            expression(ctx.expression());
+        } else {
+            CPP14Parser.RealassignmentexpressionContext realassignmentexpression = ctx.assignmentexpression().realassignmentexpression();
+
+            CPP14Parser.MultiplicativeexpressionContext multiplicativeexpression = realassignmentexpression.logicalorexpression().logicalandexpression().inclusiveorexpression().
+                    exclusiveorexpression().andexpression().equalityexpression().relationalexpression().shiftexpression()
+                    .additiveexpression().multiplicativeexpression();
+
+            if (multiplicativeexpression.multiplicativeexpression() != null) {
+
+                String type = multiplicativeexpression.multiplicativeexpression().getText();
+                name = multiplicativeexpression.pmexpression().getText();
+                System.out.println("Tipo: " + type);
+                System.out.println("Variavel: " + name);
+            } else {
+                name = multiplicativeexpression.pmexpression().getText();
+                System.out.println("Variavel: " + name);
+            }
+
+        }
+
+    }
+
+    public String assigmentExpression(CPP14Parser.AssignmentexpressionContext assignmentexpression) {
+        
+        System.out.println(assignmentexpression.getText());
+        if (assignmentexpression.conditionalexpression() != null) {
+            String text = assignmentexpression.conditionalexpression().getText();
+            return text.replace("*", "").replaceAll(" ", "");
+        } else if (assignmentexpression.realassignmentexpression() != null) {
+            return assignmentexpression.realassignmentexpression().logicalorexpression().logicalandexpression()
+                    .inclusiveorexpression().exclusiveorexpression().andexpression().equalityexpression().
+                    relationalexpression().shiftexpression().additiveexpression().multiplicativeexpression().
+                    pmexpression().castexpression().unaryexpression().castexpression().getText().
+                    replaceAll(" ", "");
+        } else {
+            System.out.println("================================================");
+            System.out.println("==================BIG PROBLEM===================");
+            System.out.println("================================================");
+        }
+
+        return null;
+    }
+
     @Override
     public Object visitExpression(CPP14Parser.ExpressionContext ctx) {
 //            log(ctx);
+        try {
+            expression(ctx);
+        } catch (NullPointerException ex) {
+
+        }
         return visitChildren(ctx);
     }
 
