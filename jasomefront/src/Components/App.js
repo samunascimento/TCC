@@ -24,7 +24,7 @@ export default class extends Component {
       <Layout projects={projects}>
         <Switch>
           <Route exact path="/insert/login" component={InsertLogin}/>
-          <Route exact path="/insert/projeto" component={InsertProject}/>
+          <Route exact path="/insert/projects" component={InsertProject}/>
           <Route exact path="/metric" component={ListMetric}/>
           <Route path="/projects" render={
             props => <Projects {...props} projects={projects} />

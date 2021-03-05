@@ -24,7 +24,6 @@ import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
-import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.jasome.jdbc.dao.LoginDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import com.google.gson.Gson;
@@ -206,7 +205,7 @@ public class JasomeResource {
 
     //AJUSTAR ESSE ENDPOINT
     @POST
-    @Path("/projects/create")
+    @Path("/insert/projects/create")
     public void create(@HeaderParam("name") String name,
             @HeaderParam("url") String url,
             @HeaderParam("dirJasome") String dirJasome){
@@ -248,7 +247,7 @@ public class JasomeResource {
     }
 
     @POST
-    @Path("login/")
+    @Path("/insert/login")
     public void insertLogin(@HeaderParam("user") String user, @HeaderParam("pass") String pass, @HeaderParam("type") String type) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         LoginDao dao = new LoginDao(connection);
@@ -272,7 +271,7 @@ public class JasomeResource {
     }
     
     @GET
-    @Path("projects/get/{projectName}")
+    @Path("/insert/projects/get/{projectName}")
     public boolean isProjectRegistered(@PathParam("projectName") String projectName) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         System.out.println(projectName);
@@ -288,7 +287,7 @@ public class JasomeResource {
     }
     
     @GET
-    @Path("login/get/{user}")
+    @Path("insert/login/get/{user}")
     public boolean isUserRegistered(@PathParam("user") String user) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         System.out.println(user);

@@ -27,13 +27,13 @@ export default class InsertLogin extends Component{
         if(this.state.user === '' || this.state.pass === '' || this.state.type === ''){
             alert('Há campos vazios.');
         }else {
-            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/login/get/'+this.state.user)
+            axios.get(`/insert/login/get/`+this.state.user)
             .then((data) => {
                 this.setState({ isUserin: data.data })
             if(this.state.isUserin === true)
                 alert('Esse usuário já está cadastrado.')
             else{
-                fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', request)
+                fetch(`/insert/login/`, request)
                 alert('Cadastrado com sucesso.')
             }
                 

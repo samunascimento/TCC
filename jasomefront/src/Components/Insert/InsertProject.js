@@ -14,9 +14,7 @@ export default class InsertProject extends Component{
 
         dirJasome: '',
 
-        isProjectIn: false,
-
-        loading: false
+        isProjectIn: false
     }
 
     onSubmit(){
@@ -28,21 +26,16 @@ export default class InsertProject extends Component{
         if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === ''){
             alert('Há campos vazios.');
         }else {
-                axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
-                .then((data) => {
-                    this.setState({ isProjectIn: data.data })
-                    if(this.state.isProjectIn === true)
-                        alert('Esse projeto já está cadastrado.')
-                    else{
-                        this.setState({ loading: true }, () => {
-                            fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
-                            .then(() => {
-                                this.setState({ loading: false })
-                            })
-                        })
-                        alert('Cadastrado com sucesso.')    
-                    }
-                })
+            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
+            .then((data) => {
+                this.setState({ isProjectIn: data.data })
+                if(this.state.isProjectIn === true)
+                    alert('Esse projeto já está cadastrado.')
+                else{
+                    fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
+                    alert('Cadastrado com sucesso.')    
+                }
+            })
         }
     }
 
@@ -107,7 +100,6 @@ export default class InsertProject extends Component{
                         Cadastrar
                     </Button>
                 </div>
-                {this.state.loading ? <CircularProgress /> : '' }
             </>
         );
     }
