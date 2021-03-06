@@ -17,6 +17,8 @@ public class ProjectMetrics {
     private String url;
     private String organization;
     private String name;
+    private String status;
+    private int loginId;
     
     private List<String> listPackageMetrics = new ArrayList<>();
     private List<String> listClassMetrics  = new ArrayList<>();
@@ -30,16 +32,11 @@ public class ProjectMetrics {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
-    
+
     public String getSourceDir() {
         return sourceDir;
     }
 
-    /**
-     * @param sourceDir the sourceDir to set
-     */
     public void setSourceDir(String sourceDir) {
         this.sourceDir = sourceDir;
     }
@@ -75,47 +72,46 @@ public class ProjectMetrics {
     public void setListMethodMetrics(List<String> listMethodMetrics) {
         this.listMethodMetrics = listMethodMetrics;
     }
-    
-      /**
-     * @return the url
-     */
+
     public String getUrl() {
         return url;
     }
 
-    /**
-     * @param url the url to set
-     */
     public void setUrl(String url) {
         this.url = url;
     }
 
-    /**
-     * @return the organization
-     */
     public String getOrganization() {
         return organization;
     }
 
-    /**
-     * @param organization the organization to set
-     */
     public void setOrganization(String organization) {
         this.organization = organization;
     }
 
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(int login) {
+        this.loginId = login;
+    }
+
     
 }

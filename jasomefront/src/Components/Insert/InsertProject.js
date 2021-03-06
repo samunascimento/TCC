@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class InsertProject extends Component{
 
@@ -14,9 +13,13 @@ export default class InsertProject extends Component{
 
         dirJasome: '',
 
-        isProjectIn: false
+        isProjectIn: false,
+
+        user: ''
     }
 
+
+    //ARRUMAR
     onSubmit(){
         const request = {
             method: 'POST',
@@ -91,6 +94,22 @@ export default class InsertProject extends Component{
                         placeholder="Caminho para o jasome"
                         style={{
                             width: '50%',
+                            padding: '0px 0px 0px 10px'
+                        }}
+                    />
+                </div>
+                <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
+                    <Typography variant='h6'>
+                        Usuário:
+                    </Typography>
+                    <TextField 
+                        id={this.state.user}
+                        name={this.state.user}
+                        onInput={(e) => this.setState({user: e.target.value})} 
+                        type="text"
+                        placeholder="Usuário"
+                        style={{
+                            width: '30%',
                             padding: '0px 0px 0px 10px'
                         }}
                     />

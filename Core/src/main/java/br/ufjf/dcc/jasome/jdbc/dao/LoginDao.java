@@ -142,4 +142,27 @@ public class LoginDao {
             }
         }
     }
+    
+    public int getUserId(String user) throws SQLException {
+        int id = -1;
+        String sql = "SELECT id FROM tb_login where login='"+user+"'";
+
+        ResultSet resultSet = null;
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+            return id;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }

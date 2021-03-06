@@ -1135,8 +1135,8 @@ public class MetricDao {
 //    }
     
     
-    public void executeProject(String dirJasome,String dirProject) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase{
+    public void executeProject(String dirJasome,String dirProject, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase{
         Jasome jasome = new Jasome();
-        jasome.analyze(null, null, null, dirJasome, dirProject);
+        jasome.analyze(null, null, null, dirJasome, dirProject, status, userId);
     }
 }

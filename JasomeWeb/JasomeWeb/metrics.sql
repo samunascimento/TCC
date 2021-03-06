@@ -32,6 +32,8 @@ CREATE TABLE tb_projectMetrics(
     sourceDir text NOT NULL,
 	ProjectName text NOT NULL,
 	status text NOT NULL,
+	userId Integer NOT NULL,
+	FOREIGN KEY (userId) REFERENCES tb_login(id),
     PRIMARY KEY (ID)
 );
 

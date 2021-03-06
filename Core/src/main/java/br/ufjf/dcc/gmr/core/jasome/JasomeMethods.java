@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.jasome;
 
 import br.ufjf.dcc.gmr.core.cli.CLIExecute;
 import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.vcs.types.Formats;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
@@ -12,8 +11,6 @@ import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
-import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
-import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -43,6 +40,9 @@ public class JasomeMethods {
     private String repositoryName = null;
     private String user = null; //usuario github
     private String password = null; //senha github
+    
+    private String status;
+    private int userId;
 
     private List<String> fileNames = new ArrayList<>();
     private List<String> pathNames = new ArrayList<>();
@@ -56,9 +56,11 @@ public class JasomeMethods {
             .concat(File.separator).concat("jasome").concat(File.separator).concat("bin").concat(File.separator)
             .concat("jasome");
 
-    public JasomeMethods(String repository, String jasome) {
+    public JasomeMethods(String repository, String jasome, String status, int userId) {
         repositoryPath = repository;
         jasomePath = jasome;
+        this.status = status;
+        this.userId = userId;
         File projectName = new File(repositoryPath);
         this.repositoryName = projectName.getName();
     }
@@ -246,27 +248,47 @@ public class JasomeMethods {
         return repositoryName;
     }
 
-    /**
-     * @return the archiveType
-     */
     public List<String> getArchiveType() {
         return archiveType;
     }
 
-    /**
-     * @param archiveType the archiveType to set
-     */
     public void setArchiveType(List<String> archiveType) {
         this.archiveType = archiveType;
     }
 
-    /**
-     * @return the fileNames
-     */
     public List<String> getFileNames() {
         return fileNames;
     }
-    /**
-     * @param fileNames the fileNames to set
-     */
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }
