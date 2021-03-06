@@ -305,4 +305,14 @@ public class JasomeResource {
         connection.close();
         return result;
     }
+    
+    @GET
+    @Path("/login")
+    public boolean enterSystem(@HeaderParam("user") String user, @HeaderParam("pass") String pass) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        LoginDao dao = new LoginDao(connection);
+        boolean acess = dao.enterSystem(user, pass);
+        connection.close();
+        return acess;
+    }
 }

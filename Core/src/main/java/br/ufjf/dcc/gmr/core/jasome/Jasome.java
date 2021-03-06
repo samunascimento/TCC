@@ -15,12 +15,10 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import org.apache.commons.cli.ParseException;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
