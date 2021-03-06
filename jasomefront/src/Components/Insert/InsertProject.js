@@ -13,30 +13,42 @@ export default class InsertProject extends Component{
 
         dirJasome: '',
 
-        isProjectIn: false,
+        isUserIn: false,
 
-        user: ''
+        user: '',
+
+        getProjectByUser: false
     }
 
 
     //ARRUMAR
     onSubmit(){
-        const request = {
-            method: 'POST',
-            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
-        };
         
-        if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === ''){
+        if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === '' || this.state.user === ''){
             alert('Há campos vazios.');
         }else {
-            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
+            axios.get('/insert/login/get/'+this.state.user)
             .then((data) => {
-                this.setState({ isProjectIn: data.data })
-                if(this.state.isProjectIn === true)
-                    alert('Esse projeto já está cadastrado.')
+                this.setState({ isUserIn: data.data })
+                if(this.state.isUserIn === false)
+                    alert('Este usuário não existe.')
                 else{
-                    fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
-                    alert('Cadastrado com sucesso.')    
+                    axios.get('/insert/projects/getData/', {
+                        headers: { 'user': this.state.user, 'name': this.state.name}
+                    }).then((data) => {
+                        this.setState({ getProjectByUser: data.data})
+                        if(this.state.getProjectByUser === true)
+                            alert('Este projeto já está cadastrado por este usuário.')
+                        else{
+                            axios.get('/insert/login/getData/'+this.state.user)
+                            .then((data) => {
+                                axios.post('/insert/projects/create', {
+                                    headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome, 'userId': data.data}
+                                })
+                            })
+                            alert('Cadastrado com sucesso.')
+                        }
+                    })
                 }
             })
         }

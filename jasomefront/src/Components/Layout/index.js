@@ -88,7 +88,7 @@ class Layout extends Component {
           </MenuItem>
           <Collapse in={openInsert} timeout="auto" unmountOnExit>
             <MenuList>
-              <MenuItem component={Link} to="/insert/projeto" selected={'/insert/projeto' === pathname}>
+              <MenuItem component={Link} to="/insert/projects" selected={'/insert/projects' === pathname}>
                 Cadastro de Projeto 
               </MenuItem>
               <MenuItem component={Link} to="/insert/login" selected={'/insert/login' === pathname}>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -189,13 +184,10 @@ public class ProjectMetricsDao {
         }
     }
     
-    
-    //ARRUMAR
     public boolean getProjectByUser(String name, String user) throws SQLException {
         LoginDao loginDao = new LoginDao(this.connection);
         
         int userId = loginDao.getUserId(user);
-        System.out.println(userId);
         String sql = "SELECT projectName, userId FROM tb_projectmetrics where projectName='"+name+"'";
 
         ResultSet resultSet = null;
@@ -207,7 +199,7 @@ public class ProjectMetricsDao {
             while (resultSet.next()) {
                 String projectName = resultSet.getString("projectName");
                 int id = resultSet.getInt("userId");
-                if(projectName.equalsIgnoreCase(name) && id == userId){
+                if(name.equalsIgnoreCase(projectName) && id == userId){
                     return true;
                 }
             }

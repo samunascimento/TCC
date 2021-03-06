@@ -296,11 +296,9 @@ public class JasomeResource {
         return id;
     }
     
-    
-    //ARRUMAR
     @GET
-    @Path("/insert/projects/getData/{projectName}/{user}")
-    public boolean getProjectByUser(@PathParam("projectName") String projectName, @PathParam("user") String user) throws SQLException {
+    @Path("/insert/projects/getData")
+    public boolean getProjectByUser(@HeaderParam("user") String user, @HeaderParam("name") String projectName) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         ProjectMetricsDao dao = new ProjectMetricsDao(connection);
         boolean result = dao.getProjectByUser(projectName, user);

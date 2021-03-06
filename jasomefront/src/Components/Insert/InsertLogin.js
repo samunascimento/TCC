@@ -47,11 +47,10 @@ export default class InsertLogin extends Component{
                     method: 'POST',
                     headers: { 'user': this.state.user, 'pass': password, 'type' : this.state.type}
                 })
-                alert('Cadastrado com sucesso.')
+                alert('Cadastrado com sucesso.');                
             }
                 
             })
-
         }
     }
 

@@ -146,7 +146,6 @@ public class LoginDao {
     public int getUserId(String user) throws SQLException {
         int id = -1;
         String sql = "SELECT id FROM tb_login where login='"+user+"'";
-
         ResultSet resultSet = null;
 
         PreparedStatement stmt = null;
