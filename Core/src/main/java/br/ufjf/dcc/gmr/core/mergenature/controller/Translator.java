@@ -942,12 +942,14 @@ public class Translator {
              if (list.contains("UsingAliasDirective")
                      ||list.contains("UsingAliasDirective")
                      ||list.contains("UsingAliasDirective")
-                     ||list.contains("Using_directive")) {
-                mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
+                     ||list.contains("Using_directive")
+                     ||list.contains("UsingStaticDirective")) {
+                mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
                 list.remove("Interface_definition");
                 list.remove("Interface_definition");
                 list.remove("Interface_definition");
                 list.remove("Using_directive");
+                list.remove("UsingStaticDirective");
             
              }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1010,8 +1012,8 @@ public class Translator {
                 list.remove("Switch_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //SYNCHRONIZED_STATEMENT+++++++++++++++++++++++++++++++++++++++++++++
-            // it seems to do not exist on c#, read better: https://stackoverflow.com/questions/541194/c-sharp-version-of-javas-synchronized-keyword#:~:text=39-,Does%20c%23%20have%20its%20own%20version%20of%20the%20java%20%22synchronized,on%20synchronously%20across%20asynchronous%20threads.
+            //SYNCHRONIZED_STATEMENT++++++++++++++++++++++++++++++++++++++++++++            
+// There is a close equivalent to this structure in Java, but their scope is different enough so we couldn't call it the same 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ThrowStatement")) {
