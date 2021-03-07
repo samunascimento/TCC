@@ -27,7 +27,7 @@ export default class InsertLogin extends Component{
     cryptoPassword(senha){
         const crypto = require("crypto");
         const cipher = crypto.createCipher(this.state.dadosCripto.alg, this.state.dadosCripto.pwd);
-        return cipher.update(senha, 'utf8', 'hex');;
+        return cipher.update(senha, 'utf8', 'hex');
     }
 
     onSubmit(){

@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import ReactDOM from 'react-dom';
 import {
   AppBar, Toolbar, IconButton, Typography, Hidden,
-  Drawer, CssBaseline, MenuList, MenuItem, List
+  Drawer, CssBaseline, MenuList, MenuItem
 } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { Menu } from '@material-ui/icons'
@@ -10,6 +11,8 @@ import { compose } from 'recompose'
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
+import Login from '../Login';
 
 const drawerWidth = 240
 
@@ -58,6 +61,10 @@ class Layout extends Component {
 
   }
 
+  onSubmit = () => {
+    ReactDOM.render(<Login />, document.getElementById('root'));
+  }
+
   handleClickInsert = () => {
     const openInsert = !this.state.openInsert;
     this.setState({ openInsert })
@@ -77,50 +84,69 @@ class Layout extends Component {
     const { mobileOpen, openInsert } = this.state
 
     const drawer = (
-      <div>
-        <Hidden smDown>
-          <div className={classes.toolbar} />
-        </Hidden>
-        <MenuList>
-          <MenuItem onClick={this.handleClickInsert} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
-            Cadastros
-            {this.state.openInsert ? <ExpandLess/> : <ExpandMore/>}
-          </MenuItem>
-          <Collapse in={openInsert} timeout="auto" unmountOnExit>
-            <MenuList>
-              <MenuItem component={Link} to="/insert/projects" selected={'/insert/projects' === pathname}>
-                Cadastro de Projeto 
-              </MenuItem>
-              <MenuItem component={Link} to="/insert/login" selected={'/insert/login' === pathname}>
-                Cadastro de Login
-              </MenuItem>
-            </MenuList>
-          </Collapse>
-          <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
-            Metric
-          </MenuItem>
-          <MenuItem onClick={this.handleClickProject} component={Link} to="/projects" selected={'/projects' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
-            Projects
-            {this.state.openProject ? <ExpandLess/> : <ExpandMore/>}
-          </MenuItem>
-          <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
-            <MenuList>
-              {projects.map(({ id, name }) => {
-                const to = `/projects/${id}`
-                return <MenuItem
-                  to={to}
-                  key={id}
-                  className={classes.nested}
-                  component={Link}
-                  selected={to === pathname}
-                >
-                  {name}
+      <>
+        <div>
+          <Hidden smDown>
+            <div className={classes.toolbar} />
+          </Hidden>
+          <MenuList>
+            <MenuItem onClick={this.handleClickInsert} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
+              Cadastros
+              {this.state.openInsert ? <ExpandLess/> : <ExpandMore/>}
+            </MenuItem>
+            <Collapse in={openInsert} timeout="auto" unmountOnExit>
+              <MenuList>
+                <MenuItem component={Link} to="/insert/projects" selected={'/insert/projects' === pathname}>
+                  Cadastro de Projeto 
                 </MenuItem>
-              })}
-            </MenuList>
-          </Collapse>
-        </MenuList>
-      </div>
+                <MenuItem component={Link} to="/insert/login" selected={'/insert/login' === pathname}>
+                  Cadastro de Login
+                </MenuItem>
+              </MenuList>
+            </Collapse>
+            <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
+              Metric
+            </MenuItem>
+            <MenuItem onClick={this.handleClickProject} component={Link} to="/projects" selected={'/projects' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
+              Projects
+              {this.state.openProject ? <ExpandLess/> : <ExpandMore/>}
+            </MenuItem>
+            <Collapse in={this.state.openProject} timeout="auto" unmountOnExit>
+              <MenuList>
+                {projects.map(({ id, name }) => {
+                  const to = `/projects/${id}`
+                  return <MenuItem
+                    to={to}
+                    key={id}
+                    className={classes.nested}
+                    component={Link}
+                    selected={to === pathname}
+                  >
+                    {name}
+                  </MenuItem>
+                })}
+              </MenuList>
+            </Collapse>
+          </MenuList>
+        </div>
+        <div style={{display:'flex'}}>
+          <Toolbar style={{display: 'flex'}}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={this.handleDrawerToggle}
+                className={classes.navIconHide}
+              >
+                <Menu />
+              </IconButton>
+              <Button color='primary' variant='contained' size='medium' type='submit' onClick={() => this.onSubmit()}>
+                <Typography variant="h6" style={{color: 'white'}} noWrap>
+                  Logout
+                </Typography>
+              </Button>
+            </Toolbar>
+        </div>
+      </>
     )
 
     return <Fragment>
@@ -128,7 +154,7 @@ class Layout extends Component {
 
       <div className={classes.root}>
         <AppBar style = {{left:'0px', width:'12.5%', borderRadius: '3px'}} position="absolute" className={classes.appBar}>
-          <Toolbar>
+          <Toolbar style={{display: 'flex'}}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -137,9 +163,11 @@ class Layout extends Component {
             >
               <Menu />
             </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              Jasome Web
-            </Typography>
+            <Button>
+              <Typography variant="h6" style = {{ color: 'white'}} noWrap>
+                Jasome Web
+              </Typography>
+            </Button>
           </Toolbar>
         </AppBar>
         <Hidden mdUp>

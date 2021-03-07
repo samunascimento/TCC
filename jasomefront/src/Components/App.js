@@ -29,7 +29,7 @@ export default class extends Component {
           <Route path="/projects" render={
             props => <Projects {...props} projects={projects} />
           } />
-          <Route component={NotFound} />
+          <Route exact path="/home" component={NotFound} />
         </Switch>
       </Layout>
     </BrowserRouter>
