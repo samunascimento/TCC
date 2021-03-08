@@ -2,12 +2,14 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.UIManager;
 
 /**
  * The bar panel
@@ -23,7 +25,7 @@ public class MNBarPanel extends JPanel implements Runnable {
     private Project project;
 
     public MNBarPanel(String repositoryPath, int contextLines) {
-        this.repositoryLocation = repositoryPath.replace("\\","/");
+        this.repositoryLocation = repositoryPath.replace("\\", "/");
         this.contextLines = contextLines;
         set();
     }
@@ -44,7 +46,7 @@ public class MNBarPanel extends JPanel implements Runnable {
         progressBar.setPreferredSize(new Dimension(6 * (MNFrame.MAX_BOUNDS.width / 8), 50));
         progressBar.setMinimumSize(new Dimension(6 * (MNFrame.MAX_BOUNDS.width / 8), 50));
         progressBar.setBackground(MNFrame.PRIMARY_COLOR);
-        progressBar.setForeground(MNFrame.SECUNDARY_COLOR);
+        progressBar.setForeground(MNFrame.TERTIARY_COLOR);
         progressBar.setIndeterminate(true);
         progressBar.setStringPainted(true);
         gbc.weightx = 1;
