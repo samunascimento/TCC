@@ -140,8 +140,8 @@ public class Merge implements Cloneable {
         this.conflicts = conflicts;
     }
 
-    public void addConflicts(Conflict conflicts) {
-        this.conflicts.add(conflicts);
+    public void addConflict(Conflict conflict) {
+        this.conflicts.add(conflict);
     }
 
     public MergeType getMergeType() {

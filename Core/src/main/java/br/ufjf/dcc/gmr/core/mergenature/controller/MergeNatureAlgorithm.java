@@ -164,7 +164,7 @@ public class MergeNatureAlgorithm {
                 for (String conflictMessage : mergeMessage) {
                     if (conflictMessage.contains("CONFLICT")) {
                         try {
-                            merge.addConflicts(conflictLayer(merge, conflictMessage, repositoryPath));
+                            merge.addConflict(conflictLayer(merge, conflictMessage, repositoryPath));
                         } catch (OutOfMemoryError er) {
                             merge.setConflicts(new ArrayList<>());
                             merge.setMergeType(MergeType.OUT_OF_MEMORY);
