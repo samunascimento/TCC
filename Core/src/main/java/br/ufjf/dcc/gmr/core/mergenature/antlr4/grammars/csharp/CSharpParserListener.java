@@ -1030,6 +1030,166 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitEmbedded_statement(CSharpParser.Embedded_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CSharpParser#if_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_expression(CSharpParser.If_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#if_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_expression(CSharpParser.If_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#if_Statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_Statement(CSharpParser.If_StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#if_Statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_Statement(CSharpParser.If_StatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#switch_expressions}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitch_expressions(CSharpParser.Switch_expressionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#switch_expressions}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitch_expressions(CSharpParser.Switch_expressionsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#switchStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitchStatement(CSharpParser.SwitchStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#switchStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitchStatement(CSharpParser.SwitchStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#selection_statements}.
+	 * @param ctx the parse tree
+	 */
+	void enterSelection_statements(CSharpParser.Selection_statementsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#selection_statements}.
+	 * @param ctx the parse tree
+	 */
+	void exitSelection_statements(CSharpParser.Selection_statementsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#iteration_statements}.
+	 * @param ctx the parse tree
+	 */
+	void enterIteration_statements(CSharpParser.Iteration_statementsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#iteration_statements}.
+	 * @param ctx the parse tree
+	 */
+	void exitIteration_statements(CSharpParser.Iteration_statementsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#while_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_expression(CSharpParser.While_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#while_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_expression(CSharpParser.While_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStatement(CSharpParser.WhileStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#whileStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStatement(CSharpParser.WhileStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#doStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterDoStatement(CSharpParser.DoStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#doStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitDoStatement(CSharpParser.DoStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#for_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_expression(CSharpParser.For_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#for_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_expression(CSharpParser.For_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#forStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterForStatement(CSharpParser.ForStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#forStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitForStatement(CSharpParser.ForStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#foreach_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterForeach_expression(CSharpParser.Foreach_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#foreach_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitForeach_expression(CSharpParser.Foreach_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#foreachStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterForeachStatement(CSharpParser.ForeachStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#foreachStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitForeachStatement(CSharpParser.ForeachStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#altered_jump_statements}.
+	 * @param ctx the parse tree
+	 */
+	void enterAltered_jump_statements(CSharpParser.Altered_jump_statementsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#altered_jump_statements}.
+	 * @param ctx the parse tree
+	 */
+	void exitAltered_jump_statements(CSharpParser.Altered_jump_statementsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#try_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterTry_expression(CSharpParser.Try_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#try_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitTry_expression(CSharpParser.Try_expressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#tryStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterTryStatement(CSharpParser.TryStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#tryStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitTryStatement(CSharpParser.TryStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code theEmptyStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree
@@ -1053,138 +1213,6 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpressionStatement(CSharpParser.ExpressionStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code if_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterIf_(CSharpParser.If_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code if_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitIf_(CSharpParser.If_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ifStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterIfStatement(CSharpParser.IfStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ifStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitIfStatement(CSharpParser.IfStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code switch_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterSwitch_(CSharpParser.Switch_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code switch_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitSwitch_(CSharpParser.Switch_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code switchStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterSwitchStatement(CSharpParser.SwitchStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code switchStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitSwitchStatement(CSharpParser.SwitchStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code while_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhile_(CSharpParser.While_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code while_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhile_(CSharpParser.While_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code whileStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterWhileStatement(CSharpParser.WhileStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code whileStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitWhileStatement(CSharpParser.WhileStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code do_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterDo_(CSharpParser.Do_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code do_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitDo_(CSharpParser.Do_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code doStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterDoStatement(CSharpParser.DoStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code doStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitDoStatement(CSharpParser.DoStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code for_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterFor_(CSharpParser.For_Context ctx);
-	/**
-	 * Exit a parse tree produced by the {@code for_}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitFor_(CSharpParser.For_Context ctx);
-	/**
-	 * Enter a parse tree produced by the {@code forStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterForStatement(CSharpParser.ForStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code forStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitForStatement(CSharpParser.ForStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code foreachStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterForeachStatement(CSharpParser.ForeachStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code foreachStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitForeachStatement(CSharpParser.ForeachStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code breakStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
@@ -1245,18 +1273,6 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitThrowStatement(CSharpParser.ThrowStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code tryStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterTryStatement(CSharpParser.TryStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code tryStatement}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitTryStatement(CSharpParser.TryStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code checkedStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
@@ -1491,6 +1507,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSpecific_catch_clause(CSharpParser.Specific_catch_clauseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#specific_catch_clause_no_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterSpecific_catch_clause_no_block(CSharpParser.Specific_catch_clause_no_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#specific_catch_clause_no_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitSpecific_catch_clause_no_block(CSharpParser.Specific_catch_clause_no_blockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CSharpParser#general_catch_clause}.
 	 * @param ctx the parse tree
@@ -2528,6 +2554,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitKeyword(CSharpParser.KeywordContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CSharpParser#class_members}.
+	 * @param ctx the parse tree
+	 */
+	void enterClass_members(CSharpParser.Class_membersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#class_members}.
+	 * @param ctx the parse tree
+	 */
+	void exitClass_members(CSharpParser.Class_membersContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CSharpParser#class_definition}.
 	 * @param ctx the parse tree
 	 */
@@ -2657,6 +2693,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstructor_declaration(CSharpParser.Constructor_declarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CSharpParser#method_expressions}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethod_expressions(CSharpParser.Method_expressionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#method_expressions}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethod_expressions(CSharpParser.Method_expressionsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CSharpParser#method_declaration}.
 	 * @param ctx the parse tree

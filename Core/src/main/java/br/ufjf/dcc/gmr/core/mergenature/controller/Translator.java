@@ -816,10 +816,12 @@ public class Translator {
                     || list.contains("")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
                 list.remove("");
-            }*/
+            }
+                       
+            */
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Vendo ainda
+            //Assert on c# does not work as an language structure
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Assignment")
@@ -858,11 +860,13 @@ public class Translator {
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Catch_clauses")
                     || list.contains("Specific_catch_clause")
-                    || list.contains("General_catch_clause")) {
+                    || list.contains("General_catch_clause")
+                     || list.contains("Specific_catch_clause_no_block")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
                 list.remove("Catch_clauses");
                 list.remove("Specific_catch_clause");
                 list.remove("General_catch_clause");
+                list.remove("Specific_catch_clause_no_block");
 
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -883,11 +887,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("DoStatement")
-                    || list.contains("Do_")) {
+            if (list.contains("DoStatement")) {
                 mainList.add(LanguageConstructsTypes.DO_STATEMENT);
                 list.remove("DoStatement");
-                list.remove("Do_");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUMS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -919,20 +921,22 @@ public class Translator {
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ForStatement")
                     || list.contains("ForeachStatement")
-                    || list.contains("for_")) {
+                     || list.contains("Foreach_expression")
+                     || list.contains("For_expression")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("ForStatement");
                 list.remove("ForeachStatement");
-                list.remove("For_");
+                list.remove("Foreach_expression");
+                list.remove("For_expression");
 
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("IfStatement")
-                    || list.contains("If_")) {
+            if (list.contains("If_expression")
+                    || list.contains("If_Statement") ) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
-                list.remove("IfStatement");
-                list.remove("If_");
+                list.remove("If_expression");
+                list.remove("If_Statement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1003,13 +1007,13 @@ public class Translator {
                     || list.contains("Switch_expression")
                     || list.contains("Switch_expression_arms")
                     || list.contains("Switch_expression_arm")
-                    || list.contains("Switch_")) {
+                    || list.contains("Switch_expressions")) {
                 mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
                 list.remove("SwitchStatement");
                 list.remove("Switch_expression");
                 list.remove("Switch_expression_arms");
                 list.remove("Switch_expression_arm");
-                list.remove("Switch_");
+                list.remove("Switch_expressions");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SYNCHRONIZED_STATEMENT++++++++++++++++++++++++++++++++++++++++++++            
@@ -1022,9 +1026,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("TryStatement")) {
+            if (list.contains("TryStatement")
+                || list.contains("Try_expression")) {
                 mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
                 list.remove("TryStatement");
+                list.remove("Try_expression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1046,10 +1052,10 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WhileStatement")
-                    || list.contains("While_")) {
+                || list.contains("While_expression")    ) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
                 list.remove("WhileStatement");
-                list.remove("While_");
+                list.remove("While_expression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
