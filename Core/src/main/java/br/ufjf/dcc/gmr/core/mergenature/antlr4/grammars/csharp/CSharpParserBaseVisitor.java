@@ -906,6 +906,13 @@ public class CSharpParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitCast(CSharpParser.CastContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitUnsafeStatement(CSharpParser.UnsafeStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

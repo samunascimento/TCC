@@ -907,13 +907,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitUsingAliasDirective(CSharpParser.UsingAliasDirectiveContext ctx) {
-       // process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitUsingNamespaceDirective(CSharpParser.UsingNamespaceDirectiveContext ctx) {
-     //   process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1667,8 +1667,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         return visitChildren(ctx);
     }
 
-   
-    
+    @Override
+    public Object visitCast(CSharpParser.CastContext ctx){
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+      
     
 
 }

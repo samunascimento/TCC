@@ -801,6 +801,13 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitYieldStatement(CSharpParser.YieldStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code cast}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCast(CSharpParser.CastContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code unsafeStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree

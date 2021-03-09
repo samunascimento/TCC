@@ -278,7 +278,7 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
             }
             visitor.visit(tree);
-            /*/Imprimir_arvore-------------------------------------------------------
+            //Imprimir_arvore-------------------------------------------------------
 
             TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             viewer.open();

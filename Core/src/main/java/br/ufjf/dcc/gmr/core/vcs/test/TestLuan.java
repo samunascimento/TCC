@@ -40,7 +40,7 @@ public class TestLuan {
         }
     */
 
-    ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval("/home/luan/Github/C#_repositories/teste.cs",26,26);
+    ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval("/home/luan/Github/C#_repositories/teste.cs",23,24);
 
          List<String> toTranslate;
         toTranslate = new ArrayList<String>();

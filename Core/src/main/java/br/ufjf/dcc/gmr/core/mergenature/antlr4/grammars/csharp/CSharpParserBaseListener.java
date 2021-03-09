@@ -1540,6 +1540,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCast(CSharpParser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCast(CSharpParser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnsafeStatement(CSharpParser.UnsafeStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

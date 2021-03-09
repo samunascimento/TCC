@@ -1334,6 +1334,18 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitYieldStatement(CSharpParser.YieldStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code cast}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCast(CSharpParser.CastContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code cast}
+	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCast(CSharpParser.CastContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code unsafeStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
 	 * @param ctx the parse tree

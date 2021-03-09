@@ -852,10 +852,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-           /* if (list.contains("")) {
+            if (list.contains("Cast")) {
                 mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("");
-            }*/
+                list.remove("Cast");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Catch_clauses")
@@ -997,9 +997,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Local_function_modifiers")) {
+            if (list.contains("")) {
                 mainList.add(LanguageConstructsTypes.STATIC_INITIALIZER);
-                list.remove("local_function_modifiers");
+                list.remove("");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
