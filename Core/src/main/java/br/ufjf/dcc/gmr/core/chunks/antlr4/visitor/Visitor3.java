@@ -481,7 +481,7 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
         //adicionar campos estaticos
         //procurar visitExpressionName, visitExpression
-        if (this.methodDeclaration) {
+        if (this.methodDeclaration ) {
             //find the methodDeclaration
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             try {
