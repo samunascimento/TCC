@@ -36,7 +36,7 @@ public class DiffTranslator {
         List<String> targetContent = ListUtils.readFile(targetFile);
 
         result = originalLine - countAdds(originalLine + 1) + countRemoves(originalLine + 1);
-        if (result < targetContent.size() - 1) {
+        if (result < targetContent.size()) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
 
@@ -45,11 +45,20 @@ public class DiffTranslator {
         }
 
         result = originalLine - countRemoves(originalLine + 1) + countAdds(originalLine + 1);
-        if (result < targetContent.size() - 1) {
+        if (result < targetContent.size()) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
             }
         }
+
+        if ( result == targetContent.size()) {
+
+            if (sourceContent.get(originalLine).equals(targetContent.get(result-1))) {
+                return result-1;
+            }
+
+        }
+
         return -1;
     }
 
@@ -74,9 +83,10 @@ public class DiffTranslator {
     private int countRemoves(int line) {
         int result = 0;
 
-        for (int i = 0; removeOpList.get(i).getLine() < line && i < removeOpList.size() - 1; i++) {
+        for (int i = 0; removeOpList.get(i).getLine() <= line && i < removeOpList.size() - 1; i++) {
             result++;
         }
+
         return result;
 
     }

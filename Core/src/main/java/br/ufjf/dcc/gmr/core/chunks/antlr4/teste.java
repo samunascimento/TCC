@@ -36,12 +36,12 @@ public class teste {
 
     public static void main(String[] args) throws RepositoryNotFound, ParseException, Exception {
 
-         Version version = start();
-         
-         ParserJava parserJava = new ParserJava(version, teste.projectPath);
-         
-         String[] arg = null;
-         ParserJava.main(arg);
+        Version version = start();
+
+        ParserJava parserJava = new ParserJava(version, teste.projectPath);
+
+        String[] arg = null;
+        ParserJava.main(arg);
 
     }
 
@@ -101,13 +101,17 @@ public class teste {
             if (Git.isFailedMerge(pathProject, firstParent, secondParent)) {
 
                 List<MyFile> statusUnmerged = Git.statusUnmerged(pathProject);
+                //version.setFile(removeDifferentsExtends(version.getFile()));
 
                 for (MyFile file : statusUnmerged) {
-                    while (file.getPath().startsWith(" ")) {
-                        file.setPath(file.getPath().replaceFirst(" ", ""));
+                    if (file.getPath().endsWith(".java")) {
+                        while (file.getPath().startsWith(" ")) {
+                            file.setPath(file.getPath().replaceFirst(" ", ""));
+                        }
+                        file.setPath(pathProject.concat(File.separator).concat(file.getPath()));
+                        result.getFile().add(updateFile(file));
                     }
-                    file.setPath(pathProject.concat(File.separator).concat(file.getPath()));
-                    result.getFile().add(updateFile(file));
+
                 }
 
                 result.setStatus(MergeStatus.CONFLICT);
@@ -126,9 +130,20 @@ public class teste {
         return result;
     }
 
-    public static Version start() throws RepositoryNotFound, ParseException {
+    private static List<MyFile> removeDifferentsExtends(List<MyFile> files) {
 
-      
+        List<MyFile> result = new ArrayList<>();
+
+        for (MyFile file : files) {
+            if (file.getPath().endsWith(".java")) {
+                result.add(file);
+            }
+        }
+
+        return result;
+    }
+
+    public static Version start() throws RepositoryNotFound, ParseException {
 
         Project result = new Project();
         result.setPath(teste.projectPath);
@@ -146,7 +161,7 @@ public class teste {
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | AlreadyUpToDate ex) {
             Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return version;
     }
 

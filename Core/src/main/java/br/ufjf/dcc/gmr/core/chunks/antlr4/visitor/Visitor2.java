@@ -16,13 +16,13 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     private TypeBinding typeBinding;
     private GlobalEnviroment globalEnviroment;
     private String className;
-    
+
     public Visitor2(GlobalEnviroment globalEnviroment) {
         this.methodDeclarationBinding = new MethodDeclarationBinding();
         this.globalEnviroment = globalEnviroment;
         this.packageBinding = new PackageBinding();
         this.typeBinding = new TypeBinding();
-        this.className = ""; 
+        this.className = "";
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -504,14 +504,14 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
     @Override
     public Object visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
 
-        AttributeDeclaratinBinding variable = new AttributeDeclaratinBinding();
+        AttributeDeclaratinBinding attribute = new AttributeDeclaratinBinding();
         TypeBinding type = new TypeBinding();
 
         if (ctx.typeType() != null) {
 
             type.setName(ctx.typeType().getText());
             type.setPackageBinding(packageBinding);
-            variable.setTypeBinding(type);
+            attribute.setTypeBinding(type);
         }
 
         ParserRuleContext memberDeclaration = ctx.getParent();
@@ -519,17 +519,17 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         if (classBodyDeclaration.getChild(0) != null) {
 
             String modifier = classBodyDeclaration.getChild(0).getText();
-            variable.setModifier(modifier);
+            attribute.setModifier(modifier);
         }
 
         for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {
             if (variableDeclarator.variableDeclaratorId() != null) {
-                variable.setName(variableDeclarator.variableDeclaratorId().getText());
+                attribute.setName(variableDeclarator.variableDeclaratorId().getText());
             }
         }
-        variable.setCtx(ctx);
-        
-        this.typeBinding.addAttributes(variable);
+        attribute.setCtx(ctx);
+
+        globalEnviroment.getEnviroment().get(className).addAttributes(attribute);
 
         return super.visitFieldDeclaration(ctx);
     }
@@ -650,7 +650,7 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
-        this.className =  packageBinding.getName().concat(".").concat(ctx.getChild(1).getText()).concat(".java");
+        this.className = packageBinding.getName().concat(".").concat(ctx.getChild(1).getText()).concat(".java");
         return super.visitClassDeclaration(ctx);
     }
 
@@ -685,8 +685,8 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-        
-        BaseVisitor baseVisitor = new BaseVisitor();        
+
+        BaseVisitor baseVisitor = new BaseVisitor();
         baseVisitor.visitPackageDeclaration(ctx, this.packageBinding);
 
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);

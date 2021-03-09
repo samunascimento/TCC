@@ -133,7 +133,20 @@ public class InitProject implements Runnable {
 
         return result;
     }
-
+    private List<MyFile> removeDifferentsExtends(List<MyFile> files){
+        
+        List<MyFile> result = new ArrayList<>();
+        
+        for (MyFile file : files) {
+            if(file.getPath().endsWith(".java")){
+                result.add(file);
+            }
+        }
+        
+        
+        return result;
+    }
+    
     @Override
     public void run() {
 
@@ -153,7 +166,9 @@ public class InitProject implements Runnable {
         this.progressBar.setMaximum(versions.size());
 
         for (Version version : versions) {
-
+            
+            version.setFile(removeDifferentsExtends(version.getFile()));
+            
             try {
                 version = updateVersion(this.projectPath, version);
             } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | AlreadyUpToDate ex) {

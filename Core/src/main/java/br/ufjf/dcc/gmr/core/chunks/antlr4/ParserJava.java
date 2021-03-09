@@ -83,9 +83,7 @@ public class ParserJava {
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
 
-            String keyPath = "";
-            keyPath = keyPath.concat(version.getFile().get(y).getPath());
-
+     
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
@@ -115,8 +113,8 @@ public class ParserJava {
                 chunk.getChunkVersion1().setLineEnd(version1[1]);
                 chunk.getChunkVersion2().setLineEnd(version2[1]);
 
-                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(keyPath, chunk.getChunkVersion1()));
-                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(keyPath, chunk.getChunkVersion2()));
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(filesToCheckParent1.get(y), chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(filesToCheckParent2.get(y), chunk.getChunkVersion2()));
 
             }
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
@@ -135,7 +133,10 @@ public class ParserJava {
     }
 
     private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
-
+        
+        if(targetFile.equals("/home/felipepe/Documentos/projetos/bolsa/Core/sandboxparent2/src/ru/org/linux/util/HTMLFormatterTest.java")){
+        System.out.println("");
+    }
         int result[] = new int[2];
         result[0] = 0;
         result[1] = 0;
@@ -432,7 +433,7 @@ public class ParserJava {
 
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.setSize(new Dimension(500, 600));
-                // viewer.open();
+                viewer.open();
                 Visitor1 visitor = new Visitor1(globalEnviroment);
 
                 visitor.visit(tree);
