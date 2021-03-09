@@ -215,6 +215,12 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRange_expression(CSharpParser.Range_expressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CSharpParser#cast}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCast(CSharpParser.CastContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CSharpParser#unary_expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -800,13 +806,6 @@ public interface CSharpParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitYieldStatement(CSharpParser.YieldStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code cast}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCast(CSharpParser.CastContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code unsafeStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.

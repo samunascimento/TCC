@@ -126,6 +126,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitExpression(CSharpParser.ExpressionContext ctx) {
         // process(ctx);
+        System.out.println(ctx.getText());
         return visitChildren(ctx);
     }
 
@@ -137,7 +138,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitAssignment(CSharpParser.AssignmentContext ctx) {
-        process(ctx);
+       process(ctx);
         return visitChildren(ctx);
     }
 
@@ -246,6 +247,8 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitUnary_expression(CSharpParser.Unary_expressionContext ctx) {
         //  process(ctx);
+        
+        
         return visitChildren(ctx);
     }
 

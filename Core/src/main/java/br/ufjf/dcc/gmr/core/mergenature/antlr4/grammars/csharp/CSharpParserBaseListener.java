@@ -424,6 +424,18 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCast(CSharpParser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCast(CSharpParser.CastContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnary_expression(CSharpParser.Unary_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1535,18 +1547,6 @@ public class CSharpParserBaseListener implements CSharpParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitYieldStatement(CSharpParser.YieldStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCast(CSharpParser.CastContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCast(CSharpParser.CastContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

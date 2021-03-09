@@ -348,6 +348,16 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 */
 	void exitRange_expression(CSharpParser.Range_expressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CSharpParser#cast}.
+	 * @param ctx the parse tree
+	 */
+	void enterCast(CSharpParser.CastContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CSharpParser#cast}.
+	 * @param ctx the parse tree
+	 */
+	void exitCast(CSharpParser.CastContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CSharpParser#unary_expression}.
 	 * @param ctx the parse tree
 	 */
@@ -1333,18 +1343,6 @@ public interface CSharpParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitYieldStatement(CSharpParser.YieldStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code cast}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterCast(CSharpParser.CastContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code cast}
-	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitCast(CSharpParser.CastContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code unsafeStatement}
 	 * labeled alternative in {@link CSharpParser#simple_embedded_statement}.

@@ -175,7 +175,9 @@ range_expression
     | unary_expression? OP_RANGE unary_expression?
     ;
 
-    
+cast
+    :  OPEN_PARENS type_ CLOSE_PARENS unary_expression
+    ;
 
 // https://msdn.microsoft.com/library/6a71f45d(v=vs.110).aspx
 unary_expression
@@ -186,11 +188,12 @@ unary_expression
 	| '~' unary_expression
 	| '++' unary_expression
 	| '--' unary_expression
-	| OPEN_PARENS type_ CLOSE_PARENS unary_expression
+	| cast
 	| AWAIT unary_expression // C# 5
 	| '&' unary_expression
 	| '*' unary_expression
-	| '^' unary_expression // C# 8 ranges       
+	| '^' unary_expression // C# 8 ranges  
+        
 	;
 
 primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.com/en-us/library/dn986595.aspx
@@ -527,9 +530,7 @@ simple_embedded_statement
 	| USING OPEN_PARENS resource_acquisition CLOSE_PARENS embedded_statement       #usingStatement
 	| YIELD (RETURN expression | BREAK) ';'                       #yieldStatement
         
-        //cast
-        |  OPEN_PARENS type_ CLOSE_PARENS identifier #cast
-	
+        
         // unsafe statements
 	| UNSAFE block                                                                       #unsafeStatement
 	| FIXED OPEN_PARENS pointer_type fixed_pointer_declarators CLOSE_PARENS embedded_statement            #fixedStatement

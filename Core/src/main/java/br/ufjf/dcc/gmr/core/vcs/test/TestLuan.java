@@ -17,7 +17,7 @@ import java.util.List;
 public class TestLuan {
 
     public static void main(String[] args) throws IOException {
-       
+
         /*
      File projectPath = new File("resources/test.py");
 
@@ -38,11 +38,11 @@ public class TestLuan {
         for (String string : toTranslate) {
             System.out.println(string);
         }
-    */
+         */
+        File projectPath = new File("resources/teste.cs");
+        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(), 21, 21);
 
-    ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval("/home/luan/Github/C#_repositories/teste.cs",23,24);
-
-         List<String> toTranslate;
+        List<String> toTranslate;
         toTranslate = new ArrayList<String>();
 
         for (SyntaxStructure outmostedAnalysis : teste.getAll()) {
