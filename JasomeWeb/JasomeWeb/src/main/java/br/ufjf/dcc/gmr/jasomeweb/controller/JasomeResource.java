@@ -24,7 +24,7 @@ import br.ufjf.dcc.gmr.core.jasome.model.PackageMetrics;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.jasome.jdbc.dao.MetricDao;
 import br.ufjf.dcc.gmr.core.jasome.model.Point;
-import br.ufjf.dcc.gmr.core.mergenature.model.Project;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectStatus;
 import br.ufjf.dcc.jasome.jdbc.dao.LoginDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import com.google.gson.Gson;
@@ -206,17 +206,18 @@ public class JasomeResource {
 
     //AJUSTAR ESSE ENDPOINT
     @POST
-    @Path("/projects/create")
+    @Path("/insert/projects/create")
     public void create(@HeaderParam("name") String name,
             @HeaderParam("url") String url,
-            @HeaderParam("dirJasome") String dirJasome){
+            @HeaderParam("dirJasome") String dirJasome,
+            @HeaderParam("userId") int userId){
         Connection connection = ConnectionFactory.getConnection();
         MetricDao dao = new MetricDao(connection);
+        ProjectStatus projectStatus = null;
         
         String caminhoJasome = dirJasome;
         try {
-            dao.executeProject(caminhoJasome, url);
-            System.out.println("Cadastrou.");
+            dao.executeProject(caminhoJasome, url, projectStatus.REGISTRADO.toString(), userId);
         } catch (IsOutsideRepository ex) {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LocalRepositoryNotAGitRepository ex) {
@@ -248,7 +249,7 @@ public class JasomeResource {
     }
 
     @POST
-    @Path("login/")
+    @Path("/insert/login")
     public void insertLogin(@HeaderParam("user") String user, @HeaderParam("pass") String pass, @HeaderParam("type") String type) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         LoginDao dao = new LoginDao(connection);
@@ -257,7 +258,6 @@ public class JasomeResource {
         login.setPass(pass);
         login.setType(type);
         dao.insert(login);
-        System.out.println("Inseriu.");
         connection.close();
     }
 
@@ -272,26 +272,9 @@ public class JasomeResource {
     }
     
     @GET
-    @Path("projects/get/{projectName}")
-    public boolean isProjectRegistered(@PathParam("projectName") String projectName) throws SQLException {
-        Connection connection = ConnectionFactory.getConnection();
-        System.out.println(projectName);
-        ProjectMetricsDao dao = new ProjectMetricsDao(connection);
-        List<String> names = dao.isProjectRegistered();
-        boolean isProjectIn = false;
-        for (String name : names) {
-            if(name.equalsIgnoreCase(projectName))
-                isProjectIn = true;
-        }
-        connection.close();
-        return isProjectIn;
-    }
-    
-    @GET
-    @Path("login/get/{user}")
+    @Path("insert/login/get/{user}")
     public boolean isUserRegistered(@PathParam("user") String user) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
-        System.out.println(user);
         LoginDao dao = new LoginDao(connection);
         List<String> users = dao.isUserRegistered();
         boolean isUserIn = false;
@@ -301,5 +284,35 @@ public class JasomeResource {
         }
         connection.close();
         return isUserIn;
+    }
+    
+    @GET
+    @Path("insert/login/getData/{user}")
+    public int getUserId(@PathParam("user") String user) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        LoginDao dao = new LoginDao(connection);
+        int id = dao.getUserId(user);        
+        connection.close();
+        return id;
+    }
+    
+    @GET
+    @Path("/insert/projects/getData")
+    public boolean getProjectByUser(@HeaderParam("user") String user, @HeaderParam("name") String projectName) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        ProjectMetricsDao dao = new ProjectMetricsDao(connection);
+        boolean result = dao.getProjectByUser(projectName, user);
+        connection.close();
+        return result;
+    }
+    
+    @GET
+    @Path("/login")
+    public boolean enterSystem(@HeaderParam("user") String user, @HeaderParam("pass") String pass) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        LoginDao dao = new LoginDao(connection);
+        boolean acess = dao.enterSystem(user, pass);
+        connection.close();
+        return acess;
     }
 }

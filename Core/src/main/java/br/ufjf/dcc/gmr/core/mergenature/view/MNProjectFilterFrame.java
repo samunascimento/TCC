@@ -20,8 +20,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 
 /**
  * The frame to the GUI of Merge Nature's algorithm
@@ -64,16 +67,18 @@ public class MNProjectFilterFrame extends JFrame {
     private JCheckBox submodule = new JCheckBox("Submodule", true);
     private JCheckBox contentWithUnilateralRenaming = new JCheckBox("Content With Unilateral Renaming", true);
 
-    private JCheckBox version1 = new JCheckBox("VERSION_1", true);
-    private JCheckBox version2 = new JCheckBox("VERSION_2", true);
-    private JCheckBox concatenation = new JCheckBox("CONCATENATION", true);
-    private JCheckBox combination = new JCheckBox("COMBINATION", true);
-    private JCheckBox newCode = new JCheckBox("NEWCODE", true);
-    private JCheckBox none = new JCheckBox("NONE", true);
-    private JCheckBox imprecise = new JCheckBox("IMPRECISE", true);
-    private JCheckBox fileDeleted = new JCheckBox("FILE_DELETED", true);
-    private JCheckBox postponed = new JCheckBox("POSTPONED", true);
-    private JCheckBox diffProblem = new JCheckBox("DIFF_PROBLEM", true);
+    private JCheckBox version1 = new JCheckBox("Version 1", true);
+    private JCheckBox version2 = new JCheckBox("Version 2", true);
+    private JCheckBox concatenation = new JCheckBox("Concatenation", true);
+    private JCheckBox combination = new JCheckBox("Combination", true);
+    private JCheckBox newCode = new JCheckBox("New Code", true);
+    private JCheckBox none = new JCheckBox("None", true);
+    private JCheckBox imprecise = new JCheckBox("Imprecise", true);
+    private JCheckBox fileDeleted = new JCheckBox("File Deleted", true);
+    private JCheckBox postponed = new JCheckBox("Postponed", true);
+    private JCheckBox diffProblem = new JCheckBox("Diff Problem", true);
+
+    private JTextField hashInput = new JTextField("");
 
     public MNProjectFilterFrame(List<Merge> defaultList, MNMergesTable panel) {
         this.defaultList = defaultList;
@@ -100,17 +105,25 @@ public class MNProjectFilterFrame extends JFrame {
         typePanel.setLayout(new GridBagLayout());
         typePanel.setBorder(BorderFactory.createTitledBorder("Type of order"));
 
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setBorder(BorderFactory.createTitledBorder("Filter By"));
+
         JPanel mergeTypePanel = new JPanel();
         mergeTypePanel.setLayout(new GridBagLayout());
-        mergeTypePanel.setBorder(BorderFactory.createTitledBorder("Merges Types"));
 
         JPanel conflictTypePanel = new JPanel();
         conflictTypePanel.setLayout(new GridBagLayout());
-        conflictTypePanel.setBorder(BorderFactory.createTitledBorder("Conflicts Types"));
 
         JPanel developerDecisionPanel = new JPanel();
         developerDecisionPanel.setLayout(new GridBagLayout());
-        developerDecisionPanel.setBorder(BorderFactory.createTitledBorder("Developer Decision"));
+
+        JPanel hashPanel = new JPanel();
+        hashPanel.setLayout(new GridBagLayout());
+
+        tabbedPane.addTab("Merge Type", null, mergeTypePanel, "Filter the merges by Merge Type");
+        tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
+        tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
+        tabbedPane.addTab("Hash", null, hashPanel, "Filter the merges by their hashes");
 
         orientationOfOrderBG = new ButtonGroup();
         orientationOfOrderBG.add(ascendingOrder);
@@ -198,30 +211,42 @@ public class MNProjectFilterFrame extends JFrame {
         developerDecisionPanel.add(diffProblem, gbc);
 
         gbc.gridy = 0;
+        hashPanel.add(new JLabel("Input the entire hash or the its start"), gbc);
+        gbc.gridy++;
+        hashPanel.add(hashInput, gbc);
+
+        gbc.gridy = 0;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+
         this.add(orientationPanel, gbc);
-        gbc.gridy++;
-        this.add(typePanel, gbc);
-        gbc.gridy++;
-        this.add(mergeTypePanel, gbc);
-        gbc.gridy = 0;
         gbc.gridx = 1;
-        gbc.gridheight = 2;
-        this.add(conflictTypePanel, gbc);
-        gbc.gridheight = 1;
-        gbc.gridy += 2;
-        this.add(developerDecisionPanel, gbc);
+        this.add(typePanel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        this.add(tabbedPane, gbc);
         JButton setFilter = new JButton("Set filter");
         setFilter.addActionListener((ActionEvent evt) -> {
-            setFilter();
+            switch (tabbedPane.getSelectedIndex()) {
+                case 0:
+                    filterByMerge();
+                    break;
+                case 1:
+                    filterByConflict();
+                    break;
+                case 2:
+                    filterByConflictRegion();
+                    break;
+                default:
+                    filterByHash();
+            }
         });
         gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.weightx = 1;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(setFilter, gbc);
 
@@ -229,16 +254,10 @@ public class MNProjectFilterFrame extends JFrame {
         this.setVisible(true);
     }
 
-    private void setFilter() {
+    private void filterByMerge() {
 
-        boolean check;
-        Merge auxMerge;
-        Conflict auxConflict;
-        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
-        List<RelationMergeOrginalCR> auxList;
         List<MergeType> mergeTypeList = new ArrayList<>();
-        List<ConflictType> conflictTypeList = new ArrayList<>();
-        List<DeveloperDecision> developerDecisionList = new ArrayList<>();
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
 
         if (conflictedMerge.isSelected()) {
             mergeTypeList.add(MergeType.CONFLICTED_MERGE);
@@ -261,6 +280,23 @@ public class MNProjectFilterFrame extends JFrame {
         if (outOfMemory.isSelected()) {
             mergeTypeList.add(MergeType.OUT_OF_MEMORY);
         }
+
+        for (Merge merge : defaultList) {
+            if (mergeTypeList.contains(merge.getMergeType())) {
+                filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
+            }
+        }
+
+        endsFilterProcess(filteredList);
+
+    }
+
+    private void filterByConflict() {
+
+        Merge auxMerge;
+        List<ConflictType> conflictTypeList = new ArrayList<>();
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+
         if (content.isSelected()) {
             conflictTypeList.add(ConflictType.CONTENT);
         }
@@ -294,6 +330,29 @@ public class MNProjectFilterFrame extends JFrame {
         if (contentWithUnilateralRenaming.isSelected()) {
             conflictTypeList.add(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
         }
+
+        for (Merge merge : defaultList) {
+            auxMerge = new Merge(merge);
+            auxMerge.setConflicts(new ArrayList<>());
+            for (Conflict conflict : merge.getConflicts()) {
+                if (conflictTypeList.contains(conflict.getConflictType())) {
+                    auxMerge.addConflict(conflict);
+                }
+            }
+            filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
+        }
+
+        endsFilterProcess(filteredList);
+
+    }
+
+    private void filterByConflictRegion() {
+
+        Merge auxMerge;
+        Conflict auxConflict;
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        List<DeveloperDecision> developerDecisionList = new ArrayList<>();
+
         if (version1.isSelected()) {
             developerDecisionList.add(DeveloperDecision.VERSION1);
         }
@@ -326,30 +385,52 @@ public class MNProjectFilterFrame extends JFrame {
         }
 
         for (Merge merge : defaultList) {
-            if (mergeTypeList.contains(merge.getMergeType())) {
-                auxMerge = new Merge(merge);
-                auxMerge.setConflicts(new ArrayList<>());
-                for (Conflict conflict : merge.getConflicts()) {
-                    if (conflictTypeList.contains(conflict.getConflictType())) {
-                        auxConflict = new Conflict(conflict);
-                        auxConflict.setConflictRegions(new ArrayList<>());
-                        for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                            if (developerDecisionList.contains(conflictRegion.getDeveloperDecision())) {
-                                auxConflict.addConflictRegion(conflictRegion);
-                            }
-                        }
-                        if (!auxConflict.getConflictRegions().isEmpty()) {
-                            auxMerge.addConflicts(auxConflict);
-                        }
+            auxMerge = new Merge(merge);
+            auxMerge.setConflicts(new ArrayList<>());
+            for (Conflict conflict : merge.getConflicts()) {
+                auxConflict = new Conflict(conflict);
+                auxConflict.setConflictRegions(new ArrayList<>());
+                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                    if (developerDecisionList.contains(conflictRegion.getDeveloperDecision())) {
+                        auxConflict.addConflictRegion(conflictRegion);
                     }
                 }
-                if (!auxMerge.getConflicts().isEmpty()) {
-                    filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
-                }
+                auxMerge.addConflict(auxConflict);
+            }
+            filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
+        }
+
+        endsFilterProcess(filteredList);
+    }
+
+    private void filterByHash() {
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        for (Merge merge : defaultList) {
+            if (merge.getMerge().getCommitHash().startsWith(hashInput.getText())) {
+                filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
         }
-        if (!filteredList.isEmpty()) {
-            auxList = new ArrayList<>();
+
+        endsFilterProcess(filteredList);
+    }
+
+    private void endsFilterProcess(List<RelationMergeOrginalCR> filteredList) {
+        filteredList = ordenateList(filteredList);
+        List<Merge> mergeResult = new ArrayList<>();
+        List<String> originalCR = new ArrayList<>();
+        for (RelationMergeOrginalCR data : filteredList) {
+            mergeResult.add(data.merge);
+            originalCR.add(data.originalCR);
+        }
+
+        panel.setTableModel(mergeResult, originalCR);
+        this.dispose();
+    }
+
+    private List<RelationMergeOrginalCR> ordenateList(List<RelationMergeOrginalCR> filteredList) {
+        if (filteredList.size() > 1) {
+            boolean check;
+            List<RelationMergeOrginalCR> auxList = new ArrayList<>();
             if (numberOfConflictRegionOrder.isSelected()) {
                 auxList.add(filteredList.get(0));
                 for (int i = 1; i < filteredList.size(); i++) {
@@ -406,16 +487,7 @@ public class MNProjectFilterFrame extends JFrame {
             }
         }
 
-        List<Merge> mergeResult = new ArrayList<>();
-        List<String> originalCR = new ArrayList<>();
-        for (RelationMergeOrginalCR data : filteredList) {
-            mergeResult.add(data.merge);
-            originalCR.add(data.originalCR);
-        }
-
-        panel.setTableModel(mergeResult, originalCR);
-        this.dispose();
-
+        return filteredList;
     }
 
     private class RelationMergeOrginalCR {

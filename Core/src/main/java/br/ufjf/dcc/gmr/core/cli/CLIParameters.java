@@ -18,7 +18,7 @@ import java.sql.SQLException;
  */
 public class CLIParameters {
 
-    public static final String URL_DB = "url_db";
+    /*public static final String URL_DB = "url_db";
     public static final String URL_DB_SHORT = "url";
     public static final String USERNAME_DB = "username_db";
     public static final String USERNAME_DB_SHORT = "u";
@@ -97,5 +97,5 @@ public class CLIParameters {
             System.out.println(ex.getMessage());
         }
     }
-
+*/
 }

@@ -15,30 +15,42 @@ export default class InsertLogin extends Component{
 
         pass: '',
 
-        isUserin: false
+        isUserin: false,
+
+        dadosCripto: {
+            alg : "aes-256-ctr",
+            pwd : "abcdabcd"
+        }
+
+    }
+
+    cryptoPassword(senha){
+        const crypto = require("crypto");
+        const cipher = crypto.createCipher(this.state.dadosCripto.alg, this.state.dadosCripto.pwd);
+        return cipher.update(senha, 'utf8', 'hex');
     }
 
     onSubmit(){
-        const request = {
-            method: 'POST',
-            headers: { 'user': this.state.user, 'pass': this.state.pass, 'type' : this.state.type}
-        };
         
         if(this.state.user === '' || this.state.pass === '' || this.state.type === ''){
             alert('Há campos vazios.');
         }else {
-            axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/login/get/'+this.state.user)
+            axios.get(`/insert/login/get/`+this.state.user)
             .then((data) => {
                 this.setState({ isUserin: data.data })
             if(this.state.isUserin === true)
                 alert('Esse usuário já está cadastrado.')
             else{
-                fetch('http://localhost:8080/JasomeWeb/webresources/jasome/login/', request)
-                alert('Cadastrado com sucesso.')
+                let password =  this.cryptoPassword(this.state.pass)
+                console.log(password)
+                fetch(`/insert/login/`, {
+                    method: 'POST',
+                    headers: { 'user': this.state.user, 'pass': password, 'type' : this.state.type}
+                })
+                alert('Cadastrado com sucesso.');                
             }
                 
             })
-
         }
     }
 

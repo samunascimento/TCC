@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufjf.dcc.jasome.jdbc.dao;
 
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
@@ -27,8 +22,8 @@ public class ProjectMetricsDao {
     public int insert(ProjectMetrics projectMetrics) throws SQLException {
 
         String sql = "INSERT INTO tb_projectMetrics "
-                + "(sourceDir,projectname) "
-                + "VALUES (?,?) "
+                + "(sourceDir,projectname,status,userId) "
+                + "VALUES (?,?,?,?) "
                 + "RETURNING id;";
 
         PreparedStatement stmt = null;
@@ -40,6 +35,8 @@ public class ProjectMetricsDao {
             //set value
             stmt.setString(1, projectMetrics.getSourceDir());
             stmt.setString(2, projectMetrics.getName());
+            stmt.setString(3, projectMetrics.getStatus());
+            stmt.setInt(4, projectMetrics.getLoginId());
             tableKeys = stmt.executeQuery();
             tableKeys.next();
 
@@ -77,7 +74,6 @@ public class ProjectMetricsDao {
 
     public List<ProjectMetrics> select() throws SQLException {
         List<ProjectMetrics> listProjectMetrics = new ArrayList<>();
-        MetricDao metrics = new MetricDao(connection);
         ProjectMetrics projectMetrics;
         projectMetrics = new ProjectMetrics();
 
@@ -188,9 +184,11 @@ public class ProjectMetricsDao {
         }
     }
     
-    public List<String> isProjectRegistered() throws SQLException {
-        List<String> names = new ArrayList<>();
-        String sql = "SELECT * FROM tb_projectMetrics";
+    public boolean getProjectByUser(String name, String user) throws SQLException {
+        LoginDao loginDao = new LoginDao(this.connection);
+        
+        int userId = loginDao.getUserId(user);
+        String sql = "SELECT projectName, userId FROM tb_projectmetrics where projectName='"+name+"'";
 
         ResultSet resultSet = null;
 
@@ -200,9 +198,12 @@ public class ProjectMetricsDao {
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 String projectName = resultSet.getString("projectName");
-                names.add(projectName);
+                int id = resultSet.getInt("userId");
+                if(name.equalsIgnoreCase(projectName) && id == userId){
+                    return true;
+                }
             }
-            return names;
+            return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

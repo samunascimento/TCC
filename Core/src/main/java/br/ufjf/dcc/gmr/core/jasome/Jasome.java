@@ -15,12 +15,10 @@ import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import org.apache.commons.cli.ParseException;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *
@@ -33,14 +31,14 @@ public class Jasome {
 
         Connection connection = ConnectionFactory.getConnection();
         
-        try {
+        /*try {
             //JasomeMethods jasome = new JasomeMethods("C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol", "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome");
             //analyze(null, null, null, "C:\\Users\\Principal\\Desktop\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\Principal\\Desktop\\teste\\UFJF");
             analyze(null, null, null, "C:\\Users\\anton\\Documents\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\ProjetosExemplos\\CalculadoraJava");
             //analyze(null, null, null, "C:\\Users\\anton\\Documents\\Bolsa de pesquisa\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\projetos-teste-jasome\\minecrowdcontrol");
         } catch (RepositoryAlreadyExistInDataBase ex) {
             ex.getMessage();
-        }
+        }*/
     }
 
     /**
@@ -75,7 +73,7 @@ public class Jasome {
         return repositoryPath;
     }
 
-    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase {
+    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase {
 
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {
@@ -84,18 +82,16 @@ public class Jasome {
             connection = ConnectionFactory.getConnection(urlDB, userNameDB, passwordDB);
         }
         connection.setAutoCommit(false);
-        
-        ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
-        
-        List<ProjectMetrics> select = projectDao.select();
-        
-        JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath);
+                
+        JasomeMethods jasome = new JasomeMethods(projectPath, jasomePath, status, userId);
 
         ProjectMetrics project = new ProjectMetrics();
 
         project.setSourceDir(jasome.GetRepositoryPath()); 
         project.setUrl("testeUrl");
         project.setName(jasome.GetRepositoryName());
+        project.setStatus(jasome.getStatus());
+        project.setLoginId(jasome.getUserId());
         project.setOrganization("organization");
 
         jasome.runProject(project, connection);

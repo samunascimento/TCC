@@ -142,4 +142,52 @@ public class LoginDao {
             }
         }
     }
+    
+    public int getUserId(String user) throws SQLException {
+        int id = -1;
+        String sql = "SELECT id FROM tb_login where login='"+user+"'";
+        ResultSet resultSet = null;
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+            return id;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+    
+    public boolean enterSystem(String user, String pass) throws SQLException {
+        String sql = "SELECT login, pass FROM tb_login where login='"+user+"'";
+        ResultSet resultSet = null;
+        String login = "";
+        String password = "";
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                login = resultSet.getString("login");
+                password = resultSet.getString("pass");
+                if(user.equals(login) && password.equals(pass)){
+                    return true;
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }

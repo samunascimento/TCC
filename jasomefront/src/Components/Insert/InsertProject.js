@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class InsertProject extends Component{
 
@@ -14,35 +13,44 @@ export default class InsertProject extends Component{
 
         dirJasome: '',
 
-        isProjectIn: false,
+        isUserIn: false,
 
-        loading: false
+        user: '',
+
+        getProjectByUser: false
     }
 
+
+    //ARRUMAR
     onSubmit(){
-        const request = {
-            method: 'POST',
-            headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome}
-        };
         
-        if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === ''){
+        if(this.state.name === '' || this.state.url === '' || this.state.dirJasome === '' || this.state.user === ''){
             alert('Há campos vazios.');
         }else {
-                axios.get('http://localhost:8080/JasomeWeb/webresources/jasome/projects/get/'+this.state.name)
-                .then((data) => {
-                    this.setState({ isProjectIn: data.data })
-                    if(this.state.isProjectIn === true)
-                        alert('Esse projeto já está cadastrado.')
-                    else{
-                        this.setState({ loading: true }, () => {
-                            fetch('http://localhost:8080/JasomeWeb/webresources/jasome/projects/create', request)
-                            .then(() => {
-                                this.setState({ loading: false })
+            axios.get('/insert/login/get/'+this.state.user)
+            .then((data) => {
+                this.setState({ isUserIn: data.data })
+                if(this.state.isUserIn === false)
+                    alert('Este usuário não existe.')
+                else{
+                    axios.get('/insert/projects/getData/', {
+                        headers: { 'user': this.state.user, 'name': this.state.name}
+                    }).then((data) => {
+                        this.setState({ getProjectByUser: data.data})
+                        if(this.state.getProjectByUser === true)
+                            alert('Este projeto já está cadastrado por este usuário.')
+                        else{
+                            axios.get('/insert/login/getData/'+this.state.user)
+                            .then((data) => {
+                                axios.post('/insert/projects/create', {
+                                    headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome, 'userId': data.data}
+                                })
                             })
-                        })
-                        alert('Cadastrado com sucesso.')    
-                    }
-                })
+                            alert('Cadastrado com sucesso.')
+                        }
+                    })
+                }
+            })
         }
     }
 
@@ -102,12 +110,27 @@ export default class InsertProject extends Component{
                         }}
                     />
                 </div>
+                <div style={{display:'flex', padding: '30px 0px 0px 16px'}}>
+                    <Typography variant='h6'>
+                        Usuário:
+                    </Typography>
+                    <TextField 
+                        id={this.state.user}
+                        name={this.state.user}
+                        onInput={(e) => this.setState({user: e.target.value})} 
+                        type="text"
+                        placeholder="Usuário"
+                        style={{
+                            width: '30%',
+                            padding: '0px 0px 0px 10px'
+                        }}
+                    />
+                </div>
                 <div style={{ margin: '30px 0px 0px 16px',}}>
                     <Button color='primary' variant='contained' size='medium' type='submit' onClick={() => this.onSubmit()}>
                         Cadastrar
                     </Button>
                 </div>
-                {this.state.loading ? <CircularProgress /> : '' }
             </>
         );
     }

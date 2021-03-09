@@ -20,10 +20,20 @@ CREATE TABLE tb_metric (
     PRIMARY KEY (ID)
 );
 
+CREATE TABLE tb_login(
+	id Serial PRIMARY KEY,
+	login text NOT NULL,
+	pass text NOT NULL,
+	type text NOT NULL
+);
+
 CREATE TABLE tb_projectMetrics(
     ID Serial NOT NULL,
     sourceDir text NOT NULL,
 	ProjectName text NOT NULL,
+	status text NOT NULL,
+	userId Integer NOT NULL,
+	FOREIGN KEY (userId) REFERENCES tb_login(id),
     PRIMARY KEY (ID)
 );
 
@@ -248,13 +258,6 @@ CREATE TABLE tb_description (
     description_id Serial,
     name text,
     description varchar (255)
-);
-
-CREATE TABLE tb_login(
-	id Serial PRIMARY KEY,
-	login text NOT NULL,
-	pass text NOT NULL,
-	type text NOT NULL
 );
 
 INSERT INTO tb_description (name, description)
