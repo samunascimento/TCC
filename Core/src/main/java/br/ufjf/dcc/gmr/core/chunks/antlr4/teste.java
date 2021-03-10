@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 public class teste {
 
-    private static String projectPath = "/home/felipepe/Documentos/projetos/exercicio/lorsource";
+    private static String projectPath = "D:/lorsource";
 
     public static void main(String[] args) throws RepositoryNotFound, ParseException, Exception {
 

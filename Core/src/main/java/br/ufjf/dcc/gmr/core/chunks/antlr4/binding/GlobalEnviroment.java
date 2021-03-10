@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ public class GlobalEnviroment {
         
         
         String aux = path.replaceAll("/", ".");
+        aux = path.replaceAll("\\\\", ".");
         String replacedPath = "";
         Set<String> keySet = enviroment.keySet();
         
