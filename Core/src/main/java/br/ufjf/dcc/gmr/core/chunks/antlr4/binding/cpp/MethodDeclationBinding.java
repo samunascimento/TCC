@@ -17,7 +17,7 @@ public class MethodDeclationBinding extends BaseBinding{
     
     private List<String> modifier;
     private TypeBinding type;
-    private List<AttributeDeclarationBinding> parametersBindings;
+    private List<ParametersBinding> parametersBindings;
     private TypeBinding returnBinding;
     private CPP14Parser.DeclaratorContext ctx;
 
@@ -46,11 +46,11 @@ public class MethodDeclationBinding extends BaseBinding{
         this.type = type;
     }
 
-    public List<AttributeDeclarationBinding> getParametersBindings() {
+    public List<ParametersBinding> getParametersBindings() {
         return parametersBindings;
     }
 
-    public void setParametersBindings(List<AttributeDeclarationBinding> parametersBindings) {
+    public void setParametersBindings(List<ParametersBinding> parametersBindings) {
         this.parametersBindings = parametersBindings;
     }
 

@@ -59,6 +59,13 @@ public class AST {
             for (int i = 0; i < visitor.getVariableUsage().size(); i++) {
                 System.out.println(visitor.getVariableUsage().get(i));
             }
+             System.out.println("============ METHOD CALL =============");
+            for (int i = 0; i < visitor.getMethodCall().size(); i++) {
+                System.out.println(visitor.getMethodCall().get(i));
+                for(int j =0; j<visitor.getMethodCall().get(i).getParameters().size(); j++)
+                    System.out.print(visitor.getMethodCall().get(i).getParameters().get(j)+ "  ");
+                 System.out.println("");
+            }
             return null;
 //            return new ANTLR4Results(visitor.getList(), comments);
         } else {
@@ -89,10 +96,10 @@ public class AST {
 
         /*
             lista declaraçao de variavel; (nome e tipo) OK
-            lista de chamada ou uso de variavel; (nome)
+            lista de chamada ou uso de variavel; (nome)ok
             
             lista de declaraçao de metodos; (nome e tipo, e qnt de paremetro) 
-            lista de chamada de metodos;
+            lista de chamada de metodos; ok
         
             "considerar o Variable Declaration"
          */
