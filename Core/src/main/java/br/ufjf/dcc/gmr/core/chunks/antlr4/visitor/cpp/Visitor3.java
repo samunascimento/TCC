@@ -13,6 +13,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableDeclarationBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableUsageBinding;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import java.util.*;
@@ -24,15 +25,37 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     private String typeString;
     private List<VariableDeclarationBinding> variableDeclaration;
     private List<MethodCallBinding> methodCallBinding;
+    private List<VariableUsageBinding> variableUsage;
 
     public Visitor3() {
         this.typeString = "";
         this.variableDeclaration = new ArrayList<>();
         this.methodCallBinding = new ArrayList<>();
+        this.variableUsage = new ArrayList<>();
     }
 
     public List<VariableDeclarationBinding> getVariableDeclaration() {
         return variableDeclaration;
+    }
+
+    public void setVariableDeclaration(List<VariableDeclarationBinding> variableDeclaration) {
+        this.variableDeclaration = variableDeclaration;
+    }
+
+    public List<MethodCallBinding> getMethodCallBinding() {
+        return methodCallBinding;
+    }
+
+    public void setMethodCallBinding(List<MethodCallBinding> methodCallBinding) {
+        this.methodCallBinding = methodCallBinding;
+    }
+
+    public List<VariableUsageBinding> getVariableUsage() {
+        return variableUsage;
+    }
+
+    public void setVariableUsage(List<VariableUsageBinding> variableUsage) {
+        this.variableUsage = variableUsage;
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -47,6 +70,15 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 + "\n\t\t" + ctx.getText()
                 + "\n\n"
         );
+    }
+
+    public boolean containDeclaration(String name) {
+        for (int i = 0; i < variableDeclaration.size(); i++) {
+            if (variableDeclaration.get(i).getName().contains(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -99,9 +131,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             if (!(ctx.getParent() instanceof CPP14Parser.PtrdeclaratorContext)) {
                 TypeBinding typeS = new TypeBinding(this.typeString);
                 VariableDeclarationBinding variavel = new VariableDeclarationBinding(ctx.getText(), typeS);
-                variableDeclaration.add(variavel);
-
-                System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
+                if (!containDeclaration(variavel.getName())) {
+                    variableDeclaration.add(variavel);
+                    System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
+                }
             }
         }
 
@@ -614,7 +647,20 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         String name;
         if (ctx.expression() != null) {
             name = assigmentExpression(ctx.assignmentexpression());
-            System.out.println("Variavel: " + name);
+            if (!containDeclaration(name)) {
+                VariableDeclarationBinding variable = new VariableDeclarationBinding();
+                variable.setName(name);
+                variableDeclaration.add(variable);
+                System.out.println("New Variavel: " + name);
+            } else {
+                VariableUsageBinding variable = new VariableUsageBinding();
+                variable.setName(name);
+                variable.setCtx(ctx);
+                variableUsage.add(variable);
+                
+                System.out.println("Variavel: " + name);
+            }
+
             expression(ctx.expression());
         } else {
             CPP14Parser.RealassignmentexpressionContext realassignmentexpression = ctx.assignmentexpression().realassignmentexpression();
@@ -627,10 +673,18 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
 
                 String type = multiplicativeexpression.multiplicativeexpression().getText();
                 name = multiplicativeexpression.pmexpression().getText();
-                System.out.println("Tipo: " + type);
-                System.out.println("Variavel: " + name);
+                if (!containDeclaration(name)) {
+                    TypeBinding tipo = new TypeBinding(type);
+                    VariableDeclarationBinding variable = new VariableDeclarationBinding(name, tipo);
+                    variableDeclaration.add(variable);
+                    System.out.println("Tipo: " + type + "  Variavel: " + name);
+                }
             } else {
                 name = multiplicativeexpression.pmexpression().getText();
+                VariableUsageBinding variable = new VariableUsageBinding();
+                variable.setName(name);
+                variable.setCtx(ctx);
+                variableUsage.add(variable);
                 System.out.println("Variavel: " + name);
             }
 
@@ -639,7 +693,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     }
 
     public String assigmentExpression(CPP14Parser.AssignmentexpressionContext assignmentexpression) {
-        
+
         System.out.println(assignmentexpression.getText());
         if (assignmentexpression.conditionalexpression() != null) {
             String text = assignmentexpression.conditionalexpression().getText();
