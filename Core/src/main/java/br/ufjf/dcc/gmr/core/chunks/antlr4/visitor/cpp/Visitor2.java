@@ -73,7 +73,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
             System.out.println("metodo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
         } else {
             if (!findParentPd(ctx)) {
-                System.out.println("atributo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
+               // System.out.println("atributo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
             } else {
                 System.out.println("\tparametros: " + this.typeS + " " + ctx.getText());
             }

@@ -14,21 +14,21 @@ import java.util.*;
  */
 public class MethodCallBinding extends BaseBinding {
 
-    private List<TypeBinding> parameters;
+    private List<ParametersBinding> parameters;
     private TypeBinding typeBinding;
 
     public MethodCallBinding(String name) {
-        super();
+        super(name);
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
 
     }
 
-    public List<TypeBinding> getParameters() {
+    public List<ParametersBinding> getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<TypeBinding> parameters) {
+    public void setParameters(List<ParametersBinding> parameters) {
         this.parameters = parameters;
     }
 
@@ -39,5 +39,8 @@ public class MethodCallBinding extends BaseBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-
+     @Override
+    public String toString(){
+        return super.getName() ;
+    }
 }

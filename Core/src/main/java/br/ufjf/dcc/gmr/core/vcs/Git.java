@@ -1246,8 +1246,9 @@ public class Git {
         }
 
         CLIExecution execution = CLIExecute.execute(command, directory);
-
-        if (!execution.getError().isEmpty()) {
+        
+    
+        if (!execution.getError().isEmpty() ) {
             for (String line : execution.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new LocalRepositoryNotAGitRepository();
@@ -1255,8 +1256,6 @@ public class Git {
                     throw new InvalidCommitHash();
                 } else if (line.contains("fatal: Path \\")) {
                     throw new FileNotExistInCommitException("The archive looked upon cannot be found on this merge, maybe the path is exchanged ");
-                }else {
-                    throw new IOException(execution.getError().toString());
                 }
             }
         } else {
@@ -1351,15 +1350,7 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
-    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, RepositoryNotFound, ParseException {
-        List<Formats> logAll = logAll("/Users/gleiph/sandbox/pasta expaco/parent1");
-
-        for (Formats log : logAll) {
-            System.out.println(log);
-        }
-    }
-
-    public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
+      public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 
         //System.out.println("\""+fileSource+"\"");
