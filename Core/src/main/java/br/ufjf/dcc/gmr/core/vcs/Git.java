@@ -1254,7 +1254,7 @@ public class Git {
              boolean bool1AuxWarning = false;
              boolean bool2AuxWarning = false;
             for (String line : execution.getError()) {
-                    if(line.contains("warning: LF will be replaced by CRLF in Core/src/main/java/br/ufjf/dcc/gmr/core/conflictanalysis/controller/GitRepositoryAnalysis.java.")
+                    if(line.contains("warning: LF will be replaced by CRLF in")
                      ){
                      auxWar1=line;
                      bool1AuxWarning=true;
