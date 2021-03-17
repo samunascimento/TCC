@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser.ModifierContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -518,8 +519,17 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
         if (classBodyDeclaration.getChild(0) != null) {
 
-            String modifier = classBodyDeclaration.getChild(0).getText();
-            attribute.setModifier(modifier);
+            for (ParseTree child : classBodyDeclaration.children) {
+
+                if (child instanceof JavaParser.ModifierContext) {
+                    Modifier modifier = Modifier.equalsTo(((ModifierContext) child).classOrInterfaceModifier().getText());
+
+                    attribute.addModifier(modifier);
+
+                } else {
+                    break;
+                }
+            }
         }
 
         for (JavaParser.VariableDeclaratorContext variableDeclarator : ctx.variableDeclarators().variableDeclarator()) {

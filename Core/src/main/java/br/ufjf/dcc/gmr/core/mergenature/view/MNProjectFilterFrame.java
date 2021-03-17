@@ -54,6 +54,8 @@ public class MNProjectFilterFrame extends JFrame {
     private JCheckBox notConflictedMergeOfUnrelatedHistories = new JCheckBox("Not Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox octopusMergeOfUnrelatedHistories = new JCheckBox("Octopus Merge Of Unrelated Histories", true);
     private JCheckBox outOfMemory = new JCheckBox("Out of Memory", true);
+    private JButton selectAllMergeTypes = new JButton("Select All");
+    private JButton unselectAllMergeTypes = new JButton("Unselect All");
 
     private JCheckBox content = new JCheckBox("Content", true);
     private JCheckBox coincidenceAdding = new JCheckBox("Coincidence Adding", true);
@@ -66,6 +68,8 @@ public class MNProjectFilterFrame extends JFrame {
     private JCheckBox fileLocation = new JCheckBox("File Location", true);
     private JCheckBox submodule = new JCheckBox("Submodule", true);
     private JCheckBox contentWithUnilateralRenaming = new JCheckBox("Content With Unilateral Renaming", true);
+    private JButton selectAllConflicts = new JButton("Select All");
+    private JButton unselectAllConflicts = new JButton("Unselect All");
 
     private JCheckBox version1 = new JCheckBox("Version 1", true);
     private JCheckBox version2 = new JCheckBox("Version 2", true);
@@ -77,6 +81,8 @@ public class MNProjectFilterFrame extends JFrame {
     private JCheckBox fileDeleted = new JCheckBox("File Deleted", true);
     private JCheckBox postponed = new JCheckBox("Postponed", true);
     private JCheckBox diffProblem = new JCheckBox("Diff Problem", true);
+    private JButton selectAllDevDecisions = new JButton("Select All");
+    private JButton unselectAllDevDecisions = new JButton("Unselect All");
 
     private JTextField hashInput = new JTextField("");
 
@@ -120,6 +126,75 @@ public class MNProjectFilterFrame extends JFrame {
         JPanel hashPanel = new JPanel();
         hashPanel.setLayout(new GridBagLayout());
 
+        selectAllMergeTypes.addActionListener((ActionEvent evt) -> {
+            conflictedMerge.setSelected(true);
+            notConflictedMerge.setSelected(true);
+            octopusMerge.setSelected(true);
+            conflictedMergeOfUnrelatedHistories.setSelected(true);
+            notConflictedMergeOfUnrelatedHistories.setSelected(true);
+            octopusMergeOfUnrelatedHistories.setSelected(true);
+            outOfMemory.setSelected(true);
+        });
+        unselectAllMergeTypes.addActionListener((ActionEvent evt) -> {
+            conflictedMerge.setSelected(false);
+            notConflictedMerge.setSelected(false);
+            octopusMerge.setSelected(false);
+            conflictedMergeOfUnrelatedHistories.setSelected(false);
+            notConflictedMergeOfUnrelatedHistories.setSelected(false);
+            octopusMergeOfUnrelatedHistories.setSelected(false);
+            outOfMemory.setSelected(false);
+        });
+        selectAllConflicts.addActionListener((ActionEvent evt) -> {
+            content.setSelected(true);
+            coincidenceAdding.setSelected(true);
+            fileRename.setSelected(true);
+            directoryRename.setSelected(true);
+            modifyDelete.setSelected(true);
+            renameDelete.setSelected(true);
+            p1RenamedP2Add.setSelected(true);
+            p2RenamedP1Add.setSelected(true);
+            fileLocation.setSelected(true);
+            submodule.setSelected(true);
+            contentWithUnilateralRenaming.setSelected(true);
+        });
+        unselectAllConflicts.addActionListener((ActionEvent evt) -> {
+            content.setSelected(false);
+            coincidenceAdding.setSelected(false);
+            fileRename.setSelected(false);
+            directoryRename.setSelected(false);
+            modifyDelete.setSelected(false);
+            renameDelete.setSelected(false);
+            p1RenamedP2Add.setSelected(false);
+            p2RenamedP1Add.setSelected(false);
+            fileLocation.setSelected(false);
+            submodule.setSelected(false);
+            contentWithUnilateralRenaming.setSelected(false);
+        });
+        selectAllDevDecisions.addActionListener((ActionEvent evt) -> {
+            version1.setSelected(true);
+            version2.setSelected(true);
+            concatenation.setSelected(true);
+            combination.setSelected(true);
+            newCode.setSelected(true);
+            none.setSelected(true);
+            imprecise.setSelected(true);
+            fileDeleted.setSelected(true);
+            postponed.setSelected(true);
+            diffProblem.setSelected(true);
+        });
+        unselectAllDevDecisions.addActionListener((ActionEvent evt) -> {
+            version1.setSelected(false);
+            version2.setSelected(false);
+            concatenation.setSelected(false);
+            combination.setSelected(false);
+            newCode.setSelected(false);
+            none.setSelected(false);
+            imprecise.setSelected(false);
+            fileDeleted.setSelected(false);
+            postponed.setSelected(false);
+            diffProblem.setSelected(false);
+        });
+
         tabbedPane.addTab("Merge Type", null, mergeTypePanel, "Filter the merges by Merge Type");
         tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
         tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
@@ -152,6 +227,7 @@ public class MNProjectFilterFrame extends JFrame {
         typePanel.add(chronologicalOrder, gbc);
 
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
         mergeTypePanel.add(conflictedMerge, gbc);
         gbc.gridy++;
         mergeTypePanel.add(notConflictedMerge, gbc);
@@ -165,8 +241,15 @@ public class MNProjectFilterFrame extends JFrame {
         mergeTypePanel.add(octopusMergeOfUnrelatedHistories, gbc);
         gbc.gridy++;
         mergeTypePanel.add(outOfMemory, gbc);
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        mergeTypePanel.add(selectAllMergeTypes, gbc);
+        gbc.gridy++;
+        mergeTypePanel.add(unselectAllMergeTypes, gbc);
 
+        
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
         conflictTypePanel.add(content, gbc);
         gbc.gridy++;
         conflictTypePanel.add(coincidenceAdding, gbc);
@@ -188,8 +271,14 @@ public class MNProjectFilterFrame extends JFrame {
         conflictTypePanel.add(submodule, gbc);
         gbc.gridy++;
         conflictTypePanel.add(contentWithUnilateralRenaming, gbc);
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        conflictTypePanel.add(selectAllConflicts, gbc);
+        gbc.gridy++;
+        conflictTypePanel.add(unselectAllConflicts, gbc);
 
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
         developerDecisionPanel.add(version1, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(version2, gbc);
@@ -209,8 +298,14 @@ public class MNProjectFilterFrame extends JFrame {
         developerDecisionPanel.add(postponed, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(diffProblem, gbc);
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        developerDecisionPanel.add(selectAllDevDecisions, gbc);
+        gbc.gridy++;
+        developerDecisionPanel.add(unselectAllDevDecisions, gbc);
 
         gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         hashPanel.add(new JLabel("Input the entire hash or the its start"), gbc);
         gbc.gridy++;
         hashPanel.add(hashInput, gbc);

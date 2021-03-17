@@ -57,8 +57,9 @@ public class GlobalEnviroment {
         }
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
-            if (methodDeclarationBinding.getCtx().getStart().getLine() < languageConstruct.getLineBegin()+1
-                    && methodDeclarationBinding.getCtx().getStop().getLine() > languageConstruct.getLineEnd()+1) {
+     
+            if (methodDeclarationBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                    && methodDeclarationBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                 {
                     result.add(methodDeclarationBinding);
 
