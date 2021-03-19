@@ -36,6 +36,7 @@ public class MNProjectFilterFrame extends JFrame {
 
     private MNMergesTable panel;
     private List<Merge> defaultList;
+    private List<Merge> currentList;
 
     private JRadioButton ascendingOrder = new JRadioButton("Ascending Order", true);
     private JRadioButton descendingOrder = new JRadioButton("Descending Order");
@@ -86,22 +87,27 @@ public class MNProjectFilterFrame extends JFrame {
 
     private JTextField hashInput = new JTextField("");
 
-    public MNProjectFilterFrame(List<Merge> defaultList, MNMergesTable panel) {
+    public MNProjectFilterFrame(List<Merge> defaultList, List<Merge> currentList, MNMergesTable panel) {
         this.defaultList = defaultList;
+        this.currentList = currentList;
         this.panel = panel;
         set();
     }
 
     private void set() {
 
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setResizable(false);
         this.setTitle("Set filter");
-        this.setResizable(true);
-        this.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
-        this.setMinimumSize(new Dimension(500, 300));
-        this.setLayout(new GridBagLayout());
+        this.setLocationRelativeTo(null);
+        this.setSize(new Dimension(480, 550));
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setOpaque(false);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP));
 
         JPanel orientationPanel = new JPanel();
         orientationPanel.setLayout(new GridBagLayout());
@@ -125,6 +131,40 @@ public class MNProjectFilterFrame extends JFrame {
 
         JPanel hashPanel = new JPanel();
         hashPanel.setLayout(new GridBagLayout());
+
+        JButton filterCurrentTable = new JButton("Filter Current Table");
+        filterCurrentTable.addActionListener((ActionEvent evt) -> {
+            switch (tabbedPane.getSelectedIndex()) {
+                case 0:
+                    filterByMerge(currentList);
+                    break;
+                case 1:
+                    filterByConflict(currentList);
+                    break;
+                case 2:
+                    filterByConflictRegion(currentList);
+                    break;
+                default:
+                    filterByHash(currentList);
+            }
+        });
+
+        JButton filterDefaultTable = new JButton("Filter Default Table");
+        filterDefaultTable.addActionListener((ActionEvent evt) -> {
+            switch (tabbedPane.getSelectedIndex()) {
+                case 0:
+                    filterByMerge(defaultList);
+                    break;
+                case 1:
+                    filterByConflict(defaultList);
+                    break;
+                case 2:
+                    filterByConflictRegion(defaultList);
+                    break;
+                default:
+                    filterByHash(defaultList);
+            }
+        });
 
         selectAllMergeTypes.addActionListener((ActionEvent evt) -> {
             conflictedMerge.setSelected(true);
@@ -214,7 +254,7 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         orientationPanel.add(ascendingOrder, gbc);
-        gbc.gridy++;
+        gbc.gridx++;
         orientationPanel.add(descendingOrder, gbc);
 
         gbc.gridy = 0;
@@ -227,7 +267,6 @@ public class MNProjectFilterFrame extends JFrame {
         typePanel.add(chronologicalOrder, gbc);
 
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
         mergeTypePanel.add(conflictedMerge, gbc);
         gbc.gridy++;
         mergeTypePanel.add(notConflictedMerge, gbc);
@@ -242,14 +281,15 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         mergeTypePanel.add(outOfMemory, gbc);
         gbc.gridy++;
-        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LAST_LINE_START;
         mergeTypePanel.add(selectAllMergeTypes, gbc);
         gbc.gridy++;
         mergeTypePanel.add(unselectAllMergeTypes, gbc);
 
-        
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         conflictTypePanel.add(content, gbc);
         gbc.gridy++;
         conflictTypePanel.add(coincidenceAdding, gbc);
@@ -263,7 +303,8 @@ public class MNProjectFilterFrame extends JFrame {
         conflictTypePanel.add(renameDelete, gbc);
         gbc.gridy++;
         conflictTypePanel.add(p1RenamedP2Add, gbc);
-        gbc.gridy++;
+        gbc.gridy = 0;
+        gbc.gridx = 1;
         conflictTypePanel.add(p2RenamedP1Add, gbc);
         gbc.gridy++;
         conflictTypePanel.add(fileLocation, gbc);
@@ -271,14 +312,17 @@ public class MNProjectFilterFrame extends JFrame {
         conflictTypePanel.add(submodule, gbc);
         gbc.gridy++;
         conflictTypePanel.add(contentWithUnilateralRenaming, gbc);
-        gbc.gridy++;
-        gbc.gridwidth = 1;
+        gbc.gridy = 7;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_START;
         conflictTypePanel.add(selectAllConflicts, gbc);
         gbc.gridy++;
         conflictTypePanel.add(unselectAllConflicts, gbc);
 
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         developerDecisionPanel.add(version1, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(version2, gbc);
@@ -292,64 +336,58 @@ public class MNProjectFilterFrame extends JFrame {
         developerDecisionPanel.add(none, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(imprecise, gbc);
-        gbc.gridy++;
+        gbc.gridy = 0;
+        gbc.gridx = 1;
         developerDecisionPanel.add(fileDeleted, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(postponed, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(diffProblem, gbc);
-        gbc.gridy++;
-        gbc.gridwidth = 1;
+        gbc.gridy = 7;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_START;
         developerDecisionPanel.add(selectAllDevDecisions, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(unselectAllDevDecisions, gbc);
 
         gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         hashPanel.add(new JLabel("Input the entire hash or the its start"), gbc);
+
         gbc.gridy++;
         hashPanel.add(hashInput, gbc);
 
         gbc.gridy = 0;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+        mainPanel.add(orientationPanel, gbc);
 
-        this.add(orientationPanel, gbc);
         gbc.gridx = 1;
-        this.add(typePanel, gbc);
+        mainPanel.add(typePanel, gbc);
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
-        this.add(tabbedPane, gbc);
-        JButton setFilter = new JButton("Set filter");
-        setFilter.addActionListener((ActionEvent evt) -> {
-            switch (tabbedPane.getSelectedIndex()) {
-                case 0:
-                    filterByMerge();
-                    break;
-                case 1:
-                    filterByConflict();
-                    break;
-                case 2:
-                    filterByConflictRegion();
-                    break;
-                default:
-                    filterByHash();
-            }
-        });
+        mainPanel.add(tabbedPane, gbc);
+
         gbc = new GridBagConstraints();
         gbc.gridy = 2;
-        gbc.weightx = 1;
         gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        this.add(setFilter, gbc);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        mainPanel.add(filterCurrentTable, gbc);
 
-        this.pack();
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        mainPanel.add(filterDefaultTable, gbc);
+
+        this.add(mainPanel);
         this.setVisible(true);
     }
 
-    private void filterByMerge() {
+    private void filterByMerge(List<Merge> list) {
 
         List<MergeType> mergeTypeList = new ArrayList<>();
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
@@ -376,7 +414,7 @@ public class MNProjectFilterFrame extends JFrame {
             mergeTypeList.add(MergeType.OUT_OF_MEMORY);
         }
 
-        for (Merge merge : defaultList) {
+        for (Merge merge : list) {
             if (mergeTypeList.contains(merge.getMergeType())) {
                 filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
@@ -386,7 +424,7 @@ public class MNProjectFilterFrame extends JFrame {
 
     }
 
-    private void filterByConflict() {
+    private void filterByConflict(List<Merge> list) {
 
         Merge auxMerge;
         List<ConflictType> conflictTypeList = new ArrayList<>();
@@ -426,7 +464,7 @@ public class MNProjectFilterFrame extends JFrame {
             conflictTypeList.add(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
         }
 
-        for (Merge merge : defaultList) {
+        for (Merge merge : list) {
             auxMerge = new Merge(merge);
             auxMerge.setConflicts(new ArrayList<>());
             for (Conflict conflict : merge.getConflicts()) {
@@ -441,7 +479,7 @@ public class MNProjectFilterFrame extends JFrame {
 
     }
 
-    private void filterByConflictRegion() {
+    private void filterByConflictRegion(List<Merge> list) {
 
         Merge auxMerge;
         Conflict auxConflict;
@@ -479,7 +517,7 @@ public class MNProjectFilterFrame extends JFrame {
             developerDecisionList.add(DeveloperDecision.DIFF_PROBLEM);
         }
 
-        for (Merge merge : defaultList) {
+        for (Merge merge : list) {
             auxMerge = new Merge(merge);
             auxMerge.setConflicts(new ArrayList<>());
             for (Conflict conflict : merge.getConflicts()) {
@@ -498,9 +536,9 @@ public class MNProjectFilterFrame extends JFrame {
         endsFilterProcess(filteredList);
     }
 
-    private void filterByHash() {
+    private void filterByHash(List<Merge> list) {
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
-        for (Merge merge : defaultList) {
+        for (Merge merge : list) {
             if (merge.getMerge().getCommitHash().startsWith(hashInput.getText())) {
                 filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
