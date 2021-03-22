@@ -1245,8 +1245,35 @@ public class Git {
             command = "git diff --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
         }
 
+     
+       
         CLIExecution execution = CLIExecute.execute(command, directory);
-        
+         if (!execution.getError().isEmpty() ) {
+             String auxWar1=null;
+             String auxWar2=null;   
+             boolean bool1AuxWarning = false;
+             boolean bool2AuxWarning = false;
+            for (String line : execution.getError()) {
+                    if(line.contains("warning: LF will be replaced by CRLF in")
+                     ){
+                     auxWar1=line;
+                     bool1AuxWarning=true;
+                    }
+                    if(line.contains("The file will have its original line endings in your working directory")){
+                        bool2AuxWarning=true; 
+                       auxWar2=line;
+                    }
+                   }
+            if(bool1AuxWarning)
+            {
+                execution.getError().remove(auxWar1);
+            }
+              if(bool2AuxWarning)
+            {
+                execution.getError().remove(auxWar2);
+            }
+            
+           }
     
         if (!execution.getError().isEmpty() ) {
             for (String line : execution.getError()) {
@@ -1256,6 +1283,8 @@ public class Git {
                     throw new InvalidCommitHash();
                 } else if (line.contains("fatal: Path \\")) {
                     throw new FileNotExistInCommitException("The archive looked upon cannot be found on this merge, maybe the path is exchanged ");
+                }else {
+                    throw new IOException(execution.getError().toString());
                 }
             }
         } else {

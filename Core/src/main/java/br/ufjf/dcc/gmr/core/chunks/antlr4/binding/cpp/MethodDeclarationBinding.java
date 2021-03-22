@@ -13,28 +13,36 @@ import java.util.List;
  *
  * @author ketleen
  */
-public class MethodDeclationBinding extends BaseBinding{
-    
-    private List<String> modifier;
+public class MethodDeclarationBinding extends BaseBinding {
+
+    private String modifier;
     private TypeBinding type;
-    private List<ParametersBinding> parametersBindings;
+    private List<VariableDeclarationBinding> parameters;
     private TypeBinding returnBinding;
     private CPP14Parser.DeclaratorContext ctx;
 
-    public MethodDeclationBinding() {
+    public MethodDeclarationBinding(String modifier, TypeBinding type, List<VariableDeclarationBinding> parameters, TypeBinding returnBinding, CPP14Parser.DeclaratorContext ctx) {
+        this.modifier = modifier;
+        this.type = type;
+        this.parameters = parameters;
+        this.returnBinding = returnBinding;
+        this.ctx = ctx;
+    }
+
+    public MethodDeclarationBinding() {
         super();
-        this.modifier = new ArrayList<>();
+        this.modifier = "";
         this.type = null;
-        this.parametersBindings = new ArrayList<>();
+        this.parameters = new ArrayList<>();
         this.returnBinding = null;
         this.ctx = null;
     }
 
-    public List<String> getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(List<String> modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 
@@ -46,12 +54,12 @@ public class MethodDeclationBinding extends BaseBinding{
         this.type = type;
     }
 
-    public List<ParametersBinding> getParametersBindings() {
-        return parametersBindings;
+    public List<VariableDeclarationBinding> getParametersBindings() {
+        return parameters;
     }
 
-    public void setParametersBindings(List<ParametersBinding> parametersBindings) {
-        this.parametersBindings = parametersBindings;
+    public void setParametersBindings(List<VariableDeclarationBinding> parametersBindings) {
+        this.parameters = parametersBindings;
     }
 
     public TypeBinding getReturnBinding() {
@@ -69,6 +77,10 @@ public class MethodDeclationBinding extends BaseBinding{
     public void setCtx(CPP14Parser.DeclaratorContext ctx) {
         this.ctx = ctx;
     }
-    
-    
+
+   @Override
+    public String toString(){
+        return "metodo: " + this.modifier + " " + this.type.getName() + " " + ctx.getText() + " " 
+                +"\tparametros: " + this.parameters.toString();
+    }
 }

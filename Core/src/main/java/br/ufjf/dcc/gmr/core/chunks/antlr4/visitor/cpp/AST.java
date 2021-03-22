@@ -36,15 +36,23 @@ public class AST {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
-            Visitor3 visitor;
+            //Visitor1 visitor;
+            Visitor2 visitor2 ;
+            Visitor3 visitor3;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Visitor3();
+               // visitor = new Visitor1();
+                visitor2 = new Visitor2();
+                visitor3 = new Visitor3();
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
-                visitor = new Visitor3();
+              //  visitor = new Visitor1();
+                visitor2 = new Visitor2();
+                visitor3 = new Visitor3();
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             }
-            visitor.visit(tree);
+           // visitor.visit(tree);
+            visitor2.visit(tree);
+            visitor3.visit(tree);
             //Imprimir_arvore-------------------------------------------------------
             if (openTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
@@ -52,19 +60,24 @@ public class AST {
             }
             //----------------------------------------------------------------------*/
             System.out.println("============ VARIABLE DECLARATION =============");
-            for (int i = 0; i < visitor.getVariableDeclaration().size(); i++) {
-                System.out.println(visitor.getVariableDeclaration().get(i));
+            for (int i = 0; i < visitor3.getVariableDeclaration().size(); i++) {
+                System.out.println(visitor3.getVariableDeclaration().get(i));
             }
             System.out.println("============ VARIABLE USAGE =============");
-            for (int i = 0; i < visitor.getVariableUsage().size(); i++) {
-                System.out.println(visitor.getVariableUsage().get(i));
+            for (int i = 0; i < visitor3.getVariableUsage().size(); i++) {
+                System.out.println(visitor3.getVariableUsage().get(i));
             }
              System.out.println("============ METHOD CALL =============");
-            for (int i = 0; i < visitor.getMethodCall().size(); i++) {
-                System.out.println(visitor.getMethodCall().get(i));
-                for(int j =0; j<visitor.getMethodCall().get(i).getParameters().size(); j++)
-                    System.out.print(visitor.getMethodCall().get(i).getParameters().get(j)+ "  ");
+            for (int i = 0; i < visitor3.getMethodCall().size(); i++) {
+                System.out.println(visitor3.getMethodCall().get(i));
+                for(int j =0; j<visitor3.getMethodCall().get(i).getParameters().size(); j++)
+                    System.out.print(visitor3.getMethodCall().get(i).getParameters().get(j)+ "  ");
                  System.out.println("");
+            }
+
+            System.out.println("============ METHOD DECLARATION =============");
+            for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
+                System.out.println(visitor2.getMethodDeclaration().get(i));
             }
             return null;
 //            return new ANTLR4Results(visitor.getList(), comments);
@@ -79,7 +92,7 @@ public class AST {
         File file = new File(dir);
         File[] files = file.listFiles();
         for (File file1 : files) {
-            
+
             if (file1.isFile() && file1.getAbsolutePath().endsWith(".cpp") || file1.getAbsolutePath().endsWith(".h")) {
                 cppFiles.add(file1.getAbsolutePath());
             } else if (file1.isDirectory()) {
@@ -91,7 +104,7 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
         analyzeCPPSyntaxTree(path, true);
 
         /*
