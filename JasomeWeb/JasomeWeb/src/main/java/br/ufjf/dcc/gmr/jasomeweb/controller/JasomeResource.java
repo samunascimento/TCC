@@ -13,7 +13,6 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExistInDataBase;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.jasome.model.Login;
@@ -242,10 +241,7 @@ public class JasomeResource {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RepositoryAlreadyExistInDataBase ex) {
-            Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        } 
     }
 
     @POST

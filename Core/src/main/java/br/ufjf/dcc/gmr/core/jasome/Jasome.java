@@ -8,7 +8,6 @@ import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExistInDataBase;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
@@ -73,7 +72,7 @@ public class Jasome {
         return repositoryPath;
     }
 
-    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, RepositoryAlreadyExistInDataBase {
+    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException {
 
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {
