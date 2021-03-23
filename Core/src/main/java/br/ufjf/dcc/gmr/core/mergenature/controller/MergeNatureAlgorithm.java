@@ -409,11 +409,11 @@ public class MergeNatureAlgorithm {
             if (solutionFileWasRenamed) {
                 allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
-                        conflict.getParent1FilePath(), true, contextLines).get(0).getLines();
+                        conflict.getParent1FilePath(), true, 0).get(0).getLines();
             } else {
                 allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
-                        conflict.getParent1FilePath(), true, contextLines).get(0).getLines();
+                        conflict.getParent1FilePath(), true, 0).get(0).getLines();
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             throw new IOException("LocalRepositoryNotAGitRepository was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
@@ -426,11 +426,17 @@ public class MergeNatureAlgorithm {
             throw new IOException();
         }
         List<LineInformation> outsideAlterations = new ArrayList<>();
+        boolean isOutsideAlteration = true;
         for (LineInformation line : allLines) {
+            isOutsideAlteration = true;
             for (IntegerInterval contextInterval : contextIntervals) {
-                if (!(contextInterval.begin > line.getLineNumber() && contextInterval.end < line.getLineNumber())) {
-                    outsideAlterations.add(line);
+                if (contextInterval.begin <= line.getLineNumber() && contextInterval.end > line.getLineNumber()) {
+                    isOutsideAlteration = false;
+                    break;
                 }
+            }
+            if(isOutsideAlteration){
+                outsideAlterations.add(line);
             }
         }
         if (outsideAlterations.isEmpty()) {

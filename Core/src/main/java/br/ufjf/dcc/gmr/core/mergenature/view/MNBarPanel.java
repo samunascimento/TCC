@@ -26,6 +26,7 @@ public class MNBarPanel extends JPanel implements Runnable {
     public MNBarPanel(String repositoryPath, int contextLines, boolean ignoreFormatting) {
         this.repositoryLocation = repositoryPath.replace("\\", "/");
         this.contextLines = contextLines;
+        this.ignoreFormatting = ignoreFormatting;
         set();
     }
 

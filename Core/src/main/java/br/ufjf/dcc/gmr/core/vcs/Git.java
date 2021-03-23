@@ -1317,7 +1317,6 @@ public class Git {
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                     String c = line.substring(1);
                     aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
-                    currentLine++;
                 } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                     currentLine = startingLine(line);
                 }
