@@ -39,6 +39,18 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text, warning));
     }
 
+     public void specialProcess(ParserRuleContext ctx, String newType) {
+
+        //Getting structure type
+        String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
+        aux = aux[aux.length - 1].split("\\(");
+
+        //Adding text
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");;
+        //Adding in list
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText, warning));
+
+    }
     @Override
     public Object visitCompilation_unit(CSharpParser.Compilation_unitContext ctx) {
         //process(ctx);
@@ -54,7 +66,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitType_(CSharpParser.Type_Context ctx) {
        // process(ctx);
-        return visitChildren(ctx);
+       return visitChildren(ctx);
     }
 
     @Override
@@ -1675,8 +1687,5 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         process(ctx);
         return visitChildren(ctx);
     }
-
-      
-    
-
+   
 }

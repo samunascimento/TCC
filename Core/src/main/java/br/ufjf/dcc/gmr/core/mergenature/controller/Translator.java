@@ -51,7 +51,7 @@ public class Translator {
                 list.remove("ElementValueArrayInitializer");
                 list.remove("ArrayCreationExpression");
                 list.remove("ArrayType");
-                
+
             }
             if (list.contains("ArrayAccess")
                     || list.contains("ArrayAccess_lf_primary")
@@ -60,7 +60,7 @@ public class Translator {
                 list.remove("ArrayAccess");
                 list.remove("ArrayAccess_lf_primary");
                 list.remove("ArrayAccess_lfno_primary");
-                
+
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -757,7 +757,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-                     if (list.contains("Variable!")) {
+            if (list.contains("Variable!")) {
                 mainList.add(LanguageConstructsTypes.VARIABLE);
                 list.remove("Variable");
             }
@@ -790,7 +790,6 @@ public class Translator {
         return mainList;
     }
 
-    
     /* TO DO
     * Verificar static
     * Ajustar cast
@@ -804,21 +803,21 @@ public class Translator {
             mainList.add("Extension not parseble!");
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // There is no equivalent of Java annotation on the c# grammar, all the structures that had close structures have a much bigger scope
+            // There is no equivalent of Java annotation on the c# grammar, all the structures that had close structures have a much bigger scope
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array_initializer")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
                 list.remove("Array_initializer");
             }
-           /* if (list.contains("")
+            /* if (list.contains("")
                     || list.contains("")
                     || list.contains("")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
                 list.remove("");
             }
                        
-            */
+             */
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Assert on c# does not work as an language structure
@@ -845,7 +844,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Switch_label")
-                || list.contains("Switch_section")) {
+                    || list.contains("Switch_section")) {
                 mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
                 list.remove("Switch_section");
                 list.remove("Switch_label");
@@ -861,7 +860,7 @@ public class Translator {
             if (list.contains("Catch_clauses")
                     || list.contains("Specific_catch_clause")
                     || list.contains("General_catch_clause")
-                     || list.contains("Specific_catch_clause_no_block")) {
+                    || list.contains("Specific_catch_clause_no_block")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
                 list.remove("Catch_clauses");
                 list.remove("Specific_catch_clause");
@@ -896,7 +895,7 @@ public class Translator {
             if (list.contains("Enum_definition")) {
                 mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
                 list.remove("Enum_definition");
-            }            
+            }
             if (list.contains("Enum_signature")) {
                 mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
                 list.remove("Enum_signature");
@@ -921,8 +920,8 @@ public class Translator {
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ForStatement")
                     || list.contains("ForeachStatement")
-                     || list.contains("Foreach_expression")
-                     || list.contains("For_expression")) {
+                    || list.contains("Foreach_expression")
+                    || list.contains("For_expression")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("ForStatement");
                 list.remove("ForeachStatement");
@@ -933,35 +932,34 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("If_expression")
-                    || list.contains("If_Statement") ) {
+                    || list.contains("If_Statement")) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
                 list.remove("If_expression");
                 list.remove("If_Statement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            
+
             //on c# we're going to use the "using" structure because it is the closest to the other languagens imports
-            
-             if (list.contains("UsingAliasDirective")
-                     ||list.contains("UsingAliasDirective")
-                     ||list.contains("UsingAliasDirective")
-                     ||list.contains("Using_directive")
-                     ||list.contains("UsingStaticDirective")) {
+            if (list.contains("UsingAliasDirective")
+                    || list.contains("UsingAliasDirective")
+                    || list.contains("UsingAliasDirective")
+                    || list.contains("Using_directive")
+                    || list.contains("UsingStaticDirective")) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
                 list.remove("Interface_definition");
                 list.remove("Interface_definition");
                 list.remove("Interface_definition");
                 list.remove("Using_directive");
                 list.remove("UsingStaticDirective");
-            
-             }
+
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Interface_definition")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
                 list.remove("Interface_definition");
-            } 
+            }
             if (list.contains("Interface_signature")) {
                 mainList.add(LanguageConstructsTypes.INTERFACE_SIGNATURE);
                 list.remove("Interface_signature");
@@ -981,7 +979,7 @@ public class Translator {
                 list.remove("Interface_member_declaration");
             }
             if (list.contains("Method_invocation")
-                || list.contains("Member_access")) {
+                    || list.contains("Member_access")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("Method_invocation");
                 list.remove("Member_access");
@@ -990,13 +988,25 @@ public class Translator {
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // There is no package estructure on c#
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //Pointer+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Pointer_type")
+                    || list.contains("Fixed_pointer_declarators")
+                    || list.contains("Fixed_pointer_declarator")
+                    || list.contains("Fixed_pointer_initializer")) {
+                mainList.add(LanguageConstructsTypes.POINTER);
+                list.remove("Pointer_type");
+                list.remove("Fixed_pointer_declarators");
+                list.remove("Fixed_pointer_declarator");
+                list.remove("Fixed_pointer_initializer");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ReturnStatement")) {
                 mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
                 list.remove("ReturnStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("")) {
                 mainList.add(LanguageConstructsTypes.STATIC_INITIALIZER);
                 list.remove("");
@@ -1027,7 +1037,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("TryStatement")
-                || list.contains("Try_expression")) {
+                    || list.contains("Try_expression")) {
                 mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
                 list.remove("TryStatement");
                 list.remove("Try_expression");
@@ -1052,7 +1062,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("WhileStatement")
-                || list.contains("While_expression")    ) {
+                    || list.contains("While_expression")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
                 list.remove("WhileStatement");
                 list.remove("While_expression");
