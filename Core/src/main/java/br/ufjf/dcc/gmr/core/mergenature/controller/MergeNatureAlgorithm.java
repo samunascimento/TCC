@@ -18,8 +18,8 @@ import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
+import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JProgressBar;
-import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The main algorithm of merge nature, its function is catch all merges, all
@@ -41,24 +38,26 @@ import java.util.logging.Logger;
  */
 public class MergeNatureAlgorithm {
 
-    private final static DecimalFormat df2 = new DecimalFormat("#.##");
     private String repositoryLocation;
     private int contextLines;
     private Project project;
+    private boolean ignoreFormatting;
     private JProgressBar progressBar;
 
     private boolean solutionFileWasRenamed;
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
+    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, boolean ignoreFormatting) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
+        this.ignoreFormatting = ignoreFormatting;
         this.project = null;
         this.progressBar = null;
     }
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, JProgressBar progressBar) {
+    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, boolean ignoreFormatting, JProgressBar progressBar) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
+        this.ignoreFormatting = ignoreFormatting;
         this.project = null;
         this.progressBar = progressBar;
     }
@@ -405,17 +404,16 @@ public class MergeNatureAlgorithm {
     }
 
     private boolean outsideAlterationsLayer(Conflict conflict, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
-        boolean insideOfConflict = false;
-        List<FileDiff> fileDiffs;
+        List<LineInformation> allLines;
         try {
             if (solutionFileWasRenamed) {
-                fileDiffs = Git.diff(repositoryPath,
+                allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
-                        conflict.getParent1FilePath(), true, contextLines);
+                        conflict.getParent1FilePath(), true, contextLines).get(0).getLines();
             } else {
-                fileDiffs = Git.diff(repositoryPath,
+                allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
-                        conflict.getParent1FilePath(), true, contextLines);
+                        conflict.getParent1FilePath(), true, contextLines).get(0).getLines();
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             throw new IOException("LocalRepositoryNotAGitRepository was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
@@ -424,24 +422,56 @@ public class MergeNatureAlgorithm {
             throw new IOException("InvalidCommitHash was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
                     + "This error probably (no certainty) occur because the version of the file in the solution has drastically, changed something like renaming or deletion,\n"
                     + "so this cannot occur here otherwise it would already happened.");
-        } catch (FileNotExistInCommitException ex) { 
-           throw new IOException();
+        } catch (FileNotExistInCommitException ex) {
+            throw new IOException();
         }
-        for (FileDiff fileDiff : fileDiffs) {
-            for (LineInformation line : fileDiff.getLines()) {
-                insideOfConflict = false;
-                for (IntegerInterval contextInterval : contextIntervals) {
-                    if(contextInterval.begin < line.getLineNumber() && contextInterval.end > line.getLineNumber()){
-                        insideOfConflict = true;
-                        break;
-                    }
-                }
-                if(!insideOfConflict){
-                    return true;
+        List<LineInformation> outsideAlterations = new ArrayList<>();
+        for (LineInformation line : allLines) {
+            for (IntegerInterval contextInterval : contextIntervals) {
+                if (!(contextInterval.begin > line.getLineNumber() && contextInterval.end < line.getLineNumber())) {
+                    outsideAlterations.add(line);
                 }
             }
         }
-        return false;
+        if (outsideAlterations.isEmpty()) {
+            return false;
+        } else if (!ignoreFormatting) {
+            return true;
+        } else {
+            List<String> addeds = new ArrayList<>();
+            List<String> removeds = new ArrayList<>();
+            for (LineInformation line : outsideAlterations) {
+                if (!line.getContent().equals("")) {
+                    if (line.getType() == LineType.ADDED) {
+                        addeds.add(line.getContent().replaceAll(" ", "").replaceAll("\t", ""));
+                    } else {
+                        removeds.add(line.getContent().replaceAll(" ", "").replaceAll("\t", ""));
+                    }
+                }
+            }
+            if (addeds.size() != removeds.size()) {
+                return true;
+            } else {
+                String toRemove = null;
+                boolean isNotFormatting = true;
+                for (String removed : removeds) {
+                    isNotFormatting = true;
+                    for (String added : addeds) {
+                        if (removed.equals(added)) {
+                            toRemove = added;
+                            isNotFormatting = false;
+                            break;
+                        }
+                    }
+                    if (isNotFormatting) {
+                        return true;
+                    } else {
+                        addeds.remove(toRemove);
+                    }
+                }
+                return false;
+            }
+        }
     }
 
     private Conflict antlr4Layer(Conflict conflict, String repositoryPath) throws IOException, OutOfMemoryError {
