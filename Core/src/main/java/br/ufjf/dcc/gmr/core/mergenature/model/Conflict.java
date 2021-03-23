@@ -19,6 +19,7 @@ public class Conflict {
     private List<ConflictRegion> conflictRegions;
     private ConflictType conflictType;
     private boolean hasOutsideAlterations;
+    private boolean hasOutsideAlterationsIgnoringFormatting;
     private transient Merge merge;
 
     /**
@@ -33,9 +34,12 @@ public class Conflict {
      * @param conflictType The type of conflict
      * @param hasOutsideAlterations Indicates if the developer who made the
      * merge did alterations outside of any conflict
+     * @param hasOutsideAlterationsIgnoringFormatting Indicates if the developer
+     * who made the merge did alterations that is not formatting outside of any
+     * conflict
      * @param merge The merge that the conflict belongs
      */
-    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, Merge merge) {
+    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.id = id;
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
@@ -43,6 +47,7 @@ public class Conflict {
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
+        this.hasOutsideAlterationsIgnoringFormatting = this.hasOutsideAlterationsIgnoringFormatting;
         this.merge = merge;
     }
 
@@ -177,6 +182,14 @@ public class Conflict {
         this.hasOutsideAlterations = hasOutsideAlterations;
     }
 
+    public boolean hasOutsideAlterationsIgnoringFormatting() {
+        return hasOutsideAlterationsIgnoringFormatting;
+    }
+
+    public void setHasOutsideAlterationsIgnoringFormatting(boolean hasOutsideAlterationsIgnoringFormatting) {
+        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
+    }
+
     public Merge getMerge() {
         return merge;
     }
@@ -187,22 +200,22 @@ public class Conflict {
 
     @Override
     public String toString() {
-        if (hasOutsideAlterations) {
-            return "Parent 1's file: " + getParent1FilePath()
-                    + "\nParent 2's file: " + getParent2FilePath()
-                    + "\nAncestor's file: " + getAncestorFilePath()
-                    + "\nConflict Type: " + conflictType.toString()
-                    + "\nConflict Regions: " + conflictRegions.size()
-                    + "\nHas Outside Alterations: YES";
+        String result = "Parent 1's file: " + getParent1FilePath()
+                + "\nParent 2's file: " + getParent2FilePath()
+                + "\nAncestor's file: " + getAncestorFilePath()
+                + "\nConflict Type: " + conflictType.toString()
+                + "\nConflict Regions: " + conflictRegions.size();
+        if(hasOutsideAlterations){
+            result = result + "\nHas Outside Alterations: YES";
         } else {
-            return "Parent 1's file: " + getParent1FilePath()
-                    + "\nParent 2's file: " + getParent2FilePath()
-                    + "\nAncestor's file: " + getAncestorFilePath()
-                    + "\nConflict Type: " + conflictType.toString()
-                    + "\nConflict Regions: " + conflictRegions.size()
-                    + "\nHas Outside Alterations: NO";
+            result = result + "\nHas Outside Alterations: NO";
         }
-
+        if(hasOutsideAlterationsIgnoringFormatting){
+            result = result + "\nHas Outside Alterations Ignoring Formatting: YES";
+        } else {
+            result = result + "\nHas Outside Alterations Ignoring Formatting: NO";
+        }
+        return result;
     }
 
 }

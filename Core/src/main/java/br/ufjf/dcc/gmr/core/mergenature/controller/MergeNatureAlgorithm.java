@@ -41,15 +41,13 @@ public class MergeNatureAlgorithm {
     private String repositoryLocation;
     private int contextLines;
     private Project project;
-    private boolean ignoreFormatting;
     private JProgressBar progressBar;
 
     private boolean solutionFileWasRenamed;
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, boolean ignoreFormatting) {
+    public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
-        this.ignoreFormatting = ignoreFormatting;
         this.project = null;
         this.progressBar = null;
     }
@@ -57,7 +55,6 @@ public class MergeNatureAlgorithm {
     public MergeNatureAlgorithm(String repositoryLocation, int contextLines, boolean ignoreFormatting, JProgressBar progressBar) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
-        this.ignoreFormatting = ignoreFormatting;
         this.project = null;
         this.progressBar = progressBar;
     }
@@ -196,9 +193,10 @@ public class MergeNatureAlgorithm {
             List<IntegerInterval> contextIntervals = new ArrayList<>();
             conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(repositoryPath + conflict.getParent1FilePath()), repositoryPath, contextIntervals));
             if (contextIntervals != null) {
-                conflict.setHasOutsideAlterations(outsideAlterationsLayer(conflict, repositoryPath, contextIntervals));
+                conflict = outsideAlterationsLayer(conflict, repositoryPath, contextIntervals);
             } else {
                 conflict.setHasOutsideAlterations(true);
+                conflict.setHasOutsideAlterationsIgnoringFormatting(true);
             }
         }
         if (!conflict.getConflictRegions().isEmpty()) {
@@ -403,7 +401,7 @@ public class MergeNatureAlgorithm {
 
     }
 
-    private boolean outsideAlterationsLayer(Conflict conflict, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
+    private Conflict outsideAlterationsLayer(Conflict conflict, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
         List<LineInformation> allLines;
         try {
             if (solutionFileWasRenamed) {
@@ -435,15 +433,16 @@ public class MergeNatureAlgorithm {
                     break;
                 }
             }
-            if(isOutsideAlteration){
+            if (isOutsideAlteration) {
                 outsideAlterations.add(line);
             }
         }
         if (outsideAlterations.isEmpty()) {
-            return false;
-        } else if (!ignoreFormatting) {
-            return true;
+            conflict.setHasOutsideAlterations(false);
+            conflict.setHasOutsideAlterationsIgnoringFormatting(false);
+            return conflict;
         } else {
+            conflict.setHasOutsideAlterations(true);
             List<String> addeds = new ArrayList<>();
             List<String> removeds = new ArrayList<>();
             for (LineInformation line : outsideAlterations) {
@@ -456,27 +455,17 @@ public class MergeNatureAlgorithm {
                 }
             }
             if (addeds.size() != removeds.size()) {
-                return true;
+                conflict.setHasOutsideAlterationsIgnoringFormatting(true);
             } else {
-                String toRemove = null;
-                boolean isNotFormatting = true;
-                for (String removed : removeds) {
-                    isNotFormatting = true;
-                    for (String added : addeds) {
-                        if (removed.equals(added)) {
-                            toRemove = added;
-                            isNotFormatting = false;
-                            break;
-                        }
-                    }
-                    if (isNotFormatting) {
-                        return true;
-                    } else {
-                        addeds.remove(toRemove);
+                for (int i = 0; i < addeds.size(); i++) {
+                    if (!addeds.get(i).equals(removeds.get(i))) {
+                        conflict.setHasOutsideAlterationsIgnoringFormatting(true);
+                        return conflict;
                     }
                 }
-                return false;
+                conflict.setHasOutsideAlterationsIgnoringFormatting(false);
             }
+            return conflict;
         }
     }
 
