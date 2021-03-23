@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,11 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
@@ -49,6 +46,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.LINE_START;
 
         JLabel conflictLabel = new JLabel("Conflict Region");
         conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
@@ -92,14 +90,6 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.NONE;
         this.add(altenativeView, gbc);
-
-        JPanel lateralAjust = new JPanel();
-        lateralAjust.setOpaque(false);
-        gbc.gridx = 1;
-        gbc.gridwidth = 3;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        this.add(lateralAjust, gbc);
 
         JPanel conflictPanel = getConflictTextArea(this.region);
         gbc.gridx = 0;

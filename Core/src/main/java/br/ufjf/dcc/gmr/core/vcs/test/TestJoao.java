@@ -1,5 +1,10 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
+import java.util.List;
+
 /**
  *
  * @author gleiph
@@ -7,11 +12,12 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 public class TestJoao {
 
     public static void main(String[] args) throws Exception {
-
-        /*MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm("/home/joao_lima/Git/Cobaia/", 1);
-        algorithm.startAlgorithm();
-        System.out.println("");*/
-
+        List<FileDiff> list = Git.diff("/home/joao_lima/Git/testRepository", "8ccc995:file.txt", "file.txt", true, 0);
+        for (FileDiff fileDiff : list) {
+            for (LineInformation line : fileDiff.getLines()) {
+                System.out.println(line);
+            }
+        }
     }
 
 }

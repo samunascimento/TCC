@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -32,6 +33,7 @@ public class MNInputPanel extends JPanel {
     private JLabel contextLabel;
     private JComboBox contextBox;
     private JButton analyseButton;
+    private JCheckBox ignoreFormatting;
 
     public MNInputPanel(MNHome home) {
         this.home = home;
@@ -64,7 +66,7 @@ public class MNInputPanel extends JPanel {
         pathField.setPreferredSize(new Dimension(150, 35));
         pathField.setMargin(new Insets(0, 10, 0, 10));
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 3;
         gbc.weightx = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -82,17 +84,23 @@ public class MNInputPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 2;
         this.add(findButton, gbc);
+        
+        ignoreFormatting = new JCheckBox("Ignore Formatting");
+        ignoreFormatting.setOpaque(false);
+        ignoreFormatting.setForeground(MNFrame.SECUNDARY_COLOR);
+        gbc.gridx = 1;
+        this.add(ignoreFormatting, gbc);
 
         contextLabel = new JLabel("Number of Context Lines");
         contextLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         contextLabel.setPreferredSize(new Dimension(200, 20));
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 0;
         this.add(contextLabel, gbc);
 
         contextBox = new JComboBox(new String[]{"1 Line", "2 Lines", "3 Lines", "4 Lines", "5 Lines"});
         contextBox.setPreferredSize(new Dimension(200, 35));
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 1;
         this.add(contextBox, gbc);
 
@@ -101,7 +109,7 @@ public class MNInputPanel extends JPanel {
         analyseButton.addActionListener((ActionEvent evt) -> {
             analyse();
         });
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 2;
         this.add(analyseButton, gbc);
 
@@ -123,7 +131,7 @@ public class MNInputPanel extends JPanel {
             if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(pathField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 new Thread() {
                     public void run() {
-                        home.getFrame().analyseThread(pathField.getText(), getProjectName(pathField.getText()), contextBox.getSelectedIndex() + 1);
+                        home.getFrame().analyseThread(pathField.getText(), getProjectName(pathField.getText()), contextBox.getSelectedIndex() + 1, ignoreFormatting.isSelected());
                     }
                 }.start();
             }

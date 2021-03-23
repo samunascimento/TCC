@@ -25,7 +25,7 @@ export default class extends Component{
         return cipher.update(senha, 'utf8', 'hex');
     }
 
-    onSubmit(){
+    onSubmit(){    
         if(this.state.user === '' || this.state.pass === '')
             alert("Há campos vazios.")
         else {
@@ -35,20 +35,20 @@ export default class extends Component{
                     alert("Usuário inexistente.")
                 else{
                     let password =  this.cryptoPassword(this.state.pass)
-                    fetch(`/login`, {
-                        method: 'GET',
+                    axios.get(`/login`, {
                         headers: { 'user': this.state.user, 'pass': password}
                     }).then((data) => {
-                        if(data.data === false)
-                            alert("Senha incorreta.")
-                        else{
+                        if(data.data === true){
                             alert('Login efetuado.')
                             ReactDOM.render(<App />, document.getElementById('root'));
                         }
+                        else
+                            alert("Senha incorreta.")
                     })
                 }
             })
         }
+
     }
 
     render(){

@@ -2,14 +2,12 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.UIManager;
 
 /**
  * The bar panel
@@ -23,8 +21,9 @@ public class MNBarPanel extends JPanel implements Runnable {
     private final String repositoryLocation;
     private final int contextLines;
     private Project project;
+    private boolean ignoreFormatting;
 
-    public MNBarPanel(String repositoryPath, int contextLines) {
+    public MNBarPanel(String repositoryPath, int contextLines, boolean ignoreFormatting) {
         this.repositoryLocation = repositoryPath.replace("\\", "/");
         this.contextLines = contextLines;
         set();
@@ -57,7 +56,7 @@ public class MNBarPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, progressBar);
+        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, ignoreFormatting);
         algorithm.startAlgorithm();
         this.project = algorithm.getProject();
     }

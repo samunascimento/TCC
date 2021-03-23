@@ -13,7 +13,6 @@ import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExistInDataBase;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.jasome.model.Login;
@@ -242,10 +241,7 @@ public class JasomeResource {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RepositoryAlreadyExistInDataBase ex) {
-            Logger.getLogger(JasomeResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        } 
     }
 
     @POST
@@ -271,6 +267,7 @@ public class JasomeResource {
     public void putJson(String content) {
     }
     
+    //VERIFICAR SE O USUARIO ESTA REGISTRADO
     @GET
     @Path("insert/login/get/{user}")
     public boolean isUserRegistered(@PathParam("user") String user) throws SQLException {
@@ -286,6 +283,7 @@ public class JasomeResource {
         return isUserIn;
     }
     
+    //RECUPERAR O ID DO USUÁRIO
     @GET
     @Path("insert/login/getData/{user}")
     public int getUserId(@PathParam("user") String user) throws SQLException {
@@ -306,12 +304,13 @@ public class JasomeResource {
         return result;
     }
     
+    //ACESSO AO LOGIN
     @GET
     @Path("/login")
     public boolean enterSystem(@HeaderParam("user") String user, @HeaderParam("pass") String pass) throws SQLException {
         Connection connection = ConnectionFactory.getConnection();
         LoginDao dao = new LoginDao(connection);
-        boolean acess = dao.enterSystem(user, pass);
+        boolean acess = dao.getAcessLogin(user,pass);
         connection.close();
         return acess;
     }
