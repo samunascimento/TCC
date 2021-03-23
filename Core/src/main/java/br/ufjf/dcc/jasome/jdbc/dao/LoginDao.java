@@ -52,12 +52,9 @@ public class LoginDao {
         }
     }
     
-    public List<Login> select() throws SQLException {
-        List<Login> listLogin = new ArrayList<>();
-        Login login = new Login();
-
-        String sql = "SELECT * FROM tb_login ";
-
+    public boolean getAcessLogin(String userData, String passData) throws SQLException {
+        String sql = "SELECT pass FROM tb_login WHERE login='"+userData+"'";
+ 
         ResultSet resultSet = null;
 
         PreparedStatement stmt = null;
@@ -65,18 +62,13 @@ public class LoginDao {
             stmt = connection.prepareStatement(sql);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                login = new Login();
-                int id = resultSet.getInt("id");
-                String user = resultSet.getString("user");
                 String pass = resultSet.getString("pass");
-                String type = resultSet.getString("type");
-                login.setId(id);
-                login.setUser(user);
-                login.setPass(pass);
-                login.setType(type);
-                listLogin.add(login);
+                System.out.println(pass);
+                if(passData.equals(pass)){
+                    System.out.println(passData+""+pass);
+                    return true;
+                }
             }
-            return listLogin;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -84,6 +76,7 @@ public class LoginDao {
                 stmt.close();
             }
         }
+        return false;
     }
 
     public Login selectID(int id) throws SQLException {
@@ -156,32 +149,6 @@ public class LoginDao {
                 id = resultSet.getInt("id");
             }
             return id;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-        }
-    }
-    
-    public boolean enterSystem(String user, String pass) throws SQLException {
-        String sql = "SELECT login, pass FROM tb_login where login='"+user+"'";
-        ResultSet resultSet = null;
-        String login = "";
-        String password = "";
-        PreparedStatement stmt = null;
-        try {
-            stmt = connection.prepareStatement(sql);
-            resultSet = stmt.executeQuery();
-            while (resultSet.next()) {
-                login = resultSet.getString("login");
-                password = resultSet.getString("pass");
-                if(user.equals(login) && password.equals(pass)){
-                    return true;
-                }
-            }
-            return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
