@@ -11,13 +11,11 @@ import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 public class Dependency {
     private ConflictChunk chunk1;
     private ConflictChunk chunk2;
-    private String label;
     private DependencyType type;
 
-    public Dependency(ConflictChunk chunk1, ConflictChunk chunk2, String label, DependencyType type) {
+    public Dependency(ConflictChunk chunk1, ConflictChunk chunk2, DependencyType type) {
         this.chunk1 = chunk1;
         this.chunk2 = chunk2;
-        this.label = label;
         this.type = type;
     }
 
@@ -43,14 +41,6 @@ public class Dependency {
 
     public void setChunk2(ConflictChunk chunk2) {
         this.chunk2 = chunk2;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
     }
     
 }
