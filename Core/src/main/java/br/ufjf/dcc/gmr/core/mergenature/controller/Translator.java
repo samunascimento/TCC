@@ -806,9 +806,11 @@ public class Translator {
             // There is no equivalent of Java annotation on the c# grammar, all the structures that had close structures have a much bigger scope
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Array_initializer")) {
+            if (list.contains("Array_initializer")
+                || list.contains("Array")    ) {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
                 list.remove("Array_initializer");
+                list.remove("Array");
             }
             /* if (list.contains("")
                     || list.contains("")
@@ -974,9 +976,9 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("Method_signature");
             }
-            if (list.contains("Interface_member_declaration")) {
+            if (list.contains("MethodInterface")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
-                list.remove("Interface_member_declaration");
+                list.remove("MethodInterface");
             }
             if (list.contains("Method_invocation")
                     || list.contains("Member_access")) {
@@ -1007,10 +1009,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("")) {
-                mainList.add(LanguageConstructsTypes.STATIC_INITIALIZER);
-                list.remove("");
-            }
+                //None
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")

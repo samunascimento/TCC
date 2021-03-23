@@ -12,6 +12,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
     private boolean warning;
+    private boolean isInterface;
 
     public List<SyntaxStructure> getList() {
         return list;
@@ -20,6 +21,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     public CSVisitor(boolean warning) {
         list = new ArrayList<>();
         this.warning = warning;
+        this.isInterface = false;
     }
 
     public void process(ParserRuleContext ctx) {
@@ -32,6 +34,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
         //Adding in list
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+
     }
 
     public void process(ParserRuleContext ctx, String outsiderType, String text) {
@@ -39,7 +42,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text, warning));
     }
 
-     public void specialProcess(ParserRuleContext ctx, String newType) {
+    public void specialProcess(ParserRuleContext ctx, String newType) {
 
         //Getting structure type
         String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
@@ -51,6 +54,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText, warning));
 
     }
+
     @Override
     public Object visitCompilation_unit(CSharpParser.Compilation_unitContext ctx) {
         //process(ctx);
@@ -65,8 +69,8 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitType_(CSharpParser.Type_Context ctx) {
-       // process(ctx);
-       return visitChildren(ctx);
+        // process(ctx);
+        return visitChildren(ctx);
     }
 
     @Override
@@ -138,7 +142,6 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitExpression(CSharpParser.ExpressionContext ctx) {
         // process(ctx);
-        System.out.println(ctx.getText());
         return visitChildren(ctx);
     }
 
@@ -150,7 +153,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitAssignment(CSharpParser.AssignmentContext ctx) {
-       process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -259,8 +262,6 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitUnary_expression(CSharpParser.Unary_expressionContext ctx) {
         //  process(ctx);
-        
-        
         return visitChildren(ctx);
     }
 
@@ -660,8 +661,6 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         return visitChildren(ctx);
     }
 
-  
-
     @Override
     public Object visitSwitchStatement(CSharpParser.SwitchStatementContext ctx) {
         process(ctx);
@@ -778,7 +777,17 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocal_variable_declaration(CSharpParser.Local_variable_declarationContext ctx) {
-        process(ctx);
+
+        try {
+            if (ctx.local_variable_type().type_().rank_specifier().get(0).getText().equals("[]")) {
+                specialProcess(ctx, "Array");
+            }else{
+                 process(ctx);
+            }
+                
+        } catch (NullPointerException ex) {
+        }
+       
         return visitChildren(ctx);
     }
 
@@ -886,7 +895,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespace_declaration(CSharpParser.Namespace_declarationContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -898,7 +907,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespace_body(CSharpParser.Namespace_bodyContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -916,7 +925,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitUsing_directives(CSharpParser.Using_directivesContext ctx) {
-       // process(ctx);
+        // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -952,7 +961,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitType_declaration(CSharpParser.Type_declarationContext ctx) {
-      //  process(ctx);
+        //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1030,7 +1039,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitClass_member_declarations(CSharpParser.Class_member_declarationsContext ctx) {
-      //  process(ctx);
+        //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1481,7 +1490,10 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitInterface_definition(CSharpParser.Interface_definitionContext ctx) {
         process(ctx);
-        return visitChildren(ctx);
+        this.isInterface = true;
+        Object children = visitChildren(ctx);
+        this.isInterface = false;
+        return children;
     }
 
     @Override
@@ -1540,6 +1552,12 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethod_declaration(CSharpParser.Method_declarationContext ctx) {
+
+        if (this.isInterface) {
+
+            specialProcess(ctx, "MethodInterface");
+
+        }
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1585,7 +1603,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         process(ctx);
         return visitChildren(ctx);
     }
-   
+
     @Override
     public Object visitInterface_signature(CSharpParser.Interface_signatureContext ctx) {
         process(ctx);
@@ -1599,7 +1617,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitClass_signature(CSharpParser.Class_signatureContext ctx)  {
+    public Object visitClass_signature(CSharpParser.Class_signatureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1683,9 +1701,9 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitCast(CSharpParser.CastContext ctx){
+    public Object visitCast(CSharpParser.CastContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
-   
+
 }
