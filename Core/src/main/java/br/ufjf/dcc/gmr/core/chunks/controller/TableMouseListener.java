@@ -35,7 +35,7 @@ public class TableMouseListener extends MouseAdapter {
         ParserJava parserJava = new ParserJava(version, this.view.getProject().getPath());
         String[] args = null;
         try {
-            parserJava.main(args);
+            parserJava.main();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

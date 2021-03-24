@@ -36,7 +36,7 @@ public class Main {
         Main.dependencyMatrix = new DependencyMatrix(conflictChunkList.size());
     }
 
-    public static void main(String[] args) {
+    public static void main() {
         Graph<Vertex, Edge> graph = new DirectedSparseMultigraph<>();
         addGraphVertices(graph);
         addEdges(graph);

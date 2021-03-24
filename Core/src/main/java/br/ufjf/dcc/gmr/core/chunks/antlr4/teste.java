@@ -32,17 +32,26 @@ import java.util.logging.Logger;
 
 public class teste {
 
-    private static String projectPath = "D:/lorsource";
+    private static String projectPath = "";
 
     public static void main(String[] args) throws RepositoryNotFound, ParseException, Exception {
-
-        Version version = start();
-
-        ParserJava parserJava = new ParserJava(version, teste.projectPath);
-
-        String[] arg = null;
-        ParserJava.main(arg);
-
+        String[] projects = {"D:/projects/SAIM", "D:/projects/modeler", "D:/projects/spring-data-neo4j",
+                "D:/projects/fongo", "D:/projects/pojobuilder", "D:/projects/Phenex", "D:/projects/OpenMEAP"};
+        String[] sha = {"044a3c", "0587bc", "042b1d", "0033c8", "09b977", "0985bf", "0af9d5"};
+        List<Version> versions = new ArrayList<>();
+        try {
+            int i = 1;
+            //for (int i = 0; i < projects.length; i++) {
+                projectPath = projects[i];
+                System.out.println("Running project: " + projectPath);
+                Version version = start(sha[i]);
+                versions.add(version);
+                ParserJava parserJava = new ParserJava(version, projectPath);
+                ParserJava.main();
+            //}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private static List<ConflictChunk> createConflictChunksList(String filePath) {
@@ -143,17 +152,15 @@ public class teste {
         return result;
     }
 
-    public static Version start() throws RepositoryNotFound, ParseException {
+    public static Version start(String sha) throws RepositoryNotFound, ParseException, OptionNotExist, LocalRepositoryNotAGitRepository, IOException {
 
         Project result = new Project();
         result.setPath(teste.projectPath);
 
         Version version = new Version();
-        version.setSHA("159d31");
+        version.setSHA(sha);
 
-        List<String> parent = new ArrayList<>();
-        parent.add("3ff364c28");
-        parent.add("9170a3528");
+        List<String> parent = Git.parent(projectPath, sha);
         version.setParent(parent);
 
         try {

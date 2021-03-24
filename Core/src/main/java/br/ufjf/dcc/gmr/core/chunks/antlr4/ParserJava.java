@@ -64,7 +64,7 @@ public class ParserJava {
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main() throws Exception {
         //Definindo os arquivos com conflitos
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
@@ -77,7 +77,7 @@ public class ParserJava {
 
         createConflictChunkList();
 
-        createJungGraph(parent1, parent2, conflictChunkList, args);
+        createJungGraph(parent1, parent2, conflictChunkList);
     }
 
     private static void createConflictChunkList() throws IOException {
@@ -190,9 +190,9 @@ public class ParserJava {
 
     }
 
-    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args) {
+    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList) {
         Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
-        jung.main(args);
+        jung.main();
         File dirParent = new File("/Documentos/projetos/sandbox/");
 
         try {
@@ -431,9 +431,9 @@ public class ParserJava {
                 JavaParser parser = new JavaParser(tokens);
                 ParseTree tree = parser.compilationUnit();
 
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.setSize(new Dimension(500, 600));
-                viewer.open();
+                //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                //viewer.setSize(new Dimension(500, 600));
+                //viewer.open();
                 Visitor1 visitor = new Visitor1(globalEnviroment);
 
                 visitor.visit(tree);
@@ -456,8 +456,9 @@ public class ParserJava {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.setSize(new Dimension(500, 600));
+            //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            //viewer.setSize(new Dimension(500, 600));
+            //viewer.open();
 
             Visitor2 visitor = new Visitor2(globalEnviroment);
 
@@ -475,9 +476,10 @@ public class ParserJava {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.setSize(new Dimension(500, 600));
-
+            //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            //viewer.setSize(new Dimension(500, 600));
+            //viewer.open();
+            
             Visitor3 visitor = new Visitor3(globalEnviroment);
 
             visitor.visit(tree);
