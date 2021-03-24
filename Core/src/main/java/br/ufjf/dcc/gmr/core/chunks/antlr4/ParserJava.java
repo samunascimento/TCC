@@ -133,27 +133,15 @@ public class ParserJava {
     }
 
     private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
-        
-        if(targetFile.equals("/home/felipepe/Documentos/projetos/bolsa/Core/sandboxparent2/src/ru/org/linux/util/HTMLFormatterTest.java")){
-        System.out.println("");
-    }
-        int result[] = new int[2];
-        result[0] = 0;
-        result[1] = 0;
+        int result[] = {0,0};
         
         int preContext = 0;
         int posContext = 0;
         List<String> targetContent = ListUtils.readFile(targetFile);
-        boolean flag = true;
         int j = 0;
-        for (int i = 0; flag; i++) {
-
+        for (int i = 0; i < targetContent.size() && j < sourceBlock.size(); i++) {
             if (targetContent.get(i).equals(sourceBlock.get(j))) {
                 j++;
-
-            }
-            if (j == sourceBlock.size()) {
-                flag = false;
             }
             posContext = i;
         }
@@ -213,15 +201,12 @@ public class ParserJava {
             ParserJava parserJava = new ParserJava(version);
 
             int j = 0, i = 0;
-            String nameNewDir;
 
             if (cont == 0) {
-                nameNewDir = "parent1";
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent1");
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                nameNewDir = "parent2";
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent2");
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
@@ -479,7 +464,7 @@ public class ParserJava {
             //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             //viewer.setSize(new Dimension(500, 600));
             //viewer.open();
-            
+
             Visitor3 visitor = new Visitor3(globalEnviroment);
 
             visitor.visit(tree);

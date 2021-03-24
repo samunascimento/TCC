@@ -1,27 +1,10 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
-import br.ufjf.dcc.gmr.core.exception.AlreadyUpToDate;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
-import br.ufjf.dcc.gmr.core.exception.NotSomethingWeCanMerge;
-import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeInProgress;
-import br.ufjf.dcc.gmr.core.exception.ThereIsNoMergeToAbort;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.principal.InitProject;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
-import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
-import br.ufjf.dcc.gmr.core.vcs.types.Line;
-import br.ufjf.dcc.gmr.core.vcs.types.MergeStatus;
-import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
-import br.ufjf.dcc.gmr.core.vcs.types.Project;
-import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import br.ufjf.dcc.gmr.core.vcs.types.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,22 +17,20 @@ public class teste {
 
     private static String projectPath = "";
 
-    public static void main(String[] args) throws RepositoryNotFound, ParseException, Exception {
+    public static void main(String[] args) throws RepositoryNotFound, ParseException {
         String[] projects = {"D:/projects/SAIM", "D:/projects/modeler", "D:/projects/spring-data-neo4j",
                 "D:/projects/fongo", "D:/projects/pojobuilder", "D:/projects/Phenex", "D:/projects/OpenMEAP"};
         String[] sha = {"044a3c", "0587bc", "042b1d", "0033c8", "09b977", "0985bf", "0af9d5"};
         List<Version> versions = new ArrayList<>();
         try {
-            int i = 1;
-            //for (int i = 0; i < projects.length; i++) {
-                projectPath = projects[i];
-                System.out.println("Running project: " + projectPath);
-                Version version = start(sha[i]);
-                versions.add(version);
-                ParserJava parserJava = new ParserJava(version, projectPath);
-                ParserJava.main();
-            //}
-        } catch (Exception e){
+            int i = 0;
+            projectPath = projects[i];
+            System.out.println("Running project: " + projectPath);
+            Version version = start(sha[i]);
+            versions.add(version);
+            ParserJava parserJava = new ParserJava(version, projectPath);
+            ParserJava.main();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
