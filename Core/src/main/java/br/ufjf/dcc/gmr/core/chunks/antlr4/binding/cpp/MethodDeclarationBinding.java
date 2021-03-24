@@ -20,13 +20,16 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<VariableDeclarationBinding> parameters;
     private TypeBinding returnBinding;
     private CPP14Parser.DeclaratorContext ctx;
+   
 
-    public MethodDeclarationBinding(String modifier, TypeBinding type, List<VariableDeclarationBinding> parameters, TypeBinding returnBinding, CPP14Parser.DeclaratorContext ctx) {
+    public MethodDeclarationBinding(String name,String modifier, TypeBinding type, List<VariableDeclarationBinding> parameters, TypeBinding returnBinding, CPP14Parser.DeclaratorContext ctx) {
+        super(name);
         this.modifier = modifier;
         this.type = type;
         this.parameters = parameters;
         this.returnBinding = returnBinding;
         this.ctx = ctx;
+        
     }
 
     public MethodDeclarationBinding() {
