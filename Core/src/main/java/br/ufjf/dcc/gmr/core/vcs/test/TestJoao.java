@@ -12,11 +12,8 @@ import java.util.List;
 public class TestJoao {
 
     public static void main(String[] args) throws Exception {
-        List<FileDiff> list = Git.diff("/home/joao_lima/Git/testRepository", "8ccc995:file.txt", "file.txt", true, 0);
-        for (FileDiff fileDiff : list) {
-            for (LineInformation line : fileDiff.getLines()) {
-                System.out.println(line);
-            }
+        for (int i = 1; i <= 50; i++) {
+            System.out.println("Line " + i);
         }
     }
 

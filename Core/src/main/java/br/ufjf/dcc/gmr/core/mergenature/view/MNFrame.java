@@ -78,9 +78,9 @@ public class MNFrame extends JFrame {
 
     }
 
-    public void analyseThread(String projectLocation, String projectName, int numContext, boolean ignoreFormatting) {
+    public void analyseThread(String projectLocation, String projectName, int numContext) {
         home.getInputPanel().reset();
-        MNBarPanel progressBarPanel = new MNBarPanel(projectLocation, numContext, ignoreFormatting);
+        MNBarPanel progressBarPanel = new MNBarPanel(projectLocation, numContext);
         tabbedPane.addTab(projectName + "(processing...)", progressBarPanel);
         Thread progressBarPanelThread = new Thread(progressBarPanel);
         progressBarPanelThread.start();

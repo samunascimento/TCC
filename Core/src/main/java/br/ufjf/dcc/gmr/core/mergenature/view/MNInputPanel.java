@@ -9,7 +9,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -33,7 +32,6 @@ public class MNInputPanel extends JPanel {
     private JLabel contextLabel;
     private JComboBox contextBox;
     private JButton analyseButton;
-    private JCheckBox ignoreFormatting;
 
     public MNInputPanel(MNHome home) {
         this.home = home;
@@ -85,12 +83,6 @@ public class MNInputPanel extends JPanel {
         gbc.gridy = 2;
         this.add(findButton, gbc);
         
-        ignoreFormatting = new JCheckBox("Ignore Formatting");
-        ignoreFormatting.setOpaque(false);
-        ignoreFormatting.setForeground(MNFrame.SECUNDARY_COLOR);
-        gbc.gridx = 1;
-        this.add(ignoreFormatting, gbc);
-
         contextLabel = new JLabel("Number of Context Lines");
         contextLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         contextLabel.setPreferredSize(new Dimension(200, 20));
@@ -131,7 +123,7 @@ public class MNInputPanel extends JPanel {
             if (JOptionPane.showConfirmDialog(null, "Analyse " + getProjectName(pathField.getText()) + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 new Thread() {
                     public void run() {
-                        home.getFrame().analyseThread(pathField.getText(), getProjectName(pathField.getText()), contextBox.getSelectedIndex() + 1, ignoreFormatting.isSelected());
+                        home.getFrame().analyseThread(pathField.getText(), getProjectName(pathField.getText()), contextBox.getSelectedIndex() + 1);
                     }
                 }.start();
             }

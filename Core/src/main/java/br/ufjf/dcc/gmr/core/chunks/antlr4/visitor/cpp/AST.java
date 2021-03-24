@@ -5,6 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
@@ -20,13 +22,14 @@ import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableUsageBinding;
 
 /**
  *
  * @author ketleen
  */
 public class AST {
+    static List<List<MethodDeclarationBinding>> methodDeclaration = new ArrayList<>();
+    static List<List<MethodCallBinding>> methodCall = new ArrayList<>();
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
@@ -68,14 +71,17 @@ public class AST {
                 System.out.println(visitor3.getVariableUsage().get(i));
             }
              System.out.println("============ METHOD CALL =============");
+             methodCall.add(visitor3.getMethodCall());
             for (int i = 0; i < visitor3.getMethodCall().size(); i++) {
                 System.out.println(visitor3.getMethodCall().get(i));
-                for(int j =0; j<visitor3.getMethodCall().get(i).getParameters().size(); j++)
+                for(int j =0; j<visitor3.getMethodCall().get(i).getParameters().size(); j++){
                     System.out.print(visitor3.getMethodCall().get(i).getParameters().get(j)+ "  ");
+                }
                  System.out.println("");
             }
 
             System.out.println("============ METHOD DECLARATION =============");
+            methodDeclaration.add(visitor2.getMethodDeclaration());
             for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
                 System.out.println(visitor2.getMethodDeclaration().get(i));
             }
@@ -101,20 +107,33 @@ public class AST {
         }
         return cppFiles;
     }
+        
+    public static void compara(){
+        
+      for(int i =0; i<methodDeclaration.size(); i++){
+          for(int j=0; j<methodDeclaration.get(i).size(); j++){
+              for(int k=0; k<methodCall.size();k++){
+                  for(int l=0; l<methodCall.get(k).size();l++){
+                        if(methodDeclaration.get(i).get(j).getName().equals(methodCall.get(k).get(l).getName())){
+                            System.out.println("=============== COMPARA ==================");
+                            System.out.println("MD: "+methodDeclaration.get(i).get(j).toString()+ " linha: "
+                                    +methodDeclaration.get(i).get(j).getCtx().getStart().getLine()+
+                                    "\nMC: "+methodCall.get(k).get(l).toString()+ " linha: "
+                                    +methodCall.get(i).get(j).getCtx().getStart().getLine());
+                        }
+                    }
+              }
+          }
+      }
+    }
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
+        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String pathh = "/home/ketleen/Documentos/testeArvore/header/Grafo.h";
         analyzeCPPSyntaxTree(path, true);
-
-        /*
-            lista declaraçao de variavel; (nome e tipo) OK
-            lista de chamada ou uso de variavel; (nome)ok
-            
-            lista de declaraçao de metodos; (nome e tipo, e qnt de paremetro) 
-            lista de chamada de metodos; ok
+        analyzeCPPSyntaxTree(pathh,true);
+        compara();
         
-            "considerar o Variable Declaration"
-         */
     }
 }

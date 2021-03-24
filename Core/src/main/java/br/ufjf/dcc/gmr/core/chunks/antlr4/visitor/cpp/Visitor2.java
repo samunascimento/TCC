@@ -92,6 +92,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
             meth.setReturnBinding(type);
             meth.setCtx(ctx);
             meth.setType(type);
+            meth.setName(ctx.getText().substring(0, ctx.getText().indexOf("(")));
             
             methodDeclaration.add(meth);
         } else {

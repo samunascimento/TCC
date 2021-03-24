@@ -16,12 +16,13 @@ public class MethodCallBinding extends BaseBinding {
 
     private List<ParametersBinding> parameters;
     private TypeBinding typeBinding;
+    private CPP14Parser.FunctioninvocationContext ctx;
 
-    public MethodCallBinding(String name) {
+    public MethodCallBinding(String name,CPP14Parser.FunctioninvocationContext ctx ) {
         super(name);
         this.parameters = new ArrayList<>();
         this.typeBinding = new TypeBinding();
-
+        this.ctx = ctx;
     }
 
     public List<ParametersBinding> getParameters() {
@@ -42,5 +43,13 @@ public class MethodCallBinding extends BaseBinding {
      @Override
     public String toString(){
         return super.getName() ;
+    }
+
+    public CPP14Parser.FunctioninvocationContext getCtx() {
+        return ctx;
+    }
+
+    public void setCtx(CPP14Parser.FunctioninvocationContext ctx) {
+        this.ctx = ctx;
     }
 }

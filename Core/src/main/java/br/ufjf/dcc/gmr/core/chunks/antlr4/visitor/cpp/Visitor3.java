@@ -106,7 +106,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             if (ctx.getText().contains("(")) {
                 for (int i = 0; i < ctx.getChildCount(); i++) {
                     if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                        MethodCallBinding e = new MethodCallBinding(ctx.getText());
+                        MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                         methodCall.add(e);
                         System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
 
@@ -115,7 +115,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
                 if (aux == 0) {
                     System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
-                    MethodCallBinding e = new MethodCallBinding(ctx.getText());
+                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                     methodCall.add(e);
                 }
             } else {
@@ -126,14 +126,14 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
                     System.out.println("Chamada com parametro: " + ctx.getText());
-                    MethodCallBinding e = new MethodCallBinding(ctx.getText());
+                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                     methodCall.add(e);
                     aux++;
                 }
             }
             if (aux == 0) {
                 System.out.println("Chamada SEM parametro: " + ctx.getText());
-                MethodCallBinding e = new MethodCallBinding(ctx.getText());
+                MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                 methodCall.add(e);
             }
         }

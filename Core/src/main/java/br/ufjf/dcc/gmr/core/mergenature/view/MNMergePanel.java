@@ -48,7 +48,7 @@ public class MNMergePanel extends JPanel {
 
         JPanel NWPanel = new JPanel();
         NWPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
-        NWPanel.setPreferredSize(new Dimension(1, 125));
+        NWPanel.setPreferredSize(new Dimension(1, 140));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
         NWPanel.add(new MNConflictPanel(this, merge.getConflicts()), INSIDE_CONSTRAINTS);
@@ -59,7 +59,7 @@ public class MNMergePanel extends JPanel {
         this.add(NWPanel, gbc);
 
         JPanel NEPanel = new JPanel();
-        NEPanel.setPreferredSize(new Dimension(1, 125));
+        NEPanel.setPreferredSize(new Dimension(1, 140));
         NEPanel.setOpaque(false);
         NEPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         NEPanel.setLayout(new GridBagLayout());

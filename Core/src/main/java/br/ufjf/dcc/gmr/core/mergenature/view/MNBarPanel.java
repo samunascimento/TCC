@@ -21,9 +21,8 @@ public class MNBarPanel extends JPanel implements Runnable {
     private final String repositoryLocation;
     private final int contextLines;
     private Project project;
-    private boolean ignoreFormatting;
 
-    public MNBarPanel(String repositoryPath, int contextLines, boolean ignoreFormatting) {
+    public MNBarPanel(String repositoryPath, int contextLines) {
         this.repositoryLocation = repositoryPath.replace("\\", "/");
         this.contextLines = contextLines;
         set();
@@ -56,7 +55,7 @@ public class MNBarPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, ignoreFormatting);
+        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines);
         algorithm.startAlgorithm();
         this.project = algorithm.getProject();
     }
