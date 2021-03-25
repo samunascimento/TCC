@@ -175,6 +175,10 @@ range_expression
     | unary_expression? OP_RANGE unary_expression?
     ;
 
+cast
+    :  OPEN_PARENS type_ CLOSE_PARENS unary_expression
+    ;
+
 // https://msdn.microsoft.com/library/6a71f45d(v=vs.110).aspx
 unary_expression
 	: primary_expression
@@ -184,11 +188,12 @@ unary_expression
 	| '~' unary_expression
 	| '++' unary_expression
 	| '--' unary_expression
-	| OPEN_PARENS type_ CLOSE_PARENS unary_expression
+	| cast
 	| AWAIT unary_expression // C# 5
 	| '&' unary_expression
 	| '*' unary_expression
-	| '^' unary_expression // C# 8 ranges
+	| '^' unary_expression // C# 8 ranges  
+        
 	;
 
 primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.com/en-us/library/dn986595.aspx
@@ -433,27 +438,83 @@ labeled_Statement
 embedded_statement
 	: block
 	| simple_embedded_statement
+        | selection_statements
+        | iteration_statements 
+        | altered_jump_statements
 	;
+        
+        if_expression
+        : IF OPEN_PARENS expression CLOSE_PARENS
+        ;
+        
+        if_Statement
+        : if_expression if_body (ELSE if_body)?
+        ;
+        
+        switch_expressions
+        :SWITCH OPEN_PARENS expression CLOSE_PARENS 
+        ;
 
+        switchStatement
+        :switch_expressions OPEN_BRACE switch_section* CLOSE_BRACE 
+        ;
+        
+        selection_statements
+        : if_Statement
+        |   switchStatement
+        ;
+                           
+        iteration_statements  
+        :whileStatement
+        |doStatement
+        |forStatement
+        |foreachStatement
+        ;
+        
+        while_expression
+        :   WHILE  OPEN_PARENS expression CLOSE_PARENS
+        ;
+
+        whileStatement
+        :  while_expression  embedded_statement 
+        ;
+        
+        doStatement
+        : DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS ';' 
+        ;
+        
+        for_expression
+        :  FOR OPEN_PARENS for_initializer? ';' expression? ';' for_iterator? CLOSE_PARENS
+        ;
+        
+        forStatement
+        :  for_expression  embedded_statement
+        ;
+        
+        foreach_expression
+        :  AWAIT? FOREACH OPEN_PARENS local_variable_type identifier IN expression CLOSE_PARENS 
+        ;
+
+        foreachStatement
+        :   foreach_expression  embedded_statement
+        ;
+
+        altered_jump_statements
+        : tryStatement
+        ;
+        
+        try_expression
+        :    TRY
+        ;
+
+        tryStatement
+        :  try_expression block (catch_clauses finally_clause? | finally_clause)
+        ;
+        
 simple_embedded_statement
 	: ';'                                                         #theEmptyStatement
 	| expression ';'                                              #expressionStatement
-
-	// selection statements
-        | IF   #if_
-	| IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)?               #ifStatement
-        | SWITCH                                                                       #switch_
-        | SWITCH OPEN_PARENS expression CLOSE_PARENS OPEN_BRACE switch_section* CLOSE_BRACE           #switchStatement
-
-    // iteration statements
-       
-        | WHILE #while_
-	| WHILE  OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
-	| DO #do_
-        | DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS ';'                                 #doStatement
-	| FOR #for_
-        | FOR OPEN_PARENS for_initializer? ';' expression? ';' for_iterator? CLOSE_PARENS embedded_statement  #forStatement
-	| AWAIT? FOREACH OPEN_PARENS local_variable_type identifier IN expression CLOSE_PARENS embedded_statement    #foreachStatement
+     
 
     // jump statements
 	| BREAK ';'                                                   #breakStatement
@@ -462,14 +523,15 @@ simple_embedded_statement
 	| RETURN expression? ';'                                      #returnStatement
 	| THROW expression? ';'                                       #throwStatement
 
-	| TRY block (catch_clauses finally_clause? | finally_clause)  #tryStatement
+	
 	| CHECKED block                                               #checkedStatement
 	| UNCHECKED block                                             #uncheckedStatement
 	| LOCK OPEN_PARENS expression CLOSE_PARENS embedded_statement                  #lockStatement
 	| USING OPEN_PARENS resource_acquisition CLOSE_PARENS embedded_statement       #usingStatement
 	| YIELD (RETURN expression | BREAK) ';'                       #yieldStatement
-
-	// unsafe statements
+        
+        
+        // unsafe statements
 	| UNSAFE block                                                                       #unsafeStatement
 	| FIXED OPEN_PARENS pointer_type fixed_pointer_declarators CLOSE_PARENS embedded_statement            #fixedStatement
 	;
@@ -536,11 +598,15 @@ for_iterator
 catch_clauses
 	: specific_catch_clause (specific_catch_clause)* general_catch_clause?
 	| general_catch_clause
+        | specific_catch_clause_no_block
 	;
 
 specific_catch_clause
-	: CATCH OPEN_PARENS class_type identifier? CLOSE_PARENS exception_filter? block
+	: specific_catch_clause_no_block exception_filter? block
 	;
+specific_catch_clause_no_block
+        :CATCH OPEN_PARENS class_type identifier? CLOSE_PARENS
+        ;
 
 general_catch_clause
 	: CATCH exception_filter? block
@@ -551,7 +617,7 @@ exception_filter // C# 6
 	;
 
 finally_clause
-	: FINALLY block
+	: FINALLY block?
 	;
 
 resource_acquisition
@@ -698,7 +764,7 @@ common_member_declaration
 	| conversion_operator_declarator (body | right_arrow throwable_expression ';') // C# 6
 	| constructor_declaration
 	| VOID method_declaration
-	| class_definition
+	| class_members
 	| struct_definition
 	| interface_definition
 	| enum_definition
@@ -708,7 +774,7 @@ common_member_declaration
 typed_member_declaration
 	: (REF | READONLY REF | REF READONLY)? type_
 	  ( namespace_or_type_name '.' indexer_declaration
-	  | method_declaration
+	  | method_expressions
 	  | property_declaration
 	  | indexer_declaration
 	  | operator_declaration
@@ -1148,6 +1214,11 @@ keyword
 
 // -------------------- extra rules for modularization --------------------------------
 
+ class_members
+        :class_definition
+        |class_signature
+         ;
+
 class_definition
 	: class_signature class_body ';'?
 	;
@@ -1203,6 +1274,11 @@ destructor_definition
 constructor_declaration
 	: identifier OPEN_PARENS formal_parameter_list? CLOSE_PARENS constructor_initializer? body
 	;
+
+method_expressions
+        :method_declaration
+        |method_signature
+        ;
 
 method_declaration // lamdas from C# 6
 	: method_signature type_parameter_constraints_clauses? (method_body | right_arrow throwable_expression ';')
