@@ -6,6 +6,7 @@ import Layout from './Layout'
 import ListMetric from './Metric'
 import InsertProject from './Insert/InsertProject'
 import InsertLogin from './Insert/InsertLogin'
+import Search from './Search'
 
 export default class extends Component {
   state = {
@@ -26,6 +27,7 @@ export default class extends Component {
           <Route exact path="/insert/login" component={InsertLogin}/>
           <Route exact path="/insert/projects" component={InsertProject}/>
           <Route exact path="/metric" component={ListMetric}/>
+          <Route exact path="/search" component={Search}/>
           <Route path="/projects" render={
             props => <Projects {...props} projects={projects} />
           } />

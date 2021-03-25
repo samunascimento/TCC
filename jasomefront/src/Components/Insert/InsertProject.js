@@ -42,7 +42,8 @@ export default class InsertProject extends Component{
                         else{
                             axios.get('/insert/login/getData/'+this.state.user)
                             .then((data) => {
-                                axios.post('/insert/projects/create', {
+                                fetch('/insert/projects/create', {
+                                    method: 'POST',
                                     headers: { 'name': this.state.name, 'url': this.state.url, 'dirJasome' : this.state.dirJasome, 'userId': data.data}
                                 })
                             })
