@@ -1,6 +1,9 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 
+import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,12 +56,25 @@ public class GSONClass {
     public static Project readProject(String path) throws FileNotFoundException {
 
         Gson recover = new Gson();
-        Project get = null;
+        Project project = null;
         FileReader read = new FileReader(path);
         Type myType = new TypeToken<Project>() {
         }.getType();
 
-        return recover.fromJson(read, myType);
+        project = recover.fromJson(read, myType);
+        
+        for (Merge merge : project.getMerges()) {
+            merge.setProject(project);
+            for (Conflict conflict : merge.getConflicts()) {
+                conflict.setMerge(merge);
+                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                    conflictRegion.setConflict(conflict);
+                }
+            }
+        }
+        
+        return project;
+        
     }
 
 }

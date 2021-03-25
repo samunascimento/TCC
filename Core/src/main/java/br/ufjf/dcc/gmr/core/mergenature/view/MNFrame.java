@@ -25,7 +25,7 @@ public class MNFrame extends JFrame {
 
     public static final Rectangle MAX_BOUNDS = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     public static final int BORDER_GAP = 3;
-    public static final Color PRIMARY_COLOR = Color.DARK_GRAY;
+    public static final Color PRIMARY_COLOR = Color.decode("#2C001E");
     public static final Color SECUNDARY_COLOR = Color.WHITE;
     public static final Color TERTIARY_COLOR = Color.GREEN;
 
@@ -51,6 +51,7 @@ public class MNFrame extends JFrame {
         this.setResizable(true);
         this.setBounds(100, 100, MAX_BOUNDS.width - 200, MAX_BOUNDS.height - 200);
         this.setMinimumSize(new Dimension(800, 450));
+        this.setExtendedState(MAXIMIZED_BOTH);
 
         menu = new JMenuBar();
         this.setJMenuBar(menu);

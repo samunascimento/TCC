@@ -22,14 +22,20 @@ public class MNMergePanel extends JPanel {
     private GridBagConstraints INSIDE_CONSTRAINTS;
     private Merge merge;
     private JPanel SPanel;
+    private MNProjectPanel projectPanel;
 
-    public MNMergePanel(Merge merge) {
+    public MNMergePanel(MNProjectPanel projectPanel, Merge merge) {
         this.merge = merge;
+        this.projectPanel = projectPanel;
         set();
     }
 
     public MNMergePanel() {
         setEmpty();
+    }
+
+    public MNProjectPanel getProjectPanel() {
+        return projectPanel;
     }
 
     private void set() {
@@ -48,18 +54,18 @@ public class MNMergePanel extends JPanel {
 
         JPanel NWPanel = new JPanel();
         NWPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
-        NWPanel.setPreferredSize(new Dimension(1, 140));
+        NWPanel.setPreferredSize(new Dimension(1, 150));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
         NWPanel.add(new MNConflictPanel(this, merge.getConflicts()), INSIDE_CONSTRAINTS);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1;
+        gbc.weightx = 1.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(NWPanel, gbc);
 
         JPanel NEPanel = new JPanel();
-        NEPanel.setPreferredSize(new Dimension(1, 140));
+        NEPanel.setPreferredSize(new Dimension(1, 150));
         NEPanel.setOpaque(false);
         NEPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         NEPanel.setLayout(new GridBagLayout());

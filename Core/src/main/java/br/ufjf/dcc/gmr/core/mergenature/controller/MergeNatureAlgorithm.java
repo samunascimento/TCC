@@ -6,6 +6,7 @@ import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
 import br.ufjf.dcc.gmr.core.exception.PathDontExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
@@ -26,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.imageio.IIOException;
 import javax.swing.JProgressBar;
 
 /**
@@ -52,7 +54,7 @@ public class MergeNatureAlgorithm {
         this.progressBar = null;
     }
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, boolean ignoreFormatting, JProgressBar progressBar) {
+    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, JProgressBar progressBar) {
         this.repositoryLocation = repositoryLocation;
         this.contextLines = contextLines;
         this.project = null;
@@ -93,7 +95,12 @@ public class MergeNatureAlgorithm {
             System.out.println("Downloading analysis is not avaliable!");
         }
         MergeNatureTools.prepareAnalysis(repositoryPath);
-        List<String> log = Git.giveAllMerges(repositoryPath);
+        List<String> log;
+        try {
+            log = Git.getAllMerges(repositoryPath);
+        } catch (RepositoryNotFound ex) {
+            throw new IOException("The repository path isn't a git repository!");
+        }
         int numberOfMerges = log.size();
         int status = 0;
         if (this.progressBar != null) {
@@ -446,7 +453,7 @@ public class MergeNatureAlgorithm {
             List<String> addeds = new ArrayList<>();
             List<String> removeds = new ArrayList<>();
             for (LineInformation line : outsideAlterations) {
-                if (!line.getContent().equals("")) {
+                if (!line.getContent().replaceAll(" ", "").replaceAll("\t", "").equals("")) {
                     if (line.getType() == LineType.ADDED) {
                         addeds.add(line.getContent().replaceAll(" ", "").replaceAll("\t", ""));
                     } else {

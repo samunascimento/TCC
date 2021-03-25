@@ -80,6 +80,7 @@ public class MNMergesTable extends JPanel {
         });
         table.setBackground(MNFrame.PRIMARY_COLOR);
         table.setForeground(MNFrame.SECUNDARY_COLOR);
+        table.setFillsViewportHeight(true);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;

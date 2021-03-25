@@ -8,6 +8,11 @@ package br.ufjf.dcc.gmr.core.exception;
 public class InvalidCommitHash extends Exception {
 
     public InvalidCommitHash() {
-        super("O commit informado não existe");
+        super("The informed commit don't belong to the informed repository");
     }
+    
+    public InvalidCommitHash(String repositoryPath, String commit) {
+        super("The commit" + commit + "don't belong to the repository " + repositoryPath);
+    }
+
 }

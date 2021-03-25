@@ -6,7 +6,6 @@ import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
-import br.ufjf.dcc.gmr.core.mergenature.view.MNFrame;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

@@ -55,7 +55,7 @@ public class MNBarPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines);
+        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, progressBar);
         algorithm.startAlgorithm();
         this.project = algorithm.getProject();
     }

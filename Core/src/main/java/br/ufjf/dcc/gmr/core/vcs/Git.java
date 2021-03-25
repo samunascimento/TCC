@@ -991,12 +991,12 @@ public class Git {
      * merges
      * @throws IOException
      */
-    public static List<String> giveAllMerges(String repositoryPath) throws IOException {
+    public static List<String> getAllMerges(String repositoryPath) throws IOException, RepositoryNotFound {
         CLIExecution cliE;
         try {
             cliE = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h/%p", repositoryPath);
         } catch (IOException ex) {
-            throw new IOException("The \"repositoryPath\" is not a path in your system!");
+            throw new RepositoryNotFound();
         }
         if (!cliE.getError().isEmpty()) {
             for (String string : cliE.getError()) {
@@ -1052,9 +1052,16 @@ public class Git {
      * directory where the command will be executed
      * @return Returns a boolean that indicates if the merge is confliting
      */
-    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException {
+    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException, InvalidCommitHash {
         CLIExecution cliE;
-        CLIExecute.execute("git checkout " + parent1, repositoryPath);
+        cliE = CLIExecute.execute("git checkout " + parent1, repositoryPath);
+        if (!cliE.getError().isEmpty()) {
+            for (String line : cliE.getError()) {
+                if (line.contains("error: pathspec")) {
+                    throw new InvalidCommitHash(repositoryPath, parent1);
+                }
+            }
+        }
         try {
             cliE = CLIExecute.execute("git merge --no-edit " + parent2, repositoryPath);
         } catch (IOException ex) {
@@ -1065,16 +1072,6 @@ public class Git {
             for (String line : cliE.getError()) {
                 if (line.contains("not a git repository")) {
                     throw new IOException("This path is not a Git repository!");
-                } else if (line.contains("No remote for the current branch.")) {
-                    throw new IOException(line);
-                } else if (line.contains("There is no merge in progress")) {
-                    throw new IOException(line);
-                } else if (line.contains("There is no merge to abort")) {
-                    throw new IOException(line);
-                } else if (line.contains("Already up to date")) {
-                    throw new IOException(line);
-                } else if (line.contains("not something we can merge")) {
-                    throw new IOException(line);
                 }
             }
         } else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
@@ -1328,9 +1325,7 @@ public class Git {
         return result;
     }
 
-    
-    
-       /**
+    /**
      * Method used by "fillFileDiff" to read the diff output and get the
      * starting line of the chunk.
      *
@@ -1375,9 +1370,7 @@ public class Git {
 
         }
     }
-    
-    
-    
+
     /**
      * This method receive two commitHash and returns the difference between
      * them, using the unified command as 0, and returns the output.

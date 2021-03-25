@@ -2,11 +2,17 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -37,23 +43,47 @@ public class MNConflictPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(new GridBagLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        textArea = new JTextArea("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:");
+        textArea = new JTextArea("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:\nHas Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
         if (!conflicts.isEmpty()) {
             textArea.setText(conflicts.get(0).toString());
         }
         textArea.setEditable(false);
         textArea.setBackground(MNFrame.PRIMARY_COLOR);
         textArea.setForeground(MNFrame.SECUNDARY_COLOR);
+        textArea.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         JScrollPane scroll = new JScrollPane(textArea);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
-        this.add(scroll, gbc);
+        scroll.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+
+        JLabel showFileAlteration = new JLabel("Show file alterations");
+        showFileAlteration.setFont(textArea.getFont());
+        showFileAlteration.setForeground(Color.CYAN);
+        showFileAlteration.setOpaque(false);
+        showFileAlteration.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mergePanel.getProjectPanel().showFileAlterationsProcess(conflicts.get(conflictComboBox.getSelectedIndex()));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                showFileAlteration.setForeground(Color.WHITE);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                showFileAlteration.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                showFileAlteration.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                showFileAlteration.setForeground(Color.CYAN);
+            }
+        });
 
         conflictComboBox = new JComboBox();
         for (Conflict conflict : conflicts) {
@@ -67,13 +97,6 @@ public class MNConflictPanel extends JPanel {
         conflictComboBox.addActionListener((ActionEvent evt) -> {
             switchConflict();
         });
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1;
-        gbc.weighty = 0;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        this.add(conflictComboBox, gbc);
 
         regionComboBox = new JComboBox();
         if (!conflicts.isEmpty()) {
@@ -91,18 +114,34 @@ public class MNConflictPanel extends JPanel {
         regionComboBox.addActionListener((ActionEvent evt) -> {
             switchRegion();
         });
-        gbc.gridx = 1;
+
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 1;
+        gbc.gridx = 1;
         gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+
+        this.add(scroll, gbc);
+        gbc.gridy++; 
         gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        this.add(showFileAlteration, gbc);
+        gbc.gridy++;
+        gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        this.add(conflictComboBox, gbc);
+        gbc.gridx++;
         this.add(regionComboBox, gbc);
+
 
     }
 
     private void switchConflict() {
         regionComboBox.removeAllItems();
-        textArea.setText("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:");
+        textArea.setText("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:Has Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
             for (ConflictRegion region : conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions()) {
                 regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
@@ -116,7 +155,7 @@ public class MNConflictPanel extends JPanel {
     private void switchRegion() {
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
             if (regionComboBox.getSelectedIndex() >= 0 && regionComboBox.getSelectedIndex() < conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().size()) {
-                if(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().isEmpty()){
+                if (conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().isEmpty()) {
                     mergePanel.updateConflictRegion(null);
                 } else {
                     mergePanel.updateConflictRegion(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().get(regionComboBox.getSelectedIndex()));
