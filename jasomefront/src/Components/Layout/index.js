@@ -107,6 +107,9 @@ class Layout extends Component {
             <MenuItem component={Link} to="/metric" selected={'/metric' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
               Metric
             </MenuItem>
+            <MenuItem component={Link} to="/search" selected={'/search' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
+              Acompanhamento
+            </MenuItem>
             <MenuItem onClick={this.handleClickProject} component={Link} to="/projects" selected={'/projects' === pathname} style={{ borderRadius: '5px', border: '1px solid grey', margin: '4px 2px' }}>
               Projects
               {this.state.openProject ? <ExpandLess/> : <ExpandMore/>}

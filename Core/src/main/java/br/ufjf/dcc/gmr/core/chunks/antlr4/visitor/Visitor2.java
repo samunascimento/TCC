@@ -519,13 +519,13 @@ public class Visitor2 extends JavaParserBaseVisitor<Object> {
         ParserRuleContext classBodyDeclaration = memberDeclaration.getParent();
         if (classBodyDeclaration.getChild(0) != null) {
 
-            for (ParseTree child : classBodyDeclaration.children) {
+            for (ParseTree child : classBodyDeclaration.children ) {
 
                 if (child instanceof JavaParser.ModifierContext) {
-                    Modifier modifier = Modifier.equalsTo(((ModifierContext) child).classOrInterfaceModifier().getText());
-
-                    attribute.addModifier(modifier);
-
+                    try {
+                        Modifier modifier = Modifier.equalsTo(((ModifierContext) child).classOrInterfaceModifier().getText());
+                        attribute.addModifier(modifier);
+                    }catch (NullPointerException e){}
                 } else {
                     break;
                 }
