@@ -91,7 +91,7 @@ public class MNMergesTable extends JPanel {
 
         JButton setFilter = new JButton("Set Filter");
         setFilter.addActionListener((ActionEvent evt) -> {
-            new MNProjectFilterFrame(merges, this);
+            new MNProjectFilterFrame(merges, filteredList, this);
         });
         gbc.gridx = 0;
         gbc.gridy = 1;

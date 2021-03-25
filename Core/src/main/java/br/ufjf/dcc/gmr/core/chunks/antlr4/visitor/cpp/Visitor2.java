@@ -5,10 +5,14 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ParametersBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
+import java.util.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
@@ -19,17 +23,25 @@ import org.antlr.v4.runtime.Token;
 public class Visitor2 extends CPP14BaseVisitor<Object> {
 
     private TypeBinding typeBinding;
-
     private String typeS;
     private String modifierS;
-
     private String className;
-
+    private List<MethodDeclarationBinding> methodDeclaration;    
+    
     public Visitor2() {
         this.typeBinding = new TypeBinding();
         this.typeS = "";
         this.modifierS = "";
         this.className = "";
+        this.methodDeclaration = new ArrayList<>();
+    }
+
+    public List<MethodDeclarationBinding> getMethodDeclaration() {
+        return methodDeclaration;
+    }
+
+    public void setMethodDeclaration(List<MethodDeclarationBinding> methodDeclaration) {
+        this.methodDeclaration = methodDeclaration;
     }
 
     public static void log(ParserRuleContext ctx) {
@@ -68,14 +80,30 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
         //    log(ctx);
-
+        MethodDeclarationBinding meth = new MethodDeclarationBinding();
+        TypeBinding type = new TypeBinding();
+        
         if (findChildPd(ctx)) {
-            System.out.println("metodo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
+            //System.out.println("metodo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
+          
+            type.setName(typeS);
+            
+            meth.setModifier(modifierS);
+            meth.setReturnBinding(type);
+            meth.setCtx(ctx);
+            meth.setType(type);
+            meth.setName(ctx.getText().substring(0, ctx.getText().indexOf("(")));
+            
+            methodDeclaration.add(meth);
         } else {
             if (!findParentPd(ctx)) {
-                System.out.println("atributo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
+                // System.out.println("atributo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
             } else {
-                System.out.println("\tparametros: " + this.typeS + " " + ctx.getText());
+                //System.out.println("\tparametros: " + this.typeS + " " + ctx.getText());
+                type.setName(typeS);
+                VariableDeclarationBinding param = new VariableDeclarationBinding(ctx.getText(), type);
+                
+                methodDeclaration.get(methodDeclaration.size()-1).getParametersBindings().add(param);
             }
         }
 

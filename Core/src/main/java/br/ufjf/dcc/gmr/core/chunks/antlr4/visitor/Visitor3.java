@@ -472,13 +472,16 @@ public class Visitor3 extends JavaParserBaseVisitor<Object> {
 
     @Override
     public Object visitBlock(JavaParser.BlockContext ctx) {
+        
         if (this.className.equals("br.ufjf.dcc.gmr.core.chunks.antlr4.analysis.example.Main.java")) {
             System.out.println();
         }
         List<BaseBinding> bindings = new ArrayList<>();
         MethodDeclarationBinding findMethodDeclaration = null;
 
-        if (this.methodDeclaration) {
+        //adicionar campos estaticos
+        //procurar visitExpressionName, visitExpression
+        if (this.methodDeclaration ) {
             //find the methodDeclaration
             findMethodDeclaration = globalEnviroment.findMethodDeclaration(this.methodDeclarationBinding, className);
             try {

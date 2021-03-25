@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ public class GlobalEnviroment {
         
         
         String aux = path.replaceAll("/", ".");
+        aux = path.replaceAll("\\\\", ".");
         String replacedPath = "";
         Set<String> keySet = enviroment.keySet();
         
@@ -39,8 +41,8 @@ public class GlobalEnviroment {
 
         //Add imports, attributes and methodDeclaration in result object. MethodCalls, LocalVariables and LocalVariablesUsage are inside MethodDeclaration
         for (ImportBinding importBinding : typeBinding.getImports()) {
-            if (importBinding.getCtx().getStart().getLine() >= languageConstruct.getLineBegin()
-                    && importBinding.getCtx().getStop().getLine() <= languageConstruct.getLineEnd()) {
+            if (importBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                    && importBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                 {
                     result.add(importBinding);
                 }
@@ -48,8 +50,8 @@ public class GlobalEnviroment {
         }
 
         for (AttributeDeclaratinBinding variableBinding : typeBinding.getAttributes()) {
-            if (variableBinding.getCtx().getStart().getLine() >= languageConstruct.getLineBegin()
-                    && variableBinding.getCtx().getStop().getLine() <= languageConstruct.getLineEnd()) {
+            if (variableBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                    && variableBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                 {
                     result.add(variableBinding);
                 }
@@ -57,15 +59,16 @@ public class GlobalEnviroment {
         }
 
         for (MethodDeclarationBinding methodDeclarationBinding : typeBinding.getMethodsBinding()) {
-            if (methodDeclarationBinding.getCtx().getStart().getLine() <= languageConstruct.getLineBegin()
-                    && methodDeclarationBinding.getCtx().getStop().getLine() >= languageConstruct.getLineEnd()) {
+     
+            if (methodDeclarationBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                    && methodDeclarationBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                 {
                     result.add(methodDeclarationBinding);
 
                     for (MethodCallBinding methodCallBinding : methodDeclarationBinding.getMethodCallBindings()) {
 
-                        if (methodCallBinding.getCtx().getStart().getLine() >= languageConstruct.getLineBegin()
-                                && methodCallBinding.getCtx().getStop().getLine() <= languageConstruct.getLineEnd()) {
+                        if (methodCallBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                                && methodCallBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                             {
                                 result.add(methodCallBinding);
                             }
@@ -75,8 +78,8 @@ public class GlobalEnviroment {
 
                     for (LocalVariableDeclarationBinding localVariableDeclarationBinding : methodDeclarationBinding.getLocalVariableDeclarationBindings()) {
 
-                        if (localVariableDeclarationBinding.getCtx().getStart().getLine() >= languageConstruct.getLineBegin()
-                                && localVariableDeclarationBinding.getCtx().getStop().getLine() <= languageConstruct.getLineEnd()) {
+                        if (localVariableDeclarationBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                                && localVariableDeclarationBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                             {
                                 result.add(localVariableDeclarationBinding);
                             }
@@ -86,8 +89,8 @@ public class GlobalEnviroment {
 
                     for (LocalVariableUsageBinding localVariableUsageBinding : methodDeclarationBinding.getLocalVariableUsageBindings()) {
 
-                        if (localVariableUsageBinding.getCtx().getStart().getLine() >= languageConstruct.getLineBegin()
-                                && localVariableUsageBinding.getCtx().getStop().getLine() <= languageConstruct.getLineEnd()) {
+                        if (localVariableUsageBinding.getCtx().getStart().getLine() > languageConstruct.getLineBegin()+1
+                                && localVariableUsageBinding.getCtx().getStop().getLine() < languageConstruct.getLineEnd()+1) {
                             {
                                 result.add(localVariableUsageBinding);
                             }

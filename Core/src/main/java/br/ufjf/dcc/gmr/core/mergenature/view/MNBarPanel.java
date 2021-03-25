@@ -23,7 +23,7 @@ public class MNBarPanel extends JPanel implements Runnable {
     private Project project;
 
     public MNBarPanel(String repositoryPath, int contextLines) {
-        this.repositoryLocation = repositoryPath.replace("\\","/");
+        this.repositoryLocation = repositoryPath.replace("\\", "/");
         this.contextLines = contextLines;
         set();
     }
@@ -44,7 +44,7 @@ public class MNBarPanel extends JPanel implements Runnable {
         progressBar.setPreferredSize(new Dimension(6 * (MNFrame.MAX_BOUNDS.width / 8), 50));
         progressBar.setMinimumSize(new Dimension(6 * (MNFrame.MAX_BOUNDS.width / 8), 50));
         progressBar.setBackground(MNFrame.PRIMARY_COLOR);
-        progressBar.setForeground(MNFrame.SECUNDARY_COLOR);
+        progressBar.setForeground(MNFrame.TERTIARY_COLOR);
         progressBar.setIndeterminate(true);
         progressBar.setStringPainted(true);
         gbc.weightx = 1;
@@ -55,7 +55,7 @@ public class MNBarPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, progressBar);
+        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines);
         algorithm.startAlgorithm();
         this.project = algorithm.getProject();
     }

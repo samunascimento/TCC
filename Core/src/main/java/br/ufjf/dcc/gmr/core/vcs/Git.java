@@ -1246,6 +1246,30 @@ public class Git {
         }
 
         CLIExecution execution = CLIExecute.execute(command, directory);
+        if (!execution.getError().isEmpty()) {
+            String auxWar1 = null;
+            String auxWar2 = null;
+            boolean bool1AuxWarning = false;
+            boolean bool2AuxWarning = false;
+
+            for (String line : execution.getError()) {
+                if (line.contains("warning: LF will be replaced by CRLF in")) {
+                    auxWar1 = line;
+                    bool1AuxWarning = true;
+                }
+                if (line.contains("The file will have its original line endings in your working directory")) {
+                    bool2AuxWarning = true;
+                    auxWar2 = line;
+                }
+            }
+            if (bool1AuxWarning) {
+                execution.getError().remove(auxWar1);
+            }
+            if (bool2AuxWarning) {
+                execution.getError().remove(auxWar2);
+            }
+
+        }
 
         if (!execution.getError().isEmpty()) {
             for (String line : execution.getError()) {
@@ -1255,39 +1279,46 @@ public class Git {
                     throw new InvalidCommitHash();
                 } else if (line.contains("fatal: Path \\")) {
                     throw new FileNotExistInCommitException("The archive looked upon cannot be found on this merge, maybe the path is exchanged ");
-                }else {
+                } else {
                     throw new IOException(execution.getError().toString());
                 }
             }
         } else {
             aux.setAllMessage(execution.getOutput());
+            int currentLine = 0;
             for (String line : execution.getOutput()) {
-                if (line.startsWith("diff --")) {
+                if (line.startsWith("diff --") && currentLine != 0) {
 
-                    if (i != 0) {
-                        result.add(aux);
-                    }
-                    i++;
+                    result.add(aux);
                     aux = new FileDiff();
                 }
-
+                if (line.startsWith("diff --") && currentLine != 0) {
+                    result.add(aux);
+                    aux = new FileDiff();
+                }
                 if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
                     continue;
                 }
                 if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
                     String c = line.substring(5);
+                    if (c.endsWith("\t") || c.endsWith("\n")) {
+                        c = c.substring(0, c.length() - 1);
+                    }
                     aux.setFilePathTarget(c);
                 } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED, 0));
+                    aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
                 } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                     String c = line.substring(5);
+                    if (c.endsWith("\t") || c.endsWith("\n")) {
+                        c = c.substring(0, c.length() - 1);
+                    }
                     aux.setFilePathSource(c);
                 } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                     String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED, 0));
-                } else if (line.charAt(0) == '@') {
-                    aux.setArroba(line);
+                    aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+                } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                    currentLine = startingLine(line);
                 }
 
             }
@@ -1297,6 +1328,56 @@ public class Git {
         return result;
     }
 
+    
+    
+       /**
+     * Method used by "fillFileDiff" to read the diff output and get the
+     * starting line of the chunk.
+     *
+     * @param a Line of the diff with the required starting line information.
+     * @return The starting line of the diff chunk
+     */
+    private static int startingLine(String a) {
+
+        if (a.contains("-")) {
+            String c[];
+            c = a.split("-");
+            a = c[1];
+            String g[];
+            if (a.contains(",")) {
+                g = a.split(",");
+                if (g[0].contains("+")) {
+                    g = g[0].split("\\+");
+                    g[0] = g[0].replace(" ", "");
+                }
+            } else {
+                g = a.split("\\+");
+                g[0] = g[0].replace(" ", "");
+            }
+            int startingLine;
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+        } else {
+            String c[];
+            c = a.split("\\+");
+            a = c[1];
+            String g[];
+            if (a.contains(",")) {
+                g = a.split(",");
+            } else {
+                g = a.split("/+");
+            }
+            int startingLine;
+            startingLine = Integer.parseInt(g[0]);
+
+            return startingLine;
+
+        }
+    }
+    
+    
+    
     /**
      * This method receive two commitHash and returns the difference between
      * them, using the unified command as 0, and returns the output.
@@ -1351,14 +1432,6 @@ public class Git {
      * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
      * wrong commit hash
      */
-    public static void main(String[] args) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, RepositoryNotFound, ParseException {
-        List<Formats> logAll = logAll("/Users/gleiph/sandbox/pasta expaco/parent1");
-
-        for (Formats log : logAll) {
-            System.out.println(log);
-        }
-    }
-
     public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
 

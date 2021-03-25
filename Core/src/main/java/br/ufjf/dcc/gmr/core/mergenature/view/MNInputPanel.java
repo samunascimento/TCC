@@ -64,7 +64,7 @@ public class MNInputPanel extends JPanel {
         pathField.setPreferredSize(new Dimension(150, 35));
         pathField.setMargin(new Insets(0, 10, 0, 10));
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 3;
         gbc.weightx = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -82,17 +82,17 @@ public class MNInputPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 2;
         this.add(findButton, gbc);
-
+        
         contextLabel = new JLabel("Number of Context Lines");
         contextLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         contextLabel.setPreferredSize(new Dimension(200, 20));
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 0;
         this.add(contextLabel, gbc);
 
         contextBox = new JComboBox(new String[]{"1 Line", "2 Lines", "3 Lines", "4 Lines", "5 Lines"});
         contextBox.setPreferredSize(new Dimension(200, 35));
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 1;
         this.add(contextBox, gbc);
 
@@ -101,7 +101,7 @@ public class MNInputPanel extends JPanel {
         analyseButton.addActionListener((ActionEvent evt) -> {
             analyse();
         });
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 2;
         this.add(analyseButton, gbc);
 

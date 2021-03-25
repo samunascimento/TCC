@@ -64,7 +64,7 @@ public class ParserJava {
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main() throws Exception {
         //Definindo os arquivos com conflitos
         for (MyFile myFile : version.getFile()) {
             String filePath = myFile.getPath();
@@ -77,15 +77,13 @@ public class ParserJava {
 
         createConflictChunkList();
 
-        createJungGraph(parent1, parent2, conflictChunkList, args);
+        createJungGraph(parent1, parent2, conflictChunkList);
     }
 
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
 
-            String keyPath = "";
-            keyPath = keyPath.concat(version.getFile().get(y).getPath());
-
+     
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
@@ -115,8 +113,8 @@ public class ParserJava {
                 chunk.getChunkVersion1().setLineEnd(version1[1]);
                 chunk.getChunkVersion2().setLineEnd(version2[1]);
 
-                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(keyPath, chunk.getChunkVersion1()));
-                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(keyPath, chunk.getChunkVersion2()));
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(filesToCheckParent1.get(y), chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(filesToCheckParent2.get(y), chunk.getChunkVersion2()));
 
             }
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
@@ -135,24 +133,15 @@ public class ParserJava {
     }
 
     private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
-
-        int result[] = new int[2];
-        result[0] = 0;
-        result[1] = 0;
+        int result[] = {0,0};
         
         int preContext = 0;
         int posContext = 0;
         List<String> targetContent = ListUtils.readFile(targetFile);
-        boolean flag = true;
         int j = 0;
-        for (int i = 0; flag; i++) {
-
+        for (int i = 0; i < targetContent.size() && j < sourceBlock.size(); i++) {
             if (targetContent.get(i).equals(sourceBlock.get(j))) {
                 j++;
-
-            }
-            if (j == sourceBlock.size()) {
-                flag = false;
             }
             posContext = i;
         }
@@ -189,9 +178,9 @@ public class ParserJava {
 
     }
 
-    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList, String[] args) {
+    private static void createJungGraph(GlobalEnviroment parent1, GlobalEnviroment parent2, List<ConflictChunk> conflictChunkList) {
         Main jung = new Main(parent1, parent2, conflictChunkList, parent1.getEnviroment().keySet(), parent2.getEnviroment().keySet());
-        jung.main(args);
+        jung.main();
         File dirParent = new File("/Documentos/projetos/sandbox/");
 
         try {
@@ -212,15 +201,12 @@ public class ParserJava {
             ParserJava parserJava = new ParserJava(version);
 
             int j = 0, i = 0;
-            String nameNewDir;
 
             if (cont == 0) {
-                nameNewDir = "parent1";
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent1");
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                nameNewDir = "parent2";
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, nameNewDir);
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent2");
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
@@ -430,9 +416,9 @@ public class ParserJava {
                 JavaParser parser = new JavaParser(tokens);
                 ParseTree tree = parser.compilationUnit();
 
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.setSize(new Dimension(500, 600));
-                // viewer.open();
+                //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                //viewer.setSize(new Dimension(500, 600));
+                //viewer.open();
                 Visitor1 visitor = new Visitor1(globalEnviroment);
 
                 visitor.visit(tree);
@@ -455,8 +441,9 @@ public class ParserJava {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.setSize(new Dimension(500, 600));
+            //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            //viewer.setSize(new Dimension(500, 600));
+            //viewer.open();
 
             Visitor2 visitor = new Visitor2(globalEnviroment);
 
@@ -474,8 +461,9 @@ public class ParserJava {
             JavaParser parser = new JavaParser(tokens);
             ParseTree tree = parser.compilationUnit();
 
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.setSize(new Dimension(500, 600));
+            //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+            //viewer.setSize(new Dimension(500, 600));
+            //viewer.open();
 
             Visitor3 visitor = new Visitor3(globalEnviroment);
 
