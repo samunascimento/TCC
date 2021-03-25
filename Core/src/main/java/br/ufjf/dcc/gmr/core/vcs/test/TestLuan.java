@@ -40,7 +40,7 @@ public class TestLuan {
         }
          */
         File projectPath = new File("resources/teste.cs");
-        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(), 21, 22);
+        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(), 21, 26);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();

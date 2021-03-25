@@ -18,13 +18,12 @@ class Program
 {
    static void Main()
    {
-	int [] teste = new int [1]; 
-	teste[0]= 10;
+	int i;
+        i=10;
+        int z;
+        z=10*i;
+
    }
 }
 
-interface Animal 
-{
-  void animalSound(); 
-  void run(); 
-}
+

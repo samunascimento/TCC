@@ -790,13 +790,6 @@ public class Translator {
         return mainList;
     }
 
-    /* TO DO
-    * Verificar static
-    * Ajustar cast
-    * ARRAY_ACCESS
-    * ajeitar case
-    * import (using)
-     */
     public static List<String> CSharpTranslator(List<String> list) {
         List<String> mainList = new ArrayList<>();
         if (list.contains("Extension not parseble!")) {
@@ -807,19 +800,11 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Array_initializer")
-                || list.contains("Array")    ) {
+                    || list.contains("Array")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
                 list.remove("Array_initializer");
                 list.remove("Array");
             }
-            /* if (list.contains("")
-                    || list.contains("")
-                    || list.contains("")) {
-                mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
-                list.remove("");
-            }
-                       
-             */
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Assert on c# does not work as an language structure
@@ -991,15 +976,9 @@ public class Translator {
             // There is no package estructure on c#
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Pointer+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Pointer_type")
-                    || list.contains("Fixed_pointer_declarators")
-                    || list.contains("Fixed_pointer_declarator")
-                    || list.contains("Fixed_pointer_initializer")) {
+            if (list.contains("Pointer")) {
                 mainList.add(LanguageConstructsTypes.POINTER);
-                list.remove("Pointer_type");
-                list.remove("Fixed_pointer_declarators");
-                list.remove("Fixed_pointer_declarator");
-                list.remove("Fixed_pointer_initializer");
+                list.remove("Pointer");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1009,7 +988,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                //None
+            //None
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")

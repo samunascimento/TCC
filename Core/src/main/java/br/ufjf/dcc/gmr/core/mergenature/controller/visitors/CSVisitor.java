@@ -781,13 +781,26 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
         try {
             if (ctx.local_variable_type().type_().rank_specifier().get(0).getText().equals("[]")) {
                 specialProcess(ctx, "Array");
-            }else{
-                 process(ctx);
-            }
-                
+            } 
         } catch (NullPointerException ex) {
+
+        } catch (IndexOutOfBoundsException ex) {
+
         }
-       
+
+        try {
+            if (ctx.local_variable_type().type_().getText().contains("*")) {
+                specialProcess(ctx, "Pointer");
+
+            } else {
+                process(ctx);
+            }
+        } catch (NullPointerException ex) {
+             process(ctx);
+        } catch (IndexOutOfBoundsException ex) {
+             process(ctx);
+        }
+
         return visitChildren(ctx);
     }
 
