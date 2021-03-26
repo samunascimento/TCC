@@ -146,6 +146,7 @@ public class MNProjectPanel extends JPanel {
                 }
                 if(allLines != null){
                     MNAlterationsFrame.openAlterations(allLines, conflict);
+                    MergeNatureTools.prepareAnalysis(repositoryPath);
                 }
             }
         } catch (IOException | LocalRepositoryNotAGitRepository ex) {

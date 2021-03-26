@@ -9,7 +9,6 @@ import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
@@ -28,7 +27,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.imageio.IIOException;
 import javax.swing.JProgressBar;
 
 /**
@@ -111,13 +109,15 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            System.out.println("Current merge: " + logLine);
-            beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            System.out.println("Before: " + beforeUsedMem + " bytes");
-            project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            System.out.println("After: " + afterUsedMem + " bytes");
-            System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
+            if (status == 21) {
+                System.out.println("Current merge: " + logLine);
+                beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                System.out.println("Before: " + beforeUsedMem + " bytes");
+                project.addMerge(mergeLayer(project, logLine, repositoryPath));
+                afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+                System.out.println("After: " + afterUsedMem + " bytes");
+                System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
+            }
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -437,7 +437,7 @@ public class MergeNatureAlgorithm {
         for (LineInformation line : allLines) {
             isOutsideAlteration = true;
             for (IntegerInterval contextInterval : contextIntervals) {
-                if (contextInterval.begin <= line.getLineNumber() && contextInterval.end > line.getLineNumber()) {
+                if (contextInterval.begin <= line.getLineNumber() && contextInterval.end >= line.getLineNumber()) {
                     isOutsideAlteration = false;
                     break;
                 }

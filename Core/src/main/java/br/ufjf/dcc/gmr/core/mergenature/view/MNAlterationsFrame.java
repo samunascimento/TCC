@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,10 +24,12 @@ import javax.swing.JTextArea;
  * @since 25-03-2021
  */
 public class MNAlterationsFrame {
-    
+
     private static Font FONT = new JTextArea().getFont();
 
     public static void openAlterations(List<LineInformation> lines, Conflict conflict) {
+
+        int beforeLine = 0;
 
         JFrame frame = new JFrame();
 
@@ -37,6 +40,7 @@ public class MNAlterationsFrame {
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         JScrollPane scroll = new JScrollPane(mainPanel);
 
         JPanel bottonAjust = new JPanel();
@@ -51,7 +55,14 @@ public class MNAlterationsFrame {
         gbc.insets = new Insets(0, 0, 0, 0);
 
         for (LineInformation line : lines) {
-            mainPanel.add(generateLabel(line), gbc);
+            if (line.getLineNumber() != beforeLine) {
+                beforeLine = line.getLineNumber();
+                gbc.insets = new Insets(20, 0, 0, 0);
+                mainPanel.add(generateLabel(line), gbc);
+            } else {
+                gbc.insets = new Insets(0, 0, 0, 0);
+                mainPanel.add(generateLabel(line), gbc);
+            }
             gbc.gridy++;
         }
         gbc.weighty = 1;
