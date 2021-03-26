@@ -212,4 +212,36 @@ public class ProjectMetricsDao {
             }
         }
     }
+    
+    public List<ProjectMetrics> getAllProjectsByUser(int userId) throws SQLException {
+        ProjectMetrics projects = new ProjectMetrics();
+        List<ProjectMetrics> projectMetrics = new ArrayList<>();
+        String sql = "SELECT id,sourceDir,projectName,status FROM tb_projectmetrics where userId="+userId;
+
+        ResultSet resultSet = null;
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(sql);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String sourceDir = resultSet.getString("sourceDir");
+                String projectName = resultSet.getString("projectName");
+                String status = resultSet.getString("status");
+                projects.setId(id);
+                projects.setSourceDir(sourceDir);
+                projects.setName(projectName);
+                projects.setStatus(status);
+                projectMetrics.add(projects);
+            }
+            return projectMetrics;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 }
