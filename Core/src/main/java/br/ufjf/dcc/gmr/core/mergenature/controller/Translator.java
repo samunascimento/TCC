@@ -44,13 +44,11 @@ public class Translator {
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ArrayInitializer")
                     || list.contains("ElementValueArrayInitializer")
-                    || list.contains("ArrayCreationExpression")
-                    || list.contains("ArrayType")) {
+                    || list.contains("ArrayCreationExpression")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
                 list.remove("ArrayInitializer");
                 list.remove("ElementValueArrayInitializer");
                 list.remove("ArrayCreationExpression");
-                list.remove("ArrayType");
 
             }
             if (list.contains("ArrayAccess")
@@ -102,16 +100,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Catches")
-                    || list.contains("CatchClause")
-                    || list.contains("CatchFormalParameter")
-                    || list.contains("CatchType")
+            if (list.contains("CatchClause")
                     || list.contains("CatchExpression")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
-                list.remove("Catches");
                 list.remove("CatchClause");
-                list.remove("CatchFormalParameter");
-                list.remove("CatchType");
                 list.remove("CatchExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -204,17 +196,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ImportDeclaration")
-                    || list.contains("SingleTypeImportDeclaration")
-                    || list.contains("TypeImportOnDemandDeclaration")
-                    || list.contains("SingleStaticImportDeclaration")
-                    || list.contains("StaticImportOnDemandDeclaration")) {
+            if (list.contains("ImportDeclaration")) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
                 list.remove("ImportDeclaration");
-                list.remove("SingleTypeImportDeclaration");
-                list.remove("TypeImportOnDemandDeclaration");
-                list.remove("SingleStaticImportDeclaration");
-                list.remove("StaticImportOnDemandDeclaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -235,11 +219,9 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("MethodSignature");
             }
-            if (list.contains("InterfaceMethodDeclaration")
-                    || list.contains("InterfaceMethodModifier")) {
+            if (list.contains("InterfaceMethodDeclaration")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
                 list.remove("InterfaceMethodDeclaration");
-                list.remove("InterfaceMethodModifier");
             }
             if (list.contains("MethodInvocation")
                     || list.contains("MethodInvocation_lf_primaryContext")) {
@@ -269,17 +251,9 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")
-                    || list.contains("SwitchBlock")
-                    || list.contains("SwitchBlockStatementGroup")
-                    || list.contains("SwitchLabels")
-                    || list.contains("SwitchLabel")
                     || list.contains("SwitchExpression")) {
                 mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
                 list.remove("SwitchStatement");
-                list.remove("SwitchBlock");
-                list.remove("SwitchBlockStatementGroup");
-                list.remove("SwitchLabels");
-                list.remove("SwitchLabel");
                 list.remove("SwitchExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -304,12 +278,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("TypeVariable")
-                    || list.contains("VariableDeclaratorList")
-                    || list.contains("VariableDeclarator")
-                    || list.contains("VariableDeclaratorId")
-                    || list.contains("VariableInitializer")
-                    || list.contains("UnannTypeVariable")
+            if (list.contains("VariableDeclarator")
                     || list.contains("VariableModifier")
                     || list.contains("VariableInitializerList")
                     || list.contains("LocalVariableDeclarationStatement")
@@ -318,12 +287,7 @@ public class Translator {
                     || list.contains("VariableDeclarator")
                     || list.contains("VariableAccess")) {
                 mainList.add(LanguageConstructsTypes.VARIABLE);
-                list.remove("TypeVariable");
-                list.remove("VariableDeclaratorList");
                 list.remove("VariableDeclarator");
-                list.remove("VariableDeclaratorId");
-                list.remove("VariableInitializer");
-                list.remove("UnannTypeVariable");
                 list.remove("VariableModifier");
                 list.remove("VariableInitializerList");
                 list.remove("LocalVariableDeclarationStatement");

@@ -21,11 +21,7 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -39,29 +35,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * @since 14-12-2020
  */
 public class ANTLR4Tools {
-
-    public static ANTLR4Results analyzeJavaSyntaxTree(String filePath) throws IOException {
-        if (filePath.endsWith(".java")) {
-            List<SyntaxStructure> comments;
-            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            JavaLexer lexer = new JavaLexer(fileStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            JavaParser parser = new JavaParser(tokens);
-            ParseTree tree = parser.compilationUnit();
-            JavaVisitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new JavaVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
-            } else {
-                visitor = new JavaVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
-            }
-            visitor.visit(tree);
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
 
     public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
         if (filePathProjectAsRoot.endsWith(".java")) {
