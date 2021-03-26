@@ -12,8 +12,10 @@ import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectStatus;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.Status;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectVersionDao;
 import br.ufjf.dcc.jasome.jdbc.dao.VersionMetricsDao;
@@ -68,7 +70,7 @@ public class JasomeMethods {
     public void runProject(ProjectMetrics project, Connection connection) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, InvalidDocument, CheckoutError, NullPointerException, OptionNotExist, RefusingToClean, UnknownSwitch, IsOutsideRepository {
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);
         VersionMetrics versionMetrics = new VersionMetrics();
-        ProjectMetrics projectMetrics = new ProjectMetrics();
+        ProjectStatus newStatus = ProjectStatus.REGISTRADO;
         ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
         ProjectVersionDao projectVersionDao = new ProjectVersionDao(connection);
         List<Integer> idList = new ArrayList<>();
@@ -92,11 +94,12 @@ public class JasomeMethods {
 
             if (checkProject == false) {
                 project.setId(projectDaoSize + 1);
-                int projectId = projectDao.insert(project);
                 i = 0;
                 idPosition = 0;
                 log = Git.logAll(project.getSourceDir());
                 Collections.reverse(log);
+                project.setStatus(newStatus.EM_PROGRESSO.toString());
+                System.out.println(project.getStatus());
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
 
@@ -111,7 +114,8 @@ public class JasomeMethods {
                     idList.add(id);
                     idPosition++;
                 }
-
+                project.setStatus(newStatus.REGISTRADO.toString());
+                System.out.println(project.getStatus());
                 idPosition = 0;
 
                 for (Formats revision : log) {
@@ -122,7 +126,6 @@ public class JasomeMethods {
                     versionMetrics.setParentsHash(parents);
                     id = idList.get(idPosition);
                     versionMetrics.setId(id);
-                    projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
                     projectVersionDao.insert(project, versionMetrics.getId());
                     versionMetricsDao.updateAnalyzed(versionMetrics);
                     System.out.println("Commit número: " + (idPosition + 1));
@@ -136,6 +139,8 @@ public class JasomeMethods {
                 idPosition = 1;
                 log = Git.logAll(project.getSourceDir());
                 Collections.reverse(log);
+                project.setStatus(newStatus.EM_PROGRESSO.toString());
+                System.out.println(project.getStatus());
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
 
@@ -155,7 +160,6 @@ public class JasomeMethods {
                         versionMetrics.setHash(revision.getCommitHash());
                         versionMetrics.setParentsHash(parents);
                         versionMetrics.setId(id);
-                        projectMetrics = analyzeVersion(revision, project, i, connection, parents, id);
                         System.out.println(versionMetrics.getId());
                         projectVersionDao.insert(project, versionMetrics.getId());
                         versionMetricsDao.updateAnalyzed(versionMetrics);
@@ -166,9 +170,9 @@ public class JasomeMethods {
                         connection.commit();
                     }
                 }
+                project.setStatus(newStatus.REGISTRADO.toString());
+                System.out.println(project.getStatus());
             }
-//        } catch (NullPointerException ex) {
-//            System.out.println("Fim do arquivo");
         } catch (LocalRepositoryNotAGitRepository ex) {
             System.out.println("Não é um repositório válido");
         } catch (IOException ex) {

@@ -314,4 +314,15 @@ public class JasomeResource {
         connection.close();
         return acess;
     }
+    
+    //CARREGAR DADOS DOS PROJETOS PARA A TABELA
+    @GET
+    @Path("/insert/projects/getProjects/{id}")
+    public List<ProjectMetrics> getAllProjects(@PathParam("id") int id) throws SQLException {
+        Connection connection = ConnectionFactory.getConnection();
+        ProjectMetricsDao dao = new ProjectMetricsDao(connection);
+        List<ProjectMetrics> allProjects = dao.getAllProjectsByUser(id);
+        connection.close();
+        return allProjects;
+    }
 }
