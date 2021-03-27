@@ -21,24 +21,14 @@ public class Translator {
         } else {
             //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("AnnotationTypeDeclaration")
-                    || list.contains("AnnotationTypeMemberDeclaration")
                     || list.contains("AnnotationTypeElementDeclaration")) {
                 mainList.add(LanguageConstructsTypes.ANNOTATION_TYPE_MEMBER_DECLARATION);
                 list.remove("AnnotationTypeDeclaration");
-                list.remove("AnnotationTypeMemberDeclaration");
                 list.remove("AnnotationTypeElementDeclaration");
             }
-            if (list.contains("Annotation")
-                    || list.contains("NormalAnnotation")
-                    || list.contains("MarkerAnnotation")
-                    || list.contains("SingleElementAnnotation")
-                    || list.contains("AnnotationTypeBody")) {
+            if (list.contains("Annotation")) {
                 mainList.add(LanguageConstructsTypes.ANNOTATION);
                 list.remove("Annotation");
-                list.remove("NormalAnnotation");
-                list.remove("MarkerAnnotation");
-                list.remove("SingleElementAnnotation");
-                list.remove("AnnotationTypeBody");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,8 +46,6 @@ public class Translator {
                     || list.contains("ArrayAccess_lfno_primary")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
                 list.remove("ArrayAccess");
-                list.remove("ArrayAccess_lf_primary");
-                list.remove("ArrayAccess_lfno_primary");
 
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -68,11 +56,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")
-                    || list.contains("AssignmentExpression")) {
+            if (list.contains("Assignment")) {
                 mainList.add(LanguageConstructsTypes.ASSIGNMENT);
                 list.remove("Assignment");
-                list.remove("AssignmentExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -138,23 +124,17 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
                 list.remove("EnumSignature");
             }
-            if (list.contains("EnumConstantList")) {
+            if (list.contains("EnumConstant")) {
                 mainList.add(LanguageConstructsTypes.ENUM_VALUE);
-                list.remove("EnumConstantList");
+                list.remove("EnumConstant");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("FieldAccess")
-                    || list.contains("FieldAccess_lf_primary")
-                    || list.contains("FieldAccess_lfno_primary")
-                    || list.contains("FieldDeclaration")
-                    || list.contains("FieldModifier")) {
+                    || list.contains("FieldDeclaration")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("FieldAccess");
-                list.remove("FieldAccess_lf_primary");
-                list.remove("FieldAccess_lfno_primary");
                 list.remove("FieldDeclaration");
-                list.remove("FieldModifier");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -279,21 +259,9 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("VariableDeclarator")
-                    || list.contains("VariableModifier")
-                    || list.contains("VariableInitializerList")
-                    || list.contains("LocalVariableDeclarationStatement")
-                    || list.contains("LocalVariableDeclaration")
-                    || list.contains("VariableDeclaratorId")
-                    || list.contains("VariableDeclarator")
                     || list.contains("VariableAccess")) {
                 mainList.add(LanguageConstructsTypes.VARIABLE);
-                list.remove("VariableDeclarator");
-                list.remove("VariableModifier");
-                list.remove("VariableInitializerList");
-                list.remove("LocalVariableDeclarationStatement");
-                list.remove("LocalVariableDeclaration");
                 list.remove("VariableAccess");
-                list.remove("VariableDeclaratorId");
                 list.remove("VariableDeclarator");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
