@@ -191,30 +191,35 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("MethodDeclaration")) {
+            if (list.contains("MethodDeclaration")
+                    || list.contains("ConstructorDeclaration")) {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("MethodDeclaration");
+                list.remove("ConstructorDeclaration");
             }
-            if (list.contains("MethodSignature")) {
+            if (list.contains("MethodSignature")
+                    || list.contains("ConstructorDeclarator")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("MethodSignature");
+                list.remove("ConstructorDeclarator");
             }
             if (list.contains("InterfaceMethodDeclaration")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
                 list.remove("InterfaceMethodDeclaration");
             }
             if (list.contains("MethodInvocation")
-                    || list.contains("MethodInvocation_lf_primaryContext")) {
+                    || list.contains("MethodInvocation_lf_primaryContext")
+                    || list.contains("MethodInvocation_lfno_primary")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("MethodInvocation");
                 list.remove("MethodInvocation_lf_primaryContext");
+                list.remove("MethodInvocation_lfno_primary");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("PackageDeclaration")) {
                 mainList.add(LanguageConstructsTypes.PACKAGE_DECLARATION);
                 list.remove("PackageDeclaration");
-
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -259,10 +264,12 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("VariableDeclarator")
-                    || list.contains("VariableAccess")) {
+                    || list.contains("VariableAccess")
+                    || list.contains("LocalVariableDeclaration")) {
                 mainList.add(LanguageConstructsTypes.VARIABLE);
                 list.remove("VariableAccess");
                 list.remove("VariableDeclarator");
+                list.remove("LocalVariableDeclaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
