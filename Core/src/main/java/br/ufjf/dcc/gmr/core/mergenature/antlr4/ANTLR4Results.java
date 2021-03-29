@@ -84,5 +84,21 @@ public class ANTLR4Results {
             return result;
         }
     }
+    
+    public String getStringAll(){
+        String result = "========================================";
+        for (SyntaxStructure syntaxStructure : this.getAll()) {
+            result = result + "\n" + syntaxStructure.getForm() + "========================================";
+        }
+        return result;
+    }
+    
+    public String getStringAllOutmosted(){
+        String result = "========================================";
+        for (SyntaxStructure syntaxStructure : this.getAllOutmosted()) {
+            result = result + "\n" + syntaxStructure.getForm() + "\n========================================";
+        }
+        return result;
+    }
 
 }
