@@ -109,15 +109,13 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            if (status == 21) {
-                System.out.println("Current merge: " + logLine);
-                beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-                System.out.println("Before: " + beforeUsedMem + " bytes");
-                project.addMerge(mergeLayer(project, logLine, repositoryPath));
-                afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-                System.out.println("After: " + afterUsedMem + " bytes");
-                System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
-            }
+            System.out.println("Current merge: " + logLine);
+            beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            System.out.println("Before: " + beforeUsedMem + " bytes");
+            project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            System.out.println("After: " + afterUsedMem + " bytes");
+            System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
