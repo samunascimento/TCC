@@ -103,6 +103,14 @@ public class Translator {
                 list.remove("NormalClassSignature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("MultiLineComment")
+                    || list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("MultiLineComment");
+                list.remove("LineComment");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ContinueStatement")) {
                 mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
@@ -364,6 +372,14 @@ public class Translator {
                 list.remove("Classhead");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("BlockComment")
+                    || list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("BlockComment");
+                list.remove("LineComment");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Continuestatement")) {
                 mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
@@ -588,6 +604,12 @@ public class Translator {
                 list.remove("ClassSignature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("LineComment")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("LineComment");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Continue_stmt")) {
                 mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
@@ -803,6 +825,20 @@ public class Translator {
             if (list.contains("Class_signature")) {
                 mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
                 list.remove("Class_signature");
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("SINGLE_LINE_DOC_COMMENT")
+                    || list.contains("EMPTY_DELIMITED_DOC_COMMENT")
+                    || list.contains("DELIMITED_DOC_COMMENT")
+                    || list.contains("LineComment")
+                    || list.contains("DELIMITED_COMMENT")) {
+                mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("SINGLE_LINE_DOC_COMMENT");
+                list.remove("EMPTY_DELIMITED_DOC_COMMENT");
+                list.remove("DELIMITED_DOC_COMMENT");
+                list.remove("LineComment");
+                list.remove("DELIMITED_COMMENT");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

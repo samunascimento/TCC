@@ -31,7 +31,6 @@ public class SyntaxStructure {
         this.warning = warning;
     }
 
-
     public SyntaxStructure(Token token, boolean warning, Language language) {
         this.startLine = token.getLine();
         this.stopLine = (token.getLine() + token.getText().split("\n").length - 1);
@@ -58,16 +57,13 @@ public class SyntaxStructure {
                 this.structureType = "SINGLE_LINE_DOC_COMMENT";
             } else if (token.getType() == CSharpParser.EMPTY_DELIMITED_DOC_COMMENT) {
                 this.structureType = "EMPTY_DELIMITED_DOC_COMMENT";
-            }
-            else if (token.getType() ==CSharpParser.DELIMITED_DOC_COMMENT) {
+            } else if (token.getType() == CSharpParser.DELIMITED_DOC_COMMENT) {
                 this.structureType = "DELIMITED_DOC_COMMENT";
-            }
-            else if (token.getType() ==CSharpParser.SINGLE_LINE_COMMENT) {
+            } else if (token.getType() == CSharpParser.SINGLE_LINE_COMMENT) {
                 this.structureType = "LineComment";
-            }else if (token.getType() ==CSharpParser.DELIMITED_COMMENT) {
+            } else if (token.getType() == CSharpParser.DELIMITED_COMMENT) {
                 this.structureType = "DELIMITED_COMMENT";
             }
-
             //Multi line comments in python are arrays with no variable, we are working on it
         } else {
 
