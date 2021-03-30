@@ -98,7 +98,7 @@ public class MNFrame extends JFrame {
             JOptionPane.showMessageDialog(null, "The repository path isn't a git repository!", "ERROR!", JOptionPane.ERROR_MESSAGE);
         } else {
             tabbedPane.remove(progressBarPanel);
-            tabbedPane.addRemovableTab(projectName, null, new MNProjectPanel(progressBarPanel.getProject()), null);
+            tabbedPane.addRemovableTab(projectName, null, new MNProjectPanel(progressBarPanel.getProject(), projectLocation), null);
         }
     }
 

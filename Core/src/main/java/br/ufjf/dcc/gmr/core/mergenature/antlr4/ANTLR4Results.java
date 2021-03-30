@@ -88,7 +88,7 @@ public class ANTLR4Results {
     public String getStringAll(){
         String result = "========================================";
         for (SyntaxStructure syntaxStructure : this.getAll()) {
-            result = result + "\n" + syntaxStructure.getForm() + "========================================";
+            result = result + "\n" + syntaxStructure.getForm() + "\n========================================";
         }
         return result;
     }

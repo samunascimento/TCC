@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -61,7 +62,11 @@ public class MNConflictPanel extends JPanel {
         showFileAlteration.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                mergePanel.getProjectPanel().showFileAlterationsProcess(conflicts.get(conflictComboBox.getSelectedIndex()));
+                if(conflicts.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "The merge don't has conflicts", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    mergePanel.getProjectPanel().showFileAlterationsProcess(conflicts.get(conflictComboBox.getSelectedIndex()));
+                }
             }
 
             @Override

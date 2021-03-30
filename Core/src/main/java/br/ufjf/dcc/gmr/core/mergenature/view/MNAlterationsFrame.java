@@ -9,8 +9,13 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,9 +32,12 @@ public class MNAlterationsFrame {
 
     private static Font FONT = new JTextArea().getFont();
 
+    private static String allText;
+
     public static void openAlterations(List<LineInformation> lines, Conflict conflict) {
 
         int beforeLine = 0;
+        allText = "";
 
         JFrame frame = new JFrame();
 
@@ -40,8 +48,19 @@ public class MNAlterationsFrame {
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
-        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
-        JScrollPane scroll = new JScrollPane(mainPanel);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP));
+
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(MNFrame.PRIMARY_COLOR);
+        topPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
+        JScrollPane scroll = new JScrollPane(topPanel);
+
+        JButton copyButton = new JButton("Copy Text");
+        copyButton.addActionListener((ActionEvent evt) -> {
+            StringSelection selection = new StringSelection(allText);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+        });
 
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
@@ -57,19 +76,38 @@ public class MNAlterationsFrame {
         for (LineInformation line : lines) {
             if (line.getLineNumber() != beforeLine) {
                 beforeLine = line.getLineNumber();
-                gbc.insets = new Insets(20, 0, 0, 0);
-                mainPanel.add(generateLabel(line), gbc);
+                gbc.insets = new Insets(20, MNFrame.BORDER_GAP, 0, 0);
+                topPanel.add(generateLabel(line), gbc);
+                allText = allText + "\n\n" + line.getContent();
             } else {
-                gbc.insets = new Insets(0, 0, 0, 0);
-                mainPanel.add(generateLabel(line), gbc);
+                gbc.insets = new Insets(0, MNFrame.BORDER_GAP, 0, 0);
+                topPanel.add(generateLabel(line), gbc);
+                allText = allText + "\n" + line.getContent();
             }
             gbc.gridy++;
         }
+        gbc.gridy++;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        mainPanel.add(bottonAjust, gbc);
+        topPanel.add(bottonAjust, gbc);
 
-        frame.add(scroll);
+        gbc = new GridBagConstraints();
+        gbc.gridy = 1;
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+        mainPanel.add(topPanel, gbc);
+        gbc.gridy++;
+        gbc.weighty = 0;
+        gbc.fill = gbc.fill = GridBagConstraints.NONE;
+        mainPanel.add(copyButton, gbc);
+
+        allText = allText.replaceFirst("\n\n", "");
+        frame.add(mainPanel);
         frame.setVisible(true);
 
     }
@@ -81,10 +119,10 @@ public class MNAlterationsFrame {
         label.setBackground(Color.DARK_GRAY);
         if (line.getType() == LineType.ADDED) {
             label.setForeground(Color.RED);
-            label.setText(" - " + line.getContent());
+            label.setText(line.getContent());
         } else {
             label.setForeground(Color.GREEN);
-            label.setText(" + " + line.getContent());
+            label.setText(line.getContent());
         }
         return label;
     }

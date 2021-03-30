@@ -7,6 +7,7 @@ import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
+import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
@@ -40,6 +41,12 @@ public class MNProjectPanel extends JPanel {
     public MNProjectPanel(Project project) {
         this.project = project;
         this.repositoryPathFrame = new MNRepositoryPathFrame(this);
+        set();
+    }
+
+    public MNProjectPanel(Project project, String repositoryPath) {
+        this.project = project;
+        this.repositoryPathFrame = new MNRepositoryPathFrame(this, repositoryPath);
         set();
     }
 
@@ -144,7 +151,7 @@ public class MNProjectPanel extends JPanel {
                         JOptionPane.showMessageDialog(null, "The solution file was renamed or deleted, impossible to get altered the lines", "Solution file not found", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
-                if(allLines != null){
+                if (allLines != null) {
                     MNAlterationsFrame.openAlterations(allLines, conflict);
                     MergeNatureTools.prepareAnalysis(repositoryPath);
                 }

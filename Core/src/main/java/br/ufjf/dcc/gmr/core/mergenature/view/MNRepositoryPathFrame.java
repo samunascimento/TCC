@@ -33,6 +33,13 @@ public class MNRepositoryPathFrame extends JFrame {
         this.projectPanel = projectPanel;
         set();
     }
+    
+    public MNRepositoryPathFrame(MNProjectPanel projectPanel, String repositoryPath) {
+        this.projectPanel = projectPanel;
+        set();
+        this.repositoryPathField.setText(repositoryPath);
+        this.repositoryPathIsVerified = true;
+    }
 
     public boolean repositoryPathIsVerified() {
         return repositoryPathIsVerified;
@@ -41,6 +48,7 @@ public class MNRepositoryPathFrame extends JFrame {
     public void setRepositoryPathIsVerified(boolean repositoryPathIsVerified) {
         this.repositoryPathIsVerified = repositoryPathIsVerified;
     }
+    
     
     public String getRepositoryPath() {
         return repositoryPathField.getText();
