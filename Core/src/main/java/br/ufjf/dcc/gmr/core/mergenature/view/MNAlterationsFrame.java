@@ -54,7 +54,8 @@ public class MNAlterationsFrame {
         topPanel.setBackground(MNFrame.PRIMARY_COLOR);
         topPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         JScrollPane scroll = new JScrollPane(topPanel);
-
+        scroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        
         JButton copyButton = new JButton("Copy Text");
         copyButton.addActionListener((ActionEvent evt) -> {
             StringSelection selection = new StringSelection(allText);
@@ -100,7 +101,7 @@ public class MNAlterationsFrame {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
-        mainPanel.add(topPanel, gbc);
+        mainPanel.add(scroll, gbc);
         gbc.gridy++;
         gbc.weighty = 0;
         gbc.fill = gbc.fill = GridBagConstraints.NONE;
