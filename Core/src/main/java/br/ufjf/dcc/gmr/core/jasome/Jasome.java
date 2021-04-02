@@ -39,7 +39,7 @@ public class Jasome {
             ex.getMessage();
         }*/
         
-        analyze(null, null, null, "C:\\Users\\anton\\Documents\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\ProjetosExemplos\\minecrowdcontrol","REGISTRADO",1);
+        //analyze(null, null, null, "C:\\Users\\anton\\Documents\\UFJF\\Core\\thirdparty\\jasome\\build\\distributions\\jasome\\bin\\jasome", "C:\\Users\\anton\\Documents\\ProjetosExemplos\\minecrowdcontrol","REGISTRADO",1);
     }
 
     /**

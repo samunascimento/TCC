@@ -12,6 +12,7 @@ import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.jasome.model.ProjectMetrics;
+import br.ufjf.dcc.gmr.core.jasome.model.ProjectStatus;
 import br.ufjf.dcc.gmr.core.jasome.model.VersionMetrics;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.jasome.jdbc.dao.ProjectMetricsDao;
@@ -69,6 +70,7 @@ public class JasomeMethods {
         VersionMetricsDao versionMetricsDao = new VersionMetricsDao(connection);
         VersionMetrics versionMetrics = new VersionMetrics();
         ProjectMetrics projectMetrics = new ProjectMetrics();
+        ProjectStatus newStatus = ProjectStatus.REGISTRADO;
         ProjectMetricsDao projectDao = new ProjectMetricsDao(connection);
         ProjectVersionDao projectVersionDao = new ProjectVersionDao(connection);
         List<Integer> idList = new ArrayList<>();
@@ -97,6 +99,7 @@ public class JasomeMethods {
                 idPosition = 0;
                 log = Git.logAll(project.getSourceDir());
                 Collections.reverse(log);
+                project.setStatus(newStatus.EM_PROGRESSO.toString());
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
 
@@ -136,6 +139,7 @@ public class JasomeMethods {
                 idPosition = 1;
                 log = Git.logAll(project.getSourceDir());
                 Collections.reverse(log);
+                project.setStatus(newStatus.EM_PROGRESSO.toString());
                 System.out.println(log.size());
                 System.out.println("=================REVs=======================");
 
@@ -166,6 +170,7 @@ public class JasomeMethods {
                         connection.commit();
                     }
                 }
+                project.setStatus(newStatus.REGISTRADO.toString());
             }
 //        } catch (NullPointerException ex) {
 //            System.out.println("Fim do arquivo");
