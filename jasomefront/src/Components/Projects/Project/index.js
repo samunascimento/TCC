@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ChartMenu from './chartMenu'
-import Chart from './../../Charts/newChart';
-//import Chart from './../../Charts/chartLine';
+//import Chart from './../../Charts/newChart';
+import Chart from './../../Charts/chartLine';
 import Caption from './chartCaption'
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
