@@ -324,7 +324,10 @@ public class Translator {
             // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // Ainda revisando
+            if (list.contains("Static_assertdeclaration")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
+                list.remove("Static_assertdeclaration");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Realassignmentexpression")) {
@@ -414,11 +417,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Memberspecification")
-                    || list.contains("Memberdeclaration")) {
+            if (list.contains("Memberspecificator")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("Memberspecification");
-                list.remove("Memberdeclaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -465,11 +466,13 @@ public class Translator {
             //NAMESPACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Namespacesignature")
                     || list.contains("Namespacealiasdefinition")
-                    || list.contains("Usingdirective")) {
+                    || list.contains("Usingdirective")
+                    || list.contains("Usingdeclaration")) {
                 mainList.add(LanguageConstructsTypes.NAMESPACE);
                 list.remove("Namespacesignature");
                 list.remove("Namespacealiasdefinition");
                 list.remove("Usingdirective");
+                list.remove("Usingdeclaration");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -499,9 +502,11 @@ public class Translator {
             //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Throwexpression")) {
+            if (list.contains("Throwexpression")
+                    || list.contains("Dynamicexceptionspecification")) {
                 mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
                 list.remove("Throwexpression");
+                list.remove("Dynamicexceptionspecification");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
