@@ -933,13 +933,17 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Method_declaration")) {
+            if (list.contains("Method_declaration")
+                    || list.contains("Local_function_declaration")) {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Method_declaration");
+                list.remove("Local_function_declaration");
             }
-            if (list.contains("Method_signature")) {
+            if (list.contains("Method_signature")
+                    || list.contains("Local_function_header")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("Method_signature");
+                list.remove("Local_function_header");
             }
             if (list.contains("MethodInterface")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
@@ -950,6 +954,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("Method_invocation");
                 list.remove("Member_access");
+
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -973,13 +978,11 @@ public class Translator {
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")
                     || list.contains("Switch_expression")
-                    || list.contains("Switch_expression_arms")
                     || list.contains("Switch_expression_arm")
                     || list.contains("Switch_expressions")) {
                 mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
                 list.remove("SwitchStatement");
                 list.remove("Switch_expression");
-                list.remove("Switch_expression_arms");
                 list.remove("Switch_expression_arm");
                 list.remove("Switch_expressions");
             }
@@ -988,9 +991,11 @@ public class Translator {
 // There is a close equivalent to this structure in Java, but their scope is different enough so we couldn't call it the same 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ThrowStatement")) {
+            if (list.contains("ThrowStatement")
+                    || list.contains("Throw_expression")) {
                 mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
                 list.remove("ThrowStatement");
+                list.remove("Throw_expression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
