@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="update teste.java">
+    <list default="true" id="5f59f458-03ee-4c2a-9f79-54e591fdcfaf" name="Default Changelist" comment="fixing bugs">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sandboxparent1" beforeDir="false" afterPath="$PROJECT_DIR$/sandboxparent1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sandboxparent2" beforeDir="false" afterPath="$PROJECT_DIR$/sandboxparent2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/ParserJava.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/ParserJava.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/teste.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/teste.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/Visitor2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/Visitor2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/cpp/AST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/cpp/AST.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +51,20 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="database.data.csv.formats" />
   </component>
-  <component name="RunManager" selected="Application.teste">
+  <component name="RunManager" selected="Application.AST">
+    <configuration name="AST" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp.AST" />
+      <module name="Core" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ParserJava" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="br.ufjf.dcc.gmr.core.chunks.antlr4.ParserJava" />
       <module name="Core" />
@@ -94,24 +104,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.AST" />
         <item itemvalue="Application.teste" />
         <item itemvalue="Application.View" />
         <item itemvalue="Application.ParserJava" />
         <item itemvalue="Application.View" />
-        <item itemvalue="Application.ParserJava" />
       </list>
     </recent_temporary>
   </component>
@@ -133,6 +145,7 @@
       <workItem from="1612660374160" duration="27000" />
       <workItem from="1612904064094" duration="30000" />
       <workItem from="1613388695034" duration="60000" />
+      <workItem from="1617740761628" duration="1073000" />
     </task>
     <task id="LOCAL-00001" summary="change view`s textArea to 3 tables">
       <created>1612563210246</created>
@@ -176,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616612507105</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fixing bugs">
+      <created>1616624028295</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1616624028295</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,7 +219,8 @@
     <MESSAGE value="change view`s textArea to 1 table" />
     <MESSAGE value="clear table" />
     <MESSAGE value="update teste.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="update teste.java" />
+    <MESSAGE value="fixing bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing bugs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -208,6 +229,21 @@
           <properties class="java.lang.IndexOutOfBoundsException" package="java.lang" />
           <option name="timeStamp" value="17" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/cpp/AST.java</url>
+          <line>117</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/cpp/AST.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/br/ufjf/dcc/gmr/core/chunks/antlr4/visitor/cpp/AST.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>

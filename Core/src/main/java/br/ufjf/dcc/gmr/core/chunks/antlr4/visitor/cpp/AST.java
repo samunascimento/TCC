@@ -33,7 +33,7 @@ public class AST {
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
-            List<SyntaxStructure> comments;
+            List<SyntaxStructure> comments = new ArrayList<>();
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -119,7 +119,7 @@ public class AST {
                             System.out.println("MD: "+methodDeclaration.get(i).get(j).toString()+ " linha: "
                                     +methodDeclaration.get(i).get(j).getCtx().getStart().getLine()+
                                     "\nMC: "+methodCall.get(k).get(l).toString()+ " linha: "
-                                    +methodCall.get(i).get(j).getCtx().getStart().getLine());
+                                    +methodCall.get(k).get(l).getCtx().getStart().getLine());
                         }
                     }
               }
@@ -138,8 +138,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
-        String pathh = "/home/ketleen/Documentos/grafos-master/header/Grafo.h";
+        String path = "C:\\Users\\icout\\Downloads\\main.cpp";
+        String pathh = "C:\\Users\\icout\\Downloads\\header\\Grafo.h";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh,true);
         comparaNome();
