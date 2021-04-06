@@ -1,4 +1,4 @@
-create table Project(
+CREATE TABLE Project(
    	id SERIAL PRIMARY KEY (ID),
     name VARCHAR(100),
     url VARCHAR(300),
@@ -6,7 +6,7 @@ create table Project(
     PRIMARY KEY (ID)
 );
 
-create table Merge(
+CREATE TABLE Merge(
 	id SERIAL PRIMARY KEY (ID),
 	fk_ancestor FOREIGN KEY,
 	fk_merge FOREIGN KEY NOT NULL,
