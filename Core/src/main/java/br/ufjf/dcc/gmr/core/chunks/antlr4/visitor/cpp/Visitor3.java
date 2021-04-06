@@ -106,7 +106,9 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             if (ctx.getText().contains("(")) {
                 for (int i = 0; i < ctx.getChildCount(); i++) {
                     if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                        MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
+                        String a = ctx.getText().substring(ctx.getText().indexOf(">"), ctx.getText().indexOf("("));
+                        a= a.substring(1);
+                        MethodCallBinding e = new MethodCallBinding(a,ctx);
                         methodCall.add(e);
                         System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
 
@@ -115,7 +117,9 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
                 if (aux == 0) {
                     System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
-                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
+                         String a = ctx.getText().substring(ctx.getText().indexOf(">"), ctx.getText().indexOf("("));
+                        a=a.substring(1);
+                        MethodCallBinding e = new MethodCallBinding(a,ctx);
                     methodCall.add(e);
                 }
             } else {

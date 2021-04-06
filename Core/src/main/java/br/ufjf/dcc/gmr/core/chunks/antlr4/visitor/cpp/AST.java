@@ -108,13 +108,13 @@ public class AST {
         return cppFiles;
     }
         
-    public static void compara(){
+    public static void comparaNome(){
         
       for(int i =0; i<methodDeclaration.size(); i++){
           for(int j=0; j<methodDeclaration.get(i).size(); j++){
               for(int k=0; k<methodCall.size();k++){
                   for(int l=0; l<methodCall.get(k).size();l++){
-                        if(methodDeclaration.get(i).get(j).getName().equals(methodCall.get(k).get(l).getName())){
+                        if(verifica(methodDeclaration.get(i).get(j).getName(),methodCall.get(k).get(l).getName())){
                             System.out.println("=============== COMPARA ==================");
                             System.out.println("MD: "+methodDeclaration.get(i).get(j).toString()+ " linha: "
                                     +methodDeclaration.get(i).get(j).getCtx().getStart().getLine()+
@@ -126,14 +126,23 @@ public class AST {
           }
       }
     }
+    
+    public static boolean verifica(String nome1, String nome2){
+        if(nome1.equals(nome2)){
+            return true;
+        }
+        else
+            return false;
+    }
+    
 
     public static void main(String args[]) throws IOException {
 
         String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
-        String pathh = "/home/ketleen/Documentos/testeArvore/header/Grafo.h";
+        String pathh = "/home/ketleen/Documentos/grafos-master/header/Grafo.h";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh,true);
-        compara();
+        comparaNome();
         
     }
 }
