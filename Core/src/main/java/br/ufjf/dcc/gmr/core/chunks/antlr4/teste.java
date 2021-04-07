@@ -23,7 +23,7 @@ public class teste {
         String[] sha = {"044a3c", "0587bc", "042b1d", "0033c8", "09b977", "0985bf", "0af9d5"};
         List<Version> versions = new ArrayList<>();
         try {
-            int i = 0;
+            int i = 1;
             projectPath = projects[i];
             System.out.println("Running project: " + projectPath);
             Version version = start(sha[i]);
@@ -98,7 +98,7 @@ public class teste {
                         while (file.getPath().startsWith(" ")) {
                             file.setPath(file.getPath().replaceFirst(" ", ""));
                         }
-                        file.setPath(pathProject.concat(File.separator).concat(file.getPath()));
+                        file.setPath(pathProject.concat("/").concat(file.getPath()));
                         result.getFile().add(updateFile(file));
                     }
 
