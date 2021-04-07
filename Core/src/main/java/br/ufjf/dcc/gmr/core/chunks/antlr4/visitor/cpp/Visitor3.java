@@ -11,6 +11,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
  */
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ParametersBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableDeclarationBinding;
@@ -27,13 +28,15 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     private List<VariableDeclarationBinding> variableDeclaration;
     private List<MethodCallBinding> methodCall;
     private List<VariableUsageBinding> variableUsage;
+    private List<MethodDeclarationBinding> methodDeclaration;
     private boolean isFunctionInvocation = false;
 
-    public Visitor3() {
+    public Visitor3(List<MethodDeclarationBinding> methodDeclaration) {
         this.typeString = "";
         this.variableDeclaration = new ArrayList<>();
         this.methodCall = new ArrayList<>();
         this.variableUsage = new ArrayList<>();
+        this.methodDeclaration = methodDeclaration;
     }
 
     public List<VariableDeclarationBinding> getVariableDeclaration() {
@@ -111,11 +114,36 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             } else {
                 System.out.println("Ponteiro instanciando atributo: " + ctx.getText());
             }
-        } else {
+        } 
+        
+        else if (ctx.getText().contains(".")) {
+            int aux = 0;
+            if (ctx.getText().contains("(")) {
+                for (int i = 0; i < ctx.getChildCount(); i++) {
+                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
+                        String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
+                      
+                        MethodCallBinding e = new MethodCallBinding(a,ctx);
+                        methodCall.add(e);
+                        aux++;
+                    }
+                }
+                if (aux == 0) {
+                    String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
+
+                    MethodCallBinding e = new MethodCallBinding(a,ctx);
+                    methodCall.add(e);
+                }
+            }
+        } 
+        
+        else {
             int aux = 0;
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
                     //System.out.println("Chamada com parametro: " + ctx.getText());
+                    
+                    
                     MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                     methodCall.add(e);
                     aux++;
@@ -1323,8 +1351,27 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             ParametersBinding param = new ParametersBinding();
             param.setName(ctx.getText());
             
+            for(int i = 0; i < methodDeclaration.size(); i++) {
+                for(int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
+                    if(param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                        param.setTypeBinding(methodDeclaration.get(i).getParametersBindings().get(j).getTypeBinding());
+                    }
+                }
+            }
+            
             for(int i = 0; i < variableDeclaration.size(); i++) {
-                if(param.getName().equals(variableDeclaration.get(i).getName())) {
+                String s = variableDeclaration.get(i).getName();
+                if(variableDeclaration.get(i).getName().contains("[")) {
+                    s = variableDeclaration.get(i).getName().substring(0, variableDeclaration.get(i).getName().indexOf("["));
+                }
+                
+                if(param.getName().contains("[")) {
+                    if(param.getName().substring(0, param.getName().indexOf("[")).equals(s)) {
+                        param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
+                    }
+                }
+                
+                if(param.getName().equals(s)) {
                     param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
                     //System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
                 }
