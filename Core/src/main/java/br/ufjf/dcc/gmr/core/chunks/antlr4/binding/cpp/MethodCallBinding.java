@@ -28,7 +28,11 @@ public class MethodCallBinding extends BaseBinding {
     public List<ParametersBinding> getParameters() {
         return parameters;
     }
-
+    
+    public int getQtParameters(){
+        return parameters.size();
+    }
+    
     public void setParameters(List<ParametersBinding> parameters) {
         this.parameters = parameters;
     }
@@ -42,7 +46,7 @@ public class MethodCallBinding extends BaseBinding {
     }
      @Override
     public String toString(){
-        return super.getName() ;
+        return "metodo: " + super.getName() + "\n\tparametros: " + this.parameters.toString();
     }
 
     public CPP14Parser.FunctioninvocationContext getCtx() {

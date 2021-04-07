@@ -44,6 +44,10 @@ public class MethodDeclarationBinding extends BaseBinding {
     public String getModifier() {
         return modifier;
     }
+    
+    public int getQtParameters(){
+        return parameters.size();
+    }
 
     public void setModifier(String modifier) {
         this.modifier = modifier;
@@ -83,7 +87,7 @@ public class MethodDeclarationBinding extends BaseBinding {
 
    @Override
     public String toString(){
-        return "metodo: " + this.modifier + " " + this.type.getName() + " " + ctx.getText() + " " 
-                +"\tparametros: " + this.parameters.toString();
+        return "metodo: " + this.modifier + " " + this.type.getName() + " " + super.getName() + " " 
+                +"\n\tparametros: " + this.parameters.toString();
     }
 }
