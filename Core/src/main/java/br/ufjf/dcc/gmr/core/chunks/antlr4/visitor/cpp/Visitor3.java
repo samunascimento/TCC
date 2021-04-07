@@ -83,20 +83,6 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         return false;
     }
 
-//    public List<ParametersBinding> parameters(ParserRuleContext ctx) {
-//        List<ParametersBinding> list = new ArrayList<>();
-//        String[] s = null;
-//
-//        if (ctx.getText().contains("(")) {
-//            s = ctx.getText().split(",");
-//        }
-//        System.out.println("=============TESTE============");
-//        for (String item : s) {
-//            System.out.println(item);
-//        }
-//        return list;
-//    }
-
     @Override
     public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
 //            log(ctx);
@@ -110,16 +96,16 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                       
                         MethodCallBinding e = new MethodCallBinding(a,ctx);
                         methodCall.add(e);
-                        System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
+                        //System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
 
                         aux++;
                     }
                 }
                 if (aux == 0) {
-                    System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
-                         String a = ctx.getText().substring(ctx.getText().indexOf(">")+1, ctx.getText().indexOf("("));
-                      
-                        MethodCallBinding e = new MethodCallBinding(a,ctx);
+                    //System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
+                    String a = ctx.getText().substring(ctx.getText().indexOf(">")+1, ctx.getText().indexOf("("));
+
+                    MethodCallBinding e = new MethodCallBinding(a,ctx);
                     methodCall.add(e);
                 }
             } else {
@@ -129,14 +115,14 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             int aux = 0;
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                    System.out.println("Chamada com parametro: " + ctx.getText());
+                    //System.out.println("Chamada com parametro: " + ctx.getText());
                     MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                     methodCall.add(e);
                     aux++;
                 }
             }
             if (aux == 0) {
-                System.out.println("Chamada SEM parametro: " + ctx.getText());
+                //System.out.println("Chamada SEM parametro: " + ctx.getText());
                 MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
                 methodCall.add(e);
             }
@@ -165,7 +151,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 VariableDeclarationBinding variavel = new VariableDeclarationBinding(ctx.getText(), typeS);
                 if (!containDeclaration(variavel.getName())) {
                     variableDeclaration.add(variavel);
-                    System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
+                    //System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
                 }
             }
         }
@@ -675,7 +661,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
 
     public void expression(CPP14Parser.ExpressionContext ctx) throws NullPointerException {
 
-        System.out.println(ctx.getText());
+        //System.out.println(ctx.getText());
 
         String name;
         if (ctx.expression() != null) {
@@ -684,14 +670,14 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 VariableDeclarationBinding variable = new VariableDeclarationBinding();
                 variable.setName(name);
                 variableDeclaration.add(variable);
-                System.out.println("New Variavel: " + name);
+                //System.out.println("New Variavel: " + name);
             } else {
                 VariableUsageBinding variable = new VariableUsageBinding();
                 variable.setName(name);
                 variable.setCtx(ctx);
                 variableUsage.add(variable);
 
-                System.out.println("Variavel: " + name);
+                //System.out.println("Variavel: " + name);
             }
 
             expression(ctx.expression());
@@ -710,7 +696,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     TypeBinding tipo = new TypeBinding(type);
                     VariableDeclarationBinding variable = new VariableDeclarationBinding(name, tipo);
                     variableDeclaration.add(variable);
-                    System.out.println("Tipo: " + type + "  Variavel: " + name);
+                    //System.out.println("Tipo: " + type + "  Variavel: " + name);
                 }
             } else {
                 name = multiplicativeexpression.pmexpression().getText();
@@ -718,7 +704,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 variable.setName(name);
                 variable.setCtx(ctx);
                 variableUsage.add(variable);
-                System.out.println("Variavel: " + name);
+                //System.out.println("Variavel: " + name);
             }
 
         }
@@ -1302,7 +1288,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitParameterdeclaration(CPP14Parser.ParameterdeclarationContext ctx) {
 //            log(ctx);
-        System.out.println("**Parametros:  " + ctx.getText());
+        //System.out.println("**Parametros:  " + ctx.getText());
         return visitChildren(ctx);
     }
 
@@ -1334,10 +1320,16 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
 //            log(ctx);
          if(isFunctionInvocation){
-             ParametersBinding param = new ParametersBinding();
-             param.setName(ctx.getText());
+            ParametersBinding param = new ParametersBinding();
+            param.setName(ctx.getText());
+            
+            for(int i = 0; i < variableDeclaration.size(); i++) {
+                if(param.getName().equals(variableDeclaration.get(i).getName())) {
+                    System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
+                }
+            } 
             methodCall.get(methodCall.size()-1).getParameters().add(param);
-            System.out.println("**Parametros:  "+ctx.getText());
+            //System.out.println("**Parametros:  "+ctx.getText());
         }
         return visitChildren(ctx);
     }

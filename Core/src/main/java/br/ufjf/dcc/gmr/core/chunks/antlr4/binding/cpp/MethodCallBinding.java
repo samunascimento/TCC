@@ -42,7 +42,7 @@ public class MethodCallBinding extends BaseBinding {
     }
      @Override
     public String toString(){
-        return super.getName() ;
+        return "metodo: " + super.getName() + "\n\tparametros: " + this.parameters.toString();
     }
 
     public CPP14Parser.FunctioninvocationContext getCtx() {

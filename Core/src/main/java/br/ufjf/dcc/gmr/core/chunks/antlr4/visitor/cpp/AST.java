@@ -66,18 +66,16 @@ public class AST {
             for (int i = 0; i < visitor3.getVariableDeclaration().size(); i++) {
                 System.out.println(visitor3.getVariableDeclaration().get(i));
             }
+            
             System.out.println("============ VARIABLE USAGE =============");
             for (int i = 0; i < visitor3.getVariableUsage().size(); i++) {
                 System.out.println(visitor3.getVariableUsage().get(i));
             }
-             System.out.println("============ METHOD CALL =============");
-             methodCall.add(visitor3.getMethodCall());
+            
+            System.out.println("============ METHOD CALL =============");
+            methodCall.add(visitor3.getMethodCall());
             for (int i = 0; i < visitor3.getMethodCall().size(); i++) {
                 System.out.println(visitor3.getMethodCall().get(i));
-                for(int j =0; j<visitor3.getMethodCall().get(i).getParameters().size(); j++){
-                    System.out.print(visitor3.getMethodCall().get(i).getParameters().get(j)+ "  ");
-                }
-                 System.out.println("");
             }
 
             System.out.println("============ METHOD DECLARATION =============");
@@ -138,8 +136,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
-        String pathh = "/home/ketleen/Documentos/grafos-master/header/Grafo.h";
+        String path = "/home/goldner/Documentos/grafos-master/main.cpp";
+        String pathh = "/home/goldner/Documentos/grafos-master/header/Grafo.h";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh,true);
         comparaNome();
