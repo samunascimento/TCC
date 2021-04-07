@@ -1325,7 +1325,8 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             
             for(int i = 0; i < variableDeclaration.size(); i++) {
                 if(param.getName().equals(variableDeclaration.get(i).getName())) {
-                    System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
+                    param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
+                    //System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
                 }
             } 
             methodCall.get(methodCall.size()-1).getParameters().add(param);

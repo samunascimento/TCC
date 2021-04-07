@@ -44,6 +44,10 @@ public class MethodDeclarationBinding extends BaseBinding {
     public String getModifier() {
         return modifier;
     }
+    
+    public int getQtParameters(){
+        return parameters.size();
+    }
 
     public void setModifier(String modifier) {
         this.modifier = modifier;

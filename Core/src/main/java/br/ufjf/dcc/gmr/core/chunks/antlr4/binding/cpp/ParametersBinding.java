@@ -30,8 +30,11 @@ public class ParametersBinding extends BaseBinding {
     }
     
     
-   @Override
+  @Override
     public String toString(){
-        return this.typeBinding.getName() + " " + super.getName() ;
+        if(typeBinding == null)
+            return super.getName();
+        else 
+            return this.typeBinding.getName() + " " + super.getName();
     }
 }

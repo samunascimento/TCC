@@ -28,7 +28,11 @@ public class MethodCallBinding extends BaseBinding {
     public List<ParametersBinding> getParameters() {
         return parameters;
     }
-
+    
+    public int getQtParameters(){
+        return parameters.size();
+    }
+    
     public void setParameters(List<ParametersBinding> parameters) {
         this.parameters = parameters;
     }
