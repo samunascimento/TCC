@@ -11,6 +11,36 @@ public enum MergeType {
     CONFLICTED_MERGE, NOT_CONFLICTED_MERGE, OCTOPUS_MERGE, 
     CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, OCTOPUS_MERGE_OF_UNRELATED_HISTORIES,
     OUT_OF_MEMORY;
+    
+    public static int getIntFromEnum(MergeType mergeType){
+        switch(mergeType){
+            case CONFLICTED_MERGE:{
+                return 1;
+            }
+            case NOT_CONFLICTED_MERGE:{
+                return 2;
+            }
+            case OCTOPUS_MERGE:{
+                return 3;
+            }
+            case CONFLICTED_MERGE_OF_UNRELATED_HISTORIES:{
+                return 4;
+            }
+            case NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES:{
+                return 5;
+            }
+            case OCTOPUS_MERGE_OF_UNRELATED_HISTORIES:{
+                return 6;
+            }
+            case OUT_OF_MEMORY:{
+                return 7;
+            }
+            default:{
+                return -1;
+            }
+            
+        }
+    }
 
     public static MergeType getEnumFromInt(int value) {
         switch (value) {

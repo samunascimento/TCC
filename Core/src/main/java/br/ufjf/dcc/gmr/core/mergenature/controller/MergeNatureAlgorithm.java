@@ -82,7 +82,11 @@ public class MergeNatureAlgorithm {
         long afterUsedMem;
 
         if (MergeNatureTools.isDirectory(repositoryLocation)) {
-            repositoryPath = this.repositoryLocation;
+            if (repositoryLocation.endsWith("/")) {
+                repositoryPath = this.repositoryLocation;
+            } else {
+                repositoryPath = this.repositoryLocation + "/";
+            }
             project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
             project.setUrl(MergeNatureTools.getULROfProjectFromConfig(repositoryLocation));
             if (project.getUrl().equals("Unknow")) {

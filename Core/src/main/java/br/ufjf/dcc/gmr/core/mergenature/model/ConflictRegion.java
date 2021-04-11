@@ -58,6 +58,7 @@ public class ConflictRegion {
     public ConflictRegion(int id, Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.id = id;
         this.conflict = conflict;
+        this.rawConflict = rawConflict;
         this.beforeContext = beforeContext;
         this.beginLine = beginLine;
         this.v1Text = v1Text;
@@ -96,6 +97,7 @@ public class ConflictRegion {
      */
     public ConflictRegion(Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.conflict = conflict;
+        this.rawConflict = rawConflict;
         this.beforeContext = beforeContext;
         this.beginLine = beginLine;
         this.v1Text = v1Text;
@@ -160,7 +162,7 @@ public class ConflictRegion {
     public int getBeginLine() {
         return beginLine;
     }
-    
+
     public int getBeginIndex() {
         return beginLine - 1;
     }
@@ -189,7 +191,7 @@ public class ConflictRegion {
     public int getSeparatorLine() {
         return separatorLine;
     }
-    
+
     public int getSeparatorIndex() {
         return separatorLine - 1;
     }
@@ -209,7 +211,7 @@ public class ConflictRegion {
     public int getEndLine() {
         return endLine;
     }
-    
+
     public int getEndIndex() {
         return endLine - 1;
     }

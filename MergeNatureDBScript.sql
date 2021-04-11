@@ -1,34 +1,34 @@
 create table Project(
     id SERIAL, PRIMARY KEY (id),
-    name VARCHAR(100),
-    url VARCHAR(300),
+    name VARCHAR(500),
+    url VARCHAR(5000),
     organization VARCHAR(100)
 );
 
 CREATE TABLE Commit(
 	id SERIAL, PRIMARY KEY (id),
-	message VARCHAR(100),
-	commitHash VARCHAR(20),
-	author VARCHAR(100),
- 	authorDate DATE,
- 	committer VARCHAR(100),
- 	committerDate DATE
+	message VARCHAR(5000),
+	commitHash VARCHAR(100),
+	author VARCHAR(500),
+ 	authorDate BIGINT,
+ 	committer VARCHAR(500),
+ 	committerDate BIGINT
 );
 
 create table Merge(
 	id SERIAL, PRIMARY KEY (id),
-	fk_ancestor INT, 
-	FOREIGN KEY(fk_ancestor) REFERENCES Commit(id),
-	fk_merge INT, 
+	mergeType INT,
+	fk_merge INT,
 	FOREIGN KEY(fk_merge) REFERENCES Commit(id),
-	mergeType INT
+	fk_ancestor INT, 
+	FOREIGN KEY(fk_ancestor) REFERENCES Commit(id)
 );
 
 CREATE TABLE Conflict(
 	id SERIAL, PRIMARY KEY (id),
-	parent1FilePath VARCHAR(500),
-	parent2FilePath VARCHAR(500),
-	ancestorFilePath VARCHAR(500),
+	parent1FilePath VARCHAR(5000),
+	parent2FilePath VARCHAR(5000),
+	ancestorFilePath VARCHAR(5000),
 	hasOutsideAlterations BOOLEAN,
 	hasOutsideAlterationsIgnoringFormatting BOOLEAN,
 	conflictType INT
@@ -43,6 +43,7 @@ CREATE TABLE ConflictRegion(
 	separatorLine INT,
 	v2Text TEXT,
 	endLine INT,
+	afterContext TEXT,
 	solutionText TEXT,
 	structures TEXT,
 	outmostedStructures TEXT,
