@@ -107,7 +107,7 @@ public class MNFrame extends JFrame {
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int check = jfc.showOpenDialog(null);
         if (check == JFileChooser.APPROVE_OPTION) {
-            String[] auxArray = jfc.getSelectedFile().getPath().replace("\\","/").split("/");
+            String[] auxArray = jfc.getSelectedFile().getPath().replace("\\", "/").split("/");
             try {
                 tabbedPane.addRemovableTab(auxArray[auxArray.length - 1], null, new MNProjectPanel(GSONClass.readProject(jfc.getSelectedFile().getPath())), null);
             } catch (Exception ex) {

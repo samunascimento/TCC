@@ -2,8 +2,6 @@ package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
-import java.io.File;
-import java.nio.file.Paths;
 
 /**
  * Class to interpret the message of the merge to catch conflict

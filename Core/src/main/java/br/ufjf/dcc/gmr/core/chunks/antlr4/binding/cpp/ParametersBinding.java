@@ -10,7 +10,9 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
  * @author ketleen
  */
 public class ParametersBinding extends BaseBinding {
-
+    private TypeBinding typeBinding;
+    
+    
     public ParametersBinding(String name) {
         super(name);
     }
@@ -18,9 +20,21 @@ public class ParametersBinding extends BaseBinding {
     public ParametersBinding() {
     }
     
-       
-   @Override
+    
+    public TypeBinding getTypeBinding() {
+        return typeBinding;
+    }
+
+    public void setTypeBinding(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
+    }
+    
+    
+  @Override
     public String toString(){
-        return super.getName() ;
+        if(typeBinding == null)
+            return super.getName();
+        else 
+            return this.typeBinding.getName() + " " + super.getName();
     }
 }

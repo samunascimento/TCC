@@ -8,6 +8,44 @@ public enum DeveloperDecision {
 
     VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED, DIFF_PROBLEM;
 
+    public static int getIntFromEnum(DeveloperDecision developerDecision) {
+        switch (developerDecision) {
+            case VERSION1: {
+                return 1;
+            }
+            case VERSION2: {
+                return 2;
+            }
+            case CONCATENATION: {
+                return 3;
+            }
+            case COMBINATION: {
+                return 4;
+            }
+            case NEWCODE: {
+                return 5;
+            }
+            case NONE: {
+                return 6;
+            }
+            case IMPRECISE: {
+                return 7;
+            }
+            case FILE_DELETED: {
+                return 8;
+            }
+            case POSTPONED: {
+                return 9;
+            }
+            case DIFF_PROBLEM: {
+                return 10;
+            }
+            default: {
+                return -1;
+            }
+        }
+    }
+
     public static DeveloperDecision getEnumFromString(String value) {
         switch (value) {
             case "VERSION1": {

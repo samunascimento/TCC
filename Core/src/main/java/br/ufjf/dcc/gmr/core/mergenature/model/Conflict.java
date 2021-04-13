@@ -47,16 +47,18 @@ public class Conflict {
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
-        this.hasOutsideAlterationsIgnoringFormatting = this.hasOutsideAlterationsIgnoringFormatting;
+        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
         this.merge = merge;
     }
 
-    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, Merge merge) {
+    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
+        this.hasOutsideAlterations = hasOutsideAlterations;
+        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
         this.merge = merge;
     }
 
@@ -67,6 +69,7 @@ public class Conflict {
         this.conflictRegions = conflict.getConflictRegions();
         this.conflictType = conflict.getConflictType();
         this.hasOutsideAlterations = conflict.hasOutsideAlterations();
+        this.hasOutsideAlterationsIgnoringFormatting = conflict.hasOutsideAlterationsIgnoringFormatting;
         this.merge = conflict.getMerge();
     }
 

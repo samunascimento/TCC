@@ -659,7 +659,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
             if (child instanceof JavaParser.ClassOrInterfaceModifierContext) {
                 Modifier modifier = Modifier.equalsTo(child.getText());
                 this.typeBinding.addModifier(modifier);
-                this.typeBinding.setPackageBinding(packageBinding);
+                
             }else{
                 break;
             }
@@ -688,7 +688,7 @@ public class Visitor1 extends JavaParserBaseVisitor<Object> {
 
         BaseVisitor baseVisitor = new BaseVisitor();
         baseVisitor.visitPackageDeclaration(ctx, this.packageBinding);
-
+        this.typeBinding.setPackageBinding(packageBinding);
         Object visitPackageDeclaration = super.visitPackageDeclaration(ctx);
         return visitPackageDeclaration;
     }
