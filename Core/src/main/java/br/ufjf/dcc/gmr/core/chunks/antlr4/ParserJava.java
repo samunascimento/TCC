@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -83,7 +84,7 @@ public class ParserJava {
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
 
-     
+
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
@@ -112,14 +113,17 @@ public class ParserJava {
 
                 chunk.getChunkVersion1().setLineEnd(version1[1]);
                 chunk.getChunkVersion2().setLineEnd(version2[1]);
+                if(version1[1] == -1){
+                    System.out.println("debug");
+                }
 
                 chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(filesToCheckParent1.get(y), chunk.getChunkVersion1()));
                 chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(filesToCheckParent2.get(y), chunk.getChunkVersion2()));
-
             }
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
 
         }
+        System.out.println("debug");
     }
 
     private static int foundLine(String sourcePath, String targetPath, int sourceLine) throws IOException {
@@ -217,7 +221,8 @@ public class ParserJava {
                 for (String javaFile : javaFiles) {
                     String[] split = javaFile.split("/");
                     for (String string : jaja) {
-                        if (string.endsWith(split[split.length - 1])) {
+                        String[] stringSplited = string.split("\\\\");
+                        if (stringSplited[stringSplited.length-1].equals(split[split.length - 1])) {
                             if (cont == 0) {
                                 filesToCheckParent1.add(string);
                             } else {
@@ -230,7 +235,12 @@ public class ParserJava {
 
             System.out.println(pathRepositoryCopy);
 
-            ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());
+            if (cont == 0) {
+                ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());
+            } else  {
+                ASTExtractor(filesToCheckParent2, parserJava.getGlobalEnviroment());
+            }
+
             Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
 
             for (String pathAST1 : javaFiles) {
@@ -272,7 +282,7 @@ public class ParserJava {
                     filesToStringParent1.add(ListUtils.readFile(path));
                 }
 
-            } else if (cont == 1) {
+            } else {
                 parent2 = parserJava.getGlobalEnviroment();
                 for (String path : filesToCheckParent2) {
                     filesToStringParent2.add(ListUtils.readFile(path));

@@ -56,16 +56,16 @@ public class MNFrame extends JFrame {
         menu = new JMenuBar();
         this.setJMenuBar(menu);
 
-        tools = new JMenu("Tools");
+        tools = new JMenu("GSON");
         menu.add(tools);
 
-        readMenu = new JMenuItem("Read saved project");
+        readMenu = new JMenuItem("Read GSON");
         readMenu.addActionListener((ActionEvent evt) -> {
             readSavedAnalysis();
         });
         tools.add(readMenu);
 
-        saveMenu = new JMenuItem("Save project");
+        saveMenu = new JMenuItem("Save GSON");
         saveMenu.addActionListener((ActionEvent evt) -> {
             saveAnalysis();
         });

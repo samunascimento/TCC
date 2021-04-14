@@ -86,6 +86,9 @@ public class MNProjectFilterFrame extends JFrame {
 
     private JTextField hashInput = new JTextField("");
 
+    private JTextField structuresInput = new JTextField("");
+    private JCheckBox onlyOutmost = new JCheckBox("Only Outmost", false);
+
     public MNProjectFilterFrame(List<Merge> defaultList, List<Merge> currentList, MNMergesTable panel) {
         this.defaultList = defaultList;
         this.currentList = currentList;
@@ -98,7 +101,7 @@ public class MNProjectFilterFrame extends JFrame {
         this.setResizable(false);
         this.setTitle("Set filter");
         this.setLocationRelativeTo(null);
-        this.setSize(new Dimension(480, 550));
+        this.setSize(new Dimension(600, 600));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -131,6 +134,9 @@ public class MNProjectFilterFrame extends JFrame {
         JPanel hashPanel = new JPanel();
         hashPanel.setLayout(new GridBagLayout());
 
+        JPanel structuresPanel = new JPanel();
+        structuresPanel.setLayout(new GridBagLayout());
+
         JButton filterCurrentTable = new JButton("Filter Current Table");
         filterCurrentTable.addActionListener((ActionEvent evt) -> {
             switch (tabbedPane.getSelectedIndex()) {
@@ -143,8 +149,11 @@ public class MNProjectFilterFrame extends JFrame {
                 case 2:
                     filterByConflictRegion(currentList);
                     break;
-                default:
+                case 3:
                     filterByHash(currentList);
+                    break;
+                default:
+                    filterByStructures(currentList);
             }
         });
 
@@ -160,8 +169,11 @@ public class MNProjectFilterFrame extends JFrame {
                 case 2:
                     filterByConflictRegion(defaultList);
                     break;
-                default:
+                case 3:
                     filterByHash(defaultList);
+                    break;
+                default:
+                    filterByStructures(defaultList);
             }
         });
 
@@ -238,6 +250,7 @@ public class MNProjectFilterFrame extends JFrame {
         tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
         tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
         tabbedPane.addTab("Hash", null, hashPanel, "Filter the merges by their hashes");
+        tabbedPane.addTab("Structures", null, structuresPanel, "Filter the conflict regions bt their structures");
 
         orientationOfOrderBG = new ButtonGroup();
         orientationOfOrderBG.add(ascendingOrder);
@@ -252,10 +265,12 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        //====================ORIENTATION PANEL====================
         orientationPanel.add(ascendingOrder, gbc);
         gbc.gridx++;
         orientationPanel.add(descendingOrder, gbc);
 
+        //====================TYPE PANEL====================
         gbc.gridy = 0;
         typePanel.add(defaultOrder, gbc);
         gbc.gridy++;
@@ -265,6 +280,7 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         typePanel.add(chronologicalOrder, gbc);
 
+        //====================MERGE TYPE PANEL====================
         gbc.gridy = 0;
         mergeTypePanel.add(conflictedMerge, gbc);
         gbc.gridy++;
@@ -286,6 +302,7 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         mergeTypePanel.add(unselectAllMergeTypes, gbc);
 
+        //====================CONFLICT TYPE PANEL====================
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -319,6 +336,7 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         conflictTypePanel.add(unselectAllConflicts, gbc);
 
+        //====================DEVELOPER DECISION PANEL====================
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -350,6 +368,7 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         developerDecisionPanel.add(unselectAllDevDecisions, gbc);
 
+        //====================HASH PANEL====================
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -358,6 +377,27 @@ public class MNProjectFilterFrame extends JFrame {
         gbc.gridy++;
         hashPanel.add(hashInput, gbc);
 
+        //====================STRUCTURES PANEL====================
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        structuresPanel.add(new JLabel("Input the structures separeted by ';'. Ex.:"), gbc);
+
+        gbc.gridy++;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(4 * MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, 4 * MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+        structuresPanel.add(new JLabel("Variable;IfStatement;Field"), gbc);
+
+        gbc.gridy++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+        structuresPanel.add(structuresInput, gbc);
+
+        gbc.gridy++;
+        structuresPanel.add(onlyOutmost, gbc);
+
+        //====================MAIN PANEL====================
         gbc.gridy = 0;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
@@ -541,6 +581,45 @@ public class MNProjectFilterFrame extends JFrame {
             if (merge.getMerge().getCommitHash().startsWith(hashInput.getText())) {
                 filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
+        }
+
+        endsFilterProcess(filteredList);
+    }
+
+    private void filterByStructures(List<Merge> list) {
+        Merge auxMerge;
+        String auxString;
+        Conflict auxConflict;
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        String[] structures = structuresInput.getText().toLowerCase().split(";");
+        for (Merge merge : list) {
+            auxMerge = new Merge(merge);
+            auxMerge.setConflicts(new ArrayList<>());
+            for (Conflict conflict : merge.getConflicts()) {
+                auxConflict = new Conflict(conflict);
+                auxConflict.setConflictRegions(new ArrayList<>());
+                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+                    if (onlyOutmost.isSelected()) {
+                        auxString = conflictRegion.getOutmostedStructures().toLowerCase();
+                        for (String structure : structures) {
+                            if (auxString.contains(structure)) {
+                                auxConflict.addConflictRegion(conflictRegion);
+                                break;
+                            }
+                        }
+                    } else {
+                        auxString = conflictRegion.getStructures().toLowerCase();
+                        for (String structure : structures) {
+                            if (auxString.contains(structure)) {
+                                auxConflict.addConflictRegion(conflictRegion);
+                                break;
+                            }
+                        }
+                    }
+                }
+                auxMerge.addConflict(auxConflict);
+            }
+            filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
         }
 
         endsFilterProcess(filteredList);
