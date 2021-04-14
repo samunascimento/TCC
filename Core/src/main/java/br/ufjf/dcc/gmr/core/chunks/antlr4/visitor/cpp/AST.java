@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
+import static br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes.isCompatibleType;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
@@ -121,15 +122,16 @@ public class AST {
                                 //compara quantidade de parametro
                                 if (methodDeclaration.get(i).get(j).getQtParameters() == methodCall.get(k).get(l).getQtParameters()) {
 
-                                    
-                                    for (int p = 0; p < methodDeclaration.get(i).get(j).getParametersBindings().size(); p++){
+                                    for (int p = 0; p < methodDeclaration.get(i).get(j).getParametersBindings().size(); p++) {
+
                                         //compara tipos exatos nos parametros
-                                        if (methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName().equals(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName())) {
-                                            System.out.println("=============== COMPARA ==================");
-                                            System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
-                                                    + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
-                                                    + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
-                                                    + methodCall.get(k).get(l).getCtx().getStart().getLine());
+                                        // if (methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName().equals(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName())) {
+                                        if(isCompatibleType(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName(),methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName())){
+                                        System.out.println("=============== COMPARA ==================");
+                                        System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
+                                                + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
+                                                + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
+                                                + methodCall.get(k).get(l).getCtx().getStart().getLine());
                                         }
                                     }
                                 }
@@ -147,8 +149,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
-        String pathh = "/home/ketleen/Documentos/grafos-master/header/Grafo.h";
+        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String pathh = "/home/ketleen/Documentos/testeArvore/main.cpp";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
         comparaNome();
