@@ -1,11 +1,18 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -28,20 +35,35 @@ public class MNFrame extends JFrame {
     public static final Color PRIMARY_COLOR = Color.decode("#021a24");
     public static final Color SECUNDARY_COLOR = Color.WHITE;
     public static final Color TERTIARY_COLOR = Color.GREEN;
+    public static final String CONNECTION_FILEPATH = System.getProperty("user.dir") + File.separator + ".mndbconnection";
+
+    private Connection connection;
 
     private MNTabbedPane tabbedPane;
     private MNHome home;
     private JMenuBar menu;
-    private JMenu tools;
-    private JMenuItem readMenu;
-    private JMenuItem saveMenu;
+    private JMenu gsonMenu;
+    private JMenuItem readGSONMenuItem;
+    private JMenuItem saveGSONMenuItem;
+    private JMenu databaseMenu;
+    private JMenuItem readFromDBMenuItem;
+    private JMenuItem saveInDBMenuItem;
 
     public MNFrame() {
+        this.connection = getConnectionFromFile();
         set();
     }
 
     public void start() {
         this.setVisible(true);
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
     private void set() {
@@ -56,20 +78,52 @@ public class MNFrame extends JFrame {
         menu = new JMenuBar();
         this.setJMenuBar(menu);
 
-        tools = new JMenu("GSON");
-        menu.add(tools);
+        gsonMenu = new JMenu("MNTR");
+        menu.add(gsonMenu);
 
-        readMenu = new JMenuItem("Read GSON");
-        readMenu.addActionListener((ActionEvent evt) -> {
+        readGSONMenuItem = new JMenuItem("Read mntr");
+        readGSONMenuItem.addActionListener((ActionEvent evt) -> {
             readSavedAnalysis();
         });
-        tools.add(readMenu);
+        gsonMenu.add(readGSONMenuItem);
 
-        saveMenu = new JMenuItem("Save GSON");
-        saveMenu.addActionListener((ActionEvent evt) -> {
-            saveAnalysis();
+        saveGSONMenuItem = new JMenuItem("Save mntr");
+        saveGSONMenuItem.addActionListener((ActionEvent evt) -> {
+            saveAnalysis(false);
         });
-        tools.add(saveMenu);
+        gsonMenu.add(saveGSONMenuItem);
+
+        databaseMenu = new JMenu("Database");
+        menu.add(databaseMenu);
+
+        readFromDBMenuItem = new JMenuItem("Read from database");
+        readFromDBMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if (connection == null) {
+                    if (JOptionPane.showConfirmDialog(null, "No database connected. Try to connect?", "WARNING",
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                        showInputConnection();
+                    }
+                } else {
+                    MNDatabaseInteractions.getGetProjectFromDBFrame(connection, tabbedPane);
+                }
+            }
+        });
+        databaseMenu.add(readFromDBMenuItem);
+
+        saveInDBMenuItem = new JMenuItem("Save in database");
+        saveInDBMenuItem.addActionListener((ActionEvent evt) -> {
+            if (connection == null) {
+                if (JOptionPane.showConfirmDialog(null, "No database connected. Try to connect?", "WARNING",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    showInputConnection();
+                }
+            } else {
+                saveAnalysis(true);
+            }
+        });
+        databaseMenu.add(saveInDBMenuItem);
 
         tabbedPane = new MNTabbedPane();
         this.add(tabbedPane);
@@ -102,6 +156,10 @@ public class MNFrame extends JFrame {
         }
     }
 
+    public void showInputConnection() {
+        MNInputConnection.getMNInputConnection(this);
+    }
+
     private void readSavedAnalysis() {
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -116,7 +174,7 @@ public class MNFrame extends JFrame {
         }
     }
 
-    private void saveAnalysis() {
+    private void saveAnalysis(boolean saveInDB) {
         if (tabbedPane.getTabCount() == 1) {
             JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -129,12 +187,33 @@ public class MNFrame extends JFrame {
             if (projectPanels.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
             } else {
-                new MNSaveAnalysis(projectPanels);
+                if(saveInDB){
+                    MNDatabaseInteractions.getSaveAnalysisInDBFrame(connection, projectPanels);
+                } else {
+                    new MNSaveAnalysis(projectPanels); 
+                }
             }
         }
     }
 
-    public static void main(String[] args) {
+    private Connection getConnectionFromFile() {
+        String fileContent;
+        try {
+            fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
+        } catch (IOException ex) {
+            return null;
+        }
+        String[] data = fileContent.split(";");
+        Connection connection = null;
+        try {
+            connection = ConnectionFactory.getConnection(data[0], data[1], data[2]);
+        } catch (Exception ex) {
+            return null;
+        }
+        return connection;
+    }
+
+    public static void main(String[] args) throws IOException {
         MNFrame frame = new MNFrame();
         frame.start();
     }
