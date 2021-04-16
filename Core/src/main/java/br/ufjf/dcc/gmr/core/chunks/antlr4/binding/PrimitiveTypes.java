@@ -21,21 +21,50 @@ public class PrimitiveTypes {
                 return false;
             } else if (subType == null && type == null) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  BYTE) && (type.equals(PRIMITIVE_PACKAGE + "." +  BYTE) || type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) || type.equals(PRIMITIVE_PACKAGE + "." +  SHORT) || type.equals(PRIMITIVE_PACKAGE + "." +  INT) || type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } 
+            else if (subType.equals(PRIMITIVE_PACKAGE + "." +  BYTE) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  BYTE) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  SHORT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  INT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  SHORT) && (type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) || type.equals(PRIMITIVE_PACKAGE + "." +  SHORT) || type.equals(PRIMITIVE_PACKAGE + "." +  INT) || type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  SHORT) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) ||
+                    type.equals(PRIMITIVE_PACKAGE + "." +  SHORT) ||
+                    type.equals(PRIMITIVE_PACKAGE + "." +  INT) ||
+                    type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  INT) && (type.equals(PRIMITIVE_PACKAGE + "." +  INT) || type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  INT) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  INT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  LONG) && (type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  LONG) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) && (type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE) && type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE)) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE) && 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE)) {
                 return true;
             } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  BOOLEAN) && type.equals(PRIMITIVE_PACKAGE + "." +  BOOLEAN)) {
                 return true;
-            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  CHAR) && (type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) || type.equals(PRIMITIVE_PACKAGE + "." +  SHORT) || type.equals(PRIMITIVE_PACKAGE + "." +  INT) || type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
+            } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  CHAR) && 
+                    (type.equals(PRIMITIVE_PACKAGE + "." +  CHAR) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  INT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  LONG) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  FLOAT) || 
+                    type.equals(PRIMITIVE_PACKAGE + "." +  DOUBLE))) {
                 return true;
             } else if (subType.equals(PRIMITIVE_PACKAGE + "." +  STRING) && type.equals(PRIMITIVE_PACKAGE + "." +  STRING)) {
                 return true;
