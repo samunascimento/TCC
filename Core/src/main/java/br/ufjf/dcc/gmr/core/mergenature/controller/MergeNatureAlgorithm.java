@@ -95,7 +95,7 @@ public class MergeNatureAlgorithm {
                 project.setOrganization(auxStringArray[auxStringArray.length - 2]);
             }
         } else {
-            System.out.println("Downloading analysis is not avaliable!");
+            System.out.println("Analysis Download is not avaliable!");
         }
         MergeNatureTools.prepareAnalysis(repositoryPath);
         List<String> log;
