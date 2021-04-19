@@ -216,14 +216,21 @@ public class ParserJava {
 
             int j = 0, i = 0;
 
+            /*
+            begin
+            */
             if (cont == 0) {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent1");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent11", version.getParent().get(0));
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2", version.getParent().get(0));
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
+            /*
+            end
+            */
+            
             File cloneDirectory = new File(pathRepositoryCopy);
             if (cloneDirectory.isDirectory()) {
                 List<String> jaja = javaFiles(pathRepositoryCopy);
@@ -346,19 +353,29 @@ public class ParserJava {
         return result;
     }
 
-    private static String createDiffRepository(String path, String sandbox, String pasta) throws IOException {
+    private static String createDiffRepository(String path, String sandbox, String pasta, String targetSHA) throws IOException {
 
         File srcDir = new File(path);
         File destDir = new File(sandbox, pasta);
         try {
 
             Git.clone(srcDir.getAbsolutePath(), sandbox, pasta);
+            Git.reset(destDir.getAbsolutePath(), true, false, false, null);
+            Git.clean(destDir.getAbsolutePath(), true, 0);
+            Git.checkout(targetSHA, destDir.getAbsolutePath());
+            
 
         } catch (RepositoryNotFound ex) {
             Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UrlNotFound ex) {
             Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryAlreadyExist ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownSwitch ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RefusingToClean ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IsOutsideRepository ex) {
             Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
         }
 
