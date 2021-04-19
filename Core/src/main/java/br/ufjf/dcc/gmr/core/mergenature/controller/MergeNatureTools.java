@@ -7,8 +7,10 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,18 @@ public class MergeNatureTools {
     public static String getRawForm(String string){
         return string.replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
     }
+    
+    public static void createAndWriteInFile(String filePath, String content) throws IOException {
+        File yourFile = new File(filePath);
+        yourFile.createNewFile();
+        FileOutputStream oFile = new FileOutputStream(yourFile, false);
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(oFile);
+        myOutWriter.append(content);
+        myOutWriter.close();
+        oFile.close();
+    }
 
-    public static List<String> getFileContent(String filePath) throws FileNotFoundException, IOException {
+    public static List<String> getFileContentInList(String filePath) throws FileNotFoundException, IOException {
         List<String> content = new ArrayList<>();
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -34,6 +46,18 @@ public class MergeNatureTools {
         }
         br.close();
         return content;
+    }
+    
+    public static String getFileContentInString(String filePath) throws FileNotFoundException, IOException{
+        String content = "";
+        File file = new File(filePath);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String st;
+        while ((st = br.readLine()) != null) {
+            content = content + "\n" + st;
+        }
+        br.close();
+        return content.replaceFirst("\n", "");
     }
 
     public static boolean isDirectory(File file) {
@@ -71,7 +95,7 @@ public class MergeNatureTools {
     public static String getULROfProjectFromConfig(String repositoryPath) throws IOException {
         try {
             String url = "Unknow";
-            for (String line : getFileContent(repositoryPath + ".git/config")) {
+            for (String line : getFileContentInList(repositoryPath + ".git" + File.separator + "config")) {
                 if (line.startsWith("\turl = ")) {
                     String[] split = line.split("= ");
                     url = split[split.length - 1];

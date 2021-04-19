@@ -9,7 +9,6 @@ import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
@@ -96,7 +95,7 @@ public class MergeNatureAlgorithm {
                 project.setOrganization(auxStringArray[auxStringArray.length - 2]);
             }
         } else {
-            System.out.println("Downloading analysis is not avaliable!");
+            System.out.println("Analysis Download is not avaliable!");
         }
         MergeNatureTools.prepareAnalysis(repositoryPath);
         List<String> log;
@@ -202,7 +201,7 @@ public class MergeNatureAlgorithm {
                 || conflict.getConflictType() == ConflictType.COINCIDENCE_ADDING
                 || conflict.getConflictType() == ConflictType.FILE_RENAME) {
             List<IntegerInterval> contextIntervals = new ArrayList<>();
-            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContent(repositoryPath + conflict.getParent1FilePath()), repositoryPath, contextIntervals));
+            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContentInList(repositoryPath + conflict.getParent1FilePath()), repositoryPath, contextIntervals));
             if (contextIntervals != null) {
                 conflict = outsideAlterationsLayer(conflict, repositoryPath, contextIntervals);
             } else {

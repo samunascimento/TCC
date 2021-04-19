@@ -74,7 +74,7 @@ public class Jasome {
         return repositoryPath;
     }
 
-    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException {
+    public static void analyze(String urlDB, String userNameDB, String passwordDB, String jasomePath, String projectPath, String status, int userId) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, SQLException, ClassNotFoundException {
 
         Connection connection = null;
         if (urlDB == null && userNameDB == null && passwordDB == null) {

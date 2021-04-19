@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +16,7 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<LocalVariableDeclarationBinding> localVariableDeclarationBindings;
     private List<LocalVariableUsageBinding> localVariableUsageBindings;
     private List<MethodCallBinding> methodCallBindings;
-    
-    
+
     public MethodDeclarationBinding() {
         super();
         this.modifier = new ArrayList<>();
@@ -31,36 +29,53 @@ public class MethodDeclarationBinding extends BaseBinding {
         this.methodCallBindings = new ArrayList<>();
     }
 
+//    Pessoa p; (getName()) -- type
+//    Estudante e; - mcb
+//    
+//    e.getName();
     public boolean equalsTo(MethodCallBinding mcb) {
-        
-        
-        if (!this.type.getName().equals(mcb.getTypeBinding().getName())) {       
-            if (mcb.getTypeBinding().getExtendClass() == null || (mcb.getTypeBinding().getExtendClass() != null && !this.returnBinding.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
+
+        if (!this.type.getName().equals(mcb.getTypeBinding().getName())) {
+            /*TODO: Tratar herança com vários níveis considerando o modificador de acesso*/
+
+            if (mcb.getTypeBinding().getExtendClass() == null
+                    || (mcb.getTypeBinding().getExtendClass() != null
+                    && !this.type.getName().equals(mcb.getTypeBinding().getExtendClass().getName()))) {
                 return false;
             }
         }
 
         if (!this.getName().equals(mcb.getName())) {
             return false;
-        }
+        } else {
 
-        if (this.getParameters() == null || mcb.getParameters() == null) {
-            return false;
-        }
+            if (this.getParameters() == null && mcb.getParameters() == null) {
+                return true;
+            }
 
-        if (this.getParameters().size() != mcb.getParameters().size()) {
-            return false;
-        }
-
-        for (int i = 0; i < this.getParameters().size(); i++) {
-            if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(), this.getParameters().get(i).getTypeBinding().getName())) {
+            if (this.getParameters() == null ^ mcb.getParameters() == null) {
                 return false;
+            }
+
+            if (this.getParameters() != null && mcb.getParameters() != null
+                    && this.getParameters().size() != mcb.getParameters().size()) {
+                return false;
+            }
+
+            for (int i = 0; i < this.getParameters().size(); i++) {
+                //verify
+                /*TODO: tratar tipos de referência*/
+                
+                if (!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getName(),
+                        this.getParameters().get(i).getTypeBinding().getName())) {
+                    return false;
+                }
             }
         }
 
         return true;
     }
-    
+
     @Override
     public String toString() {
 
@@ -80,11 +95,10 @@ public class MethodDeclarationBinding extends BaseBinding {
 
         output = output.concat("[").concat(ctx.getStart().getLine() + "").concat(",").
                 concat(ctx.getStop().getLine() + "").concat("]");
-        
+
         for (Modifier modifiers : modifier) {
-            output = output.concat("| Modifier = "+modifiers+" | ");
+            output = output.concat("| Modifier = " + modifiers + " | ");
         }
-        
 
         return output;
     }
@@ -190,32 +204,35 @@ public class MethodDeclarationBinding extends BaseBinding {
     public void setMethodCallBindings(List<MethodCallBinding> methodCallBindings) {
         this.methodCallBindings = methodCallBindings;
     }
-    
-    public void addLocalVariableDeclarationBinding(List<BaseBinding> baseBindings){
-        
+
+    public void addLocalVariableDeclarationBinding(List<BaseBinding> baseBindings) {
+
         for (BaseBinding baseBinding : baseBindings) {
-            if(baseBinding instanceof LocalVariableDeclarationBinding)
+            if (baseBinding instanceof LocalVariableDeclarationBinding) {
                 this.localVariableDeclarationBindings.add((LocalVariableDeclarationBinding) baseBinding);
+            }
         }
-        
+
     }
-    
-    public void addLocalVariableUsageBinding(List<BaseBinding> baseBindings){
-        
+
+    public void addLocalVariableUsageBinding(List<BaseBinding> baseBindings) {
+
         for (BaseBinding baseBinding : baseBindings) {
-            if(baseBinding instanceof LocalVariableUsageBinding)
+            if (baseBinding instanceof LocalVariableUsageBinding) {
                 this.localVariableUsageBindings.add((LocalVariableUsageBinding) baseBinding);
+            }
         }
-        
+
     }
-    
-    public void addMethodCallBinding(List<BaseBinding> baseBindings){
-        
+
+    public void addMethodCallBinding(List<BaseBinding> baseBindings) {
+
         for (BaseBinding baseBinding : baseBindings) {
-            if(baseBinding instanceof MethodCallBinding)
+            if (baseBinding instanceof MethodCallBinding) {
                 this.methodCallBindings.add((MethodCallBinding) baseBinding);
+            }
         }
-        
+
     }
 
     public TypeBinding getType() {

@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
+import static br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes.isCompatibleType;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
@@ -60,7 +61,7 @@ public class AST {
             //Imprimir_arvore-------------------------------------------------------
             if (openTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
+                //viewer.open();
             }
             //----------------------------------------------------------------------*/
             System.out.println("============ VARIABLE DECLARATION =============");
@@ -113,16 +114,26 @@ public class AST {
             for (int j = 0; j < methodDeclaration.get(i).size(); j++) {
                 for (int k = 0; k < methodCall.size(); k++) {
                     for (int l = 0; l < methodCall.get(k).size(); l++) {
-                        if(i != k) {
-                                //compara nome
+                        if (i != k) {
+
+                            //compara nome
                             if (verifica(methodDeclaration.get(i).get(j).getName(), methodCall.get(k).get(l).getName())) {
+
                                 //compara quantidade de parametro
                                 if (methodDeclaration.get(i).get(j).getQtParameters() == methodCall.get(k).get(l).getQtParameters()) {
-                                    System.out.println("=============== COMPARA ==================");
-                                    System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
-                                            + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
-                                            + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
-                                            + methodCall.get(k).get(l).getCtx().getStart().getLine());
+
+                                    for (int p = 0; p < methodDeclaration.get(i).get(j).getParametersBindings().size(); p++) {
+
+                                        //compara tipos exatos nos parametros
+                                        // if (methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName().equals(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName())) {
+                                        if(isCompatibleType(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName(),methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName())){
+                                        System.out.println("=============== COMPARA ==================");
+                                        System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
+                                                + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
+                                                + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
+                                                + methodCall.get(k).get(l).getCtx().getStart().getLine());
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -138,8 +149,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/goldner/Documentos/grafos-master/main.cpp";
-        String pathh = "/home/goldner/Documentos/grafos-master/header/Grafo.h";
+        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String pathh = "/home/ketleen/Documentos/testeArvore/main.cpp";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
         comparaNome();
