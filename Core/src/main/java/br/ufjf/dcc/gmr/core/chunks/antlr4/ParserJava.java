@@ -220,10 +220,10 @@ public class ParserJava {
             begin
             */
             if (cont == 0) {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent11", version.getParent().get(0));
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent1", version.getParent().get(0));
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2", version.getParent().get(0));
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2", version.getParent().get(1));
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
