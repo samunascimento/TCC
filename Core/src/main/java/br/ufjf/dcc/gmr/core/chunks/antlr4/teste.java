@@ -28,7 +28,7 @@ public class teste {
             System.out.println("Running project: " + projectPath);
             Version version = start(sha[i]);
             versions.add(version);
-            ParserJava parserJava = new ParserJava(version, projectPath);
+            ParserJava parserJava = new ParserJava(version, projectPath, "C:/Users/felip/Desktop/Bolsa/Sandbox");
             ParserJava.main();
         } catch (Exception e) {
             e.printStackTrace();

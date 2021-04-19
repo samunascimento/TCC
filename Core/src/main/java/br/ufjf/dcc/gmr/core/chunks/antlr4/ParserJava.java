@@ -39,6 +39,7 @@ public class ParserJava {
     private GlobalEnviroment globalEnviroment;
     private static Version version;
     private static String pathProject = "";
+    private static String pathSandbox = "";
     private static int context = 0;
     private static String pathRepositoryCopy = "";
     private static String pathRepositoryCopy1 = "";
@@ -58,7 +59,8 @@ public class ParserJava {
 
     }
 
-    public ParserJava(Version version, String pathProject) {
+    public ParserJava(Version version, String pathProject, String pathSandbox) {
+        this.pathSandbox = pathSandbox;
         this.version = version;
         this.globalEnviroment = new GlobalEnviroment();
         this.pathProject = pathProject;
@@ -208,10 +210,10 @@ public class ParserJava {
             int j = 0, i = 0;
 
             if (cont == 0) {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent1");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent1");
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent2");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2");
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
@@ -338,12 +340,13 @@ public class ParserJava {
         return result;
     }
 
-    private static String createDiffRepository(String path, String pasta) throws IOException {
+    private static String createDiffRepository(String path, String sandbox, String pasta) throws IOException {
 
         String source = path;
         File srcDir = new File(source);
 
-        String destination = "sandbox" + pasta;
+        
+        String destination = sandbox + File.separator + pasta;
         File destDir = new File(destination);
 
         try {
