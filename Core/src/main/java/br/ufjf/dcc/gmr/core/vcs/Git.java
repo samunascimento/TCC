@@ -333,6 +333,48 @@ public class Git {
     /**
      * description
      *
+     * @param sourcePath
+     * @param sandboxPath 
+     * @param name
+     * @return
+     * @throws RepositoryNotFound
+     * @throws br.ufjf.dcc.gmr.core.exception.UrlNotFound
+     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
+     */
+    public static boolean localClone(String sourcePath, String sandboxPath, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
+
+        String command = "git clone " + sourcePath;
+        if (name != null) {
+            command = command.concat(" ").concat(name);
+        }
+        
+        if (sourcePath == null || sourcePath.isEmpty()) {
+            throw new UrlNotFound();
+        }
+        try {
+
+            CLIExecution execution = CLIExecute.execute(command, sandboxPath);
+
+            if (!execution.getError().isEmpty()) {
+                for (String line : execution.getError()) {
+                    if (line.contains("does not exist")) {
+                        throw new RepositoryNotFound();
+                    } else if (line.contains("already exists and is not an empty directory")) {
+                        throw new RepositoryAlreadyExist();
+                    }
+                }
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return true;
+    }
+    
+    /**
+     * description
+     *
      * @param url
      * @param directory
      * @param name
