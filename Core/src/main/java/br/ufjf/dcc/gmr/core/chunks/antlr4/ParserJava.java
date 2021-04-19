@@ -86,6 +86,7 @@ public class ParserJava {
 
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
+                System.out.println("");
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
                 int version2[] = new int[2];
@@ -233,7 +234,6 @@ public class ParserJava {
                 }
             }
 
-            System.out.println(pathRepositoryCopy);
 
             if (cont == 0) {
                 ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());

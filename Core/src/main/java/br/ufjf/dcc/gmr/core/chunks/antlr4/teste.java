@@ -18,7 +18,7 @@ public class teste {
     private static String projectPath = "";
 
     public static void main(String[] args) throws RepositoryNotFound, ParseException {
-        String[] projects = {"D:/projects/SAIM", "D:/projects/modeler", "D:/projects/spring-data-neo4j",
+        String[] projects = {"D:/projects/SAIM", "C:/Users/felip/Desktop/Bolsa/modeler", "D:/projects/spring-data-neo4j",
                 "D:/projects/fongo", "D:/projects/pojobuilder", "D:/projects/Phenex", "D:/projects/OpenMEAP"};
         String[] sha = {"044a3c", "0587bc", "042b1d", "0033c8", "09b977", "0985bf", "0af9d5"};
         List<Version> versions = new ArrayList<>();

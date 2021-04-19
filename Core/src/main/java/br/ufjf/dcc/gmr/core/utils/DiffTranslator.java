@@ -39,9 +39,7 @@ public class DiffTranslator {
         if (result < targetContent.size()) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
-
             }
-
         }
 
         result = originalLine - countRemoves(originalLine + 1) + countAdds(originalLine + 1);
@@ -51,12 +49,10 @@ public class DiffTranslator {
             }
         }
 
-        if ( result == targetContent.size()) {
-
-            if (sourceContent.get(originalLine).equals(targetContent.get(result-1))) {
-                return result-1;
+        if (result == targetContent.size()) {
+            if (sourceContent.get(originalLine).equals(targetContent.get(result - 1))) {
+                return result - 1;
             }
-
         }
 
         return -1;
@@ -67,7 +63,7 @@ public class DiffTranslator {
 
         int j;
 
-        for (int i = 0; addOpList.get(i).getLine() <= line && i < addOpList.size() - 1; i++) {
+        for (int i = 0; i < addOpList.size() - 1 && addOpList.get(i).getLine() <= line; i++) {
             j = 0;
             while (j != addOpList.get(i).getSize()) {
                 j++;
@@ -75,7 +71,9 @@ public class DiffTranslator {
             }
             result += j;
         }
-        result += addOpList.get(addOpList.size() - 1).getSize();
+        if (addOpList.size() > 0) {
+            result += addOpList.get(addOpList.size() - 1).getSize();
+        }
 
         return result;
     }
