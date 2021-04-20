@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,23 +33,28 @@ public class MNInputConnection {
 
     public static void getMNInputConnection(MNFrame mainFrame) {
 
-        JFrame frame = new JFrame();
-        frame.setTitle("Make Connection");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JFrame frame = new JFrame("Make Connection");
+        frame.setSize(500, 275);
         frame.setResizable(false);
-        frame.setSize(500, 150);
-        frame.setLocationRelativeTo(null);
+        frame.setLocationRelativeTo(mainFrame);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
+        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.LAST_LINE_START;
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
 
-        url = new JTextField();
-        user = new JTextField();
-        password = new JTextField();
+        url = getTextField("jdbc:postgresql://localhost:5432/");
+        user = getTextField("postgres");
+        password = getTextField("");
 
         JButton tryConnect = new JButton("Try Connect");
         tryConnect.addActionListener(new ActionListener() {
@@ -78,22 +85,21 @@ public class MNInputConnection {
             }
         });
 
-        mainPanel.add(new JLabel("URL:"), gbc);
+        mainPanel.add(getLabel("URL:"), gbc);
         gbc.gridy++;
-        mainPanel.add(new JLabel("User:"), gbc);
-        gbc.gridy++;
-        mainPanel.add(new JLabel("Password:"), gbc);
-        gbc.gridy++;
-        mainPanel.add(tryConnect, gbc);
-        gbc.gridy = 1;
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(url, gbc);
+        gbc.gridy++;
+        mainPanel.add(getLabel("User:"), gbc);
         gbc.gridy++;
         mainPanel.add(user, gbc);
         gbc.gridy++;
+        mainPanel.add(getLabel("Password:"), gbc);
+        gbc.gridy++;
         mainPanel.add(password, gbc);
+        gbc.gridy++;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        mainPanel.add(tryConnect, gbc);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -102,6 +108,24 @@ public class MNInputConnection {
 
     private static Connection tryConnection(String url, String user, String password) throws SQLException, ClassNotFoundException {
         return ConnectionFactory.getConnection(url, user, password);
+    }
+
+    private static JTextField getTextField(String text) {
+        JTextField result = new JTextField(text);
+        result.setOpaque(false);
+        result.setEditable(true);
+        result.setMargin(new Insets(0, 10, 0, 10));
+        result.setForeground(MNFrame.SECUNDARY_COLOR);
+        result.setCaretColor(MNFrame.SECUNDARY_COLOR);
+        result.setPreferredSize(new Dimension(1, 30));
+        return result;
+    }
+
+    private static JLabel getLabel(String labelString) {
+        JLabel pathLabel = new JLabel(labelString);
+        pathLabel.setForeground(MNFrame.SECUNDARY_COLOR);
+        pathLabel.setPreferredSize(new Dimension(150, 20));
+        return pathLabel;
     }
 
 }

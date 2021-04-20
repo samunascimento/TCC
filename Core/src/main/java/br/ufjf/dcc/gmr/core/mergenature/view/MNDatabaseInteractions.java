@@ -6,6 +6,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -100,14 +101,17 @@ public class MNDatabaseInteractions {
             return;
         }
 
-        JFrame mainFrame = new JFrame("Read from Database");
+        JFrame mainFrame = new JFrame("Double click a row to get a project");
         mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        mainFrame.setResizable(true);
-        mainFrame.setMinimumSize(new Dimension(200, 200));
-        mainFrame.setSize(200, 400);
+        mainFrame.setSize(500, 500);
+        mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
+        mainFrame.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
+        mainFrame.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1;
@@ -136,7 +140,12 @@ public class MNDatabaseInteractions {
                 return canEdit[columnIndex];
             }
         });
-        table.getColumnModel().getColumn(0).setPreferredWidth(25);
+        table.setRowHeight(30);
+        table.setFillsViewportHeight(true);
+        table.setBackground(MNFrame.PRIMARY_COLOR);
+        table.setForeground(MNFrame.SECUNDARY_COLOR);
+        table.setBorder(BorderFactory.createEmptyBorder());
+        table.getColumnModel().getColumn(0).setPreferredWidth(30);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {

@@ -5,7 +5,6 @@ import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
