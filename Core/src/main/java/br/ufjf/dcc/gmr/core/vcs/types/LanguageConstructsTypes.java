@@ -53,7 +53,7 @@ public class LanguageConstructsTypes {
     public static final String TRY_STATEMENT = "TryStatement"; 
     public static final String VARIABLE = "Variable"; 
     public static final String WHILE_STATEMENT = "WhileStatement"; 
-    public static final String YELD_STATEMENT = "YeldStatement"; //Python exclusive
+    public static final String YIELD_STATEMENT = "YieldStatement"; 
     public static final String OTHER = "Other";
     public static final String ERROR = "Error"; 
 }

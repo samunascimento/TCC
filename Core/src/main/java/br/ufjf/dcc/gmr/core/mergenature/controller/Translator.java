@@ -723,7 +723,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-            if (list.contains("Variable!")) {
+            if (list.contains("Variable")) {
                 mainList.add(LanguageConstructsTypes.VARIABLE);
                 list.remove("Variable");
             }
@@ -744,7 +744,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Yield_stmt")) {
-                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
+                mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
                 list.remove("Yield_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
@@ -776,11 +776,9 @@ public class Translator {
             //Assert on c# does not work as an language structure
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")
-                    || list.contains("Right_shift_assignment")) {
+            if (list.contains("Assignment")) {
                 mainList.add(LanguageConstructsTypes.ASSIGNMENT);
                 list.remove("Assignment");
-                list.remove("Right_shift_assignment");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -909,14 +907,10 @@ public class Translator {
 
             //on c# we're going to use the "using" structure because it is the closest to the other languagens imports
             if (list.contains("UsingAliasDirective")
-                    || list.contains("UsingAliasDirective")
-                    || list.contains("UsingAliasDirective")
                     || list.contains("Using_directive")
                     || list.contains("UsingStaticDirective")) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
-                list.remove("Interface_definition");
-                list.remove("Interface_definition");
-                list.remove("Interface_definition");
+                list.remove("UsingAliasDirective");
                 list.remove("Using_directive");
                 list.remove("UsingStaticDirective");
 
@@ -1039,7 +1033,7 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("YieldStatement")) {
-                mainList.add(LanguageConstructsTypes.YELD_STATEMENT);
+                mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
                 list.remove("YieldStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

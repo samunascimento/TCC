@@ -63,7 +63,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespace_or_type_name(CSharpParser.Namespace_or_type_nameContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -81,13 +81,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitTuple_type(CSharpParser.Tuple_typeContext ctx) {
-        process(ctx);
+   //     process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTuple_element(CSharpParser.Tuple_elementContext ctx) {
-        process(ctx);
+ //       process(ctx);
         return visitChildren(ctx);
     }
 
@@ -147,12 +147,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNon_assignment_expression(CSharpParser.Non_assignment_expressionContext ctx) {
-        process(ctx);
+   //     process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitAssignment(CSharpParser.AssignmentContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -237,7 +238,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSwitch_expression(CSharpParser.Switch_expressionContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -249,7 +250,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSwitch_expression_arm(CSharpParser.Switch_expression_armContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -291,7 +292,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitMemberAccessExpression(CSharpParser.MemberAccessExpressionContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -303,7 +304,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitThisReferenceExpression(CSharpParser.ThisReferenceExpressionContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -375,12 +376,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitThrow_expression(CSharpParser.Throw_expressionContext ctx) {
+    /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitMember_access(CSharpParser.Member_accessContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -417,7 +420,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitObject_initializer(CSharpParser.Object_initializerContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -429,7 +432,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitMember_initializer(CSharpParser.Member_initializerContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -441,19 +444,19 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitCollection_initializer(CSharpParser.Collection_initializerContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitElement_initializer(CSharpParser.Element_initializerContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitAnonymous_object_initializer(CSharpParser.Anonymous_object_initializerContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -501,13 +504,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLambda_expression(CSharpParser.Lambda_expressionContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitAnonymous_function_signature(CSharpParser.Anonymous_function_signatureContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
@@ -537,19 +540,19 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitQuery_expression(CSharpParser.Query_expressionContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitFrom_clause(CSharpParser.From_clauseContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitQuery_body(CSharpParser.Query_bodyContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -561,25 +564,25 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLet_clause(CSharpParser.Let_clauseContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitWhere_clause(CSharpParser.Where_clauseContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitCombined_join_clause(CSharpParser.Combined_join_clauseContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitOrderby_clause(CSharpParser.Orderby_clauseContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
@@ -597,7 +600,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitQuery_continuation(CSharpParser.Query_continuationContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
@@ -615,12 +618,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocal_function_declaration(CSharpParser.Local_function_declarationContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLocal_function_header(CSharpParser.Local_function_headerContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -669,36 +674,42 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitWhileStatement(CSharpParser.WhileStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDoStatement(CSharpParser.DoStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitForStatement(CSharpParser.ForStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitForeachStatement(CSharpParser.ForeachStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitBreakStatement(CSharpParser.BreakStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitContinueStatement(CSharpParser.ContinueStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -711,37 +722,40 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitReturnStatement(CSharpParser.ReturnStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitThrowStatement(CSharpParser.ThrowStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTryStatement(CSharpParser.TryStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitCheckedStatement(CSharpParser.CheckedStatementContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitUncheckedStatement(CSharpParser.UncheckedStatementContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLockStatement(CSharpParser.LockStatementContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -753,13 +767,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitYieldStatement(CSharpParser.YieldStatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitUnsafeStatement(CSharpParser.UnsafeStatementContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -777,7 +792,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocal_variable_declaration(CSharpParser.Local_variable_declarationContext ctx) {
-
+        /*Usando*/
         try {
             if (ctx.local_variable_type().type_().rank_specifier().get(0).getText().equals("[]")) {
                 specialProcess(ctx, "Array");
@@ -818,12 +833,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitLocal_variable_initializer(CSharpParser.Local_variable_initializerContext ctx) {
+       /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLocal_constant_declaration(CSharpParser.Local_constant_declarationContext ctx) {
+       /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -836,12 +853,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSwitch_section(CSharpParser.Switch_sectionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSwitch_label(CSharpParser.Switch_labelContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -878,12 +897,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSpecific_catch_clause(CSharpParser.Specific_catch_clauseContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitGeneral_catch_clause(CSharpParser.General_catch_clauseContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -896,6 +917,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitFinally_clause(CSharpParser.Finally_clauseContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -908,13 +930,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespace_declaration(CSharpParser.Namespace_declarationContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitQualified_identifier(CSharpParser.Qualified_identifierContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
@@ -926,13 +948,13 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitExtern_alias_directives(CSharpParser.Extern_alias_directivesContext ctx) {
-        process(ctx);
+   //     process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitExtern_alias_directive(CSharpParser.Extern_alias_directiveContext ctx) {
-        process(ctx);
+  //      process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1016,7 +1038,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitType_parameter_constraints_clause(CSharpParser.Type_parameter_constraints_clauseContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1094,7 +1116,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitConstant_declarator(CSharpParser.Constant_declaratorContext ctx) {
-        process(ctx);
+  //      process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1106,12 +1128,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitVariable_declarator(CSharpParser.Variable_declaratorContext ctx) {
+       /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVariable_initializer(CSharpParser.Variable_initializerContext ctx) {
+       /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1148,7 +1172,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitFixed_parameter(CSharpParser.Fixed_parameterContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1166,7 +1190,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitAccessor_declarations(CSharpParser.Accessor_declarationsContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1196,7 +1220,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitEvent_accessor_declarations(CSharpParser.Event_accessor_declarationsContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1220,7 +1244,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitConversion_operator_declarator(CSharpParser.Conversion_operator_declaratorContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1268,6 +1292,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitArray_initializer(CSharpParser.Array_initializerContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1328,6 +1353,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnum_member_declaration(CSharpParser.Enum_member_declarationContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1412,7 +1438,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitStackalloc_initializer(CSharpParser.Stackalloc_initializerContext ctx) {
-        process(ctx);
+   //     process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1490,18 +1516,21 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitClass_definition(CSharpParser.Class_definitionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitStruct_definition(CSharpParser.Struct_definitionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitInterface_definition(CSharpParser.Interface_definitionContext ctx) {
+        /*Usando*/
         process(ctx);
         this.isInterface = true;
         Object children = visitChildren(ctx);
@@ -1511,37 +1540,39 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnum_definition(CSharpParser.Enum_definitionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDelegate_definition(CSharpParser.Delegate_definitionContext ctx) {
-        process(ctx);
+     //   process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitEvent_declaration(CSharpParser.Event_declarationContext ctx) {
-        process(ctx);
+   //     process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitField_declaration(CSharpParser.Field_declarationContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitProperty_declaration(CSharpParser.Property_declarationContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitConstant_declaration(CSharpParser.Constant_declarationContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1583,18 +1614,19 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitOperator_declaration(CSharpParser.Operator_declarationContext ctx) {
-        process(ctx);
+      //  process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitArg_declaration(CSharpParser.Arg_declarationContext ctx) {
-        process(ctx);
+    //    process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitMethod_invocation(CSharpParser.Method_invocationContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1613,24 +1645,28 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitMethod_signature(CSharpParser.Method_signatureContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitInterface_signature(CSharpParser.Interface_signatureContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitEnum_signature(CSharpParser.Enum_signatureContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitClass_signature(CSharpParser.Class_signatureContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1643,30 +1679,35 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitIf_Statement(CSharpParser.If_StatementContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitIf_expression(CSharpParser.If_expressionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitForeach_expression(CSharpParser.Foreach_expressionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitFor_expression(CSharpParser.For_expressionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitWhile_expression(CSharpParser.While_expressionContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
@@ -1679,7 +1720,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSwitch_expressions(CSharpParser.Switch_expressionsContext ctx) {
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1709,12 +1750,14 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitSpecific_catch_clause_no_block(CSharpParser.Specific_catch_clause_no_blockContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitCast(CSharpParser.CastContext ctx) {
+        /*Usando*/
         process(ctx);
         return visitChildren(ctx);
     }
