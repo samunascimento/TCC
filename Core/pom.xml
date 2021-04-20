@@ -100,8 +100,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>
-                            <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>--> 
+                             <!--<mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>-->
+                           <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass>--> 
                         </manifest>
                     </archive>
                 </configuration>
@@ -111,8 +111,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>
-                            <!--<mainClass>br.ufjf.dcc.gmr.core.conflictanalysis.view.Cli</mainClass>-->
+                            <!--<mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>-->
+                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass>>
                         </manifest>
                     </archive>
                     <descriptorRefs>

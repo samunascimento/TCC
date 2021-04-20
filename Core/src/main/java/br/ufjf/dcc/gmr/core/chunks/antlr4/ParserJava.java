@@ -8,7 +8,10 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
 import br.ufjf.dcc.gmr.core.chunks.jung.Main;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
+import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
+import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
+import br.ufjf.dcc.gmr.core.exception.UrlNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.utils.DiffTranslator;
@@ -31,6 +34,8 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import br.ufjf.dcc.gmr.core.vcs.types.ConflictChunk;
 import br.ufjf.dcc.gmr.core.vcs.types.MyFile;
 import br.ufjf.dcc.gmr.core.vcs.types.Version;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ParserJava {
 
@@ -39,6 +44,7 @@ public class ParserJava {
     private GlobalEnviroment globalEnviroment;
     private static Version version;
     private static String pathProject = "";
+    private static String pathSandbox = "";
     private static int context = 0;
     private static String pathRepositoryCopy = "";
     private static String pathRepositoryCopy1 = "";
@@ -58,7 +64,8 @@ public class ParserJava {
 
     }
 
-    public ParserJava(Version version, String pathProject) {
+    public ParserJava(Version version, String pathProject, String pathSandbox) {
+        this.pathSandbox = pathSandbox;
         this.version = version;
         this.globalEnviroment = new GlobalEnviroment();
         this.pathProject = pathProject;
@@ -84,8 +91,8 @@ public class ParserJava {
     private static void createConflictChunkList() throws IOException {
         for (int y = 0; y < version.getFile().size(); y++) {
 
-
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
+                System.out.println("");
                 List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
                 int version2[] = new int[2];
@@ -98,8 +105,8 @@ public class ParserJava {
                 } else {
                     if (conflictContent.get(1).size() == 0) {
                         version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
-                        version2[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y),  version1[0]);
-                        version2[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y),  version1[1]);
+                        version2[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version1[0]);
+                        version2[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version1[1]);
 
                     } else {
                         version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
@@ -113,7 +120,7 @@ public class ParserJava {
 
                 chunk.getChunkVersion1().setLineEnd(version1[1]);
                 chunk.getChunkVersion2().setLineEnd(version2[1]);
-                if(version1[1] == -1){
+                if (version1[1] == -1) {
                     System.out.println("debug");
                 }
 
@@ -137,8 +144,8 @@ public class ParserJava {
     }
 
     private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
-        int result[] = {0,0};
-        
+        int result[] = {0, 0};
+
         int preContext = 0;
         int posContext = 0;
         List<String> targetContent = ListUtils.readFile(targetFile);
@@ -194,6 +201,9 @@ public class ParserJava {
         }
     }
 
+    /* 
+    Refactoring
+     */
     private static void extractParents() throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
         int cont = 0;
         for (String parent : version.getParent()) {
@@ -206,14 +216,21 @@ public class ParserJava {
 
             int j = 0, i = 0;
 
+            /*
+            begin
+            */
             if (cont == 0) {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent1");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent1", version.getParent().get(0));
                 pathRepositoryCopy1 = pathRepositoryCopy;
             } else {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, "parent2");
+                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2", version.getParent().get(1));
                 pathRepositoryCopy2 = pathRepositoryCopy;
             }
 
+            /*
+            end
+            */
+            
             File cloneDirectory = new File(pathRepositoryCopy);
             if (cloneDirectory.isDirectory()) {
                 List<String> jaja = javaFiles(pathRepositoryCopy);
@@ -222,7 +239,7 @@ public class ParserJava {
                     String[] split = javaFile.split("/");
                     for (String string : jaja) {
                         String[] stringSplited = string.split("\\\\");
-                        if (stringSplited[stringSplited.length-1].equals(split[split.length - 1])) {
+                        if (stringSplited[stringSplited.length - 1].equals(split[split.length - 1])) {
                             if (cont == 0) {
                                 filesToCheckParent1.add(string);
                             } else {
@@ -233,11 +250,9 @@ public class ParserJava {
                 }
             }
 
-            System.out.println(pathRepositoryCopy);
-
             if (cont == 0) {
                 ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());
-            } else  {
+            } else {
                 ASTExtractor(filesToCheckParent2, parserJava.getGlobalEnviroment());
             }
 
@@ -338,21 +353,33 @@ public class ParserJava {
         return result;
     }
 
-    private static String createDiffRepository(String path, String pasta) throws IOException {
+    private static String createDiffRepository(String path, String sandbox, String pasta, String targetSHA) throws IOException {
 
-        String source = path;
-        File srcDir = new File(source);
-
-        String destination = "sandbox" + pasta;
-        File destDir = new File(destination);
-
+        File srcDir = new File(path);
+        File destDir = new File(sandbox, pasta);
         try {
-            FileUtils.copyDirectory(srcDir, destDir);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            Git.clone(srcDir.getAbsolutePath(), sandbox, pasta);
+            Git.reset(destDir.getAbsolutePath(), true, false, false, null);
+            Git.clean(destDir.getAbsolutePath(), true, 0);
+            Git.checkout(targetSHA, destDir.getAbsolutePath());
+            
+
+        } catch (RepositoryNotFound ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UrlNotFound ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RepositoryAlreadyExist ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownSwitch ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RefusingToClean ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IsOutsideRepository ex) {
+            Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return destination;
+        return destDir.getAbsolutePath();
     }
 
     private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
@@ -381,7 +408,7 @@ public class ParserJava {
                 System.out.println(methodCall);
             }
         }
-*/
+         */
         //System.out.println("***************Dependencies***************");
         //System.out.println("--------------AST1 --> AST2--------------");
         Dependencies.methodDeclarationCallList(AST1.getAllMethodsDeclaration(), AST1, AST2.getAllMethodsCallBinding());
@@ -454,7 +481,6 @@ public class ParserJava {
             //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             //viewer.setSize(new Dimension(500, 600));
             //viewer.open();
-
             Visitor2 visitor = new Visitor2(globalEnviroment);
 
             visitor.visit(tree);
@@ -474,7 +500,6 @@ public class ParserJava {
             //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
             //viewer.setSize(new Dimension(500, 600));
             //viewer.open();
-
             Visitor3 visitor = new Visitor3(globalEnviroment);
 
             visitor.visit(tree);

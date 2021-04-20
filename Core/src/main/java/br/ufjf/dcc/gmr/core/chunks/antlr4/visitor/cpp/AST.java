@@ -116,25 +116,33 @@ public class AST {
                     for (int l = 0; l < methodCall.get(k).size(); l++) {
                         if (i != k) {
 
-                            //compara nome
-                            if (verifica(methodDeclaration.get(i).get(j).getName(), methodCall.get(k).get(l).getName())) {
-
-                                //compara quantidade de parametro
-                                if (methodDeclaration.get(i).get(j).getQtParameters() == methodCall.get(k).get(l).getQtParameters()) {
-
-                                    for (int p = 0; p < methodDeclaration.get(i).get(j).getParametersBindings().size(); p++) {
-
-                                        //compara tipos exatos nos parametros
-                                        // if (methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName().equals(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName())) {
-                                        if(isCompatibleType(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName(),methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName())){
-                                        System.out.println("=============== COMPARA ==================");
+//                            //compara nome
+//                            if (verifica(methodDeclaration.get(i).get(j).getName(), methodCall.get(k).get(l).getName())) {
+//
+//                                //compara quantidade de parametro
+//                                if (methodDeclaration.get(i).get(j).getQtParameters() == methodCall.get(k).get(l).getQtParameters()) {
+//
+//                                    for (int p = 0; p < methodDeclaration.get(i).get(j).getParametersBindings().size(); p++) {
+//
+//                                        //compara tipos exatos nos parametros
+//                                        // if (methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName().equals(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName())) {
+//                                        if(isCompatibleType(methodCall.get(k).get(l).getParameters().get(p).getTypeBinding().getName(),methodDeclaration.get(i).get(j).getParametersBindings().get(p).getTypeBinding().getName())){
+//                                        System.out.println("=============== COMPARA ==================");
+//                                        System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
+//                                                + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
+//                                                + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
+//                                                + methodCall.get(k).get(l).getCtx().getStart().getLine());
+//                                        }
+//                                    }
+//                                }
+//                            }
+                            
+                            if(methodDeclaration.get(i).get(j).equalsTo(methodCall.get(k).get(l))) {
+                                System.out.println("=============== COMPARA ==================");
                                         System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
                                                 + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
                                                 + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
                                                 + methodCall.get(k).get(l).getCtx().getStart().getLine());
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
@@ -149,8 +157,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
-        String pathh = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String path = "/home/goldner/Documentos/grafos-master/main2.cpp";
+        String pathh = "/home/goldner/Documentos/grafos-master/main2.cpp";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
         comparaNome();

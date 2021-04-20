@@ -32,13 +32,13 @@ public class TableMouseListener extends MouseAdapter {
         getView().paintTree(version);
         this.view.getTree().setVisible(true);
         
-        ParserJava parserJava = new ParserJava(version, this.view.getProject().getPath());
-        String[] args = null;
-        try {
-            parserJava.main();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        ParserJava parserJava = new ParserJava(version, this.view.getProject().getPath());
+//        String[] args = null;
+//        try {
+//            parserJava.main();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     /**

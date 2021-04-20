@@ -1,4 +1,4 @@
-create table Project(
+CREATE TABLE Project(
     id SERIAL, PRIMARY KEY (id),
     name VARCHAR(500),
     url VARCHAR(5000),
@@ -19,9 +19,9 @@ create table Merge(
 	id SERIAL, PRIMARY KEY (id),
 	mergeType INT,
 	fk_merge INT,
-	FOREIGN KEY(fk_merge) REFERENCES Commit(id),
+	FOREIGN KEY(fk_merge) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	fk_ancestor INT, 
-	FOREIGN KEY(fk_ancestor) REFERENCES Commit(id)
+	FOREIGN KEY(fk_ancestor) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE Conflict(
@@ -53,25 +53,25 @@ CREATE TABLE ConflictRegion(
 );
 
 CREATE TABLE Project_Merge(
-	idProject INT, FOREIGN KEY(idProject) REFERENCES Project(id),
-	idMerge INT, FOREIGN KEY (idMerge) REFERENCES Merge(id),
+	idProject INT, FOREIGN KEY(idProject) REFERENCES Project(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	idMerge INT, FOREIGN KEY (idMerge) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	CONSTRAINT project_merge_Key PRIMARY KEY (idProject, idMerge)
 );
 
 CREATE TABLE Merge_Commit_parents(
-	idMerge INT, FOREIGN KEY(idMerge) REFERENCES Merge(id),
-	idCommit INT, FOREIGN KEY (idCommit) REFERENCES Commit(id),
+	idMerge INT, FOREIGN KEY(idMerge) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	idCommit INT, FOREIGN KEY (idCommit) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	CONSTRAINT merge_commit_parents_key PRIMARY KEY (idMerge, idCommit)
 );
 
 CREATE TABLE Merge_Conflict(
-	idMerge INT, FOREIGN KEY(idMerge) REFERENCES Merge(id),
-	idConflict INT, FOREIGN KEY (idConflict) REFERENCES Conflict(id),
+	idMerge INT, FOREIGN KEY(idMerge) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	idConflict INT, FOREIGN KEY (idConflict) REFERENCES Conflict(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	CONSTRAINT merge_conflict_key PRIMARY KEY (idMerge, idConflict)
 );
 
 CREATE TABLE Conflict_ConflictRegion(
-	idConflict INT, FOREIGN KEY (idConflict) REFERENCES Conflict(id),
-	idConflictRegion INT, FOREIGN KEY (idConflictRegion) REFERENCES ConflictRegion(id),
+	idConflict INT, FOREIGN KEY (idConflict) REFERENCES Conflict(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	idConflictRegion INT, FOREIGN KEY (idConflictRegion) REFERENCES ConflictRegion(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	CONSTRAINT conflict_conflictRegion_key PRIMARY KEY (idConflict, idConflictRegion)
 );

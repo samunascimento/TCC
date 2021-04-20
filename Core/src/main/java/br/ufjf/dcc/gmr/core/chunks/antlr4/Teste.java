@@ -13,22 +13,24 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class teste {
+public class Teste {
 
     private static String projectPath = "";
 
     public static void main(String[] args) throws RepositoryNotFound, ParseException {
-        String[] projects = {"D:/projects/SAIM", "D:/projects/modeler", "D:/projects/spring-data-neo4j",
+        String[] projects = {"D:/projects/SAIM", "C:\\Users\\gleip\\repositories\\modeler", "D:/projects/spring-data-neo4j",
                 "D:/projects/fongo", "D:/projects/pojobuilder", "D:/projects/Phenex", "D:/projects/OpenMEAP"};
         String[] sha = {"044a3c", "0587bc", "042b1d", "0033c8", "09b977", "0985bf", "0af9d5"};
         List<Version> versions = new ArrayList<>();
+        
+        String sandbox = "C:\\Users\\gleip\\repositories\\sandbox";
         try {
             int i = 1;
             projectPath = projects[i];
             System.out.println("Running project: " + projectPath);
             Version version = start(sha[i]);
             versions.add(version);
-            ParserJava parserJava = new ParserJava(version, projectPath);
+            ParserJava parserJava = new ParserJava(version, projectPath, sandbox);
             ParserJava.main();
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,7 +138,7 @@ public class teste {
     public static Version start(String sha) throws RepositoryNotFound, ParseException, OptionNotExist, LocalRepositoryNotAGitRepository, IOException {
 
         Project result = new Project();
-        result.setPath(teste.projectPath);
+        result.setPath(Teste.projectPath);
 
         Version version = new Version();
         version.setSHA(sha);
@@ -145,7 +147,7 @@ public class teste {
         version.setParent(parent);
 
         try {
-            version = updateVersion(teste.projectPath, version);
+            version = updateVersion(Teste.projectPath, version);
         } catch (LocalRepositoryNotAGitRepository | OptionNotExist | IOException | RepositoryNotFound | InvalidDocument | UnknownSwitch | RefusingToClean | IsOutsideRepository | CheckoutError | ThereIsNoMergeToAbort | NotSomethingWeCanMerge | NoRemoteForTheCurrentBranch | ThereIsNoMergeInProgress | AlreadyUpToDate ex) {
             Logger.getLogger(InitProject.class.getName()).log(Level.SEVERE, null, ex);
         }
