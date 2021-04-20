@@ -6,6 +6,7 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +90,21 @@ public class MethodDeclarationBinding extends BaseBinding {
     public String toString(){
         return "metodo: " + this.modifier + " " + this.type.getName() + " " + super.getName() + " " 
                 +"\n\tparametros: " + this.parameters.toString();
+    }
+    
+    public boolean equalsTo(MethodCallBinding mcb) {
+        if(this.getName() == null ? mcb.getName() != null : !this.getName().equals(mcb.getName()))
+            return false;
+        
+        if(this.getQtParameters() != mcb.getQtParameters())
+            return false;
+        
+        for(int i = 0; i < this.getQtParameters(); i++) {
+            if(this.getParametersBindings().get(i).getTypeBinding().getName() == null ? mcb.getParameters().get(i).getTypeBinding().getName() != null : !this.getParametersBindings().get(i).getTypeBinding().getName().equals(mcb.getParameters().get(i).getTypeBinding().getName()))
+                if(!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getTypeBinding().getName(), this.getParametersBindings().get(i).getTypeBinding().getName()))
+                    return false;
+        }
+        
+        return true;
     }
 }
