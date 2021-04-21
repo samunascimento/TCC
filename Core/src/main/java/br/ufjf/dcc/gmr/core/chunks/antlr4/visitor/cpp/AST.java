@@ -7,7 +7,6 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
-import static br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes.isCompatibleType;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
@@ -61,7 +60,7 @@ public class AST {
             //Imprimir_arvore-------------------------------------------------------
             if (openTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                //viewer.open();
+                viewer.open();
             }
             //----------------------------------------------------------------------*/
             System.out.println("============ VARIABLE DECLARATION =============");
@@ -157,8 +156,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
-        String pathh = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String path = "C:\\Users\\gleip\\OneDrive\\Área de Trabalho\\main.cpp";
+        String pathh = path;
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
         comparaNome();

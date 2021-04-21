@@ -95,9 +95,9 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             if (ctx.getText().contains("(")) {
                 for (int i = 0; i < ctx.getChildCount(); i++) {
                     if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                        String a = ctx.getText().substring(ctx.getText().indexOf(">")+1, ctx.getText().indexOf("("));
-                      
-                        MethodCallBinding e = new MethodCallBinding(a,ctx);
+                        String a = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
+
+                        MethodCallBinding e = new MethodCallBinding(a, ctx);
                         methodCall.add(e);
                         //System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
 
@@ -106,9 +106,9 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
                 if (aux == 0) {
                     //System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
-                    String a = ctx.getText().substring(ctx.getText().indexOf(">")+1, ctx.getText().indexOf("("));
+                    String a = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
 
-                    MethodCallBinding e = new MethodCallBinding(a,ctx);
+                    MethodCallBinding e = new MethodCallBinding(a, ctx);
                     methodCall.add(e);
                 }
             } else {
@@ -117,24 +117,61 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         } 
         
         else if (ctx.getText().contains(".")) {
-            int aux = 0;
-            if (ctx.getText().contains("(")) {
-                for (int i = 0; i < ctx.getChildCount(); i++) {
-                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                        String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
-                      
-                        MethodCallBinding e = new MethodCallBinding(a,ctx);
-                        methodCall.add(e);
-                        aux++;
-                    }
-                }
-                if (aux == 0) {
-                    String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
+            int begin = ctx.getText().indexOf(".") + 1;
+            int end = ctx.getText().indexOf("(");
+            if (begin <= end) {
+                /*
+                Verify
+                 */
+//                int aux = 0;
 
-                    MethodCallBinding e = new MethodCallBinding(a,ctx);
-                    methodCall.add(e);
-                }
+//                for (int i = 0; i < ctx.getChildCount(); i++) {
+//                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
+//
+//                        String methodCallName = ctx.getText().substring(begin, end);
+//                        MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
+//                        methodCall.add(e);
+//
+//                        aux++;
+//
+//                    }
+//                }
+//
+//                if (aux == 0) {
+                String methodCallName = ctx.getText().substring(begin, end);
+                MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
+                methodCall.add(e);
+//                }
+            } else {
+                String methodCallName = ctx.getText().substring(0, end);
+                MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
+                methodCall.add(e);
             }
+
+            /*
+            Begin: Remover?
+             */
+//            int aux = 0;
+//            if (ctx.getText().contains("(")) {
+//                for (int i = 0; i < ctx.getChildCount(); i++) {
+//                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
+//                        String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
+//                      
+//                        MethodCallBinding e = new MethodCallBinding(a,ctx);
+//                        methodCall.add(e);
+//                        aux++;
+//                    }
+//                }
+//                if (aux == 0) {
+//                    String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
+//
+//                    MethodCallBinding e = new MethodCallBinding(a,ctx);
+//                    methodCall.add(e);
+//                }
+//            }
+            /*
+            End: Remover?
+             */
         } 
         
         else {
@@ -142,16 +179,15 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
                     //System.out.println("Chamada com parametro: " + ctx.getText());
-                    
-                    
-                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
+
+                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
                     methodCall.add(e);
                     aux++;
                 }
             }
             if (aux == 0) {
                 //System.out.println("Chamada SEM parametro: " + ctx.getText());
-                MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")),ctx);
+                MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
                 methodCall.add(e);
             }
         }
@@ -690,7 +726,6 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     public void expression(CPP14Parser.ExpressionContext ctx) throws NullPointerException {
 
         //System.out.println(ctx.getText());
-
         String name;
         if (ctx.expression() != null) {
             name = assigmentExpression(ctx.assignmentexpression());
@@ -1347,36 +1382,36 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
 //            log(ctx);
-         if(isFunctionInvocation){
+        if (isFunctionInvocation) {
             ParametersBinding param = new ParametersBinding();
             param.setName(ctx.getText());
-            
-            for(int i = 0; i < methodDeclaration.size(); i++) {
-                for(int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
-                    if(param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+
+            for (int i = 0; i < methodDeclaration.size(); i++) {
+                for (int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
+                    if (param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
                         param.setTypeBinding(methodDeclaration.get(i).getParametersBindings().get(j).getTypeBinding());
                     }
                 }
             }
-            
-            for(int i = 0; i < variableDeclaration.size(); i++) {
+
+            for (int i = 0; i < variableDeclaration.size(); i++) {
                 String s = variableDeclaration.get(i).getName();
-                if(variableDeclaration.get(i).getName().contains("[")) {
+                if (variableDeclaration.get(i).getName().contains("[")) {
                     s = variableDeclaration.get(i).getName().substring(0, variableDeclaration.get(i).getName().indexOf("["));
                 }
-                
-                if(param.getName().contains("[")) {
-                    if(param.getName().substring(0, param.getName().indexOf("[")).equals(s)) {
+
+                if (param.getName().contains("[")) {
+                    if (param.getName().substring(0, param.getName().indexOf("[")).equals(s)) {
                         param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
                     }
                 }
-                
-                if(param.getName().equals(s)) {
+
+                if (param.getName().equals(s)) {
                     param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
                     //System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
                 }
-            } 
-            
+            }
+
             //tipos de parametro de methodCall quando nao é passado variavel
             CPP14Parser.PrimaryexpressionContext initializaerclauseContext = ctx.assignmentexpression().conditionalexpression()
                     .logicalorexpression().logicalandexpression().inclusiveorexpression()
@@ -1384,38 +1419,37 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     .relationalexpression().shiftexpression().additiveexpression()
                     .multiplicativeexpression().pmexpression().castexpression()
                     .unaryexpression().postfixexpression().primaryexpression();
-            
-            if(initializaerclauseContext.literal()!=null){
-                if(initializaerclauseContext.literal().Characterliteral()!=null){
-                    System.out.println("TYPE: CARACTER : "+ 
-                            initializaerclauseContext.literal().Characterliteral().getText());
-                }
-                else if(initializaerclauseContext.literal().Floatingliteral()!=null){
-                    System.out.println("TYPE: FLOAT : "+
-                            initializaerclauseContext.literal().Floatingliteral().getText());
-                }
-                else if(initializaerclauseContext.literal().Integerliteral()!=null){
-                    System.out.println("TYPE: INTEIRO : "+
-                            initializaerclauseContext.literal().Integerliteral().getText());
-                }
-                else if(initializaerclauseContext.literal().Stringliteral()!=null){
-                    System.out.println("TYPE: STRING : " +
-                            initializaerclauseContext.literal().Stringliteral().getText());
-                }else if(initializaerclauseContext.literal().booleanliteral()!=null){
-                    System.out.println("TYPE: BOOLEAN : "+ 
-                            initializaerclauseContext.literal().booleanliteral().getText());
-                }else if(initializaerclauseContext.literal().pointerliteral()!=null){
-                    System.out.println("TYPE: PONTEIRO : " +
-                            initializaerclauseContext.literal().pointerliteral().getText());
-                }else if(initializaerclauseContext.literal().userdefinedliteral()!=null){
-                    System.out.println("TYPE: USER DEFINED : "+
-                            initializaerclauseContext.literal().userdefinedliteral().getText());
-                }else
+
+            if (initializaerclauseContext.literal() != null) {
+                if (initializaerclauseContext.literal().Characterliteral() != null) {
+                    System.out.println("TYPE: CARACTER : "
+                            + initializaerclauseContext.literal().Characterliteral().getText());
+                } else if (initializaerclauseContext.literal().Floatingliteral() != null) {
+                    System.out.println("TYPE: FLOAT : "
+                            + initializaerclauseContext.literal().Floatingliteral().getText());
+                } else if (initializaerclauseContext.literal().Integerliteral() != null) {
+                    System.out.println("TYPE: INTEIRO : "
+                            + initializaerclauseContext.literal().Integerliteral().getText());
+                } else if (initializaerclauseContext.literal().Stringliteral() != null) {
+                    System.out.println("TYPE: STRING : "
+                            + initializaerclauseContext.literal().Stringliteral().getText());
+                } else if (initializaerclauseContext.literal().booleanliteral() != null) {
+                    System.out.println("TYPE: BOOLEAN : "
+                            + initializaerclauseContext.literal().booleanliteral().getText());
+                } else if (initializaerclauseContext.literal().pointerliteral() != null) {
+                    System.out.println("TYPE: PONTEIRO : "
+                            + initializaerclauseContext.literal().pointerliteral().getText());
+                } else if (initializaerclauseContext.literal().userdefinedliteral() != null) {
+                    System.out.println("TYPE: USER DEFINED : "
+                            + initializaerclauseContext.literal().userdefinedliteral().getText());
+                } else {
                     System.out.println("ERROR: NOT DEFINED");
-              
-            }else
-                methodCall.get(methodCall.size()-1).getParameters().add(param);
-  
+                }
+
+            } else {
+                methodCall.get(methodCall.size() - 1).getParameters().add(param);
+            }
+
             //System.out.println("**Parametros:  "+ctx.getText());
         }
         return visitChildren(ctx);
@@ -1424,7 +1458,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitInitializerlist(CPP14Parser.InitializerlistContext ctx) {
 //            log(ctx);
-     
+
         return visitChildren(ctx);
     }
 
