@@ -114,9 +114,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             } else {
                 System.out.println("Ponteiro instanciando atributo: " + ctx.getText());
             }
-        } 
-        
-        else if (ctx.getText().contains(".")) {
+        } else if (ctx.getText().contains(".")) {
             int begin = ctx.getText().indexOf(".") + 1;
             int end = ctx.getText().indexOf("(");
             if (begin <= end) {
@@ -172,9 +170,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             /*
             End: Remover?
              */
-        } 
-        
-        else {
+        } else {
             int aux = 0;
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
@@ -1382,6 +1378,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
 //            log(ctx);
+        boolean isLiteral = true;
         if (isFunctionInvocation) {
             ParametersBinding param = new ParametersBinding();
             param.setName(ctx.getText());
@@ -1413,41 +1410,60 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             }
 
             //tipos de parametro de methodCall quando nao é passado variavel
-            CPP14Parser.PrimaryexpressionContext initializaerclauseContext = ctx.assignmentexpression().conditionalexpression()
+            CPP14Parser.CastexpressionContext castexpression = ctx.assignmentexpression().conditionalexpression()
                     .logicalorexpression().logicalandexpression().inclusiveorexpression()
                     .exclusiveorexpression().andexpression().equalityexpression()
                     .relationalexpression().shiftexpression().additiveexpression()
-                    .multiplicativeexpression().pmexpression().castexpression()
-                    .unaryexpression().postfixexpression().primaryexpression();
+                    .multiplicativeexpression().pmexpression().castexpression();
+            /*
+            OBS: ir até o  cast e tratar dois caminhos 
+            */
+            try {
+                CPP14Parser.PrimaryexpressionContext initializaerclauseContext = castexpression
+                        .unaryexpression().postfixexpression().primaryexpression();
 
-            if (initializaerclauseContext.literal() != null) {
-                if (initializaerclauseContext.literal().Characterliteral() != null) {
-                    System.out.println("TYPE: CARACTER : "
-                            + initializaerclauseContext.literal().Characterliteral().getText());
-                } else if (initializaerclauseContext.literal().Floatingliteral() != null) {
-                    System.out.println("TYPE: FLOAT : "
-                            + initializaerclauseContext.literal().Floatingliteral().getText());
-                } else if (initializaerclauseContext.literal().Integerliteral() != null) {
-                    System.out.println("TYPE: INTEIRO : "
-                            + initializaerclauseContext.literal().Integerliteral().getText());
-                } else if (initializaerclauseContext.literal().Stringliteral() != null) {
-                    System.out.println("TYPE: STRING : "
-                            + initializaerclauseContext.literal().Stringliteral().getText());
-                } else if (initializaerclauseContext.literal().booleanliteral() != null) {
-                    System.out.println("TYPE: BOOLEAN : "
-                            + initializaerclauseContext.literal().booleanliteral().getText());
-                } else if (initializaerclauseContext.literal().pointerliteral() != null) {
-                    System.out.println("TYPE: PONTEIRO : "
-                            + initializaerclauseContext.literal().pointerliteral().getText());
-                } else if (initializaerclauseContext.literal().userdefinedliteral() != null) {
-                    System.out.println("TYPE: USER DEFINED : "
-                            + initializaerclauseContext.literal().userdefinedliteral().getText());
-                } else {
-                    System.out.println("ERROR: NOT DEFINED");
+                if (initializaerclauseContext != null
+                        && initializaerclauseContext.literal() != null) {
+                    if (initializaerclauseContext.literal().Characterliteral() != null) {
+                        System.out.println("TYPE: CARACTER : "
+                                + initializaerclauseContext.literal().Characterliteral().getText());
+                    } else if (initializaerclauseContext.literal().Floatingliteral() != null) {
+                        System.out.println("TYPE: FLOAT : "
+                                + initializaerclauseContext.literal().Floatingliteral().getText());
+                    } else if (initializaerclauseContext.literal().Integerliteral() != null) {
+                        System.out.println("TYPE: INTEIRO : "
+                                + initializaerclauseContext.literal().Integerliteral().getText());
+                    } else if (initializaerclauseContext.literal().Stringliteral() != null) {
+                        System.out.println("TYPE: STRING : "
+                                + initializaerclauseContext.literal().Stringliteral().getText());
+                    } else if (initializaerclauseContext.literal().booleanliteral() != null) {
+                        System.out.println("TYPE: BOOLEAN : "
+                                + initializaerclauseContext.literal().booleanliteral().getText());
+                    } else if (initializaerclauseContext.literal().pointerliteral() != null) {
+                        System.out.println("TYPE: PONTEIRO : "
+                                + initializaerclauseContext.literal().pointerliteral().getText());
+                    } else if (initializaerclauseContext.literal().userdefinedliteral() != null) {
+                        System.out.println("TYPE: USER DEFINED : "
+                                + initializaerclauseContext.literal().userdefinedliteral().getText());
+                    } else {
+                        System.out.println("ERROR: NOT DEFINED");
+                    }
+
+                }
+            } catch (NullPointerException ex) {
+                isLiteral = false;
+            }
+            
+            if (!isLiteral) {
+
+                if (param.getName().contains("(")) {
+                    param.setMethodCall(true);
                 }
 
-            } else {
                 methodCall.get(methodCall.size() - 1).getParameters().add(param);
+                /*
+                TODO: Tratar chamada de método nos parâmetros 
+                 */
             }
 
             //System.out.println("**Parametros:  "+ctx.getText());

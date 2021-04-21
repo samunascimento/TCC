@@ -11,10 +11,12 @@ package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
  */
 public class ParametersBinding extends BaseBinding {
     private TypeBinding typeBinding;
+    private boolean methodCall;
     
     
     public ParametersBinding(String name) {
         super(name);
+        this.methodCall = false;
     }
 
     public ParametersBinding() {
@@ -37,4 +39,14 @@ public class ParametersBinding extends BaseBinding {
         else 
             return this.typeBinding.getName() + " " + super.getName();
     }
+
+    public boolean isMethodCall() {
+        return methodCall;
+    }
+
+    public void setMethodCall(boolean methodCall) {
+        this.methodCall = methodCall;
+    }
+
+    
 }
