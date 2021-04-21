@@ -157,8 +157,8 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/goldner/Documentos/grafos-master/main2.cpp";
-        String pathh = "/home/goldner/Documentos/grafos-master/main2.cpp";
+        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String pathh = "/home/ketleen/Documentos/testeArvore/main.cpp";
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
         comparaNome();

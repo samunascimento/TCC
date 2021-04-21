@@ -1376,7 +1376,46 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     //System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
                 }
             } 
-            methodCall.get(methodCall.size()-1).getParameters().add(param);
+            
+            //tipos de parametro de methodCall quando nao é passado variavel
+            CPP14Parser.PrimaryexpressionContext initializaerclauseContext = ctx.assignmentexpression().conditionalexpression()
+                    .logicalorexpression().logicalandexpression().inclusiveorexpression()
+                    .exclusiveorexpression().andexpression().equalityexpression()
+                    .relationalexpression().shiftexpression().additiveexpression()
+                    .multiplicativeexpression().pmexpression().castexpression()
+                    .unaryexpression().postfixexpression().primaryexpression();
+            
+            if(initializaerclauseContext.literal()!=null){
+                if(initializaerclauseContext.literal().Characterliteral()!=null){
+                    System.out.println("TYPE: CARACTER : "+ 
+                            initializaerclauseContext.literal().Characterliteral().getText());
+                }
+                else if(initializaerclauseContext.literal().Floatingliteral()!=null){
+                    System.out.println("TYPE: FLOAT : "+
+                            initializaerclauseContext.literal().Floatingliteral().getText());
+                }
+                else if(initializaerclauseContext.literal().Integerliteral()!=null){
+                    System.out.println("TYPE: INTEIRO : "+
+                            initializaerclauseContext.literal().Integerliteral().getText());
+                }
+                else if(initializaerclauseContext.literal().Stringliteral()!=null){
+                    System.out.println("TYPE: STRING : " +
+                            initializaerclauseContext.literal().Stringliteral().getText());
+                }else if(initializaerclauseContext.literal().booleanliteral()!=null){
+                    System.out.println("TYPE: BOOLEAN : "+ 
+                            initializaerclauseContext.literal().booleanliteral().getText());
+                }else if(initializaerclauseContext.literal().pointerliteral()!=null){
+                    System.out.println("TYPE: PONTEIRO : " +
+                            initializaerclauseContext.literal().pointerliteral().getText());
+                }else if(initializaerclauseContext.literal().userdefinedliteral()!=null){
+                    System.out.println("TYPE: USER DEFINED : "+
+                            initializaerclauseContext.literal().userdefinedliteral().getText());
+                }else
+                    System.out.println("ERROR: NOT DEFINED");
+              
+            }else
+                methodCall.get(methodCall.size()-1).getParameters().add(param);
+  
             //System.out.println("**Parametros:  "+ctx.getText());
         }
         return visitChildren(ctx);
