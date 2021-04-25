@@ -39,8 +39,8 @@ public class TestLuan {
             System.out.println(string);
         }
          */
-        File projectPath = new File("resources/teste.cs");
-        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval(projectPath.getAbsolutePath(), 21, 26);
+      //  File projectPath = new File("resources/teste.cs");
+        ANTLR4Results teste = ANTLR4Tools.getANTLR4ResultsInInterval("/home/luan/Github/Struct_test.cpp", 5, 16);
 
         List<String> toTranslate;
         toTranslate = new ArrayList<String>();
