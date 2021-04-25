@@ -1268,7 +1268,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitStruct_body(CSharpParser.Struct_bodyContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

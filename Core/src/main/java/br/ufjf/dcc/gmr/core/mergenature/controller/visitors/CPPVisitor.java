@@ -3,6 +3,7 @@ package br.ufjf.dcc.gmr.core.mergenature.controller.visitors;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -40,6 +41,19 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     public void process(ParserRuleContext ctx, String outsiderType, String text) {
         //Adding in list
         list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text, warning));
+    }
+
+    public void specialProcess(ParserRuleContext ctx, String newType) {
+
+        //Getting structure type
+        String[] aux = Thread.currentThread().getStackTrace()[2].toString().split(".visit");
+        aux = aux[aux.length - 1].split("\\(");
+
+        //Adding text
+        String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");;
+        //Adding in list
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText, warning));
+
     }
 
     @Override
@@ -933,13 +947,23 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitClassspecifier(CPP14Parser.ClassspecifierContext ctx) {
-        process(ctx);
+              try {
+            if (ctx.classhead().classkey().Struct() != null) {
+                specialProcess(ctx, "Struct");
+            }else{
+                process(ctx);
+            }
+
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+          
+        }
+      
         return visitChildren(ctx);
     }
 
     @Override
-    public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {
-        process(ctx);
+    public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {     
+          process(ctx);     
         return visitChildren(ctx);
     }
 
@@ -957,7 +981,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     @Override
     public Object visitClasskey(CPP14Parser.ClasskeyContext ctx) {
-        //  process(ctx);
+        //proces(ctx);
         return visitChildren(ctx);
     }
 

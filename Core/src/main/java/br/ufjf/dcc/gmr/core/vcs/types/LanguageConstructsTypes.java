@@ -47,6 +47,7 @@ public class LanguageConstructsTypes {
     public static final String POINTER = "Pointer";
     public static final String RETURN_STATEMENT = "ReturnStatement";   
     public static final String STATIC_INITIALIZER = "StaticInitializer";
+    public static final String STRUCT = "Struct";
     public static final String SWITCH_STATEMENT = "SwitchStatement"; 
     public static final String SYNCHRONIZED_STATEMENT = "SynchronizedStatement"; 
     public static final String THROW_STATEMENT = "ThrowStatement"; 
