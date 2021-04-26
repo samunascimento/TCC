@@ -89,6 +89,7 @@ public class MNProjectFilterFrame extends JFrame {
 
     private JTextField structuresInput = new JTextField("");
     private JCheckBox onlyOutmost = new JCheckBox("Only Outmost", false);
+    private JCheckBox needToHaveAll = new JCheckBox("Need To Have All", false);
 
     private JTextField extensionInput = new JTextField("");
 
@@ -404,6 +405,9 @@ public class MNProjectFilterFrame extends JFrame {
 
         gbc.gridy++;
         structuresPanel.add(onlyOutmost, gbc);
+        
+        gbc.gridy++;
+        structuresPanel.add(needToHaveAll, gbc);
 
         //====================EXTENSION PANEL====================
         gbc.gridy = 0;
@@ -606,10 +610,12 @@ public class MNProjectFilterFrame extends JFrame {
     }
 
     private void filterByStructures(List<Merge> list) {
+        boolean haveAll;
         Merge auxMerge;
         String auxString;
         Conflict auxConflict;
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        boolean needToHaveAll = this.needToHaveAll.isSelected();
         String[] structures = structuresInput.getText().toLowerCase().split(";");
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
@@ -619,20 +625,38 @@ public class MNProjectFilterFrame extends JFrame {
                 auxConflict.setConflictRegions(new ArrayList<>());
                 for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                     if (onlyOutmost.isSelected()) {
+                        haveAll = true;
                         auxString = conflictRegion.getOutmostedStructures().toLowerCase();
                         for (String structure : structures) {
-                            if (auxString.contains(structure)) {
+                            if (needToHaveAll) {
+                                if(!auxString.contains(structure)){
+                                    haveAll = false;
+                                    break;
+                                }
+                            } else if (auxString.contains(structure)) {
                                 auxConflict.addConflictRegion(conflictRegion);
                                 break;
                             }
                         }
+                        if(needToHaveAll && haveAll){
+                            auxConflict.addConflictRegion(conflictRegion);
+                        }
                     } else {
+                        haveAll = true;
                         auxString = conflictRegion.getStructures().toLowerCase();
                         for (String structure : structures) {
-                            if (auxString.contains(structure)) {
+                            if (needToHaveAll) {
+                                if(!auxString.contains(structure)){
+                                    haveAll = false;
+                                    break;
+                                }
+                            } else if (auxString.contains(structure)) {
                                 auxConflict.addConflictRegion(conflictRegion);
                                 break;
                             }
+                        }
+                        if(needToHaveAll && haveAll){
+                            auxConflict.addConflictRegion(conflictRegion);
                         }
                     }
                 }
