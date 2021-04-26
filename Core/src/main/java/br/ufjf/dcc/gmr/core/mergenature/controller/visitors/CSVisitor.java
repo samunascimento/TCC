@@ -239,7 +239,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitSwitch_expression(CSharpParser.Switch_expressionContext ctx) {
         //Usando
-        process(ctx);
+       // process(ctx);
         return visitChildren(ctx);
     }
 
@@ -934,7 +934,8 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespace_declaration(CSharpParser.Namespace_declarationContext ctx) {
-        //process(ctx);
+        //Usando
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1731,7 +1732,7 @@ public class CSVisitor extends CSharpParserBaseVisitor<Object> {
     @Override
     public Object visitSwitch_expressions(CSharpParser.Switch_expressionsContext ctx) {
         //Usando
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

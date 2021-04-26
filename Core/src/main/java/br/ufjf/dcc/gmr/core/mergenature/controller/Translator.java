@@ -966,7 +966,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //NAMESPACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+            if (list.contains("Namespace_declaration")) {
+                mainList.add(LanguageConstructsTypes.NAMESPACE);
+                list.remove("Namespace_declaration");
+                
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             // There is no package estructure on c#
