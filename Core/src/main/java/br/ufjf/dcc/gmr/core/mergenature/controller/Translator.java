@@ -938,10 +938,14 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Method_declaration")
-                    || list.contains("Local_function_declaration")) {
+                    || list.contains("Local_function_declaration")
+                    || list.contains("Constructor_declaration")
+                    || list.contains("Destructor_definition")) {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Method_declaration");
                 list.remove("Local_function_declaration");
+                list.remove("Constructor_declaration");
+                list.remove("Destructor_definition");
             }
             if (list.contains("Method_signature")
                     || list.contains("Local_function_header")) {
