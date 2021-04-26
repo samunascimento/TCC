@@ -512,8 +512,6 @@ public class MergeNatureAlgorithm {
                     ANTLR4Results parent2Results = null;
                     List<String> v2Structures;
                     List<String> v2OutmostedStructures;
-                    String rawString = "";
-                    String outmostedRawString = "";
                     for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                         v1Structures = new ArrayList<>();
                         v1OutmostedStructures = new ArrayList<>();
@@ -524,20 +522,16 @@ public class MergeNatureAlgorithm {
                             v1OutmostedStructures.add("Blank");
                         } else {
                             parent1Results = ANTLR4Tools.filterAndGetOutmost(rawParent1Results, conflictRegion.getOriginalV1FirstLine(), conflictRegion.getOriginalV1FinalLine());
-                            rawString = rawString + "\n" + parent1Results.getStringAll();
-                            outmostedRawString = outmostedRawString + "\n" + parent1Results.getStringAllOutmosted();
-                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath);
-                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath);
+                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath, isEmpty(conflictRegion));
+                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath, isEmpty(conflictRegion));
                         }
                         if (conflictRegion.getOriginalV2FirstLine() == 0) {
                             v2Structures.add("Blank");
                             v2OutmostedStructures.add("Blank");
                         } else {
                             parent2Results = ANTLR4Tools.filterAndGetOutmost(rawParent2Results, conflictRegion.getOriginalV2FirstLine(), conflictRegion.getOriginalV2FinalLine());
-                            rawString = rawString + "\n" + parent2Results.getStringAll();
-                            outmostedRawString = outmostedRawString + "\n" + parent2Results.getStringAllOutmosted();
-                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath);
-                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath);
+                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath, isEmpty(conflictRegion));
+                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath, isEmpty(conflictRegion));
                         }
                         for (String str : v2Structures) {
                             if (!v1Structures.contains(str)) {
@@ -551,8 +545,8 @@ public class MergeNatureAlgorithm {
                         }
                         Collections.sort(v1Structures);
                         Collections.sort(v1OutmostedStructures);
-                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures) + "\n\n\n" + rawString);
-                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures) + "\n\n\n" + outmostedRawString);
+                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures));
+                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures));
                     }
                 }
             }
@@ -570,5 +564,9 @@ public class MergeNatureAlgorithm {
             this.end = end;
         }
 
+    }
+
+    private boolean isEmpty(ConflictRegion conflictRegion) {
+        return (conflictRegion.getV1Text() + conflictRegion.getV2Text()).replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
     }
 }

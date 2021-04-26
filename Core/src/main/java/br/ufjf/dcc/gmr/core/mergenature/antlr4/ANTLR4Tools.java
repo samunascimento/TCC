@@ -278,7 +278,7 @@ public class ANTLR4Tools {
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + repositoryPath + filePathProjectAsRoot + " does not exist in!");
             throw ex;
-        } 
+        }
     }
 
     public static ANTLR4Results getANTLR4ResultsInInterval(String filePath, int start, int stop) throws IOException {
@@ -345,7 +345,7 @@ public class ANTLR4Tools {
         }
         return result;
     }
-    
+
     public static ANTLR4Results filterAndGetOutmost(ANTLR4Results inputResults, int beginLine, int endLine) {
 
         List<SyntaxStructure> normalAnalysis = new ArrayList<>();
@@ -409,12 +409,15 @@ public class ANTLR4Tools {
 
     }
 
-    public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath) {
+    public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath, boolean isEmpty) {
         List<String> translatedList;
         List<String> untranslatedList = new ArrayList<>();
-        if (rawList.isEmpty()) {
+        if (isEmpty) {
             translatedList = new ArrayList<>();
-            translatedList.add("Nothing");
+            translatedList.add("Blank");
+        } else if (rawList.isEmpty()) {
+            translatedList = new ArrayList<>();
+            translatedList.add("Other");
         } else {
             for (SyntaxStructure struc : rawList) {
                 if (!untranslatedList.contains(struc.getStructureType())) {

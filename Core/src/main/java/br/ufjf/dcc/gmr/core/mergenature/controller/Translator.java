@@ -46,6 +46,8 @@ public class Translator {
                     || list.contains("ArrayAccess_lfno_primary")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
                 list.remove("ArrayAccess");
+                list.remove("ArrayAccess_lf_primary");
+                list.remove("ArrayAccess_lfno_primary");
 
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -62,9 +64,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Nothing")) {
+            if (list.contains("Blank")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Nothing");
+                list.remove("Blank");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -338,9 +340,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Nothing")) {
+            if (list.contains("Blank")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Nothing");
+                list.remove("Blank");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -419,7 +421,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Memberspecificator")) {
+            if (list.contains("Memberspecification")) {
                 mainList.add(LanguageConstructsTypes.FIELD);
                 list.remove("Memberspecification");
             }
@@ -581,9 +583,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Nothing")) {
+            if (list.contains("Blank")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Nothing");
+                list.remove("Blank");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -792,9 +794,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Nothing")) {
+            if (list.contains("Blank")) {
                 mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Nothing");
+                list.remove("Blank");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

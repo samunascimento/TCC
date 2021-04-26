@@ -24,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -55,38 +56,63 @@ public class MNDatabaseInteractions {
             comboBox.addItem(projectPanel.getProject().getName());
         }
 
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setVisible(false);
+        progressBar.setIndeterminate(true);
+        progressBar.setPreferredSize(new Dimension(1, 25));
+
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((ActionEvent evt) -> {
-            boolean check = true;
-            Project project = projectPanels.get(comboBox.getSelectedIndex()).getProject();
-            ProjectDAO projectDAO = new ProjectDAO(connection);
-            try {
-                projectDAO.insert(project);
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                check = false;
-            } finally {
-                if (check) {
-                    JOptionPane.showMessageDialog(null, project.getName() + " was saved in DB!", "Done", JOptionPane.INFORMATION_MESSAGE);
+            progressBar.setVisible(true);
+            new Thread() {
+                @Override
+                public void run() {
+                    boolean check = true;
+                    Project project = projectPanels.get(comboBox.getSelectedIndex()).getProject();
+                    ProjectDAO projectDAO = new ProjectDAO(connection);
+                    try {
+                        projectDAO.insert(project);
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        check = false;
+                    } finally {
+                        mainFrame.dispose();
+                        if (check) {
+                            JOptionPane.showMessageDialog(null, project.getName() + " was saved in DB!", "Done", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
                 }
-                mainFrame.dispose();
-            }
-        });
+            }.start();
+        }
+        );
 
         gbc.gridy = 1;
+        gbc.gridx = 1;
         gbc.weightx = 1;
+        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+
         mainPanel.add(comboBox, gbc);
 
         gbc.gridy++;
         gbc.weightx = 0;
+        gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
+
         mainPanel.add(saveButton, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.LINE_START;
+
+        mainPanel.add(progressBar, gbc);
 
         mainFrame.add(mainPanel);
 
-        mainFrame.setVisible(true);
+        mainFrame.setVisible(
+                true);
 
     }
 
@@ -126,7 +152,9 @@ public class MNDatabaseInteractions {
                 }
         ) {
             Class[] types = new Class[]{
-                Integer.class, String.class
+                Integer.class,
+                String.class
+
             };
             boolean[] canEdit = new boolean[]{
                 false, false
