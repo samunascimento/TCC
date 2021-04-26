@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -89,6 +90,8 @@ public class MNProjectFilterFrame extends JFrame {
     private JTextField structuresInput = new JTextField("");
     private JCheckBox onlyOutmost = new JCheckBox("Only Outmost", false);
 
+    private JTextField extensionInput = new JTextField("");
+
     public MNProjectFilterFrame(List<Merge> defaultList, List<Merge> currentList, MNMergesTable panel) {
         this.defaultList = defaultList;
         this.currentList = currentList;
@@ -137,6 +140,9 @@ public class MNProjectFilterFrame extends JFrame {
         JPanel structuresPanel = new JPanel();
         structuresPanel.setLayout(new GridBagLayout());
 
+        JPanel extensionPanel = new JPanel();
+        extensionPanel.setLayout(new GridBagLayout());
+
         JButton filterCurrentTable = new JButton("Filter Current Table");
         filterCurrentTable.addActionListener((ActionEvent evt) -> {
             switch (tabbedPane.getSelectedIndex()) {
@@ -152,8 +158,11 @@ public class MNProjectFilterFrame extends JFrame {
                 case 3:
                     filterByHash(currentList);
                     break;
-                default:
+                case 4:
                     filterByStructures(currentList);
+                    break;
+                default:
+                    filterByExtension(currentList);
             }
         });
 
@@ -172,8 +181,12 @@ public class MNProjectFilterFrame extends JFrame {
                 case 3:
                     filterByHash(defaultList);
                     break;
-                default:
+                case 4:
                     filterByStructures(defaultList);
+                    break;
+                default:
+                    filterByExtension(defaultList);
+
             }
         });
 
@@ -250,7 +263,8 @@ public class MNProjectFilterFrame extends JFrame {
         tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
         tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
         tabbedPane.addTab("Hash", null, hashPanel, "Filter the merges by their hashes");
-        tabbedPane.addTab("Structures", null, structuresPanel, "Filter the conflict regions bt their structures");
+        tabbedPane.addTab("Structures", null, structuresPanel, "Filter the conflict regions by their structures");
+        tabbedPane.addTab("Extension", null, extensionPanel, "Filter the conflicts by the extension of their file");
 
         orientationOfOrderBG = new ButtonGroup();
         orientationOfOrderBG.add(ascendingOrder);
@@ -380,13 +394,7 @@ public class MNProjectFilterFrame extends JFrame {
         //====================STRUCTURES PANEL====================
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_START;
-        structuresPanel.add(new JLabel("Input the structures separeted by ';'. Ex.:"), gbc);
-
-        gbc.gridy++;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(4 * MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, 4 * MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
-        structuresPanel.add(new JLabel("Variable;IfStatement;Field"), gbc);
+        structuresPanel.add(new JLabel("Input the structures separeted by ';'. Ex.: Variable;IfStatement;Field"), gbc);
 
         gbc.gridy++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -396,6 +404,17 @@ public class MNProjectFilterFrame extends JFrame {
 
         gbc.gridy++;
         structuresPanel.add(onlyOutmost, gbc);
+
+        //====================EXTENSION PANEL====================
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        extensionPanel.add(new JLabel("Input the extensions separeted by ';'. Ex.: java;cpp;py"), gbc);
+
+        gbc.gridy++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+        extensionPanel.add(extensionInput, gbc);
 
         //====================MAIN PANEL====================
         gbc.gridy = 0;
@@ -625,6 +644,24 @@ public class MNProjectFilterFrame extends JFrame {
         endsFilterProcess(filteredList);
     }
 
+    private void filterByExtension(List<Merge> list) {
+        Merge auxMerge;
+        List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
+        List<String> extensions = Arrays.asList(extensionInput.getText().toLowerCase().split(";"));
+        for (Merge merge : list) {
+            auxMerge = new Merge(merge);
+            auxMerge.setConflicts(new ArrayList<>());
+            for (Conflict conflict : merge.getConflicts()) {
+                if (extensions.contains(getExtension(conflict.getParent1FileName()))) {
+                    auxMerge.addConflict(conflict);
+                }
+            }
+            filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
+        }
+
+        endsFilterProcess(filteredList);
+    }
+
     private void endsFilterProcess(List<RelationMergeOrginalCR> filteredList) {
         filteredList = ordenateList(filteredList);
         List<Merge> mergeResult = new ArrayList<>();
@@ -699,6 +736,15 @@ public class MNProjectFilterFrame extends JFrame {
         }
 
         return filteredList;
+    }
+
+    private String getExtension(String file) {
+        String[] auxArray = file.split("\\.");
+        if (auxArray.length == 1) {
+            return "";
+        } else {
+            return auxArray[1];
+        }
     }
 
     private class RelationMergeOrginalCR {

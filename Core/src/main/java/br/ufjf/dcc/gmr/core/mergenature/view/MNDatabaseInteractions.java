@@ -63,26 +63,27 @@ public class MNDatabaseInteractions {
 
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((ActionEvent evt) -> {
-            progressBar.setVisible(true);
             new Thread() {
                 @Override
                 public void run() {
-                    boolean check = true;
-                    Project project = projectPanels.get(comboBox.getSelectedIndex()).getProject();
-                    ProjectDAO projectDAO = new ProjectDAO(connection);
-                    try {
-                        projectDAO.insert(project);
-                    } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                        check = false;
-                    } finally {
-                        mainFrame.dispose();
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, project.getName() + " was saved in DB!", "Done", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
+                    progressBar.setVisible(true);
+                    this.interrupt();
                 }
             }.start();
+            boolean check = true;
+            Project project = projectPanels.get(comboBox.getSelectedIndex()).getProject();
+            ProjectDAO projectDAO = new ProjectDAO(connection);
+            try {
+                projectDAO.insert(project);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                check = false;
+            } finally {
+                mainFrame.dispose();
+                if (check) {
+                    JOptionPane.showMessageDialog(null, project.getName() + " was saved in DB!", "Done", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         }
         );
 
