@@ -76,7 +76,18 @@ public class PrimitiveTypes {
         } else {
             return false;
         }
-        
-
+    }
+    
+    public static boolean isPrimitiveType(String type) {
+            if(type.equals(CHAR) 
+                    || type.equals(SHORT) 
+                    || type.equals(INT) 
+                    || type.equals(LONG) 
+                    || type.equals(FLOAT) 
+                    || type.equals(DOUBLE) 
+                    || type.equals(STRING))
+                return true;
+            else
+                return false;
     }
 }

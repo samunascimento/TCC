@@ -23,12 +23,31 @@ public class ParametersBinding extends BaseBinding {
     }
     
     
+    @Override
+    public void setName(String name) {
+        if(name.contains("(") && name.contains(")")) {
+            String type = name.substring(name.indexOf('(') + 1, name.indexOf(')'));
+            String newName = name.substring(name.indexOf(')') + 1);
+            
+            if(PrimitiveTypes.isPrimitiveType(type)) {
+                name = newName;
+                
+                TypeBinding tB = new TypeBinding(type);
+                this.setTypeBinding(tB);
+            }
+        }
+        
+        super.setName(name);
+    }
+    
+    
     public TypeBinding getTypeBinding() {
         return typeBinding;
     }
 
     public void setTypeBinding(TypeBinding typeBinding) {
-        this.typeBinding = typeBinding;
+        if(this.typeBinding == null)
+            this.typeBinding = typeBinding;
     }
     
     

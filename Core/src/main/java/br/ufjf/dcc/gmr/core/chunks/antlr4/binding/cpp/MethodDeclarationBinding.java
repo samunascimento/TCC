@@ -6,7 +6,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes;
 import java.util.ArrayList;
 import java.util.List;
 
