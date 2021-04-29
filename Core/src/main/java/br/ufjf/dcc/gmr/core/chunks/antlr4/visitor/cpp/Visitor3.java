@@ -1409,7 +1409,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
             }
 
-            //tipos de parametro de methodCall quando nao é passado variavel
+            //tipos de parametro de methodCall quando nao é passado variavel atributo
             CPP14Parser.CastexpressionContext castexpression = ctx.assignmentexpression().conditionalexpression()
                     .logicalorexpression().logicalandexpression().inclusiveorexpression()
                     .exclusiveorexpression().andexpression().equalityexpression()
@@ -1419,36 +1419,71 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             OBS: ir até o  cast e tratar dois caminhos 
             */
             try {
-                CPP14Parser.PrimaryexpressionContext initializaerclauseContext = castexpression
+                CPP14Parser.PrimaryexpressionContext unaryExpression = castexpression
                         .unaryexpression().postfixexpression().primaryexpression();
+                CPP14Parser.SimpletypespecifierContext realCastexpression = castexpression.
+                        realcastexpression().thetypeid().typespecifierseq().typespecifier()
+                        .trailingtypespecifier().simpletypespecifier();
 
-                if (initializaerclauseContext != null
-                        && initializaerclauseContext.literal() != null) {
-                    if (initializaerclauseContext.literal().Characterliteral() != null) {
+                if (unaryExpression != null
+                        && unaryExpression.literal() != null) {
+                    if (unaryExpression.literal().Characterliteral() != null) {
                         System.out.println("TYPE: CARACTER : "
-                                + initializaerclauseContext.literal().Characterliteral().getText());
-                    } else if (initializaerclauseContext.literal().Floatingliteral() != null) {
+                                + unaryExpression.literal().Characterliteral().getText());
+                    } else if (unaryExpression.literal().Floatingliteral() != null) {
                         System.out.println("TYPE: FLOAT : "
-                                + initializaerclauseContext.literal().Floatingliteral().getText());
-                    } else if (initializaerclauseContext.literal().Integerliteral() != null) {
+                                + unaryExpression.literal().Floatingliteral().getText());
+                    } else if (unaryExpression.literal().Integerliteral() != null) {
                         System.out.println("TYPE: INTEIRO : "
-                                + initializaerclauseContext.literal().Integerliteral().getText());
-                    } else if (initializaerclauseContext.literal().Stringliteral() != null) {
+                                + unaryExpression.literal().Integerliteral().getText());
+                    } else if (unaryExpression.literal().Stringliteral() != null) {
                         System.out.println("TYPE: STRING : "
-                                + initializaerclauseContext.literal().Stringliteral().getText());
-                    } else if (initializaerclauseContext.literal().booleanliteral() != null) {
+                                + unaryExpression.literal().Stringliteral().getText());
+                    } else if (unaryExpression.literal().booleanliteral() != null) {
                         System.out.println("TYPE: BOOLEAN : "
-                                + initializaerclauseContext.literal().booleanliteral().getText());
-                    } else if (initializaerclauseContext.literal().pointerliteral() != null) {
+                                + unaryExpression.literal().booleanliteral().getText());
+                    } else if (unaryExpression.literal().pointerliteral() != null) {
                         System.out.println("TYPE: PONTEIRO : "
-                                + initializaerclauseContext.literal().pointerliteral().getText());
-                    } else if (initializaerclauseContext.literal().userdefinedliteral() != null) {
+                                + unaryExpression.literal().pointerliteral().getText());
+                    } else if (unaryExpression.literal().userdefinedliteral() != null) {
                         System.out.println("TYPE: USER DEFINED : "
-                                + initializaerclauseContext.literal().userdefinedliteral().getText());
+                                + unaryExpression.literal().userdefinedliteral().getText());
                     } else {
                         System.out.println("ERROR: NOT DEFINED");
                     }
 
+                } 
+                else if (unaryExpression != null && realCastexpression!= null){
+                    if(realCastexpression.Bool()!= null)
+                        System.out.println("TYPE: BOOL" + realCastexpression.Bool());
+                    else if(realCastexpression.Char()!= null)
+                        System.out.println("TYPE: CHAR " + realCastexpression.Char());
+                    else if(realCastexpression.Char16()!= null)
+                        System.out.println("TYPE: CHAR16" + realCastexpression.Char());
+                    else if(realCastexpression.Auto()!= null)
+                        System.out.println("TYPE: AUTO?" + realCastexpression.Auto());
+                    else if(realCastexpression.Char32()!= null)
+                        System.out.println("TYPE: CHAR16" + realCastexpression.Char32());
+                    else if(realCastexpression.Double()!= null)
+                        System.out.println("TYPE: DOUBLE" + realCastexpression.Double());
+                    else if(realCastexpression.Float()!= null)
+                        System.out.println("TYPE: FLOAT " + realCastexpression.Float());
+                    else if(realCastexpression.Int()!= null)
+                        System.out.println("TYPE: INT" + realCastexpression.Int());
+                    else if(realCastexpression.Long()!= null)
+                        System.out.println("TYPE: LONG" + realCastexpression.Long());
+                    else if(realCastexpression.Short()!= null)
+                        System.out.println("TYPE: SHORT" + realCastexpression.Short());
+                    else if(realCastexpression.Signed()!= null)
+                        System.out.println("TYPE: SIGNED?" + realCastexpression.Signed());
+                    else if(realCastexpression.Template()!= null)
+                        System.out.println("TYPE: TEMPLATE?" + realCastexpression.Template());
+                    else if(realCastexpression.Unsigned()!= null)
+                        System.out.println("TYPE: UNSIGNED" + realCastexpression.Unsigned());
+                    else if(realCastexpression.Void()!= null)
+                        System.out.println("TYPE: VOID" + realCastexpression.Void());
+                    else if(realCastexpression.Wchar()!= null)
+                        System.out.println("TYPE: Wchar" + realCastexpression.Wchar());
                 }
             } catch (NullPointerException ex) {
                 isLiteral = false;
