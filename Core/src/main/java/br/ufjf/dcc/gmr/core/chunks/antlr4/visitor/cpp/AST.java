@@ -156,7 +156,7 @@ public class AST {
 
     public static void main(String args[]) throws IOException {
 
-        String path = "/home/ketleen/Documentos/testeArvore/main.cpp";
+        String path = "C:\\Users\\gleip\\OneDrive\\Área de Trabalho\\main.cpp";
         String pathh = path;
         analyzeCPPSyntaxTree(path, true);
         analyzeCPPSyntaxTree(pathh, true);
