@@ -82,9 +82,11 @@ public class Cli {
 
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
                 if (!(cmd.hasOption("s") && cmd.hasOption("db"))) {
+                    System.out.println("The analysis is not being saved");
                     throw new Notsaving();
                 }
                 if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
+                    System.out.println("Double saving is not suported yet");
                     throw new DoubleSave();
                 }
 
