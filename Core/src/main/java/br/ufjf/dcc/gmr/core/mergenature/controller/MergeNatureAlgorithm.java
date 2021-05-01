@@ -298,12 +298,12 @@ public class MergeNatureAlgorithm {
             int solutionFirstLine;
             int solutionFinalLine;
             try {
-                solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit + ":" + parentFilePath, parentFilePath, conflictRegion.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, mergeCommit + ":" + parentFilePath, parentFilePath, conflictRegion.getEndLine() + 1);
+                solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getBeginLine() - 1);
+                solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getEndLine() + 1);
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = conflictRegion.getConflict().getParent2FilePath();
-                    solutionFirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parentFilePath, mergeCommit + ":" + parentFilePath, conflictRegion.getEndLine() + 1);
+                    solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getBeginLine() - 1);
+                    solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getEndLine() + 1);
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
@@ -336,7 +336,7 @@ public class MergeNatureAlgorithm {
                         conflictRegion = developerDecisionLayer(conflictRegion);
                     }
                 }
-            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber | FileNotExistInCommitException ex) {
+            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | EmptyOutput | ImpossibleLineNumber | FileNotExistInCommitException ex) {
                 throw new IOException(ex);
             }
         }
@@ -379,8 +379,8 @@ public class MergeNatureAlgorithm {
             int conflictV1Line = conflictRegion.getBeginLine() + 1;
             int originalV1FirstLine;
             try {
-                originalV1FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent1Commit + ":" + parent1FilePath, parent1FilePath, conflictV1Line);
-            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
+                originalV1FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent1Commit, "", parent1FilePath, parent1FilePath, false, conflictV1Line);
+            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
             conflictRegion.setOriginalV1FirstLine(originalV1FirstLine);
@@ -395,8 +395,8 @@ public class MergeNatureAlgorithm {
             int conflictV2Line = conflictRegion.getSeparatorLine() + 1;
             int originalV2FirstLine;
             try {
-                originalV2FirstLine = ReturnNewLineNumber.initReturnNewLineNumberAdapted(repositoryPath, parent2Commit + ":" + parent2FilePath, parent1FilePath, conflictV2Line);
-            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | PathDontExist | EmptyOutput | ImpossibleLineNumber ex) {
+                originalV2FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent2Commit, "", parent2FilePath, parent1FilePath, false, conflictV2Line);
+            } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
             if (originalV2FirstLine < 0) {

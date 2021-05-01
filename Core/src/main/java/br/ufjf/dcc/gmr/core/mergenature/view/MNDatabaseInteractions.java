@@ -63,13 +63,13 @@ public class MNDatabaseInteractions {
 
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener((ActionEvent evt) -> {
-            new Thread() {
+            Thread barThread = new Thread() {
                 @Override
                 public void run() {
                     progressBar.setVisible(true);
-                    this.interrupt();
                 }
-            }.start();
+            };
+            barThread.start();
             boolean check = true;
             Project project = projectPanels.get(comboBox.getSelectedIndex()).getProject();
             ProjectDAO projectDAO = new ProjectDAO(connection);
@@ -79,6 +79,7 @@ public class MNDatabaseInteractions {
                 JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
                 check = false;
             } finally {
+                barThread.interrupt();
                 mainFrame.dispose();
                 if (check) {
                     JOptionPane.showMessageDialog(null, project.getName() + " was saved in DB!", "Done", JOptionPane.INFORMATION_MESSAGE);

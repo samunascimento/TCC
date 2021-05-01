@@ -689,7 +689,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitExplicitConstructorInvocation(Java9Parser.ExplicitConstructorInvocationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 

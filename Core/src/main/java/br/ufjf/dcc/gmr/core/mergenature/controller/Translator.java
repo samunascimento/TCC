@@ -63,12 +63,6 @@ public class Translator {
                 list.remove("Assignment");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Blank")) {
-                mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Blank");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("BreakStatement")) {
                 mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
@@ -219,11 +213,13 @@ public class Translator {
             }
             if (list.contains("MethodInvocation")
                     || list.contains("MethodInvocation_lf_primaryContext")
-                    || list.contains("MethodInvocation_lfno_primary")) {
+                    || list.contains("MethodInvocation_lfno_primary")
+                    || list.contains("ExplicitConstructorInvocation"))  {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("MethodInvocation");
                 list.remove("MethodInvocation_lf_primaryContext");
                 list.remove("MethodInvocation_lfno_primary");
+                list.remove("ExplicitConstructorInvocation");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -298,10 +294,6 @@ public class Translator {
             if (list.contains("WARNING!")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (!list.isEmpty()) {
-                mainList.add(LanguageConstructsTypes.OTHER);
             }
         }
         return mainList;
@@ -971,7 +963,7 @@ public class Translator {
             if (list.contains("Namespace_declaration")) {
                 mainList.add(LanguageConstructsTypes.NAMESPACE);
                 list.remove("Namespace_declaration");
-                
+
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
