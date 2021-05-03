@@ -2,7 +2,8 @@ CREATE TABLE Project(
     id SERIAL, PRIMARY KEY (id),
     name VARCHAR(500),
     url VARCHAR(5000),
-    organization VARCHAR(100)
+    organization VARCHAR(100),
+    savedate DATE
 );
 
 CREATE TABLE Commit(

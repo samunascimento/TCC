@@ -16,7 +16,7 @@ import javax.swing.JProgressBar;
  * @since 05-01-2021
  */
 public class MNBarPanel extends JPanel implements Runnable {
-
+    
     private JProgressBar progressBar;
     private final String repositoryLocation;
     private final int contextLines;

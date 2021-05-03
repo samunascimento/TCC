@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,7 +27,7 @@ import javax.swing.JTextField;
  * @author João Pedro Lima
  * @since 10-01-2021
  */
-public class MNSaveAnalysis extends JFrame {
+public class MNSaveAnalysis extends JDialog {
 
     private List<MNProjectPanel> projectPanels;
     private JComboBox comboBox;
@@ -45,12 +46,15 @@ public class MNSaveAnalysis extends JFrame {
 
     private void set() {
 
-        this.setTitle("Save Analysis");
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setLayout(new GridBagLayout());
-        this.setResizable(false);
+        this.setModal(true);
         this.setSize(800, 800);
+        this.setResizable(false);
+        this.setAlwaysOnTop(true);
+        this.setTitle("Save Analysis");
         this.setLocationRelativeTo(null);
+        this.setLayout(new GridBagLayout());
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);

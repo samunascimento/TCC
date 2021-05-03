@@ -19,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,7 +33,7 @@ import javax.swing.JTextField;
  * @author João Pedro Lima
  * @since 01-02-2021
  */
-public class MNProjectFilterFrame extends JFrame {
+public class MNProjectFilterFrame extends JDialog {
 
     private MNMergesTable panel;
     private List<Merge> defaultList;
@@ -102,10 +103,13 @@ public class MNProjectFilterFrame extends JFrame {
 
     private void set() {
 
+        this.setModal(true);
         this.setResizable(false);
+        this.setAlwaysOnTop(true);
         this.setTitle("Set filter");
         this.setLocationRelativeTo(null);
         this.setSize(new Dimension(600, 600));
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         GridBagConstraints gbc = new GridBagConstraints();
