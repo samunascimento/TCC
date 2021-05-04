@@ -5,7 +5,6 @@ import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.PathDontExist;
 import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
@@ -77,19 +76,23 @@ public class MergeNatureAlgorithm {
         Project project = new Project();
         String[] auxStringArray;
         String repositoryPath = "";
-        long beforeUsedMem;
-        long afterUsedMem;
 
         if (MergeNatureTools.isDirectory(repositoryLocation)) {
+            if (repositoryLocation.contains("\\")) {
+                repositoryLocation = repositoryLocation.replaceAll("\\", "/");
+            }
             if (repositoryLocation.endsWith("/")) {
                 repositoryPath = this.repositoryLocation;
             } else {
                 repositoryPath = this.repositoryLocation + "/";
             }
             project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
-            project.setUrl(MergeNatureTools.getULROfProjectFromConfig(repositoryLocation));
+            project.setUrl(Git.getRemoteURL(repositoryPath));
             if (project.getUrl().equals("Unknow")) {
                 project.setOrganization("Unknow");
+            } else if (project.getUrl().contains(":")) {
+                auxStringArray = project.getUrl().split(":")[1].split("/");
+                project.setOrganization(auxStringArray[0]);
             } else {
                 auxStringArray = project.getUrl().split("/");
                 project.setOrganization(auxStringArray[auxStringArray.length - 2]);
@@ -113,13 +116,7 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            System.out.println("Current merge: " + logLine);
-            beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            System.out.println("Before: " + beforeUsedMem + " bytes");
             project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            System.out.println("After: " + afterUsedMem + " bytes");
-            System.out.println("Used: " + (afterUsedMem - beforeUsedMem) + " bytes");
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -174,6 +171,7 @@ public class MergeNatureAlgorithm {
                         } catch (OutOfMemoryError er) {
                             merge.setConflicts(new ArrayList<>());
                             merge.setMergeType(MergeType.OUT_OF_MEMORY);
+                            break;
                         }
                     }
                 }

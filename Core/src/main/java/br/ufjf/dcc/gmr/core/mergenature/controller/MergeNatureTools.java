@@ -92,22 +92,6 @@ public class MergeNatureTools {
 
     }
 
-    public static String getULROfProjectFromConfig(String repositoryPath) throws IOException {
-        try {
-            String url = "Unknow";
-            for (String line : getFileContentInList(repositoryPath + ".git" + File.separator + "config")) {
-                if (line.startsWith("\turl = ")) {
-                    String[] split = line.split("= ");
-                    url = split[split.length - 1];
-                    break;
-                }
-            }
-            return url;
-        } catch (FileNotFoundException ex) {
-            return "Unknow";
-        }
-    }
-
     public static boolean checkIfIsBegin(String line) {
         if (line.startsWith("<<<<<<< HEAD")) {
             if (line.replaceAll("<<<<<<< HEAD", "").equals("")) {
