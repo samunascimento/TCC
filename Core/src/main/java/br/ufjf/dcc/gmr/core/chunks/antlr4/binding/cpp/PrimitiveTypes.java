@@ -19,11 +19,18 @@ public class PrimitiveTypes {
     public static final String STRING = "String";
     public static final String DOUBLE = "double";
     public static final String CHAR = "char";
+    public static final String CHAR16 = "char16";
+    public static final String CHAR32 = "char32";
+    public static final String WCHAR = "wchar";
     public static final String BOOLEAN = "boolean";
     public static final String SHORT = "short";
     public static final String LONG = "long";
     public static final String VOID = "void";
     public static final String POINTER = "pointer";
+    public static final String AUTO = "auto";
+    public static final String SIGNED = "signed";
+    public static final String UNSIGNED = "unsigned";
+    public static final String TEMPLATE = "template";
     public static final String USER_DEFINED = "userDefined";
     public static final String NOT_DEFINED = "notDefined";
 
@@ -116,6 +123,42 @@ public class PrimitiveTypes {
         } else {
             return new TypeBinding(NOT_DEFINED);
         }
+    }
+
+    public static TypeBinding getType(CPP14Parser.SimpletypespecifierContext realCastexpression) {
+        if (realCastexpression.Bool() != null) {
+            return new TypeBinding(BOOLEAN);
+        } else if (realCastexpression.Char() != null) {
+            return new TypeBinding(CHAR);
+        } else if (realCastexpression.Char16() != null) {
+            return new TypeBinding(CHAR16);
+        } else if (realCastexpression.Auto() != null) {
+            return new TypeBinding(AUTO);
+        } else if (realCastexpression.Char32() != null) {
+           return new TypeBinding(CHAR32);
+        } else if (realCastexpression.Double() != null) {
+           return new TypeBinding(DOUBLE);
+        } else if (realCastexpression.Float() != null) {
+            return new TypeBinding(FLOAT);
+        } else if (realCastexpression.Int() != null) {
+            return new TypeBinding(INT);
+        } else if (realCastexpression.Long() != null) {
+            return new TypeBinding(LONG);
+        } else if (realCastexpression.Short() != null) {
+            return new TypeBinding(SHORT);
+        } else if (realCastexpression.Signed() != null) {
+            return new TypeBinding(SIGNED);
+        } else if (realCastexpression.Template() != null) {
+            return new TypeBinding(TEMPLATE);
+        } else if (realCastexpression.Unsigned() != null) {
+           return new TypeBinding(UNSIGNED);
+        } else if (realCastexpression.Void() != null) {
+            return new TypeBinding(VOID);
+        } else if (realCastexpression.Wchar() != null) {
+            return new TypeBinding(WCHAR);
+        }
+        else
+            return new TypeBinding(NULL);
     }
 
 }

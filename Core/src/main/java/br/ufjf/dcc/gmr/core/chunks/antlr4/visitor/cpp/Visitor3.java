@@ -118,24 +118,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             int begin = ctx.getText().indexOf(".") + 1;
             int end = ctx.getText().indexOf("(");
             if (begin <= end) {
-                /*
-                Verify
-                 */
-//                int aux = 0;
-
-//                for (int i = 0; i < ctx.getChildCount(); i++) {
-//                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-//
-//                        String methodCallName = ctx.getText().substring(begin, end);
-//                        MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
-//                        methodCall.add(e);
-//
-//                        aux++;
-//
-//                    }
-//                }
-//
-//                if (aux == 0) {
+      
                 String methodCallName = ctx.getText().substring(begin, end);
                 MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
                 methodCall.add(e);
@@ -146,30 +129,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 methodCall.add(e);
             }
 
-            /*
-            Begin: Remover?
-             */
-//            int aux = 0;
-//            if (ctx.getText().contains("(")) {
-//                for (int i = 0; i < ctx.getChildCount(); i++) {
-//                    if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-//                        String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
-//                      
-//                        MethodCallBinding e = new MethodCallBinding(a,ctx);
-//                        methodCall.add(e);
-//                        aux++;
-//                    }
-//                }
-//                if (aux == 0) {
-//                    String a = ctx.getText().substring(ctx.getText().indexOf(".")+1, ctx.getText().indexOf("("));
-//
-//                    MethodCallBinding e = new MethodCallBinding(a,ctx);
-//                    methodCall.add(e);
-//                }
-//            }
-            /*
-            End: Remover?
-             */
+      
         } else {
             int aux = 0;
             for (int i = 0; i < ctx.getChildCount(); i++) {
@@ -1415,9 +1375,6 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     .exclusiveorexpression().andexpression().equalityexpression()
                     .relationalexpression().shiftexpression().additiveexpression()
                     .multiplicativeexpression().pmexpression().castexpression();
-            /*
-            OBS: ir até o  cast e tratar dois caminhos 
-             */
 
             CPP14Parser.PrimaryexpressionContext unaryExpression;
             CPP14Parser.SimpletypespecifierContext realCastexpression;
@@ -1435,52 +1392,35 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             } catch (NullPointerException ex) {
                 realCastexpression = null;
             }
-
-            
+            //tipos literais
             if (unaryExpression != null
                     && unaryExpression.literal() != null) {
                 TypeBinding type = PrimitiveTypes.getType(unaryExpression.literal());
                 param.setTypeBinding(type);
                 isLiteral = true;
-
+                //modificadores (exemplo)
             } else if (unaryExpression == null && realCastexpression != null) {
-                if (realCastexpression.Bool() != null) {
-                    System.out.println("TYPE: BOOL" + realCastexpression.Bool());
-                } else if (realCastexpression.Char() != null) {
-                    System.out.println("TYPE: CHAR " + realCastexpression.Char());
-                } else if (realCastexpression.Char16() != null) {
-                    System.out.println("TYPE: CHAR16" + realCastexpression.Char());
-                } else if (realCastexpression.Auto() != null) {
-                    System.out.println("TYPE: AUTO?" + realCastexpression.Auto());
-                } else if (realCastexpression.Char32() != null) {
-                    System.out.println("TYPE: CHAR16" + realCastexpression.Char32());
-                } else if (realCastexpression.Double() != null) {
-                    System.out.println("TYPE: DOUBLE" + realCastexpression.Double());
-                } else if (realCastexpression.Float() != null) {
-                    System.out.println("TYPE: FLOAT " + realCastexpression.Float());
-                } else if (realCastexpression.Int() != null) {
-                    System.out.println("TYPE: INT" + realCastexpression.Int());
-                } else if (realCastexpression.Long() != null) {
-                    System.out.println("TYPE: LONG" + realCastexpression.Long());
-                } else if (realCastexpression.Short() != null) {
-                    System.out.println("TYPE: SHORT" + realCastexpression.Short());
-                } else if (realCastexpression.Signed() != null) {
-                    System.out.println("TYPE: SIGNED?" + realCastexpression.Signed());
-                } else if (realCastexpression.Template() != null) {
-                    System.out.println("TYPE: TEMPLATE?" + realCastexpression.Template());
-                } else if (realCastexpression.Unsigned() != null) {
-                    System.out.println("TYPE: UNSIGNED" + realCastexpression.Unsigned());
-                } else if (realCastexpression.Void() != null) {
-                    System.out.println("TYPE: VOID" + realCastexpression.Void());
-                } else if (realCastexpression.Wchar() != null) {
-                    System.out.println("TYPE: Wchar" + realCastexpression.Wchar());
-                }
+                TypeBinding type = PrimitiveTypes.getType(realCastexpression);
+                param.setTypeBinding(type);
                 isLiteral = true;
             } else if (!isLiteral) {
 
                 if (param.getName().contains("(")) {
                     param.setMethodCall(true);
+
+                    for (int i = 0; i < methodDeclaration.size(); i++) {
+                        String name = param.getName().substring(0,param.getName().indexOf("("));
+                            if (name.equals(methodDeclaration.get(i).getName())) {
+                                param.setTypeBinding(methodDeclaration.get(i).getReturnBinding());
+                            }
+                        }
+                    
+               
                 }
+                else{
+                    
+                }
+                    
 
                 /*
                 TODO: Tratar chamada de método nos parâmetros 
