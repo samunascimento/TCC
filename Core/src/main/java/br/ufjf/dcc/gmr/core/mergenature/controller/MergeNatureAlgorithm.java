@@ -87,10 +87,10 @@ public class MergeNatureAlgorithm {
                 repositoryPath = this.repositoryLocation + "/";
             }
             project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
-            project.setUrl(Git.getRemoteURL(repositoryPath));
+            project.setUrl(Git.getRemoteURL(repositoryPath).replaceAll("\n", ""));
             if (project.getUrl().equals("Unknow")) {
                 project.setOrganization("Unknow");
-            } else if (project.getUrl().contains(":")) {
+            } else if (project.getUrl().contains("@")) {
                 auxStringArray = project.getUrl().split(":")[1].split("/");
                 project.setOrganization(auxStringArray[0]);
             } else {
@@ -219,6 +219,7 @@ public class MergeNatureAlgorithm {
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
         String auxString = "";
+        String possibleFileChange = "";
         int beforeContextSize;
         int afterContextSize;
         for (int i = 0; i < fileContent.size(); i++) {
@@ -234,6 +235,14 @@ public class MergeNatureAlgorithm {
                     } else if (j == -1) {
                         auxString = auxString + "\n<SOF>";
                         break;
+                    }
+                }
+                if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
+                    auxArray = fileContent.get(i).split(":");
+                    if (auxArray[auxArray.length - 1] != conflict.getParent1FilePath() 
+                            && Git.fileExistInCommit(conflict.getMerge().getParents().get(0).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
+                        conflict.setParent1FilePath(auxArray[auxArray.length - 1]);
+                        conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
                     }
                 }
                 conflictRegion.setBeforeContext(auxString.replaceFirst("\n", ""));
@@ -254,7 +263,8 @@ public class MergeNatureAlgorithm {
                 }
                 if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
-                    if (Git.fileExistInCommit(conflict.getMerge().getParents().get(1).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
+                    if (auxArray[auxArray.length - 1] != conflict.getParent2FilePath() 
+                            && Git.fileExistInCommit(conflict.getMerge().getParents().get(1).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
                         conflict.setParent2FilePath(auxArray[auxArray.length - 1]);
                         conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
                     }

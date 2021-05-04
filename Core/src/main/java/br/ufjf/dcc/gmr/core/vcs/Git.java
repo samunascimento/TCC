@@ -1498,6 +1498,9 @@ public class Git {
                 if (line.contains("error: Could not access")) {
                     return null;
                 }
+                if (line.contains("fatal: Path")) {
+                    return null;
+                }
             }
         }
 

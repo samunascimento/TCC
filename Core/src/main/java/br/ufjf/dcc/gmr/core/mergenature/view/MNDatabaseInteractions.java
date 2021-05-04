@@ -3,7 +3,6 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -129,7 +128,6 @@ public class MNDatabaseInteractions {
             }
         }.start();
 
-        dialog.setVisible(true);
     }
 
     public static void getGetProjectFromDBFrame(Connection connection, MNTabbedPane tabbedPane) {
