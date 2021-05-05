@@ -89,62 +89,134 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
 //            log(ctx);
-
+        
         if (ctx.getText().contains("->")) {
             int aux = 0;
             if (ctx.getText().contains("(")) {
                 for (int i = 0; i < ctx.getChildCount(); i++) {
                     if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
-                        String a = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
+                        
+                        String obj = ctx.getText().substring(0, ctx.getText().indexOf("-"));
+                        
+                        String name = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
 
-                        MethodCallBinding e = new MethodCallBinding(a, ctx);
-                        methodCall.add(e);
-                        //System.out.println("Chamada Ponteiro com parametro: " + ctx.getText());
-
+                        MethodCallBinding method = new MethodCallBinding(name, ctx);
+                        
+                        for(int j = 0; j < this.variableDeclaration.size(); j++) {
+                            if(obj.equals(this.variableDeclaration.get(j).getName()))
+                                method.setTypeBinding(this.variableDeclaration.get(j).getTypeBinding());
+                        }
+                        
+                        if(method.getTypeBinding() == null) {
+                            for (int k = 0; k < methodDeclaration.size(); k++) {
+                                for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
+                                    if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                        method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                                    }
+                                }
+                            }
+                        }
+                        
+                        methodCall.add(method);
+                        
                         aux++;
                     }
                 }
                 if (aux == 0) {
-                    //System.out.println("Chamada Ponteiro SEM parametro: " + ctx.getText());
-                    String a = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
+                    String obj = ctx.getText().substring(0, ctx.getText().indexOf("-"));
+                    
+                    String name = ctx.getText().substring(ctx.getText().indexOf(">") + 1, ctx.getText().indexOf("("));
 
-                    MethodCallBinding e = new MethodCallBinding(a, ctx);
-                    methodCall.add(e);
+                    MethodCallBinding method = new MethodCallBinding(name, ctx);
+                    
+                    for(int j = 0; j < this.variableDeclaration.size(); j++) {
+                        if(obj.equals(this.variableDeclaration.get(j).getName()))
+                            method.setTypeBinding(this.variableDeclaration.get(j).getTypeBinding());
+                    }
+                    
+                    if(method.getTypeBinding() == null) {
+                        for (int k = 0; k < methodDeclaration.size(); k++) {
+                            for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
+                                if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                    method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                                }
+                            }
+                        }
+                    }
+                    
+                    methodCall.add(method);
                 }
             } else {
                 System.out.println("Ponteiro instanciando atributo: " + ctx.getText());
             }
-        } else if (ctx.getText().contains(".")) {
+        } 
+        else if (ctx.getText().contains(".")) {
             int begin = ctx.getText().indexOf(".") + 1;
             int end = ctx.getText().indexOf("(");
             if (begin <= end) {
-      
+                String obj = ctx.getText().substring(0, ctx.getText().indexOf("."));
+                
                 String methodCallName = ctx.getText().substring(begin, end);
-                MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
-                methodCall.add(e);
-//                }
-            } else {
+                MethodCallBinding method = new MethodCallBinding(methodCallName, ctx);
+                
+                for(int j = 0; j < this.variableDeclaration.size(); j++) {
+                    if(obj.equals(this.variableDeclaration.get(j).getName()))
+                        method.setTypeBinding(this.variableDeclaration.get(j).getTypeBinding());
+                }
+                
+                if(method.getTypeBinding() == null) {
+                    for (int k = 0; k < methodDeclaration.size(); k++) {
+                        for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
+                            if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                            }
+                        }
+                    }
+                }
+                
+                methodCall.add(method);
+            } 
+            else {
+                String obj = ctx.getText().substring(0, ctx.getText().indexOf("."));
+                
                 String methodCallName = ctx.getText().substring(0, end);
-                MethodCallBinding e = new MethodCallBinding(methodCallName, ctx);
-                methodCall.add(e);
+                MethodCallBinding method = new MethodCallBinding(methodCallName, ctx);
+                
+                for(int j = 0; j < this.variableDeclaration.size(); j++) {
+                    if(obj.equals(this.variableDeclaration.get(j).getName()))
+                        method.setTypeBinding(this.variableDeclaration.get(j).getTypeBinding());
+                }
+                
+                if(method.getTypeBinding() == null) {
+                    for (int k = 0; k < methodDeclaration.size(); k++) {
+                        for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
+                            if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                            }
+                        }
+                    }
+                }
+                
+                methodCall.add(method);
             }
 
       
-        } else {
+        } 
+        else {
             int aux = 0;
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i) instanceof CPP14Parser.ExpressionlistContext) {
                     //System.out.println("Chamada com parametro: " + ctx.getText());
 
-                    MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
-                    methodCall.add(e);
+                    MethodCallBinding method = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
+                    methodCall.add(method);
                     aux++;
                 }
             }
             if (aux == 0) {
                 //System.out.println("Chamada SEM parametro: " + ctx.getText());
-                MethodCallBinding e = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
-                methodCall.add(e);
+                MethodCallBinding method = new MethodCallBinding(ctx.getText().substring(0, ctx.getText().indexOf("(")), ctx);
+                methodCall.add(method);
             }
         }
         isFunctionInvocation = true;
@@ -685,6 +757,8 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         String name;
         if (ctx.expression() != null) {
             name = assigmentExpression(ctx.assignmentexpression());
+            
+            
             if (!containDeclaration(name)) {
                 VariableDeclarationBinding variable = new VariableDeclarationBinding();
                 variable.setName(name);
@@ -1343,29 +1417,32 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             ParametersBinding param = new ParametersBinding();
             param.setName(ctx.getText());
 
-            for (int i = 0; i < methodDeclaration.size(); i++) {
-                for (int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
-                    if (param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                        param.setTypeBinding(methodDeclaration.get(i).getParametersBindings().get(j).getTypeBinding());
-                    }
-                }
-            }
-
             for (int i = 0; i < variableDeclaration.size(); i++) {
-                String s = variableDeclaration.get(i).getName();
+                String variableName = variableDeclaration.get(i).getName();
+                
                 if (variableDeclaration.get(i).getName().contains("[")) {
-                    s = variableDeclaration.get(i).getName().substring(0, variableDeclaration.get(i).getName().indexOf("["));
+                    variableName = variableDeclaration.get(i).getName().substring(0, variableDeclaration.get(i).getName().indexOf("["));
                 }
 
                 if (param.getName().contains("[")) {
-                    if (param.getName().substring(0, param.getName().indexOf("[")).equals(s)) {
+                    if (param.getName().substring(0, param.getName().indexOf("[")).equals(variableName)) {
                         param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
                     }
                 }
 
-                if (param.getName().equals(s)) {
+                if (param.getName().equals(variableName)) {
                     param.setTypeBinding(variableDeclaration.get(i).getTypeBinding());
                     //System.out.println("\n\n\n" + variableDeclaration.get(i) + " " + param +"\n\n\n");
+                }
+            }
+            
+            if(param.getTypeBinding() == null) {
+                for (int i = 0; i < methodDeclaration.size(); i++) {
+                    for (int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
+                        if (param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                            param.setTypeBinding(methodDeclaration.get(i).getParametersBindings().get(j).getTypeBinding());
+                        }
+                    }
                 }
             }
 

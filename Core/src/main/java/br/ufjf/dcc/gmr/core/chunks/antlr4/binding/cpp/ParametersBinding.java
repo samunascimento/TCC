@@ -17,6 +17,8 @@ public class ParametersBinding extends BaseBinding {
     public ParametersBinding(String name) {
         super(name);
         this.methodCall = false;
+        
+        this.typeBinding = null;
     }
 
     public ParametersBinding() {

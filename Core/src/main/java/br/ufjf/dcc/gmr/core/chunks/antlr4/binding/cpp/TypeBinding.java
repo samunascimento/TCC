@@ -17,4 +17,8 @@ public class TypeBinding extends BaseBinding{
 
     public TypeBinding() {
     }
+    
+    public String toString() {
+        return getName();
+    }
 }

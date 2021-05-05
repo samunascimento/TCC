@@ -21,7 +21,7 @@ public class MethodCallBinding extends BaseBinding {
     public MethodCallBinding(String name,CPP14Parser.FunctioninvocationContext ctx ) {
         super(name);
         this.parameters = new ArrayList<>();
-        this.typeBinding = new TypeBinding();
+        this.typeBinding = null;
         this.ctx = ctx;
     }
 
@@ -44,9 +44,18 @@ public class MethodCallBinding extends BaseBinding {
     public void setTypeBinding(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
     }
-     @Override
+    
+    @Override
     public String toString(){
-        return "metodo: " + super.getName() + "\n\tparametros: " + this.parameters.toString();
+        String name;
+        
+        if(this.typeBinding == null)
+            name = "metodo: " + super.getName() + "\n\tparametros: " + this.parameters.toString();
+        
+        else
+            name = "metodo: " + this.typeBinding + " " + super.getName() + "\n\tparametros: " + this.parameters.toString();
+        
+        return name;
     }
 
     public CPP14Parser.FunctioninvocationContext getCtx() {
