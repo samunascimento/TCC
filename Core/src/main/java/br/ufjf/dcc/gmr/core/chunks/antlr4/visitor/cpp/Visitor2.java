@@ -681,13 +681,15 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) {
 //            log(ctx);
+        if(ctx.simpledeclaration()!=null){
+            if(ctx.simpledeclaration().pointerdeclaration()!=null){
+                if(ctx.simpledeclaration().pointerdeclaration().ptrdeclarator() != null) {
+                    String name = ctx.simpledeclaration().pointerdeclaration().ptrdeclarator().getText();
 
-        if(ctx.simpledeclaration().pointerdeclaration().ptrdeclarator() != null) {
-            String name = ctx.simpledeclaration().pointerdeclaration().ptrdeclarator().getText();
-            
-            this.typeClass = new TypeBinding(name);
+                    this.typeClass = new TypeBinding(name);
+                 }
+            }
         }
-
         return visitChildren(ctx);
     }
 
