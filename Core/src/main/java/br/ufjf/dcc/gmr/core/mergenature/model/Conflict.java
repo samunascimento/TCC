@@ -12,10 +12,15 @@ import java.util.List;
  */
 public class Conflict {
 
+    public static int PARENT1_FILE = 0;
+    public static int PARENT2_FILE = 1;
+    public static int BOTH_FILES = 2;
+
     private int id;
     private String parent1FilePath;
     private String parent2FilePath;
     private String ancestorFilePath;
+    private int conflictFilePath;
     private List<ConflictRegion> conflictRegions;
     private ConflictType conflictType;
     private boolean hasOutsideAlterations;
@@ -29,6 +34,8 @@ public class Conflict {
      * @param parent1FilePath The name of the file in parent 1 commit
      * @param parent2FilePath The name of the file in parent 2 commit
      * @param ancestorFilePath The name of the file in ancestor commit
+     * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
+     * or <code>parent2FilePath</code>) appears during the conflict
      * @param conflictRegions A list that contains all conflict regions in a
      * file, can be empty
      * @param conflictType The type of conflict
@@ -39,11 +46,12 @@ public class Conflict {
      * conflict
      * @param merge The merge that the conflict belongs
      */
-    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.id = id;
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
+        this.conflictFilePath = conflictFilePath;
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
@@ -51,10 +59,29 @@ public class Conflict {
         this.merge = merge;
     }
 
-    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    /**
+     * No id constructor
+     *
+     * @param parent1FilePath The name of the file in parent 1 commit
+     * @param parent2FilePath The name of the file in parent 2 commit
+     * @param ancestorFilePath The name of the file in ancestor commit
+     * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
+     * or <code>parent2FilePath</code>) appears during the conflict
+     * @param conflictRegions A list that contains all conflict regions in a
+     * file, can be empty
+     * @param conflictType The type of conflict
+     * @param hasOutsideAlterations Indicates if the developer who made the
+     * merge did alterations outside of any conflict
+     * @param hasOutsideAlterationsIgnoringFormatting Indicates if the developer
+     * who made the merge did alterations that is not formatting outside of any
+     * conflict
+     * @param merge The merge that the conflict belongs
+     */
+    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
+        this.conflictFilePath = conflictFilePath;
         this.conflictRegions = conflictRegions;
         this.conflictType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
@@ -66,6 +93,7 @@ public class Conflict {
         this.parent1FilePath = conflict.getParent1FilePath();
         this.parent2FilePath = conflict.getParent2FilePath();
         this.ancestorFilePath = conflict.getAncestorFilePath();
+        this.conflictFilePath = conflict.getIntConflictFilePath();
         this.conflictRegions = conflict.getConflictRegions();
         this.conflictType = conflict.getConflictType();
         this.hasOutsideAlterations = conflict.hasOutsideAlterations();
@@ -157,6 +185,22 @@ public class Conflict {
         this.ancestorFilePath = ancestorFilePath;
     }
 
+    public int getIntConflictFilePath(){
+        return conflictFilePath;
+    }
+    
+    public String getConflictFilePath() {
+        return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES) ? getParent1FilePath() : getParent2FilePath();
+    }
+    
+    public String getConflictFileName() {
+        return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES) ? getParent1FileName() : getParent2FileName();
+    }
+
+    public void setConflictFilePath(int conflictFilePath) {
+        this.conflictFilePath = conflictFilePath;
+    }
+    
     public List<ConflictRegion> getConflictRegions() {
         return conflictRegions;
     }
@@ -208,12 +252,12 @@ public class Conflict {
                 + "\nAncestor's file: " + getAncestorFilePath()
                 + "\nConflict Type: " + conflictType.toString()
                 + "\nConflict Regions: " + conflictRegions.size();
-        if(hasOutsideAlterations){
+        if (hasOutsideAlterations) {
             result = result + "\nHas Outside Alterations: YES";
         } else {
             result = result + "\nHas Outside Alterations: NO";
         }
-        if(hasOutsideAlterationsIgnoringFormatting){
+        if (hasOutsideAlterationsIgnoringFormatting) {
             result = result + "\nHas Outside Alterations Ignoring Formatting: YES";
         } else {
             result = result + "\nHas Outside Alterations Ignoring Formatting: NO";

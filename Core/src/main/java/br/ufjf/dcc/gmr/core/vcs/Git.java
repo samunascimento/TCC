@@ -1482,7 +1482,7 @@ public class Git {
 
         //System.out.println("\""+fileSource+"\"");
         //String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
-        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
+        String command = "git diff " + "--unified=0 --ignore-space-at-eol " + fileSource + " " + fileTarget;
 
         CLIExecution execution = CLIExecute.execute(command, directory);
 

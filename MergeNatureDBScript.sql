@@ -30,6 +30,7 @@ CREATE TABLE Conflict(
 	parent1FilePath VARCHAR(5000),
 	parent2FilePath VARCHAR(5000),
 	ancestorFilePath VARCHAR(5000),
+	conflictFilePath INT,
 	hasOutsideAlterations BOOLEAN,
 	hasOutsideAlterationsIgnoringFormatting BOOLEAN,
 	conflictType INT

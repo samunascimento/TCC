@@ -239,9 +239,10 @@ public class MergeNatureAlgorithm {
                 }
                 if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
-                    if (auxArray[auxArray.length - 1] != conflict.getParent1FilePath() 
+                    if (!auxArray[auxArray.length - 1].equals(conflict.getParent1FilePath())
                             && Git.fileExistInCommit(conflict.getMerge().getParents().get(0).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
                         conflict.setParent1FilePath(auxArray[auxArray.length - 1]);
+                        conflict.setConflictFilePath(Conflict.PARENT2_FILE);
                         conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
                     }
                 }
@@ -263,9 +264,10 @@ public class MergeNatureAlgorithm {
                 }
                 if (conflict.getConflictType() == ConflictType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
-                    if (auxArray[auxArray.length - 1] != conflict.getParent2FilePath() 
+                    if (!auxArray[auxArray.length - 1].equals(conflict.getParent2FilePath())
                             && Git.fileExistInCommit(conflict.getMerge().getParents().get(1).getCommitHash(), auxArray[auxArray.length - 1], repositoryPath)) {
                         conflict.setParent2FilePath(auxArray[auxArray.length - 1]);
+                        conflict.setConflictFilePath(Conflict.PARENT1_FILE);
                         conflict.setConflictType(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
                     }
                 }
@@ -302,16 +304,17 @@ public class MergeNatureAlgorithm {
             contextIntervals = null;
         } else {
             String mergeCommit = conflictRegion.getConflict().getMerge().getMerge().getCommitHash();
+            String conflictFilePath = conflictRegion.getConflict().getConflictFilePath();
             String parentFilePath = conflictRegion.getConflict().getParent1FilePath();
             int solutionFirstLine;
             int solutionFinalLine;
             try {
-                solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getEndLine() + 1);
+                solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, conflictRegion.getBeginLine() - 1);
+                solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, conflictRegion.getEndLine() + 1);
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = conflictRegion.getConflict().getParent2FilePath();
-                    solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, parentFilePath, false, conflictRegion.getEndLine() + 1);
+                    solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, conflictRegion.getBeginLine() - 1);
+                    solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, conflictRegion.getEndLine() + 1);
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         conflictRegion.setSolutionText("The solution to the conflict was to delete the file.");
                         conflictRegion.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
@@ -378,6 +381,7 @@ public class MergeNatureAlgorithm {
     }
 
     private ConflictRegion originalLinesLayer(ConflictRegion conflictRegion, String repositoryPath) throws IOException {
+        String conflictFilePath = conflictRegion.getConflict().getConflictFilePath();
         String parent1FilePath = conflictRegion.getConflict().getParent1FilePath();
         String parent2FilePath = conflictRegion.getConflict().getParent2FilePath();
         if (conflictRegion.getBeginLine() + 1 == conflictRegion.getSeparatorLine()) {
@@ -387,7 +391,7 @@ public class MergeNatureAlgorithm {
             int conflictV1Line = conflictRegion.getBeginLine() + 1;
             int originalV1FirstLine;
             try {
-                originalV1FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent1Commit, "", parent1FilePath, parent1FilePath, false, conflictV1Line);
+                originalV1FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent1Commit, "", parent1FilePath, conflictFilePath, false, conflictV1Line);
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
@@ -403,7 +407,7 @@ public class MergeNatureAlgorithm {
             int conflictV2Line = conflictRegion.getSeparatorLine() + 1;
             int originalV2FirstLine;
             try {
-                originalV2FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent2Commit, "", parent2FilePath, parent1FilePath, false, conflictV2Line);
+                originalV2FirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, parent2Commit, "", parent2FilePath, conflictFilePath, false, conflictV2Line);
             } catch (IOException | LocalRepositoryNotAGitRepository | InvalidCommitHash | EmptyOutput | ImpossibleLineNumber ex) {
                 throw new IOException(ex);
             }
@@ -425,11 +429,11 @@ public class MergeNatureAlgorithm {
             if (solutionFileWasRenamed) {
                 allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
-                        conflict.getParent1FilePath(), true, 0).get(0).getLines();
+                        conflict.getConflictFilePath(), true, 0).get(0).getLines();
             } else {
                 allLines = Git.diff(repositoryPath,
                         conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
-                        conflict.getParent1FilePath(), true, 0).get(0).getLines();
+                        conflict.getConflictFilePath(), true, 0).get(0).getLines();
             }
         } catch (LocalRepositoryNotAGitRepository ex) {
             throw new IOException("LocalRepositoryNotAGitRepository was caught during a Git.diff between the version of the solution and of the conflict of a file.\n"
