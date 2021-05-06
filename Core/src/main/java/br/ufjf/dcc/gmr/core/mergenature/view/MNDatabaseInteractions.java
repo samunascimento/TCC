@@ -124,7 +124,9 @@ public class MNDatabaseInteractions {
         new Thread() {
             @Override
             public void run() {
-                dialog.setVisible(true);
+                try {
+                    dialog.setVisible(true);
+                } catch (IndexOutOfBoundsException ex){}
             }
         }.start();
 

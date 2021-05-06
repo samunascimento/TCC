@@ -3,7 +3,7 @@ CREATE TABLE Project(
     name VARCHAR(500),
     url VARCHAR(5000),
     organization VARCHAR(100),
-    savedate DATE
+    savedate TIMESTAMP
 );
 
 CREATE TABLE Commit(

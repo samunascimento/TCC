@@ -3,10 +3,11 @@ package br.ufjf.dcc.gmr.core.mergenature.dao;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JProgressBar;
@@ -66,7 +67,7 @@ public class ProjectDAO {
             stmt.setString(1, project.getName());
             stmt.setString(2, project.getUrl());
             stmt.setString(3, project.getOrganization());
-            stmt.setDate(4, new Date(new java.util.Date().getTime()));
+            stmt.setTimestamp(4, new Timestamp(new Date().getTime()));
 
             ResultSet result = stmt.executeQuery();
 
