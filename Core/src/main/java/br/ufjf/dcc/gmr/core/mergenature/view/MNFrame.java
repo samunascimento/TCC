@@ -105,7 +105,7 @@ public class MNFrame extends JFrame {
                         showInputConnection();
                     }
                 } else {
-                    MNDatabaseInteractions.getGetProjectFromDBFrame(connection, tabbedPane);
+                    MNDatabaseInteractions.initGetProjectFrame(connection, tabbedPane);
                 }
             }
         });
@@ -187,7 +187,7 @@ public class MNFrame extends JFrame {
                 JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
             } else {
                 if(saveInDB){
-                    MNDatabaseInteractions.getSaveAnalysisInDBFrame(connection, projectPanels);
+                    MNDatabaseInteractions.initSaveFrame(connection, projectPanels);
                 } else {
                     new MNSaveAnalysis(projectPanels); 
                 }

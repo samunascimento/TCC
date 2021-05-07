@@ -183,9 +183,8 @@ public class ProjectDAO {
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                dates.add(resultSet.getDate(SAVEDATE));
+                dates.add(resultSet.getTimestamp(SAVEDATE));
             }
-
             return dates;
 
         } catch (SQLException ex) {

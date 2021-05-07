@@ -1123,8 +1123,8 @@ public class Git {
     }
     
     public static String getRemoteURL(String repositoryPath) throws IOException {
-        String result = CLIExecute.execute(" git config --get remote.origin.url", repositoryPath).getOutputString();
-        if(result == ""){
+        String result = CLIExecute.execute("git config --get remote.origin.url", repositoryPath).getOutputString();
+        if(result.equals("")){
             return "Unknown";
         } else {
             return result;

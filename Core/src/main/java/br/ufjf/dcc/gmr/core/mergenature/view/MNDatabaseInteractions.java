@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -33,7 +33,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MNDatabaseInteractions {
 
-    public static void getSaveAnalysisInDBFrame(Connection connection, List<MNProjectPanel> projectPanels) {
+    public static void initSaveFrame(Connection connection, List<MNProjectPanel> projectPanels) {
         JDialog dialog = new JDialog();
         dialog.setModal(true);
         dialog.setSize(400, 125);
@@ -132,7 +132,7 @@ public class MNDatabaseInteractions {
 
     }
 
-    public static void getGetProjectFromDBFrame(Connection connection, MNTabbedPane tabbedPane) {
+    public static void initGetProjectFrame(Connection connection, MNTabbedPane tabbedPane) {
         List<Project> projects;
         ProjectDAO projectDAO = new ProjectDAO(connection);
         List<Date> dates;
@@ -146,7 +146,7 @@ public class MNDatabaseInteractions {
 
         JDialog dialog = new JDialog();
         dialog.setModal(true);
-        dialog.setSize(500, 500);
+        dialog.setSize(550, 500);
         dialog.setResizable(false);
         dialog.setAlwaysOnTop(true);
         dialog.setLocationRelativeTo(null);

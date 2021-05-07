@@ -461,13 +461,13 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitVariableDeclaratorList(Java9Parser.VariableDeclaratorListContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVariableDeclarator(Java9Parser.VariableDeclaratorContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 

@@ -88,8 +88,8 @@ public class MergeNatureAlgorithm {
             }
             project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
             project.setUrl(Git.getRemoteURL(repositoryPath).replaceAll("\n", ""));
-            if (project.getUrl().equals("Unknow")) {
-                project.setOrganization("Unknow");
+            if (project.getUrl().equals("Unknown")) {
+                project.setOrganization("Unknown");
             } else if (project.getUrl().contains("@")) {
                 auxStringArray = project.getUrl().split(":")[1].split("/");
                 project.setOrganization(auxStringArray[0]);
