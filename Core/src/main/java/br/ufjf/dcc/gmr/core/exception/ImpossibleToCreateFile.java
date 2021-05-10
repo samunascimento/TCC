@@ -9,11 +9,8 @@ package br.ufjf.dcc.gmr.core.exception;
  *
  * @author luan
  */
-public class Notsaving extends Exception {
-
-    public Notsaving() {
-        super("\"The analysis will not be save anywhere, please use '-s' to save on the computer\" "
-                + "+ \"or '-db' to save on yout database \"");
+public class ImpossibleToCreateFile extends Exception{
+    public ImpossibleToCreateFile(){
+        super ("Its is not possible to create the file ");
     }
-
 }

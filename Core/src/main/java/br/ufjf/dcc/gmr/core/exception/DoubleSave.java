@@ -10,7 +10,8 @@ package br.ufjf.dcc.gmr.core.exception;
  * @author luan
  */
 public class DoubleSave extends Exception {
-      public DoubleSave() {
-        super("It is not possible to save at the computer and the database at the same time, please chose one");
+
+    public DoubleSave() {
+        super("\"It is not possible to save at the computer and the database at the same time, please chose one\"");
     }
 }

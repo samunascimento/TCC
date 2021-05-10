@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.DoubleSave;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
+import br.ufjf.dcc.gmr.core.exception.ImpossibleToCreateFile;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -81,6 +84,7 @@ public class Cli {
             CommandLine cmd = parser.parse(options, args);
 
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
+               
                 if (!(cmd.hasOption("s") && cmd.hasOption("db"))) {
                     System.out.println("The analysis is not being saved");
                     throw new Notsaving();
@@ -128,25 +132,20 @@ public class Cli {
                     System.out.println("Ops, it was not suposed to happen!");
                 }
             } else {
-
                 String fileContent = null;
-                try {
+                if (testConnection()) {
                     fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
-                } catch (IOException ex) {
-                    Scanner sc = new Scanner(System.in);
-                    String url, user, password;
-                    System.out.println("Type the database URL followd by it's name: ");
-                    url = sc.nextLine();
-                    System.out.println("Type the database User: ");
-                    user = sc.nextLine();
-                    System.out.println("Type the database password: ");
-                    password = sc.nextLine();
-                    MergeNatureTools.createAndWriteInFile(MNFrame.CONNECTION_FILEPATH, url + ";" + user + ";" + password);
-                    try {
+                } else {
+
+                    createFile();
+
+                    if (testConnection()) {
                         fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
-                    } catch (IOException er) {
-                        System.out.println("There is an archieve issue, please contact the developers");
+                    } else {
+                           System.out.println("The archieve us not being created, please contact the developers");
+                           throw new ImpossibleToCreateFile();
                     }
+
                 }
                 String[] data = fileContent.split(";");
                 Connection connection = null;
@@ -164,12 +163,11 @@ public class Cli {
                     } else {
                         System.out.println("Ops, it was not suposed to happen!");
                     }
-                    project.insert(analysis.getProject());
-                } catch (SQLException exception) {
+                    } catch (SQLException exception) {
                     System.out.println("SQL ERROR!");
                 }
             }
-        } catch (ParseException | NumberFormatException | Notsaving | DoubleSave e) {
+        } catch (ParseException | NumberFormatException | Notsaving | DoubleSave | ImpossibleToCreateFile e) {
 
             if (e instanceof NumberFormatException) {
                 System.out.println("Context line number must be a number");
@@ -178,6 +176,34 @@ public class Cli {
             formatter.printHelp("help", options);
         }
 
+    }
+
+    private static void createFile() {
+
+        Scanner sc = new Scanner(System.in);
+        String url, user, password;
+        System.out.println("Type the database URL followd by it's name: ");
+        url = sc.nextLine();
+        System.out.println("Type the database User: ");
+        user = sc.nextLine();
+        System.out.println("Type the database password: ");
+        password = sc.nextLine();
+        try {
+            MergeNatureTools.createAndWriteInFile(MNFrame.CONNECTION_FILEPATH, url + ";" + user + ";" + password);
+        } catch (IOException ex) {
+            System.out.println("É impossivel criar o arquivo!");
+        }
+    }
+
+    private static boolean testConnection() {
+        String fileContent = null;
+        try {
+            fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
+        } catch (IOException ex) {
+
+            return false;
+        }
+        return true;
     }
 
 }
