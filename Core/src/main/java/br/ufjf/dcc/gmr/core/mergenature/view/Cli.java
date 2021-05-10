@@ -80,18 +80,17 @@ public class Cli {
         HelpFormatter formatter = new HelpFormatter();
 
         try {
-
             CommandLine cmd = parser.parse(options, args);
 
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
-               
-                if (!(cmd.hasOption("s") && cmd.hasOption("db"))) {
+
+                if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
+                    System.out.println("Double save is not supoorted yet");
+                    throw new DoubleSave();
+
+                } else {
                     System.out.println("The analysis is not being saved");
                     throw new Notsaving();
-                }
-                if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
-                    System.out.println("Double saving is not suported yet");
-                    throw new DoubleSave();
                 }
 
             }
@@ -136,14 +135,12 @@ public class Cli {
                 if (testConnection()) {
                     fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
                 } else {
-
                     createFile();
-
                     if (testConnection()) {
                         fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
                     } else {
-                           System.out.println("The archieve us not being created, please contact the developers");
-                           throw new ImpossibleToCreateFile();
+                        System.out.println("The archieve us not being created, please contact the developers");
+                        throw new ImpossibleToCreateFile();
                     }
 
                 }
@@ -163,7 +160,7 @@ public class Cli {
                     } else {
                         System.out.println("Ops, it was not suposed to happen!");
                     }
-                    } catch (SQLException exception) {
+                } catch (SQLException exception) {
                     System.out.println("SQL ERROR!");
                 }
             }
@@ -200,7 +197,6 @@ public class Cli {
         try {
             fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
         } catch (IOException ex) {
-
             return false;
         }
         return true;
