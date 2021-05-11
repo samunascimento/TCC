@@ -50,11 +50,13 @@ public class MethodCallBinding extends BaseBinding {
         String name;
         
         if(this.typeBinding == null)
-            name = "metodo: " + super.getName() + "\n\tparametros: " + this.parameters.toString();
+            name = "metodo: " + super.getName()  + this.parameters.toString();
         
         else
-            name = "metodo: " + this.typeBinding + " " + super.getName() + "\n\tparametros: " + this.parameters.toString();
+            name = "metodo: " + this.typeBinding + " " + super.getName() + this.parameters.toString();
         
+        name = name.replace("[","(" );
+        name =name.replace("]", ")");
         return name;
     }
 

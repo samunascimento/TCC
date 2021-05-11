@@ -1494,14 +1494,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     
                
                 }
-                else{
-                    
-                }
-                    
-
-                /*
-                TODO: Tratar chamada de método nos parâmetros 
-                 */
+                   
             }
 
             methodCall.get(methodCall.size() - 1).getParameters().add(param);

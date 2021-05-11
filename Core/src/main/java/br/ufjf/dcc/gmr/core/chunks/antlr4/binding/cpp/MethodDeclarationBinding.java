@@ -90,13 +90,14 @@ public class MethodDeclarationBinding extends BaseBinding {
         String name;
         
         if(this.type == null)
-            name = "metodo: " + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() + " " 
-                +"\n\tparametros: " + this.parameters.toString();
+            name = "metodo: " + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() + this.parameters.toString();
         
         else 
-            name = "metodo: " + this.type + " " + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() + " " 
-                +"\n\tparametros: " + this.parameters.toString();
+            name = "metodo: " + this.type + "::" + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() 
+                 + this.parameters.toString();
         
+        name = name.replace("[","(" );
+        name =name.replace("]", ")");
         return name;
     }
     

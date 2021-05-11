@@ -60,30 +60,30 @@ public class AST {
             //Imprimir_arvore-------------------------------------------------------
             if (openTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
+               // viewer.open();
             }
             //----------------------------------------------------------------------*/
-            System.out.println("============ VARIABLE DECLARATION =============");
-            for (int i = 0; i < visitor3.getVariableDeclaration().size(); i++) {
-                System.out.println(visitor3.getVariableDeclaration().get(i));
-            }
-
-            System.out.println("============ VARIABLE USAGE =============");
-            for (int i = 0; i < visitor3.getVariableUsage().size(); i++) {
-                System.out.println(visitor3.getVariableUsage().get(i));
-            }
-
-            System.out.println("============ METHOD CALL =============");
+//            System.out.println("============ VARIABLE DECLARATION =============");
+//            for (int i = 0; i < visitor3.getVariableDeclaration().size(); i++) {
+//                System.out.println(visitor3.getVariableDeclaration().get(i));
+//            }
+//
+//            System.out.println("============ VARIABLE USAGE =============");
+//            for (int i = 0; i < visitor3.getVariableUsage().size(); i++) {
+//                System.out.println(visitor3.getVariableUsage().get(i));
+//            }
+//
+//            System.out.println("============ METHOD CALL =============");
             methodCall.add(visitor3.getMethodCall());
-            for (int i = 0; i < visitor3.getMethodCall().size(); i++) {
-                System.out.println(visitor3.getMethodCall().get(i));
-            }
-
-            System.out.println("============ METHOD DECLARATION =============");
-            methodDeclaration.add(visitor2.getMethodDeclaration());
-            for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
-                System.out.println(visitor2.getMethodDeclaration().get(i));
-            }
+//            for (int i = 0; i < visitor3.getMethodCall().size(); i++) {
+//                System.out.println(visitor3.getMethodCall().get(i));
+//            }
+//
+//            System.out.println("============ METHOD DECLARATION =============");
+           methodDeclaration.add(visitor2.getMethodDeclaration());
+//            for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
+//                System.out.println(visitor2.getMethodDeclaration().get(i));
+//            }
             return null;
 //            return new ANTLR4Results(visitor.getList(), comments);
         } else {
@@ -107,7 +107,7 @@ public class AST {
         return cppFiles;
     }
 
-    public static void comparaNome() {
+    public static void comparaNome(String caminho) {
 
         for (int i = 0; i < methodDeclaration.size(); i++) {
             for (int j = 0; j < methodDeclaration.get(i).size(); j++) {
@@ -138,9 +138,9 @@ public class AST {
                             
                             if(methodDeclaration.get(i).get(j).equalsTo(methodCall.get(k).get(l))) {
                                 System.out.println("=============== COMPARA ==================");
-                                        System.out.println("MD: " + methodDeclaration.get(i).get(j).toString() + " linha: "
-                                                + methodDeclaration.get(i).get(j).getCtx().getStart().getLine()
-                                                + "\nMC: " + methodCall.get(k).get(l).toString() + " linha: "
+                                        System.out.println("MD ("+ caminho + "): "+ methodDeclaration.get(i).get(j).toString() + " linha: "
+                                                + methodDeclaration.get(i).get(j).getCtx().getStart().getLine() 
+                                                + "\nMc: "+ methodCall.get(k).get(l).toString() + " linha: "
                                                 + methodCall.get(k).get(l).getCtx().getStart().getLine());
                             }
                         }
@@ -153,14 +153,31 @@ public class AST {
     public static boolean verifica(String nome1, String nome2) {
         return (nome1 == null ? nome2 == null : nome1.equals(nome2));
     }
+    
+    public static void files(File file) throws IOException{
+        for (File f : file.listFiles()) {
+            if ((f.isFile() && f.getName().endsWith("cpp"))||(f.isFile() && f.getName().endsWith("h"))){
+                analyzeCPPSyntaxTree(f.getAbsolutePath(),true);
+                comparaNome(f.getAbsolutePath());
+            }
+            else if(f.isDirectory()){ 
+                files(f);
+            }
+        }
+    }
+    
 
     public static void main(String args[]) throws IOException {
-
-        String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
-        String pathh = "/home/ketleen/Documentos/grafos-master/Grafo.cpp";
-        analyzeCPPSyntaxTree(path, true);
-        analyzeCPPSyntaxTree(pathh, true);
-        comparaNome();
-
-    }
+//
+//        String path = "/home/ketleen/Documentos/grafos-master/main.cpp";
+//        String pathh = "/home/ketleen/Documentos/grafos-master/Grafo.cpp";
+//        analyzeCPPSyntaxTree(path, true);
+//        analyzeCPPSyntaxTree(pathh, true);
+//        comparaNome();
+//
+          File file = new File("/home/ketleen/Documentos/grafos-master");
+          files(file);
+          
+   }
 }
+    
