@@ -86,7 +86,7 @@ public class MNCommitInfoPanel extends JPanel {
         if (comboBox.getSelectedIndex() == 0) {
             textArea.setText(merge.getMerge().toString());
         } else if (comboBox.getSelectedIndex() == comboBox.getItemCount() - 1) {
-            if (merge.getAncestor().equals(Commit.NO_EXIST)) {
+            if (merge.getAncestor() == null) {
                 textArea.setText("This merge don't have a common\nancestor between it's parents, so the\n ancestor commit not exist");
             } else {
                 textArea.setText(merge.getAncestor().toString());

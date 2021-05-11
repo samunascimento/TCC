@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class Commit {
 
-    public static final Commit NO_EXIST = new Commit();
-
     private int id;
     private String message;
     private String commitHash;
@@ -148,16 +146,11 @@ public class Commit {
 
     @Override
     public String toString() {
-        if (this == NO_EXIST) {
-            return "Don't exist a commit that does this function!";
-        } else {
-            return "Title: " + message + "\n"
-                    + "Hash: " + commitHash + "\n"
-                    + "Author: " + author + "\n"
-                    + "Author Date: " + authorDate + "\n"
-                    + "Committer: " + committer + "\n"
-                    + "Committer Date: " + committerDate;
-        }
+        return "Title: " + message + "\n"
+                + "Hash: " + commitHash + "\n"
+                + "Author: " + author + "\n"
+                + "Author Date: " + authorDate + "\n"
+                + "Committer: " + committer + "\n"
+                + "Committer Date: " + committerDate;
     }
-
 }

@@ -150,9 +150,8 @@ public class MergeNatureAlgorithm {
         }
         auxString = Git.mergeBaseCommand(repositoryPath, auxStringArray);
         if ("No ancestor".equals(auxString)) {
-            merge.setAncestor(Commit.NO_EXIST);
+            merge.setAncestor(null);
             unrelatedHistories = true;
-
         } else {
             merge.setAncestor(new Commit(auxString, repositoryPath));
         }

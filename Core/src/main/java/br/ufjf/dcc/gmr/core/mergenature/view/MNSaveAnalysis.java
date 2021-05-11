@@ -200,7 +200,7 @@ public class MNSaveAnalysis extends JDialog {
                 notError = false;
             }
             if (notError) {
-                JOptionPane.showMessageDialog(null, fileName + ".gson was saved in " + this.fileChooser.getSelectedFile().getPath() + "!", "Saved", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, fileName + ".mntr was saved in " + this.fileChooser.getSelectedFile().getPath() + "!", "Saved", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             }
         }

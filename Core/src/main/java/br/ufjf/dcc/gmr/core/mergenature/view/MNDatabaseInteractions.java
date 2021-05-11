@@ -110,6 +110,7 @@ public class MNDatabaseInteractions {
                 try {
                     projectDAO.insert(project);
                 } catch (SQLException ex) {
+                    ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Some error!", "ERROR", JOptionPane.ERROR_MESSAGE);
                     check = false;
                 } finally {
