@@ -219,7 +219,6 @@ public class MergeNatureAlgorithm {
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
         String auxString = "";
-        String possibleFileChange = "";
         int beforeContextSize;
         int afterContextSize;
         for (int i = 0; i < fileContent.size(); i++) {
@@ -367,6 +366,9 @@ public class MergeNatureAlgorithm {
             conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION1);
         } else if (solution.equals(v2)) {
             conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION2);
+        } else if (solution.equals(MergeNatureTools.getRawForm(conflictRegion.getRawConflictWithoutContext()))) {
+            conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
+            conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getSolutionText());
         } else {
             solution = conflictRegion.getSolutionText().replaceAll(" ", "").replaceAll("\t", "");
             for (String solutionLine : solution.split("\n")) {
