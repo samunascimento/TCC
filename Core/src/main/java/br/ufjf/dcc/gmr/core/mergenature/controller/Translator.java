@@ -536,10 +536,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.ERROR);
                 list.remove("WARNING!");
             }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (!list.isEmpty()) {
-                mainList.add(LanguageConstructsTypes.OTHER);
-            }
+          
         }
         return mainList;
     }
@@ -751,10 +748,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
                 list.remove("Yield_stmt");
             }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
-            if (!list.isEmpty()) {
-                mainList.add(LanguageConstructsTypes.OTHER);
-            }
+            
         }
 
         return mainList;
@@ -1057,10 +1051,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
                 list.remove("YieldStatement");
             }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (!list.isEmpty()) {
-                mainList.add(LanguageConstructsTypes.OTHER);
-            }
+            
         }
         return mainList;
     }
