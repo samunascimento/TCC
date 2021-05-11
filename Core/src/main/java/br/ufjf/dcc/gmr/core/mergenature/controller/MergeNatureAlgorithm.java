@@ -44,6 +44,7 @@ public class MergeNatureAlgorithm {
     private JProgressBar progressBar;
 
     private boolean solutionFileWasRenamed;
+    private List<IntegerInterval> contextIntervals;
 
     public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
         this.repositoryLocation = repositoryLocation;
@@ -198,8 +199,8 @@ public class MergeNatureAlgorithm {
         if (conflict.getConflictType() == ConflictType.CONTENT
                 || conflict.getConflictType() == ConflictType.COINCIDENCE_ADDING
                 || conflict.getConflictType() == ConflictType.FILE_RENAME) {
-            List<IntegerInterval> contextIntervals = new ArrayList<>();
-            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContentInList(repositoryPath + conflict.getParent1FilePath()), repositoryPath, contextIntervals));
+            contextIntervals = new ArrayList<>();
+            conflict.setConflictRegions(conflictRegionsLayer(conflict, MergeNatureTools.getFileContentInList(repositoryPath + conflict.getParent1FilePath()), repositoryPath));
             if (contextIntervals != null) {
                 conflict = outsideAlterationsLayer(conflict, repositoryPath, contextIntervals);
             } else {
@@ -214,7 +215,7 @@ public class MergeNatureAlgorithm {
         return conflict;
     }
 
-    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
+    private List<ConflictRegion> conflictRegionsLayer(Conflict conflict, List<String> fileContent, String repositoryPath) throws IOException {
         String[] auxArray;
         List<ConflictRegion> conflictRegions = new ArrayList<>();
         ConflictRegion conflictRegion;
@@ -288,7 +289,7 @@ public class MergeNatureAlgorithm {
                 conflictRegion.setRawConflict(ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent,
                         conflictRegion.getBeginIndex() - beforeContextSize,
                         conflictRegion.getEndIndex() + afterContextSize)));
-                conflictRegion = solutionLayer(conflictRegion, repositoryPath, contextIntervals);
+                conflictRegion = solutionLayer(conflictRegion, repositoryPath);
                 conflictRegion = originalLinesLayer(conflictRegion, repositoryPath);
                 conflictRegions.add(conflictRegion);
             }
@@ -296,7 +297,7 @@ public class MergeNatureAlgorithm {
         return conflictRegions;
     }
 
-    private ConflictRegion solutionLayer(ConflictRegion conflictRegion, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException {
+    private ConflictRegion solutionLayer(ConflictRegion conflictRegion, String repositoryPath) throws IOException {
         if (conflictRegion.getBeforeContext().endsWith("<SOF>") || conflictRegion.getAfterContext().startsWith("<EOF>")) {
             conflictRegion.setSolutionText("The context is not a line, the solution cannot be obtained accurately");
             conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);

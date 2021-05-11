@@ -38,7 +38,7 @@ public class MergeDAO {
         int conflictID;
         int parentCommitID;
         int mergeCommitID = commitDAO.insert(merge.getMerge());
-        int ancestorCommitID = commitDAO.insert(merge.getAncestor());
+        int ancestorCommitID = merge.getAncestor().equals(Commit.NO_EXIST) ? -1 : commitDAO.insert(merge.getAncestor());
 
         String sql = "INSERT INTO merge ("
                 + MERGETYPE + ", "
@@ -103,7 +103,7 @@ public class MergeDAO {
                         null,
                         commitDAO.select(resultSet.getInt(FK_MERGE)),
                         null,
-                        commitDAO.select(resultSet.getInt(FK_ANCESTOR)),
+                        resultSet.getInt(FK_ANCESTOR) == -1 ? Commit.NO_EXIST : commitDAO.select(resultSet.getInt(FK_ANCESTOR)),
                         null,
                         MergeType.getEnumFromInt(resultSet.getInt(MERGETYPE)));
             }
