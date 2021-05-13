@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4;
 
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.*;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.model.Chunk;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor1;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor2;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.Visitor3;
@@ -16,16 +15,13 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java.JavaParser;
 import br.ufjf.dcc.gmr.core.utils.DiffTranslator;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
-import java.awt.Dimension;
 import java.awt.HeadlessException;
 import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;

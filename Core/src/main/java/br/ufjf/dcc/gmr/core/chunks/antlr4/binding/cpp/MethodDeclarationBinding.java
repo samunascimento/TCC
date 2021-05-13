@@ -6,7 +6,6 @@
 package br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.PrimitiveTypes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,8 +87,18 @@ public class MethodDeclarationBinding extends BaseBinding {
 
    @Override
     public String toString(){
-        return "metodo: " + this.modifier + " " + this.type.getName() + " " + super.getName() + " " 
-                +"\n\tparametros: " + this.parameters.toString();
+        String name;
+        
+        if(this.type == null)
+            name = "metodo: " + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() + this.parameters.toString();
+        
+        else 
+            name = "metodo: " + this.type + "::" + this.modifier + " " + this.returnBinding.getName() + " " + super.getName() 
+                 + this.parameters.toString();
+        
+        name = name.replace("[","(" );
+        name =name.replace("]", ")");
+        return name;
     }
     
     public boolean equalsTo(MethodCallBinding mcb) {
@@ -100,9 +109,10 @@ public class MethodDeclarationBinding extends BaseBinding {
             return false;
         
         for(int i = 0; i < this.getQtParameters(); i++) {
-            if(this.getParametersBindings().get(i).getTypeBinding().getName() == null ? mcb.getParameters().get(i).getTypeBinding().getName() != null : !this.getParametersBindings().get(i).getTypeBinding().getName().equals(mcb.getParameters().get(i).getTypeBinding().getName()))
-                if(!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getTypeBinding().getName(), this.getParametersBindings().get(i).getTypeBinding().getName()))
-                    return false;
+            if(this.getParametersBindings().get(i).getTypeBinding() != null && mcb.getParameters().get(i).getTypeBinding() != null)
+                if(this.getParametersBindings().get(i).getTypeBinding().getName() == null ? mcb.getParameters().get(i).getTypeBinding().getName() != null : !this.getParametersBindings().get(i).getTypeBinding().getName().equals(mcb.getParameters().get(i).getTypeBinding().getName()))
+                    if(!PrimitiveTypes.isCompatibleType(mcb.getParameters().get(i).getTypeBinding().getName(), this.getParametersBindings().get(i).getTypeBinding().getName()))
+                        return false;
         }
         
         return true;

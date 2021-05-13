@@ -21,6 +21,7 @@ public class ConflictDAO {
     public static final String PARENT1FILEPATH = "parent1filepath";
     public static final String PARENT2FILEPATH = "parent2filepath";
     public static final String ANCESTORFILEPATH = "ancestorfilepath";
+    public static final String CONFLICTFILEPATH = "conflictfilepath";
     public static final String HASOUTSIDEALTERATIONS = "hasoutsidealterations";
     public static final String HASOUTSIDEALTERATIONSIGNORINGFORMATTING = "hasoutsidealterationsignoringformatting";
     public static final String CONFLICTTYPE = "conflicttype";
@@ -38,9 +39,10 @@ public class ConflictDAO {
                 + PARENT1FILEPATH + ", "
                 + PARENT2FILEPATH + ", "
                 + ANCESTORFILEPATH + ", "
+                + CONFLICTFILEPATH + ", "
                 + HASOUTSIDEALTERATIONS + ", "
                 + HASOUTSIDEALTERATIONSIGNORINGFORMATTING + ", "
-                + CONFLICTTYPE + ") VALUES (?,?,?,?,?,?) RETURNING " + ID + ";";
+                + CONFLICTTYPE + ") VALUES (?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
         PreparedStatement stmt = null;
 
@@ -51,9 +53,10 @@ public class ConflictDAO {
             stmt.setString(1, conflict.getParent1FilePath());
             stmt.setString(2, conflict.getParent2FilePath());
             stmt.setString(3, conflict.getAncestorFilePath());
-            stmt.setBoolean(4, conflict.hasOutsideAlterations());
-            stmt.setBoolean(5, conflict.hasOutsideAlterationsIgnoringFormatting());
-            stmt.setInt(6, ConflictType.getIntFromEnum(conflict.getConflictType()));
+            stmt.setInt(4, conflict.getIntConflictFilePath());
+            stmt.setBoolean(5, conflict.hasOutsideAlterations());
+            stmt.setBoolean(6, conflict.hasOutsideAlterationsIgnoringFormatting());
+            stmt.setInt(7, ConflictType.getIntFromEnum(conflict.getConflictType()));
 
             ResultSet result = stmt.executeQuery();
 
@@ -97,6 +100,7 @@ public class ConflictDAO {
                         resultSet.getString(PARENT1FILEPATH),
                         resultSet.getString(PARENT2FILEPATH),
                         resultSet.getString(ANCESTORFILEPATH),
+                        resultSet.getInt(CONFLICTFILEPATH),
                         null,
                         ConflictType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
                         resultSet.getBoolean(HASOUTSIDEALTERATIONS),

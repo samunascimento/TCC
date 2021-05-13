@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -106,7 +105,7 @@ public class MNFrame extends JFrame {
                         showInputConnection();
                     }
                 } else {
-                    MNDatabaseInteractions.getGetProjectFromDBFrame(connection, tabbedPane);
+                    MNDatabaseInteractions.initGetProjectFrame(connection, tabbedPane);
                 }
             }
         });
@@ -188,7 +187,7 @@ public class MNFrame extends JFrame {
                 JOptionPane.showMessageDialog(null, "None analysis has done!", "WARNING", JOptionPane.WARNING_MESSAGE);
             } else {
                 if(saveInDB){
-                    MNDatabaseInteractions.getSaveAnalysisInDBFrame(connection, projectPanels);
+                    MNDatabaseInteractions.initSaveFrame(connection, projectPanels);
                 } else {
                     new MNSaveAnalysis(projectPanels); 
                 }

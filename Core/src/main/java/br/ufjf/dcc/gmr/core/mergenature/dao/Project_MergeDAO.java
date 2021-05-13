@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -16,12 +17,19 @@ import java.util.List;
 public class Project_MergeDAO {
 
     private final Connection connection;
+    private JProgressBar progressBar;
 
     public static final String IDPROJECT = "idproject";
     public static final String IDMERGE = "idmerge";
 
     public Project_MergeDAO(Connection connection) {
         this.connection = connection;
+        this.progressBar = null;
+    }
+
+    public Project_MergeDAO(Connection connection, JProgressBar progressBar) {
+        this.connection = connection;
+        this.progressBar = progressBar;
     }
 
     public void insert(int idProject, int idMerge) throws SQLException {
@@ -52,6 +60,7 @@ public class Project_MergeDAO {
 
     public List<Merge> selectMerges(int idproject) throws SQLException {
 
+        int rows = 0;
         List<Merge> merges = new ArrayList<>();
         MergeDAO mergeDAO = new MergeDAO(connection);
 
@@ -63,7 +72,12 @@ public class Project_MergeDAO {
 
             stmt = connection.prepareStatement(sql);
             ResultSet resultSet = stmt.executeQuery();
-
+            if (progressBar != null) {
+                while (resultSet.next()) {
+                    rows++;
+                }
+            }
+            resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 merges.add(mergeDAO.select(resultSet.getInt("idmerge")));
             }
@@ -78,5 +92,5 @@ public class Project_MergeDAO {
             }
         }
     }
-    
+
 }

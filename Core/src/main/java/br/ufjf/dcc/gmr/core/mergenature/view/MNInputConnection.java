@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,13 +35,17 @@ public class MNInputConnection {
 
     public static void getMNInputConnection(MNFrame mainFrame) {
 
-        JFrame frame = new JFrame("Make Connection");
-        frame.setSize(500, 275);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(mainFrame);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
-        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
+        JDialog dialog = new JDialog();
+        dialog.setModal(true);
+        dialog.setSize(500, 275);
+        dialog.setResizable(false);
+        dialog.setAlwaysOnTop(true);
+        dialog.setTitle("Make Connection");
+        dialog.setLocationRelativeTo(mainFrame);
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 1;
@@ -79,7 +85,7 @@ public class MNInputConnection {
                         } catch (IOException ex) {
                             JOptionPane.showMessageDialog(null, "Error in database creation.", "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
-                        frame.dispose();
+                        dialog.dispose();
                     }
                 }
             }
@@ -101,8 +107,8 @@ public class MNInputConnection {
         gbc.fill = GridBagConstraints.NONE;
         mainPanel.add(tryConnect, gbc);
 
-        frame.add(mainPanel);
-        frame.setVisible(true);
+        dialog.add(mainPanel);
+        dialog.setVisible(true);
 
     }
 

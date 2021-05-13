@@ -22,16 +22,18 @@ import org.antlr.v4.runtime.Token;
  */
 public class Visitor2 extends CPP14BaseVisitor<Object> {
 
-    private TypeBinding typeBinding;
-    private String typeS;
-    private String modifierS;
+    private TypeBinding typeClass;
+    private String returnType;
+    private String variableType;
+    private String modifierMethod;
     private String className;
     private List<MethodDeclarationBinding> methodDeclaration;    
     
     public Visitor2() {
-        this.typeBinding = new TypeBinding();
-        this.typeS = "";
-        this.modifierS = "";
+        this.typeClass = null;
+        this.returnType = "";
+        this.variableType = "";
+        this.modifierMethod = "";
         this.className = "";
         this.methodDeclaration = new ArrayList<>();
     }
@@ -81,33 +83,43 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
         //    log(ctx);
         MethodDeclarationBinding meth = new MethodDeclarationBinding();
-        TypeBinding type = new TypeBinding();
+        
+        TypeBinding returnTypeBinding = new TypeBinding();
         
         if (findChildPd(ctx)) {
-            //System.out.println("metodo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
           
-            type.setName(typeS);
-            
-            meth.setModifier(modifierS);
-            meth.setReturnBinding(type);
+            returnTypeBinding.setName(returnType);
+
+            meth.setModifier(modifierMethod);
+            meth.setReturnBinding(returnTypeBinding);
             meth.setCtx(ctx);
-            meth.setType(type);
-            meth.setName(ctx.getText().substring(0, ctx.getText().indexOf("(")));
+            meth.setType(typeClass);
+            
+            String name = ctx.getText().substring(0, ctx.getText().indexOf("("));
+            
+            if(name.contains("::"))
+                name = name.replace("::", "");
+            
+            if(name.contains("*"))
+                name = name.replace("*", "");
+            
+            meth.setName(name);
             
             methodDeclaration.add(meth);
-        } else {
-            if (!findParentPd(ctx)) {
-                // System.out.println("atributo: " + this.modifierS + " " + this.typeS + " " + ctx.getText());
-            } else {
-                //System.out.println("\tparametros: " + this.typeS + " " + ctx.getText());
-                type.setName(typeS);
+        } 
+        
+        else if (findParentPd(ctx)) {
+                
+                TypeBinding type = new TypeBinding();
+            
+                type.setName(variableType);
                 VariableDeclarationBinding param = new VariableDeclarationBinding(ctx.getText(), type);
                 
                 methodDeclaration.get(methodDeclaration.size()-1).getParametersBindings().add(param);
             }
-        }
+        
 
-        this.typeS = "";
+        this.returnType = "";
         return visitChildren(ctx);
     }
 
@@ -121,6 +133,10 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx) {
         //           log(ctx);
+        
+        if(ctx.ptrdeclarator().ptroperator() != null) 
+            returnType = ctx.declspecifierseq().getText() + ctx.ptrdeclarator().ptroperator().getText();
+        
         return visitChildren(ctx);
     }
 
@@ -163,6 +179,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
 //            log(ctx);
+        
         return visitChildren(ctx);
     }
 
@@ -271,6 +288,14 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
         //log(ctx);
+        
+        if(ctx.declspecifierseq() != null) {
+            this.returnType = ctx.declspecifierseq().getText();
+            
+            if(ctx.declarator().ptrdeclarator().ptroperator() != null)
+                this.returnType += ctx.declarator().ptrdeclarator().ptroperator().getText();
+        }
+        
         return visitChildren(ctx);
     }
 
@@ -656,6 +681,15 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) {
 //            log(ctx);
+        if(ctx.simpledeclaration()!=null){
+            if(ctx.simpledeclaration().pointerdeclaration()!=null){
+                if(ctx.simpledeclaration().pointerdeclaration().ptrdeclarator() != null) {
+                    String name = ctx.simpledeclaration().pointerdeclaration().ptrdeclarator().getText();
+
+                    this.typeClass = new TypeBinding(name);
+                 }
+            }
+        }
         return visitChildren(ctx);
     }
 
@@ -746,8 +780,9 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitSimpletypespecifier(CPP14Parser.SimpletypespecifierContext ctx) {
 //            log(ctx);
-
-        this.typeS = ctx.getText();
+        
+        if(ctx.thetypename() == null)
+            this.returnType = ctx.getText();
 
         return visitChildren(ctx);
     }
@@ -1091,6 +1126,9 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitParameterdeclaration(CPP14Parser.ParameterdeclarationContext ctx) {
 //            log(ctx);
+        
+        this.variableType = ctx.declspecifierseq().getText();
+
         return visitChildren(ctx);
     }
 
@@ -1151,6 +1189,10 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {
 //            log(ctx);
+        String name = ctx.classheadname().classname().getText();
+        
+        this.typeClass = new TypeBinding(name);
+            
         return visitChildren(ctx);
     }
 
@@ -1181,6 +1223,15 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     @Override
     public Object visitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
 //            log(ctx);
+        
+        if(ctx.declspecifierseq() != null) {
+            returnType = ctx.declspecifierseq().getText();
+            
+            if(ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator().ptroperator() != null)
+                returnType += ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator().ptroperator().getText();    
+        }
+            
+            
         return visitChildren(ctx);
     }
 
@@ -1248,7 +1299,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     public Object visitAccessspecifier(CPP14Parser.AccessspecifierContext ctx) {
 //            log(ctx);
 
-        this.modifierS = ctx.getText();
+        this.modifierMethod = ctx.getText();
 
         return visitChildren(ctx);
     }

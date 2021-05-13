@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  *
@@ -38,7 +39,7 @@ public class MergeDAO {
         int conflictID;
         int parentCommitID;
         int mergeCommitID = commitDAO.insert(merge.getMerge());
-        int ancestorCommitID = commitDAO.insert(merge.getAncestor());
+        int ancestorCommitID = merge.getAncestor() == null ? -1 : commitDAO.insert(merge.getAncestor());
 
         String sql = "INSERT INTO merge ("
                 + MERGETYPE + ", "
@@ -53,7 +54,11 @@ public class MergeDAO {
 
             stmt.setInt(1, MergeType.getIntFromEnum(merge.getMergeType()));
             stmt.setInt(2, mergeCommitID);
-            stmt.setInt(3, ancestorCommitID);
+            if (ancestorCommitID == -1) {
+                stmt.setNull(3, Types.NULL);
+            } else {
+                stmt.setInt(3, ancestorCommitID);
+            }
 
             ResultSet result = stmt.executeQuery();
 
@@ -103,7 +108,7 @@ public class MergeDAO {
                         null,
                         commitDAO.select(resultSet.getInt(FK_MERGE)),
                         null,
-                        commitDAO.select(resultSet.getInt(FK_ANCESTOR)),
+                        resultSet.getInt(FK_ANCESTOR) == 0 ? null : commitDAO.select(resultSet.getInt(FK_ANCESTOR)),
                         null,
                         MergeType.getEnumFromInt(resultSet.getInt(MERGETYPE)));
             }

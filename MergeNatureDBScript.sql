@@ -2,7 +2,8 @@ CREATE TABLE Project(
     id SERIAL, PRIMARY KEY (id),
     name VARCHAR(500),
     url VARCHAR(5000),
-    organization VARCHAR(100)
+    organization VARCHAR(100),
+    savedate TIMESTAMP
 );
 
 CREATE TABLE Commit(
@@ -29,6 +30,7 @@ CREATE TABLE Conflict(
 	parent1FilePath VARCHAR(5000),
 	parent2FilePath VARCHAR(5000),
 	ancestorFilePath VARCHAR(5000),
+	conflictFilePath INT,
 	hasOutsideAlterations BOOLEAN,
 	hasOutsideAlterationsIgnoringFormatting BOOLEAN,
 	conflictType INT

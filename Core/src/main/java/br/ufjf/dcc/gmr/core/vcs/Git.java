@@ -1121,6 +1121,16 @@ public class Git {
         }
         return check;
     }
+    
+    public static String getRemoteURL(String repositoryPath) throws IOException {
+        String result = CLIExecute.execute("git config --get remote.origin.url", repositoryPath).getOutputString();
+        if(result.equals("")){
+            return "Unknown";
+        } else {
+            return result;
+        }
+        
+    }
 
     /**
      * Return form:
@@ -1472,7 +1482,7 @@ public class Git {
 
         //System.out.println("\""+fileSource+"\"");
         //String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
-        String command = "git" + " diff" + " --unified=0 " + fileSource + " " + fileTarget;
+        String command = "git diff " + "--unified=0 --ignore-space-at-eol " + fileSource + " " + fileTarget;
 
         CLIExecution execution = CLIExecute.execute(command, directory);
 
@@ -1486,6 +1496,9 @@ public class Git {
                     throw new InvalidCommitHash();
                 }
                 if (line.contains("error: Could not access")) {
+                    return null;
+                }
+                if (line.contains("fatal: Path")) {
                     return null;
                 }
             }

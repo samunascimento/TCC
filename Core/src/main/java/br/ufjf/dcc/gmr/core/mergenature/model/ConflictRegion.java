@@ -136,6 +136,26 @@ public class ConflictRegion {
     public String getRawConflict() {
         return rawConflict;
     }
+    
+    public String getRawConflictWithoutContext(){
+        String[] lines = rawConflict.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            if(MergeNatureTools.checkIfIsBegin(lines[i])){
+                StringBuilder result = new StringBuilder("");
+                while(!MergeNatureTools.checkIfIsSeparator(lines[i])){
+                    result.append("\n").append(lines[i]);
+                    i++;
+                }
+                while(!MergeNatureTools.checkIfIsEnd(lines[i])){
+                    result.append("\n").append(lines[i]);
+                    i++;
+                }
+                result.append("\n").append(lines[i]);
+                return result.toString().replaceFirst("\n", "");
+            }
+        }
+        return null;
+    }
 
     public void setRawConflict(String rawConflict) {
         this.rawConflict = rawConflict;
