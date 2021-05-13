@@ -43,16 +43,8 @@ public class ParserJava {
 
     private GlobalEnviroment globalEnviroment;
     private static Version version;
-    private static String pathProject = "";
-    private static String pathSandbox = "";
     private static int context = 0;
-    private static String pathRepositoryCopy = "";
-    private static String pathRepositoryCopy1 = "";
-    private static String pathRepositoryCopy2 = "";
-    private static List<String> filesToCheckParent1 = new ArrayList<>();
-    private static List<String> filesToCheckParent2 = new ArrayList<>();
-    private static List<List<String>> filesToStringParent1 = new ArrayList<>();
-    private static List<List<String>> filesToStringParent2 = new ArrayList<>();
+    private static ConfigurationFile configurationFile;
     private static GlobalEnviroment parent1 = new GlobalEnviroment();
     private static GlobalEnviroment parent2 = new GlobalEnviroment();
     private static List<String> javaFiles = new ArrayList<>();
@@ -64,11 +56,10 @@ public class ParserJava {
 
     }
 
-    public ParserJava(Version version, String pathProject, String pathSandbox) {
-        this.pathSandbox = pathSandbox;
+    public ParserJava(Version version, ConfigurationFile configurationFile) {
+        this.configurationFile = configurationFile;
         this.version = version;
         this.globalEnviroment = new GlobalEnviroment();
-        this.pathProject = pathProject;
 
     }
 
@@ -78,39 +69,47 @@ public class ParserJava {
             String filePath = myFile.getPath();
             javaFiles.add(filePath);
         }
+        String[] SHA = {version.getParent().get(0), version.getParent().get(1)};
 
-        extractParents();
-
+        ParserJava.parent1 = extractParents(configurationFile.getProjectPath(), configurationFile.getSandboxPath(), SHA[0], "parent1", javaFiles);
+        ParserJava.parent2 = extractParents(configurationFile.getProjectPath(), configurationFile.getSandboxPath(), SHA[1], "parent2", javaFiles);
+        
         setBeforeAndAfterContext();
 
         createConflictChunkList();
 
-        createJungGraph(parent1, parent2, conflictChunkList);
+        //createJungGraph(parent1, parent2, conflictChunkList);
+        List<List<DependencyType>> dependency = parent1.findDependencies(conflictChunkList);
+        
+        System.out.println("");
     }
 
     private static void createConflictChunkList() throws IOException {
+
+        DiffTranslator diffTranslator = new DiffTranslator();
+
         for (int y = 0; y < version.getFile().size(); y++) {
 
             for (ConflictChunk chunk : version.getFile().get(y).getChunks()) {
                 System.out.println("");
-                List<List<String>> conflictContent = cutConflitcContent(chunk.getErrorContent());
+                List<List<String>> conflictContent = ParserTools.cutConflitcContent(chunk.getErrorContent());
                 int version1[] = new int[2];
                 int version2[] = new int[2];
 
                 if (conflictContent.get(0).size() == 0) {
-                    version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
-                    version1[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version2[0]);
-                    version1[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version2[1]);
+                    version2 = ParserTools.getParentLines(configurationFile.getFilesToCheckParent2().get(y), conflictContent.get(1));
+                    version1[0] = diffTranslator.inicializeFindLine(configurationFile.getFilesToCheckParent1().get(y), configurationFile.getFilesToCheckParent2().get(y), configurationFile.getProjectPath(), version2[0]);
+                    version1[1] = diffTranslator.inicializeFindLine(configurationFile.getFilesToCheckParent1().get(y), configurationFile.getFilesToCheckParent2().get(y), configurationFile.getProjectPath(), version2[1]);
 
                 } else {
                     if (conflictContent.get(1).size() == 0) {
-                        version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
-                        version2[0] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version1[0]);
-                        version2[1] = foundLine(filesToCheckParent1.get(y), filesToCheckParent2.get(y), version1[1]);
+                        version1 = ParserTools.getParentLines(configurationFile.getFilesToCheckParent1().get(y), conflictContent.get(0));
+                        version2[0] = diffTranslator.inicializeFindLine(configurationFile.getFilesToCheckParent1().get(y), configurationFile.getFilesToCheckParent2().get(y), configurationFile.getProjectPath(), version1[0]);
+                        version2[1] = diffTranslator.inicializeFindLine(configurationFile.getFilesToCheckParent1().get(y), configurationFile.getFilesToCheckParent2().get(y), configurationFile.getProjectPath(), version1[1]);
 
                     } else {
-                        version1 = getParentLines(filesToCheckParent1.get(y), conflictContent.get(0));
-                        version2 = getParentLines(filesToCheckParent2.get(y), conflictContent.get(1));
+                        version1 = ParserTools.getParentLines(configurationFile.getFilesToCheckParent1().get(y), conflictContent.get(0));
+                        version2 = ParserTools.getParentLines(configurationFile.getFilesToCheckParent2().get(y), conflictContent.get(1));
                     }
 
                 }
@@ -120,72 +119,13 @@ public class ParserJava {
 
                 chunk.getChunkVersion1().setLineEnd(version1[1]);
                 chunk.getChunkVersion2().setLineEnd(version2[1]);
-                if (version1[1] == -1) {
-                    System.out.println("debug");
-                }
 
-                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(filesToCheckParent1.get(y), chunk.getChunkVersion1()));
-                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(filesToCheckParent2.get(y), chunk.getChunkVersion2()));
+                chunk.getChunkVersion1().setLanguageConstruct(parent1.findLanguageConstructs(configurationFile.getFilesToCheckParent1().get(y), chunk.getChunkVersion1()));
+                chunk.getChunkVersion2().setLanguageConstruct(parent2.findLanguageConstructs(configurationFile.getFilesToCheckParent2().get(y), chunk.getChunkVersion2()));
             }
             conflictChunkList.addAll(version.getFile().get(y).getChunks());
 
         }
-        System.out.println("debug");
-    }
-
-    private static int foundLine(String sourcePath, String targetPath, int sourceLine) throws IOException {
-
-        int result;
-        DiffTranslator diffTranslator = new DiffTranslator();
-        diffTranslator.translator(sourcePath, targetPath, pathProject);
-        result = diffTranslator.findLines(sourcePath, targetPath, sourceLine);
-
-        return result;
-    }
-
-    private static int[] getParentLines(String targetFile, List<String> sourceBlock) {
-        int result[] = {0, 0};
-
-        int preContext = 0;
-        int posContext = 0;
-        List<String> targetContent = ListUtils.readFile(targetFile);
-        int j = 0;
-        for (int i = 0; i < targetContent.size() && j < sourceBlock.size(); i++) {
-            if (targetContent.get(i).equals(sourceBlock.get(j))) {
-                j++;
-            }
-            posContext = i;
-        }
-        preContext = posContext - j;
-        posContext += 1;
-
-        result[0] = preContext;
-        result[1] = posContext;
-
-        return result;
-    }
-
-    private static List<List<String>> cutConflitcContent(List<String> content) {
-
-        List<List<String>> result = new ArrayList<>();
-
-        List<String> aux = new ArrayList<>();
-        int i = 1;
-        while (!content.get(i).contains("=======")) {
-
-            aux.add(content.get(i));
-            i++;
-        }
-        result.add(aux);
-        aux = new ArrayList<>();
-        i++;
-        while (!content.get(i).contains(">>>>>>>")) {
-            aux.add(content.get(i));
-            i++;
-        }
-        result.add(aux);
-
-        return result;
 
     }
 
@@ -204,112 +144,75 @@ public class ParserJava {
     /* 
     Refactoring
      */
-    private static void extractParents() throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
-        int cont = 0;
-        for (String parent : version.getParent()) {
+    private static GlobalEnviroment extractParents(String projectPath, String sandboxPath, String SHA, String parent, List<String> javaFiles) throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
 
-            Git.reset(ParserJava.pathProject, true, false, false, null);
-            Git.clean(ParserJava.pathProject, true, 0);
-            Git.checkout(parent, ParserJava.pathProject);
+        String pathRepositoryClone;
 
-            ParserJava parserJava = new ParserJava(version);
+        List<String> filesToCheckParent = new ArrayList<>();
 
-            int j = 0, i = 0;
+        ParserJava parserJavaParent = new ParserJava(version);
 
-            /*
-            begin
-            */
-            if (cont == 0) {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent1", version.getParent().get(0));
-                pathRepositoryCopy1 = pathRepositoryCopy;
-            } else {
-                pathRepositoryCopy = createDiffRepository(ParserJava.pathProject, ParserJava.pathSandbox, "parent2", version.getParent().get(1));
-                pathRepositoryCopy2 = pathRepositoryCopy;
-            }
+        List<List<String>> filesToStringParent1 = new ArrayList<>();
+        List<List<String>> filesToStringParent2 = new ArrayList<>();
 
-            /*
-            end
-            */
-            
-            File cloneDirectory = new File(pathRepositoryCopy);
-            if (cloneDirectory.isDirectory()) {
-                List<String> jaja = javaFiles(pathRepositoryCopy);
+        ParserTools.checkoutToParent(projectPath, SHA);
+        pathRepositoryClone = pathRepositoryClone(projectPath, sandboxPath, parent, SHA);
+        filesToCheckParent = ParserTools.filesToCheckParent(pathRepositoryClone, javaFiles);
+        ASTExtractor(filesToCheckParent, parserJavaParent.getGlobalEnviroment());
+        Set<String> pathsParent = parserJavaParent.getGlobalEnviroment().getEnviroment().keySet();
 
-                for (String javaFile : javaFiles) {
-                    String[] split = javaFile.split("/");
-                    for (String string : jaja) {
-                        String[] stringSplited = string.split("\\\\");
-                        if (stringSplited[stringSplited.length - 1].equals(split[split.length - 1])) {
-                            if (cont == 0) {
-                                filesToCheckParent1.add(string);
-                            } else {
-                                filesToCheckParent2.add(string);
-                            }
-                        }
-                    }
-                }
-            }
+        filesToStringParent1 = ParserTools.filesToStringParent(filesToCheckParent);
 
-            if (cont == 0) {
-                ASTExtractor(filesToCheckParent1, parserJava.getGlobalEnviroment());
-            } else {
-                ASTExtractor(filesToCheckParent2, parserJava.getGlobalEnviroment());
-            }
-
-            Set<String> paths = parserJava.getGlobalEnviroment().getEnviroment().keySet();
-
-            for (String pathAST1 : javaFiles) {
-                for (String pathAST2 : javaFiles) {
-                    TypeBinding ast1 = new TypeBinding();
-                    TypeBinding ast2 = new TypeBinding();
-
-                    for (String path : paths) {
-                        if (pathAST1.endsWith(replaceAll(path, File.separator))) {
-                            ast1 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
-                        }
-                    }
-
-                    for (String path : paths) {
-                        if (pathAST2.endsWith(replaceAll(path, File.separator))) {
-                            ast2 = parserJava.getGlobalEnviroment().getEnviroment().get(path);
-                        }
-                    }
-
-                    if (j != i) {
-                        System.out.println("\n" + ast1.getName() + " // " + ast2.getName() + "\n");
-                        compare(ast1, ast2, parserJava.getGlobalEnviroment());
-                    }
-                    i++;
-                }
-                i = 0;
-                j++;
-
-            }
-            System.out.println("***************GlobalEnviromentTypes***************");
-            for (TypeBinding value : parserJava.getGlobalEnviroment().getEnviroment().values()) {
-                System.out.println(value);
-
-            }
-
-            if (cont == 0) {
-                parent1 = parserJava.getGlobalEnviroment();
-                for (String path : filesToCheckParent1) {
-                    filesToStringParent1.add(ListUtils.readFile(path));
-                }
-
-            } else {
-                parent2 = parserJava.getGlobalEnviroment();
-                for (String path : filesToCheckParent2) {
-                    filesToStringParent2.add(ListUtils.readFile(path));
-                }
-            }
-
-            cont++;
-
+        if (parent.equals("parent1")) {
+            configurationFile.setFilesToCheckParent1(filesToCheckParent);
         }
+        if (parent.equals("parent2")) {
+            configurationFile.setFilesToCheckParent2(filesToCheckParent);
+        }
+
+        return parserJavaParent.getGlobalEnviroment();
+
+//        ParserTools.printCompare(javaFiles, pathsParent, parserJavaParent1.getGlobalEnviroment(), parserJavaParent2.getGlobalEnviroment());
+//        String[] SHA = {version.getParent().get(0), version.getParent().get(1)};
+//
+//        String pathRepositoryClone1;
+//        String pathRepositoryClone2;
+//
+//        List<String> filesToCheckParent1 = new ArrayList<>();
+//        List<String> filesToCheckParent2 = new ArrayList<>();
+//
+//        ParserJava parserJavaParent1 = new ParserJava(version);
+//        ParserJava parserJavaParent2 = new ParserJava(version);
+//
+//        List<List<String>> filesToStringParent1 = new ArrayList<>();
+//        List<List<String>> filesToStringParent2 = new ArrayList<>();
+//
+//        /* parent1 zone
+//         */
+//        ParserTools.checkoutToParent(configurationFile.getProjectPath(), SHA[0]);
+//        pathRepositoryClone1 = pathRepositoryClone(configurationFile.getProjectPath(), configurationFile.getSandboxPath(), "parent1", SHA[0]);
+//        filesToCheckParent1 = ParserTools.filesToCheckParent(pathRepositoryClone1, javaFiles);
+//        ASTExtractor(filesToCheckParent1, parserJavaParent1.getGlobalEnviroment());
+//        Set<String> pathsParent1 = parserJavaParent1.getGlobalEnviroment().getEnviroment().keySet();
+//        parent1 = parserJavaParent1.getGlobalEnviroment();
+//        filesToStringParent1 = ParserTools.filesToStringParent(filesToCheckParent1);
+//
+//        /*parent2 zone
+//         */
+//        ParserTools.checkoutToParent(configurationFile.getProjectPath(), SHA[1]);
+//        pathRepositoryClone2 = pathRepositoryClone(configurationFile.getProjectPath(), configurationFile.getSandboxPath(), "parent2", SHA[1]);
+//        filesToCheckParent2 = ParserTools.filesToCheckParent(pathRepositoryClone2, javaFiles);
+//        ASTExtractor(filesToCheckParent2, parserJavaParent2.getGlobalEnviroment());
+//        Set<String> pathsParent2 = parserJavaParent2.getGlobalEnviroment().getEnviroment().keySet();
+//        parent2 = parserJavaParent2.getGlobalEnviroment();
+//        filesToStringParent2 = ParserTools.filesToStringParent(filesToCheckParent2);
+//
+//        configurationFile.setFilesToCheckParent1(filesToCheckParent1);
+//        configurationFile.setFilesToCheckParent2(filesToCheckParent2);
+//
+//        ParserTools.printCompare(javaFiles, pathsParent1, parserJavaParent1.getGlobalEnviroment(), parserJavaParent2.getGlobalEnviroment());
     }
 
-    //aqui ta setando só o numero da linha por enquanto pelo visto
     private static void setBeforeAndAfterContext() {
         for (int i = 0; i < version.getFile().size(); i++) {
             for (int z = 0; z < version.getFile().get(i).getChunks().size(); z++) {
@@ -353,6 +256,12 @@ public class ParserJava {
         return result;
     }
 
+    private static String pathRepositoryClone(String pathProject, String pathSandbox, String parent, String SHA) throws IOException {
+
+        return createDiffRepository(pathProject, pathSandbox, parent, SHA);
+
+    }
+
     private static String createDiffRepository(String path, String sandbox, String pasta, String targetSHA) throws IOException {
 
         File srcDir = new File(path);
@@ -363,7 +272,6 @@ public class ParserJava {
             Git.reset(destDir.getAbsolutePath(), true, false, false, null);
             Git.clean(destDir.getAbsolutePath(), true, 0);
             Git.checkout(targetSHA, destDir.getAbsolutePath());
-            
 
         } catch (RepositoryNotFound ex) {
             Logger.getLogger(ParserJava.class.getName()).log(Level.SEVERE, null, ex);
@@ -382,7 +290,7 @@ public class ParserJava {
         return destDir.getAbsolutePath();
     }
 
-    private static void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
+    static protected void compare(TypeBinding AST1, TypeBinding AST2, GlobalEnviroment globalEnviroment) {
 
         /*System.out.println("***************MethodDeclarationAST1***************");
         for (MethodDeclarationBinding methodDeclarationBinding : AST1.getMethodsBinding()) {
@@ -416,20 +324,6 @@ public class ParserJava {
         Dependencies.methodDeclarationCallList(AST2.getAllMethodsDeclaration(), AST2, AST1.getAllMethodsCallBinding());
         //System.out.println("***************Chunks***************");
 
-    }
-
-    private static List<String> javaFiles(String dir) {
-        List<String> javaFiles = new ArrayList<>();
-        File file = new File(dir);
-        File[] files = file.listFiles();
-        for (File file1 : files) {
-            if (file1.isFile() && file1.getAbsolutePath().endsWith(".java")) {
-                javaFiles.add(file1.getAbsolutePath());
-            } else if (file1.isDirectory()) {
-                javaFiles.addAll(javaFiles(file1.getAbsolutePath()));
-            }
-        }
-        return javaFiles;
     }
 
     private static void ASTExtractor(List<String> pathList, GlobalEnviroment globalEnviroment) throws IOException {
@@ -562,82 +456,12 @@ public class ParserJava {
         this.version = version;
     }
 
-    /**
-     * @return the pathProject
-     */
-    public String getPathProject() {
-        return pathProject;
-    }
-
-    /**
-     * @param pathProject the pathProject to set
-     */
-    public void setPathProject(String pathProject) {
-        this.pathProject = pathProject;
-    }
-
     public static int getContext() {
         return context;
     }
 
     public static void setContext(int context) {
         ParserJava.context = context;
-    }
-
-    /**
-     * @return the filesToCheckParent1
-     */
-    public List<String> getFilesToCheckParent1() {
-        return filesToCheckParent1;
-    }
-
-    /**
-     * @param filesToCheckParent1 the filesToCheckParent1 to set
-     */
-    public void setFilesToCheckParent1(List<String> filesToCheckParent1) {
-        this.filesToCheckParent1 = filesToCheckParent1;
-    }
-
-    /**
-     * @return the filesToCheckParent2
-     */
-    public List<String> getFilesToCheckParent2() {
-        return filesToCheckParent2;
-    }
-
-    /**
-     * @param filesToCheckParent2 the filesToCheckParent2 to set
-     */
-    public void setFilesToCheckParent2(List<String> filesToCheckParent2) {
-        this.filesToCheckParent2 = filesToCheckParent2;
-    }
-
-    /**
-     * @return the filesToStringParent1
-     */
-    public List<List<String>> getFilesToStringParent1() {
-        return filesToStringParent1;
-    }
-
-    /**
-     * @param filesToStringParent1 the filesToStringParent1 to set
-     */
-    public void setFilesToStringParent1(List<List<String>> filesToStringParent1) {
-        this.filesToStringParent1 = filesToStringParent1;
-    }
-
-    /**
-     * @return the filesToStringParent2
-     */
-    public List<List<String>> getFilesToStringParent2() {
-        return filesToStringParent2;
-    }
-
-    /**
-     * @param filesToStringParent2 the filesToStringParent2 to set
-     */
-    public void setFilesToStringParent2(List<List<String>> filesToStringParent2) {
-        this.filesToStringParent2 = filesToStringParent2;
     }
 
     /**
@@ -666,6 +490,20 @@ public class ParserJava {
      */
     public void setParent2(GlobalEnviroment parent2) {
         this.parent2 = parent2;
+    }
+
+    /**
+     * @return the configurationFile
+     */
+    public ConfigurationFile getConfigurationFile() {
+        return configurationFile;
+    }
+
+    /**
+     * @param configurationFile the configurationFile to set
+     */
+    public void setConfigurationFile(ConfigurationFile configurationFile) {
+        this.configurationFile = configurationFile;
     }
 
 }

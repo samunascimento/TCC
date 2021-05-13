@@ -28,6 +28,15 @@ public class DiffTranslator {
         this.addOpList = new ArrayList<>();
     }
 
+    public int inicializeFindLine(String sourcePath, String targetPath, String pathProject, int sourceLine) throws IOException {
+
+        int result;       
+        translator(sourcePath, targetPath, pathProject);
+        result = findLines(sourcePath, targetPath, sourceLine);
+
+        return result;
+    }
+
     public int findLines(String sourceFile, String targetFile, int originalLine) {
 
         int result = 0;
@@ -36,14 +45,14 @@ public class DiffTranslator {
         List<String> targetContent = ListUtils.readFile(targetFile);
 
         result = originalLine - countAdds(originalLine + 1) + countRemoves(originalLine + 1);
-        if (result < targetContent.size()) {
+        if (result < targetContent.size() && originalLine < sourceContent.size()) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
             }
         }
 
         result = originalLine - countRemoves(originalLine + 1) + countAdds(originalLine + 1);
-        if (result < targetContent.size()) {
+        if (result < targetContent.size() && originalLine < sourceContent.size()) {
             if (sourceContent.get(originalLine).equals(targetContent.get(result))) {
                 return result;
             }
