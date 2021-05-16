@@ -542,9 +542,7 @@ public class Translator {
     }
 
     public static List<String> PythonTranslator(List<String> list) {
-
         List<String> mainList = new ArrayList<>();
-
         if (list.contains("Extension not parseble!")) {
             mainList.add("Extension not parseble!");
         } else {
@@ -748,9 +746,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
                 list.remove("Yield_stmt");
             }
-            
         }
-
         return mainList;
     }
 
@@ -902,7 +898,6 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
             //on c# we're going to use the "using" structure because it is the closest to the other languagens imports
             if (list.contains("UsingAliasDirective")
                     || list.contains("Using_directive")
@@ -997,7 +992,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SYNCHRONIZED_STATEMENT++++++++++++++++++++++++++++++++++++++++++++            
-// There is a close equivalent to this structure in Java, but their scope is different enough so we couldn't call it the same 
+            // There is a close equivalent to this structure in Java, but their scope is different enough so we couldn't call it the same 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("ThrowStatement")

@@ -363,7 +363,8 @@ public class ANTLR4Tools {
         outmostedNormalAnalysis = getOutmostStructures(new ArrayList<>(normalAnalysis));
 
         for (SyntaxStructure ss : inputResults.commentAnalysis) {
-            if (ss.getStartLine() >= beginLine && ss.getStartLine() <= endLine || ss.getStopLine() >= beginLine && ss.getStopLine() <= endLine) {
+            if ((ss.getStartLine() >= beginLine && ss.getStartLine() <= endLine) || (ss.getStopLine() >= beginLine && ss.getStopLine() <= endLine)
+                    || (ss.getStartLine() <= beginLine && ss.getStopLine() >= endLine)) {
                 commentAnalysis.add(ss);
             }
         }

@@ -357,7 +357,14 @@ public class MergeNatureAlgorithm {
         String solution = MergeNatureTools.getRawForm(conflictRegion.getSolutionTextWithoutContext());
         String v1 = MergeNatureTools.getRawForm(conflictRegion.getV1Text());
         String v2 = MergeNatureTools.getRawForm(conflictRegion.getV2Text());
-
+        boolean withBegin = false;
+        boolean withEnd = false;
+        for (String line : conflictRegion.getSolutionTextWithoutContext().split("\n")) {
+            if (MergeNatureTools.checkIfIsBegin(line)
+                    || MergeNatureTools.checkIfIsSeparator(line)
+                    || MergeNatureTools.checkIfIsEnd(line)) {
+            }
+        }
         if (solution.equals("")) {
             conflictRegion.setDeveloperDecision(DeveloperDecision.NONE);
         } else if (solution.equals(v1.concat(v2)) || solution.equals(v2.concat(v1))) {
@@ -526,6 +533,8 @@ public class MergeNatureAlgorithm {
                     ANTLR4Results parent2Results = null;
                     List<String> v2Structures;
                     List<String> v2OutmostedStructures;
+                    String rawString = "";
+                    String outmostedRawString = "";
                     for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
                         v1Structures = new ArrayList<>();
                         v1OutmostedStructures = new ArrayList<>();
@@ -536,16 +545,20 @@ public class MergeNatureAlgorithm {
                             v1OutmostedStructures.add("Blank");
                         } else {
                             parent1Results = ANTLR4Tools.filterAndGetOutmost(rawParent1Results, conflictRegion.getOriginalV1FirstLine(), conflictRegion.getOriginalV1FinalLine());
-                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath, isEmpty(conflictRegion));
-                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath, isEmpty(conflictRegion));
+                            rawString = rawString + "\n" + parent1Results.getStringAll();
+                            outmostedRawString = outmostedRawString + "\n" + parent1Results.getStringAllOutmosted();
+                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath, isEmpty(conflictRegion, true));
+                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath, isEmpty(conflictRegion, true));
                         }
                         if (conflictRegion.getOriginalV2FirstLine() == 0) {
                             v2Structures.add("Blank");
                             v2OutmostedStructures.add("Blank");
                         } else {
                             parent2Results = ANTLR4Tools.filterAndGetOutmost(rawParent2Results, conflictRegion.getOriginalV2FirstLine(), conflictRegion.getOriginalV2FinalLine());
-                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath, isEmpty(conflictRegion));
-                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath, isEmpty(conflictRegion));
+                            rawString = rawString + "\n" + parent2Results.getStringAll();
+                            outmostedRawString = outmostedRawString + "\n" + parent2Results.getStringAllOutmosted();
+                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath, isEmpty(conflictRegion, false));
+                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath, isEmpty(conflictRegion, false));
                         }
                         for (String str : v2Structures) {
                             if (!v1Structures.contains(str)) {
@@ -559,8 +572,8 @@ public class MergeNatureAlgorithm {
                         }
                         Collections.sort(v1Structures);
                         Collections.sort(v1OutmostedStructures);
-                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures));
-                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures));
+                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures) + "\n\n" + rawString);
+                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures) + "\n\n" + outmostedRawString);
                     }
                 }
             }
@@ -580,7 +593,11 @@ public class MergeNatureAlgorithm {
 
     }
 
-    private boolean isEmpty(ConflictRegion conflictRegion) {
-        return (conflictRegion.getV1Text() + conflictRegion.getV2Text()).replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
+    private boolean isEmpty(ConflictRegion conflictRegion, boolean v1) {
+        if (v1) {
+            return conflictRegion.getV1Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
+        } else {
+            return conflictRegion.getV2Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
+        }
     }
 }

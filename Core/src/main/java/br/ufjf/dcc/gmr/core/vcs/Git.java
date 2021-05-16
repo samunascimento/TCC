@@ -1289,9 +1289,9 @@ public class Git {
         FileDiff aux = new FileDiff();
         String command = null;
         if (!unified) {
-            command = "git diff " + commitSource + " " + commitTarget;
+            command = "git diff --ignore-space-at-eol " + commitSource + " " + commitTarget;
         } else {
-            command = "git diff --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
+            command = "git diff --ignore-space-at-eol --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
         }
 
         CLIExecution execution = CLIExecute.execute(command, directory);

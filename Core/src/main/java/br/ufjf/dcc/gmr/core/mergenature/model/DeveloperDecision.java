@@ -6,7 +6,7 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  */
 public enum DeveloperDecision {
 
-    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED, DIFF_PROBLEM;
+    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED, DIFF_PROBLEM, POSTPONED_EDITED;
 
     public static int getIntFromEnum(DeveloperDecision developerDecision) {
         switch (developerDecision) {
