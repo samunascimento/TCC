@@ -427,7 +427,10 @@ public class ANTLR4Tools {
             }
             if (filePath.endsWith(".java")) {
                 translatedList = Translator.JavaTranslator(untranslatedList);
-            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
+                    || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
+                    || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
+                    || filePath.endsWith(".hpp")) {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
