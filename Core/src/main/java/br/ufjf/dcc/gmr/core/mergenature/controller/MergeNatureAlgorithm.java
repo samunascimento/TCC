@@ -80,7 +80,7 @@ public class MergeNatureAlgorithm {
 
         if (MergeNatureTools.isDirectory(repositoryLocation)) {
             if (repositoryLocation.contains("\\")) {
-                repositoryLocation = repositoryLocation.replaceAll("\\", "/");
+                repositoryLocation = repositoryLocation.replaceAll("\\\\", "/");
             }
             if (repositoryLocation.endsWith("/")) {
                 repositoryPath = this.repositoryLocation;
