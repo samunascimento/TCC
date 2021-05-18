@@ -89,7 +89,10 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
-        if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
+        if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
+                    || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
+                    || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
+                    || filePathProjectAsRoot.endsWith(".hpp")) {
             String fileContent;
             try {
                 fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
@@ -121,7 +124,10 @@ public class ANTLR4Tools {
     }
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePath) throws IOException {
-        if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+        if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
+                    || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
+                    || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
+                    || filePath.endsWith(".hpp")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
@@ -265,7 +271,10 @@ public class ANTLR4Tools {
             ANTLR4Results results;
             if (filePathProjectAsRoot.endsWith(".java")) {
                 results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
-            } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")) {
+            } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
+                    || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
+                    || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
+                    || filePathProjectAsRoot.endsWith(".hpp")) {
                 results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
@@ -291,7 +300,10 @@ public class ANTLR4Tools {
             boolean isOutmost;
             if (filePath.endsWith(".java")) {
                 results = analyzeJava9SyntaxTree(filePath);
-            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
+            } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
+                    || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
+                    || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
+                    || filePath.endsWith(".hpp")) {
                 results = analyzeCPPSyntaxTree(filePath);
             } else if (filePath.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePath);
