@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.TypeBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
+import java.util.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
@@ -17,12 +18,22 @@ import org.antlr.v4.runtime.Token;
  * @author ketleen
  */
 public class Visitor1 extends CPP14BaseVisitor<Object> {
+    
     private TypeBinding typeBinding;
     
-    public Visitor1() {
+    public Visitor1( ) {
         this.typeBinding = new TypeBinding();
     }
 
+    public TypeBinding getTypeBinding() {
+        return typeBinding;
+    }
+
+    public void setTypeBinding(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
+    }
+    
+ 
     public static void log(ParserRuleContext ctx){
         Token start = ctx.getStart();
         Token stop = ctx.getStop();
@@ -86,6 +97,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
                String[] name = imports.split("include");
 //               System.out.println(name[1]);
                ImportBinding importBinding = new ImportBinding(name[1]);
+               this.typeBinding.getImports().add(importBinding);
            }
             return visitChildren(ctx);
         }
@@ -194,7 +206,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
 
         @Override
         public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
-            log(ctx);
+ //           log(ctx);
             return visitChildren(ctx);
         }
 
@@ -1072,7 +1084,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         public Object visitClassname(CPP14Parser.ClassnameContext ctx) {
 //            log(ctx);
             this.typeBinding.setName(ctx.getText());
-            System.out.println(ctx.getText());
+//            System.out.println(ctx.getText());
             return visitChildren(ctx);
         }
 

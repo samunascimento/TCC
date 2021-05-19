@@ -28,15 +28,15 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     private List<VariableDeclarationBinding> variableDeclaration;
     private List<MethodCallBinding> methodCall;
     private List<VariableUsageBinding> variableUsage;
-    private List<MethodDeclarationBinding> methodDeclaration;
+    private TypeBinding typeBinding;
     private boolean isFunctionInvocation = false;
 
-    public Visitor3(List<MethodDeclarationBinding> methodDeclaration) {
+    public Visitor3(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
         this.typeString = "";
         this.variableDeclaration = new ArrayList<>();
         this.methodCall = new ArrayList<>();
         this.variableUsage = new ArrayList<>();
-        this.methodDeclaration = methodDeclaration;
     }
 
     public List<VariableDeclarationBinding> getVariableDeclaration() {
@@ -108,10 +108,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                         }
                         
                         if(method.getTypeBinding() == null) {
-                            for (int k = 0; k < methodDeclaration.size(); k++) {
-                                for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
-                                    if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                                        method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                            for (int k = 0; k < this.typeBinding.getMethodsBinding().size(); k++) {
+                                for (int j = 0; j < this.typeBinding.getMethodsBinding().get(k).getParametersBindings().size(); j++) {
+                                    if (obj.equals(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                        method.setTypeBinding(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getTypeBinding());
                                     }
                                 }
                             }
@@ -135,10 +135,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     }
                     
                     if(method.getTypeBinding() == null) {
-                        for (int k = 0; k < methodDeclaration.size(); k++) {
-                            for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
-                                if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                                    method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                        for (int k = 0; k < this.typeBinding.getMethodsBinding().size(); k++) {
+                            for (int j = 0; j < this.typeBinding.getMethodsBinding().get(k).getParametersBindings().size(); j++) {
+                                if (obj.equals(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                    method.setTypeBinding(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getTypeBinding());
                                 }
                             }
                         }
@@ -147,7 +147,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     methodCall.add(method);
                 }
             } else {
-                System.out.println("Ponteiro instanciando atributo: " + ctx.getText());
+                //System.out.println("Ponteiro instanciando atributo: " + ctx.getText());
             }
         } 
         else if (ctx.getText().contains(".")) {
@@ -165,10 +165,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
                 
                 if(method.getTypeBinding() == null) {
-                    for (int k = 0; k < methodDeclaration.size(); k++) {
-                        for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
-                            if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                                method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                    for (int k = 0; k < this.typeBinding.getMethodsBinding().size(); k++) {
+                        for (int j = 0; j < this.typeBinding.getMethodsBinding().get(k).getParametersBindings().size(); j++) {
+                            if (obj.equals(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                method.setTypeBinding(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getTypeBinding());
                             }
                         }
                     }
@@ -188,10 +188,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 }
                 
                 if(method.getTypeBinding() == null) {
-                    for (int k = 0; k < methodDeclaration.size(); k++) {
-                        for (int j = 0; j < methodDeclaration.get(k).getParametersBindings().size(); j++) {
-                            if (obj.equals(methodDeclaration.get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                                method.setTypeBinding(methodDeclaration.get(k).getParametersBindings().get(j).getTypeBinding());
+                    for (int k = 0; k < this.typeBinding.getMethodsBinding().size(); k++) {
+                        for (int j = 0; j < this.typeBinding.getMethodsBinding().get(k).getParametersBindings().size(); j++) {
+                            if (obj.equals(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                                method.setTypeBinding(this.typeBinding.getMethodsBinding().get(k).getParametersBindings().get(j).getTypeBinding());
                             }
                         }
                     }
@@ -806,7 +806,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
 
     public String assigmentExpression(CPP14Parser.AssignmentexpressionContext assignmentexpression) {
 
-        System.out.println(assignmentexpression.getText());
+//        System.out.println(assignmentexpression.getText());
         if (assignmentexpression.conditionalexpression() != null) {
             String text = assignmentexpression.conditionalexpression().getText();
             return text.replace("*", "").replaceAll(" ", "");
@@ -1437,10 +1437,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
             }
             
             if(param.getTypeBinding() == null) {
-                for (int i = 0; i < methodDeclaration.size(); i++) {
-                    for (int j = 0; j < methodDeclaration.get(i).getParametersBindings().size(); j++) {
-                        if (param.getName().equals(methodDeclaration.get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
-                            param.setTypeBinding(methodDeclaration.get(i).getParametersBindings().get(j).getTypeBinding());
+                for (int i = 0; i < this.typeBinding.getMethodsBinding().size(); i++) {
+                    for (int j = 0; j < this.typeBinding.getMethodsBinding().get(i).getParametersBindings().size(); j++) {
+                        if (param.getName().equals(this.typeBinding.getMethodsBinding().get(i).getParametersBindings().get(j).getName().replace("*", "").replace("&", ""))) {
+                            param.setTypeBinding(this.typeBinding.getMethodsBinding().get(i).getParametersBindings().get(j).getTypeBinding());
                         }
                     }
                 }
@@ -1485,10 +1485,10 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 if (param.getName().contains("(")) {
                     param.setMethodCall(true);
 
-                    for (int i = 0; i < methodDeclaration.size(); i++) {
+                    for (int i = 0; i < this.typeBinding.getMethodsBinding().size(); i++) {
                         String name = param.getName().substring(0,param.getName().indexOf("("));
-                            if (name.equals(methodDeclaration.get(i).getName())) {
-                                param.setTypeBinding(methodDeclaration.get(i).getReturnBinding());
+                            if (name.equals(this.typeBinding.getMethodsBinding().get(i).getName())) {
+                                param.setTypeBinding(this.typeBinding.getMethodsBinding().get(i).getReturnBinding());
                             }
                         }
                     

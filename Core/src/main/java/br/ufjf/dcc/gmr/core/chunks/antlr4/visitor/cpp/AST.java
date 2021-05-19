@@ -40,21 +40,21 @@ public class AST {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             ParseTree tree = parser.translationunit();
-            //Visitor1 visitor;
+            Visitor1 visitor1;
             Visitor2 visitor2;
             Visitor3 visitor3;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                // visitor = new Visitor1();
-                visitor2 = new Visitor2();
-                visitor3 = new Visitor3(visitor2.getMethodDeclaration());
+                visitor1 = new Visitor1();
+                visitor2 = new Visitor2(visitor1.getTypeBinding());
+                visitor3 = new Visitor3(visitor1.getTypeBinding());
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             } else {
-                //  visitor = new Visitor1();
-                visitor2 = new Visitor2();
-                visitor3 = new Visitor3(visitor2.getMethodDeclaration());
+                 visitor1 = new Visitor1();
+                visitor2 = new Visitor2(visitor1.getTypeBinding());
+                visitor3 = new Visitor3(visitor1.getTypeBinding());
                 comments = ANTLR4Tools.getCommentsFromChannel2(tokens, true, Language.CPP);
             }
-            // visitor.visit(tree);
+            visitor1.visit(tree);
             visitor2.visit(tree);
             visitor3.visit(tree);
             //Imprimir_arvore-------------------------------------------------------
@@ -80,7 +80,7 @@ public class AST {
 //            }
 //
 //            System.out.println("============ METHOD DECLARATION =============");
-           methodDeclaration.add(visitor2.getMethodDeclaration());
+           methodDeclaration.add(visitor1.getTypeBinding().getMethodsBinding());
 //            for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
 //                System.out.println(visitor2.getMethodDeclaration().get(i));
 //            }

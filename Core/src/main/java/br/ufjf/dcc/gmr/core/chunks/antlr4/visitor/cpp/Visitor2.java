@@ -23,28 +23,21 @@ import org.antlr.v4.runtime.Token;
 public class Visitor2 extends CPP14BaseVisitor<Object> {
 
     private TypeBinding typeClass;
+    private TypeBinding typeBinding;
     private String returnType;
     private String variableType;
     private String modifierMethod;
-    private String className;
-    private List<MethodDeclarationBinding> methodDeclaration;    
+    private String className;   
     
-    public Visitor2() {
+    public Visitor2(TypeBinding typeBinding) {
+        this.typeBinding = typeBinding;
         this.typeClass = null;
         this.returnType = "";
         this.variableType = "";
         this.modifierMethod = "";
         this.className = "";
-        this.methodDeclaration = new ArrayList<>();
     }
 
-    public List<MethodDeclarationBinding> getMethodDeclaration() {
-        return methodDeclaration;
-    }
-
-    public void setMethodDeclaration(List<MethodDeclarationBinding> methodDeclaration) {
-        this.methodDeclaration = methodDeclaration;
-    }
 
     public static void log(ParserRuleContext ctx) {
         Token start = ctx.getStart();
@@ -105,7 +98,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
             
             meth.setName(name);
             
-            methodDeclaration.add(meth);
+            this.typeBinding.getMethodsBinding().add(meth);
         } 
         
         else if (findParentPd(ctx)) {
@@ -115,7 +108,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
                 type.setName(variableType);
                 VariableDeclarationBinding param = new VariableDeclarationBinding(ctx.getText(), type);
                 
-                methodDeclaration.get(methodDeclaration.size()-1).getParametersBindings().add(param);
+                this.typeBinding.getMethodsBinding().get(this.typeBinding.getMethodsBinding().size()-1).getParametersBindings().add(param);
             }
         
 
