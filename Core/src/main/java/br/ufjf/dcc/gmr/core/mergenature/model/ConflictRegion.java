@@ -276,12 +276,12 @@ public class ConflictRegion {
                 && developerDecision != DeveloperDecision.FILE_DELETED
                 && developerDecision != DeveloperDecision.POSTPONED
                 && developerDecision != DeveloperDecision.DIFF_PROBLEM) {
-            String[] auxArray = solutionText.replaceAll("\n", "\ngleiphEhFluminense").split("\n");
+            String[] auxArray = (" " + solutionText + " ").split("\n");
             StringBuilder result = new StringBuilder("");
             for (int i = 1; i < auxArray.length - 1; i++) {
                 result.append("\n").append(auxArray[i]);
             }
-            return result.toString().replaceAll("gleiphEhFluminense", "\n").replaceFirst("\n", "");
+            return result.toString().replaceFirst("\n", "");
         } else {
             return solutionText;
         }
