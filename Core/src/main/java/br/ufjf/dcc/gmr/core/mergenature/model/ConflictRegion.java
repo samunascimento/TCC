@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
+import java.util.List;
 
 /**
  * Class to record the conflict regions in files
@@ -276,10 +277,10 @@ public class ConflictRegion {
                 && developerDecision != DeveloperDecision.FILE_DELETED
                 && developerDecision != DeveloperDecision.POSTPONED
                 && developerDecision != DeveloperDecision.DIFF_PROBLEM) {
-            String[] auxArray = (" " + solutionText + " ").split("\n");
+            List<String> text = MergeNatureTools.stringTextToListText(solutionText);
             StringBuilder result = new StringBuilder("");
-            for (int i = 1; i < auxArray.length - 1; i++) {
-                result.append("\n").append(auxArray[i]);
+            for (int i = 1; i < text.size() - 1; i++) {
+                result.append("\n").append(text.get(i));
             }
             return result.toString().replaceFirst("\n", "");
         } else {

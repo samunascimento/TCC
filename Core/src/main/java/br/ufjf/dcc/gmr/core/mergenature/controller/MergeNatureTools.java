@@ -21,11 +21,18 @@ import java.util.List;
  * @since 14-10-2020
  */
 public class MergeNatureTools {
-    
-    public static String getRawForm(String string){
+
+    public static String getRawForm(String string) {
         return string.replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
     }
-    
+
+    public static List<String> getRawForm(List<String> list) {
+        for (int i = 0; i < list.size(); i++) {
+            list.set(i, getRawForm(list.get(i)));
+        }
+        return list;
+    }
+
     public static void createAndWriteInFile(String filePath, String content) throws IOException {
         File yourFile = new File(filePath);
         yourFile.createNewFile();
@@ -47,8 +54,23 @@ public class MergeNatureTools {
         br.close();
         return content;
     }
-    
-    public static String getFileContentInString(String filePath) throws FileNotFoundException, IOException{
+
+    public static List<String> stringTextToListText(String text) {
+        List<String> list = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '\n') {
+                list.add(sb.toString());
+                sb = new StringBuilder();
+            } else {
+                sb.append(text.charAt(i));
+            }
+        }
+        list.add(sb.toString());
+        return list;
+    }
+
+    public static String getFileContentInString(String filePath) throws FileNotFoundException, IOException {
         String content = "";
         File file = new File(filePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -105,13 +127,13 @@ public class MergeNatureTools {
             return false;
         }
     }
-    
+
     public static boolean checkIfIsSeparator(String line) {
         return line.replaceAll("=======", "").equals("") && line.startsWith("=======");
     }
 
     public static boolean checkIfIsEnd(String line) {
-        if (line.startsWith(">>>>>>> "))  {
+        if (line.startsWith(">>>>>>> ")) {
             return true;
         } else {
             return false;

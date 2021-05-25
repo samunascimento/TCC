@@ -377,9 +377,11 @@ public class MergeNatureAlgorithm {
             conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
             conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getSolutionText());
         } else {
-            solution = conflictRegion.getSolutionText().replaceAll(" ", "").replaceAll("\t", "");
-            for (String solutionLine : solution.split("\n")) {
-                if (!(v1.contains(solutionLine) || v2.contains(solutionLine))) {
+            List<String> solutionList = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getSolutionTextWithoutContext()));
+            List<String> v1List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV1Text()));
+            List<String> v2List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV2Text()));
+            for (String solutionLine : solutionList) {
+                if (!(v1List.contains(solutionLine) || v2List.contains(solutionLine))) {
                     conflictRegion.setDeveloperDecision(DeveloperDecision.NEWCODE);
                     return conflictRegion;
                 }
