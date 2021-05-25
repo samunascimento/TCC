@@ -5,8 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodCallBinding;
-import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.*;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
@@ -31,6 +30,7 @@ public class AST {
 
     static List<List<MethodDeclarationBinding>> methodDeclaration = new ArrayList<>();
     static List<List<MethodCallBinding>> methodCall = new ArrayList<>();
+    static GlobalEnviroment globalEnviroment = new GlobalEnviroment();
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean openTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")) {
@@ -84,6 +84,7 @@ public class AST {
 //            for (int i = 0; i < visitor2.getMethodDeclaration().size(); i++) {
 //                System.out.println(visitor2.getMethodDeclaration().get(i));
 //            }
+            globalEnviroment.getEnviroment().put(filePath, visitor1.getTypeBinding());
             return null;
 //            return new ANTLR4Results(visitor.getList(), comments);
         } else {
@@ -158,7 +159,8 @@ public class AST {
         for (File f : file.listFiles()) {
             if ((f.isFile() && f.getName().endsWith("cpp"))||(f.isFile() && f.getName().endsWith("h"))){
                 analyzeCPPSyntaxTree(f.getAbsolutePath(),true);
-                comparaNome(f.getAbsolutePath());
+                System.out.println(globalEnviroment);
+                //comparaNome(f.getAbsolutePath());
             }
             else if(f.isDirectory()){ 
                 files(f);
@@ -175,6 +177,7 @@ public class AST {
 //        analyzeCPPSyntaxTree(pathh, true);
 //        comparaNome();
 //
+
           File file = new File("/home/ketleen/Documentos/grafos-master");
           files(file);
           
