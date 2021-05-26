@@ -16,10 +16,9 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
     private String modifier;
     private CPP14Parser.DeclaratorContext ctx;
             
-    public AttributeDeclarationBinding(String Modifier, TypeBinding type, String name, CPP14Parser.DeclaratorContext ctx) {
+    public AttributeDeclarationBinding(String Modifier, TypeBinding type, String name) {
         super(name, type);
         this.modifier = Modifier;
-        this.ctx = ctx;
     }   
 
     public AttributeDeclarationBinding() {

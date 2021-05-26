@@ -5,6 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.chunks.antlr4.visitor.cpp;
 
+import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.AttributeDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.VariableDeclarationBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.ImportBinding;
 import br.ufjf.dcc.gmr.core.chunks.antlr4.binding.cpp.MethodDeclarationBinding;
@@ -1120,7 +1121,8 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
     public Object visitParameterdeclaration(CPP14Parser.ParameterdeclarationContext ctx) {
 //            log(ctx);
         
-        this.variableType = ctx.declspecifierseq().getText();
+        if(ctx.declspecifierseq() != null)
+            this.variableType = ctx.declspecifierseq().getText();
 
         return visitChildren(ctx);
     }
@@ -1221,7 +1223,21 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
             returnType = ctx.declspecifierseq().getText();
             
             if(ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator().ptroperator() != null)
-                returnType += ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator().ptroperator().getText();    
+                returnType += ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator().ptroperator().getText();
+        }
+        
+        if(ctx.memberdeclaratorlist() != null) {
+            
+            CPP14Parser.PtrdeclaratorContext context = ctx.memberdeclaratorlist().memberdeclarator().declarator().ptrdeclarator();
+            
+            if(context.noptrdeclarator() == null || context.noptrdeclarator().parametersandqualifiers() == null) {
+                TypeBinding type = new TypeBinding(returnType);
+                
+                String name = context.getText().replace("*", "");
+                
+                AttributeDeclarationBinding attribute = new AttributeDeclarationBinding(modifierMethod, type, name);
+            }
+
         }
             
             

@@ -207,6 +207,17 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
  //           log(ctx);
+            if(ctx.getText().contains("::")) {
+                String name = ctx.getText().substring(0, ctx.getText().indexOf("("));
+                
+                String aux1 = name.substring(0, name.indexOf(":")).replace(":", "");
+                String aux2 = name.substring(name.indexOf(":")).replace(":", "");
+                
+                if(aux1.equals(aux2))
+                    this.typeBinding.setName(aux1);
+            }
+           
+ 
             return visitChildren(ctx);
         }
 
@@ -927,6 +938,7 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
   //    log(ctx);
+            
             return visitChildren(ctx);
         }
 
@@ -1083,8 +1095,6 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitClassname(CPP14Parser.ClassnameContext ctx) {
 //            log(ctx);
-            this.typeBinding.setName(ctx.getText());
-//            System.out.println(ctx.getText());
             return visitChildren(ctx);
         }
 
@@ -1097,6 +1107,10 @@ public class Visitor1 extends CPP14BaseVisitor<Object> {
         @Override
         public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {
 //            log(ctx);
+            if(ctx.classheadname() != null) 
+                if(ctx.classheadname().classname() != null) 
+                    this.typeBinding.setName(ctx.classheadname().classname().getText());
+            
             return visitChildren(ctx);
         }
 
