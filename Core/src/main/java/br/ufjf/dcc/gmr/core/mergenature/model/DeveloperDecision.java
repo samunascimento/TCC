@@ -6,7 +6,7 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  */
 public enum DeveloperDecision {
 
-    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED, DIFF_PROBLEM, POSTPONED_EDITED;
+    VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED_1, POSTPONED_2, POSTPONED_3, DIFF_PROBLEM;
 
     public static int getIntFromEnum(DeveloperDecision developerDecision) {
         switch (developerDecision) {
@@ -34,11 +34,17 @@ public enum DeveloperDecision {
             case FILE_DELETED: {
                 return 8;
             }
-            case POSTPONED: {
+            case POSTPONED_1: {
                 return 9;
             }
-            case DIFF_PROBLEM: {
+            case POSTPONED_2: {
                 return 10;
+            }
+            case POSTPONED_3: {
+                return 11;
+            }
+            case DIFF_PROBLEM: {
+                return 12;
             }
             default: {
                 return -1;
@@ -72,8 +78,14 @@ public enum DeveloperDecision {
             case "FILE_DELETED": {
                 return FILE_DELETED;
             }
-            case "POSTPONED": {
-                return POSTPONED;
+            case "POSTPONED_1": {
+                return POSTPONED_1;
+            }
+            case "POSTPONED_2": {
+                return POSTPONED_2;
+            }
+            case "POSTPONED_3": {
+                return POSTPONED_3;
             }
             case "DIFF_PROBLEM": {
                 return DIFF_PROBLEM;
@@ -112,9 +124,15 @@ public enum DeveloperDecision {
                 return FILE_DELETED;
             }
             case 9: {
-                return POSTPONED;
+                return POSTPONED_1;
             }
             case 10: {
+                return POSTPONED_2;
+            }
+            case 11: {
+                return POSTPONED_3;
+            }
+            case 12: {
                 return DIFF_PROBLEM;
             }
             default: {

@@ -275,7 +275,6 @@ public class ConflictRegion {
     public String getSolutionTextWithoutContext() {
         if (developerDecision != DeveloperDecision.IMPRECISE
                 && developerDecision != DeveloperDecision.FILE_DELETED
-                && developerDecision != DeveloperDecision.POSTPONED
                 && developerDecision != DeveloperDecision.DIFF_PROBLEM) {
             List<String> text = MergeNatureTools.stringTextToListText(solutionText);
             StringBuilder result = new StringBuilder("");

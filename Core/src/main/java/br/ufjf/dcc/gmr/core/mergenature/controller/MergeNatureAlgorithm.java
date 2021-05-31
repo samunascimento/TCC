@@ -331,8 +331,8 @@ public class MergeNatureAlgorithm {
                     conflictRegion.setDeveloperDecision(DeveloperDecision.IMPRECISE);
                 } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
                     contextIntervals = null;
-                    conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getRawConflict());
-                    conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
+                    conflictRegion.setSolutionText(conflictRegion.getRawConflict());
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
                 } else {
                     if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
                         contextIntervals = null;
@@ -357,14 +357,6 @@ public class MergeNatureAlgorithm {
         String solution = MergeNatureTools.getRawForm(conflictRegion.getSolutionTextWithoutContext());
         String v1 = MergeNatureTools.getRawForm(conflictRegion.getV1Text());
         String v2 = MergeNatureTools.getRawForm(conflictRegion.getV2Text());
-        boolean withBegin = false;
-        boolean withEnd = false;
-        for (String line : conflictRegion.getSolutionTextWithoutContext().split("\n")) {
-            if (MergeNatureTools.checkIfIsBegin(line)
-                    || MergeNatureTools.checkIfIsSeparator(line)
-                    || MergeNatureTools.checkIfIsEnd(line)) {
-            }
-        }
         if (solution.equals("")) {
             conflictRegion.setDeveloperDecision(DeveloperDecision.NONE);
         } else if (solution.equals(v1.concat(v2)) || solution.equals(v2.concat(v1))) {
@@ -373,20 +365,34 @@ public class MergeNatureAlgorithm {
             conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION1);
         } else if (solution.equals(v2)) {
             conflictRegion.setDeveloperDecision(DeveloperDecision.VERSION2);
-        } else if (solution.equals(MergeNatureTools.getRawForm(conflictRegion.getRawConflictWithoutContext()))) {
-            conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED);
-            conflictRegion.setSolutionText("(The developer postponed/ignored the conflict, so the solution is the conflict)\n\n" + conflictRegion.getSolutionText());
         } else {
-            List<String> solutionList = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getSolutionTextWithoutContext()));
-            List<String> v1List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV1Text()));
-            List<String> v2List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV2Text()));
-            for (String solutionLine : solutionList) {
-                if (!(v1List.contains(solutionLine) || v2List.contains(solutionLine))) {
-                    conflictRegion.setDeveloperDecision(DeveloperDecision.NEWCODE);
-                    return conflictRegion;
-                }
+            List<String> solutionList = MergeNatureTools.stringTextToListText(conflictRegion.getSolutionTextWithoutContext());
+            int markers = numberOfMarkers(solutionList);
+            solutionList = MergeNatureTools.getRawForm(solutionList);
+            switch (markers) {
+                case 0:
+                    List<String> v1List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV1Text()));
+                    List<String> v2List = MergeNatureTools.getRawForm(MergeNatureTools.stringTextToListText(conflictRegion.getV2Text()));
+                    for (String solutionLine : solutionList) {
+                        if (!(v1List.contains(solutionLine) || v2List.contains(solutionLine))) {
+                            conflictRegion.setDeveloperDecision(DeveloperDecision.NEWCODE);
+                            return conflictRegion;
+                        }
+                    }
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.COMBINATION);
+                    break;
+                case 1:
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED_1);
+                    break;
+                case 2:
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED_2);
+                    break;
+                case 3:
+                    conflictRegion.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
+                    break;
+                default:
+                    break;
             }
-            conflictRegion.setDeveloperDecision(DeveloperDecision.COMBINATION);
         }
         return conflictRegion;
     }
@@ -602,4 +608,34 @@ public class MergeNatureAlgorithm {
             return conflictRegion.getV2Text().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
         }
     }
+
+    private int numberOfMarkers(List<String> solutionTextWithoutContext) {
+        int result = 0;
+        boolean begin = false;
+        boolean separator = false;
+        boolean end = false;
+        for (String line : solutionTextWithoutContext) {
+            if (!begin && MergeNatureTools.checkIfIsBegin(line)) {
+                begin = true;
+            } else if (!separator && MergeNatureTools.checkIfIsSeparator(line)) {
+                separator = true;
+            } else if (!end && MergeNatureTools.checkIfIsEnd(line)) {
+                end = true;
+            }
+            if (begin && separator && end) {
+                return 3;
+            }
+        }
+        if (begin) {
+            result += 1;
+        }
+        if (separator) {
+            result += 1;
+        }
+        if (end) {
+            result += 1;
+        }
+        return result;
+    }
+
 }

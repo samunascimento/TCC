@@ -577,7 +577,9 @@ public class MNProjectFilterFrame extends JDialog {
             developerDecisionList.add(DeveloperDecision.FILE_DELETED);
         }
         if (postponed.isSelected()) {
-            developerDecisionList.add(DeveloperDecision.POSTPONED);
+            developerDecisionList.add(DeveloperDecision.POSTPONED_1);
+            developerDecisionList.add(DeveloperDecision.POSTPONED_2);
+            developerDecisionList.add(DeveloperDecision.POSTPONED_3);
         }
         if (diffProblem.isSelected()) {
             developerDecisionList.add(DeveloperDecision.DIFF_PROBLEM);
