@@ -30,6 +30,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
     private List<VariableUsageBinding> variableUsage;
     private TypeBinding typeBinding;
     private boolean isFunctionInvocation = false;
+    private MethodDeclarationBinding methodDeclarationBinding;
 
     public Visitor3(TypeBinding typeBinding) {
         this.typeBinding = typeBinding;
@@ -37,6 +38,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
         this.variableDeclaration = new ArrayList<>();
         this.methodCall = new ArrayList<>();
         this.variableUsage = new ArrayList<>();
+        this.methodDeclarationBinding = new MethodDeclarationBinding();
     }
 
     public List<VariableDeclarationBinding> getVariableDeclaration() {
@@ -243,6 +245,8 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 VariableDeclarationBinding variavel = new VariableDeclarationBinding(ctx.getText(), typeS);
                 if (!containDeclaration(variavel.getName())) {
                     variableDeclaration.add(variavel);
+                    methodDeclarationBinding.getVariableDeclarationBindings().add(variavel);
+                    
                     //System.out.println("Variavel: " + this.typeString + " " + ctx.getText());
                 }
             }
@@ -763,12 +767,14 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 VariableDeclarationBinding variable = new VariableDeclarationBinding();
                 variable.setName(name);
                 variableDeclaration.add(variable);
+                methodDeclarationBinding.getVariableDeclarationBindings().add(variable);
                 //System.out.println("New Variavel: " + name);
             } else {
                 VariableUsageBinding variable = new VariableUsageBinding();
                 variable.setName(name);
                 variable.setCtx(ctx);
                 variableUsage.add(variable);
+                methodDeclarationBinding.getVariableUsageBindings().add(variable);
 
                 //System.out.println("Variavel: " + name);
             }
@@ -789,6 +795,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                     TypeBinding tipo = new TypeBinding(type);
                     VariableDeclarationBinding variable = new VariableDeclarationBinding(name, tipo);
                     variableDeclaration.add(variable);
+                    methodDeclarationBinding.getVariableDeclarationBindings().add(variable);
                     //System.out.println("Tipo: " + type + "  Variavel: " + name);
                 }
             } else {
@@ -797,6 +804,7 @@ public class Visitor3 extends CPP14BaseVisitor<Object> {
                 variable.setName(name);
                 variable.setCtx(ctx);
                 variableUsage.add(variable);
+                methodDeclarationBinding.getVariableUsageBindings().add(variable);
                 //System.out.println("Variavel: " + name);
             }
 

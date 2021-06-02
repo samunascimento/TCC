@@ -20,6 +20,11 @@ public class MethodDeclarationBinding extends BaseBinding {
     private List<VariableDeclarationBinding> parameters;
     private TypeBinding returnBinding;
     private CPP14Parser.DeclaratorContext ctx;
+    
+    private EnviromentBinding methodEnviromentBinding;
+    private List<VariableDeclarationBinding> VariableDeclarationBindings;
+    private List<VariableUsageBinding> VariableUsageBindings;
+    private List<MethodCallBinding> methodCallBindings;
    
 
     public MethodDeclarationBinding(String name,String modifier, TypeBinding type, List<VariableDeclarationBinding> parameters, TypeBinding returnBinding, CPP14Parser.DeclaratorContext ctx) {
@@ -83,6 +88,38 @@ public class MethodDeclarationBinding extends BaseBinding {
 
     public void setCtx(CPP14Parser.DeclaratorContext ctx) {
         this.ctx = ctx;
+    }
+    
+        public EnviromentBinding getMethodEnviromentBinding() {
+        return methodEnviromentBinding;
+    }
+
+    public void setMethodEnviromentBinding(EnviromentBinding methodEnviromentBinding) {
+        this.methodEnviromentBinding = methodEnviromentBinding;
+    }
+
+    public List<VariableDeclarationBinding> getVariableDeclarationBindings() {
+        return VariableDeclarationBindings;
+    }
+
+    public void setVariableDeclarationBindings(List<VariableDeclarationBinding> localVariableDeclarationBindings) {
+        this.VariableDeclarationBindings = localVariableDeclarationBindings;
+    }
+
+    public List<VariableUsageBinding> getVariableUsageBindings() {
+        return VariableUsageBindings;
+    }
+
+    public void setVariableUsageBindings(List<VariableUsageBinding> localVariableUsageBindings) {
+        this.VariableUsageBindings = localVariableUsageBindings;
+    }
+
+    public List<MethodCallBinding> getMethodCallBindings() {
+        return methodCallBindings;
+    }
+
+    public void setMethodCallBindings(List<MethodCallBinding> methodCallBindings) {
+        this.methodCallBindings = methodCallBindings;
     }
 
    @Override

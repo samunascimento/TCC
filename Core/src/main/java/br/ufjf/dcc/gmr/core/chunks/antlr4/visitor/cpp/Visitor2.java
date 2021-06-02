@@ -1236,6 +1236,7 @@ public class Visitor2 extends CPP14BaseVisitor<Object> {
                 String name = context.getText().replace("*", "");
                 
                 AttributeDeclarationBinding attribute = new AttributeDeclarationBinding(modifierMethod, type, name);
+                this.typeBinding.getAttributesBinding().add(attribute);
             }
 
         }
