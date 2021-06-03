@@ -5,7 +5,7 @@
  */
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.DoubleSave;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;

@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.db.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import java.awt.Color;

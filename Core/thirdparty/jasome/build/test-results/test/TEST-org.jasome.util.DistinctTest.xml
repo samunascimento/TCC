@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.jasome.util.DistinctTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-11-14T22:14:32" hostname="dcc-m055.nrc.ice.ufjf.br" time="0.002">
-  <properties/>
-  <testcase name="handles nulls" classname="org.jasome.util.DistinctTest" time="0.002"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
