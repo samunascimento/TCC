@@ -1,6 +1,6 @@
 # Merge Nature
 ![](https://img.shields.io/badge/Language-Java-green)
-![](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows-lightgrey)
+![](https://img.shields.io/badge/Platforms-Linux%20%7C%20Windows-lightgrey)
 
  
 Repositório para manutenção e armazenamento dos códigos criados para o projeto de iniciação científica: "A Natureza do Merge de Software".  
@@ -44,7 +44,7 @@ $ java -jar Core-1.0-SNAPSHOT-jar-with-dependencies.jar -r "../Github/Mergenatur
 <ul>
   <li>Apesar do exemplo, <b>não se deve usar o programa na Repositório onde o projeto está sendo executado!</b></li>
   <li>Os arquivos serão salvos num formato especial de gson nomeado de : ".mntr".</li>
-  <li>O terminal só aceita salvar ou em "mntr" ou no banco de dados por vez.</li>
+  <li>O terminal só aceita salvar ou em ".mntr" ou no banco de dados por vez.</li>
   <li>O programa faz análises de projetos em: Java, C++, Python e C#.</li>
   <li>O programa necessita do git instalado e funcional.</li>
 </ul>
