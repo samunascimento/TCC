@@ -1,6 +1,6 @@
 # Merge Nature
-![](https://img.shields.io/badge/Java%2B%2B-v1.0-green)
-![](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)
+![](https://img.shields.io/badge/Language-Java-green)
+![](https://img.shields.io/badge/platforms-Linux%20%7C%20Windows-lightgrey)
 
  
 Repositório para manutenção e armazenamento dos códigos criados para o projeto de iniciação científica: "A Natureza do Merge de Software".  
