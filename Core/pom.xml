@@ -3,7 +3,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.ufjf.dcc.gmr</groupId>
-    <artifactId>Core</artifactId>
+    <artifactId>MergeNature</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
@@ -36,30 +36,15 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>commons-cli</groupId>
-            <artifactId>commons-cli</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.sf.jung</groupId>
-            <artifactId>jung-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jung</groupId>
-            <artifactId>jung-graph-impl</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jung</groupId>
-            <artifactId>jung-visualization</artifactId>
-            <version>2.1.1</version>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -74,15 +59,15 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/csharp</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp</argument>
                     </arguments>
                     <includes>
-                        <include>CSharpLexer.g4</include>
-                        <include>CSharpParser.g4</include>
+                        <include>CPP14Parser.g4</include>
+                        <include>CPP14Lexer.g4</include>
                     </includes>
                 </configuration>
                 <executions>
@@ -100,8 +85,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                             <!--<mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>-->
-                           <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass> 
+                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass> 
                         </manifest>
                     </archive>
                 </configuration>
@@ -111,7 +95,6 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!--<mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>-->
                             <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass>
                         </manifest>
                     </archive>
@@ -151,5 +134,4 @@
             </plugin>
         </plugins>   
     </build>
-
 </project>
