@@ -63,9 +63,18 @@ Depois de fornecer esses pela primeira vez, não será necessário a repetição
   <li>O modelo de banco de dados para o programa se encontra no próprio repositório com nome de "MergeNatureDBScript.sql". Foi feito pensando no uso de "PostgresQL" </li>
 </ul>
  
- ## instruições para Buildar:
+ ## instruições para Build:
  
+ Build com linha de comando como classe criada no JAR:
  ```
 $ mvn install
 ```
+ Build com GUI como classe criada no JAR
+  ```
+$ mvn -Pgui install 
+```
+  ```
+$ mvn install
+```
+
  
