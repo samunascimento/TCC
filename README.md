@@ -73,8 +73,6 @@ $ mvn install
   ```
 $ mvn -Pgui install 
 ```
-  ```
-$ mvn install
-```
+
 
  
