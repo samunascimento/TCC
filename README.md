@@ -63,4 +63,9 @@ Depois de fornecer esses pela primeira vez, não será necessário a repetição
   <li>O modelo de banco de dados para o programa se encontra no próprio repositório com nome de "MergeNatureDBScript.sql". Foi feito pensando no uso de "PostgresQL" </li>
 </ul>
  
+ ## instruições para Buildar:
+ 
+ ```
+$ mvn install
+```
  
