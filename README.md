@@ -76,11 +76,13 @@ Depois de fornecer esses pela primeira vez, não será necessário a repetição
  
  ## instruições para Build:
  
- Build com linha de comando como classe criada no JAR:
+Seguir para a pasta core e:
+ 
+Build com linha de comando como classe criada no JAR:
  ```
 $ mvn install
 ```
- Build com GUI como classe criada no JAR
+Build com GUI como classe criada no JAR
   ```
 $ mvn -Pgui install 
 ```
