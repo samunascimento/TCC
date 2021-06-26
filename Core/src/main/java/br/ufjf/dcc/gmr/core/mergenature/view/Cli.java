@@ -8,11 +8,13 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.exception.CheckoutError;
 import br.ufjf.dcc.gmr.core.exception.DoubleSave;
+import br.ufjf.dcc.gmr.core.exception.GUICaller;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
 import br.ufjf.dcc.gmr.core.exception.ImpossibleToCreateFile;
 import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
 import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
 import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
+import br.ufjf.dcc.gmr.core.exception.NoPath;
 import br.ufjf.dcc.gmr.core.exception.Notsaving;
 import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
 import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
@@ -56,14 +58,16 @@ public class Cli {
 
     public static final String SAVE_IN_THE_DATABASE = "save_in_the_database";
     public static final String SAVE_IN_THE_DATABASE_SHORT = "db";
+    
+    public static final String GUI = "gui";
+    public static final String GUI_SHORT = "g";
 
-    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, RepositoryAlreadyExist, ImpossibleLineNumber, Notsaving, DoubleSave {
+    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, RepositoryAlreadyExist, ImpossibleLineNumber, Notsaving, DoubleSave, NoPath {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
 
         Option repositoryOption = new Option(REPOSITORY_PATH_SHORT, REPOSITORY_PATH, true, "Repository");
-        repositoryOption.setRequired(true);
         options.addOption(repositoryOption);
 
         Option saveOption = new Option(SAVE_PATH_SHORT, SAVE_PATH, true, "Save path");
@@ -76,16 +80,28 @@ public class Cli {
 
         Option contextLineOption = new Option(CONTEXT_LINE_NUMBER_SHORT, CONTEXT_LINE_NUMBER, true, "Number of context lines");
         options.addOption(contextLineOption);
+        
+        Option guioption = new Option(GUI_SHORT,GUI,false, "Command to call the graphical interface" );
+        options.addOption(guioption);
 
         HelpFormatter formatter = new HelpFormatter();
 
         try {
             CommandLine cmd = parser.parse(options, args);
-
+            
+            if(cmd.hasOption("gui") || cmd.hasOption("g")){
+                
+                throw new GUICaller();
+            }
+            
+            if(!cmd.hasOption("r")){
+                throw new NoPath();
+            }
+            
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
 
                 if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
-                    System.out.println("Double save is not supoorted yet");
+                    System.out.println("Double save is not suported yet");
                     throw new DoubleSave();
 
                 } else {
@@ -164,17 +180,23 @@ public class Cli {
                     System.out.println("SQL ERROR!");
                 }
             }
-        } catch (ParseException | NumberFormatException | Notsaving | DoubleSave | ImpossibleToCreateFile e) {
+        } catch (ParseException | NumberFormatException | Notsaving | DoubleSave | ImpossibleToCreateFile |NoPath e) {
 
             if (e instanceof NumberFormatException) {
                 System.out.println("Context line number must be a number");
             }
 
             formatter.printHelp("help", options);
+        } catch (GUICaller ex) {
+            callGui();
         }
 
     }
 
+    private static void callGui(){
+        MNFrame frame = new MNFrame();
+        frame.start();
+    }
     private static void createFile() {
 
         Scanner sc = new Scanner(System.in);
