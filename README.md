@@ -14,11 +14,16 @@ Com contribuição de : [Heleno Campos](https://github.com/helenocampos).
  
 ## Para a execução do programa utilizando o sistema gráfico: 
  
- Baixar a última versão disponível no release e usar o comando: 
+ Existem duas opções: 
+ 
+1. Baixar a última versão disponível no release e usar o comando: 
+
 ```
 $  java -jar MergeNature_Gui.jar
 ```
-Nenhum parâmetro é necessário e para as instruções do sistema gráfico, conferir a wiki.
+2. Ou, Usar o comando "-gui" nas linhas de comando.
+
+Nenhum parâmetro é necessário e para as instruções do sistema gráfico, conferir a [wiki](https://github.com/gleiph/MergeNature/wiki).
  
 ## Para execução do programa utilizando o terminal, windows ou linux:
  
@@ -28,10 +33,11 @@ $ java -jar MergeNature_commandLine.jar
 ```
 Com os seguintes parâmetros: 
  
- -c,  Number of context lines,
- -db  Save in the Database,
- -r,  Repository path,
- -s,  Save path.
+ -c,  Number of context lines,<br>
+ -db  Save in the Database,<br>
+ -r,  Repository path,<br>
+ -s,  Save path,<br>
+ -g, Call the graphical version of the software.
  
  Exemplos:
  
@@ -44,6 +50,11 @@ Já para salvar em um banco de Dados:
  ```
 $ java -jar MergeNature_commandLine.jar -r "../Github/Mergenature" -db
 ```
+Para chamar a versão grafica: 
+ ```
+$ java -jar MergeNature_commandLine.jar -g
+```
+
 O comando "db" inicialmente não precisa de nenhum comando. Mas na primeira conexão ao banco de dados ele irá pedir:
  
 - Url do banco.
