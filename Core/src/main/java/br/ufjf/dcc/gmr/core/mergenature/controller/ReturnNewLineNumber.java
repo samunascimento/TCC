@@ -23,7 +23,7 @@ public class ReturnNewLineNumber {
     public static final int REMOVED_LINE = -Integer.MAX_VALUE; // Constant used to indentify when a line was removed
     public static final int REMOVED_FILE = -(Integer.MAX_VALUE - 1); // Constant used to indentify when a file was removed
     public static final int POSTPONED = -(Integer.MAX_VALUE - 2);
-    
+
     public static int getLineInAnotherCommit(String directory, String pastCommit, String futureCommit,
             String file, boolean getFromFuture, int originalLineNumber) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput, ImpossibleLineNumber {
         return initReturnNewLineNumber(directory,
@@ -41,7 +41,7 @@ public class ReturnNewLineNumber {
                 getFromFuture,
                 originalLineNumber);
     }
-    
+
     private static int initReturnNewLineNumber(String directory, String pastEntity, String futureEntity, boolean getFromFuture, int originalLineNumber)
             throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput, ImpossibleLineNumber {
         if (originalLineNumber < 0) {
@@ -61,7 +61,7 @@ public class ReturnNewLineNumber {
             }
         }
     }
-    
+
     private static List<FileDiff> fillOneFileDiff(String directory, String pastEntity, String futureEntity, boolean getFromFuture) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, EmptyOutput {
 
         String line;
@@ -77,7 +77,9 @@ public class ReturnNewLineNumber {
         } else {
             for (int i = 0; i < output.size(); i++) {
                 line = output.get(i);
-                if (line.startsWith("diff --") && currentLine != 0) {
+                if (line.length() == 0) {
+                    continue;
+                } else if (line.startsWith("diff --") && currentLine != 0) {
                     chunks.add(aux);
                     aux = new FileDiff();
                 } else if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
@@ -115,7 +117,7 @@ public class ReturnNewLineNumber {
             return chunks;
         }
     }
-    
+
     public static int startingLineAdapated(String example, boolean getLineOfPlus) {
         String auxString;
         if (example.startsWith("@@@ -")) {
@@ -127,7 +129,7 @@ public class ReturnNewLineNumber {
         }
         if (auxString.contains(",")) {
             String[] auxArray = auxString.split("\\,");
-            if(auxArray[1].equals("0")){
+            if (auxArray[1].equals("0")) {
                 return Integer.parseInt(auxArray[0]) + 1;
             } else {
                 return Integer.parseInt(auxArray[0]);
@@ -136,7 +138,7 @@ public class ReturnNewLineNumber {
             return Integer.parseInt(auxString);
         }
     }
-    
+
     private static int processingChunkModifiedLine(List<FileDiff> chunks, int originalLineNumber, boolean getFromFuture) {
         int j = 0;
         int cont = 0;
@@ -160,7 +162,7 @@ public class ReturnNewLineNumber {
         }
         return cont;
     }
-    
+
     /**
      * This method goes trough the diffs between the commit source and the
      * commit target and salve all the information on a created type "FileDiff"
