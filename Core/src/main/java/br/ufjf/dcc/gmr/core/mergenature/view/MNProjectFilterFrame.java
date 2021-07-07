@@ -56,6 +56,7 @@ public class MNProjectFilterFrame extends JDialog {
     private JCheckBox notConflictedMergeOfUnrelatedHistories = new JCheckBox("Not Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox octopusMergeOfUnrelatedHistories = new JCheckBox("Octopus Merge Of Unrelated Histories", true);
     private JCheckBox outOfMemory = new JCheckBox("Out of Memory", true);
+    private JCheckBox unexpectedOccurrence = new JCheckBox("Unexpected Occurrence", true);
     private JButton selectAllMergeTypes = new JButton("Select All");
     private JButton unselectAllMergeTypes = new JButton("Unselect All");
 
@@ -203,6 +204,7 @@ public class MNProjectFilterFrame extends JDialog {
             notConflictedMergeOfUnrelatedHistories.setSelected(true);
             octopusMergeOfUnrelatedHistories.setSelected(true);
             outOfMemory.setSelected(true);
+            unexpectedOccurrence.setSelected(true);
         });
         unselectAllMergeTypes.addActionListener((ActionEvent evt) -> {
             conflictedMerge.setSelected(false);
@@ -212,6 +214,7 @@ public class MNProjectFilterFrame extends JDialog {
             notConflictedMergeOfUnrelatedHistories.setSelected(false);
             octopusMergeOfUnrelatedHistories.setSelected(false);
             outOfMemory.setSelected(false);
+            unexpectedOccurrence.setSelected(false);
         });
         selectAllConflicts.addActionListener((ActionEvent evt) -> {
             content.setSelected(true);
@@ -315,6 +318,8 @@ public class MNProjectFilterFrame extends JDialog {
         gbc.gridy++;
         mergeTypePanel.add(outOfMemory, gbc);
         gbc.gridy++;
+        mergeTypePanel.add(unexpectedOccurrence, gbc);
+        gbc.gridy++;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LAST_LINE_START;
         mergeTypePanel.add(selectAllMergeTypes, gbc);
@@ -338,16 +343,16 @@ public class MNProjectFilterFrame extends JDialog {
         conflictTypePanel.add(renameDelete, gbc);
         gbc.gridy++;
         conflictTypePanel.add(p1RenamedP2Add, gbc);
+        gbc.gridy++;
+        conflictTypePanel.add(p2RenamedP1Add, gbc);
         gbc.gridy = 0;
         gbc.gridx = 1;
-        conflictTypePanel.add(p2RenamedP1Add, gbc);
-        gbc.gridy++;
         conflictTypePanel.add(fileLocation, gbc);
         gbc.gridy++;
         conflictTypePanel.add(submodule, gbc);
         gbc.gridy++;
         conflictTypePanel.add(contentWithUnilateralRenaming, gbc);
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
@@ -372,14 +377,14 @@ public class MNProjectFilterFrame extends JDialog {
         developerDecisionPanel.add(none, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(imprecise, gbc);
+        gbc.gridy++;
+        developerDecisionPanel.add(fileDeleted, gbc);
         gbc.gridy = 0;
         gbc.gridx = 1;
-        developerDecisionPanel.add(fileDeleted, gbc);
-        gbc.gridy++;
         developerDecisionPanel.add(postponed, gbc);
         gbc.gridy++;
         developerDecisionPanel.add(diffProblem, gbc);
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
@@ -478,6 +483,9 @@ public class MNProjectFilterFrame extends JDialog {
         }
         if (outOfMemory.isSelected()) {
             mergeTypeList.add(MergeType.OUT_OF_MEMORY);
+        }
+        if (unexpectedOccurrence.isSelected()) {
+            mergeTypeList.add(MergeType.UNEXPECTED_OCCURRENCE);
         }
 
         for (Merge merge : list) {

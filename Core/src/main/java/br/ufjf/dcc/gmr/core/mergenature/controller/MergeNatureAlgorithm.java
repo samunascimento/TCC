@@ -173,6 +173,11 @@ public class MergeNatureAlgorithm {
                             merge.setConflicts(new ArrayList<>());
                             merge.setMergeType(MergeType.OUT_OF_MEMORY);
                             break;
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            merge.setConflicts(new ArrayList<>());
+                            merge.setMergeType(MergeType.UNEXPECTED_OCCURRENCE);
+                            break;
                         }
                     }
                 }

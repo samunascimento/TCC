@@ -10,7 +10,7 @@ public enum MergeType {
 
     CONFLICTED_MERGE, NOT_CONFLICTED_MERGE, OCTOPUS_MERGE, 
     CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, OCTOPUS_MERGE_OF_UNRELATED_HISTORIES,
-    OUT_OF_MEMORY;
+    OUT_OF_MEMORY, UNEXPECTED_OCCURRENCE;
     
     public static int getIntFromEnum(MergeType mergeType){
         switch(mergeType){
@@ -34,6 +34,9 @@ public enum MergeType {
             }
             case OUT_OF_MEMORY:{
                 return 7;
+            }
+            case UNEXPECTED_OCCURRENCE:{
+                return 8;
             }
             default:{
                 return -1;
@@ -65,6 +68,9 @@ public enum MergeType {
             case 7: {
                 return MergeType.OUT_OF_MEMORY;
             }
+            case 8: {
+                return MergeType.UNEXPECTED_OCCURRENCE;
+            }
             default: {
                 return null;
             }
@@ -93,6 +99,9 @@ public enum MergeType {
             }
             case "OUT_OF_MEMORY": {
                 return MergeType.OUT_OF_MEMORY;
+            }
+            case "UNEXPECTED_OCCURRENCE": {
+                return MergeType.UNEXPECTED_OCCURRENCE;
             }
             default: {
                 return null;
