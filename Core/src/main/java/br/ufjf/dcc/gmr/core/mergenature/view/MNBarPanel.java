@@ -1,11 +1,13 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.exception.GitException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
@@ -16,7 +18,7 @@ import javax.swing.JProgressBar;
  * @since 05-01-2021
  */
 public class MNBarPanel extends JPanel implements Runnable {
-    
+
     private JProgressBar progressBar;
     private final String repositoryLocation;
     private final int contextLines;

@@ -5,22 +5,8 @@
  */
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.exception.GitException;
 import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
-import br.ufjf.dcc.gmr.core.exception.CheckoutError;
-import br.ufjf.dcc.gmr.core.exception.DoubleSave;
-import br.ufjf.dcc.gmr.core.exception.GUICaller;
-import br.ufjf.dcc.gmr.core.exception.ImpossibleLineNumber;
-import br.ufjf.dcc.gmr.core.exception.ImpossibleToCreateFile;
-import br.ufjf.dcc.gmr.core.exception.InvalidDocument;
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.NoPath;
-import br.ufjf.dcc.gmr.core.exception.Notsaving;
-import br.ufjf.dcc.gmr.core.exception.OptionNotExist;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
@@ -31,8 +17,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -62,7 +46,7 @@ public class Cli {
     public static final String GUI = "gui";
     public static final String GUI_SHORT = "g";
 
-    public static void main(String[] args) throws IsOutsideRepository, LocalRepositoryNotAGitRepository, RepositoryNotFound, java.text.ParseException, CheckoutError, InvalidDocument, OptionNotExist, NullPointerException, RefusingToClean, IOException, UnknownSwitch, RepositoryAlreadyExist, ImpossibleLineNumber, Notsaving, DoubleSave, NoPath {
+    public static void main(String[] args) throws java.text.ParseException, NullPointerException, IOException, GitException {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -91,22 +75,22 @@ public class Cli {
             
             if(cmd.hasOption("gui") || cmd.hasOption("g")){
                 
-                throw new GUICaller();
+                throw new IOException();
             }
             
             if(!cmd.hasOption("r")){
-                throw new NoPath();
+                throw new IOException();
             }
             
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
 
                 if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
                     System.out.println("Double save is not suported yet");
-                    throw new DoubleSave();
+                    throw new IOException();
 
                 } else {
                     System.out.println("The analysis is not being saved");
-                    throw new Notsaving();
+                    throw new IOException();
                 }
 
             }
@@ -156,7 +140,7 @@ public class Cli {
                         fileContent = MergeNatureTools.getFileContentInString(CONNECTION_FILEPATH);
                     } else {
                         System.out.println("The archieve us not being created, please contact the developers");
-                        throw new ImpossibleToCreateFile();
+                        throw new IOException();
                     }
 
                 }
@@ -180,14 +164,14 @@ public class Cli {
                     System.out.println("SQL ERROR!");
                 }
             }
-        } catch (ParseException | NumberFormatException | Notsaving | DoubleSave | ImpossibleToCreateFile |NoPath e) {
+        } catch (ParseException | NumberFormatException e) {
 
             if (e instanceof NumberFormatException) {
                 System.out.println("Context line number must be a number");
             }
 
             formatter.printHelp("help", options);
-        } catch (GUICaller ex) {
+        } catch (IOException ex) {
             callGui();
         }
 

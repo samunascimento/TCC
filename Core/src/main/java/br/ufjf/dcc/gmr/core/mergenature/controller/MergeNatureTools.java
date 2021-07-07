@@ -1,8 +1,5 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
-import br.ufjf.dcc.gmr.core.exception.IsOutsideRepository;
-import br.ufjf.dcc.gmr.core.exception.RefusingToClean;
-import br.ufjf.dcc.gmr.core.exception.UnknownSwitch;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.BufferedReader;
 import java.io.File;
@@ -102,14 +99,11 @@ public class MergeNatureTools {
     public static void prepareAnalysis(String repositoryPath) {
         try {
             Git.reset(repositoryPath, true, false, false, null);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
         }
         try {
             Git.clean(repositoryPath, true, 0);
-        } catch (IOException ex) {
-        } catch (UnknownSwitch ex) {
-        } catch (RefusingToClean ex) {
-        } catch (IsOutsideRepository ex) {
+        } catch (Exception ex) {
         }
 
     }

@@ -90,6 +90,17 @@ public class CLIExecution {
         return sb.toString();
     }
     
+    public String getErrorString() {
+        
+        List<String> error = this.getError();
+
+        StringBuilder sb = new StringBuilder();
+        for (String line : error) {
+            sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
+    
     
     
     

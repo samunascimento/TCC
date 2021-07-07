@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 
-import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
+import br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException;
+import br.ufjf.dcc.gmr.core.exception.ShowException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
@@ -33,14 +34,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ANTLR4Tools {
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".java")) {
             String fileContent;
-            try {
-                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            } catch (FileNotExistInCommitException ex) {
-                throw new IOException(ex);
-            }
+            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             Java9Lexer lexer = new Java9Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -88,17 +85,13 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
-                    || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
-                    || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
-                    || filePathProjectAsRoot.endsWith(".hpp")) {
+                || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
+                || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
+                || filePathProjectAsRoot.endsWith(".hpp")) {
             String fileContent;
-            try {
-                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            } catch (FileNotExistInCommitException ex) {
-                throw new IOException(ex);
-            }
+            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -125,9 +118,9 @@ public class ANTLR4Tools {
 
     public static ANTLR4Results analyzeCPPSyntaxTree(String filePath) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
-                    || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
-                    || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
-                    || filePath.endsWith(".hpp")) {
+                || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
+                || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
+                || filePath.endsWith(".hpp")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
@@ -149,14 +142,10 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent;
-            try {
-                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            } catch (FileNotExistInCommitException ex) {
-                throw new IOException(ex);
-            }
+            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -204,14 +193,10 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException {
+    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".cs")) {
             String fileContent;
-            try {
-                fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            } catch (FileNotExistInCommitException ex) {
-                throw new IOException(ex);
-            }
+            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
             CSharpLexer lexer = new CSharpLexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -266,7 +251,7 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError {
+    public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         try {
             ANTLR4Results results;
             if (filePathProjectAsRoot.endsWith(".java")) {

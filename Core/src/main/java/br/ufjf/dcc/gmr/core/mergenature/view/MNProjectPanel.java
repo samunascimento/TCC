@@ -1,9 +1,10 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.exception.FileNotExistInCommitException;
-import br.ufjf.dcc.gmr.core.exception.InvalidCommitHash;
-import br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository;
-import br.ufjf.dcc.gmr.core.exception.RepositoryNotFound;
+import br.ufjf.dcc.gmr.core.exception.CheckoutException;
+import br.ufjf.dcc.gmr.core.exception.DiffException;
+import br.ufjf.dcc.gmr.core.exception.LogException;
+import br.ufjf.dcc.gmr.core.exception.MergeException;
+import br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
@@ -128,7 +129,7 @@ public class MNProjectPanel extends JPanel {
         }
     }
 
-    public void showFileAlterations(Conflict conflict, String repositoryPath) {
+    public void showFileAlterations(Conflict conflict, String repositoryPath){
         try {
             if (Git.getAllMerges(repositoryPath).size() < conflict.getMerge().getProject().getMerges().size()) {
                 JOptionPane.showMessageDialog(null, repositoryPath + " is a oldest version of this project!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -141,12 +142,12 @@ public class MNProjectPanel extends JPanel {
                     allLines = Git.diff(repositoryPath,
                             conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
                             conflict.getParent1FilePath(), true, 0).get(0).getLines();
-                } catch (FileNotExistInCommitException ex) {
+                } catch (DiffException ex) {
                     try {
                         allLines = Git.diff(repositoryPath,
                                 conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
                                 conflict.getParent1FilePath(), true, 0).get(0).getLines();
-                    } catch (FileNotExistInCommitException ex1) {
+                    } catch (DiffException ex1) {
                         JOptionPane.showMessageDialog(null, "The solution file was renamed or deleted, impossible to get altered the lines", "Solution file not found", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -155,11 +156,11 @@ public class MNProjectPanel extends JPanel {
                     MergeNatureTools.prepareAnalysis(repositoryPath);
                 }
             }
-        } catch (IOException | LocalRepositoryNotAGitRepository ex) {
+        } catch (NotGitRepositoryException | LogException ex) {
             JOptionPane.showMessageDialog(null, repositoryPath + " isn't a git repository!", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (RepositoryNotFound ex) {
+        } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, repositoryPath + " don't exist in the system!", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (InvalidCommitHash ex) {
+        } catch (CheckoutException | MergeException ex) {
             JOptionPane.showMessageDialog(null, repositoryPath + " isn't the same project of the persistence!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 

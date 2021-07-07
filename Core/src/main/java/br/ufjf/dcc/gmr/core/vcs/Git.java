@@ -1,1087 +1,274 @@
 package br.ufjf.dcc.gmr.core.vcs;
 
-import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
-import br.ufjf.dcc.gmr.core.exception.NoRemoteForTheCurrentBranch;
-import br.ufjf.dcc.gmr.core.cli.CLIExecute;
-import br.ufjf.dcc.gmr.core.cli.CLIExecution;
-import br.ufjf.dcc.gmr.core.vcs.types.Formats;
+import br.ufjf.dcc.gmr.core.cli.*;
 import br.ufjf.dcc.gmr.core.exception.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
-import br.ufjf.dcc.gmr.core.vcs.types.*;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
+import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
+import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class created to implement Git commands
  *
  * @author gleiph
+ * @since Ever
  */
 public class Git {
 
     /**
-     * @param repositoryString
-     * @param hashCommit
-     * @return
-     */
-    public static List<String> show(String repositoryString, String hashCommit) throws IOException, LocalRepositoryNotAGitRepository {
-        CLIExecution execution = null;
-        String command = "git show" + " " + hashCommit + " --pretty=oneline";
-        List<String> list = new ArrayList<>();
-        execution = CLIExecute.execute(command, repositoryString);
-        for (String line : execution.getError()) {
-            if (line.contains("not a git repository")) {
-                throw new LocalRepositoryNotAGitRepository();
-            }
-        }
-        for (String line : execution.getOutput()) {
-            list.add(line);
-        }
-
-        return list;
-    }
-
-    /**
+     * Check if a path in the system if a git repository.
      *
-     * @param repositoryString
-     * @param hashCommit
-     * @return return command git show from hashCommit
-     * @throws IOException
+     * @param repositoryPath The path of the git repository.
+     * @return true if repositoryPath is git repository, false if not.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
      */
-    public static List<String> showCommiterName(String repositoryString, String hashCommit) throws IOException {
-        CLIExecution execution = null;
-        List<String> list = new ArrayList<>();
-        String command = "git show" + " " + hashCommit + " --pretty=oneline";
-        execution = CLIExecute.execute(command, repositoryString);
-        for (String line : execution.getOutput()) {
-            list.add(line);
-        }
-        return list;
+    public static boolean isGitRepository(String repositoryPath) throws IOException {
+        return CLIExecute.execute("git rev-parse --is-inside-work-tree", repositoryPath).getError().isEmpty();
     }
 
     /**
-     * @author antonio
-     * @param repositoryPath
-     * @param merge
-     * @return list of Formats
-     * @throws IOException
-     */
-    private static List<Formats> log(String repositoryPath, boolean merge, boolean all) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
-        CLIExecution execution = null;
-        String command = "git log ";
-        if (merge) {
-            command = command.concat(" --merges ");
-        }
-
-        if (all) {
-            command = command.concat(" --all ");
-        }
-
-        //log method formatting
-        command = command.concat("--pretty=format:%H,%ai,%an");
-        List<Formats> list = new ArrayList<>();
-        Formats model = null;
-
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                }
-            }
-        }
-
-        int i = 0;
-        for (String line : execution.getOutput()) {
-
-            String[] split = line.split(",", 3);
-            String commitHash = split[0];
-            String authorDate = split[1];
-            String authorName = split[2];
-            String commitDescription = getCommitInfo(commitHash, repositoryPath, "%s");
-            //Split Date
-            //System.out.println("autorDate: " + authorDate);
-            String array[];
-            array = authorDate.split(" ", 3);
-            String dateForm = array[0];
-            String time = array[1];
-            String timeZone = array[2];
-            String text = dateForm + " " + time + " " + timeZone;
-            String localization = array[2];
-            String formato = "yyyy-MM-dd HH:mm:ss Z";
-            Date dateFormat = new SimpleDateFormat(formato).parse(text);
-            //end
-
-            model = new Formats(authorName, commitHash, dateFormat, commitDescription);
-            list.add(model);
-            i++;
-        }
-
-        return list;
-    }
-
-    private static List<Version> logVersion(String repositoryPath, boolean merge, boolean all) throws IOException, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist, RepositoryNotFound {
-        CLIExecution execution = null;
-        String command = "git log ";
-        if (merge) {
-            command = command.concat(" --merges ");
-        }
-
-        if (all) {
-            command = command.concat(" --all ");
-        }
-
-        //log method formatting
-        command = command.concat("--pretty=format:\"%an,%H,%ai,%s\"");
-        List<Version> list = new ArrayList<>();
-        Version model = new Version();
-
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                }
-            }
-        }
-        //size: Number of Parameters
-        String array[];
-        int i = 0;
-        for (String line : execution.getOutput()) {
-            array = line.split(",", 4);
-            String authorName = array[0];
-            String commitHash = array[1];
-            String authorDate = array[2];
-            String commitDescription = array[3];
-            List<String> parent = Git.parent(repositoryPath, commitHash);
-            List<MyFile> file = new ArrayList<>();
-            boolean versionIsMerge = false;
-            if (parent.size() == 2) {
-                versionIsMerge = true;
-            }
-            //Split Date
-            //System.out.println("autorDate: " + authorDate);
-            array = array[2].split(" ", 3);
-            String dateForm = array[0];
-            String time = array[1];
-            String text = dateForm + " " + time;
-            String localization = array[2];
-            String formato = "yyyy-MM-dd HH:mm:ss";
-            Date dateFormat = new SimpleDateFormat(formato).parse(text);
-            //end
-
-            model = new Version(commitHash, authorName, dateFormat, versionIsMerge, parent, commitDescription, MergeStatus.NON_CONFLICT);
-            model.setFile(file);
-            list.add(model);
-            i++;
-        }
-
-        return list;
-    }
-
-    /**
-     * @param repositoryPath
-     * @return list of Formats
-     * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     */
-    public static List<Formats> log(String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, false, false);
-    }
-
-    /**
-     * @param repositoryPath
-     * @return
-     * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     */
-    public static List<Formats> logMerge(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, true, false);
-    }
-
-    /**
-     * @param repositoryPath
-     * @return
-     * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     */
-    public static List<Formats> logAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, false, true);
-    }
-
-    public static List<Version> logAllVersion(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException, OptionNotExist {
-        return Git.logVersion(repositoryPath, false, true);
-    }
-
-    /**
-     * @param repositoryPath
-     * @return
-     * @throws IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     */
-    public static List<Formats> logMergeAll(String repositoryPath) throws IOException, RepositoryNotFound, LocalRepositoryNotAGitRepository, ParseException {
-        return Git.log(repositoryPath, true, true);
-    }
-
-    /**
-     * @param repositoryPath
-     * @return
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
-     * @throws java.io.IOException
-     * @TODO:What is the meaning when this method returns true or false? Would
-     * you improve the output?
-     */
-    public static List<FileStatus> status(String repositoryPath) throws RepositoryNotFound, IOException {
-
-        List<FileStatus> result = new ArrayList<>();
-        String command = "git status --short";
-        CLIExecution execute;
-        Status type = null;
-        FileStatus status = null;
-
-        if (repositoryPath == null || repositoryPath.isEmpty()) {
-            throw new RepositoryNotFound();
-        }
-
-        execute = CLIExecute.execute(command, repositoryPath);
-
-        for (String line : execute.getOutput()) {
-            String[] array;
-            if (line.startsWith("M")) {
-                array = line.split("M");
-                status = new FileStatus();
-                status.setType(type.MODIFIED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.startsWith("A")) {
-                array = line.split("A");
-                status = new FileStatus();
-                status.setType(type.ADDED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.startsWith("D")) {
-                array = line.split("D");
-                status = new FileStatus();
-
-                status.setType(type.DELETED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.contains("?")) {
-                array = line.split(" ");
-                status = new FileStatus();
-                status.setType(type.UNTRACKED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.startsWith("R")) {
-                array = line.split("R");
-                status = new FileStatus();
-                status.setType(type.RENAMED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.startsWith("C")) {
-                array = line.split("C");
-                status = new FileStatus(type.COPIED, array[1]);
-                result.add(status);
-            }
-            if (line.startsWith("UU")) {
-                array = line.split("UU");
-                status = new FileStatus();
-                status.setType(type.UNMERGED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-            if (line.contains("!")) {
-                array = line.split(" ");
-                status = new FileStatus();
-
-                status.setType(type.IGNORED);
-                status.setPath(array[1]);
-                result.add(status);
-            }
-        }
-        return result;
-    }
-
-    public static List<MyFile> statusUnmerged(String repositoryPath) throws RepositoryNotFound, IOException {
-
-        List<FileStatus> status = status(repositoryPath);
-
-        List<MyFile> result = new ArrayList<>();
-
-        for (FileStatus file : status) {
-            if (file.getType() == Status.UNMERGED) {
-                MyFile aux = new MyFile();
-                aux.setPath(file.getPath());
-                aux.setStatus(Status.UNMERGED);
-                result.add(aux);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * description
+     * Execute "git clean" in a path in the system.
      *
-     * @param sourcePath
-     * @param sandboxPath 
-     * @param name
-     * @return
-     * @throws RepositoryNotFound
-     * @throws br.ufjf.dcc.gmr.core.exception.UrlNotFound
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
-     */
-    public static boolean localClone(String sourcePath, String sandboxPath, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
-
-        String command = "git clone " + sourcePath;
-        if (name != null) {
-            command = command.concat(" ").concat(name);
-        }
-        
-        if (sourcePath == null || sourcePath.isEmpty()) {
-            throw new UrlNotFound();
-        }
-        try {
-
-            CLIExecution execution = CLIExecute.execute(command, sandboxPath);
-
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("does not exist")) {
-                        throw new RepositoryNotFound();
-                    } else if (line.contains("already exists and is not an empty directory")) {
-                        throw new RepositoryAlreadyExist();
-                    }
-                }
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return true;
-    }
-    
-    /**
-     * description
-     *
-     * @param url
-     * @param directory
-     * @param name
-     * @return
-     * @throws RepositoryNotFound
-     * @throws br.ufjf.dcc.gmr.core.exception.UrlNotFound
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryAlreadyExist
-     */
-    public static boolean clone(String url, String directory, String name) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
-
-        String command = "git clone " + url;
-        if (name != null) {
-            command = command.concat(" ").concat(name);
-        }
-        if (url == null || url.isEmpty()) {
-            throw new UrlNotFound();
-        }
-        try {
-
-            CLIExecution execution = CLIExecute.execute(command, directory);
-
-            if (!execution.getError().isEmpty()) {
-                for (String line : execution.getError()) {
-                    if (line.contains("does not exist")) {
-                        throw new RepositoryNotFound();
-                    } else if (line.contains("already exists and is not an empty directory")) {
-                        throw new RepositoryAlreadyExist();
-                    }
-                }
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(Git.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return true;
-    }
-
-    public static boolean clone(String url, String directory, String name, String username, String password) throws RepositoryNotFound, UrlNotFound, RepositoryAlreadyExist {
-        String[] split = url.split("//");
-
-        String command = split[0].concat("//").concat(username).concat(":").concat(password).concat("@").concat(split[1]);
-
-        return clone(command, directory, name);
-    }
-
-    /**
-     * Description TODO: Test implementation
-     *
-     * @author felip
-     * @param repositoryPath: git repository path in your pc.
-     * @param remoteBranch: remote branch name's, like "origin master".
-     * @param quiet: defines whether the command will be used or not.
-     * @return true
-     * @throws RemoteRefBranchNotFound
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws OptionNotExist
-     * @throws IOException
-     */
-    public static boolean pull(String repositoryPath, String remoteBranch, Boolean quiet) throws RemoteRefBranchNotFound, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
-
-        CLIExecution execution = null;
-        String command = "git pull ";
-
-        if (remoteBranch != null) {
-            command = command.concat(" " + remoteBranch);
-        }
-
-        if (quiet) {
-            command = command.concat(" --quiet ");
-        }
-
-        execution = CLIExecute.execute(command, repositoryPath);
-
-        execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("Couldn't find remote ref branch")) {
-                    throw new RemoteRefBranchNotFound();
-                } else if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains(" is not a git command")) {
-                    throw new OptionNotExist();
-                }
-            }
-
-        }
-        return true;
-    }
-
-    /**
-     * @author felip
-     * @param repositoryPath: git repository path in your pc.
-     * @param remoteBranch: remote branch name's, like "origin master".
-     * @param setUpstream: boolean param to set up stream your branch.
-     * @param pushTags boolean param to push all tags.
-     * @return true
-     * @throws HasNoUpstreamBranch
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws OptionNotExist
-     * @throws IOException
-     *
-     */
-    public static boolean push(String repositoryPath, String remoteBranch, Boolean setUpstream, Boolean pushTags) throws HasNoUpstreamBranch, LocalRepositoryNotAGitRepository, OptionNotExist, IOException {
-
-        CLIExecution execution = null;
-        String command = "git push ";
-
-        if (setUpstream && remoteBranch != null && !pushTags) {
-            command = command.concat(" --set-upstream " + remoteBranch);
-        }
-        if (remoteBranch != null && !setUpstream && !pushTags) {
-            command = command.concat(" " + remoteBranch);
-        }
-        if (pushTags && !setUpstream) {
-            command = command.concat(" origin --tags");
-        }
-
-        execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains(" has no upstream branch.")) {
-                    throw new HasNoUpstreamBranch();
-                } else if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains(" is not a git command")) {
-                    throw new OptionNotExist();
-                }
-
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     *
-     * @param repositoryPath repository
-     * @return return a String List with tags
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws java.io.IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
-     */
-    public static List<String> listTag(String repositoryPath) throws LocalRepositoryNotAGitRepository, IOException, RepositoryNotFound {
-        String command = "git tag";
-        CLIExecution execution = null;
-        List<String> lista = new ArrayList<>();
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("Repository not found")) {
-                    throw new RepositoryNotFound();
-                }
-            }
-        }
-        lista = execution.getOutput();
-        return lista;
-    }
-
-    /**
-     * @param repositoryPath
-     * @param tag tag name to create
-     * @param message tag message
-     * @param commit version hash
-     * @return return true if execution was successful and false if unsuccessful
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws java.io.IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.OptionNotExist
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
-     */
-    public static boolean createTag(String repositoryPath, String tag, String message, String commit) throws LocalRepositoryNotAGitRepository, IOException, OptionNotExist, RepositoryNotFound {
-        String command = "git tag";
-        CLIExecution execution = null;
-        if (message == null && commit == null) {
-            command = command + " " + tag;
-        } else if (message == null && commit != null) {
-            command = command + " " + tag + " " + commit;
-        } else if (message != null && commit == null) {
-            command = command + " -a " + tag + " -m " + message;
-        } else {
-            command = command + " " + tag + " " + commit + " -m " + message;
-        }
-        boolean success = false;
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("Repository not found")) {
-                    throw new RepositoryNotFound();
-                }
-            }
-        } else {
-            success = true;
-        }
-        return success;
-    }
-
-    /**
-     * @param repositoryPath
-     * @param tag tag name to remove
-     * @return return true if execution was successful and false if unsuccessful
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws java.io.IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
-     */
-    public static boolean removeTag(String repositoryPath, String tag) throws IOException, LocalRepositoryNotAGitRepository, RepositoryNotFound {
-        String command = "git tag --delete ";
-        CLIExecution execution = null;
-        command = command + tag;
-        boolean sucess = false;
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("Repository not found")) {
-                    throw new RepositoryNotFound();
-                }
-            }
-        } else {
-            sucess = true;
-        }
-        return sucess;
-    }
-
-    /**
-     *
-     * @param repositoryPath repository
-     * @param commit version hash
-     * @return return a String List with parents
-     * @throws LocalRepositoryNotAGitRepository
-     * @throws OptionNotExist
-     * @throws java.io.IOException
-     * @throws br.ufjf.dcc.gmr.core.exception.RepositoryNotFound
-     */
-    public static List<String> parent(String repositoryPath, String commit) throws LocalRepositoryNotAGitRepository, OptionNotExist, IOException, RepositoryNotFound {
-        String command = "git log --pretty=%P -n 1 ";
-        CLIExecution execution;
-        execution = null;
-        List<String> lista = new ArrayList<>();
-        command = command + commit;
-        execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("fatal: ambiguous argument")) {
-                    throw new OptionNotExist();
-                } else if (line.contains("Repository not found")) {
-                    throw new RepositoryNotFound();
-                }
-            }
-        }
-
-        String[] split = execution.getOutput().get(0).split(" ");
-
-        for (String parent : split) {
-            lista.add(parent);
-        }
-
-        return lista;
-    }
-
-    /**
-     * @param repositoryPath - String used to recive the repository path.
-     * @param force - If the Git configuration variable clean.requireForce is
-     * not set to false, Git will refuse to delete directories with .git sub
+     * @param repositoryPath The path of the git repository.
+     * @param force If the Git configuration variable clean.requireForce is not
+     * set to false, Git will refuse to delete directories with .git sub
      * directory or file unless a second -f is given.
-     * @param ignoredFiles - if == 0 allows removing all untracked files,
+     * @param ignoredFiles If == 0 allows removing all untracked files,
      * including build products. if == 1 Remove only files ignored by Git. if
-     * you don`t wanna use it, just let it blanck.
-     * @return boolean - True if no exception is thrown, else false.
-     * @exception UnknownSwitch
-     * @exception RefusingToClean
-     * @exception IsOutsideRepository
-     * @throws java.io.IOException
+     * you don`t wanna use it, just let it blank.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.CleanException if occur any error
+     * in scope of git clean command.
      */
-    public static boolean clean(String repositoryPath, boolean force, int ignoredFiles) throws IOException, UnknownSwitch, RefusingToClean, IsOutsideRepository {
-        String command = "git clean ";
-
-        if (force) {
-            command = command.concat(" -f");
-        }
-
-        if (ignoredFiles == 0) {
-            command = command.concat(" -x");
-        } else if (ignoredFiles == 1) {
-            command = command.concat(" -X");
-        }
-
-        CLIExecution execution = null;
-
-        execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("unknown switch")) {
-                    throw new UnknownSwitch(line);
-                } else if (line.contains("refusing to clean")) {
-                    throw new RefusingToClean(line);
-                } else if (line.contains("is outside repository")) {
-                    throw new IsOutsideRepository(line);
-                }
+    public static void clean(String repositoryPath, boolean force, int ignoredFiles) throws IOException, NotGitRepositoryException, CleanException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git clean" + (force ? " -f" : "") + (ignoredFiles == 0 ? " -x" : ignoredFiles == 1 ? " -X" : "");
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
+                throw new CleanException(ListUtils.getTextListStringToString(execution.getError()));
             }
-            return false;
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
         }
-
-        return true;
     }
 
     /**
-     * Private method used by the other merge methods to execute a merge.
+     * Execute "git merge" in a path in the system.
      *
-     * @return boolean - True if no exception is thrown, else false.
-     * @param repositoryPath - String used to recive the repository path.
-     * @param version - String used to recive all the commands generated by the
-     * other merge methods.
-     * @exception CanNotMerge
-     * @exception NoRemoteForTheCurrentBranch
-     * @exception ThereIsNoMergeInProgress
-     * @exception ThereIsNoMergeToAbort
-     * @exception AlreadyUpToDate
-     * @exception NotSomethingWeCanMerge
+     * @param otherCommit For the hash to merge
+     * @param repositoryPath The path of the git repository.
+     * @return the message of the command.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.MergeException if occur any error
+     * in scope of git merge command.
      */
-    private static boolean mergeBase(String repositoryPath, String version) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
-        String command = "git merge " + version;
-        CLIExecution execution = null;
-
-        execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("No remote for the current branch.")) {
-                    throw new NoRemoteForTheCurrentBranch(line);
-                } else if (line.contains("There is no merge in progress")) {
-                    throw new ThereIsNoMergeInProgress(line);
-                } else if (line.contains("There is no merge to abort")) {
-                    throw new ThereIsNoMergeToAbort(line);
-                } else if (line.contains("Already up to date")) {
-                    throw new AlreadyUpToDate(line);
-                } else if (line.contains("not something we can merge")) {
-                    throw new NotSomethingWeCanMerge(line);
-                }
+    public static List<String> merge(String otherCommit, String repositoryPath) throws IOException, NotGitRepositoryException, MergeException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git merge --allow-unrelated-histories --no-edit " + otherCommit;
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
+                throw new MergeException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                return execution.getOutput();
             }
-            return false;
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
         }
-        return true;
     }
 
     /**
-     * This method merge changes from one branch into the current branch.
+     * Execute "git checkout" in a path in the system.
      *
-     * @param branch1 - String used to recive the name of the branch 1.
-     * @param commitMessage - String used to recive the commit message.
-     * @return boolean - True if no exception is thrown else false.
-     * @param repositoryPath - String used to recive the repository path.
-     * @exception NoRemoteForTheCurrentBranch
-     * @exception ThereIsNoMergeInProgress
-     * @exception ThereIsNoMergeToAbort
-     * @exception AlreadyUpToDate
-     * @exception NotSomethingWeCanMerge
-     * @throws java.io.IOException
+     * @param entity Represents anything that can be checkouted like branches.
+     * and commits
+     * @param repositoryPath The path of the git repository.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.CheckoutException if occur any
+     * error in scope of git checkout command.
      */
-    public static boolean mergeBranch(String repositoryPath, String branch1, String commitMessage) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
-        String command = branch1.concat(" ").concat(" -m \"").concat(commitMessage).concat("\"");
-        return mergeBase(repositoryPath, command);
-    }
-
-    public static List<String> merge(String repositoryPath, String revision, boolean commit, boolean fastForward) throws IOException, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-
-        String command = "git merge ";
-
-        if (!commit) {
-            command = command + " --no-commit ";
-        }
-
-        if (!fastForward) {
-            command = command + "--no-ff ";
-        }
-
-        command = command + revision;
-
-        CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("No remote for the current branch.")) {
-                    throw new NoRemoteForTheCurrentBranch(line);
-                } else if (line.contains("There is no merge in progress")) {
-                    throw new ThereIsNoMergeInProgress(line);
-                } else if (line.contains("There is no merge to abort")) {
-                    throw new ThereIsNoMergeToAbort(line);
-                } else if (line.contains("Already up to date")) {
-                    throw new AlreadyUpToDate(line);
-                } else if (line.contains("not something we can merge")) {
-                    throw new NotSomethingWeCanMerge(line);
-                } else if (line.contains("Automatic merge went well; stopped before committing as requested")) {
-                    return execution.getOutput();
-                }
-            }
-            return null;
-        }
-        return execution.getOutput();
-
-    }
-
-    public static List<String> merge(String otherCommit, String repositoryPath) throws IOException {
-        String command = "git merge --allow-unrelated-histories " + otherCommit;
-        CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("No remote for the current branch.")) {
-                    throw new IOException(line);
-                } else if (line.contains("There is no merge in progress")) {
-                    throw new IOException(line);
-                } else if (line.contains("There is no merge to abort")) {
-                    throw new IOException(line);
-                } else if (line.contains("Already up to date")) {
-                    throw new IOException(line);
-                } else if (line.contains("not something we can merge")) {
-                    throw new IOException(line);
-                } else if (line.contains("Automatic merge went well; stopped before committing as requested")) {
-                    throw new IOException(line);
-                }
-            }
-            return null;
-        }
-        return execution.getOutput();
-    }
-
-    public static boolean isFailedMerge(String projectPath, String SHALeft, String SHARight) throws IOException, LocalRepositoryNotAGitRepository, InvalidDocument, UnknownSwitch, RefusingToClean, IsOutsideRepository, CheckoutError, NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, AlreadyUpToDate, NotSomethingWeCanMerge {
-        Git.reset(projectPath, true, false, false, null);
-        Git.clean(projectPath, true, 0);
-        Git.checkout(SHALeft, projectPath);
-        List<String> merge = Git.merge(projectPath, SHARight, false, false);
-
-        return isConflict(merge);
-    }
-
-    public static boolean isConflict(List<String> mergeMessage) {
-        String MERGE_FAIL_MESSAGE = "Automatic merge failed";
-        if (mergeMessage == null) {
-            return false;
-        }
-
-        for (String line : mergeMessage) {
-            if (line.contains(MERGE_FAIL_MESSAGE)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * This method merge changes from one branch into another.
-     *
-     * @param branch1 - String used to recive the name of the branch 1.
-     * @param branch2 - String used to recive the name of the branch 2.
-     * @param commitMessage - String used to recive the commit message.
-     * @return boolean - True if no exception is thrown else false.
-     * @param repositoryPath - String used to recive the repository path.
-     * @exception NoRemoteForTheCurrentBranch
-     * @exception ThereIsNoMergeInProgress
-     * @exception ThereIsNoMergeToAbort
-     * @exception AlreadyUpToDate
-     * @exception NotSomethingWeCanMerge
-     * @throws java.io.IOException
-     */
-    public static boolean mergeBranch(String repositoryPath, String branch1, String branch2, String commitMessage) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
-        String command = branch1.concat(" ").concat(branch2).concat(" -m \"").concat(commitMessage).concat("\"");
-        return mergeBase(repositoryPath, command);
-    }
-
-    /**
-     * This method abort a merge that resulted in conflicts.
-     *
-     * @return boolean - True if no exception is thrown else false.
-     * @param repositoryPath - String used to recive the repository path.
-     * @exception NoRemoteForTheCurrentBranch
-     * @exception ThereIsNoMergeInProgress
-     * @exception ThereIsNoMergeToAbort
-     * @exception AlreadyUpToDate
-     * @exception NotSomethingWeCanMerge
-     * @throws java.io.IOException
-     */
-    public static boolean mergeAbort(String repositoryPath) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
-        return mergeBase(repositoryPath, "--abort");
-    }
-
-    /**
-     * This method continue a merge that resulted in conflicts.
-     *
-     * @return boolean - True if no exception is thrown else false.
-     * @param repositoryPath - String used to recive the repository path.
-     * @exception NoRemoteForTheCurrentBranch
-     * @exception ThereIsNoMergeInProgress
-     * @exception ThereIsNoMergeToAbort
-     * @exception AlreadyUpToDate
-     * @exception NotSomethingWeCanMerge
-     * @throws java.io.IOException
-     */
-    public static boolean mergeContinue(String repositoryPath) throws NoRemoteForTheCurrentBranch, ThereIsNoMergeInProgress, ThereIsNoMergeToAbort, IOException, AlreadyUpToDate, NotSomethingWeCanMerge {
-        return mergeBase(repositoryPath, "--continue");
-    }
-
-    /**
-     * Create a new branch and switch to it if requested.
-     *
-     * @param branchName This parameter is a String that contains the name of
-     * branch that goes be create
-     * @param switchTo This parameter is a boolean that goes determinate if user
-     * wants to switch to the new branch
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @return Returns a boolean that goes show if command worked or not
-     * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
-     * @throws BranchAlreadyExist if branchName has the same name of other
-     * branch that already exist
-     */
-    public static boolean createBranch(String branchName, boolean switchTo, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository, BranchAlreadyExist {
-        String command = "git branch " + branchName;
-        boolean check = true;
-        CLIExecution cliE = null;
-        cliE = CLIExecute.execute(command, repositoryPath);
-        if (!cliE.getError().isEmpty()) {
-            for (String line : cliE.getError()) {
-                if (line.contains("fatal: not a git repository (or any of the parent directories): .git")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("already exists")) {
-                    throw new BranchAlreadyExist(branchName);
-                } else {
-                    check = false;
+    public static void checkout(String entity, String repositoryPath) throws IOException, NotGitRepositoryException, CheckoutException {
+        if (isGitRepository(repositoryPath)) {
+            CLIExecution execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                String error = ListUtils.getTextListStringToString(execution.getError());
+                if (!error.contains("HEAD is now at ")) {
+                    throw new CheckoutException(error);
                 }
             }
         } else {
-            for (String string : cliE.getOutput()) {
-                System.out.println(string);
-            }
-            if (switchTo) {
-                command = "git checkout " + branchName;
-                cliE = CLIExecute.execute(command, repositoryPath);
-                for (String string : cliE.getOutput()) {
-                    System.out.println(string);
-                }
-            }
+            throw new NotGitRepositoryException(repositoryPath);
         }
-        return check;
-    }
-
-    /**
-     * Delete a branch.
-     *
-     * @param branchName This parameter is a String that contains the name of
-     * branch that goes be create
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @return Returns a boolean that goes show if command worked or not
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
-     * @throws BranchNotFound if branchName is not another branch that already
-     * exist
-     * @throws IOException
-     */
-    public static boolean deleteBranch(String branchName, String repositoryPath) throws LocalRepositoryNotAGitRepository, BranchNotFound, IOException {
-        CLIExecution cliE = null;
-        boolean check = true;
-        cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
-        if (!cliE.getError().isEmpty()) {
-            for (String line : cliE.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("not found")) {
-                    throw new BranchNotFound(branchName);
-                } else if (line.contains("Cannot delete branch")) {
-                    cliE = CLIExecute.execute("git checkout master", repositoryPath);
-                    cliE = CLIExecute.execute("git branch -d " + branchName, repositoryPath);
-                    break;
-                }
-            }
-        }
-        return check;
-    }
-
-    /**
-     * List all branches in repository and return a list of them.
-     *
-     * @param print parameter is a boolean that goes determinate if user wants
-     * to print
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @return Return a List<String> that contain all the branches of repository
-     * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
-     */
-    public static List<String> listBranches(boolean print, String repositoryPath) throws IOException, LocalRepositoryNotAGitRepository {
-        CLIExecution cliE = null;
-        cliE = CLIExecute.execute("git branch --all", repositoryPath);
-        if (!cliE.getError().isEmpty()) {
-            for (String line : cliE.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                }
-            }
-        }
-        if (print) {
-            for (String line : cliE.getOutput()) {
-                System.out.println(line);
-            }
-        }
-        return cliE.getOutput();
-    }
-
-    /**
-     * Switch to another branch, commit or tag. WARNING: if entity is a file
-     * that was added to staging area, checkout will be treated like reset.
-     *
-     * @param entity This parameter is a String that represents anything that
-     * can be checkouted like branches and commits
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @return Returns a boolean that goes show if command worked or not
-     * @throws IOException
-     * @throws LocalRepositoryNotAGitRepository if repositoryPath is not a Git
-     * repository
-     * @throws CheckoutError if entity does not exist in repository
-     */
-    public static boolean checkout(String entity, String repositoryPath) throws IOException {
-        CLIExecution cliE = null;
-        boolean check = true;
-        cliE = CLIExecute.execute("git checkout " + entity, repositoryPath);
-        if (!cliE.getError().isEmpty()) {
-            if (cliE.getError().toString().contains("not a git repository")) {
-                throw new IOException(cliE.getError().toString());
-            } else if (cliE.getError().toString().contains("did not match any file(s) known to git")) {
-                throw new IOException(cliE.getError().toString());
-            }
-        }
-        return check;
     }
 
     /**
      * Give all commits that is merges and their parents in the form:
      * HASH[bar]PARENT1[space]PARENT2
      *
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @return Return a List String that goes contains all commits that is
-     * merges
-     * @throws IOException
+     * @param repositoryPath The path of the git repository.
+     * @return a list of the merges.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.LogException if occur any error in
+     * scope of git log command.
      */
-    public static List<String> getAllMerges(String repositoryPath) throws IOException, RepositoryNotFound {
-        CLIExecution cliE;
-        try {
-            cliE = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h/%p", repositoryPath);
-        } catch (IOException ex) {
-            throw new RepositoryNotFound();
-        }
-        if (!cliE.getError().isEmpty()) {
-            for (String string : cliE.getError()) {
-                if (string.contains("not a git repository")) {
-                    throw new IOException("This path is not a Git repository!");
-                }
-            }
-        }
-        return cliE.getOutput();
-    }
-
-    public static List<String> getFileContentFromCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException, FileNotExistInCommitException {
-        CLIExecution cliE;
-        try {
-            cliE = CLIExecute.execute("git show " + commit + ":" + filePathProjectAsRoot, repositoryPath);
-        } catch (IOException ex) {
-            throw new IOException("The \"repositoryPath\" is not a path in your system!");
-        }
-        if (!cliE.getError().isEmpty()) {
-            for (String string : cliE.getError()) {
-                if (string.contains("fatal: Invalid object name")) {
-                    throw new IOException("Commit do not exist in this repository!");
-                }
-                if (string.contains("fatal: Path")) {
-                    throw new FileNotExistInCommitException(commit, filePathProjectAsRoot, repositoryPath);
-                }
-            }
-            throw new IOException("Unknow error!\n" + ListUtils.getTextListStringToString(cliE.getError()));
-        }
-        return cliE.getOutput();
-    }
-
-    public static boolean fileExistInCommit(String commit, String filePathProjectAsRoot, String repositoryPath) throws IOException {
-        try {
-            if (getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath).isEmpty()) {
-                return false;
+    public static List<String> getAllMerges(String repositoryPath) throws IOException, NotGitRepositoryException, LogException {
+        if (isGitRepository(repositoryPath)) {
+            CLIExecution execution = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h/%p", repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new LogException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
-                return true;
+                return execution.getOutput();
             }
-        } catch (IOException ex) {
-            throw ex;
-        } catch (FileNotExistInCommitException ex) {
-            return false;
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * Get the the content of a file in some commit.
+     *
+     * @param commit The commit where the file is.
+     * @param relativeFilePath The file to get the content.
+     * @param repositoryPath The path of the git repository.
+     * @return a list of the file's lines or null if "relativeFilePath" not
+     * exist in "commit".
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.ShowException if occur any error
+     * in scope of git show command.
+     */
+    public static List<String> getFileContentFromCommit(String commit, String relativeFilePath, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+        if (isGitRepository(repositoryPath)) {
+            CLIExecution execution = CLIExecute.execute("git show " + commit + ":" + relativeFilePath, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                if (execution.getErrorString().contains("exists on disk, but not in")) {
+                    return null;
+                } else {
+                    throw new ShowException(ListUtils.getTextListStringToString(execution.getError()));
+                }
+            }
+            return execution.getOutput();
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * Check if a file exist in a commit.
+     *
+     * @param commit The commit where the file is.
+     * @param relativeFilePath The file to check existence.
+     * @param repositoryPath The path of the git repository.
+     * @return false if "relativeFilePath" not exist in "commit", otherwise
+     * return true.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.ShowException if occur any error
+     * in scope of git show command.
+     */
+    public static boolean fileExistInCommit(String commit, String relativeFilePath, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+        if (isGitRepository(repositoryPath)) {
+            return getFileContentFromCommit(commit, relativeFilePath, repositoryPath) != null;
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * Get the URL where was cloned the project.
+     *
+     * @param repositoryPath The path of the git repository.
+     * @return the URL where was cloned the project, can be "Unknown".
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     */
+    public static String getRemoteURL(String repositoryPath) throws IOException, NotGitRepositoryException {
+        if (isGitRepository(repositoryPath)) {
+            String result = CLIExecute.execute("git config --get remote.origin.url", repositoryPath).getOutputString();
+            if (result.equals("")) {
+                return "Unknown";
+            } else {
+                return result;
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * Return the basic info of the commit
+     *
+     * @param commitHash The commit to get the basic info.
+     * @param repositoryPath The path of the git repository.
+     * @return the basic info. Return form:<pre>
+     * CommitHash
+     * AuthorName
+     * AuthorDate
+     * CommitterName
+     * CommitterDate
+     * Title<pre>
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.ShowException if occur any error
+     * in scope of git show command.
+     */
+    public static List<String> getBasicCommitInfo(String commitHash, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git show " + commitHash + " --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch";
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new ShowException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                return execution.getOutput();
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * Find a common ancestor of the parents
+     *
+     * @param repositoryPath The path of the git repository.
+     * @param parents the hashes of the parents
+     * @return the common ancestor of the parents
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.MergeBaseException if occur any
+     * error in scope of git merge-base command.
+     */
+    public static String mergeBase(String repositoryPath, String[] parents) throws IOException, NotGitRepositoryException, MergeBaseException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git merge-base ";
+            for (String str : parents) {
+                command = command + str + " ";
+            }
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new MergeBaseException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                if (execution.getOutput().isEmpty()) {
+                    return "No ancestor";
+                }
+                return execution.getOutputString();
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
         }
     }
 
@@ -1094,122 +281,9 @@ public class Git {
      * directory where the command will be executed
      * @return Returns a boolean that indicates if the merge is confliting
      */
-    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException, InvalidCommitHash {
-        CLIExecution cliE;
-        cliE = CLIExecute.execute("git checkout " + parent1, repositoryPath);
-        if (!cliE.getError().isEmpty()) {
-            for (String line : cliE.getError()) {
-                if (line.contains("error: pathspec")) {
-                    throw new InvalidCommitHash(repositoryPath, parent1);
-                }
-            }
-        }
-        try {
-            cliE = CLIExecute.execute("git merge --no-edit " + parent2, repositoryPath);
-        } catch (IOException ex) {
-            throw new IOException("The \"repositoryPath\" is not a path in your system!");
-        }
-        boolean check = false;
-        if (!cliE.getError().isEmpty()) {
-            for (String line : cliE.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new IOException("This path is not a Git repository!");
-                }
-            }
-        } else if (cliE.getOutput().toString().contains("Automatic merge failed")) {
-            check = true;
-        }
-        return check;
-    }
-    
-    public static String getRemoteURL(String repositoryPath) throws IOException {
-        String result = CLIExecute.execute("git config --get remote.origin.url", repositoryPath).getOutputString();
-        if(result.equals("")){
-            return "Unknown";
-        } else {
-            return result;
-        }
-        
-    }
-
-    /**
-     * Return form:
-     *
-     * Commit Hash Author Name Author Date Committer Name Committer Date Title
-     *
-     * @param commitHash
-     * @param repositoryPath
-     * @return
-     * @throws IOException
-     */
-    public static List<String> getBaseCommitInfo(String commitHash, String repositoryPath) throws IOException {
-        String command = "git show " + commitHash + " --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch";
-        return CLIExecute.execute(command, repositoryPath).getOutput();
-    }
-
-    /**
-     *
-     * @param commitHash
-     * @param repositoryPath
-     * @param pattern
-     * @return
-     * @throws IOException
-     */
-    public static String getCommitInfo(String commitHash, String repositoryPath, String pattern) throws IOException {
-        String command = "git show " + commitHash + " --pretty=" + pattern + " -s";
-        return CLIExecute.execute(command, repositoryPath).getOutput().get(0);
-    }
-
-    /**
-     * Find a common ancestor of the parents
-     *
-     * @param repositoryPath This parameter is a String that contains the
-     * directory where the command will be executed
-     * @param parents This parameter is a String[] that contains the hash of the
-     * parents
-     * @return Return a String that goes contains the ancestor
-     * @throws IOException
-     */
-    public static String mergeBaseCommand(String repositoryPath, String[] parents) throws IOException {
-        String command = "git merge-base ";
-        for (String str : parents) {
-            command = command + str + " ";
-        }
-        CLIExecution cliE;
-        try {
-            cliE = CLIExecute.execute(command, repositoryPath);
-        } catch (IOException ex) {
-            throw new IOException("The \"repositoryPath\" is not a path in your system!");
-        }
-        if (!cliE.getError().isEmpty()) {
-            for (String string : cliE.getError()) {
-                if (string.contains("not a git repository")) {
-                    throw new IOException("This path is not a Git repository!");
-                }
-            }
-        }
-        if (cliE.getOutput().isEmpty()) {
-            return "No ancestor";
-        }
-        return cliE.getOutput().get(0);
-    }
-
-    public static String mergeBaseCommand(String repositoryPath, String parent1, String parent2) throws IOException {
-        String command = "git merge-base " + parent1 + " " + parent2;
-        CLIExecution cliE;
-        try {
-            cliE = CLIExecute.execute(command, repositoryPath);
-        } catch (IOException ex) {
-            throw new IOException("The \"repositoryPath\" is not a path in your system!");
-        }
-        if (!cliE.getError().isEmpty()) {
-            for (String string : cliE.getError()) {
-                if (string.contains("not a git repository")) {
-                    throw new IOException("This path is not a Git repository!");
-                }
-            }
-        }
-        return cliE.getOutput().get(0);
+    public static boolean mergeIsConflicting(String parent1, String parent2, String repositoryPath) throws IOException, NotGitRepositoryException, CheckoutException, MergeException {
+        Git.checkout(parent1, repositoryPath);
+        return Git.merge(parent2, repositoryPath).toString().contains("Automatic merge failed");
     }
 
     /**
@@ -1225,156 +299,176 @@ public class Git {
      * @param soft If this parameter is true the command will do a soft reset
      * @param document this parameter is used in case of a mixed reset and is
      * the "document" that the command will remove
-     * @return return true if the command was executed and false if not
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.ResetException if occur any error
+     * in scope of git reset command.
      */
-    public static boolean reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException {
-
-        String command = "git reset ";
-
-        if (hard) {
-            command = command.concat(" --hard");
-        } else if (mixed) {
-            command = command.concat(" -- ");
-            command = command.concat(document);
-        } else if (soft) {
-            command = command.concat(" --soft");
-        }
-
-        CLIExecution execution = CLIExecute.execute(command, repositoryPath);
-        if (!execution.getError().isEmpty()) {
-
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-
-                    throw new IOException("This path is not a Git repository!");
-                }
-                if (line.contains("fatal: ambiguous argument")) {
-                    throw new IOException("The document is invalid!");
-                }
-
+    public static void reset(String repositoryPath, boolean hard, boolean mixed, boolean soft, String document) throws IOException, NotGitRepositoryException, ResetException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git reset " + (hard ? " --hard" : "") + (mixed ? (" -- " + document) : "") + (soft ? " --soft" : "");
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new ResetException(ListUtils.getTextListStringToString(execution.getError()));
             }
         } else {
-            return true;
+            throw new NotGitRepositoryException(repositoryPath);
         }
-
-        return false;
-
     }
 
     /**
      * This method receive two commitHash and returns the difference between
      * them using an FileDiff list.
      *
-     * @param directory This parameter tells the command the path to the
+     * @param repositoryPath This parameter tells the command the path to the
      * repository we are dealing with
      * @param commitSource This parameter is the commit we want to compare
      * @param commitTarget This parameter is the commit we want to compare to.
      * @param unified
      * @param unifiedSize This parameter defines how much context lines appears
      * @return return the FileDiff list
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repository is not a git repository
-     *
-     * @throws IOException exception that occurs when the repositorypath is
-     * wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
-     * wrong commit hash
-     *
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.DiffException if occur any error
+     * in scope of git diff command.
      */
-    public static List<FileDiff> diff(String directory, String commitSource, String commitTarget, boolean unified, int unifiedSize)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash, FileNotExistInCommitException {
-
-        List<FileDiff> result = new ArrayList<>();
-        int i = 0;
-        FileDiff aux = new FileDiff();
-        String command = null;
-        if (!unified) {
-            command = "git diff --ignore-space-at-eol " + commitSource + " " + commitTarget;
-        } else {
-            command = "git diff --ignore-space-at-eol --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
-        }
-
-        CLIExecution execution = CLIExecute.execute(command, directory);
-        if (!execution.getError().isEmpty()) {
-            String auxWar1 = null;
-            String auxWar2 = null;
-            boolean bool1AuxWarning = false;
-            boolean bool2AuxWarning = false;
-
-            for (String line : execution.getError()) {
-                if (line.contains("warning: LF will be replaced by CRLF in")) {
-                    auxWar1 = line;
-                    bool1AuxWarning = true;
-                }
-                if (line.contains("The file will have its original line endings in your working directory")) {
-                    bool2AuxWarning = true;
-                    auxWar2 = line;
-                }
+    public static List<FileDiff> diff(String repositoryPath, String commitSource, String commitTarget, boolean unified, int unifiedSize) throws IOException, NotGitRepositoryException, DiffException {
+        if (isGitRepository(repositoryPath)) {
+            List<FileDiff> result = new ArrayList<>();
+            FileDiff aux = new FileDiff();
+            String command;
+            if (!unified) {
+                command = "git diff --ignore-space-at-eol " + commitSource + " " + commitTarget;
+            } else {
+                command = "git diff --ignore-space-at-eol --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
             }
-            if (bool1AuxWarning) {
-                execution.getError().remove(auxWar1);
-            }
-            if (bool2AuxWarning) {
-                execution.getError().remove(auxWar2);
-            }
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                String auxWar1 = null;
+                String auxWar2 = null;
+                boolean bool1AuxWarning = false;
+                boolean bool2AuxWarning = false;
 
-        }
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-                } else if (line.contains("fatal: ambiguous argument")) {
-                    throw new InvalidCommitHash();
-                } else if (line.contains("fatal: Path \\")) {
-                    throw new FileNotExistInCommitException("The archive looked upon cannot be found on this merge, maybe the path is exchanged ");
-                } else {
-                    throw new IOException(execution.getError().toString());
-                }
-            }
-        } else {
-            aux.setAllMessage(execution.getOutput());
-            int currentLine = 0;
-            for (String line : execution.getOutput()) {
-                if (line.startsWith("diff --") && currentLine != 0) {
-
-                    result.add(aux);
-                    aux = new FileDiff();
-                }
-                if (line.startsWith("diff --") && currentLine != 0) {
-                    result.add(aux);
-                    aux = new FileDiff();
-                }
-                if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
-                    continue;
-                }
-                if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
-                    String c = line.substring(5);
-                    if (c.endsWith("\t") || c.endsWith("\n")) {
-                        c = c.substring(0, c.length() - 1);
+                for (String line : execution.getError()) {
+                    if (line.contains("warning: LF will be replaced by CRLF in")) {
+                        auxWar1 = line;
+                        bool1AuxWarning = true;
                     }
-                    aux.setFilePathTarget(c);
-                } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
-                } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
-                    String c = line.substring(5);
-                    if (c.endsWith("\t") || c.endsWith("\n")) {
-                        c = c.substring(0, c.length() - 1);
+                    if (line.contains("The file will have its original line endings in your working directory")) {
+                        bool2AuxWarning = true;
+                        auxWar2 = line;
                     }
-                    aux.setFilePathSource(c);
-                } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
-                    String c = line.substring(1);
-                    aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
-                } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
-                    currentLine = startingLine(line);
+                }
+                if (bool1AuxWarning) {
+                    execution.getError().remove(auxWar1);
+                }
+                if (bool2AuxWarning) {
+                    execution.getError().remove(auxWar2);
                 }
 
             }
-            result.add(aux);
-            aux = new FileDiff();
+            if (!execution.getError().isEmpty()) {
+                throw new DiffException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                aux.setAllMessage(execution.getOutput());
+                int currentLine = 0;
+                for (String line : execution.getOutput()) {
+                    if (line.startsWith("diff --") && currentLine != 0) {
+                        result.add(aux);
+                        aux = new FileDiff();
+                    }
+                    if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
+                        continue;
+                    }
+                    if (line.length() > 2 && line.charAt(0) == '+' && line.charAt(1) == '+' && line.charAt(2) == '+' && line.charAt(3) == ' ') {
+                        String c = line.substring(5);
+                        if (c.endsWith("\t") || c.endsWith("\n")) {
+                            c = c.substring(0, c.length() - 1);
+                        }
+                        aux.setFilePathTarget(c);
+                    } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
+                        String c = line.substring(1);
+                        aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                    } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
+                        String c = line.substring(5);
+                        if (c.endsWith("\t") || c.endsWith("\n")) {
+                            c = c.substring(0, c.length() - 1);
+                        }
+                        aux.setFilePathSource(c);
+                    } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
+                        String c = line.substring(1);
+                        aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+                    } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                        currentLine = startingLine(line);
+                    }
+
+                }
+                result.add(aux);
+            }
+            return result;
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
         }
-        return result;
+    }
+
+    /**
+     * This method receive two files and returns the difference between them,
+     * using the unified command as 0, and returns the output.
+     *
+     * @param repositoryPath This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to compare.
+     * @param fileTarget This parameter is the file we want to compare to.
+     * @return the result of the git command
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.DiffException if occur any error
+     * in scope of git diff command.
+     */
+    public static List<String> auxiliarDiffFile(String repositoryPath, String fileSource, String fileTarget) throws IOException, NotGitRepositoryException, DiffException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git diff " + "--unified=0 --ignore-space-at-eol " + fileSource + " " + fileTarget;
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new DiffException(ListUtils.getTextListStringToString(execution.getError()));
+            }
+            return execution.getOutput();
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
+     * This method receive two files and returns the difference between them,
+     * using the "name-status" command, and returns the output.
+     *
+     * @param repositoryPath This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to compare
+     * @param fileTarget This parameter is the file we want to compare to.
+     * @return List of Strings
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.DiffException if occur any error
+     * in scope of git diff command.
+     */
+    public static List<String> auxiliarDiffStat(String repositoryPath, String fileSource, String fileTarget) throws IOException, NotGitRepositoryException, DiffException {
+        if (isGitRepository(repositoryPath)) {
+            String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";
+            CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new DiffException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                return execution.getOutput();
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+
     }
 
     /**
@@ -1385,7 +479,6 @@ public class Git {
      * @return The starting line of the diff chunk
      */
     private static int startingLine(String a) {
-
         if (a.contains("-")) {
             String c[];
             c = a.split("-");
@@ -1403,7 +496,6 @@ public class Git {
             }
             int startingLine;
             startingLine = Integer.parseInt(g[0]);
-
             return startingLine;
         } else {
             String c[];
@@ -1419,181 +511,31 @@ public class Git {
             startingLine = Integer.parseInt(g[0]);
 
             return startingLine;
-
         }
-    }
-
-    /**
-     * This method receive two commitHash and returns the difference between
-     * them, using the unified command as 0, and returns the output.
-     *
-     * @param directory This parameter tells the command the path to the
-     * repository we are dealing with
-     * @param commitSource This parameter is the commit we want to compare
-     * @param commitTarget This parameter is the commit we want to compare to.
-     * @return List of Strings
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repository is not a git repository
-     * @throws IOException exception that occurs when the repositorypath is
-     * wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
-     * wrong commit hash
-     */
-    public static List<String> auxiliarDiff(String directory, String commitSource, String commitTarget)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
-        String command = "git diff " + commitSource + " " + commitTarget + " --unified=0";
-        CLIExecution execution = CLIExecute.execute(command, directory);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-
-                }
-                if (line.contains("fatal: ambiguous argument")) {
-                    throw new InvalidCommitHash();
-                }
-            }
-        }
-
-        return execution.getOutput();
-
-    }
-
-    /**
-     * This method receive two files and returns the difference between them,
-     * using the unified command as 0, and returns the output.
-     *
-     * @param directory This parameter tells the command the path to the
-     * repository we are dealing with
-     * @param fileSource This parameter is the file we want to compare
-     * @param fileTarget This parameter is the file we want to compare to.
-     * @return List of Strings
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repository is not a git repository
-     * @throws IOException exception that occurs when the repositorypath is
-     * wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
-     * wrong commit hash
-     */
-    public static List<String> auxiliarDiffFile(String directory, String fileSource, String fileTarget)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
-        //System.out.println("\""+fileSource+"\"");
-        //String  [] command = {"git", "diff","\""+fileSource+"\"","\""+fileTarget+"\""};
-        String command = "git diff " + "--unified=0 --ignore-space-at-eol " + fileSource + " " + fileTarget;
-
-        CLIExecution execution = CLIExecute.execute(command, directory);
-
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-
-                }
-                if (line.contains("fatal: ambiguous argument")) {
-                    throw new InvalidCommitHash();
-                }
-                if (line.contains("error: Could not access")) {
-                    return null;
-                }
-                if (line.contains("fatal: Path")) {
-                    return null;
-                }
-            }
-        }
-
-        return execution.getOutput();
-
-    }
-
-    public static List<String> fileDiffExample(String initialFile, String finalFile, String repository) throws IOException {
-
-        List<String> result = new ArrayList<>();
-        //String [] command;
-        //command = {"git", "diff", ,"\"" + initialFile + "\"", "\""+finalFile+"\""};
-        String command = "git" + " diff " + initialFile + " " + finalFile;
-        CLIExecution cmdOutput = CLIExecute.execute(command, repository);
-        //CMDOutput cmdOutput = CMD.cmdArray(repository, command);
-
-        if (cmdOutput.getError().isEmpty()) {
-
-            for (String line : cmdOutput.getOutput()) {
-                result.add(line);
-
-            }
-
-            return result;
-
-        } else {
-            return null;
-        }
-
-    }
-
-    /**
-     * This method receive two files and returns the difference between them,
-     * using the "name-status" command, and returns the output.
-     *
-     * @param directory This parameter tells the command the path to the
-     * repository we are dealing with
-     * @param fileSource This parameter is the file we want to compare
-     * @param fileTarget This parameter is the file we want to compare to.
-     * @return List of Strings
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repository is not a git repository
-     * @throws IOException exception that occurs when the repositorypath is
-     * wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
-     * wrong commit hash
-     */
-    public static List<String> auxiliarDiffStat(String directory, String fileSource, String fileTarget)
-            throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-        String command = "git diff --unified=0 " + fileSource + " " + fileTarget + " --name-status";
-        CLIExecution execution = CLIExecute.execute(command, directory);
-        if (!execution.getError().isEmpty()) {
-            for (String line : execution.getError()) {
-                if (line.contains("not a git repository")) {
-                    throw new LocalRepositoryNotAGitRepository();
-
-                }
-                if (line.contains("fatal: ambiguous argument")) {
-                    throw new InvalidCommitHash();
-                }
-            }
-        }
-
-        return execution.getOutput();
-
     }
 
     /**
      * Function that verify if the selected file source was deleted in the given
      * merge
      *
-     * @param directory This parameter tells the command the path to the
+     * @param repositoryPath This parameter tells the command the path to the
      * repository we are dealing with
      * @param fileSource This parameter is the file we want to verify the status
-     * @param parent This parameter is the hash of one parent of the merg
+     * @param parent This parameter is the hash of one parent of the merge
      * @param merge This parameter is the merge commit hash
-     * @return boolean
-     * @throws br.ufjf.dcc.gmr.core.exception.LocalRepositoryNotAGitRepository
-     * exception that occurs when the repository is not a git repository
-     * @throws IOException exception that occurs when the repositorypath is
-     * wrong
-     * @throws br.ufjf.dcc.gmr.core.exception.InvalidCommitHash Exception to
-     * wrong commit hash
+     * @return true if file was deleted
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.DiffException if occur any error
+     * in scope of git diff command.
      */
-    public static boolean deletedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
+    public static boolean deletedFile(String repositoryPath, String fileSource, String parent, String merge) throws IOException, NotGitRepositoryException, DiffException {
         List<String> output;
         String line;
-        output = Git.auxiliarDiffStat(directory, parent, merge);
-
+        output = Git.auxiliarDiffStat(repositoryPath, parent, merge);
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
-
             if (line.startsWith("D")) {
                 String c;
                 c = line.substring(2);
@@ -1606,12 +548,26 @@ public class Git {
         return false;
     }
 
-    public static boolean renamedFile(String directory, String fileSource, String parent, String merge) throws IOException, LocalRepositoryNotAGitRepository, InvalidCommitHash {
-
+    /**
+     * Function that verify if the selected file source was renamed in the given
+     * merge
+     *
+     * @param repositoryPath This parameter tells the command the path to the
+     * repository we are dealing with
+     * @param fileSource This parameter is the file we want to verify the status
+     * @param parent This parameter is the hash of one parent of the merge
+     * @param merge This parameter is the merge commit hash
+     * @return true if file was deleted
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.DiffException if occur any error
+     * in scope of git diff command.
+     */
+    public static boolean renamedFile(String directory, String fileSource, String parent, String merge) throws IOException, NotGitRepositoryException, DiffException {
         List<String> output;
         String line;
         output = Git.auxiliarDiffStat(directory, parent, merge);
-
         for (int i = 0; i < output.size(); i++) {
             line = output.get(i);
             if (line.startsWith("R")) {

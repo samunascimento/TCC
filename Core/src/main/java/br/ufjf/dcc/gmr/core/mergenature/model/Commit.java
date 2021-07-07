@@ -1,5 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
+import br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException;
+import br.ufjf.dcc.gmr.core.exception.ShowException;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.IOException;
 import java.util.Date;
@@ -70,8 +72,8 @@ public class Commit {
      * @throws IOException If repositoryPath is not a path in system or the path
      * is not a Git repository
      */
-    public Commit(String hash, String repositoryPath) throws IOException {
-        List<String> info = Git.getBaseCommitInfo(hash, repositoryPath);
+    public Commit(String hash, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+        List<String> info = Git.getBasicCommitInfo(hash, repositoryPath);
         this.message = info.get(5);
         this.commitHash = info.get(0);
         this.author = info.get(1);

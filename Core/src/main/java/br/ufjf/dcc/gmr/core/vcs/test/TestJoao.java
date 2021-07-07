@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+
 /**
  *
  * @author gleiph
@@ -7,7 +8,7 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 public class TestJoao {
 
     public static void main(String[] args) throws Exception {
-        
+
     }
 
 }
