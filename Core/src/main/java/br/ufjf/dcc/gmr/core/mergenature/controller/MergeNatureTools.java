@@ -99,13 +99,10 @@ public class MergeNatureTools {
     public static void prepareAnalysis(String repositoryPath) {
         try {
             Git.reset(repositoryPath, true, false, false, null);
-        } catch (Exception ex) {
-        }
-        try {
+            Git.removeAllInWorkspace(repositoryPath);
             Git.clean(repositoryPath, true, 0);
         } catch (Exception ex) {
         }
-
     }
 
     public static boolean checkIfIsBegin(String line) {

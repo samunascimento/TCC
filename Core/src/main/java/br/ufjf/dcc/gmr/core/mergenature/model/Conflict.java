@@ -15,6 +15,7 @@ public class Conflict {
     public static int PARENT1_FILE = 0;
     public static int PARENT2_FILE = 1;
     public static int BOTH_FILES = 2;
+    public static int UNKNOWM = 3;
 
     private int id;
     private String parent1FilePath;
@@ -194,7 +195,7 @@ public class Conflict {
     }
     
     public String getConflictFileName() {
-        return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES) ? getParent1FileName() : getParent2FileName();
+        return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES || conflictFilePath == UNKNOWM) ? getParent1FileName() : getParent2FileName();
     }
 
     public void setConflictFilePath(int conflictFilePath) {

@@ -11,7 +11,7 @@ public enum ConflictType {
     CONTENT, COINCIDENCE_ADDING, FILE_RENAME,
     DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE,
     P1_RENAMED_P2_ADD, P2_RENAMED_P1_ADD, FILE_LOCATION,
-    SUBMODULE, CONTENT_WITH_UNILATERAL_RENAMNING;
+    SUBMODULE, CONTENT_WITH_UNILATERAL_RENAMNING, DIRECTORY_RENAME_SPLIT;
 
     public static int getIntFromEnum(ConflictType conflictType) {
         switch (conflictType) {
@@ -47,6 +47,9 @@ public enum ConflictType {
             }
             case CONTENT_WITH_UNILATERAL_RENAMNING: {
                 return 11;
+            }
+            case DIRECTORY_RENAME_SPLIT: {
+                return 12;
             }
             default: {
                 return -1;
@@ -89,13 +92,16 @@ public enum ConflictType {
             case 11: {
                 return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
             }
+            case 12: {
+                return ConflictType.DIRECTORY_RENAME_SPLIT;
+            }
             default: {
                 return null;
             }
         }
     }
 
-    public static ConflictType getEnemFromString(String value) {
+    public static ConflictType getEnumFromString(String value) {
         switch (value) {
             case "CONTENT": {
                 return ConflictType.CONTENT;
@@ -129,6 +135,9 @@ public enum ConflictType {
             }
             case "CONTENT_WITH_UNILATERAL_RENAMNING": {
                 return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
+            }
+            case "DIRECTORY_RENAME_SPLIT": {
+                return ConflictType.DIRECTORY_RENAME_SPLIT;
             }
             default: {
                 return null;

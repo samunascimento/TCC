@@ -28,6 +28,8 @@ public class MergeMessageReader {
             return fileLocationType(message);
         } else if (message.contains("(submodule)")) {
             return submoduleType(message);
+        } else if (message.contains("(directory rename split)")) {
+            return directoryRenameSplitType(message);
         } else {
             System.out.println("NOVA MESSAGEM OBTIDA:\n" + message + "\n");
             return null;
@@ -220,6 +222,27 @@ public class MergeMessageReader {
         result.setConflictFilePath(Conflict.BOTH_FILES);
         result.setAncestorFilePath(null);
         result.setConflictType(ConflictType.SUBMODULE);
+        return result;
+    }
+
+    /*
+ 
+    CONFLICT (directory rename split): Unclear where to place modules/ocl/src/opencl/arithm_bitwise.cl 
+    because directory modules/ocl/src was renamed to multiple other directories, 
+    with no destination getting a majority of the files.
+    
+    CONFLICT (directory rename split): Unclear where to place modules/gpu/src/cuda/build_point_list.cu because directory modules/gpu/src/cuda was renamed to multiple other directories, with no destination getting a majority of the files.
+    
+     */
+    private static Conflict directoryRenameSplitType(String message) {
+        Conflict result = new Conflict();
+        String auxString = message.replace("CONFLICT (directory rename split): Unclear where to place ", "").replace("because directory ", "");
+        String[] auxStringArray = message.split(" ");
+        result.setParent1FilePath(auxStringArray[1] + " or no");
+        result.setParent2FilePath(auxStringArray[1] + " or no");
+        result.setConflictFilePath(Conflict.UNKNOWM);
+        result.setAncestorFilePath(auxStringArray[1]);
+        result.setConflictType(ConflictType.DIRECTORY_RENAME_SPLIT);
         return result;
     }
 

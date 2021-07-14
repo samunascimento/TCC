@@ -84,6 +84,27 @@ public class Git {
     }
 
     /**
+     * Restore all uncommited files
+     *
+     * @param repositoryPath The path of the git repository.
+     * @throws java.io.IOException if repositoryPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException if
+     * repositoryPath isn't a git repository.
+     * @throws br.ufjf.dcc.gmr.core.exception.RMException if occur any error in
+     * scope of git rm command.
+     */
+    public static void removeAllInWorkspace(String repositoryPath) throws IOException, NotGitRepositoryException, RMException {
+        if (isGitRepository(repositoryPath)) {
+            CLIExecution execution = CLIExecute.execute("git rm --cached -r", repositoryPath);
+            if (!execution.getError().isEmpty()) {
+                throw new RMException(ListUtils.getTextListStringToString(execution.getError()));
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    /**
      * Execute "git checkout" in a path in the system.
      *
      * @param entity Represents anything that can be checkouted like branches.
@@ -152,7 +173,8 @@ public class Git {
         if (isGitRepository(repositoryPath)) {
             CLIExecution execution = CLIExecute.execute("git show " + commit + ":" + relativeFilePath, repositoryPath);
             if (!execution.getError().isEmpty()) {
-                if (execution.getErrorString().contains("exists on disk, but not in")) {
+                if (execution.getErrorString().contains("exists on disk, but not in")
+                        || execution.getErrorString().contains("does not exist in")) {
                     return null;
                 } else {
                     throw new ShowException(ListUtils.getTextListStringToString(execution.getError()));
