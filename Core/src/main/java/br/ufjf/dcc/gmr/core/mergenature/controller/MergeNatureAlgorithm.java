@@ -110,9 +110,9 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            if (logLine.equals("f921017b/a76accd1 e7e7be0c")) {
+            
                 project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            }
+            
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
