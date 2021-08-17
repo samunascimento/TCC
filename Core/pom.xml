@@ -54,20 +54,30 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/(java|java9|cpp|python3|csharp)</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/(java|java9|cpp|python3|csharp)</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.(java|java9|cpp|python3|csharp)</argument>
                     </arguments>
                     <includes>
+                        <include>JavaParser.g4</include>
+                        <include>JavaLexer.g4</include>
+                    
+                        <include>Java9.g4</include>
+                        
                         <include>CPP14Parser.g4</include>
                         <include>CPP14Lexer.g4</include>
+                        
+                        <include>Python3.g4</include>
+                        
+                        <include>CSharpParser.g4</include>
+                        <include>CSharpLexer.g4</include>
                     </includes>
                 </configuration>
                 <executions>
@@ -77,7 +87,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
