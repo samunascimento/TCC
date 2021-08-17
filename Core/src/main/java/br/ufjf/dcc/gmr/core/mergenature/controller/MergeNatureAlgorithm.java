@@ -98,7 +98,6 @@ public class MergeNatureAlgorithm {
         } else {
             System.out.println("Analysis Download is not avaliable!");
         }
-        MergeNatureTools.prepareAnalysis(repositoryPath);
         List<String> log;
         log = Git.getAllMerges(repositoryPath);
         int numberOfMerges = log.size();
@@ -151,7 +150,9 @@ public class MergeNatureAlgorithm {
             merge.setAncestor(new Commit(auxString, repositoryPath));
         }
         if (merge.getMergeType() != MergeType.OCTOPUS_MERGE) {
+            MergeNatureTools.prepareAnalysis(repositoryPath);
             Git.checkout(merge.getParents().get(0).getCommitHash(), repositoryPath);
+            MergeNatureTools.prepareAnalysis(repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getCommitHash(), repositoryPath);
             if (mergeMessage.contains("Automatic merge failed; fix conflicts and then commit the result.")) {
                 if (unrelatedHistories) {
@@ -175,7 +176,6 @@ public class MergeNatureAlgorithm {
                         }
                     }
                 }
-                MergeNatureTools.prepareAnalysis(repositoryPath);
             } else {
                 if (unrelatedHistories) {
                     merge.setMergeType(MergeType.NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES);

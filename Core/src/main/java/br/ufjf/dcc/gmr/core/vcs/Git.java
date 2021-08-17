@@ -47,7 +47,7 @@ public class Git {
      */
     public static void clean(String repositoryPath, boolean force, int ignoredFiles) throws IOException, NotGitRepositoryException, CleanException {
         if (isGitRepository(repositoryPath)) {
-            String command = "git clean" + (force ? " -f" : "") + (ignoredFiles == 0 ? " -x" : ignoredFiles == 1 ? " -X" : "");
+            String command = "git clean" + (force ? " -fd" : "") + (ignoredFiles == 0 ? " -x" : ignoredFiles == 1 ? " -X" : "");
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
                 throw new CleanException(ListUtils.getTextListStringToString(execution.getError()));
