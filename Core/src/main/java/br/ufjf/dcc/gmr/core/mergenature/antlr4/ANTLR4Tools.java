@@ -11,12 +11,14 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Parser;
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CSVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Python3Visitor;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,21 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * @since 14-12-2020
  */
 public class ANTLR4Tools {
+
+    
+    public static void writeSyntaxErrors(String fileName, String fileContent, List<SyntaxError> syntaxErrors) throws IOException {
+
+        File directory = new File(System.getProperty("user.dir") + File.separator + "syntaxErrors" + File.separator + fileName.replaceAll("\\.", "-") + File.separator);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        MergeNatureTools.createAndWriteInFile(directory.getAbsolutePath() + File.separator + fileName, fileContent);
+        String errors = "";
+        for (SyntaxError syntaxError : syntaxErrors) {
+            errors = errors + "\n\n\nLine: " + syntaxError.getLine() + "\nChar Position: " + syntaxError.getCharPositionInLine() + "\nError Message:\n" + syntaxError.getMessage();
+        }
+        MergeNatureTools.createAndWriteInFile(directory.getAbsolutePath() + File.separator + "errors.txt", errors.replaceFirst("\n\n\n", ""));
+    }
 
     public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".java")) {
@@ -150,6 +167,8 @@ public class ANTLR4Tools {
             Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
             ParseTree tree;
             try {
                 tree = parser.file_input();
@@ -159,11 +178,13 @@ public class ANTLR4Tools {
             Python3Visitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new Python3Visitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
                 visitor = new Python3Visitor(false);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();

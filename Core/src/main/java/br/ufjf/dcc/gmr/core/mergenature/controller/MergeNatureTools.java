@@ -29,6 +29,11 @@ public class MergeNatureTools {
         }
         return list;
     }
+    
+    public static String getFileName(String filePath){
+        String[] auxArray = filePath.split(File.separator);
+        return auxArray[auxArray.length - 1];
+    }
 
     public static void createAndWriteInFile(String filePath, String content) throws IOException {
         File yourFile = new File(filePath);
