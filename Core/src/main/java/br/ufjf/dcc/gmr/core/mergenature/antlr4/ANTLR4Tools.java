@@ -21,7 +21,9 @@ import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -36,7 +38,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ANTLR4Tools {
 
-    
     public static void writeSyntaxErrors(String fileName, String fileContent, List<SyntaxError> syntaxErrors) throws IOException {
 
         File directory = new File(System.getProperty("user.dir") + File.separator + "syntaxErrors" + File.separator + fileName.replaceAll("\\.", "-") + File.separator);
@@ -51,7 +52,7 @@ public class ANTLR4Tools {
         MergeNatureTools.createAndWriteInFile(directory.getAbsolutePath() + File.separator + "errors.txt", errors.replaceFirst("\n\n\n", ""));
     }
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".java")) {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
@@ -73,13 +74,17 @@ public class ANTLR4Tools {
             }
             visitor.visit(tree);
             comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".java")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -96,13 +101,18 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
+
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
                 || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
                 || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
@@ -127,13 +137,17 @@ public class ANTLR4Tools {
             }
             visitor.visit(tree);
             comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
                 || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                 || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
@@ -153,13 +167,17 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
@@ -185,13 +203,17 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".py")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -208,13 +230,17 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".cs")) {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
@@ -230,20 +256,18 @@ public class ANTLR4Tools {
                 visitor = new CSVisitor(false);
             }
             visitor.visit(tree);
-            /*/Imprimir_arvore-------------------------------------------------------
-
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.open();
-
-            //----------------------------------------------------------------------*/
             comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".cs")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -260,12 +284,10 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
             }
             visitor.visit(tree);
-            /*/Imprimir_arvore-------------------------------------------------------
-
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.open();
-
-            //----------------------------------------------------------------------*/
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -276,16 +298,16 @@ public class ANTLR4Tools {
         try {
             ANTLR4Results results;
             if (filePathProjectAsRoot.endsWith(".java")) {
-                results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
                     || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
                     || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
                     || filePathProjectAsRoot.endsWith(".hpp")) {
-                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if ((filePathProjectAsRoot.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzeCSharpSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else {
                 return null;
             }
@@ -305,16 +327,16 @@ public class ANTLR4Tools {
             List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
             boolean isOutmost;
             if (filePath.endsWith(".java")) {
-                results = analyzeJava9SyntaxTree(filePath);
+                results = analyzeJava9SyntaxTree(filePath, false);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
                     || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                     || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
                     || filePath.endsWith(".hpp")) {
-                results = analyzeCPPSyntaxTree(filePath);
+                results = analyzeCPPSyntaxTree(filePath, false);
             } else if (filePath.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePath);
+                results = analyzePythonSyntaxTree(filePath, false);
             } else if ((filePath.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePath);
+                results = analyzeCSharpSyntaxTree(filePath, false);
             } else {
                 return null;
             }
