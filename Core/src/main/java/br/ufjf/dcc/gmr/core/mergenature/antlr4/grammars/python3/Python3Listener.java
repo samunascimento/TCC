@@ -8,16 +8,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface Python3Listener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link Python3Parser#single_input}.
-	 * @param ctx the parse tree
-	 */
-	void enterSingle_input(Python3Parser.Single_inputContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Python3Parser#single_input}.
-	 * @param ctx the parse tree
-	 */
-	void exitSingle_input(Python3Parser.Single_inputContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link Python3Parser#file_input}.
 	 * @param ctx the parse tree
 	 */
@@ -27,16 +17,6 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFile_input(Python3Parser.File_inputContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link Python3Parser#eval_input}.
-	 * @param ctx the parse tree
-	 */
-	void enterEval_input(Python3Parser.Eval_inputContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Python3Parser#eval_input}.
-	 * @param ctx the parse tree
-	 */
-	void exitEval_input(Python3Parser.Eval_inputContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#decorator}.
 	 * @param ctx the parse tree
@@ -407,16 +387,6 @@ public interface Python3Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssert_(Python3Parser.Assert_Context ctx);
-	/**
-	 * Enter a parse tree produced by {@link Python3Parser#cast}.
-	 * @param ctx the parse tree
-	 */
-	void enterCast(Python3Parser.CastContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link Python3Parser#cast}.
-	 * @param ctx the parse tree
-	 */
-	void exitCast(Python3Parser.CastContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree

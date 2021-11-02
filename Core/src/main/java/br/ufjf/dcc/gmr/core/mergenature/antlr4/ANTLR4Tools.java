@@ -182,7 +182,7 @@ public class ANTLR4Tools {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
-            Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
+            Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n")? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
             SyntaxErrorListener listener = new SyntaxErrorListener();
@@ -215,9 +215,11 @@ public class ANTLR4Tools {
 
     public static ANTLR4Results analyzePythonSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".py")) {
+            String fileContent;
+            fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            Python3Lexer lexer = new Python3Lexer(fileStream);
+            Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n")? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Python3Parser parser = new Python3Parser(tokens);
             ParseTree tree = parser.file_input();

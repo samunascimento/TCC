@@ -74,22 +74,11 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
     }
 
     @Override
-    public Object visitSingle_input(Python3Parser.Single_inputContext ctx) {
-        process(ctx);
-        return super.visitChildren(ctx);
-    }
-
-    @Override
     public Object visitFile_input(Python3Parser.File_inputContext ctx) {
         process(ctx);
         return super.visitChildren(ctx);
     }
 
-    @Override
-    public Object visitEval_input(Python3Parser.Eval_inputContext ctx) {
-        process(ctx);
-        return super.visitChildren(ctx);
-    }
 
     @Override
     public Object visitDecorator(Python3Parser.DecoratorContext ctx) {
@@ -654,12 +643,6 @@ public class Python3Visitor extends Python3BaseVisitor<Object> {
 
     @Override
     public Object visitAssert_(Python3Parser.Assert_Context ctx) {
-        process(ctx);
-        return super.visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCast(Python3Parser.CastContext ctx) {
         process(ctx);
         return super.visitChildren(ctx);
     }

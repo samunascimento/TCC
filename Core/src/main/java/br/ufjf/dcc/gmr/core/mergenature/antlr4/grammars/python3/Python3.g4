@@ -129,9 +129,7 @@ tokens { INDENT, DEDENT }
  * parser rules
  */
 
-single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE;
 file_input: (NEWLINE | stmt)* EOF;
-eval_input: testlist NEWLINE* EOF;
 
 decorator: '@' dotted_name ( '(' (arglist)? ')' )? NEWLINE;
 decorators: decorator+;
@@ -160,7 +158,7 @@ stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt (';' small_stmt)* (';')? NEWLINE;
 small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | nonlocal_stmt | assert_stmt);
-expr_stmt:assignment|cast| testlist_star_expr (annassign | augassign (yield_expr|testlist) | 
+expr_stmt:assignment| testlist_star_expr (annassign | augassign (yield_expr|testlist) | 
                      ('=' (yield_expr|testlist_star_expr))*);
 annassign: ':' test ('=' test)?;
 testlist_star_expr: (test|star_expr) (',' (test|star_expr))* (',')?;
@@ -216,20 +214,13 @@ array:'[' (testlist_comp)? ']';
 //------------------------------------------------------------------------------
 
 //Assignment++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-assignment: atom '=' atom;
+assignment: atom '=' atom_expr;
 //------------------------------------------------------------------------------
 
 //Assert++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 assert_: 'assert';
 //------------------------------------------------------------------------------
     
-//Cast++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-cast:     atom '=' + 'int'     + '(' |
-          atom '=' + 'float'   + '(' |
-          atom '=' + 'complex' + '(' |
-          atom '=' + 'long'    + '(' |
-          atom '=' + 'str'     + '(' ;
-//------------------------------------------------------------------------------
 
 global_stmt: 'global' NAME (',' NAME)*;
 nonlocal_stmt: 'nonlocal' NAME (',' NAME)*;
@@ -270,7 +261,7 @@ with_item: test ('as' expr)?;
 // NB compile.c makes sure that the default except clause is last
 except_clause: 'except' (test ('as' NAME)?)?;
 finally_clause: 'finally';
-suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
+suite: stmt | NEWLINE INDENT stmt+ DEDENT;
 
 //Logical tests ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 test: or_test (if_ or_test 'else' test)? | lambdef;
@@ -296,7 +287,7 @@ term: factor (('*'|'@'|'/'|'%'|'//') factor)*;
 factor: ('+'|'-'|'~') factor | power;
 power: atom_expr ('**' factor)?;
 atom_expr: (AWAIT)? atom trailer*;
-atom:       array | 
+atom:   array | 
         ('(' (yield_expr|testlist_comp)? ')' |     
        '{' (dictorsetmaker)? '}' |
        NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False') |;

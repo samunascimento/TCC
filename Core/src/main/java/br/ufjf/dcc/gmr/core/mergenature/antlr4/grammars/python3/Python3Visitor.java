@@ -11,23 +11,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link Python3Parser#single_input}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSingle_input(Python3Parser.Single_inputContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link Python3Parser#file_input}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFile_input(Python3Parser.File_inputContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link Python3Parser#eval_input}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitEval_input(Python3Parser.Eval_inputContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#decorator}.
 	 * @param ctx the parse tree
@@ -250,12 +238,6 @@ public interface Python3Visitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAssert_(Python3Parser.Assert_Context ctx);
-	/**
-	 * Visit a parse tree produced by {@link Python3Parser#cast}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCast(Python3Parser.CastContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Python3Parser#global_stmt}.
 	 * @param ctx the parse tree
