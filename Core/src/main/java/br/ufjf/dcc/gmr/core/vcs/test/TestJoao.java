@@ -9,9 +9,7 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
 public class TestJoao {
 
     public static void main(String[] args) throws Exception {
-        String file = 
-"/home/joao_lima/Git/MergeNature/Core/syntaxErrors/backend-py/backend.py";
-        ANTLR4Tools.analyzePythonSyntaxTree(file, true);
+        ANTLR4Tools.analyzePythonSyntaxTree("/home/joao_lima/Git/MergeNature/Core/syntaxErrors/tensorflow_backend-py/tensorflow_backend.py", true);
     }
 
 }

@@ -66,7 +66,8 @@
                         <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3</argument>
                     </arguments>
                     <includes>
-                        <include>Python3.g4</include>
+                        <include>PythonParser.g4</include>
+                        <include>PythonLexer.g4</include>
                     </includes>
                 </configuration>
                 <executions>

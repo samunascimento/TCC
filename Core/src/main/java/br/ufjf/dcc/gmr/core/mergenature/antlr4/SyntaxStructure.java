@@ -3,7 +3,7 @@ package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexer;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -49,7 +49,7 @@ public class SyntaxStructure {
                 this.structureType = "LineComment";
             }
         } else if (language == Language.PYTHON) {
-            if (token.getType() == Python3Lexer.LINE_COMMENT) {
+            if (token.getType() == PythonLexer.COMMENT) {
                 this.structureType = "LineComment";
             }
         } else if (language == Language.CSHARP) {
