@@ -261,11 +261,11 @@ public class ANTLR4Tools {
             CSVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CSVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
                 writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
                 visitor = new CSVisitor(false);
-                comments = getCommentsFromChannel2(tokens, false, Language.CSHARP);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
             if (printTree) {
