@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.antlr4;
 
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexer;
 import org.antlr.v4.runtime.Token;
@@ -52,19 +51,6 @@ public class SyntaxStructure {
             if (token.getType() == PythonLexer.COMMENT) {
                 this.structureType = "LineComment";
             }
-        } else if (language == Language.CSHARP) {
-            if (token.getType() == CSharpParser.SINGLE_LINE_DOC_COMMENT) {
-                this.structureType = "SINGLE_LINE_DOC_COMMENT";
-            } else if (token.getType() == CSharpParser.EMPTY_DELIMITED_DOC_COMMENT) {
-                this.structureType = "EMPTY_DELIMITED_DOC_COMMENT";
-            } else if (token.getType() == CSharpParser.DELIMITED_DOC_COMMENT) {
-                this.structureType = "DELIMITED_DOC_COMMENT";
-            } else if (token.getType() == CSharpParser.SINGLE_LINE_COMMENT) {
-                this.structureType = "LineComment";
-            } else if (token.getType() == CSharpParser.DELIMITED_COMMENT) {
-                this.structureType = "DELIMITED_COMMENT";
-            }
-            //Multi line comments in python are arrays with no variable, we are working on it
         } else {
 
             this.structureType = "Unknown";
