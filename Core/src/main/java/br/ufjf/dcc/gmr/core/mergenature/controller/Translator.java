@@ -684,6 +684,10 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
                 list.remove("Func_signature");
             }
+            if (list.contains("Function_call")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
+                list.remove("Function_call");
+            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //There is no package on pythons

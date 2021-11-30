@@ -384,8 +384,12 @@ yield_arg
 // TODO: this way we can pass: `f(x for x in i, a)`, but it's invalid.
 // See: https://docs.python.org/3/reference/expressions.html#calls
 trailer
-    : DOT name arguments?
+    : function_call
     | arguments
+    ;
+
+function_call
+    : DOT name arguments?
     ;
 
 arguments

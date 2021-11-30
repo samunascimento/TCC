@@ -520,6 +520,12 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTrailer(PythonParser.TrailerContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#function_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_call(PythonParser.Function_callContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#arguments}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

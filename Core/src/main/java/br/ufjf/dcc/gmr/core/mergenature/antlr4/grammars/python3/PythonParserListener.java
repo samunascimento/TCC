@@ -863,6 +863,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitTrailer(PythonParser.TrailerContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction_call(PythonParser.Function_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction_call(PythonParser.Function_callContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#arguments}.
 	 * @param ctx the parse tree
 	 */
