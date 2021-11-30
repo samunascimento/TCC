@@ -1,5 +1,6 @@
 // Generated from PythonParser.g4 by ANTLR 4.7.1
 package br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParserBase;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -83,6 +84,24 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#while_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_signature(PythonParser.While_signatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonParser#if_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_signature(PythonParser.If_signatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonParser#for_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_signature(PythonParser.For_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#suite}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -113,6 +132,12 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFinally_clause(PythonParser.Finally_clauseContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#finally_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFinally_signature(PythonParser.Finally_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#with_item}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -125,17 +150,35 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExcept_clause(PythonParser.Except_clauseContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#except_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExcept_signature(PythonParser.Except_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#classdef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitClassdef(PythonParser.ClassdefContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#class_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClass_signature(PythonParser.Class_signatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#funcdef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFuncdef(PythonParser.FuncdefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonParser#func_signature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunc_signature(PythonParser.Func_signatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PythonParser#typedargslist}.
 	 * @param ctx the parse tree
@@ -178,6 +221,13 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSimple_stmt(PythonParser.Simple_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code variable}
+	 * labeled alternative in {@link PythonParser#small_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariable(PythonParser.VariableContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code expr_stmt}
 	 * labeled alternative in {@link PythonParser#small_stmt}.
@@ -302,6 +352,12 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssign_part(PythonParser.Assign_partContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#array_initializer}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray_initializer(PythonParser.Array_initializerContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#exprlist}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -386,11 +442,23 @@ public interface PythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr(PythonParser.ExprContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonParser#array_acess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray_acess(PythonParser.Array_acessContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAtom(PythonParser.AtomContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonParser#array}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray(PythonParser.ArrayContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PythonParser#dictorsetmaker}.
 	 * @param ctx the parse tree

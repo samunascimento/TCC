@@ -13,7 +13,6 @@ import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParser;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
-import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CSVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.PythonVisitor;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
@@ -242,68 +241,6 @@ public class ANTLR4Tools {
         }
     }
 
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, NotGitRepositoryException, ShowException {
-        if (filePathProjectAsRoot.endsWith(".cs")) {
-            String fileContent;
-            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            List<SyntaxStructure> comments;
-            CSharpLexer lexer = new CSharpLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n")? "" : "\n")));
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens);
-            SyntaxErrorListener listener = new SyntaxErrorListener();
-            parser.addErrorListener(listener);
-            ParseTree tree;
-            try {
-                tree = parser.compilation_unit();
-            } catch (OutOfMemoryError ex) {
-                throw ex;
-            }
-            CSVisitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CSVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
-                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
-            } else {
-                visitor = new CSVisitor(false);
-                comments = getCommentsFromChannel2(tokens, false, Language.CSHARP);
-            }
-            visitor.visit(tree);
-            if (printTree) {
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
-            }
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
-
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePath, boolean printTree) throws IOException {
-        if (filePath.endsWith(".cs")) {
-            List<SyntaxStructure> comments;
-            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            CSharpLexer lexer = new CSharpLexer(fileStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens);
-            ParseTree tree = parser.compilation_unit();
-            CSVisitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CSVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
-            } else {
-                visitor = new CSVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
-            }
-            visitor.visit(tree);
-            if (printTree) {
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
-            }
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
 
     public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         try {
@@ -317,8 +254,6 @@ public class ANTLR4Tools {
                 results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
-            } else if ((filePathProjectAsRoot.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else {
                 return null;
             }
@@ -346,8 +281,6 @@ public class ANTLR4Tools {
                 results = analyzeCPPSyntaxTree(filePath, false);
             } else if (filePath.endsWith(".py")) {
                 results = analyzePythonSyntaxTree(filePath, false);
-            } else if ((filePath.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePath, false);
             } else {
                 return null;
             }
@@ -485,8 +418,6 @@ public class ANTLR4Tools {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
-            } else if (filePath.endsWith(".cs")) {
-                translatedList = Translator.CSharpTranslator(untranslatedList);
             } else {
                 return null;
             }

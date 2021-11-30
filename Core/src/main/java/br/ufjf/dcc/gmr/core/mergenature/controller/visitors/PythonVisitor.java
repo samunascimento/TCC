@@ -39,32 +39,44 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitRoot(PythonParser.RootContext ctx) {
+    public Object visitArray_initializer(PythonParser.Array_initializerContext ctx) {
         process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitArray(PythonParser.ArrayContext ctx) {
+        //process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitRoot(PythonParser.RootContext ctx) {
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSingle_input(PythonParser.Single_inputContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitFile_input(PythonParser.File_inputContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitEval_input(PythonParser.Eval_inputContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitStmt(PythonParser.StmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -94,37 +106,37 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitWith_stmt(PythonParser.With_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSuite(PythonParser.SuiteContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDecorator(PythonParser.DecoratorContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitElif_clause(PythonParser.Elif_clauseContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitElse_clause(PythonParser.Else_clauseContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -136,7 +148,7 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitWith_item(PythonParser.With_itemContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -160,55 +172,55 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitTypedargslist(PythonParser.TypedargslistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitArgs(PythonParser.ArgsContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitKwargs(PythonParser.KwargsContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDef_parameters(PythonParser.Def_parametersContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDef_parameter(PythonParser.Def_parameterContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitNamed_parameter(PythonParser.Named_parameterContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSimple_stmt(PythonParser.Simple_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitExpr_stmt(PythonParser.Expr_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitPrint_stmt(PythonParser.Print_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -220,7 +232,7 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitPass_stmt(PythonParser.Pass_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -268,13 +280,13 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitGlobal_stmt(PythonParser.Global_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitExec_stmt(PythonParser.Exec_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -286,19 +298,19 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitNonlocal_stmt(PythonParser.Nonlocal_stmtContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTestlist_star_expr(PythonParser.Testlist_star_exprContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitStar_expr(PythonParser.Star_exprContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -310,199 +322,253 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitExprlist(PythonParser.ExprlistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitImport_as_names(PythonParser.Import_as_namesContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitImport_as_name(PythonParser.Import_as_nameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDotted_as_names(PythonParser.Dotted_as_namesContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDotted_as_name(PythonParser.Dotted_as_nameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTest(PythonParser.TestContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVarargslist(PythonParser.VarargslistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVardef_parameters(PythonParser.Vardef_parametersContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVardef_parameter(PythonParser.Vardef_parameterContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVarargs(PythonParser.VarargsContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVarkwargs(PythonParser.VarkwargsContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLogical_test(PythonParser.Logical_testContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitComparison(PythonParser.ComparisonContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitExpr(PythonParser.ExprContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitAtom(PythonParser.AtomContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDictorsetmaker(PythonParser.DictorsetmakerContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTestlist_comp(PythonParser.Testlist_compContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTestlist(PythonParser.TestlistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitDotted_name(PythonParser.Dotted_nameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitName(PythonParser.NameContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitNumber(PythonParser.NumberContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitInteger(PythonParser.IntegerContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitYield_expr(PythonParser.Yield_exprContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitYield_arg(PythonParser.Yield_argContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitTrailer(PythonParser.TrailerContext ctx) {
+        //process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitArray_acess(PythonParser.Array_acessContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitArguments(PythonParser.ArgumentsContext ctx) {
+        //process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitWhile_signature(PythonParser.While_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitExcept_signature(PythonParser.Except_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitVariable(PythonParser.VariableContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFunc_signature(PythonParser.Func_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitClass_signature(PythonParser.Class_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFinally_signature(PythonParser.Finally_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFor_signature(PythonParser.For_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIf_signature(PythonParser.If_signatureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitArglist(PythonParser.ArglistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitArgument(PythonParser.ArgumentContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSubscriptlist(PythonParser.SubscriptlistContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSubscript(PythonParser.SubscriptContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitSliceop(PythonParser.SliceopContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitComp_for(PythonParser.Comp_forContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitComp_iter(PythonParser.Comp_iterContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

@@ -29,6 +29,8 @@ parser grammar PythonParser;
 
 options { tokenVocab=PythonLexer; superClass=PythonParserBase; }
 
+@header {import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParserBase;}
+
 root
     : (single_input
     | file_input
@@ -58,12 +60,24 @@ stmt
     ;
 
 compound_stmt
-    : IF cond=test COLON suite elif_clause* else_clause?                             #if_stmt
-    | WHILE test COLON suite else_clause?                                            #while_stmt
-    | ASYNC? FOR exprlist IN testlist COLON suite else_clause?                       #for_stmt
+    : if_signature suite elif_clause* else_clause?                                   #if_stmt
+    | while_signature suite else_clause?                                             #while_stmt
+    | ASYNC? for_signature suite else_clause?                                        #for_stmt
     | TRY COLON suite (except_clause+ else_clause? finally_clause? | finally_clause) #try_stmt
     | ASYNC? WITH with_item (COMMA with_item)* COLON suite                           #with_stmt
     | decorator* (classdef | funcdef)                                                #class_or_func_def_stmt
+    ;
+
+while_signature
+    : WHILE test COLON
+    ;
+
+if_signature
+    : IF cond=test COLON
+    ;
+
+for_signature
+    : FOR exprlist IN testlist COLON
     ;
 
 suite
@@ -84,7 +98,11 @@ else_clause
     ;
 
 finally_clause
-    : FINALLY COLON suite
+    : finally_signature suite
+    ;
+
+finally_signature
+    : FINALLY COLON
     ;
 
 with_item
@@ -95,15 +113,27 @@ with_item
 // Python 2 : EXCEPT test COMMA name
 // Python 3 : EXCEPT test AS name
 except_clause
-    : EXCEPT (test ({CheckVersion(2)}? COMMA name {SetVersion(2);} | {CheckVersion(3)}? AS name {SetVersion(3);})?)? COLON suite
+    : except_signature suite
+    ;
+
+except_signature
+    : EXCEPT (test ({CheckVersion(2)}? COMMA name {SetVersion(2);} | {CheckVersion(3)}? AS name {SetVersion(3);})?)? COLON
     ;
 
 classdef
-    : CLASS name (OPEN_PAREN arglist? CLOSE_PAREN)? COLON suite
+    : class_signature suite
+    ;
+
+class_signature
+    : CLASS name (OPEN_PAREN arglist? CLOSE_PAREN)? COLON
     ;
 
 funcdef
-    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON suite
+    : func_signature suite
+    ;
+
+func_signature
+    : ASYNC? DEF name OPEN_PAREN typedargslist? CLOSE_PAREN (ARROW test)? COLON
     ;
 
 // python 3 paramters
@@ -142,7 +172,8 @@ simple_stmt
 // TODO 1: left part augmented assignment should be `test` only, no stars or lists
 // TODO 2: semantically annotated declaration is not an assignment
 small_stmt
-    : testlist_star_expr assign_part?                                                 #expr_stmt
+    : atom assign_part                                                                #variable
+    | testlist_star_expr assign_part?                                                 #expr_stmt
     | {CheckVersion(2)}? PRINT ((test (COMMA test)* COMMA?)
                        | RIGHT_SHIFT test ((COMMA test)+ COMMA?)) {SetVersion(2);}    #print_stmt   // Python 2
     | DEL exprlist                                                                    #del_stmt
@@ -172,7 +203,8 @@ star_expr
 
 assign_part
     // if left expression in assign is bool literal, it's mean that is Python 2 here
-    : ASSIGN ( testlist_star_expr (ASSIGN testlist_star_expr)* (ASSIGN yield_expr)?
+    : array_initializer 
+    | ASSIGN ( testlist_star_expr (ASSIGN testlist_star_expr)* (ASSIGN yield_expr)?
              | yield_expr)
     | {CheckVersion(3)}? COLON test (ASSIGN testlist)? {SetVersion(3);} // annassign Python3 rule
     | op=( ADD_ASSIGN
@@ -190,6 +222,10 @@ assign_part
          | IDIV_ASSIGN
          )
       (yield_expr | testlist)
+    ;
+
+array_initializer
+    : ASSIGN array 
     ;
 
 exprlist
@@ -263,7 +299,9 @@ comparison
     ;
 
 expr
-    : AWAIT? atom trailer*
+    : AWAIT? atom
+    | array_acess
+    | AWAIT? atom trailer*
     | <assoc=right> expr op=POWER expr
     | op=(ADD | MINUS | NOT_OP) expr
     | expr op=(STAR | DIV | MOD | IDIV | AT) expr
@@ -274,9 +312,13 @@ expr
     | expr op=OR_OP expr
     ;
 
+array_acess
+    : AWAIT? atom OPEN_BRACKET subscriptlist CLOSE_BRACKET
+    ;
+
 atom
     : OPEN_PAREN (yield_expr | testlist_comp)? CLOSE_PAREN
-    | OPEN_BRACKET testlist_comp? CLOSE_BRACKET
+    | array
     | OPEN_BRACE dictorsetmaker? CLOSE_BRACE
     | REVERSE_QUOTE testlist COMMA? REVERSE_QUOTE
     | ELLIPSIS
@@ -286,6 +328,10 @@ atom
     | MINUS? number
     | NONE
     | STRING+
+    ;
+
+array
+    : OPEN_BRACKET testlist_comp? CLOSE_BRACKET
     ;
 
 dictorsetmaker
