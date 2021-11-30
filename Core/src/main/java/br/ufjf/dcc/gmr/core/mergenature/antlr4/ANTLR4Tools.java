@@ -5,8 +5,6 @@ import br.ufjf.dcc.gmr.core.exception.ShowException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpLexer;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexer;
@@ -25,9 +23,13 @@ import java.util.List;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.ListTokenSource;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+//Antlr4.Runtime.IToken
 
 /**
  * Auxiliaries methods for ANTLR4's utilities
@@ -181,7 +183,7 @@ public class ANTLR4Tools {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
-            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n")? "" : "\n")));
+            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             PythonParser parser = new PythonParser(tokens);
             SyntaxErrorListener listener = new SyntaxErrorListener();
@@ -218,7 +220,7 @@ public class ANTLR4Tools {
             fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n")? "" : "\n")));
+            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             PythonParser parser = new PythonParser(tokens);
             ParseTree tree = parser.file_input();
@@ -240,7 +242,6 @@ public class ANTLR4Tools {
             throw new IOException();
         }
     }
-
 
     public static ANTLR4Results getANTLR4Results(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         try {
