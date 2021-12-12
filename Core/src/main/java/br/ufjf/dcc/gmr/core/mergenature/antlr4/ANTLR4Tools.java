@@ -5,26 +5,31 @@ import br.ufjf.dcc.gmr.core.exception.ShowException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Translator;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpLexer;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.csharp.CSharpParser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Lexer;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9.Java9Parser;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Lexer;
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.Python3Parser;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexer;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParser;
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CPPVisitor;
-import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.CSVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
-import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Python3Visitor;
+import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.PythonVisitor;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.ListTokenSource;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+//Antlr4.Runtime.IToken
 
 /**
  * Auxiliaries methods for ANTLR4's utilities
@@ -34,7 +39,21 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ANTLR4Tools {
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static void writeSyntaxErrors(String fileName, String fileContent, List<SyntaxError> syntaxErrors) throws IOException {
+
+        File directory = new File(System.getProperty("user.dir") + File.separator + "syntaxErrors" + File.separator + fileName.replaceAll("\\.", "-") + File.separator);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        MergeNatureTools.createAndWriteInFile(directory.getAbsolutePath() + File.separator + fileName, fileContent);
+        String errors = "";
+        for (SyntaxError syntaxError : syntaxErrors) {
+            errors = errors + "\n\n\nLine: " + syntaxError.getLine() + "\nChar Position: " + syntaxError.getCharPositionInLine() + "\nError Message:\n" + syntaxError.getMessage();
+        }
+        MergeNatureTools.createAndWriteInFile(directory.getAbsolutePath() + File.separator + "errors.txt", errors.replaceFirst("\n\n\n", ""));
+    }
+
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".java")) {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
@@ -56,13 +75,17 @@ public class ANTLR4Tools {
             }
             visitor.visit(tree);
             comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".java")) {
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
@@ -79,13 +102,18 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
+
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
                 || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
                 || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
@@ -110,13 +138,17 @@ public class ANTLR4Tools {
             }
             visitor.visit(tree);
             comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzeCPPSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
                 || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                 || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
@@ -136,115 +168,75 @@ public class ANTLR4Tools {
                 comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             }
             visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath, boolean printTree) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (filePathProjectAsRoot.endsWith(".py")) {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
-            Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(fileContent));
+            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            Python3Parser parser = new Python3Parser(tokens);
+            PythonParser parser = new PythonParser(tokens);
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
             ParseTree tree;
             try {
                 tree = parser.file_input();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
-            Python3Visitor visitor;
+            PythonVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Python3Visitor(true);
+                visitor = new PythonVisitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new Python3Visitor(false);
+                visitor = new PythonVisitor(false);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
         }
     }
 
-    public static ANTLR4Results analyzePythonSyntaxTree(String filePath) throws IOException {
+    public static ANTLR4Results analyzePythonSyntaxTree(String filePath, boolean printTree) throws IOException {
         if (filePath.endsWith(".py")) {
-            List<SyntaxStructure> comments;
-            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            Python3Lexer lexer = new Python3Lexer(fileStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            Python3Parser parser = new Python3Parser(tokens);
-            ParseTree tree = parser.file_input();
-            Python3Visitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Python3Visitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
-            } else {
-                visitor = new Python3Visitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
-            }
-            visitor.visit(tree);
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
-
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePathProjectAsRoot, String commit, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
-        if (filePathProjectAsRoot.endsWith(".cs")) {
             String fileContent;
-            fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
-            List<SyntaxStructure> comments;
-            CSharpLexer lexer = new CSharpLexer(new ANTLRInputStream(fileContent));
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens);
-            ParseTree tree = parser.compilation_unit();
-            CSVisitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CSVisitor(true);
-            } else {
-                visitor = new CSVisitor(false);
-            }
-            visitor.visit(tree);
-            /*/Imprimir_arvore-------------------------------------------------------
-
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.open();
-
-            //----------------------------------------------------------------------*/
-            comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
-
-    public static ANTLR4Results analyzeCSharpSyntaxTree(String filePath) throws IOException {
-        if (filePath.endsWith(".cs")) {
+            fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            CSharpLexer lexer = new CSharpLexer(fileStream);
+            PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens);
-            ParseTree tree = parser.compilation_unit();
-            CSVisitor visitor;
+            PythonParser parser = new PythonParser(tokens);
+            ParseTree tree = parser.file_input();
+            PythonVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CSVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
+                visitor = new PythonVisitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             } else {
-                visitor = new CSVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.CSHARP);
+                visitor = new PythonVisitor(false);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
             }
             visitor.visit(tree);
-            /*/Imprimir_arvore-------------------------------------------------------
-
-            TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-            viewer.open();
-
-            //----------------------------------------------------------------------*/
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
             return new ANTLR4Results(visitor.getList(), comments);
         } else {
             throw new IOException();
@@ -255,16 +247,14 @@ public class ANTLR4Tools {
         try {
             ANTLR4Results results;
             if (filePathProjectAsRoot.endsWith(".java")) {
-                results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzeJava9SyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if (filePathProjectAsRoot.endsWith(".cpp") || filePathProjectAsRoot.endsWith(".h")
                     || filePathProjectAsRoot.endsWith(".cc") || filePathProjectAsRoot.endsWith(".cxx")
                     || filePathProjectAsRoot.endsWith(".cp") || filePathProjectAsRoot.endsWith(".hxx")
                     || filePathProjectAsRoot.endsWith(".hpp")) {
-                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzeCPPSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else if (filePathProjectAsRoot.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
-            } else if ((filePathProjectAsRoot.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePathProjectAsRoot, commit, repositoryPath);
+                results = analyzePythonSyntaxTree(filePathProjectAsRoot, commit, repositoryPath, false);
             } else {
                 return null;
             }
@@ -284,16 +274,14 @@ public class ANTLR4Tools {
             List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
             boolean isOutmost;
             if (filePath.endsWith(".java")) {
-                results = analyzeJava9SyntaxTree(filePath);
+                results = analyzeJava9SyntaxTree(filePath, false);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
                     || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                     || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
                     || filePath.endsWith(".hpp")) {
-                results = analyzeCPPSyntaxTree(filePath);
+                results = analyzeCPPSyntaxTree(filePath, false);
             } else if (filePath.endsWith(".py")) {
-                results = analyzePythonSyntaxTree(filePath);
-            } else if ((filePath.endsWith(".cs"))) {
-                results = analyzeCSharpSyntaxTree(filePath);
+                results = analyzePythonSyntaxTree(filePath, false);
             } else {
                 return null;
             }

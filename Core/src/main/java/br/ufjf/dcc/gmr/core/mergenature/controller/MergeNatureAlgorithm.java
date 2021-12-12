@@ -573,8 +573,8 @@ public class MergeNatureAlgorithm {
                         }
                         Collections.sort(v1Structures);
                         Collections.sort(v1OutmostedStructures);
-                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures) + "\n\n" + rawString);
-                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures) + "\n\n" + outmostedRawString);
+                        conflictRegion.setStructures(ListUtils.getTextListStringToString(v1Structures)/* + "\n\n" + rawString*/);
+                        conflictRegion.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures)/* + "\n\n" + outmostedRawString*/);
                     }
                 }
             }

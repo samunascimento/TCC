@@ -1,4 +1,4 @@
-// Generated from /home/joao_lima/Git/UFJF/Core/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/java9/Java9.g4 by ANTLR 4.8
+// Generated from /home/joao_lima/Git/MergeNature/Core/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/java9/Java9.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
