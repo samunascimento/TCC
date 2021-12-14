@@ -23,13 +23,9 @@ import java.util.List;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.ListTokenSource;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-//Antlr4.Runtime.IToken
 
 /**
  * Auxiliaries methods for ANTLR4's utilities
@@ -124,20 +120,24 @@ public class ANTLR4Tools {
             CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
             ParseTree tree;
             try {
-                tree = parser.translationunit();
+                tree = parser.translationUnit();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
                 visitor = new CPPVisitor(false);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             if (printTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
@@ -153,19 +153,29 @@ public class ANTLR4Tools {
                 || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                 || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
                 || filePath.endsWith(".hpp")) {
+            String fileContent;
+            fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            CPP14Lexer lexer = new CPP14Lexer(fileStream);
+            CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
-            ParseTree tree = parser.translationunit();
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
+            ParseTree tree;
+            try {
+                tree = parser.translationUnit();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
             CPPVisitor visitor;
             if (parser.getNumberOfSyntaxErrors() > 0) {
                 visitor = new CPPVisitor(true);
-                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePath), fileContent, listener.getSyntaxErrors());
             } else {
                 visitor = new CPPVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
             if (printTree) {
