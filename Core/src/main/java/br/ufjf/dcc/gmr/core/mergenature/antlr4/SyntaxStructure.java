@@ -43,16 +43,17 @@ public class SyntaxStructure {
             }
         } else if (language == Language.CPP) {
             if (token.getType() == CPP14Lexer.BlockComment) {
-                this.structureType = "BlockComment";
+                this.structureType = "MultiLineComment";
             } else if (token.getType() == CPP14Lexer.LineComment) {
                 this.structureType = "LineComment";
             }
         } else if (language == Language.PYTHON) {
             if (token.getType() == PythonLexer.COMMENT) {
                 this.structureType = "LineComment";
+            } else if (token.getType() == PythonLexer.MULTI_LINE_COMMENT){
+                this.structureType = "MultiLineComment";
             }
         } else {
-
             this.structureType = "Unknown";
         }
 

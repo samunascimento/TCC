@@ -39,6 +39,18 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitArray_initializer(PythonParser.Array_initializerContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitArray(PythonParser.ArrayContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitRoot(PythonParser.RootContext ctx) {
         process(ctx);
         return visitChildren(ctx);
@@ -52,6 +64,12 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     @Override
     public Object visitFile_input(PythonParser.File_inputContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFunction_call(PythonParser.Function_callContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }
@@ -459,7 +477,61 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitArray_acess(PythonParser.Array_acessContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitArguments(PythonParser.ArgumentsContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitWhile_signature(PythonParser.While_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitExcept_signature(PythonParser.Except_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitVariable(PythonParser.VariableContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFunc_signature(PythonParser.Func_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitClass_signature(PythonParser.Class_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFinally_signature(PythonParser.Finally_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFor_signature(PythonParser.For_signatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIf_signature(PythonParser.If_signatureContext ctx) {
         process(ctx);
         return visitChildren(ctx);
     }

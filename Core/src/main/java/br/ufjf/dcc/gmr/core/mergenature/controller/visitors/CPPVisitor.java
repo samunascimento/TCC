@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller.visitors;
 
-import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14BaseVisitor;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14ParserBaseVisitor;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp.CPP14Parser;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.SyntaxStructure;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
  *
  * @author luand
  */
-public class CPPVisitor extends CPP14BaseVisitor<Object> {
+public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
     private boolean warning;
@@ -56,1375 +56,958 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
     }
 
     @Override
-    public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
-        if (ctx.getText().contains("include")) {
-            if (ctx.getText().contains("//")) {
-                String[] auxArray = ctx.getText().split("//");
-                process(ctx, "Includedeclaration", auxArray[0]);
-            } else {
-                process(ctx, "Includedeclaration", ctx.getText());
-            }
-        }
-        return visitChildren(ctx);
+    public Object visitLiteral(CPP14Parser.LiteralContext ctx) {
+        return super.visitLiteral(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitTranslationunit(CPP14Parser.TranslationunitContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTheOperator(CPP14Parser.TheOperatorContext ctx) {
+        return super.visitTheOperator(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPrimaryexpression(CPP14Parser.PrimaryexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitNoeExceptSpecification(CPP14Parser.NoeExceptSpecificationContext ctx) {
+        return super.visitNoeExceptSpecification(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitIdexpression(CPP14Parser.IdexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTypeIdList(CPP14Parser.TypeIdListContext ctx) {
+        return super.visitTypeIdList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUnqualifiedid(CPP14Parser.UnqualifiedidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitDynamicExceptionSpecification(CPP14Parser.DynamicExceptionSpecificationContext ctx) {
+        return super.visitDynamicExceptionSpecification(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitQualifiedid(CPP14Parser.QualifiedidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitExceptionSpecification(CPP14Parser.ExceptionSpecificationContext ctx) {
+        return super.visitExceptionSpecification(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitNestednamespecifier(CPP14Parser.NestednamespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitThrowExpression(CPP14Parser.ThrowExpressionContext ctx) {
+        return super.visitThrowExpression(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitLambdaexpression(CPP14Parser.LambdaexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLambdaintroducer(CPP14Parser.LambdaintroducerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLambdacapture(CPP14Parser.LambdacaptureContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCapturedefault(CPP14Parser.CapturedefaultContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCapturelist(CPP14Parser.CapturelistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCapture(CPP14Parser.CaptureContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitSimplecapture(CPP14Parser.SimplecaptureContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitcapture(CPP14Parser.InitcaptureContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLambdadeclarator(CPP14Parser.LambdadeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPostfixexpression(CPP14Parser.PostfixexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypeidofexpr(CPP14Parser.TypeidofexprContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypeidofthetypeid(CPP14Parser.TypeidofthetypeidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExpressionlist(CPP14Parser.ExpressionlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPseudodestructorname(CPP14Parser.PseudodestructornameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitUnaryexpression(CPP14Parser.UnaryexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitUnaryoperator(CPP14Parser.UnaryoperatorContext ctx) {
-             //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNewexpression(CPP14Parser.NewexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNewplacement(CPP14Parser.NewplacementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNewtypeid(CPP14Parser.NewtypeidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNewdeclarator(CPP14Parser.NewdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNoptrnewdeclarator(CPP14Parser.NoptrnewdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNewinitializer(CPP14Parser.NewinitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeleteexpression(CPP14Parser.DeleteexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNoexceptexpression(CPP14Parser.NoexceptexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCastexpression(CPP14Parser.CastexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPmexpression(CPP14Parser.PmexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMultiplicativeexpression(CPP14Parser.MultiplicativeexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAdditiveexpression(CPP14Parser.AdditiveexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitShiftexpression(CPP14Parser.ShiftexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitShiftoperator(CPP14Parser.ShiftoperatorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitRelationalexpression(CPP14Parser.RelationalexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEqualityexpression(CPP14Parser.EqualityexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAndexpression(CPP14Parser.AndexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExclusiveorexpression(CPP14Parser.ExclusiveorexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInclusiveorexpression(CPP14Parser.InclusiveorexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLogicalandexpression(CPP14Parser.LogicalandexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLogicalorexpression(CPP14Parser.LogicalorexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitConditionalexpression(CPP14Parser.ConditionalexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAssignmentexpression(CPP14Parser.AssignmentexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAssignmentoperator(CPP14Parser.AssignmentoperatorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExpression(CPP14Parser.ExpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitConstantexpression(CPP14Parser.ConstantexpressionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitStatement(CPP14Parser.StatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLabeledstatement(CPP14Parser.LabeledstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExpressionstatement(CPP14Parser.ExpressionstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCompoundstatement(CPP14Parser.CompoundstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitStatementseq(CPP14Parser.StatementseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitSelectionstatement(CPP14Parser.SelectionstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCondition(CPP14Parser.ConditionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitIterationstatement(CPP14Parser.IterationstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitForinitstatement(CPP14Parser.ForinitstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitForrangedeclaration(CPP14Parser.ForrangedeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitForrangeinitializer(CPP14Parser.ForrangeinitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitJumpstatement(CPP14Parser.JumpstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclarationstatement(CPP14Parser.DeclarationstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclaration(CPP14Parser.DeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBlockdeclaration(CPP14Parser.BlockdeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAliasdeclaration(CPP14Parser.AliasdeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitSimpledeclaration(CPP14Parser.SimpledeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitStatic_assertdeclaration(CPP14Parser.Static_assertdeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEmptydeclaration(CPP14Parser.EmptydeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributedeclaration(CPP14Parser.AttributedeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclspecifier(CPP14Parser.DeclspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclspecifierseq(CPP14Parser.DeclspecifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitStorageclassspecifier(CPP14Parser.StorageclassspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitFunctionspecifier(CPP14Parser.FunctionspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypedefname(CPP14Parser.TypedefnameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypespecifier(CPP14Parser.TypespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTrailingtypespecifier(CPP14Parser.TrailingtypespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypespecifierseq(CPP14Parser.TypespecifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTrailingtypespecifierseq(CPP14Parser.TrailingtypespecifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitSimpletypespecifier(CPP14Parser.SimpletypespecifierContext ctx) {
-             //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitThetypename(CPP14Parser.ThetypenameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDecltypespecifier(CPP14Parser.DecltypespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitElaboratedtypespecifier(CPP14Parser.ElaboratedtypespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumname(CPP14Parser.EnumnameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumspecifier(CPP14Parser.EnumspecifierContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumhead(CPP14Parser.EnumheadContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitOpaqueenumdeclaration(CPP14Parser.OpaqueenumdeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumkey(CPP14Parser.EnumkeyContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumbase(CPP14Parser.EnumbaseContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumeratorlist(CPP14Parser.EnumeratorlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumeratordefinition(CPP14Parser.EnumeratordefinitionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitEnumerator(CPP14Parser.EnumeratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamespacename(CPP14Parser.NamespacenameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitOriginalnamespacename(CPP14Parser.OriginalnamespacenameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamespacedefinition(CPP14Parser.NamespacedefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamednamespacedefinition(CPP14Parser.NamednamespacedefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitOriginalnamespacedefinition(CPP14Parser.OriginalnamespacedefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExtensionnamespacedefinition(CPP14Parser.ExtensionnamespacedefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitUnnamednamespacedefinition(CPP14Parser.UnnamednamespacedefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamespacebody(CPP14Parser.NamespacebodyContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamespacealias(CPP14Parser.NamespacealiasContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNamespacealiasdefinition(CPP14Parser.NamespacealiasdefinitionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitQualifiednamespacespecifier(CPP14Parser.QualifiednamespacespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitUsingdeclaration(CPP14Parser.UsingdeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitUsingdirective(CPP14Parser.UsingdirectiveContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAsmdefinition(CPP14Parser.AsmdefinitionContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLinkagespecification(CPP14Parser.LinkagespecificationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributespecifierseq(CPP14Parser.AttributespecifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributespecifier(CPP14Parser.AttributespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAlignmentspecifier(CPP14Parser.AlignmentspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributelist(CPP14Parser.AttributelistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttribute(CPP14Parser.AttributeContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributetoken(CPP14Parser.AttributetokenContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributescopedtoken(CPP14Parser.AttributescopedtokenContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributenamespace(CPP14Parser.AttributenamespaceContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAttributeargumentclause(CPP14Parser.AttributeargumentclauseContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBalancedtokenseq(CPP14Parser.BalancedtokenseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBalancedtoken(CPP14Parser.BalancedtokenContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitdeclaratorlist(CPP14Parser.InitdeclaratorlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitdeclarator(CPP14Parser.InitdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPtrdeclarator(CPP14Parser.PtrdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNoptrdeclarator(CPP14Parser.NoptrdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitParametersandqualifiers(CPP14Parser.ParametersandqualifiersContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTrailingreturntype(CPP14Parser.TrailingreturntypeContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPtroperator(CPP14Parser.PtroperatorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCvqualifierseq(CPP14Parser.CvqualifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCvqualifier(CPP14Parser.CvqualifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitRefqualifier(CPP14Parser.RefqualifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitDeclaratorid(CPP14Parser.DeclaratoridContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitThetypeid(CPP14Parser.ThetypeidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAbstractdeclarator(CPP14Parser.AbstractdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPtrabstractdeclarator(CPP14Parser.PtrabstractdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNoptrabstractdeclarator(CPP14Parser.NoptrabstractdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAbstractpackdeclarator(CPP14Parser.AbstractpackdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitNoptrabstractpackdeclarator(CPP14Parser.NoptrabstractpackdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitParameterdeclarationclause(CPP14Parser.ParameterdeclarationclauseContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitParameterdeclarationlist(CPP14Parser.ParameterdeclarationlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitParameterdeclaration(CPP14Parser.ParameterdeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitFunctiondefinition(CPP14Parser.FunctiondefinitionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitFunctionbody(CPP14Parser.FunctionbodyContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitializer(CPP14Parser.InitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBraceorequalinitializer(CPP14Parser.BraceorequalinitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitializerclause(CPP14Parser.InitializerclauseContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitInitializerlist(CPP14Parser.InitializerlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBracedinitlist(CPP14Parser.BracedinitlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClassname(CPP14Parser.ClassnameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClassspecifier(CPP14Parser.ClassspecifierContext ctx) {
-              try {
-            if (ctx.classhead().classkey().Struct() != null) {
-                specialProcess(ctx, "Struct");
-            }else{
-                process(ctx);
-            }
-
-        } catch (NullPointerException | IndexOutOfBoundsException ex) {
-          
-        }
-      
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClasshead(CPP14Parser.ClassheadContext ctx) {     
-          process(ctx);     
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClassheadname(CPP14Parser.ClassheadnameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClassvirtspecifier(CPP14Parser.ClassvirtspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClasskey(CPP14Parser.ClasskeyContext ctx) {
-        //proces(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMemberspecification(CPP14Parser.MemberspecificationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMemberdeclaratorlist(CPP14Parser.MemberdeclaratorlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMemberdeclarator(CPP14Parser.MemberdeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitVirtspecifierseq(CPP14Parser.VirtspecifierseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitVirtspecifier(CPP14Parser.VirtspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitPurespecifier(CPP14Parser.PurespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBaseclause(CPP14Parser.BaseclauseContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBasespecifierlist(CPP14Parser.BasespecifierlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBasespecifier(CPP14Parser.BasespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitClassordecltype(CPP14Parser.ClassordecltypeContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitBasetypespecifier(CPP14Parser.BasetypespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitAccessspecifier(CPP14Parser.AccessspecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitConversionfunctionid(CPP14Parser.ConversionfunctionidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitConversiontypeid(CPP14Parser.ConversiontypeidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitConversiondeclarator(CPP14Parser.ConversiondeclaratorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitCtorinitializer(CPP14Parser.CtorinitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMeminitializerlist(CPP14Parser.MeminitializerlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMeminitializer(CPP14Parser.MeminitializerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitMeminitializerid(CPP14Parser.MeminitializeridContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitOperatorfunctionid(CPP14Parser.OperatorfunctionidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitLiteraloperatorid(CPP14Parser.LiteraloperatoridContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplatedeclaration(CPP14Parser.TemplatedeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplateparameterlist(CPP14Parser.TemplateparameterlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplateparameter(CPP14Parser.TemplateparameterContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypeparameter(CPP14Parser.TypeparameterContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitSimpletemplateid(CPP14Parser.SimpletemplateidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplateid(CPP14Parser.TemplateidContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplatename(CPP14Parser.TemplatenameContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplateargumentlist(CPP14Parser.TemplateargumentlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTemplateargument(CPP14Parser.TemplateargumentContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTypenamespecifier(CPP14Parser.TypenamespecifierContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExplicitinstantiation(CPP14Parser.ExplicitinstantiationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitExplicitspecialization(CPP14Parser.ExplicitspecializationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitTryblock(CPP14Parser.TryblockContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitFunctiontryblock(CPP14Parser.FunctiontryblockContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Object visitHandlerseq(CPP14Parser.HandlerseqContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitExceptionDeclaration(CPP14Parser.ExceptionDeclarationContext ctx) {
+        return super.visitExceptionDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Object visitHandler(CPP14Parser.HandlerContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+        return super.visitHandler(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitExceptiondeclaration(CPP14Parser.ExceptiondeclarationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitHandlerSeq(CPP14Parser.HandlerSeqContext ctx) {
+        return super.visitHandlerSeq(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitThrowexpression(CPP14Parser.ThrowexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitFunctionTryBlock(CPP14Parser.FunctionTryBlockContext ctx) {
+        return super.visitFunctionTryBlock(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitExceptionspecification(CPP14Parser.ExceptionspecificationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTryBlock(CPP14Parser.TryBlockContext ctx) {
+        return super.visitTryBlock(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitDynamicexceptionspecification(CPP14Parser.DynamicexceptionspecificationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitExplicitSpecialization(CPP14Parser.ExplicitSpecializationContext ctx) {
+        return super.visitExplicitSpecialization(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitTypeidlist(CPP14Parser.TypeidlistContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitExplicitInstantiation(CPP14Parser.ExplicitInstantiationContext ctx) {
+        return super.visitExplicitInstantiation(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitNoexceptspecification(CPP14Parser.NoexceptspecificationContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTypeNameSpecifier(CPP14Parser.TypeNameSpecifierContext ctx) {
+        return super.visitTypeNameSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitTheoperator(CPP14Parser.TheoperatorContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateArgument(CPP14Parser.TemplateArgumentContext ctx) {
+        return super.visitTemplateArgument(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitLiteral(CPP14Parser.LiteralContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateArgumentList(CPP14Parser.TemplateArgumentListContext ctx) {
+        return super.visitTemplateArgumentList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitBooleanliteral(CPP14Parser.BooleanliteralContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateName(CPP14Parser.TemplateNameContext ctx) {
+        return super.visitTemplateName(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPointerliteral(CPP14Parser.PointerliteralContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateId(CPP14Parser.TemplateIdContext ctx) {
+        return super.visitTemplateId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitUserdefinedliteral(CPP14Parser.UserdefinedliteralContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitSimpleTemplateId(CPP14Parser.SimpleTemplateIdContext ctx) {
+        return super.visitSimpleTemplateId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPointerdeclaration(CPP14Parser.PointerdeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitTypeParameter(CPP14Parser.TypeParameterContext ctx) {
+        return super.visitTypeParameter(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitNamespacesignature(CPP14Parser.NamespacesignatureContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateParameter(CPP14Parser.TemplateParameterContext ctx) {
+        return super.visitTemplateParameter(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitIfstatement(CPP14Parser.IfstatementContext ctx) {
-       //process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateparameterList(CPP14Parser.TemplateparameterListContext ctx) {
+        return super.visitTemplateparameterList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPseudodestructcaller(CPP14Parser.PseudodestructcallerContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitTemplateDeclaration(CPP14Parser.TemplateDeclarationContext ctx) {
+        return super.visitTemplateDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitPseudodestructdeclaration(CPP14Parser.PseudodestructdeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitLiteralOperatorId(CPP14Parser.LiteralOperatorIdContext ctx) {
+        return super.visitLiteralOperatorId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitVariabledeclaration(CPP14Parser.VariabledeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitOperatorFunctionId(CPP14Parser.OperatorFunctionIdContext ctx) {
+        return super.visitOperatorFunctionId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitRealassignmentexpression(CPP14Parser.RealassignmentexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMeminitializerid(CPP14Parser.MeminitializeridContext ctx) {
+        return super.visitMeminitializerid(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitFunctioninvocation(CPP14Parser.FunctioninvocationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMemInitializer(CPP14Parser.MemInitializerContext ctx) {
+        return super.visitMemInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitArrayaccess(CPP14Parser.ArrayaccessContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMemInitializerList(CPP14Parser.MemInitializerListContext ctx) {
+        return super.visitMemInitializerList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitArraydeclaration(CPP14Parser.ArraydeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitConstructorInitializer(CPP14Parser.ConstructorInitializerContext ctx) {
+        return super.visitConstructorInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitCatchexpression(CPP14Parser.CatchexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitConversionDeclarator(CPP14Parser.ConversionDeclaratorContext ctx) {
+        return super.visitConversionDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitFunctiontryblockexpression(CPP14Parser.FunctiontryblockexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitConversionTypeId(CPP14Parser.ConversionTypeIdContext ctx) {
+        return super.visitConversionTypeId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitTryblockexpression(CPP14Parser.TryblockexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitConversionFunctionId(CPP14Parser.ConversionFunctionIdContext ctx) {
+        return super.visitConversionFunctionId(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitReturnstatement(CPP14Parser.ReturnstatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitAccessSpecifier(CPP14Parser.AccessSpecifierContext ctx) {
+        return super.visitAccessSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitContinuestatement(CPP14Parser.ContinuestatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitBaseTypeSpecifier(CPP14Parser.BaseTypeSpecifierContext ctx) {
+        return super.visitBaseTypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitBreakstatement(CPP14Parser.BreakstatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitClassOrDeclType(CPP14Parser.ClassOrDeclTypeContext ctx) {
+        return super.visitClassOrDeclType(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitSwitchexpression(CPP14Parser.SwitchexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitBaseSpecifier(CPP14Parser.BaseSpecifierContext ctx) {
+        return super.visitBaseSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitIfexpression(CPP14Parser.IfexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitBaseSpecifierList(CPP14Parser.BaseSpecifierListContext ctx) {
+        return super.visitBaseSpecifierList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitCaseexpression(CPP14Parser.CaseexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitBaseClause(CPP14Parser.BaseClauseContext ctx) {
+        return super.visitBaseClause(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitBasicforexpression(CPP14Parser.BasicforexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitPureSpecifier(CPP14Parser.PureSpecifierContext ctx) {
+        return super.visitPureSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitEnhancedforexpression(CPP14Parser.EnhancedforexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitVirtualSpecifier(CPP14Parser.VirtualSpecifierContext ctx) {
+        return super.visitVirtualSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitDostatement(CPP14Parser.DostatementContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitVirtualSpecifierSeq(CPP14Parser.VirtualSpecifierSeqContext ctx) {
+        return super.visitVirtualSpecifierSeq(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitWhileexpression(CPP14Parser.WhileexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMemberDeclarator(CPP14Parser.MemberDeclaratorContext ctx) {
+        return super.visitMemberDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitRealcastexpression(CPP14Parser.RealcastexpressionContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMemberDeclaratorList(CPP14Parser.MemberDeclaratorListContext ctx) {
+        return super.visitMemberDeclaratorList(ctx); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object visitFunctionhead(CPP14Parser.FunctionheadContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+    public Object visitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
+        return super.visitMemberdeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Object visitMemberSpecification(CPP14Parser.MemberSpecificationContext ctx) {
+        return super.visitMemberSpecification(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassKey(CPP14Parser.ClassKeyContext ctx) {
+        return super.visitClassKey(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassVirtSpecifier(CPP14Parser.ClassVirtSpecifierContext ctx) {
+        return super.visitClassVirtSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassHeadName(CPP14Parser.ClassHeadNameContext ctx) {
+        return super.visitClassHeadName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassHead(CPP14Parser.ClassHeadContext ctx) {
+        return super.visitClassHead(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassSpecifier(CPP14Parser.ClassSpecifierContext ctx) {
+        return super.visitClassSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitClassName(CPP14Parser.ClassNameContext ctx) {
+        return super.visitClassName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitBracedInitList(CPP14Parser.BracedInitListContext ctx) {
+        return super.visitBracedInitList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitializerList(CPP14Parser.InitializerListContext ctx) {
+        return super.visitInitializerList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitializerClause(CPP14Parser.InitializerClauseContext ctx) {
+        return super.visitInitializerClause(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitBraceOrEqualInitializer(CPP14Parser.BraceOrEqualInitializerContext ctx) {
+        return super.visitBraceOrEqualInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitializer(CPP14Parser.InitializerContext ctx) {
+        return super.visitInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFunctionBody(CPP14Parser.FunctionBodyContext ctx) {
+        return super.visitFunctionBody(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFunctionDefinition(CPP14Parser.FunctionDefinitionContext ctx) {
+        return super.visitFunctionDefinition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitParameterDeclaration(CPP14Parser.ParameterDeclarationContext ctx) {
+        return super.visitParameterDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitParameterDeclarationList(CPP14Parser.ParameterDeclarationListContext ctx) {
+        return super.visitParameterDeclarationList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitParameterDeclarationClause(CPP14Parser.ParameterDeclarationClauseContext ctx) {
+        return super.visitParameterDeclarationClause(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNoPointerAbstractPackDeclarator(CPP14Parser.NoPointerAbstractPackDeclaratorContext ctx) {
+        return super.visitNoPointerAbstractPackDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAbstractPackDeclarator(CPP14Parser.AbstractPackDeclaratorContext ctx) {
+        return super.visitAbstractPackDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNoPointerAbstractDeclarator(CPP14Parser.NoPointerAbstractDeclaratorContext ctx) {
+        return super.visitNoPointerAbstractDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPointerAbstractDeclarator(CPP14Parser.PointerAbstractDeclaratorContext ctx) {
+        return super.visitPointerAbstractDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAbstractDeclarator(CPP14Parser.AbstractDeclaratorContext ctx) {
+        return super.visitAbstractDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTheTypeId(CPP14Parser.TheTypeIdContext ctx) {
+        return super.visitTheTypeId(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclaratorid(CPP14Parser.DeclaratoridContext ctx) {
+        return super.visitDeclaratorid(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRefqualifier(CPP14Parser.RefqualifierContext ctx) {
+        return super.visitRefqualifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCvQualifier(CPP14Parser.CvQualifierContext ctx) {
+        return super.visitCvQualifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCvqualifierseq(CPP14Parser.CvqualifierseqContext ctx) {
+        return super.visitCvqualifierseq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPointerOperator(CPP14Parser.PointerOperatorContext ctx) {
+        return super.visitPointerOperator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTrailingReturnType(CPP14Parser.TrailingReturnTypeContext ctx) {
+        return super.visitTrailingReturnType(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitParametersAndQualifiers(CPP14Parser.ParametersAndQualifiersContext ctx) {
+        return super.visitParametersAndQualifiers(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNoPointerDeclarator(CPP14Parser.NoPointerDeclaratorContext ctx) {
+        return super.visitNoPointerDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPointerDeclarator(CPP14Parser.PointerDeclaratorContext ctx) {
+        return super.visitPointerDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclarator(CPP14Parser.DeclaratorContext ctx) {
+        return super.visitDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitDeclarator(CPP14Parser.InitDeclaratorContext ctx) {
+        return super.visitInitDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitDeclaratorList(CPP14Parser.InitDeclaratorListContext ctx) {
+        return super.visitInitDeclaratorList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitBalancedtoken(CPP14Parser.BalancedtokenContext ctx) {
+        return super.visitBalancedtoken(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitBalancedTokenSeq(CPP14Parser.BalancedTokenSeqContext ctx) {
+        return super.visitBalancedTokenSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeArgumentClause(CPP14Parser.AttributeArgumentClauseContext ctx) {
+        return super.visitAttributeArgumentClause(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeNamespace(CPP14Parser.AttributeNamespaceContext ctx) {
+        return super.visitAttributeNamespace(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttribute(CPP14Parser.AttributeContext ctx) {
+        return super.visitAttribute(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeList(CPP14Parser.AttributeListContext ctx) {
+        return super.visitAttributeList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAlignmentspecifier(CPP14Parser.AlignmentspecifierContext ctx) {
+        return super.visitAlignmentspecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeSpecifier(CPP14Parser.AttributeSpecifierContext ctx) {
+        return super.visitAttributeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeSpecifierSeq(CPP14Parser.AttributeSpecifierSeqContext ctx) {
+        return super.visitAttributeSpecifierSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLinkageSpecification(CPP14Parser.LinkageSpecificationContext ctx) {
+        return super.visitLinkageSpecification(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAsmDefinition(CPP14Parser.AsmDefinitionContext ctx) {
+        return super.visitAsmDefinition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitUsingDirective(CPP14Parser.UsingDirectiveContext ctx) {
+        return super.visitUsingDirective(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitUsingDeclaration(CPP14Parser.UsingDeclarationContext ctx) {
+        return super.visitUsingDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitQualifiednamespacespecifier(CPP14Parser.QualifiednamespacespecifierContext ctx) {
+        return super.visitQualifiednamespacespecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNamespaceAliasDefinition(CPP14Parser.NamespaceAliasDefinitionContext ctx) {
+        return super.visitNamespaceAliasDefinition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNamespaceAlias(CPP14Parser.NamespaceAliasContext ctx) {
+        return super.visitNamespaceAlias(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNamespaceDefinition(CPP14Parser.NamespaceDefinitionContext ctx) {
+        return super.visitNamespaceDefinition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitOriginalNamespaceName(CPP14Parser.OriginalNamespaceNameContext ctx) {
+        return super.visitOriginalNamespaceName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNamespaceName(CPP14Parser.NamespaceNameContext ctx) {
+        return super.visitNamespaceName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumerator(CPP14Parser.EnumeratorContext ctx) {
+        return super.visitEnumerator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumeratorDefinition(CPP14Parser.EnumeratorDefinitionContext ctx) {
+        return super.visitEnumeratorDefinition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumeratorList(CPP14Parser.EnumeratorListContext ctx) {
+        return super.visitEnumeratorList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumbase(CPP14Parser.EnumbaseContext ctx) {
+        return super.visitEnumbase(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumkey(CPP14Parser.EnumkeyContext ctx) {
+        return super.visitEnumkey(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitOpaqueEnumDeclaration(CPP14Parser.OpaqueEnumDeclarationContext ctx) {
+        return super.visitOpaqueEnumDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumHead(CPP14Parser.EnumHeadContext ctx) {
+        return super.visitEnumHead(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumSpecifier(CPP14Parser.EnumSpecifierContext ctx) {
+        return super.visitEnumSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEnumName(CPP14Parser.EnumNameContext ctx) {
+        return super.visitEnumName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitElaboratedTypeSpecifier(CPP14Parser.ElaboratedTypeSpecifierContext ctx) {
+        return super.visitElaboratedTypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDecltypeSpecifier(CPP14Parser.DecltypeSpecifierContext ctx) {
+        return super.visitDecltypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTheTypeName(CPP14Parser.TheTypeNameContext ctx) {
+        return super.visitTheTypeName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleTypeSpecifier(CPP14Parser.SimpleTypeSpecifierContext ctx) {
+        return super.visitSimpleTypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleTypeSignednessModifier(CPP14Parser.SimpleTypeSignednessModifierContext ctx) {
+        return super.visitSimpleTypeSignednessModifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleTypeLengthModifier(CPP14Parser.SimpleTypeLengthModifierContext ctx) {
+        return super.visitSimpleTypeLengthModifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTrailingTypeSpecifierSeq(CPP14Parser.TrailingTypeSpecifierSeqContext ctx) {
+        return super.visitTrailingTypeSpecifierSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTypeSpecifierSeq(CPP14Parser.TypeSpecifierSeqContext ctx) {
+        return super.visitTypeSpecifierSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTrailingTypeSpecifier(CPP14Parser.TrailingTypeSpecifierContext ctx) {
+        return super.visitTrailingTypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTypeSpecifier(CPP14Parser.TypeSpecifierContext ctx) {
+        return super.visitTypeSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTypedefName(CPP14Parser.TypedefNameContext ctx) {
+        return super.visitTypedefName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFunctionSpecifier(CPP14Parser.FunctionSpecifierContext ctx) {
+        return super.visitFunctionSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitStorageClassSpecifier(CPP14Parser.StorageClassSpecifierContext ctx) {
+        return super.visitStorageClassSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclSpecifierSeq(CPP14Parser.DeclSpecifierSeqContext ctx) {
+        return super.visitDeclSpecifierSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclSpecifier(CPP14Parser.DeclSpecifierContext ctx) {
+        return super.visitDeclSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAttributeDeclaration(CPP14Parser.AttributeDeclarationContext ctx) {
+        return super.visitAttributeDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEmptyDeclaration(CPP14Parser.EmptyDeclarationContext ctx) {
+        return super.visitEmptyDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitStaticAssertDeclaration(CPP14Parser.StaticAssertDeclarationContext ctx) {
+        return super.visitStaticAssertDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleDeclaration(CPP14Parser.SimpleDeclarationContext ctx) {
+        return super.visitSimpleDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAliasDeclaration(CPP14Parser.AliasDeclarationContext ctx) {
+        return super.visitAliasDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitBlockDeclaration(CPP14Parser.BlockDeclarationContext ctx) {
+        return super.visitBlockDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclaration(CPP14Parser.DeclarationContext ctx) {
+        return super.visitDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
+        return super.visitDeclarationseq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeclarationStatement(CPP14Parser.DeclarationStatementContext ctx) {
+        return super.visitDeclarationStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitJumpStatement(CPP14Parser.JumpStatementContext ctx) {
+        return super.visitJumpStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitForRangeInitializer(CPP14Parser.ForRangeInitializerContext ctx) {
+        return super.visitForRangeInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitForRangeDeclaration(CPP14Parser.ForRangeDeclarationContext ctx) {
+        return super.visitForRangeDeclaration(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitForInitStatement(CPP14Parser.ForInitStatementContext ctx) {
+        return super.visitForInitStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitIterationStatement(CPP14Parser.IterationStatementContext ctx) {
+        return super.visitIterationStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCondition(CPP14Parser.ConditionContext ctx) {
+        return super.visitCondition(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSelectionStatement(CPP14Parser.SelectionStatementContext ctx) {
+        return super.visitSelectionStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitStatementSeq(CPP14Parser.StatementSeqContext ctx) {
+        return super.visitStatementSeq(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCompoundStatement(CPP14Parser.CompoundStatementContext ctx) {
+        return super.visitCompoundStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitExpressionStatement(CPP14Parser.ExpressionStatementContext ctx) {
+        return super.visitExpressionStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLabeledStatement(CPP14Parser.LabeledStatementContext ctx) {
+        return super.visitLabeledStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitStatement(CPP14Parser.StatementContext ctx) {
+        return super.visitStatement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitConstantExpression(CPP14Parser.ConstantExpressionContext ctx) {
+        return super.visitConstantExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitExpression(CPP14Parser.ExpressionContext ctx) {
+        return super.visitExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAssignmentOperator(CPP14Parser.AssignmentOperatorContext ctx) {
+        return super.visitAssignmentOperator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAssignmentExpression(CPP14Parser.AssignmentExpressionContext ctx) {
+        return super.visitAssignmentExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitConditionalExpression(CPP14Parser.ConditionalExpressionContext ctx) {
+        return super.visitConditionalExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLogicalOrExpression(CPP14Parser.LogicalOrExpressionContext ctx) {
+        return super.visitLogicalOrExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLogicalAndExpression(CPP14Parser.LogicalAndExpressionContext ctx) {
+        return super.visitLogicalAndExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInclusiveOrExpression(CPP14Parser.InclusiveOrExpressionContext ctx) {
+        return super.visitInclusiveOrExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitExclusiveOrExpression(CPP14Parser.ExclusiveOrExpressionContext ctx) {
+        return super.visitExclusiveOrExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAndExpression(CPP14Parser.AndExpressionContext ctx) {
+        return super.visitAndExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitEqualityExpression(CPP14Parser.EqualityExpressionContext ctx) {
+        return super.visitEqualityExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitRelationalExpression(CPP14Parser.RelationalExpressionContext ctx) {
+        return super.visitRelationalExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitShiftOperator(CPP14Parser.ShiftOperatorContext ctx) {
+        return super.visitShiftOperator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitShiftExpression(CPP14Parser.ShiftExpressionContext ctx) {
+        return super.visitShiftExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitAdditiveExpression(CPP14Parser.AdditiveExpressionContext ctx) {
+        return super.visitAdditiveExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitMultiplicativeExpression(CPP14Parser.MultiplicativeExpressionContext ctx) {
+        return super.visitMultiplicativeExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPointerMemberExpression(CPP14Parser.PointerMemberExpressionContext ctx) {
+        return super.visitPointerMemberExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCastExpression(CPP14Parser.CastExpressionContext ctx) {
+        return super.visitCastExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNoExceptExpression(CPP14Parser.NoExceptExpressionContext ctx) {
+        return super.visitNoExceptExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitDeleteExpression(CPP14Parser.DeleteExpressionContext ctx) {
+        return super.visitDeleteExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNewInitializer(CPP14Parser.NewInitializerContext ctx) {
+        return super.visitNewInitializer(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNoPointerNewDeclarator(CPP14Parser.NoPointerNewDeclaratorContext ctx) {
+        return super.visitNoPointerNewDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNewDeclarator(CPP14Parser.NewDeclaratorContext ctx) {
+        return super.visitNewDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNewTypeId(CPP14Parser.NewTypeIdContext ctx) {
+        return super.visitNewTypeId(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNewPlacement(CPP14Parser.NewPlacementContext ctx) {
+        return super.visitNewPlacement(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNewExpression(CPP14Parser.NewExpressionContext ctx) {
+        return super.visitNewExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitUnaryOperator(CPP14Parser.UnaryOperatorContext ctx) {
+        return super.visitUnaryOperator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitUnaryExpression(CPP14Parser.UnaryExpressionContext ctx) {
+        return super.visitUnaryExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPseudoDestructorName(CPP14Parser.PseudoDestructorNameContext ctx) {
+        return super.visitPseudoDestructorName(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitExpressionList(CPP14Parser.ExpressionListContext ctx) {
+        return super.visitExpressionList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTypeIdOfTheTypeId(CPP14Parser.TypeIdOfTheTypeIdContext ctx) {
+        return super.visitTypeIdOfTheTypeId(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPostfixExpression(CPP14Parser.PostfixExpressionContext ctx) {
+        return super.visitPostfixExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLambdaDeclarator(CPP14Parser.LambdaDeclaratorContext ctx) {
+        return super.visitLambdaDeclarator(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitInitcapture(CPP14Parser.InitcaptureContext ctx) {
+        return super.visitInitcapture(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitSimpleCapture(CPP14Parser.SimpleCaptureContext ctx) {
+        return super.visitSimpleCapture(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCapture(CPP14Parser.CaptureContext ctx) {
+        return super.visitCapture(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCaptureList(CPP14Parser.CaptureListContext ctx) {
+        return super.visitCaptureList(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitCaptureDefault(CPP14Parser.CaptureDefaultContext ctx) {
+        return super.visitCaptureDefault(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLambdaCapture(CPP14Parser.LambdaCaptureContext ctx) {
+        return super.visitLambdaCapture(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLambdaIntroducer(CPP14Parser.LambdaIntroducerContext ctx) {
+        return super.visitLambdaIntroducer(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitLambdaExpression(CPP14Parser.LambdaExpressionContext ctx) {
+        return super.visitLambdaExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitNestedNameSpecifier(CPP14Parser.NestedNameSpecifierContext ctx) {
+        return super.visitNestedNameSpecifier(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitQualifiedId(CPP14Parser.QualifiedIdContext ctx) {
+        return super.visitQualifiedId(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitUnqualifiedId(CPP14Parser.UnqualifiedIdContext ctx) {
+        return super.visitUnqualifiedId(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitIdExpression(CPP14Parser.IdExpressionContext ctx) {
+        return super.visitIdExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitPrimaryExpression(CPP14Parser.PrimaryExpressionContext ctx) {
+        return super.visitPrimaryExpression(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitTranslationUnit(CPP14Parser.TranslationUnitContext ctx) {
+        return super.visitTranslationUnit(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

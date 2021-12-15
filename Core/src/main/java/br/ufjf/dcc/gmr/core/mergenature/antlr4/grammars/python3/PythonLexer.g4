@@ -29,6 +29,8 @@ lexer grammar PythonLexer;
 
 options { superClass=PythonLexerBase; }
 
+@header {import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonLexerBase;}
+
 // Artificial tokens only for parser purposes
 
 tokens { INDENT, DEDENT, LINE_BREAK }
@@ -145,6 +147,7 @@ LINE_JOIN          : '\\' [ \t]* RN                        -> channel(HIDDEN);
 NEWLINE            : RN                {HandleNewLine();}  -> channel(HIDDEN);
 WS                 : [ \t]+            {HandleSpaces();}   -> channel(HIDDEN);
 COMMENT            : '#' ~[\r\n\f]*                        -> channel(2);
+MULTI_LINE_COMMENT : '\"\"\"' .*? '\"\"\"'                 -> channel(2);
 
 // Fragments
 

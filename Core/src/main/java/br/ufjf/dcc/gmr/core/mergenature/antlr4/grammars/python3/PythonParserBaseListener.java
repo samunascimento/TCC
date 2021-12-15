@@ -1,5 +1,6 @@
 // Generated from PythonParser.g4 by ANTLR 4.7.1
 package br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParserBase;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -148,6 +149,42 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhile_signature(PythonParser.While_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhile_signature(PythonParser.While_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIf_signature(PythonParser.If_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIf_signature(PythonParser.If_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFor_signature(PythonParser.For_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor_signature(PythonParser.For_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSuite(PythonParser.SuiteContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -208,6 +245,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFinally_signature(PythonParser.Finally_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFinally_signature(PythonParser.Finally_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterWith_item(PythonParser.With_itemContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -232,6 +281,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExcept_signature(PythonParser.Except_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExcept_signature(PythonParser.Except_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterClassdef(PythonParser.ClassdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -244,6 +305,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterClass_signature(PythonParser.Class_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClass_signature(PythonParser.Class_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFuncdef(PythonParser.FuncdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -251,6 +324,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFuncdef(PythonParser.FuncdefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunc_signature(PythonParser.Func_signatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunc_signature(PythonParser.Func_signatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -335,6 +420,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSimple_stmt(PythonParser.Simple_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVariable(PythonParser.VariableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariable(PythonParser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -556,6 +653,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArray_initializer(PythonParser.Array_initializerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArray_initializer(PythonParser.Array_initializerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExprlist(PythonParser.ExprlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -724,6 +833,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArray_acess(PythonParser.Array_acessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArray_acess(PythonParser.Array_acessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAtom(PythonParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -731,6 +852,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAtom(PythonParser.AtomContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArray(PythonParser.ArrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArray(PythonParser.ArrayContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -851,6 +984,18 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTrailer(PythonParser.TrailerContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunction_call(PythonParser.Function_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction_call(PythonParser.Function_callContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
