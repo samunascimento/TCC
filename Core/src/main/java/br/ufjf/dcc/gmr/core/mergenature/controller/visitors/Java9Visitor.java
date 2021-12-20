@@ -14,15 +14,13 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
-    private boolean warning;
 
     public List<SyntaxStructure> getList() {
         return list;
     }
 
-    public Java9Visitor(boolean warning) {
+    public Java9Visitor() {
         list = new ArrayList<>();
-        this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
@@ -35,7 +33,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText));
 
     }
 

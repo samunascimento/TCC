@@ -14,15 +14,13 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class PythonVisitor extends PythonParserBaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
-    private boolean warning;
 
     public List<SyntaxStructure> getList() {
         return list;
     }
 
-    public PythonVisitor(boolean warning) {
+    public PythonVisitor() {
         list = new ArrayList<>();
-        this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
@@ -34,7 +32,7 @@ public class PythonVisitor extends PythonParserBaseVisitor<Object> {
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText));
 
     }
 

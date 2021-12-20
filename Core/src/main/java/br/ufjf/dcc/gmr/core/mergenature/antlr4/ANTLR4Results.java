@@ -14,19 +14,22 @@ public class ANTLR4Results {
     List<SyntaxStructure> commentAnalysis;
     List<SyntaxStructure> outmostedNormalAnalysis;
     List<SyntaxStructure> outmostedCommentAnalysis;
+    List<SyntaxError> syntaxErrors;
 
-    public ANTLR4Results(List<SyntaxStructure> normalAnalysis, List<SyntaxStructure> commentAnalysis, List<SyntaxStructure> outmostedNormalAnalysis, List<SyntaxStructure> outmostedCommentAnalysis) {
+    public ANTLR4Results(List<SyntaxStructure> normalAnalysis, List<SyntaxStructure> commentAnalysis, List<SyntaxStructure> outmostedNormalAnalysis, List<SyntaxStructure> outmostedCommentAnalysis, List<SyntaxError> syntaxErrors) {
         this.normalAnalysis = normalAnalysis;
         this.commentAnalysis = commentAnalysis;
         this.outmostedNormalAnalysis = outmostedNormalAnalysis;
         this.outmostedCommentAnalysis = outmostedCommentAnalysis;
+        this.syntaxErrors = syntaxErrors;
     }
 
-    public ANTLR4Results(List<SyntaxStructure> normalAnalysis, List<SyntaxStructure> commentAnalysis) {
+    public ANTLR4Results(List<SyntaxStructure> normalAnalysis, List<SyntaxStructure> commentAnalysis, List<SyntaxError> syntaxErrors) {
         this.normalAnalysis = normalAnalysis;
         this.commentAnalysis = commentAnalysis;
         this.outmostedNormalAnalysis = null;
         this.outmostedCommentAnalysis = null;
+        this.syntaxErrors = syntaxErrors;
     }
 
     public ANTLR4Results() {
@@ -65,6 +68,14 @@ public class ANTLR4Results {
         this.outmostedCommentAnalysis = outmostedCommentAnalysis;
     }
 
+    public List<SyntaxError> getSyntaxErrors() {
+        return syntaxErrors;
+    }
+
+    public void setSyntaxErrors(List<SyntaxError> syntaxErrors) {
+        this.syntaxErrors = syntaxErrors;
+    }
+
     public List<SyntaxStructure> getAll() {
         if (this.normalAnalysis == null) {
             return null;
@@ -84,16 +95,16 @@ public class ANTLR4Results {
             return result;
         }
     }
-    
-    public String getStringAll(){
+
+    public String getStringAll() {
         String result = "========================================";
         for (SyntaxStructure syntaxStructure : this.getAll()) {
             result = result + "\n" + syntaxStructure.getForm() + "\n========================================";
         }
         return result;
     }
-    
-    public String getStringAllOutmosted(){
+
+    public String getStringAllOutmosted() {
         String result = "========================================";
         for (SyntaxStructure syntaxStructure : this.getAllOutmosted()) {
             result = result + "\n" + syntaxStructure.getForm() + "\n========================================";

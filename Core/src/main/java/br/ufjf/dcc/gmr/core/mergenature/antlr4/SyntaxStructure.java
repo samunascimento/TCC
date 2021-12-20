@@ -16,18 +16,16 @@ public class SyntaxStructure {
     private int startCharIndex;
     private int stopCharIndex;
     private String structureType;
-    private boolean warning;
     private String text;
     private int id;
 
-    public SyntaxStructure(Token start, Token stop, String structureType, String text, boolean warning) {
+    public SyntaxStructure(Token start, Token stop, String structureType, String text) {
         this.startLine = start.getLine();
         this.stopLine = stop.getLine();
         this.startCharIndex = start.getStartIndex();
         this.stopCharIndex = stop.getStopIndex();
         this.structureType = structureType;
         this.text = text;
-        this.warning = warning;
     }
 
     public SyntaxStructure(Token token, boolean warning, Language language) {
@@ -51,14 +49,15 @@ public class SyntaxStructure {
             if (token.getType() == PythonLexer.COMMENT) {
                 this.structureType = "LineComment";
             }
+            if (token.getType() == PythonLexer.MULTI_LINE_COMMENT) {
+                this.structureType = "MultiLineComment";
+            }
+
         } else {
 
             this.structureType = "Unknown";
         }
-
         this.text = token.getText();
-
-        this.warning = warning;
     }
 
     public SyntaxStructure() {
@@ -119,14 +118,6 @@ public class SyntaxStructure {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean getWarning() {
-        return warning;
-    }
-
-    public void setWarning(boolean warning) {
-        this.warning = warning;
     }
 
     public boolean isOneLine() {

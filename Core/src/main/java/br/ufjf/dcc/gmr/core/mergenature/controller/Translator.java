@@ -214,7 +214,7 @@ public class Translator {
             if (list.contains("MethodInvocation")
                     || list.contains("MethodInvocation_lf_primaryContext")
                     || list.contains("MethodInvocation_lfno_primary")
-                    || list.contains("ExplicitConstructorInvocation"))  {
+                    || list.contains("ExplicitConstructorInvocation")) {
                 mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
                 list.remove("MethodInvocation");
                 list.remove("MethodInvocation_lf_primaryContext");
@@ -290,10 +290,10 @@ public class Translator {
                 list.remove("WhileExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
         }
         return mainList;
@@ -531,12 +531,12 @@ public class Translator {
                 list.remove("Whileexpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
-          
+
         }
         return mainList;
     }
@@ -607,9 +607,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("LineComment")) {
+            if (list.contains("LineComment")
+                    || list.contains("MultiLineComment")) {
                 mainList.add(LanguageConstructsTypes.COMMENT);
                 list.remove("LineComment");
+                list.remove("MultiLineComment");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -727,10 +729,10 @@ public class Translator {
                 list.remove("Variable");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //Error+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -750,304 +752,4 @@ public class Translator {
         return mainList;
     }
 
-    public static List<String> CSharpTranslator(List<String> list) {
-        List<String> mainList = new ArrayList<>();
-        if (list.contains("Extension not parseble!")) {
-            mainList.add("Extension not parseble!");
-        } else {
-            //ANNOTATION++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // There is no equivalent of Java annotation on the c# grammar, all the structures that had close structures have a much bigger scope
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Array_initializer")
-                    || list.contains("Array")) {
-                mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
-                list.remove("Array_initializer");
-                list.remove("Array");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Assert on c# does not work as an language structure
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")) {
-                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
-                list.remove("Assignment");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Blank")) {
-                mainList.add(LanguageConstructsTypes.BLANK);
-                list.remove("Blank");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("BreakStatement")) {
-                mainList.add(LanguageConstructsTypes.BREAK_STATEMENT);
-                list.remove("BreakStatement");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Switch_label")
-                    || list.contains("Switch_section")) {
-                mainList.add(LanguageConstructsTypes.CASE_STATEMENT);
-                list.remove("Switch_section");
-                list.remove("Switch_label");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-            //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Cast")) {
-                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("Cast");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Catch_clauses")
-                    || list.contains("Specific_catch_clause")
-                    || list.contains("General_catch_clause")
-                    || list.contains("Specific_catch_clause_no_block")) {
-                mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
-                list.remove("Catch_clauses");
-                list.remove("Specific_catch_clause");
-                list.remove("General_catch_clause");
-                list.remove("Specific_catch_clause_no_block");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Class_definition")) {
-                mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
-                list.remove("Class_definition");
-            }
-            if (list.contains("Class_signature")) {
-                mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
-                list.remove("Class_signature");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("SINGLE_LINE_DOC_COMMENT")
-                    || list.contains("EMPTY_DELIMITED_DOC_COMMENT")
-                    || list.contains("DELIMITED_DOC_COMMENT")
-                    || list.contains("LineComment")
-                    || list.contains("DELIMITED_COMMENT")) {
-                mainList.add(LanguageConstructsTypes.COMMENT);
-                list.remove("SINGLE_LINE_DOC_COMMENT");
-                list.remove("EMPTY_DELIMITED_DOC_COMMENT");
-                list.remove("DELIMITED_DOC_COMMENT");
-                list.remove("LineComment");
-                list.remove("DELIMITED_COMMENT");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ContinueStatement")) {
-                mainList.add(LanguageConstructsTypes.CONTINUE_STATEMENT);
-                list.remove("ContinueStatement");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //DO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("DoStatement")) {
-                mainList.add(LanguageConstructsTypes.DO_STATEMENT);
-                list.remove("DoStatement");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //ENUMS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Enum_definition")) {
-                mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
-                list.remove("Enum_definition");
-            }
-            if (list.contains("Enum_signature")) {
-                mainList.add(LanguageConstructsTypes.ENUM_SIGNATURE);
-                list.remove("Enum_signature");
-            }
-            if (list.contains("Enum_member_declaration")) {
-                mainList.add(LanguageConstructsTypes.ENUM_VALUE);
-                list.remove("Enum_member_declaration");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Field_declaration")) {
-                mainList.add(LanguageConstructsTypes.FIELD);
-                list.remove("Field_declaration");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Finally_clause")) {
-                mainList.add(LanguageConstructsTypes.FINALLY);
-                list.remove("Finally_clause");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ForStatement")
-                    || list.contains("ForeachStatement")
-                    || list.contains("Foreach_expression")
-                    || list.contains("For_expression")) {
-                mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
-                list.remove("ForStatement");
-                list.remove("ForeachStatement");
-                list.remove("Foreach_expression");
-                list.remove("For_expression");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("If_expression")
-                    || list.contains("If_Statement")) {
-                mainList.add(LanguageConstructsTypes.IF_STATEMENT);
-                list.remove("If_expression");
-                list.remove("If_Statement");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //on c# we're going to use the "using" structure because it is the closest to the other languagens imports
-            if (list.contains("UsingAliasDirective")
-                    || list.contains("Using_directive")
-                    || list.contains("UsingStaticDirective")) {
-                mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
-                list.remove("UsingAliasDirective");
-                list.remove("Using_directive");
-                list.remove("UsingStaticDirective");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Interface_definition")) {
-                mainList.add(LanguageConstructsTypes.INTERFACE_DECLARATION);
-                list.remove("Interface_definition");
-            }
-            if (list.contains("Interface_signature")) {
-                mainList.add(LanguageConstructsTypes.INTERFACE_SIGNATURE);
-                list.remove("Interface_signature");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //METHODS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Method_declaration")
-                    || list.contains("Local_function_declaration")
-                    || list.contains("Constructor_declaration")
-                    || list.contains("Destructor_definition")) {
-                mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
-                list.remove("Method_declaration");
-                list.remove("Local_function_declaration");
-                list.remove("Constructor_declaration");
-                list.remove("Destructor_definition");
-            }
-            if (list.contains("Method_signature")
-                    || list.contains("Local_function_header")) {
-                mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
-                list.remove("Method_signature");
-                list.remove("Local_function_header");
-            }
-            if (list.contains("MethodInterface")) {
-                mainList.add(LanguageConstructsTypes.METHOD_INTERFACE);
-                list.remove("MethodInterface");
-            }
-            if (list.contains("Method_invocation")
-                    || list.contains("Member_access")) {
-                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
-                list.remove("Method_invocation");
-                list.remove("Member_access");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //NAMESPACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Namespace_declaration")) {
-                mainList.add(LanguageConstructsTypes.NAMESPACE);
-                list.remove("Namespace_declaration");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            // There is no package estructure on c#
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //POINTER+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Pointer")) {
-                mainList.add(LanguageConstructsTypes.POINTER);
-                list.remove("Pointer");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ReturnStatement")) {
-                mainList.add(LanguageConstructsTypes.RETURN_STATEMENT);
-                list.remove("ReturnStatement");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //STATIC++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //None
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //STRUCT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Struct_definition")) {
-                mainList.add(LanguageConstructsTypes.STRUCT);
-                list.remove("Struct_definition");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("SwitchStatement")
-                    || list.contains("Switch_expression")
-                    || list.contains("Switch_expression_arm")
-                    || list.contains("Switch_expressions")) {
-                mainList.add(LanguageConstructsTypes.SWITCH_STATEMENT);
-                list.remove("SwitchStatement");
-                list.remove("Switch_expression");
-                list.remove("Switch_expression_arm");
-                list.remove("Switch_expressions");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //SYNCHRONIZED_STATEMENT++++++++++++++++++++++++++++++++++++++++++++            
-            // There is a close equivalent to this structure in Java, but their scope is different enough so we couldn't call it the same 
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //THROW+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("ThrowStatement")
-                    || list.contains("Throw_expression")) {
-                mainList.add(LanguageConstructsTypes.THROW_STATEMENT);
-                list.remove("ThrowStatement");
-                list.remove("Throw_expression");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("TryStatement")
-                    || list.contains("Try_expression")) {
-                mainList.add(LanguageConstructsTypes.TRY_STATEMENT);
-                list.remove("TryStatement");
-                list.remove("Try_expression");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Local_variable_declaration")
-                    || list.contains("Local_variable_declarator")
-                    || list.contains("Local_variable_initializer")
-                    || list.contains("Variable_initializer")
-                    || list.contains("Variable_declarator")
-                    || list.contains("Variable_declarators")) {
-                mainList.add(LanguageConstructsTypes.VARIABLE);
-                list.remove("Local_variable_declaration");
-                list.remove("Local_variable_declarator");
-                list.remove("Local_variable_initializer");
-                list.remove("Variable_initializer");
-                list.remove("Variable_declarator");
-                list.remove("Variable_declarators");
-
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WhileStatement")
-                    || list.contains("While_expression")) {
-                mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
-                list.remove("WhileStatement");
-                list.remove("While_expression");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
-                mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
-            //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("YieldStatement")) {
-                mainList.add(LanguageConstructsTypes.YIELD_STATEMENT);
-                list.remove("YieldStatement");
-            }
-            
-        }
-        return mainList;
-    }
 }

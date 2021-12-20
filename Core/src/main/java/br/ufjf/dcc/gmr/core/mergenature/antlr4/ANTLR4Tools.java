@@ -23,10 +23,7 @@ import java.util.List;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.ListTokenSource;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 //Antlr4.Runtime.IToken
@@ -58,47 +55,22 @@ public class ANTLR4Tools {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
-            Java9Lexer lexer = new Java9Lexer(new ANTLRInputStream(fileContent));
+            Java9Lexer lexer = new Java9Lexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             Java9Parser parser = new Java9Parser(tokens);
-            ParseTree tree = null;
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
+            ParseTree tree;
             try {
                 tree = parser.compilationUnit();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
-            Java9Visitor visitor;
+            Java9Visitor visitor = new Java9Visitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Java9Visitor(true);
-            } else {
-                visitor = new Java9Visitor(false);
-            }
-            visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
-            if (printTree) {
-                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
-                viewer.open();
-            }
-            return new ANTLR4Results(visitor.getList(), comments);
-        } else {
-            throw new IOException();
-        }
-    }
-
-    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath, boolean printTree) throws IOException {
-        if (filePath.endsWith(".java")) {
-            List<SyntaxStructure> comments;
-            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            Java9Lexer lexer = new Java9Lexer(fileStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            Java9Parser parser = new Java9Parser(tokens);
-            ParseTree tree = parser.compilationUnit();
-            Java9Visitor visitor;
-            if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new Java9Visitor(true);
                 comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new Java9Visitor(false);
                 comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
             }
             visitor.visit(tree);
@@ -106,8 +78,42 @@ public class ANTLR4Tools {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
-            return new ANTLR4Results(visitor.getList(), comments);
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
+        } else {
+            throw new IOException();
+        }
+    }
 
+    public static ANTLR4Results analyzeJava9SyntaxTree(String filePath, boolean printTree) throws IOException {
+        if (filePath.endsWith(".java")) {
+            String fileContent;
+            fileContent = MergeNatureTools.getFileContentInString(filePath);
+            List<SyntaxStructure> comments;
+            ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
+            Java9Lexer lexer = new Java9Lexer(fileStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            Java9Parser parser = new Java9Parser(tokens);
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
+            ParseTree tree;
+            try {
+                tree = parser.compilationUnit();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
+            Java9Visitor visitor = new Java9Visitor();
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                comments = getCommentsFromChannel2(tokens, true, Language.JAVA);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePath), fileContent, listener.getSyntaxErrors());
+            } else {
+                comments = getCommentsFromChannel2(tokens, false, Language.JAVA);
+            }
+            visitor.visit(tree);
+            if (printTree) {
+                TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
+                viewer.open();
+            }
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
         } else {
             throw new IOException();
         }
@@ -121,28 +127,30 @@ public class ANTLR4Tools {
             String fileContent;
             fileContent = ListUtils.getTextListStringToString(Git.getFileContentFromCommit(commit, filePathProjectAsRoot, repositoryPath));
             List<SyntaxStructure> comments;
-            CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
+            CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
             ParseTree tree;
             try {
                 tree = parser.translationunit();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
-            CPPVisitor visitor;
+            CPPVisitor visitor = new CPPVisitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CPPVisitor(true);
+                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new CPPVisitor(false);
+                comments = getCommentsFromChannel2(tokens, false, Language.CPP);
             }
             visitor.visit(tree);
-            comments = getCommentsFromChannel2(tokens, true, Language.CPP);
             if (printTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
-            return new ANTLR4Results(visitor.getList(), comments);
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
         } else {
             throw new IOException();
         }
@@ -153,26 +161,34 @@ public class ANTLR4Tools {
                 || filePath.endsWith(".cc") || filePath.endsWith(".cxx")
                 || filePath.endsWith(".cp") || filePath.endsWith(".hxx")
                 || filePath.endsWith(".hpp")) {
+            String fileContent;
+            fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
             CPP14Lexer lexer = new CPP14Lexer(fileStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
-            ParseTree tree = parser.translationunit();
-            CPPVisitor visitor;
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
+            ParseTree tree;
+            try {
+                tree = parser.translationunit();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
+            CPPVisitor visitor = new CPPVisitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new CPPVisitor(true);
                 comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePath), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new CPPVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.CPP);
+                comments = getCommentsFromChannel2(tokens, false, Language.CPP);
             }
             visitor.visit(tree);
             if (printTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
-            return new ANTLR4Results(visitor.getList(), comments);
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
         } else {
             throw new IOException();
         }
@@ -194,13 +210,11 @@ public class ANTLR4Tools {
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
-            PythonVisitor visitor;
+            PythonVisitor visitor = new PythonVisitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new PythonVisitor(true);
                 comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
                 writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new PythonVisitor(false);
                 comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
@@ -208,7 +222,7 @@ public class ANTLR4Tools {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
-            return new ANTLR4Results(visitor.getList(), comments);
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
         } else {
             throw new IOException();
         }
@@ -223,21 +237,27 @@ public class ANTLR4Tools {
             PythonLexer lexer = new PythonLexer(new ANTLRInputStream(fileContent + (fileContent.endsWith("\n") ? "" : "\n")));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             PythonParser parser = new PythonParser(tokens);
-            ParseTree tree = parser.file_input();
-            PythonVisitor visitor;
+            SyntaxErrorListener listener = new SyntaxErrorListener();
+            parser.addErrorListener(listener);
+            ParseTree tree;
+            try {
+                tree = parser.file_input();
+            } catch (OutOfMemoryError ex) {
+                throw ex;
+            }
+            PythonVisitor visitor = new PythonVisitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
-                visitor = new PythonVisitor(true);
                 comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                writeSyntaxErrors(MergeNatureTools.getFileName(filePath), fileContent, listener.getSyntaxErrors());
             } else {
-                visitor = new PythonVisitor(false);
-                comments = getCommentsFromChannel2(tokens, true, Language.PYTHON);
+                comments = getCommentsFromChannel2(tokens, false, Language.PYTHON);
             }
             visitor.visit(tree);
             if (printTree) {
                 TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), tree);
                 viewer.open();
             }
-            return new ANTLR4Results(visitor.getList(), comments);
+            return new ANTLR4Results(visitor.getList(), comments, listener.getSyntaxErrors());
         } else {
             throw new IOException();
         }
@@ -272,6 +292,7 @@ public class ANTLR4Tools {
             List<SyntaxStructure> commentAnalysis = new ArrayList<>();
             List<SyntaxStructure> outmostedNormalAnalysis = new ArrayList<>();
             List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
+            List<SyntaxError> syntaxErrors = new ArrayList<>();
             boolean isOutmost;
             if (filePath.endsWith(".java")) {
                 results = analyzeJava9SyntaxTree(filePath, false);
@@ -295,6 +316,11 @@ public class ANTLR4Tools {
                     commentAnalysis.add(ss);
                 }
             }
+            for (SyntaxError se : results.getSyntaxErrors()) {
+                if ((se.getLine() >= start && se.getLine() <= stop)) {
+                    syntaxErrors.add(se);
+                }
+            }
             isOutmost = true;
             outmostedNormalAnalysis = getOutmostStructures(normalAnalysis);
             for (SyntaxStructure comment : commentAnalysis) {
@@ -309,7 +335,7 @@ public class ANTLR4Tools {
                     outmostedCommentAnalysis.add(comment);
                 }
             }
-            return new ANTLR4Results(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis);
+            return new ANTLR4Results(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis, syntaxErrors);
 
         } catch (IOException ex) {
             System.out.println("ERROR: FilePath of analyseSyntaxTree: " + filePath + " does not exist!");
@@ -337,6 +363,7 @@ public class ANTLR4Tools {
         List<SyntaxStructure> commentAnalysis = new ArrayList<>();
         List<SyntaxStructure> outmostedNormalAnalysis = new ArrayList<>();
         List<SyntaxStructure> outmostedCommentAnalysis = new ArrayList<>();
+        List<SyntaxError> syntaxErrors = new ArrayList<>();
         boolean isOutmost = false;
 
         for (SyntaxStructure ss : inputResults.normalAnalysis) {
@@ -367,7 +394,13 @@ public class ANTLR4Tools {
             }
         }
 
-        return new ANTLR4Results(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis);
+        for (SyntaxError se : inputResults.getSyntaxErrors()) {
+            if ((se.getLine() >= beginLine && se.getLine() <= endLine)) {
+                syntaxErrors.add(se);
+            }
+        }
+
+        return new ANTLR4Results(normalAnalysis, commentAnalysis, outmostedNormalAnalysis, outmostedCommentAnalysis, syntaxErrors);
     }
 
     public static List<SyntaxStructure> getOutmostStructures(List<SyntaxStructure> rawList) {
@@ -395,7 +428,7 @@ public class ANTLR4Tools {
 
     }
 
-    public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath, boolean isEmpty) {
+    public static List<String> getTranslatedStrucutures(List<SyntaxStructure> rawList, String filePath, boolean isEmpty, boolean containErrors) {
         List<String> translatedList;
         List<String> untranslatedList = new ArrayList<>();
         if (isEmpty) {
@@ -410,6 +443,9 @@ public class ANTLR4Tools {
                     untranslatedList.add(struc.getStructureType());
                 }
             }
+            if(containErrors){
+                untranslatedList.add("Error");
+            }
             if (filePath.endsWith(".java")) {
                 translatedList = Translator.JavaTranslator(untranslatedList);
             } else if (filePath.endsWith(".cpp") || filePath.endsWith(".h")
@@ -419,13 +455,8 @@ public class ANTLR4Tools {
                 translatedList = Translator.CPPTranslator(untranslatedList);
             } else if (filePath.endsWith(".py")) {
                 translatedList = Translator.PythonTranslator(untranslatedList);
-            } else if (filePath.endsWith(".cs")) {
-                translatedList = Translator.CSharpTranslator(untranslatedList);
             } else {
                 return null;
-            }
-            if (rawList.get(0).getWarning()) {
-                translatedList.add("WARNING!");
             }
         }
         return translatedList;

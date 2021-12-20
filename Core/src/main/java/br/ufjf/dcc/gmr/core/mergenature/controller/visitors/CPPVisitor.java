@@ -14,15 +14,13 @@ import org.antlr.v4.runtime.ParserRuleContext;
 public class CPPVisitor extends CPP14BaseVisitor<Object> {
 
     private List<SyntaxStructure> list;
-    private boolean warning;
 
     public List<SyntaxStructure> getList() {
         return list;
     }
 
-    public CPPVisitor(boolean warning) {
+    public CPPVisitor() {
         list = new ArrayList<>();
-        this.warning = warning;
     }
 
     public void process(ParserRuleContext ctx) {
@@ -34,12 +32,12 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");
 
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText, warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), aux[0], ctxText));
     }
 
     public void process(ParserRuleContext ctx, String outsiderType, String text) {
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text, warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), outsiderType, text));
     }
 
     public void specialProcess(ParserRuleContext ctx, String newType) {
@@ -51,7 +49,7 @@ public class CPPVisitor extends CPP14BaseVisitor<Object> {
         //Adding text
         String ctxText = ctx.getText().replaceAll(";", ";\n").replaceAll("\\{", "\\{\n").replaceAll("\\}", "\\}\n").replaceAll("\n;", ";");;
         //Adding in list
-        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText, warning));
+        list.add(new SyntaxStructure(ctx.getStart(), ctx.getStop(), newType, ctxText));
 
     }
 
