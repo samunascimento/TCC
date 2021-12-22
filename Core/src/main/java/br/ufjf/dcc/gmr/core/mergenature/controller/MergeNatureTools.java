@@ -103,9 +103,9 @@ public class MergeNatureTools {
 
     public static void prepareAnalysis(String repositoryPath) {
         try {
-            Git.reset(repositoryPath, true, false, false, null);
             Git.removeAllInWorkspace(repositoryPath);
             Git.clean(repositoryPath, true, 0);
+            Git.reset(repositoryPath, true, false, false, null);
         } catch (Exception ex) {
         }
     }

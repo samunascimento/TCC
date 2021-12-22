@@ -95,7 +95,7 @@ public class Git {
      */
     public static void removeAllInWorkspace(String repositoryPath) throws IOException, NotGitRepositoryException, RMException {
         if (isGitRepository(repositoryPath)) {
-            CLIExecution execution = CLIExecute.execute("git rm --cached -r", repositoryPath);
+            CLIExecution execution = CLIExecute.execute("git rm --cached -r .", repositoryPath);
             if (!execution.getError().isEmpty()) {
                 throw new RMException(ListUtils.getTextListStringToString(execution.getError()));
             }
@@ -144,7 +144,7 @@ public class Git {
      */
     public static List<String> getAllMerges(String repositoryPath) throws IOException, NotGitRepositoryException, LogException {
         if (isGitRepository(repositoryPath)) {
-            CLIExecution execution = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%h/%p", repositoryPath);
+            CLIExecution execution = CLIExecute.execute("git log --all --min-parents=2 --pretty=format:%H/%P", repositoryPath);
             if (!execution.getError().isEmpty()) {
                 throw new LogException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
