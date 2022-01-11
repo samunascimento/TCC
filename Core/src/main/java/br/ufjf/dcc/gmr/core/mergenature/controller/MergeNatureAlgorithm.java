@@ -35,6 +35,7 @@ import javax.swing.JProgressBar;
 public class MergeNatureAlgorithm {
 
     private String repositoryLocation;
+    private String downloadPath;
     private int contextLines;
     private Project project;
     private JProgressBar progressBar;
@@ -96,7 +97,7 @@ public class MergeNatureAlgorithm {
                 project.setOrganization(auxStringArray[auxStringArray.length - 2]);
             }
         } else {
-            System.out.println("Analysis Download is not avaliable!");
+            
         }
         List<String> log;
         log = Git.getAllMerges(repositoryPath);
@@ -109,10 +110,7 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            if (status == 849) {
-                System.out.println(logLine);
-                project.addMerge(mergeLayer(project, logLine, repositoryPath));
-            }
+            project.addMerge(mergeLayer(project, logLine, repositoryPath));
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
