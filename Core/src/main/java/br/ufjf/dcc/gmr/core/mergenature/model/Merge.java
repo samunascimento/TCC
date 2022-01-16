@@ -135,7 +135,7 @@ public class Merge implements Cloneable {
     public List<Conflict> getConflicts() {
         return conflicts;
     }
-
+ 
     public void setConflicts(List<Conflict> conflicts) {
         this.conflicts = conflicts;
     }
