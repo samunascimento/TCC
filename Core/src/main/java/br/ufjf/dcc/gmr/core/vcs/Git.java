@@ -6,6 +6,7 @@ import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,31 @@ import java.util.List;
  * @since Ever
  */
 public class Git {
+
+    /**
+     * Execute "git clone" in a path in the system.
+     *
+     * @param downloadPath The path where the project will be downloaded.
+     * @param projectURL The URL where the project is.
+     * @param folderName The name that the clone will receive
+     * @throws java.io.IOException if downloadPath not exist in your system.
+     * @throws br.ufjf.dcc.gmr.core.exception.CloneException if occur any error
+     * in scope of git clone command.
+     */
+    public static void clone(String downloadPath, String projectURL, String folderName) throws IOException, CloneException {
+        if(folderName == null){
+            folderName = "";
+        }
+        String command = "git clone " + projectURL + " " + folderName;
+        System.out.println("Clonando " + projectURL + " em " + downloadPath + (downloadPath.endsWith(File.separator)? "" : File.separator) + 
+                folderName + (folderName.endsWith(File.separator)? "" : File.separator) +
+                "...\nIsso pode demorar dependendo do projeto, por favor espere.");
+        CLIExecution execution = CLIExecute.execute(command, downloadPath);
+        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty()){
+            System.out.println(execution);
+            throw new CloneException(ListUtils.getTextListStringToString(execution.getError()));
+        }
+    }
 
     /**
      * Check if a path in the system if a git repository.
