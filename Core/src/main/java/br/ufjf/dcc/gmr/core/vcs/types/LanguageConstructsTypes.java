@@ -27,7 +27,7 @@ public class LanguageConstructsTypes {
     public static final String COMMENT = "Comment";
     public static final String CONTINUE_STATEMENT = "ContinueStatement";
     public static final String DO_STATEMENT = "DoStatement";
-    public static final String DELETE_STATEMENT = "Delet";
+    public static final String DELETE_STATEMENT = "Delete";
     public static final String ENUM_DECLARATION = "EnumDeclaration";
     public static final String ENUM_SIGNATURE = "EnumSignature";
     public static final String ENUM_VALUE = "EnumValue";

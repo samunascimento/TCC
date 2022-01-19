@@ -1,5 +1,6 @@
 // Generated from PythonParser.g4 by ANTLR 4.7.1
 package br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3;
+import br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3.PythonParserBase;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -130,6 +131,36 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#while_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_signature(PythonParser.While_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#while_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_signature(PythonParser.While_signatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#if_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_signature(PythonParser.If_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#if_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_signature(PythonParser.If_signatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#for_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_signature(PythonParser.For_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#for_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_signature(PythonParser.For_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#suite}.
 	 * @param ctx the parse tree
 	 */
@@ -180,6 +211,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitFinally_clause(PythonParser.Finally_clauseContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#finally_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterFinally_signature(PythonParser.Finally_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#finally_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitFinally_signature(PythonParser.Finally_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#with_item}.
 	 * @param ctx the parse tree
 	 */
@@ -200,6 +241,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitExcept_clause(PythonParser.Except_clauseContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#except_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterExcept_signature(PythonParser.Except_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#except_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitExcept_signature(PythonParser.Except_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#classdef}.
 	 * @param ctx the parse tree
 	 */
@@ -210,6 +261,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClassdef(PythonParser.ClassdefContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#class_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterClass_signature(PythonParser.Class_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#class_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitClass_signature(PythonParser.Class_signatureContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#funcdef}.
 	 * @param ctx the parse tree
 	 */
@@ -219,6 +280,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFuncdef(PythonParser.FuncdefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#func_signature}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunc_signature(PythonParser.Func_signatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#func_signature}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunc_signature(PythonParser.Func_signatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#typedargslist}.
 	 * @param ctx the parse tree
@@ -289,6 +360,18 @@ public interface PythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSimple_stmt(PythonParser.Simple_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code variable}
+	 * labeled alternative in {@link PythonParser#small_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariable(PythonParser.VariableContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code variable}
+	 * labeled alternative in {@link PythonParser#small_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariable(PythonParser.VariableContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code expr_stmt}
 	 * labeled alternative in {@link PythonParser#small_stmt}.
@@ -500,6 +583,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitAssign_part(PythonParser.Assign_partContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#array_initializer}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_initializer(PythonParser.Array_initializerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#array_initializer}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_initializer(PythonParser.Array_initializerContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#exprlist}.
 	 * @param ctx the parse tree
 	 */
@@ -640,6 +733,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitExpr(PythonParser.ExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonParser#array_acess}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_acess(PythonParser.Array_acessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#array_acess}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_acess(PythonParser.Array_acessContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonParser#atom}.
 	 * @param ctx the parse tree
 	 */
@@ -649,6 +752,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAtom(PythonParser.AtomContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#array}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray(PythonParser.ArrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#array}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray(PythonParser.ArrayContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#dictorsetmaker}.
 	 * @param ctx the parse tree
@@ -749,6 +862,16 @@ public interface PythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTrailer(PythonParser.TrailerContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction_call(PythonParser.Function_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction_call(PythonParser.Function_callContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#arguments}.
 	 * @param ctx the parse tree

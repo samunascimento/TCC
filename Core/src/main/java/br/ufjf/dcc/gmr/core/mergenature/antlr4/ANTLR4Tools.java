@@ -26,7 +26,6 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-//Antlr4.Runtime.IToken
 
 /**
  * Auxiliaries methods for ANTLR4's utilities
@@ -134,16 +133,18 @@ public class ANTLR4Tools {
             parser.addErrorListener(listener);
             ParseTree tree;
             try {
-                tree = parser.translationunit();
+                tree = parser.translationUnit();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
             CPPVisitor visitor = new CPPVisitor();
             if (parser.getNumberOfSyntaxErrors() > 0) {
+
                 comments = getCommentsFromChannel2(tokens, true, Language.CPP);
                 writeSyntaxErrors(MergeNatureTools.getFileName(filePathProjectAsRoot), fileContent, listener.getSyntaxErrors());
             } else {
                 comments = getCommentsFromChannel2(tokens, false, Language.CPP);
+
             }
             visitor.visit(tree);
             if (printTree) {
@@ -165,14 +166,15 @@ public class ANTLR4Tools {
             fileContent = MergeNatureTools.getFileContentInString(filePath);
             List<SyntaxStructure> comments;
             ANTLRFileStream fileStream = new ANTLRFileStream(filePath);
-            CPP14Lexer lexer = new CPP14Lexer(fileStream);
+            CPP14Lexer lexer = new CPP14Lexer(new ANTLRInputStream(fileContent));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CPP14Parser parser = new CPP14Parser(tokens);
             SyntaxErrorListener listener = new SyntaxErrorListener();
             parser.addErrorListener(listener);
             ParseTree tree;
             try {
-                tree = parser.translationunit();
+
+                tree = parser.translationUnit();
             } catch (OutOfMemoryError ex) {
                 throw ex;
             }
@@ -182,6 +184,7 @@ public class ANTLR4Tools {
                 writeSyntaxErrors(MergeNatureTools.getFileName(filePath), fileContent, listener.getSyntaxErrors());
             } else {
                 comments = getCommentsFromChannel2(tokens, false, Language.CPP);
+
             }
             visitor.visit(tree);
             if (printTree) {

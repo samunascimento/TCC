@@ -42,8 +42,8 @@ public class TestLuan {
 
             Map<String, Integer> estruturas = leitorProjeto.getEstruturas();
             Map<String, Integer> dist = leitorProjeto.getChunkDistribution();
-            
-             Map<String, ArrayList<Integer>> Lines = leitorProjeto.lineNumberPerVersion();
+
+            Map<String, ArrayList<Integer>> Lines = leitorProjeto.lineNumberPerVersion();
 
             //imprime
             System.out.println(paths[p].replace("/home/luan/Github/TCC/mntrs/", ""));
@@ -70,11 +70,9 @@ public class TestLuan {
 
             Set teste4 = dist.entrySet();
             System.out.println(teste4);
-            
+
             Set teste5 = Lines.entrySet();
             System.out.println(teste5);
-            
-            
 
             EstruturasLuan rep = new EstruturasLuan();
 
@@ -91,5 +89,6 @@ public class TestLuan {
             GSONClass.saveRep(paths[p].replace(".mntr", ".rep"), rep);
 
         }
+
     }
 }

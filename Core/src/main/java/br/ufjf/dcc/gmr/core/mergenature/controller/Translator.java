@@ -372,10 +372,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("BlockComment")
+            if (list.contains("MultiLineComment")
                     || list.contains("LineComment")) {
                 mainList.add(LanguageConstructsTypes.COMMENT);
-                list.remove("BlockComment");
+                list.remove("MultiLineComment");
                 list.remove("LineComment");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -550,23 +550,25 @@ public class Translator {
             //There is no ANNOTATION on python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Array")) {
+            if (list.contains("Array_initializer")) {
                 mainList.add(LanguageConstructsTypes.ARRAY_INITIALIZER);
-                list.remove("Array");
+                list.remove("Array_initializer");
+            }
+            if (list.contains("Array_acess")) {
+                mainList.add(LanguageConstructsTypes.ARRAY_ACCESS);
+                list.remove("Array_acess");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assert_")
-                    || list.contains("Assert_stmt")) {
-                mainList.add(LanguageConstructsTypes.ASSIGNMENT);
-                list.remove("Assert_");
+            if (list.contains("Assert_stmt")) {
+                mainList.add(LanguageConstructsTypes.ASSERT_STATEMENT);
                 list.remove("Assert_stmt");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")) {
+            if (list.contains("Assign_part")) {
                 mainList.add(LanguageConstructsTypes.ASSIGNMENT);
-                list.remove("Assignment");
+                list.remove("Assign_part");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -591,8 +593,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Except_clause")) {
+            if (list.contains("Except_signature")
+                    || list.contains("Except_clause")) {
                 mainList.add(LanguageConstructsTypes.CATCH_CLAUSE);
+                list.remove("Except_signature");
                 list.remove("Except_clause");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -601,15 +605,18 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.CLASS_DECLARATION);
                 list.remove("Classdef");
             }
-            if (list.contains("ClassSignature")) {
+            if (list.contains("Class_signature")) {
                 mainList.add(LanguageConstructsTypes.CLASS_SIGNATURE);
-                list.remove("ClassSignature");
+                list.remove("Class_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("LineComment")
-                    || list.contains("MultiLineComment")) {
+
+            if (list.contains("MultiLineComment")
+                    || list.contains("LineComment")) {
+
                 mainList.add(LanguageConstructsTypes.COMMENT);
+                list.remove("MultiLineComment");
                 list.remove("LineComment");
                 list.remove("MultiLineComment");
             }
@@ -630,52 +637,42 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ENUM++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Enum")) {
-                mainList.add(LanguageConstructsTypes.ENUM_DECLARATION);
-                list.remove("Enum");
-            }
+            //There is no enum do on python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             ////There is no field on python grammar
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FINALLY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Finally_clause")) {
+            if (list.contains("Finally_clause")
+                    || list.contains("Finally_signature")) {
                 mainList.add(LanguageConstructsTypes.FINALLY);
                 list.remove("Finally_clause");
+                list.remove("Finally_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FOR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("For_stmt")
-                    || list.contains("For_")) {
+                    || list.contains("For_signature")) {
                 mainList.add(LanguageConstructsTypes.FOR_STATEMENT);
                 list.remove("For_stmt");
-                list.remove("For_");
+                list.remove("For_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("If_stmt")
-                    || list.contains("If_")) {
+                    || list.contains("If_signature")) {
                 mainList.add(LanguageConstructsTypes.IF_STATEMENT);
                 list.remove("If_stmt");
-                list.remove("If_");
+                list.remove("If_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Import_stmt")
-                    || list.contains("Import_name")
-                    || list.contains("Import_from")
-                    || list.contains("Import_as_name")
-                    || list.contains("Import_as_names")
-                    || list.contains("Dotted_as_name")
-                    || list.contains("Dotted_name")) {
+            if (list.contains("From_stmt")
+                    || list.contains("Import_stmt")) {
                 mainList.add(LanguageConstructsTypes.IMPORT_DECLARATION);
+                list.remove("From_stmt");
                 list.remove("Import_stmt");
-                list.remove("Import_name");
-                list.remove("Import_from");
-                list.remove("Import_as_name");
-                list.remove("Import_as_names");
-                list.remove("Dotted_as_name");
-                list.remove("Dotted_name");
+
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //INTERFACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -686,9 +683,13 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.METHOD_DECLARATION);
                 list.remove("Funcdef");
             }
-            if (list.contains("FuncSignature")) {
+            if (list.contains("Func_signature")) {
                 mainList.add(LanguageConstructsTypes.METHOD_SIGNATURE);
-                list.remove("FuncSignature");
+                list.remove("Func_signature");
+            }
+            if (list.contains("Function_call")) {
+                mainList.add(LanguageConstructsTypes.METHOD_INVOCATION);
+                list.remove("Function_call");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -737,10 +738,10 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("While_stmt")
-                    || list.contains("While_")) {
+                    || list.contains("While_signature")) {
                 mainList.add(LanguageConstructsTypes.WHILE_STATEMENT);
                 list.remove("While_stmt");
-                list.remove("While_");
+                list.remove("While_signature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //YELD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
