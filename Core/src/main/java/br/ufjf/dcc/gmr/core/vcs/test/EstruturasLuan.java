@@ -7,6 +7,7 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -21,6 +22,9 @@ public class EstruturasLuan {
     int numChunks;
     Map<DeveloperDecision, Integer> solucao;
     Map<ConflictType, Integer> tipoDeConflito;
+    Map<String, Integer> ChunkDistribution;
+     Map<String, ArrayList<Integer>> LinesNumbers;
+
 
     public Map<DeveloperDecision, Integer> getSolucao() {
         return solucao;
@@ -83,4 +87,20 @@ public class EstruturasLuan {
         this.estruturas = estruturas;
     }
 
+    public Map<String, Integer> getChunkDistribution() {
+        return ChunkDistribution;
+    }
+
+    public void setChunkDistribution(Map<String, Integer> ChunkDistribution) {
+        this.ChunkDistribution = ChunkDistribution;
+    }
+
+    public Map<String, ArrayList<Integer>> getLinesNumbers() {
+        return LinesNumbers;
+    }
+
+    public void setLinesNumbers(Map<String, ArrayList<Integer>> LinesNumbers) {
+        this.LinesNumbers = LinesNumbers;
+    }
+    
 }

@@ -16,7 +16,7 @@ import java.util.Set;
  * @since 10-10-2020
  */
 public class Project {
-    
+
     private int id;
     private String name;
     private String url;
@@ -54,61 +54,67 @@ public class Project {
         this.organization = organization;
         this.merges = merges;
     }
-    
+
     public Project() {
         this.merges = new ArrayList<>();
     }
-    
+
     public int getId() {
-        
+
         return id;
     }
-    
+
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getUrl() {
         return url;
     }
-    
+
     public void setUrl(String url) {
         this.url = url;
     }
-    
+
     public String getOrganization() {
         return organization;
     }
-    
+
     public void setOrganization(String organization) {
         this.organization = organization;
     }
-    
+
     public List<Merge> getMerges() {
         return merges;
     }
-    
+
     public void setMerges(List<Merge> merges) {
         this.merges = merges;
     }
-    
+
     public void addMerge(Merge merge) {
         this.merges.add(merge);
     }
-    
+
     public int getNumberOfMerges() {
-        
+
         return merges.size();
     }
-    
+
+    public int getNumberOfConflictedMerges() {
+        int count = 0;
+        count = merges.stream().filter(merge -> (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)).map(_item -> 1).reduce(count, Integer::sum);
+        return count;
+    }
+
     public int getNumberOfConflicts() {
         int count = 0;
         for (Merge merge : merges) {
@@ -116,13 +122,7 @@ public class Project {
         }
         return count;
     }
-    
-    public int getNumberOfConflictedMerges() {
-        int count = 0;
-        count = merges.stream().filter(merge -> (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)).map(_item -> 1).reduce(count, Integer::sum);
-        return count;
-    }
-    
+
     public int getNumberOfChunks() {
         int count = 0;
         for (Merge merge : merges) {
@@ -130,15 +130,29 @@ public class Project {
         }
         return count;
     }
-    
-    public  Map<DeveloperDecision, Integer>  getSolucoes() {
-        
+
+    public Map<String, Integer> getChunkDistribution() {
+
+        Map<String, Integer> distribuicao = new HashMap<>();
+
+        merges.stream().filter(merge -> (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)).map(merge -> Integer.toString(merge.getNumberOfConflictRegions()) + " Chunks").forEachOrdered(numChunks -> {
+            if (distribuicao.containsKey(numChunks)) {
+                distribuicao.put(numChunks, distribuicao.get(numChunks) + 1);
+            } else {
+                distribuicao.put(numChunks, 1);
+            }
+        });
+        return distribuicao;
+    }
+
+    public Map<DeveloperDecision, Integer> getSolucoes() {
+
         int[] contaSolucao = new int[12];
-        
+
         for (int i = 0; i < 12; i++) {
             contaSolucao[i] = 0;
         }
-        
+
         merges.forEach(merge -> {
             merge.getConflicts().forEach(conflict -> {
                 conflict.getConflictRegions().forEach(conflictRegion -> {
@@ -146,69 +160,86 @@ public class Project {
                 });
             });
         });
-        
-     
+
         Map<DeveloperDecision, Integer> solucoes = new HashMap<>();
-        
+
         for (int i = 0; i < 12; i++) {
             solucoes.put(DeveloperDecision.getEnumFromInt(i + 1), contaSolucao[i]);
         }
-         
-       
-        
+
         return solucoes;
     }
-    
+
     public Map<String, Integer> getEstruturas() {
-        
+
         Map<String, Integer> estruturas = new HashMap<>();
         merges.forEach(merge -> {
             merge.getConflicts().forEach(conflict -> {
                 conflict.getConflictRegions().forEach(conflictRegion -> {
-                    Set<String> mySet = new HashSet<>(Arrays.asList(conflictRegion.getStructures()));
+                    Set<String> mySet = new HashSet<>(Arrays.asList(conflictRegion.getOutmostedStructures()));
                     mySet.stream().filter(st -> (st != null && !st.isEmpty())).forEachOrdered(st -> {
                         for (String s : st.split("\n")) {
-                            s=s.replaceAll(" ", "").replaceAll("\t","");
-                            if(s.contains("extensionnotparseable") || s.contains("Untreatablegit'serror")){
-                            }else{
-                            if (estruturas.containsKey(s)) {
-                                estruturas.put(s, estruturas.get(s) + 1);
+                            s = s.replaceAll(" ", "").replaceAll("\t", "");
+                            if (s.contains("extensionnotparseable") || s.contains("Untreatablegit'serror")) {
                             } else {
-                                estruturas.put(s, 1);
-                            }
+                                if (estruturas.containsKey(s)) {
+                                    estruturas.put(s, estruturas.get(s) + 1);
+                                } else {
+                                    estruturas.put(s, 1);
+                                }
                             }
                         }
-                    }); 
+                    });
                 });
             });
         });
-       // Set teste = estruturas.entrySet();
-       // System.out.println(teste);
-        
+        // Set teste = estruturas.entrySet();
+        // System.out.println(teste);
+
         return estruturas;
     }
-    
+
     public Map<ConflictType, Integer> getConflictType() {
-        
+
         int[] conflicType = new int[12];
-        
+
         for (int i = 0; i < 12; i++) {
             conflicType[i] = 0;
         }
-        
+
         merges.forEach(merge -> {
             merge.getConflicts().forEach(conflict -> {
                 conflicType[ConflictType.getIntFromEnum(conflict.getConflictType()) - 1]++;
-                
+            });
+        });
+
+        Map<ConflictType, Integer> conflicTypes = new HashMap<>();
+
+        for (int i = 0; i < 12; i++) {
+            conflicTypes.put(ConflictType.getEnumFromInt(i + 1), conflicType[i]);
+        }
+
+        return conflicTypes;
+    }
+
+    public Map<String, ArrayList<Integer>> lineNumberPerVersion() {
+        ArrayList<Integer> version1 = new ArrayList<Integer>();
+        ArrayList<Integer> version2 = new ArrayList<Integer>();
+
+        merges.forEach(merge -> {
+            merge.getConflicts().forEach(conflict -> {
+                conflict.getConflictRegions().forEach(conflictRegion -> {
+                        version1.add(conflictRegion.getSeparatorLine()-conflictRegion.getBeginLine());
+                        version2.add(conflictRegion.getEndLine()-conflictRegion.getSeparatorLine());
+                });
             });
         });
         
-        Map<ConflictType, Integer> conflicTypes = new HashMap<>();
+        Map<String, ArrayList<Integer>> versionLineNumber = new HashMap<>();
+        versionLineNumber.put("Version 1",version1);
+        versionLineNumber.put("Version 2",version2);
         
-         for (int i = 0; i < 12; i++) {
-            conflicTypes.put(ConflictType.getEnumFromInt(i + 1), conflicType[i]);
-        }
+        return versionLineNumber;
         
-        return conflicTypes;
     }
 }

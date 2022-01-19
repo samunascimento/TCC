@@ -6,6 +6,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +41,9 @@ public class TestLuan {
             Map<ConflictType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
 
             Map<String, Integer> estruturas = leitorProjeto.getEstruturas();
+            Map<String, Integer> dist = leitorProjeto.getChunkDistribution();
+            
+             Map<String, ArrayList<Integer>> Lines = leitorProjeto.lineNumberPerVersion();
 
             //imprime
             System.out.println(paths[p].replace("/home/luan/Github/TCC/mntrs/", ""));
@@ -50,7 +54,7 @@ public class TestLuan {
             System.out.println("Media de chunks por total de merges: " + ((float) mergeConflit / (float) numMerges));
 
             System.out.println("--------------- Numero de cada tipo de solução ------------");
-            
+
             Set teste = solucao.entrySet();
             System.out.println(teste);
 
@@ -64,6 +68,14 @@ public class TestLuan {
             Set teste3 = estruturas.entrySet();
             System.out.println(teste3);
 
+            Set teste4 = dist.entrySet();
+            System.out.println(teste4);
+            
+            Set teste5 = Lines.entrySet();
+            System.out.println(teste5);
+            
+            
+
             EstruturasLuan rep = new EstruturasLuan();
 
             rep.setNumMerges(numMerges);
@@ -73,6 +85,8 @@ public class TestLuan {
             rep.setSolucao(solucao);
             rep.setTipoDeConflito(tipoDeConflito);
             rep.setEstruturas(estruturas);
+            rep.setChunkDistribution(dist);
+            rep.setLinesNumbers(Lines);
 
             GSONClass.saveRep(paths[p].replace(".mntr", ".rep"), rep);
 
