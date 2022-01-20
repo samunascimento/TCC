@@ -587,10 +587,6 @@ public class Translator {
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Cast")) {
-                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("Cast");
-            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Except_signature")
@@ -618,7 +614,7 @@ public class Translator {
                 mainList.add(LanguageConstructsTypes.COMMENT);
                 list.remove("MultiLineComment");
                 list.remove("LineComment");
-                list.remove("MultiLineComment");
+                
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
