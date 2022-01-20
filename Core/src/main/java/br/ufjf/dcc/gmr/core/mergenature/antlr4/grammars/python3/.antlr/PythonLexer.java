@@ -286,7 +286,6 @@ public class PythonLexer extends PythonLexerBase {
 		"Y\3Z\3Z\3Z\3[\3[\3[\3\\\3\\\3\\\3]\3]\3]\3^\3^\7^\u0280\n^\f^\16^\u0283"+
 		"\13^\3_\3_\7_\u0287\n_\f_\16_\u028a\13_\3_\3_\3_\3_\3`\3`\3`\3`\3`\3a"+
 		"\6a\u0296\na\ra\16a\u0297\3a\3a\3a\3a\3b\3b\7b\u02a0\nb\fb\16b\u02a3\13"+
-
 		"b\3b\3b\3c\3c\7c\u02a9\nc\fc\16c\u02ac\13c\3c\3c\3c\3d\3d\3d\3d\5d\u02b5"+
 		"\nd\3d\7d\u02b8\nd\fd\16d\u02bb\13d\3d\3d\3d\3d\3d\5d\u02c2\nd\3d\7d\u02c5"+
 		"\nd\fd\16d\u02c8\13d\3d\5d\u02cb\nd\3e\3e\3e\3e\3e\7e\u02d2\ne\fe\16e"+
@@ -629,7 +628,6 @@ public class PythonLexer extends PythonLexerBase {
 		"\u0306\u0309\u030e\u0315\u031a\u031d\u0322\u0324\u032b\u032d\u0331\u033a"+
 		"\u0347\u034d\u0351\u0354\u0357\u035a\u0361\u0364\f\3X\2\3Y\3\3Z\4\3[\5"+
 		"\3\\\6\3]\7\2\3\2\3`\b\3a\t\2\4\2";
-
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

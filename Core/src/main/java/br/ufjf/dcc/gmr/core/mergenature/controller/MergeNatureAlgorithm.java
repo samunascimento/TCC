@@ -166,6 +166,7 @@ public class MergeNatureAlgorithm {
                         } catch (OutOfMemoryError er) {
                             merge.setConflicts(new ArrayList<>());
                             merge.setMergeType(MergeType.OUT_OF_MEMORY);
+                            System.out.println("OUT_OF_MEMORY");
                             break;
                         } catch (Exception ex) {
                             ex.printStackTrace();

@@ -147,7 +147,6 @@ LINE_JOIN          : '\\' [ \t]* RN                        -> channel(HIDDEN);
 NEWLINE            : RN                {HandleNewLine();}  -> channel(HIDDEN);
 WS                 : [ \t]+            {HandleSpaces();}   -> channel(HIDDEN);
 COMMENT            : '#' ~[\r\n\f]*                        -> channel(2);
-
 MULTI_LINE_COMMENT : '\"\"\"' .*? '\"\"\"'                 -> channel(2);
 
 // Fragments
@@ -158,7 +157,7 @@ fragment SHORT_STRING
     ;
 
 fragment LONG_STRING
-    : ('\'\'\'' LONG_STRING_ITEM*? '\'\'\'');
+    : ('\'\'\'' LONG_STRING_ITEM*? '\'\'\'' | '"""' LONG_STRING_ITEM*? '"""') -> channel(2);
 
 fragment LONG_STRING_ITEM
     : ~'\\'
