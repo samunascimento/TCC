@@ -310,7 +310,7 @@ public class ConflictRegion {
     public String getOutmostedStructures() {
         return outmostedStructures;
     }
-
+    
     public void setOutmostedStructures(String outmostedStructures) {
         this.outmostedStructures = outmostedStructures;
     }

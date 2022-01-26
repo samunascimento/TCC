@@ -290,10 +290,10 @@ public class Translator {
                 list.remove("WhileExpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
         }
         return mainList;
@@ -531,10 +531,10 @@ public class Translator {
                 list.remove("Whileexpression");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //ERROR+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
 
         }
@@ -587,10 +587,6 @@ public class Translator {
             //There is no switch on Python
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Cast")) {
-                mainList.add(LanguageConstructsTypes.CAST_EXPRESSION);
-                list.remove("Cast");
-            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Except_signature")
@@ -611,11 +607,14 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
             if (list.contains("MultiLineComment")
                     || list.contains("LineComment")) {
+
                 mainList.add(LanguageConstructsTypes.COMMENT);
                 list.remove("MultiLineComment");
                 list.remove("LineComment");
+                
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -727,10 +726,10 @@ public class Translator {
                 list.remove("Variable");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //WARNING+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("WARNING!")) {
+            //Error+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            if (list.contains("Error")) {
                 mainList.add(LanguageConstructsTypes.ERROR);
-                list.remove("WARNING!");
+                list.remove("Error");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

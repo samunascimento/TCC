@@ -5,6 +5,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
+import br.ufjf.dcc.gmr.core.vcs.test.EstruturasLuan;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
@@ -45,6 +46,19 @@ public class GSONClass {
 
     }
 
+        public static void saveRep(String path, EstruturasLuan rep ) throws IOException {
+
+        Gson toSave = new Gson();
+        String toJson = toSave.toJson(rep);
+        File myFile = new File(path);
+        myFile.createNewFile();
+        FileOutputStream fOut = new FileOutputStream(myFile);
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+        myOutWriter.append(toJson);
+        myOutWriter.close();
+        fOut.close();
+
+    }
     /**
      * Function that receives a path that contains a GSON file and return it on
      * an List of the object "Project" format.

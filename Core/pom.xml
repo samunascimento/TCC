@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.ufjf.dcc.gmr</groupId>
     <artifactId>MergeNature</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,15 +59,15 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/python3</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.python3</argument>
                     </arguments>
                     <includes>
-                        <include>CPP14Parser.g4</include>
-                        <include>CPP14Lexer.g4</include>
+                        <include>PythonParser.g4</include>
+                        <include>PythonLexer.g4</include>
                     </includes>
                 </configuration>
                 <executions>
