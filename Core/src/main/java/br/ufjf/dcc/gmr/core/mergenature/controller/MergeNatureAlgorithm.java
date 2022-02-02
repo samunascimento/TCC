@@ -9,6 +9,7 @@ import br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException;
 import br.ufjf.dcc.gmr.core.exception.ShowException;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Results;
 import br.ufjf.dcc.gmr.core.mergenature.antlr4.ANTLR4Tools;
+import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.mergenature.model.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -17,12 +18,14 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JProgressBar;
+import org.apache.commons.io.FileUtils;
 
 /**
  * The main algorithm of merge nature, its function is catch all merges, all
@@ -34,32 +37,82 @@ import javax.swing.JProgressBar;
  */
 public class MergeNatureAlgorithm {
 
-    private String repositoryLocation;
+    private final String DOWNLOAD_NAME = ".NtgGDpeT34R7aHyayrB5DcH5i";
+    private String repositoryPath;
+    private String repositoryURL;
     private String downloadPath;
     private int contextLines;
     private Project project;
     private JProgressBar progressBar;
+    private Connection sqlConnection;
 
     private boolean solutionFileWasRenamed;
     private List<IntegerInterval> contextIntervals;
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines) {
-        this.repositoryLocation = repositoryLocation;
+    public MergeNatureAlgorithm(String repositoryURL, String downloadPath, int contextLines) {
+        this.repositoryPath = null;
+        this.repositoryURL = repositoryURL;
+        this.downloadPath = downloadPath;
         this.contextLines = contextLines;
-        this.project = null;
         this.progressBar = null;
+        this.sqlConnection = null;
     }
 
-    public MergeNatureAlgorithm(String repositoryLocation, int contextLines, JProgressBar progressBar) {
-        this.repositoryLocation = repositoryLocation;
+    public MergeNatureAlgorithm(String repositoryURL, String downloadPath, int contextLines, Connection sqlConnection) {
+        this.repositoryPath = null;
+        this.repositoryURL = repositoryURL;
+        this.downloadPath = downloadPath;
         this.contextLines = contextLines;
-        this.project = null;
+        this.progressBar = null;
+        this.sqlConnection = sqlConnection;
+    }
+
+    public MergeNatureAlgorithm(String repositoryPath, int contextLines) {
+        this.repositoryPath = repositoryPath;
+        this.repositoryURL = null;
+        this.downloadPath = null;
+        this.contextLines = contextLines;
+        this.progressBar = null;
+        this.sqlConnection = null;
+    }
+
+    public MergeNatureAlgorithm(String repositoryURL, String downloadPath, int contextLines, JProgressBar progressBar) {
+        this.repositoryPath = null;
+        this.repositoryURL = repositoryURL;
+        this.downloadPath = downloadPath;
+        this.contextLines = contextLines;
         this.progressBar = progressBar;
+        this.sqlConnection = null;
+    }
+
+    public MergeNatureAlgorithm(String repositoryPath, int contextLines, JProgressBar progressBar) {
+        this.repositoryPath = repositoryPath;
+        this.repositoryURL = null;
+        this.downloadPath = null;
+        this.contextLines = contextLines;
+        this.progressBar = progressBar;
+        this.sqlConnection = null;
     }
 
     public void startAlgorithm() {
         try {
+            if (this.repositoryURL != null) {
+                if (this.repositoryURL.endsWith(".git")) {
+                    this.repositoryURL = this.repositoryURL.replaceAll("\\.git", "");
+                }
+                this.downloadPath = pathTreatment(this.downloadPath);
+                this.repositoryPath = this.downloadPath + "/" + this.DOWNLOAD_NAME + "/";
+                FileUtils.deleteDirectory(new File(this.repositoryPath));
+                Git.clone(this.downloadPath, this.repositoryURL, this.DOWNLOAD_NAME);
+            }
             this.project = projectLayer();
+            if (this.repositoryURL != null) {
+                FileUtils.deleteDirectory(new File(this.repositoryPath));
+            }
+            if (this.sqlConnection != null && this.project != null) {
+                ProjectDAO projectDAO = new ProjectDAO(sqlConnection);
+                projectDAO.insert(this.project);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             this.project = null;
@@ -74,18 +127,21 @@ public class MergeNatureAlgorithm {
 
         Project project = new Project();
         String[] auxStringArray;
-        String repositoryPath = "";
 
-        if (MergeNatureTools.isDirectory(repositoryLocation)) {
-            if (repositoryLocation.contains("\\")) {
-                repositoryLocation = repositoryLocation.replaceAll("\\\\", "/");
-            }
-            if (repositoryLocation.endsWith("/")) {
-                repositoryPath = this.repositoryLocation;
+        this.repositoryPath = pathTreatment(this.repositoryPath);
+        if (this.repositoryURL != null) {
+            project.setUrl(this.repositoryURL);
+            if (project.getUrl().contains("@")) {
+                auxStringArray = project.getUrl().split(":")[1].split("/");
+                project.setName(auxStringArray[1]);
+                project.setOrganization(auxStringArray[0]);
             } else {
-                repositoryPath = this.repositoryLocation + "/";
+                auxStringArray = project.getUrl().split("/");
+                project.setName(auxStringArray[auxStringArray.length - 1]);
+                project.setOrganization(auxStringArray[auxStringArray.length - 2]);
             }
-            project.setName(Paths.get(this.repositoryLocation).getFileName().toString());
+        } else {
+            project.setName(Paths.get(this.repositoryPath).getFileName().toString());
             project.setUrl(Git.getRemoteURL(repositoryPath).replaceAll("\n", ""));
             if (project.getUrl().equals("Unknown")) {
                 project.setOrganization("Unknown");
@@ -96,11 +152,10 @@ public class MergeNatureAlgorithm {
                 auxStringArray = project.getUrl().split("/");
                 project.setOrganization(auxStringArray[auxStringArray.length - 2]);
             }
-        } else {
-            
         }
+
         List<String> log;
-        log = Git.getAllMerges(repositoryPath);
+        log = Git.getAllMerges(this.repositoryPath);
         int numberOfMerges = log.size();
         int status = 0;
         if (this.progressBar != null) {
@@ -110,7 +165,7 @@ public class MergeNatureAlgorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            project.addMerge(mergeLayer(project, logLine, repositoryPath));
+            project.addMerge(mergeLayer(project, logLine, this.repositoryPath));
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
                 System.out.println("[" + project.getName() + "] " + status + File.separator + numberOfMerges + " merges processed...");
@@ -629,6 +684,18 @@ public class MergeNatureAlgorithm {
             result += 1;
         }
         return result;
+    }
+
+    private String pathTreatment(String path) {
+        if (path.contains("\\")) {
+            path = path.replaceAll("\\\\", "/");
+        }
+        if (path.endsWith("/")) {
+            path = path;
+        } else {
+            path = path + "/";
+        }
+        return path;
     }
 
 }

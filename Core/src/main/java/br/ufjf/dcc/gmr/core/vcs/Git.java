@@ -38,7 +38,7 @@ public class Git {
                 folderName + (folderName.endsWith(File.separator)? "" : File.separator) +
                 "...\nIsso pode demorar dependendo do projeto, por favor espere.");
         CLIExecution execution = CLIExecute.execute(command, downloadPath);
-        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty()){
+        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty() && !execution.getError().contains("Cloning into '" + folderName + "'...")){
             System.out.println(execution);
             throw new CloneException(ListUtils.getTextListStringToString(execution.getError()));
         }
