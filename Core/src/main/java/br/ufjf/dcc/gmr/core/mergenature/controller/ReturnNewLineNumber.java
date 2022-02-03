@@ -63,7 +63,13 @@ public class ReturnNewLineNumber {
         int currentLine = 0;
         FileDiff aux = new FileDiff();
         List<FileDiff> chunks = new ArrayList<>();
-        List<String> output = Git.auxiliarDiffFile(directory, pastEntity, futureEntity);
+        List<String> output;
+        
+        try {
+            output = Git.auxiliarDiffFile(directory, pastEntity, futureEntity);
+        } catch (DiffException ex) {
+            output = null;
+        }
 
         if (output == null) {
             return null;
