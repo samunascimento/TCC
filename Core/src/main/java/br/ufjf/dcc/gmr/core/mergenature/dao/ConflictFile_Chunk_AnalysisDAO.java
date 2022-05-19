@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.dao;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,26 +13,26 @@ import java.util.List;
  *
  * @author João Pedro Lima
  */
-public class Project_MergeDAO {
-    
-    public static final String PROJECT_FK = "projectFK";
-    public static final String MERGE_FK = "mergeFK";
-    public static final String MERGE_HASH = "mergeHash";
-    
-    public static void insert(Connection connection, int projectID, int mergeID, String mergeHash) throws SQLException, IOException {
+public class ConflictFile_Chunk_AnalysisDAO {
+
+    public static final String CONFLICT_FILE_FK = "conflictFileFK";
+    public static final String CHUNK_FK = "chunkFK";
+    public static final String ANALYSIS_FK = "analysisFK";
+
+    public static void insert(Connection connection, int conflictFileID, int chunkID, int analysisID) throws SQLException, IOException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO project_merge ("
-                    + PROJECT_FK + ", "
-                    + MERGE_FK + ", "
-                    + MERGE_HASH + ") VALUES (?,?,?);";
+            String sql = "INSERT INTO conflictFile_chunk_analysis ("
+                    + CONFLICT_FILE_FK + ", "
+                    + CHUNK_FK + ", "
+                    + ANALYSIS_FK + ") VALUES (?,?,?);";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
-                stmt.setInt(1, projectID);
-                stmt.setInt(2, mergeID);
-                stmt.setString(3, mergeHash);
+                stmt.setInt(1, conflictFileID);
+                stmt.setInt(2, chunkID);
+                stmt.setInt(3, analysisID);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 throw ex;
@@ -43,20 +44,20 @@ public class Project_MergeDAO {
         }
     }
     
-    public static List<Integer> selectByProjectIDAndMergeHash(Connection connection, int projectID, String mergeHash) throws SQLException, IOException{
-        List<Integer> mergeIDs = null;
+    public static List<Chunk> selectChunks(Connection connection, int conflictFileID, int analysisID) throws SQLException, IOException {
+        List<Chunk> chunks = null;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            mergeIDs = new ArrayList<>();
-            String sql = "SELECT " + MERGE_FK + " FROM project_merge WHERE " + PROJECT_FK + "= \'" + projectID + "\' AND "
-                                                                       + MERGE_HASH + "= \'" + mergeHash + "\';";
+            chunks = new ArrayList<>();
+            String sql = "SELECT " + CHUNK_FK + " FROM conflictFile_chunk_analysis WHERE " + CONFLICT_FILE_FK + "=\'" + conflictFileID
+                    + "\' AND " + ANALYSIS_FK + "=\'" + analysisID + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    mergeIDs.add(resultSet.getInt(MERGE_FK));
+                    chunks.add(ChunkDAO.select(connection, resultSet.getInt(CHUNK_FK)));
                 }
             } catch (SQLException ex) {
                 throw ex;
@@ -66,7 +67,7 @@ public class Project_MergeDAO {
                 }
             }
         }
-        return mergeIDs;
+        return chunks;
     }
-    
+
 }

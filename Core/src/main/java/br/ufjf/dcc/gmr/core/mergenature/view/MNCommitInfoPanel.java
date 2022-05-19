@@ -38,7 +38,7 @@ public class MNCommitInfoPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        textArea = new JTextArea(merge.getMerge().toString());
+        textArea = new JTextArea(merge.getMergeCommit().toString());
         textArea.setEditable(false);
         textArea.setBackground(MNFrame.PRIMARY_COLOR);
         textArea.setForeground(MNFrame.SECUNDARY_COLOR);
@@ -84,12 +84,12 @@ public class MNCommitInfoPanel extends JPanel {
 
     private void switchCommit() {
         if (comboBox.getSelectedIndex() == 0) {
-            textArea.setText(merge.getMerge().toString());
+            textArea.setText(merge.getMergeCommit().toString());
         } else if (comboBox.getSelectedIndex() == comboBox.getItemCount() - 1) {
-            if (merge.getAncestor() == null) {
+            if (merge.getMergeBase() == null) {
                 textArea.setText("This merge don't have a common\nancestor between it's parents, so the\n ancestor commit not exist");
             } else {
-                textArea.setText(merge.getAncestor().toString());
+                textArea.setText(merge.getMergeBase().toString());
             }
         } else {
             textArea.setText(merge.getParents().get(comboBox.getSelectedIndex() - 1).toString());

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to record commits involved in a merge and classify the type of conflict
+ * Class to record commits involved in a mergeCommit and classify the type of conflict
  *
  * @author João Pedro Lima
  * @since 10-10-2020
@@ -13,73 +13,77 @@ public class Merge implements Cloneable {
 
     private int id;
     private transient Project project;
-    private Commit merge;
+    private Commit mergeCommit;
     private List<Commit> parents;
-    private Commit ancestor;
-    private List<Conflict> conflicts;
+    private Commit mergeBase;
+    private List<ConflictFile> conflictFiles;
     private MergeType mergeType;
+    private boolean hasOutOfMemory;
 
     /**
      * Normal constructor
      *
      * @param id Id for databases
-     * @param project The project that the merge belongs
-     * @param merge The data of the merge
+     * @param project The project that the mergeCommit belongs
+     * @param mergeCommit The data of the mergeCommit
      * @param parents The data of all parents
-     * @param ancestor The data of the ancestor of the parents (merge base)
-     * @param conflicts List of all files involved in a merge conflict
-     * @param mergeType The type of the merge
+     * @param mergeBase The data of the mergeBase of the parents (mergeCommit base)
+     * @param conflicts List of all files involved in a mergeCommit conflict
+     * @param mergeType The type of the mergeCommit
      */
-    public Merge(int id, Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
+    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, boolean hasOutOfMemory) {
         this.id = id;
         this.project = project;
-        this.merge = merge;
+        this.mergeCommit = mergeCommit;
         this.parents = parents;
-        this.ancestor = ancestor;
-        this.conflicts = conflicts;
+        this.mergeBase = mergeBase;
+        this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.hasOutOfMemory = hasOutOfMemory;
     }
 
     /**
      * No id constructor
      *
-     * @param project The project that the merge belongs
-     * @param merge The data of the merge
+     * @param project The project that the mergeCommit belongs
+     * @param mergeCommit The data of the mergeCommit
      * @param parents The data of all parents
-     * @param ancestor The data of the ancestor of the parents (merge base)
-     * @param conflicts List of all files involved in a merge conflict
-     * @param mergeType The type of the merge
+     * @param mergeBase The data of the mergeBase of the parents (mergeCommit base)
+     * @param conflicts List of all files involved in a mergeCommit conflict
+     * @param mergeType The type of the mergeCommit
      */
-    public Merge(Project project, Commit merge, List<Commit> parents, Commit ancestor, List<Conflict> conflicts, MergeType mergeType) {
+    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, boolean hasOutOfMemory) {
         this.project = project;
-        this.merge = merge;
+        this.mergeCommit = mergeCommit;
         this.parents = parents;
-        this.ancestor = ancestor;
-        this.conflicts = conflicts;
+        this.mergeBase = mergeBase;
+        this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.hasOutOfMemory = hasOutOfMemory;
     }
 
     public Merge(Merge merge) {
         this.id = merge.getId();
         this.project = merge.getProject();
-        this.merge = merge.getMerge();
+        this.mergeCommit = merge.getMergeCommit();
         this.parents = merge.getParents();
-        this.ancestor = merge.getAncestor();
-        this.conflicts = merge.getConflicts();
+        this.mergeBase = merge.getMergeBase();
+        this.conflictFiles = merge.getConflictFiles();
         this.mergeType = merge.getMergeType();
+        this.hasOutOfMemory = merge.getHasOutOfMemory();
     }
 
     public Merge() {
         this.parents = new ArrayList<>();
-        this.conflicts = new ArrayList<>();
+        this.conflictFiles = new ArrayList<>();
     }
 
     public int getNumberOfConflictRegions() {
         if (mergeType == MergeType.CONFLICTED_MERGE || mergeType == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
             int i = 0;
-            for (Conflict conflict : this.getConflicts()) {
-                if (conflict.getConflictRegions() != null) {
-                    i += conflict.getConflictRegions().size();
+            for (ConflictFile conflict : this.getConflictFiles()) {
+                if (conflict.getChunks() != null) {
+                    i += conflict.getChunks().size();
                 }
             }
             return i;
@@ -104,12 +108,12 @@ public class Merge implements Cloneable {
         this.project = project;
     }
 
-    public Commit getMerge() {
-        return merge;
+    public Commit getMergeCommit() {
+        return mergeCommit;
     }
 
-    public void setMerge(Commit merge) {
-        this.merge = merge;
+    public void setMergeCommit(Commit mergeCommit) {
+        this.mergeCommit = mergeCommit;
     }
 
     public List<Commit> getParents() {
@@ -124,24 +128,24 @@ public class Merge implements Cloneable {
         this.parents.add(parent);
     }
 
-    public Commit getAncestor() {
-        return ancestor;
+    public Commit getMergeBase() {
+        return mergeBase;
     }
 
-    public void setAncestor(Commit ancestor) {
-        this.ancestor = ancestor;
+    public void setMergeBase(Commit mergeBase) {
+        this.mergeBase = mergeBase;
     }
 
-    public List<Conflict> getConflicts() {
-        return conflicts;
-    }
- 
-    public void setConflicts(List<Conflict> conflicts) {
-        this.conflicts = conflicts;
+    public List<ConflictFile> getConflictFiles() {
+        return conflictFiles;
     }
 
-    public void addConflict(Conflict conflict) {
-        this.conflicts.add(conflict);
+    public void setConflictFiles(List<ConflictFile> conflictFiles) {
+        this.conflictFiles = conflictFiles;
+    }
+
+    public void addConflictFile(ConflictFile conflictFile) {
+        this.conflictFiles.add(conflictFile);
     }
 
     public MergeType getMergeType() {
@@ -150,6 +154,14 @@ public class Merge implements Cloneable {
 
     public void setMergeType(MergeType mergeType) {
         this.mergeType = mergeType;
+    }
+
+    public boolean getHasOutOfMemory() {
+        return hasOutOfMemory;
+    }
+
+    public void setHasOutOfMemory(boolean hasOutOfMemory) {
+        this.hasOutOfMemory = hasOutOfMemory;
     }
 
 }

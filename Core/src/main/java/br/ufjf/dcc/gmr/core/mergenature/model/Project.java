@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +48,7 @@ public class Project {
      * @param merges List of all merges involved in the history of the project
      */
     public Project(String name, String url, String organization, List<Merge> merges) {
+        this.id = 0;
         this.name = name;
         this.url = url;
         this.organization = organization;
@@ -60,7 +60,6 @@ public class Project {
     }
 
     public int getId() {
-
         return id;
     }
 
@@ -118,7 +117,7 @@ public class Project {
     public int getNumberOfConflicts() {
         int count = 0;
         for (Merge merge : merges) {
-            count += merge.getConflicts().size();
+            count += merge.getConflictFiles().size();
         }
         return count;
     }
@@ -154,8 +153,8 @@ public class Project {
         }
 
         merges.forEach(merge -> {
-            merge.getConflicts().forEach(conflict -> {
-                conflict.getConflictRegions().forEach(conflictRegion -> {
+            merge.getConflictFiles().forEach(conflict -> {
+                conflict.getChunks().forEach(conflictRegion -> {
                     contaSolucao[DeveloperDecision.getIntFromEnum(conflictRegion.getDeveloperDecision()) - 1]++;
                 });
             });
@@ -174,8 +173,8 @@ public class Project {
 
         Map<String, Integer> estruturas = new HashMap<>();
         merges.forEach(merge -> {
-            merge.getConflicts().forEach(conflict -> {
-                conflict.getConflictRegions().forEach(conflictRegion -> {
+            merge.getConflictFiles().forEach(conflict -> {
+                conflict.getChunks().forEach(conflictRegion -> {
                     Set<String> mySet = new HashSet<>(Arrays.asList(conflictRegion.getOutmostedStructures()));
                     mySet.stream().filter(st -> (st != null && !st.isEmpty())).forEachOrdered(st -> {
                         for (String s : st.split("\n")) {
@@ -199,7 +198,7 @@ public class Project {
         return estruturas;
     }
 
-    public Map<ConflictType, Integer> getConflictType() {
+    public Map<ConflictFileType, Integer> getConflictType() {
 
         int[] conflicType = new int[12];
 
@@ -208,15 +207,15 @@ public class Project {
         }
 
         merges.forEach(merge -> {
-            merge.getConflicts().forEach(conflict -> {
-                conflicType[ConflictType.getIntFromEnum(conflict.getConflictType()) - 1]++;
+            merge.getConflictFiles().forEach(conflict -> {
+                conflicType[ConflictFileType.getIntFromEnum(conflict.getConflictFileType()) - 1]++;
             });
         });
 
-        Map<ConflictType, Integer> conflicTypes = new HashMap<>();
+        Map<ConflictFileType, Integer> conflicTypes = new HashMap<>();
 
         for (int i = 0; i < 12; i++) {
-            conflicTypes.put(ConflictType.getEnumFromInt(i + 1), conflicType[i]);
+            conflicTypes.put(ConflictFileType.getEnumFromInt(i + 1), conflicType[i]);
         }
 
         return conflicTypes;
@@ -227,8 +226,8 @@ public class Project {
         ArrayList<Integer> version2 = new ArrayList<Integer>();
 
         merges.forEach(merge -> {
-            merge.getConflicts().forEach(conflict -> {
-                conflict.getConflictRegions().forEach(conflictRegion -> {
+            merge.getConflictFiles().forEach(conflict -> {
+                conflict.getChunks().forEach(conflictRegion -> {
                         version1.add(conflictRegion.getSeparatorLine()-conflictRegion.getBeginLine());
                         version2.add(conflictRegion.getEndLine()-conflictRegion.getSeparatorLine());
                 });

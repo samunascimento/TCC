@@ -41,7 +41,6 @@ public enum MergeType {
             default:{
                 return -1;
             }
-            
         }
     }
 

@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -27,7 +27,7 @@ public class MNRepositoryPathFrame extends JFrame {
     private final MNProjectPanel projectPanel;
     private JTextField repositoryPathField;
     private boolean repositoryPathIsVerified;
-    private Conflict currentConflict;
+    private ConflictFile currentConflict;
 
     public MNRepositoryPathFrame(MNProjectPanel projectPanel) {
         this.projectPanel = projectPanel;
@@ -112,7 +112,7 @@ public class MNRepositoryPathFrame extends JFrame {
         mainPanel.add(findOutsideAlterations, gbc);
     }
 
-    public void showRepositoryPathFrame(Conflict conflict) {
+    public void showRepositoryPathFrame(ConflictFile conflict) {
         this.currentConflict = conflict;
         this.setVisible(true);
     }

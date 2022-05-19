@@ -12,7 +12,7 @@ import java.util.List;
 public class ConflictRegion {
 
     private int id;
-    private transient Conflict conflict;
+    private transient ConflictFile conflict;
     private String rawConflict;
 
     //IN CONFLICT
@@ -56,7 +56,7 @@ public class ConflictRegion {
      * @param originalV1FirstLine The line first line of v1 in parent 1
      * @param originalV2FirstLine The line first line of v2 in parent 2
      */
-    public ConflictRegion(int id, Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public ConflictRegion(int id, ConflictFile conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.id = id;
         this.conflict = conflict;
         this.rawConflict = rawConflict;
@@ -96,7 +96,7 @@ public class ConflictRegion {
      * @param originalV1FirstLine The line first line of v1 in parent 1
      * @param originalV2FirstLine The line first line of v2 in parent 2
      */
-    public ConflictRegion(Conflict conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public ConflictRegion(ConflictFile conflict, String rawConflict, String beforeContext, int beginLine, String v1Text, int separatorLine, String v2Text, int endLine, String afterContext, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
         this.conflict = conflict;
         this.rawConflict = rawConflict;
         this.beforeContext = beforeContext;
@@ -126,11 +126,11 @@ public class ConflictRegion {
         this.id = id;
     }
 
-    public Conflict getConflict() {
+    public ConflictFile getConflict() {
         return conflict;
     }
 
-    public void setConflict(Conflict conflict) {
+    public void setConflict(ConflictFile conflict) {
         this.conflict = conflict;
     }
 

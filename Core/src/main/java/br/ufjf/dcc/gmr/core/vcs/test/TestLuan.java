@@ -1,7 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.io.FileNotFoundException;
@@ -38,7 +38,7 @@ public class TestLuan {
             int numChunks = leitorProjeto.getNumberOfChunks();
 
             Map<DeveloperDecision, Integer> solucao = leitorProjeto.getSolucoes();
-            Map<ConflictType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
+            Map<ConflictFileType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
 
             Map<String, Integer> estruturas = leitorProjeto.getEstruturas();
             Map<String, Integer> dist = leitorProjeto.getChunkDistribution();

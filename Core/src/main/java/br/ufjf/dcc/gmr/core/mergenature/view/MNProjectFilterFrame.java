@@ -1,8 +1,8 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
@@ -501,49 +501,49 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByConflict(List<Merge> list) {
 
         Merge auxMerge;
-        List<ConflictType> conflictTypeList = new ArrayList<>();
+        List<ConflictFileType> conflictTypeList = new ArrayList<>();
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
 
         if (content.isSelected()) {
-            conflictTypeList.add(ConflictType.CONTENT);
+            conflictTypeList.add(ConflictFileType.CONTENT);
         }
         if (coincidenceAdding.isSelected()) {
-            conflictTypeList.add(ConflictType.COINCIDENCE_ADDING);
+            conflictTypeList.add(ConflictFileType.COINCIDENCE_ADDING);
         }
         if (fileRename.isSelected()) {
-            conflictTypeList.add(ConflictType.FILE_RENAME);
+            conflictTypeList.add(ConflictFileType.FILE_RENAME);
         }
         if (directoryRename.isSelected()) {
-            conflictTypeList.add(ConflictType.DIRECTORY_RENAME);
+            conflictTypeList.add(ConflictFileType.DIRECTORY_RENAME);
         }
         if (modifyDelete.isSelected()) {
-            conflictTypeList.add(ConflictType.MODIFY_DELETE);
+            conflictTypeList.add(ConflictFileType.MODIFY_DELETE);
         }
         if (renameDelete.isSelected()) {
-            conflictTypeList.add(ConflictType.RENAME_DELETE);
+            conflictTypeList.add(ConflictFileType.RENAME_DELETE);
         }
         if (p1RenamedP2Add.isSelected()) {
-            conflictTypeList.add(ConflictType.P1_RENAMED_P2_ADD);
+            conflictTypeList.add(ConflictFileType.P1_RENAMED_P2_ADD);
         }
         if (p2RenamedP1Add.isSelected()) {
-            conflictTypeList.add(ConflictType.P2_RENAMED_P1_ADD);
+            conflictTypeList.add(ConflictFileType.P2_RENAMED_P1_ADD);
         }
         if (fileLocation.isSelected()) {
-            conflictTypeList.add(ConflictType.FILE_LOCATION);
+            conflictTypeList.add(ConflictFileType.FILE_LOCATION);
         }
         if (submodule.isSelected()) {
-            conflictTypeList.add(ConflictType.SUBMODULE);
+            conflictTypeList.add(ConflictFileType.SUBMODULE);
         }
         if (contentWithUnilateralRenaming.isSelected()) {
-            conflictTypeList.add(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
+            conflictTypeList.add(ConflictFileType.CONTENT_WITH_UNILATERAL_RENAMNING);
         }
 
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                if (conflictTypeList.contains(conflict.getConflictType())) {
-                    auxMerge.addConflict(conflict);
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                if (conflictTypeList.contains(conflict.getConflictFileType())) {
+                    auxMerge.addConflictFile(conflict);
                 }
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
@@ -556,7 +556,7 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByConflictRegion(List<Merge> list) {
 
         Merge auxMerge;
-        Conflict auxConflict;
+        ConflictFile auxConflict;
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         List<DeveloperDecision> developerDecisionList = new ArrayList<>();
 
@@ -595,16 +595,16 @@ public class MNProjectFilterFrame extends JDialog {
 
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                auxConflict = new Conflict(conflict);
-                auxConflict.setConflictRegions(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                auxConflict = new ConflictFile(conflict);
+                auxConflict.setChunks(new ArrayList<>());
+                for (ConflictRegion conflictRegion : conflict.getChunks()) {
                     if (developerDecisionList.contains(conflictRegion.getDeveloperDecision())) {
                         auxConflict.addConflictRegion(conflictRegion);
                     }
                 }
-                auxMerge.addConflict(auxConflict);
+                auxMerge.addConflictFile(auxConflict);
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
         }
@@ -615,7 +615,7 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByHash(List<Merge> list) {
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         for (Merge merge : list) {
-            if (merge.getMerge().getCommitHash().startsWith(hashInput.getText())) {
+            if (merge.getMergeCommit().getHash().startsWith(hashInput.getText())) {
                 filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
         }
@@ -627,17 +627,17 @@ public class MNProjectFilterFrame extends JDialog {
         boolean haveAll;
         Merge auxMerge;
         String auxString;
-        Conflict auxConflict;
+        ConflictFile auxConflict;
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         boolean needToHaveAll = this.needToHaveAll.isSelected();
         String[] structures = structuresInput.getText().toLowerCase().split(";");
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                auxConflict = new Conflict(conflict);
-                auxConflict.setConflictRegions(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                auxConflict = new ConflictFile(conflict);
+                auxConflict.setChunks(new ArrayList<>());
+                for (ConflictRegion conflictRegion : conflict.getChunks()) {
                     if (onlyOutmost.isSelected()) {
                         haveAll = true;
                         auxString = conflictRegion.getOutmostedStructures().toLowerCase();
@@ -674,7 +674,7 @@ public class MNProjectFilterFrame extends JDialog {
                         }
                     }
                 }
-                auxMerge.addConflict(auxConflict);
+                auxMerge.addConflictFile(auxConflict);
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
         }
@@ -688,10 +688,10 @@ public class MNProjectFilterFrame extends JDialog {
         List<String> extensions = Arrays.asList(extensionInput.getText().toLowerCase().split(";"));
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
                 if (extensions.contains(getExtension(conflict.getParent1FileName()))) {
-                    auxMerge.addConflict(conflict);
+                    auxMerge.addConflictFile(conflict);
                 }
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
@@ -739,7 +739,7 @@ public class MNProjectFilterFrame extends JDialog {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).merge.getConflicts().size() >= auxList.get(j).merge.getConflicts().size()) {
+                        if (filteredList.get(i).merge.getConflictFiles().size() >= auxList.get(j).merge.getConflictFiles().size()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
@@ -755,7 +755,7 @@ public class MNProjectFilterFrame extends JDialog {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).merge.getMerge().getCommitterDate().getTime() >= auxList.get(j).merge.getMerge().getCommitterDate().getTime()) {
+                        if (filteredList.get(i).merge.getMergeCommit().getCommitterDate().getTime() >= auxList.get(j).merge.getMergeCommit().getCommitterDate().getTime()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();

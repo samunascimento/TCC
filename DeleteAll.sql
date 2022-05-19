@@ -1,0 +1,12 @@
+DELETE FROM Project_Analysis;
+DELETE FROM Merge_Analysis;
+DELETE FROM Merge_Commit_parents;
+DELETE FROM Project_Merge;
+DELETE FROM Merge_ConflictFile_Analysis;
+DELETE FROM ConflictFile_Chunk_Analysis;
+DELETE FROM Merge;
+DELETE FROM Commit;
+DELETE FROM Analysis;
+DELETE FROM Project;
+DELETE FROM ConflictFile;
+DELETE FROM Chunk;

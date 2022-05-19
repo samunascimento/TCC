@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -25,14 +25,14 @@ import javax.swing.JTextArea;
  */
 public class MNConflictPanel extends JPanel {
 
-    private List<Conflict> conflicts;
+    private List<ConflictFile> conflicts;
 
     private MNMergePanel mergePanel;
     private JComboBox conflictComboBox;
     private JComboBox regionComboBox;
     private JTextArea textArea;
 
-    public MNConflictPanel(MNMergePanel mergePanel, List<Conflict> conflicts) {
+    public MNConflictPanel(MNMergePanel mergePanel, List<ConflictFile> conflicts) {
         this.mergePanel = mergePanel;
         this.conflicts = conflicts;
         set();
@@ -90,11 +90,11 @@ public class MNConflictPanel extends JPanel {
         });
 
         conflictComboBox = new JComboBox();
-        for (Conflict conflict : conflicts) {
+        for (ConflictFile conflict : conflicts) {
             if (!conflict.getParent1FileName().equals("Absent")) {
-                conflictComboBox.addItem(conflict.getParent1FileName() + " (" + conflict.getConflictRegions().size() + " regions)");
+                conflictComboBox.addItem(conflict.getParent1FileName() + " (" + conflict.getChunks().size() + " regions)");
             } else {
-                conflictComboBox.addItem(conflict.getParent2FileName() + " (" + conflict.getConflictRegions().size() + " regions)");
+                conflictComboBox.addItem(conflict.getParent2FileName() + " (" + conflict.getChunks().size() + " regions)");
             }
 
         }
@@ -104,13 +104,13 @@ public class MNConflictPanel extends JPanel {
 
         regionComboBox = new JComboBox();
         if (!conflicts.isEmpty()) {
-            for (ConflictRegion region : conflicts.get(0).getConflictRegions()) {
+            for (ConflictRegion region : conflicts.get(0).getChunks()) {
                 regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
             }
-            if (conflicts.get(0).getConflictRegions().isEmpty()) {
+            if (conflicts.get(0).getChunks().isEmpty()) {
                 mergePanel.updateConflictRegion(null);
             } else {
-                mergePanel.updateConflictRegion(conflicts.get(0).getConflictRegions().get(0));
+                mergePanel.updateConflictRegion(conflicts.get(0).getChunks().get(0));
             }
         } else {
             mergePanel.updateConflictRegion(null);
@@ -147,7 +147,7 @@ public class MNConflictPanel extends JPanel {
         regionComboBox.removeAllItems();
         textArea.setText("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:Has Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
-            for (ConflictRegion region : conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions()) {
+            for (ConflictRegion region : conflicts.get(conflictComboBox.getSelectedIndex()).getChunks()) {
                 regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
             }
             textArea.setText(conflicts.get(conflictComboBox.getSelectedIndex()).toString());
@@ -158,11 +158,11 @@ public class MNConflictPanel extends JPanel {
 
     private void switchRegion() {
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
-            if (regionComboBox.getSelectedIndex() >= 0 && regionComboBox.getSelectedIndex() < conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().size()) {
-                if (conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().isEmpty()) {
+            if (regionComboBox.getSelectedIndex() >= 0 && regionComboBox.getSelectedIndex() < conflicts.get(conflictComboBox.getSelectedIndex()).getChunks().size()) {
+                if (conflicts.get(conflictComboBox.getSelectedIndex()).getChunks().isEmpty()) {
                     mergePanel.updateConflictRegion(null);
                 } else {
-                    mergePanel.updateConflictRegion(conflicts.get(conflictComboBox.getSelectedIndex()).getConflictRegions().get(regionComboBox.getSelectedIndex()));
+                    mergePanel.updateConflictRegion(conflicts.get(conflictComboBox.getSelectedIndex()).getChunks().get(regionComboBox.getSelectedIndex()));
                 }
             }
         }

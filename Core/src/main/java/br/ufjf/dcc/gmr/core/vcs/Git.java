@@ -311,7 +311,7 @@ public class Git {
                 throw new MergeBaseException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
                 if (execution.getOutput().isEmpty()) {
-                    return "No ancestor";
+                    return null;
                 }
                 return execution.getOutputString();
             }

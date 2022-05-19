@@ -57,7 +57,7 @@ public class MNMergePanel extends JPanel {
         NWPanel.setPreferredSize(new Dimension(1, 150));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
-        NWPanel.add(new MNConflictPanel(this, merge.getConflicts()), INSIDE_CONSTRAINTS);
+        NWPanel.add(new MNConflictPanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.5;
@@ -90,9 +90,9 @@ public class MNMergePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         this.add(SPanel, gbc);
-        if(!merge.getConflicts().isEmpty()){
-            if(!merge.getConflicts().get(0).getConflictRegions().isEmpty()){
-                updateConflictRegion(merge.getConflicts().get(0).getConflictRegions().get(0));
+        if(!merge.getConflictFiles().isEmpty()){
+            if(!merge.getConflictFiles().get(0).getChunks().isEmpty()){
+                updateConflictRegion(merge.getConflictFiles().get(0).getChunks().get(0));
             }
         }
 

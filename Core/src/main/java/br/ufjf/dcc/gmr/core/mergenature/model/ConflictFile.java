@@ -10,7 +10,7 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 09-11-2020
  */
-public class Conflict {
+public class ConflictFile {
 
     public static int PARENT1_FILE = 0;
     public static int PARENT2_FILE = 1;
@@ -22,8 +22,8 @@ public class Conflict {
     private String parent2FilePath;
     private String ancestorFilePath;
     private int conflictFilePath;
-    private List<ConflictRegion> conflictRegions;
-    private ConflictType conflictType;
+    private List<Chunk> chunks;
+    private ConflictFileType conflictFileType;
     private boolean hasOutsideAlterations;
     private boolean hasOutsideAlterationsIgnoringFormatting;
     private transient Merge merge;
@@ -37,7 +37,7 @@ public class Conflict {
      * @param ancestorFilePath The name of the file in ancestor commit
      * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
      * or <code>parent2FilePath</code>) appears during the conflict
-     * @param conflictRegions A list that contains all conflict regions in a
+     * @param chunks A list that contains all conflict regions in a
      * file, can be empty
      * @param conflictType The type of conflict
      * @param hasOutsideAlterations Indicates if the developer who made the
@@ -47,14 +47,15 @@ public class Conflict {
      * conflict
      * @param merge The merge that the conflict belongs
      */
-    public Conflict(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    public ConflictFile(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, 
+            List<Chunk> chunks, ConflictFileType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.id = id;
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
         this.conflictFilePath = conflictFilePath;
-        this.conflictRegions = conflictRegions;
-        this.conflictType = conflictType;
+        this.chunks = chunks;
+        this.conflictFileType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
         this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
         this.merge = merge;
@@ -68,7 +69,7 @@ public class Conflict {
      * @param ancestorFilePath The name of the file in ancestor commit
      * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
      * or <code>parent2FilePath</code>) appears during the conflict
-     * @param conflictRegions A list that contains all conflict regions in a
+     * @param chunks A list that contains all conflict regions in a
      * file, can be empty
      * @param conflictType The type of conflict
      * @param hasOutsideAlterations Indicates if the developer who made the
@@ -78,32 +79,32 @@ public class Conflict {
      * conflict
      * @param merge The merge that the conflict belongs
      */
-    public Conflict(String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<ConflictRegion> conflictRegions, ConflictType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    public ConflictFile(String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<Chunk> chunks, ConflictFileType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
         this.conflictFilePath = conflictFilePath;
-        this.conflictRegions = conflictRegions;
-        this.conflictType = conflictType;
+        this.chunks = chunks;
+        this.conflictFileType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
         this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
         this.merge = merge;
     }
 
-    public Conflict(Conflict conflict) {
-        this.parent1FilePath = conflict.getParent1FilePath();
-        this.parent2FilePath = conflict.getParent2FilePath();
-        this.ancestorFilePath = conflict.getAncestorFilePath();
-        this.conflictFilePath = conflict.getIntConflictFilePath();
-        this.conflictRegions = conflict.getConflictRegions();
-        this.conflictType = conflict.getConflictType();
-        this.hasOutsideAlterations = conflict.hasOutsideAlterations();
-        this.hasOutsideAlterationsIgnoringFormatting = conflict.hasOutsideAlterationsIgnoringFormatting;
-        this.merge = conflict.getMerge();
+    public ConflictFile(ConflictFile conflictFile) {
+        this.parent1FilePath = conflictFile.getParent1FilePath();
+        this.parent2FilePath = conflictFile.getParent2FilePath();
+        this.ancestorFilePath = conflictFile.getAncestorFilePath();
+        this.conflictFilePath = conflictFile.getIntConflictFilePath();
+        this.chunks = conflictFile.getChunks();
+        this.conflictFileType = conflictFile.getConflictFileType();
+        this.hasOutsideAlterations = conflictFile.hasOutsideAlterations();
+        this.hasOutsideAlterationsIgnoringFormatting = conflictFile.hasOutsideAlterationsIgnoringFormatting;
+        this.merge = conflictFile.getMerge();
     }
 
-    public Conflict() {
-        this.conflictRegions = new ArrayList<>();
+    public ConflictFile() {
+        this.chunks = new ArrayList<>();
     }
 
     public int getId() {
@@ -202,24 +203,24 @@ public class Conflict {
         this.conflictFilePath = conflictFilePath;
     }
     
-    public List<ConflictRegion> getConflictRegions() {
-        return conflictRegions;
+    public List<Chunk> getChunks() {
+        return chunks;
     }
 
-    public void setConflictRegions(List<ConflictRegion> conflictRegions) {
-        this.conflictRegions = conflictRegions;
+    public void setChunks(List<Chunk> chunks) {
+        this.chunks = chunks;
     }
 
-    public void addConflictRegion(ConflictRegion conflictRegion) {
-        this.conflictRegions.add(conflictRegion);
+    public void addChunk(Chunk chunk) {
+        this.chunks.add(chunk);
     }
 
-    public ConflictType getConflictType() {
-        return conflictType;
+    public ConflictFileType getConflictFileType() {
+        return conflictFileType;
     }
 
-    public void setConflictType(ConflictType conflictType) {
-        this.conflictType = conflictType;
+    public void setConflictFileType(ConflictFileType conflictFileType) {
+        this.conflictFileType = conflictFileType;
     }
 
     public boolean hasOutsideAlterations() {
@@ -251,8 +252,8 @@ public class Conflict {
         String result = "Parent 1's file: " + getParent1FilePath()
                 + "\nParent 2's file: " + getParent2FilePath()
                 + "\nAncestor's file: " + getAncestorFilePath()
-                + "\nConflict Type: " + conflictType.toString()
-                + "\nConflict Regions: " + conflictRegions.size();
+                + "\nConflict File Type: " + conflictFileType.toString()
+                + "\nConflict Regions: " + chunks.size();
         if (hasOutsideAlterations) {
             result = result + "\nHas Outside Alterations: YES";
         } else {
