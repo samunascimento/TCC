@@ -39,7 +39,7 @@ public class MergeNatureAlgorithm {
     private int contextLines;
     private Project project;
     private JProgressBar progressBar;
-
+    
     private boolean solutionFileWasRenamed;
     private List<IntegerInterval> contextIntervals;
 
@@ -71,7 +71,6 @@ public class MergeNatureAlgorithm {
     }
 
     private Project projectLayer() throws IOException, NotGitRepositoryException, ShowException, MergeException, CheckoutException, MergeBaseException, LogException, DiffException {
-
         Project project = new Project();
         String[] auxStringArray;
         String repositoryPath = "";

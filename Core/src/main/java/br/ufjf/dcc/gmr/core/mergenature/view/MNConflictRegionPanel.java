@@ -1,7 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
@@ -51,7 +49,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JLabel altenativeView = new JLabel("Show alternative view");
         altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
-        altenativeView.setForeground(Color.CYAN);
+        altenativeView.setForeground(MNFrame.OPTION_COLOR);
         altenativeView.setOpaque(false);
         altenativeView.addMouseListener(new MouseListener() {
             @Override
@@ -76,7 +74,7 @@ public class MNConflictRegionPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                altenativeView.setForeground(Color.CYAN);
+                altenativeView.setForeground(MNFrame.OPTION_COLOR);
             }
         });
         
@@ -171,7 +169,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JTextArea v1 = new JTextArea(region.getV1Text());
         v1.setBackground(MNFrame.PRIMARY_COLOR);
-        v1.setForeground(Color.CYAN);
+        v1.setForeground(MNFrame.V1_COLOR);
         v1.setEditable(false);
         v1.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gbc.gridy = 1;
@@ -187,7 +185,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JTextArea v2 = new JTextArea(region.getV2Text());
         v2.setBackground(MNFrame.PRIMARY_COLOR);
-        v2.setForeground(Color.MAGENTA);
+        v2.setForeground(MNFrame.V2_COLOR);
         v2.setEditable(false);
         v2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gbc.gridy = 3;
