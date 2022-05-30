@@ -56,7 +56,7 @@ public class MNConflictFilePanel extends JPanel {
 
         JLabel showFileAlteration = new JLabel("Show file alterations");
         showFileAlteration.setFont(textArea.getFont());
-        showFileAlteration.setForeground(Color.CYAN);
+        showFileAlteration.setForeground(MNFrame.OPTION_COLOR);
         showFileAlteration.setOpaque(false);
         showFileAlteration.addMouseListener(new MouseListener() {
             @Override
@@ -85,7 +85,7 @@ public class MNConflictFilePanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                showFileAlteration.setForeground(Color.CYAN);
+                showFileAlteration.setForeground(MNFrame.OPTION_COLOR);
             }
         });
 

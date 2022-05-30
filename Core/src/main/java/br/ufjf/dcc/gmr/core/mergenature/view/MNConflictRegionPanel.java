@@ -49,7 +49,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JLabel altenativeView = new JLabel("Show alternative view");
         altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
-        altenativeView.setForeground(Color.CYAN);
+        altenativeView.setForeground(MNFrame.OPTION_COLOR);
         altenativeView.setOpaque(false);
         altenativeView.addMouseListener(new MouseListener() {
             @Override
@@ -74,7 +74,7 @@ public class MNConflictRegionPanel extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                altenativeView.setForeground(Color.CYAN);
+                altenativeView.setForeground(MNFrame.OPTION_COLOR);
             }
         });
         
@@ -169,7 +169,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JTextArea v1 = new JTextArea(chunk.getV1());
         v1.setBackground(MNFrame.PRIMARY_COLOR);
-        v1.setForeground(Color.CYAN);
+        v1.setForeground(MNFrame.V1_COLOR);
         v1.setEditable(false);
         v1.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gbc.gridy = 1;
@@ -185,7 +185,7 @@ public class MNConflictRegionPanel extends JPanel {
 
         JTextArea v2 = new JTextArea(chunk.getV2());
         v2.setBackground(MNFrame.PRIMARY_COLOR);
-        v2.setForeground(Color.MAGENTA);
+        v2.setForeground(MNFrame.V2_COLOR);
         v2.setEditable(false);
         v2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gbc.gridy = 3;
