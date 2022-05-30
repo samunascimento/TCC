@@ -31,12 +31,12 @@ public class MNFrame extends JFrame {
 
     public static final Rectangle MAX_BOUNDS = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     public static final int BORDER_GAP = 3;
-    public static final Color PRIMARY_COLOR = Color.GRAY;//Color.decode("#021a24");
+    public static final Color PRIMARY_COLOR = Color.WHITE;
     public static final Color SECUNDARY_COLOR = Color.BLACK;
-    public static final Color TERTIARY_COLOR = Color.RED;
+    public static final Color TERTIARY_COLOR = Color.decode("#b30000");
     public static final Color OPTION_COLOR = Color.BLUE;
     public static final Color V1_COLOR = Color.BLUE;
-    public static final Color V2_COLOR = Color.GREEN;
+    public static final Color V2_COLOR = Color.decode("#006400");
     public static final String CONNECTION_FILEPATH = System.getProperty("user.dir") + File.separator + ".mndbconnection";
 
     private Connection connection;
