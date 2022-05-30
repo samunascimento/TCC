@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -57,7 +57,7 @@ public class MNMergePanel extends JPanel {
         NWPanel.setPreferredSize(new Dimension(1, 150));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
-        NWPanel.add(new MNConflictPanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
+        NWPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.5;
@@ -114,13 +114,13 @@ public class MNMergePanel extends JPanel {
 
     }
 
-    public void updateConflictRegion(ConflictRegion region) {
+    public void updateConflictRegion(Chunk chunk) {
         if (SPanel != null) {
             SPanel.removeAll();
             SPanel.revalidate();
             SPanel.repaint();
-            if (region != null) {
-                MNConflictRegionPanel regionPanel = new MNConflictRegionPanel(region);
+            if (chunk != null) {
+                MNConflictRegionPanel regionPanel = new MNConflictRegionPanel(chunk);
                 JScrollPane scroll = new JScrollPane(regionPanel);
                 scroll.setOpaque(false);
                 SPanel.add(scroll, INSIDE_CONSTRAINTS);

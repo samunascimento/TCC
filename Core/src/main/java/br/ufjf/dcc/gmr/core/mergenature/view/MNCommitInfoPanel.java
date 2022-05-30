@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -56,7 +55,7 @@ public class MNCommitInfoPanel extends JPanel {
         for (Commit parent : merge.getParents()) {
             comboBox.addItem("Parent " + (++i));
         }
-        comboBox.addItem("Ancestor");
+        comboBox.addItem("Merge-Base");
         comboBox.addActionListener((ActionEvent evt) -> {
             switchCommit();
         });
@@ -87,7 +86,7 @@ public class MNCommitInfoPanel extends JPanel {
             textArea.setText(merge.getMergeCommit().toString());
         } else if (comboBox.getSelectedIndex() == comboBox.getItemCount() - 1) {
             if (merge.getMergeBase() == null) {
-                textArea.setText("This merge don't have a common\nancestor between it's parents, so the\n ancestor commit not exist");
+                textArea.setText("This merge don't have a common\nancestor between it's parents, so the\n merge-base commit not exist");
             } else {
                 textArea.setText(merge.getMergeBase().toString());
             }

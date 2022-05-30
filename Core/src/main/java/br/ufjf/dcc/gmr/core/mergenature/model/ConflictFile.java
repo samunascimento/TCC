@@ -251,9 +251,9 @@ public class ConflictFile {
     public String toString() {
         String result = "Parent 1's file: " + getParent1FilePath()
                 + "\nParent 2's file: " + getParent2FilePath()
-                + "\nAncestor's file: " + getAncestorFilePath()
+                + "\nMerge-Base's file: " + getAncestorFilePath()
                 + "\nConflict File Type: " + conflictFileType.toString()
-                + "\nConflict Regions: " + chunks.size();
+                + "\nChunk: " + chunks.size();
         if (hasOutsideAlterations) {
             result = result + "\nHas Outside Alterations: YES";
         } else {

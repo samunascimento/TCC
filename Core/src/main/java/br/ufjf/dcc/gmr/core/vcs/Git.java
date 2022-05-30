@@ -249,7 +249,7 @@ public class Git {
             if (result.equals("")) {
                 return "Unknown";
             } else {
-                return result;
+                return result.replaceAll("\n", "").replaceAll("\\.git", "");
             }
         } else {
             throw new NotGitRepositoryException(repositoryPath);

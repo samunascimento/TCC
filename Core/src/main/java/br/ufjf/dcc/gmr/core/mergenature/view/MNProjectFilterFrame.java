@@ -1,7 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
@@ -44,8 +44,8 @@ public class MNProjectFilterFrame extends JDialog {
     private ButtonGroup orientationOfOrderBG;
 
     private JRadioButton defaultOrder = new JRadioButton("Default Order", true);
-    private JRadioButton numberOfConflictRegionOrder = new JRadioButton("Number of Conflict Regions Order");
-    private JRadioButton numberOfConflicsOrder = new JRadioButton("Number of Conflicts Order");
+    private JRadioButton numberOfConflictRegionOrder = new JRadioButton("Number of Chunks Order");
+    private JRadioButton numberOfConflicsOrder = new JRadioButton("Number of Conflict Files Order");
     private JRadioButton chronologicalOrder = new JRadioButton("Chronological Order");
     private ButtonGroup typeOfOrderBG;
 
@@ -268,11 +268,11 @@ public class MNProjectFilterFrame extends JDialog {
         });
 
         tabbedPane.addTab("Merge Type", null, mergeTypePanel, "Filter the merges by Merge Type");
-        tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
-        tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
+        tabbedPane.addTab("Conflict File Type", null, conflictTypePanel, "Filter the conflict files by Conflict File Type");
+        tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the chunks by Developer Decision");
         tabbedPane.addTab("Hash", null, hashPanel, "Filter the merges by their hashes");
-        tabbedPane.addTab("Structures", null, structuresPanel, "Filter the conflict regions by their structures");
-        tabbedPane.addTab("Extension", null, extensionPanel, "Filter the conflicts by the extension of their file");
+        tabbedPane.addTab("Language Constructs", null, structuresPanel, "Filter the chunks by their structures");
+        tabbedPane.addTab("Extension", null, extensionPanel, "Filter the conflict files by the extension of their file");
 
         orientationOfOrderBG = new ButtonGroup();
         orientationOfOrderBG.add(ascendingOrder);
@@ -599,9 +599,9 @@ public class MNProjectFilterFrame extends JDialog {
             for (ConflictFile conflict : merge.getConflictFiles()) {
                 auxConflict = new ConflictFile(conflict);
                 auxConflict.setChunks(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getChunks()) {
-                    if (developerDecisionList.contains(conflictRegion.getDeveloperDecision())) {
-                        auxConflict.addConflictRegion(conflictRegion);
+                for (Chunk chunk : conflict.getChunks()) {
+                    if (developerDecisionList.contains(chunk.getDeveloperDecision())) {
+                        auxConflict.addChunk(chunk);
                     }
                 }
                 auxMerge.addConflictFile(auxConflict);
@@ -637,10 +637,10 @@ public class MNProjectFilterFrame extends JDialog {
             for (ConflictFile conflict : merge.getConflictFiles()) {
                 auxConflict = new ConflictFile(conflict);
                 auxConflict.setChunks(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getChunks()) {
+                for (Chunk chunk : conflict.getChunks()) {
                     if (onlyOutmost.isSelected()) {
                         haveAll = true;
-                        auxString = conflictRegion.getOutmostedStructures().toLowerCase();
+                        auxString = chunk.getOutmostedStructures().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){
@@ -648,16 +648,16 @@ public class MNProjectFilterFrame extends JDialog {
                                     break;
                                 }
                             } else if (auxString.contains(structure)) {
-                                auxConflict.addConflictRegion(conflictRegion);
+                                auxConflict.addChunk(chunk);
                                 break;
                             }
                         }
                         if(needToHaveAll && haveAll){
-                            auxConflict.addConflictRegion(conflictRegion);
+                            auxConflict.addChunk(chunk);
                         }
                     } else {
                         haveAll = true;
-                        auxString = conflictRegion.getStructures().toLowerCase();
+                        auxString = chunk.getStructures().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){
@@ -665,12 +665,12 @@ public class MNProjectFilterFrame extends JDialog {
                                     break;
                                 }
                             } else if (auxString.contains(structure)) {
-                                auxConflict.addConflictRegion(conflictRegion);
+                                auxConflict.addChunk(chunk);
                                 break;
                             }
                         }
                         if(needToHaveAll && haveAll){
-                            auxConflict.addConflictRegion(conflictRegion);
+                            auxConflict.addChunk(chunk);
                         }
                     }
                 }

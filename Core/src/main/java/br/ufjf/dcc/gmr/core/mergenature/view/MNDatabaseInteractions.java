@@ -56,9 +56,6 @@ public class MNDatabaseInteractions {
         }
 
         JButton saveButton = new JButton("Save");
-        saveButton.addActionListener((ActionEvent evt) -> {
-            progressBarForSaving(connection, projectPanels.get(comboBox.getSelectedIndex()).getProject(), dialog);
-        });
 
         gbc.gridy = 1;
         gbc.gridx = 1;
@@ -78,7 +75,7 @@ public class MNDatabaseInteractions {
         dialog.setVisible(true);
     }
 
-    private static void progressBarForSaving(Connection connection, Project project, JDialog dialogToDispose) {
+    /*private static void progressBarForSaving(Connection connection, Project project, JDialog dialogToDispose) {
 
         dialogToDispose.dispose();
 
@@ -131,19 +128,11 @@ public class MNDatabaseInteractions {
             }
         }.start();
 
-    }
+    }*/
 
     public static void initGetProjectFrame(Connection connection, MNTabbedPane tabbedPane) {
         List<Project> projects;
-        ProjectDAO projectDAO = new ProjectDAO(connection);
         List<Date> dates;
-        try {
-            projects = projectDAO.selectAllProjectsWithoutMerges();
-            dates = projectDAO.selectAllDateSaveOfProjects();
-        } catch (SQLException ex) {
-            System.out.println("Deu ruim");
-            return;
-        }
 
         JDialog dialog = new JDialog();
         dialog.setModal(true);
@@ -195,30 +184,9 @@ public class MNDatabaseInteractions {
         table.setBackground(MNFrame.PRIMARY_COLOR);
         table.setForeground(MNFrame.SECUNDARY_COLOR);
         table.setBorder(BorderFactory.createEmptyBorder());
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
-                if (evt.getClickCount() > 1) {
-                    Project project = projects.get(table.getSelectedRow());
-                    try {
-                        tabbedPane.addRemovableTab(project.getName() + "DB - " + project.getId(), null, new MNProjectPanel(projectDAO.select(project.getId())), null);
-                    } catch (SQLException ex) {
-                        System.out.println("Deu ruim 2");
-                    }
-                    dialog.dispose();
-                }
-            }
-        });
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.getDataVector().removeAllElements();
         model.fireTableDataChanged();
-        for (int i = 0; i < projects.size(); i++) {
-            model.addRow(new Object[]{
-                projects.get(i).getId(),
-                projects.get(i).getName(),
-                dates.get(i).toString()
-            });
-        }
         JScrollPane scroll = new JScrollPane(table);
         mainPanel.add(scroll, gbc);
 

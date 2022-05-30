@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import java.util.Collections;
+import javax.swing.JProgressBar;
 
 public class Algorithm {
 
@@ -28,13 +29,39 @@ public class Algorithm {
     private final String DOWNLOAD_NAME = ".MergeNatureDownload";
     private Connection sqlConnection;
     private int ctxLines = 3;
+    private JProgressBar progressBar;
 
     private boolean solutionFileWasRenamed;
     private List<IntegerInterval> contextIntervals;
 
-    public Algorithm(Connection sqlConnection) {
+    public Algorithm() {
+
+    }
+
+    public Connection getSqlConnection() {
+        return sqlConnection;
+    }
+
+    public void setSqlConnection(Connection sqlConnection) {
         this.sqlConnection = sqlConnection;
     }
+
+    public int getCtxLines() {
+        return ctxLines;
+    }
+
+    public void setCtxLines(int ctxLines) {
+        this.ctxLines = ctxLines;
+    }
+
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(JProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+    
 
     public Project run(String repositoryURL, String downloadPath) throws IOException, GitException, SQLException {
         String repositoryPath = null;
@@ -77,23 +104,37 @@ public class Algorithm {
     private Project projectLayer(String repositoryPath, String repositoryURL) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
         int analysisID = getAnalysisID(project);
-        List<String> log = Git.getAllMerges(repositoryPath);
+        List<String> log;
+        log = Git.getAllMerges(repositoryPath);
+        
         int numberOfMerges = log.size();
         int status = 0;
+        if (this.progressBar != null) {
+            this.progressBar.setMinimum(1);
+            progressBar.setIndeterminate(false);
+            this.progressBar.setMaximum(numberOfMerges);
+        }
         System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            project.addMerge(mergeLayer(repositoryPath, project, logLine, analysisID));
-            System.out.println("[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed...");
+            project.addMerge(mergeLayer(repositoryPath,project, logLine, analysisID));
+            if (this.progressBar != null) {
+                this.progressBar.setValue(++status);
+                System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+            } else {
+                System.out.println("[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed...");
+            }
         }
+        
         if (sqlConnection != null) {
             AnalysisDAO.updateCompleted(sqlConnection, analysisID, true);
         }
+        
         return project;
     }
 
     private Merge mergeLayer(String repositoryPath, Project project, String logLine, int analysisID) throws SQLException, IOException, GitException {
         Merge merge = getMergeData(repositoryPath, project, logLine, analysisID);
-        if (!Merge_AnalysisDAO.selectCompleted(sqlConnection, merge.getId(), analysisID)) {
+        if(sqlConnection == null || !Merge_AnalysisDAO.selectCompleted(sqlConnection, merge.getId(), analysisID)){
             List<String> mergeMessage = getMergeMessage(repositoryPath, merge);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
             merge.setId(insertMergeInDatabase(merge, project, analysisID));

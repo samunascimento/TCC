@@ -6,15 +6,13 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.exception.GitException;
-import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
+import br.ufjf.dcc.gmr.core.mergenature.controller.Algorithm;
 import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
-import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
-import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
+import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import static br.ufjf.dcc.gmr.core.mergenature.view.MNFrame.CONNECTION_FILEPATH;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 import org.apache.commons.cli.CommandLine;
@@ -42,11 +40,11 @@ public class Cli {
 
     public static final String SAVE_IN_THE_DATABASE = "save_in_the_database";
     public static final String SAVE_IN_THE_DATABASE_SHORT = "db";
-    
+
     public static final String GUI = "gui";
     public static final String GUI_SHORT = "g";
 
-    public static void main(String[] args) throws java.text.ParseException, NullPointerException, IOException, GitException {
+    public static void main(String[] args) throws java.text.ParseException, NullPointerException, IOException, GitException, SQLException {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -64,24 +62,24 @@ public class Cli {
 
         Option contextLineOption = new Option(CONTEXT_LINE_NUMBER_SHORT, CONTEXT_LINE_NUMBER, true, "Number of context lines");
         options.addOption(contextLineOption);
-        
-        Option guioption = new Option(GUI_SHORT,GUI,false, "Command to call the graphical interface" );
+
+        Option guioption = new Option(GUI_SHORT, GUI, false, "Command to call the graphical interface");
         options.addOption(guioption);
 
         HelpFormatter formatter = new HelpFormatter();
 
         try {
             CommandLine cmd = parser.parse(options, args);
-            
-            if(cmd.hasOption("gui") || cmd.hasOption("g")){
-                
+
+            if (cmd.hasOption("gui") || cmd.hasOption("g")) {
+
                 throw new IOException();
             }
-            
-            if(!cmd.hasOption("r")){
+
+            if (!cmd.hasOption("r")) {
                 throw new IOException();
             }
-            
+
             if (!(cmd.hasOption("s") ^ cmd.hasOption("db"))) {
 
                 if ((cmd.hasOption("s") && cmd.hasOption("db"))) {
@@ -110,9 +108,9 @@ public class Cli {
                 }
             }
 
-            MergeNatureAlgorithm analysis = new MergeNatureAlgorithm(directoryPath, cln);
-            analysis.startAlgorithm();
-            name = analysis.getProject().getName();
+            Algorithm algorithm = new Algorithm();
+            Project project = algorithm.run(directoryPath);
+            name = project.getName();
 
             if (cmd.hasOption("s")) {
                 if (!savePath.endsWith(".mntr")) {
@@ -125,8 +123,8 @@ public class Cli {
                     savePath = savePath + File.separator + name + ".mntr";
                 }
 
-                if (analysis.getProject().getMerges() != null) {
-                    GSONClass.save(savePath, analysis.getProject());
+                if (project.getMerges() != null) {
+                    GSONClass.save(savePath, project);
                 } else {
                     System.out.println("Ops, it was not suposed to happen!");
                 }
@@ -144,7 +142,7 @@ public class Cli {
                     }
 
                 }
-                String[] data = fileContent.split(";");
+                /*String[] data = fileContent.split(";");
                 Connection connection = null;
                 try {
                     connection = ConnectionFactory.getConnection(data[0], data[1], data[2]);
@@ -162,7 +160,7 @@ public class Cli {
                     }
                 } catch (SQLException exception) {
                     System.out.println("SQL ERROR!");
-                }
+                }*/
             }
         } catch (ParseException | NumberFormatException e) {
 
@@ -177,10 +175,11 @@ public class Cli {
 
     }
 
-    private static void callGui(){
+    private static void callGui() {
         MNFrame frame = new MNFrame();
         frame.start();
     }
+
     private static void createFile() {
 
         Scanner sc = new Scanner(System.in);

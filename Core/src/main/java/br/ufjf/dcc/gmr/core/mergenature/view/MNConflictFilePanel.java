@@ -1,7 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,7 +23,7 @@ import javax.swing.JTextArea;
  * @author João Pedro Lima
  * @since 07-01-2021
  */
-public class MNConflictPanel extends JPanel {
+public class MNConflictFilePanel extends JPanel {
 
     private List<ConflictFile> conflicts;
 
@@ -32,7 +32,7 @@ public class MNConflictPanel extends JPanel {
     private JComboBox regionComboBox;
     private JTextArea textArea;
 
-    public MNConflictPanel(MNMergePanel mergePanel, List<ConflictFile> conflicts) {
+    public MNConflictFilePanel(MNMergePanel mergePanel, List<ConflictFile> conflicts) {
         this.mergePanel = mergePanel;
         this.conflicts = conflicts;
         set();
@@ -43,7 +43,7 @@ public class MNConflictPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(new GridBagLayout());
 
-        textArea = new JTextArea("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:\nHas Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
+        textArea = new JTextArea("Parent 1's file:\nParent 2's file:\nMerge-Base's file:\nConflict File Type:\nChunks:\nHas Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
         if (!conflicts.isEmpty()) {
             textArea.setText(conflicts.get(0).toString());
         }
@@ -104,8 +104,8 @@ public class MNConflictPanel extends JPanel {
 
         regionComboBox = new JComboBox();
         if (!conflicts.isEmpty()) {
-            for (ConflictRegion region : conflicts.get(0).getChunks()) {
-                regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
+            for (Chunk chunk : conflicts.get(0).getChunks()) {
+                regionComboBox.addItem(chunk.getBeginLine() + " - " + chunk.getEndLine());
             }
             if (conflicts.get(0).getChunks().isEmpty()) {
                 mergePanel.updateConflictRegion(null);
@@ -145,10 +145,10 @@ public class MNConflictPanel extends JPanel {
 
     private void switchConflict() {
         regionComboBox.removeAllItems();
-        textArea.setText("Parent 1's file:\nParent 2's file:\nAncestor's file:\nConflict Type:\nConflict Regions:Has Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
+        textArea.setText("Parent 1's file:\nParent 2's file:\nMerge-Base's file:\nConflict File Type:\nChunks:Has Outside Alterations:\nHas Outside Alterations Ignoring Formatting:");
         if (conflictComboBox.getSelectedIndex() >= 0 && conflictComboBox.getSelectedIndex() < conflicts.size()) {
-            for (ConflictRegion region : conflicts.get(conflictComboBox.getSelectedIndex()).getChunks()) {
-                regionComboBox.addItem(region.getBeginLine() + " - " + region.getEndLine());
+            for (Chunk chunk : conflicts.get(conflictComboBox.getSelectedIndex()).getChunks()) {
+                regionComboBox.addItem(chunk.getBeginLine() + " - " + chunk.getEndLine());
             }
             textArea.setText(conflicts.get(conflictComboBox.getSelectedIndex()).toString());
         }

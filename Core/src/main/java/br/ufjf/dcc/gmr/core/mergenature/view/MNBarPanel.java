@@ -1,13 +1,16 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.exception.GitException;
-import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureAlgorithm;
+import br.ufjf.dcc.gmr.core.mergenature.controller.Algorithm;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
@@ -57,9 +60,18 @@ public class MNBarPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        MergeNatureAlgorithm algorithm = new MergeNatureAlgorithm(repositoryLocation, contextLines, progressBar);
-        algorithm.startAlgorithm();
-        this.project = algorithm.getProject();
+        Algorithm algorithm = new Algorithm();
+        algorithm.setCtxLines(contextLines);
+        algorithm.setProgressBar(progressBar);
+        try {
+            this.project = algorithm.run(repositoryLocation);
+        } catch (IOException ex) {
+            Logger.getLogger(MNBarPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GitException ex) {
+            Logger.getLogger(MNBarPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MNBarPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

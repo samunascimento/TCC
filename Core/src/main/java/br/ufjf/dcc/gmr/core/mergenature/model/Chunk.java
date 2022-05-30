@@ -146,6 +146,10 @@ public class Chunk {
         return firstPrefixLine - 1;
     }
 
+    private int getFirstPrefixListIndex() {
+        return (this.chunkText.contains("<BOF>") ? 1 : 0);
+    }
+
     public void setFirstPrefixLine(int firstPrefixLine) {
         this.firstPrefixLine = firstPrefixLine;
     }
@@ -156,6 +160,10 @@ public class Chunk {
 
     public int getBeginIndex() {
         return beginLine - 1;
+    }
+
+    private int getBeginListIndex() {
+        return this.beginLine - this.firstPrefixLine + (this.chunkText.contains("<BOF>") ? 1 : 0);
     }
 
     public void setBeginLine(int beginLine) {
@@ -170,6 +178,10 @@ public class Chunk {
         return separatorLine - 1;
     }
 
+    private int getSeparatorListIndex() {
+        return this.separatorLine - this.firstPrefixLine + (this.chunkText.contains("<BOF>") ? 1 : 0);
+    }
+
     public void setSeparatorLine(int separatorLine) {
         this.separatorLine = separatorLine;
     }
@@ -182,6 +194,10 @@ public class Chunk {
         return endLine - 1;
     }
 
+    private int getEndListIndex() {
+        return this.endLine - this.firstPrefixLine + (this.chunkText.contains("<BOF>") ? 1 : 0);
+    }
+
     public void setEndLine(int endLine) {
         this.endLine = endLine;
     }
@@ -192,6 +208,10 @@ public class Chunk {
 
     public int getLastSuffixIndex() {
         return lastSuffixLine - 1;
+    }
+
+    private int getLastSuffixListIndex() {
+        return this.lastSuffixLine - this.firstPrefixLine + (this.chunkText.contains("<BOF>") ? 1 : 0);
     }
 
     public void setLastSuffixLine(int lastSuffixLine) {
@@ -271,9 +291,9 @@ public class Chunk {
 
     public List<String> getPrefixList(boolean bof) {
         if (this.chunkText.startsWith("<BOF>") && !bof) {
-            return ListUtils.getSubList(this.getRawConflictList(), 1, this.beginLine - this.firstPrefixLine - 1);
+            return ListUtils.getSubList(this.getRawConflictList(), 1, this.getBeginListIndex() - 1);
         } else {
-            return ListUtils.getSubList(this.getRawConflictList(), 0, this.beginLine - this.firstPrefixLine - 1);
+            return ListUtils.getSubList(this.getRawConflictList(), 0, this.getBeginListIndex() - 1);
         }
     }
 
@@ -282,11 +302,11 @@ public class Chunk {
     }
 
     public String getBegin() {
-        return this.getRawConflictList().get(this.beginLine - this.firstPrefixLine);
+        return this.getRawConflictList().get(this.getBeginListIndex());
     }
 
     public List<String> getV1List() {
-        return ListUtils.getSubList(this.getRawConflictList(), this.beginLine - this.firstPrefixLine + 1, this.separatorLine - this.firstPrefixLine - 1);
+        return ListUtils.getSubList(this.getRawConflictList(), this.getBeginListIndex() + 1, this.getSeparatorListIndex() - 1);
     }
 
     public String getV1() {
@@ -294,11 +314,11 @@ public class Chunk {
     }
 
     public String getSeparator() {
-        return this.getRawConflictList().get(this.separatorLine - this.firstPrefixLine);
+        return this.getRawConflictList().get(this.getSeparatorListIndex());
     }
 
     public List<String> getV2List() {
-        return ListUtils.getSubList(this.getRawConflictList(), this.separatorLine - this.firstPrefixLine + 1, this.endLine - this.firstPrefixLine - 1);
+        return ListUtils.getSubList(this.getRawConflictList(), this.getSeparatorListIndex() + 1, this.getEndListIndex() - 1);
     }
 
     public String getV2() {
@@ -306,19 +326,19 @@ public class Chunk {
     }
 
     public String getEnd() {
-        return this.getRawConflictList().get(this.endLine - this.firstPrefixLine);
+        return this.getRawConflictList().get(this.getEndListIndex());
     }
 
-    public List<String> getSuffixList(boolean sof) {
-        if (this.chunkText.endsWith("EOF") && !sof) {
-            return ListUtils.getSubList(this.getRawConflictList(), this.endLine - this.firstPrefixLine + 1, this.lastSuffixLine - this.firstPrefixLine);
+    public List<String> getSuffixList(boolean eof) {
+        if (this.chunkText.endsWith("<EOF>") && eof) {
+            return ListUtils.getSubList(this.getRawConflictList(), this.getEndListIndex() + 1, this.getLastSuffixListIndex() + 1);
         } else {
-            return ListUtils.getSubList(this.getRawConflictList(), this.endLine - this.firstPrefixLine + 1, this.lastSuffixLine - this.firstPrefixLine - 1);
+            return ListUtils.getSubList(this.getRawConflictList(), this.getEndListIndex() + 1, this.getLastSuffixListIndex());
         }
     }
 
-    public String getSuffix(boolean sof) {
-        return ListUtils.getTextListStringToString(this.getSuffixList(sof));
+    public String getSuffix(boolean eof) {
+        return ListUtils.getTextListStringToString(this.getSuffixList(eof));
     }
 
 }
