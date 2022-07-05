@@ -1,12 +1,7 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Class to record basic info about Git projects and store a list of all merges
@@ -103,142 +98,87 @@ public class Project {
         this.merges.add(merge);
     }
 
-    public int getNumberOfMerges() {
-
-        return merges.size();
-    }
-
-    public int getNumberOfConflictedMerges() {
-        int count = 0;
-        count = merges.stream().filter(merge -> (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)).map(_item -> 1).reduce(count, Integer::sum);
-        return count;
-    }
-
-    public int getNumberOfConflicts() {
-        int count = 0;
+    public int numberOfConflictFiles() {
+        int cont = 0;
         for (Merge merge : merges) {
-            count += merge.getConflictFiles().size();
+            cont += merge.getConflictFiles().size();
         }
-        return count;
+        return cont;
     }
 
-    public int getNumberOfChunks() {
-        int count = 0;
+    public int numberOfChunks() {
+        int cont = 0;
         for (Merge merge : merges) {
-            count += merge.getNumberOfConflictRegions();
-        }
-        return count;
-    }
-
-    public Map<String, Integer> getChunkDistribution() {
-
-        Map<String, Integer> distribuicao = new HashMap<>();
-
-        merges.stream().filter(merge -> (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)).map(merge -> Integer.toString(merge.getNumberOfConflictRegions()) + " Chunks").forEachOrdered(numChunks -> {
-            if (distribuicao.containsKey(numChunks)) {
-                distribuicao.put(numChunks, distribuicao.get(numChunks) + 1);
-            } else {
-                distribuicao.put(numChunks, 1);
+            for (ConflictFile conflictFile : merge.getConflictFiles()) {
+                cont += conflictFile.getChunks().size();
             }
-        });
-        return distribuicao;
+        }
+        return cont;
     }
 
-    public Map<DeveloperDecision, Integer> getSolucoes() {
-
-        int[] contaSolucao = new int[12];
-
-        for (int i = 0; i < 12; i++) {
-            contaSolucao[i] = 0;
+    public int numberOfMergeType(MergeType mergeType) {
+        int cont = 0;
+        for (Merge merge : merges) {
+            if (merge.getMergeType() == mergeType) {
+                cont++;
+            }
         }
-
-        merges.forEach(merge -> {
-            merge.getConflictFiles().forEach(conflict -> {
-                conflict.getChunks().forEach(conflictRegion -> {
-                    contaSolucao[DeveloperDecision.getIntFromEnum(conflictRegion.getDeveloperDecision()) - 1]++;
-                });
-            });
-        });
-
-        Map<DeveloperDecision, Integer> solucoes = new HashMap<>();
-
-        for (int i = 0; i < 12; i++) {
-            solucoes.put(DeveloperDecision.getEnumFromInt(i + 1), contaSolucao[i]);
-        }
-
-        return solucoes;
+        return cont;
     }
 
-    public Map<String, Integer> getEstruturas() {
-
-        Map<String, Integer> estruturas = new HashMap<>();
-        merges.forEach(merge -> {
-            merge.getConflictFiles().forEach(conflict -> {
-                conflict.getChunks().forEach(conflictRegion -> {
-                    Set<String> mySet = new HashSet<>(Arrays.asList(conflictRegion.getOutmostedStructures()));
-                    mySet.stream().filter(st -> (st != null && !st.isEmpty())).forEachOrdered(st -> {
-                        for (String s : st.split("\n")) {
-                            s = s.replaceAll(" ", "").replaceAll("\t", "");
-                            if (s.contains("extensionnotparseable") || s.contains("Untreatablegit'serror")) {
-                            } else {
-                                if (estruturas.containsKey(s)) {
-                                    estruturas.put(s, estruturas.get(s) + 1);
-                                } else {
-                                    estruturas.put(s, 1);
-                                }
-                            }
-                        }
-                    });
-                });
-            });
-        });
-        // Set teste = estruturas.entrySet();
-        // System.out.println(teste);
-
-        return estruturas;
+    public int numberOfConflictFileType(ConflictFileType conflictFileType) {
+        int cont = 0;
+        for (Merge merge : merges) {
+            for (ConflictFile conflictFile : merge.getConflictFiles()) {
+                if (conflictFile.getConflictFileType() == conflictFileType) {
+                    cont++;
+                }
+            }
+        }
+        return cont;
     }
 
-    public Map<ConflictFileType, Integer> getConflictType() {
-
-        int[] conflicType = new int[12];
-
-        for (int i = 0; i < 12; i++) {
-            conflicType[i] = 0;
+    public int numberOfConflictFileType(DeveloperDecision developerDecision) {
+        int cont = 0;
+        for (Merge merge : merges) {
+            for (ConflictFile conflictFile : merge.getConflictFiles()) {
+                for (Chunk chunk : conflictFile.getChunks()) {
+                    if (chunk.getDeveloperDecision() == developerDecision) {
+                        cont++;
+                    }
+                }
+            }
         }
-
-        merges.forEach(merge -> {
-            merge.getConflictFiles().forEach(conflict -> {
-                conflicType[ConflictFileType.getIntFromEnum(conflict.getConflictFileType()) - 1]++;
-            });
-        });
-
-        Map<ConflictFileType, Integer> conflicTypes = new HashMap<>();
-
-        for (int i = 0; i < 12; i++) {
-            conflicTypes.put(ConflictFileType.getEnumFromInt(i + 1), conflicType[i]);
-        }
-
-        return conflicTypes;
+        return cont;
     }
 
-    public Map<String, ArrayList<Integer>> lineNumberPerVersion() {
-        ArrayList<Integer> version1 = new ArrayList<Integer>();
-        ArrayList<Integer> version2 = new ArrayList<Integer>();
+    public int numberOfLanguagesConstructs() {
+        int cont = 0;
+        for (Merge merge : merges) {
+            for (ConflictFile conflictFile : merge.getConflictFiles()) {
+                for (Chunk chunk : conflictFile.getChunks()) {
+                    if (!chunk.getLanguageConstructs().contains("has an extension not parseable!") 
+                            && !chunk.getLanguageConstructs().contains("Untreatable git's error")
+                            && !chunk.getLanguageConstructs().replaceAll("\n", "").replaceAll("\t", "").replaceAll(" ", "").equals("")) {
+                        cont += chunk.numberOfLanguageConstructs();
+                    }
+                }
+            }
+        }
+        return cont;
+    }
 
-        merges.forEach(merge -> {
-            merge.getConflictFiles().forEach(conflict -> {
-                conflict.getChunks().forEach(conflictRegion -> {
-                        version1.add(conflictRegion.getSeparatorLine()-conflictRegion.getBeginLine());
-                        version2.add(conflictRegion.getEndLine()-conflictRegion.getSeparatorLine());
-                });
-            });
-        });
-        
-        Map<String, ArrayList<Integer>> versionLineNumber = new HashMap<>();
-        versionLineNumber.put("Version 1",version1);
-        versionLineNumber.put("Version 2",version2);
-        
-        return versionLineNumber;
-        
+    public int numberOfLanguagesConstructs(String languageConstruct) {
+        int cont = 0;
+        for (Merge merge : merges) {
+            for (ConflictFile conflictFile : merge.getConflictFiles()) {
+                for (Chunk chunk : conflictFile.getChunks()) {
+                    if (chunk.getLanguageConstructs().contains(languageConstruct)) {
+                        cont++;
+                    }
+                }
+            }
+        }
+        return cont;
     }
 }

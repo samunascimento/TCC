@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.*;
 import br.ufjf.dcc.gmr.core.mergenature.dao.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.LanguageConstructs;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.io.File;
@@ -29,9 +30,11 @@ public class Algorithm {
     private final String DOWNLOAD_NAME = ".MergeNatureDownload";
     private Connection sqlConnection;
     private int ctxLines = 3;
+    private boolean devMode = false;
     private JProgressBar progressBar;
 
     private boolean solutionFileWasRenamed;
+
     private List<IntegerInterval> contextIntervals;
 
     public Algorithm() {
@@ -54,6 +57,14 @@ public class Algorithm {
         this.ctxLines = ctxLines;
     }
 
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
+    }
+
     public JProgressBar getProgressBar() {
         return progressBar;
     }
@@ -61,7 +72,6 @@ public class Algorithm {
     public void setProgressBar(JProgressBar progressBar) {
         this.progressBar = progressBar;
     }
-    
 
     public Project run(String repositoryURL, String downloadPath) throws IOException, GitException, SQLException {
         String repositoryPath = null;
@@ -103,10 +113,11 @@ public class Algorithm {
 
     private Project projectLayer(String repositoryPath, String repositoryURL) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
+        Merge merge;
         int analysisID = getAnalysisID(project);
         List<String> log;
         log = Git.getAllMerges(repositoryPath);
-        
+
         int numberOfMerges = log.size();
         int status = 0;
         if (this.progressBar != null) {
@@ -116,60 +127,74 @@ public class Algorithm {
         }
         System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
         for (String logLine : log) {
-            project.addMerge(mergeLayer(repositoryPath,project, logLine, analysisID));
+            try {
+                merge = mergeLayer(repositoryPath, project, logLine, analysisID);
+                project.addMerge(merge);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
-                System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+                System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
             } else {
-                System.out.println("[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed...");
+                System.out.println("[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
             }
         }
-        
+
         if (sqlConnection != null) {
             AnalysisDAO.updateCompleted(sqlConnection, analysisID, true);
         }
-        
+
         return project;
     }
 
     private Merge mergeLayer(String repositoryPath, Project project, String logLine, int analysisID) throws SQLException, IOException, GitException {
         Merge merge = getMergeData(repositoryPath, project, logLine, analysisID);
-        if(sqlConnection == null || !Merge_AnalysisDAO.selectCompleted(sqlConnection, merge.getId(), analysisID)){
+        ConflictFile conflictFile;
+        if (sqlConnection == null || !Merge_AnalysisDAO.selectCompleted(sqlConnection, merge.getId(), analysisID)) {
             List<String> mergeMessage = getMergeMessage(repositoryPath, merge);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
             merge.setId(insertMergeInDatabase(merge, project, analysisID));
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
-                System.out.println("");
                 if (sqlConnection != null) {
                     List<Integer> conflictFileIDs = Merge_ConflictFile_AnalysisDAO.selectConflictFiles(sqlConnection, merge.getId(), analysisID);
                     int conflictIndex = 0;
                     for (String conflictMessage : mergeMessage) {
                         if (conflictMessage.contains("CONFLICT")) {
-                            merge.addConflictFile(conflictFileLayer(repositoryPath, merge, conflictMessage,
-                                    analysisID, (conflictIndex < conflictFileIDs.size() ? conflictFileIDs.get(conflictIndex) : 0)));
+                            try {
+                                conflictFile = conflictFileLayer(repositoryPath, merge, conflictMessage,
+                                        analysisID, (conflictIndex < conflictFileIDs.size() ? conflictFileIDs.get(conflictIndex) : 0));
+                                merge.addConflictFile(conflictFile);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                             conflictIndex += 1;
                         }
                     }
                 } else {
                     for (String conflictMessage : mergeMessage) {
                         if (conflictMessage.contains("CONFLICT")) {
-                            merge.addConflictFile(conflictFileLayer(repositoryPath, merge, conflictMessage,
-                                    analysisID, 0));
+                            try {
+                                conflictFile = conflictFileLayer(repositoryPath, merge, conflictMessage,
+                                        analysisID, 0);
+                                merge.addConflictFile(conflictFile);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 }
             }
         }
         if (sqlConnection != null) {
-            boolean hasOutOfMemory = false;
-            //ver em se tem out of memory em conflict file
-            Merge_AnalysisDAO.update(sqlConnection, merge.getId(), analysisID, hasOutOfMemory, true);
+            Merge_AnalysisDAO.update(sqlConnection, merge.getId(), analysisID, merge.hasOutOfMemory(), true);
         }
         return merge;
     }
 
     private ConflictFile conflictFileLayer(String repositoryPath, Merge merge, String conflictMessage, int analysisID, int conflictFileID) throws IOException, SQLException, GitException {
-        ConflictFile conflictFile = null;
+        ConflictFile conflictFile;
+        List<Chunk> chunks;
         if (sqlConnection != null && conflictFileID > 0) {
             if (Merge_ConflictFile_AnalysisDAO.select(sqlConnection, merge.getId(), conflictFileID, analysisID)) {
                 return ConflictFileDAO.select(sqlConnection, conflictFileID, analysisID);
@@ -180,76 +205,61 @@ public class Algorithm {
             conflictFile = MergeMessageReader.getConflictFileFromMessage(conflictMessage);
         }
         conflictFile.setMerge(merge);
+        conflictFile.setOutOfMemory(false);
         if (conflictFile.getId() == 0) {
             if (conflictFile.getConflictFileType() == ConflictFileType.CONTENT
                     || conflictFile.getConflictFileType() == ConflictFileType.COINCIDENCE_ADDING
                     || conflictFile.getConflictFileType() == ConflictFileType.FILE_RENAME) {
                 contextIntervals = new ArrayList<>();
-                conflictFile.setChunks(chunkLayer(conflictFile, MergeNatureTools.getFileContentInList(repositoryPath + conflictFile.getParent1FilePath()), repositoryPath));
+                try {
+                    chunks = chunkLayer(conflictFile, MergeNatureTools.getFileContentInList(repositoryPath + conflictFile.getParent1FilePath()), repositoryPath);
+                    conflictFile.setChunks(chunks);
+                } catch (OutOfMemoryError ex) {
+                    System.out.println("OutOfMemoryError getting chunks");
+                    conflictFile.setOutOfMemory(true);
+                    return conflictFile;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    return conflictFile;
+                }
                 if (contextIntervals != null && !conflictFile.getChunks().isEmpty()) {
                     conflictFile = outsideAlterationsLayer(conflictFile, repositoryPath, contextIntervals);
                 } else {
-                    conflictFile.setHasOutsideAlterations(true);
-                    conflictFile.setHasOutsideAlterationsIgnoringFormatting(true);
+                    conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
                 }
                 addUncopletedConflictFile(conflictFile, analysisID);
             }
         }
         if (!conflictFile.getChunks().isEmpty()) {
-            conflictFile = antlr4Layer(conflictFile, repositoryPath);
+            try {
+                conflictFile = antlr4Layer(conflictFile, repositoryPath);
+            } catch (OutOfMemoryError ex) {
+                System.out.println("OutOfMemoryError get language contructs");
+                conflictFile.setAllLanguageConstructs(LanguageConstructs.OUT_OF_MEMORY);
+                conflictFile.setOutOfMemory(true);
+                return conflictFile;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                conflictFile.setAllLanguageConstructs(LanguageConstructs.ERROR);
+                return conflictFile;
+            }
             updateChunksInDatabase(conflictFile, analysisID);
         }
-
         return conflictFile;
     }
 
-    private void addUncopletedConflictFile(ConflictFile conflictFile, int analysisID) throws IOException, SQLException {
-        if (sqlConnection != null) {
-            sqlConnection.setAutoCommit(false);
-            conflictFile.setId(ConflictFileDAO.contains(sqlConnection, conflictFile));
-            if (conflictFile.getId() == 0) {
-                conflictFile.setId(ConflictFileDAO.insert(sqlConnection, conflictFile));
-            }
-            Merge_ConflictFile_AnalysisDAO.insert(sqlConnection, conflictFile.getMerge().getId(), conflictFile.getId(), analysisID, false);
-            for (Chunk chunk : conflictFile.getChunks()) {
-                chunk.setId(ChunkDAO.containsWithoutStructures(sqlConnection, chunk));
-                if (chunk.getId() == 0) {
-                    chunk.setId(ChunkDAO.insert(sqlConnection, chunk));
-                }
-                ConflictFile_Chunk_AnalysisDAO.insert(sqlConnection, conflictFile.getId(), chunk.getId(), analysisID);
-            }
-            sqlConnection.commit();
-            sqlConnection.setAutoCommit(true);
-        }
-    }
-
-    private void updateChunksInDatabase(ConflictFile conflictFile, int analysisID) throws IOException, SQLException {
-        if (sqlConnection != null) {
-            int newId = 0;
-            sqlConnection.setAutoCommit(false);
-            for (Chunk chunk : conflictFile.getChunks()) {
-                newId = ChunkDAO.contains(sqlConnection, chunk);
-                if (newId == chunk.getId()) {
-                    continue;
-                } else {
-                    ChunkDAO.updateStructures(sqlConnection, chunk.getId(), chunk.getStructures(), chunk.getOutmostedStructures());
-                }
-            }
-            Merge_ConflictFile_AnalysisDAO.updateComplete(sqlConnection, conflictFile.getMerge().getId(), conflictFile.getId(), analysisID, true);
-            sqlConnection.commit();
-            sqlConnection.setAutoCommit(true);
-        }
-    }
-
-    private List<Chunk> chunkLayer(ConflictFile conflictFile, List<String> fileContent, String repositoryPath) throws IOException, NotGitRepositoryException, GitException {
+    private List<Chunk> chunkLayer(ConflictFile conflictFile, List<String> fileContent, String repositoryPath) throws IOException, GitException {
         List<Chunk> chunks = new ArrayList<>();
         String[] auxArray;
         Chunk chunk;
+        boolean eof;
+        boolean bof;
         for (int i = 0; i < fileContent.size(); i++) {
             if (MergeNatureTools.checkIfIsBegin(fileContent.get(i))) {
                 chunk = new Chunk();
                 chunk.setConflictFile(conflictFile);
-                chunk.setFirstPrefixLine(i - ctxLines < 0 ? 1 : i - ctxLines + 1);
+                bof = i - ctxLines < 0;
+                chunk.setFirstPrefixLine(bof ? 1 : i - ctxLines + 1);
                 if (conflictFile.getConflictFileType() == ConflictFileType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
                     if (!auxArray[auxArray.length - 1].equals(conflictFile.getParent1FilePath())
@@ -280,10 +290,17 @@ public class Algorithm {
                 }
                 chunk.setEndLine(i + 1);
                 i++;
-                chunk.setLastSuffixLine(i + ctxLines >= fileContent.size() ? fileContent.size() : i + 1);
-                chunk.setChunkText(((chunk.getBeginLine() - chunk.getFirstPrefixLine()) < ctxLines ? "<BOF>\n" : "")
-                        + ListUtils.getTextListStringToString(ListUtils.getSubList(fileContent, chunk.getFirstPrefixIndex(), chunk.getLastSuffixIndex()))
-                        + (((chunk.getLastSuffixLine() - chunk.getEndLine()) < ctxLines ? "\n<EOF>" : "")));
+                eof = i + ctxLines >= fileContent.size();
+                chunk.setLastSuffixLine(i + ctxLines >= fileContent.size() ? fileContent.size() : i + ctxLines);
+                chunk.setChunkText(
+                        (bof ? "<BOF>\n" : "")
+                        + ListUtils.getTextListStringToString(
+                                ListUtils.getSubList(
+                                        fileContent,
+                                        chunk.getFirstPrefixIndex(),
+                                        chunk.getLastSuffixIndex()))
+                        + (eof ? "\n<EOF>" : "")
+                );
                 chunk = solutionLayer(chunk, repositoryPath);
                 chunk = originalLinesLayer(chunk, repositoryPath);
                 chunks.add(chunk);
@@ -333,7 +350,7 @@ public class Algorithm {
                 } else {
                     if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
                         contextIntervals = null;
-                        chunk.setSolutionText("DIFF PROBLEM!");
+                        chunk.setSolutionText("Diff Error!");
                         chunk.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
                     } else {
                         if (contextIntervals != null) {
@@ -473,11 +490,9 @@ public class Algorithm {
             }
         }
         if (outsideAlterations.isEmpty()) {
-            conflictFile.setHasOutsideAlterations(false);
-            conflictFile.setHasOutsideAlterationsIgnoringFormatting(false);
+            conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO);
             return conflictFile;
         } else {
-            conflictFile.setHasOutsideAlterations(true);
             List<String> addeds = new ArrayList<>();
             List<String> removeds = new ArrayList<>();
             for (LineInformation line : outsideAlterations) {
@@ -490,16 +505,16 @@ public class Algorithm {
                 }
             }
             if (addeds.size() != removeds.size()) {
-                conflictFile.setHasOutsideAlterationsIgnoringFormatting(true);
+                conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
             } else {
                 for (int i = 0; i < addeds.size(); i++) {
                     if (!addeds.get(i).equals(removeds.get(i))) {
-                        conflictFile.setHasOutsideAlterationsIgnoringFormatting(true);
+                        conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
                         return conflictFile;
                     }
 
                 }
-                conflictFile.setHasOutsideAlterationsIgnoringFormatting(false);
+                conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO_IGNORING_FORMATTING);
             }
             return conflictFile;
         }
@@ -508,16 +523,14 @@ public class Algorithm {
     private ConflictFile antlr4Layer(ConflictFile conflictFile, String repositoryPath) throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
         if (conflictFile.getChunks().get(0).getOriginalV1FirstLine() < 0) {
             for (Chunk chunk : conflictFile.getChunks()) {
-                chunk.setStructures("Untreatable git's error");
-                chunk.setOutmostedStructures("Untreatable git's error");
+                chunk.setLanguageConstructs(LanguageConstructs.SYNTAX_ERROR);
             }
         } else {
             String parent1FilePath = conflictFile.getParent1FilePath();
             ANTLR4Results rawParent1Results = ANTLR4Tools.getANTLR4Results(parent1FilePath, conflictFile.getMerge().getParents().get(0).getHash(), repositoryPath);
             if (rawParent1Results == null) {
                 for (Chunk chunk : conflictFile.getChunks()) {
-                    chunk.setStructures(conflictFile.getParent1FilePath() + " has an extension not parseable!");
-                    chunk.setOutmostedStructures(conflictFile.getParent1FilePath() + " has an extension not parseable!");
+                    chunk.setLanguageConstructs(LanguageConstructs.NOT_PARSEABLE);
                 }
                 return conflictFile;
             } else {
@@ -525,58 +538,45 @@ public class Algorithm {
                 ANTLR4Results rawParent2Results = ANTLR4Tools.getANTLR4Results(parent2FilePath, conflictFile.getMerge().getParents().get(1).getHash(), repositoryPath);
                 if (rawParent2Results == null) {
                     for (Chunk chunk : conflictFile.getChunks()) {
-                        chunk.setStructures(conflictFile.getParent2FilePath() + " has an extension not parseable!");
-                        chunk.setOutmostedStructures(conflictFile.getParent2FilePath() + " has an extension not parseable!");
+                        chunk.setLanguageConstructs(LanguageConstructs.NOT_PARSEABLE);
                     }
                     return conflictFile;
                 } else {
                     ANTLR4Results parent1Results = null;
                     List<String> v1Structures;
-                    List<String> v1OutmostedStructures;
+                    List<String> v1LanguageConstructs;
                     ANTLR4Results parent2Results = null;
                     List<String> v2Structures;
-                    List<String> v2OutmostedStructures;
-                    String rawString = "";
-                    String outmostedRawString = "";
+                    List<String> v2LanguageConstructs;
+                    String devModeText = "";
                     for (Chunk chunk : conflictFile.getChunks()) {
                         v1Structures = new ArrayList<>();
-                        v1OutmostedStructures = new ArrayList<>();
+                        v1LanguageConstructs = new ArrayList<>();
                         v2Structures = new ArrayList<>();
-                        v2OutmostedStructures = new ArrayList<>();
+                        v2LanguageConstructs = new ArrayList<>();
                         if (chunk.getOriginalV1FirstLine() == 0) {
                             v1Structures.add("Blank");
-                            v1OutmostedStructures.add("Blank");
+                            v1LanguageConstructs.add("Blank");
                         } else {
                             parent1Results = ANTLR4Tools.filterAndGetOutmost(rawParent1Results, chunk.getOriginalV1FirstLine(), chunk.getOriginalV1FinalLine());
-                            rawString = rawString + "\n" + parent1Results.getStringAll();
-                            outmostedRawString = outmostedRawString + "\n" + parent1Results.getStringAllOutmosted();
-                            v1Structures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAll(), parent1FilePath, isEmpty(chunk, true), !parent1Results.getSyntaxErrors().isEmpty());
-                            v1OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath, isEmpty(chunk, true), !parent1Results.getSyntaxErrors().isEmpty());
+                            devModeText += parent1Results.getStringAllOutmosted();
+                            v1LanguageConstructs = ANTLR4Tools.getTranslatedStrucutures(parent1Results.getAllOutmosted(), parent1FilePath, isEmpty(chunk, true), !parent1Results.getSyntaxErrors().isEmpty());
                         }
                         if (chunk.getOriginalV2FirstLine() == 0) {
                             v2Structures.add("Blank");
-                            v2OutmostedStructures.add("Blank");
+                            v2LanguageConstructs.add("Blank");
                         } else {
                             parent2Results = ANTLR4Tools.filterAndGetOutmost(rawParent2Results, chunk.getOriginalV2FirstLine(), chunk.getOriginalV2FinalLine());
-                            rawString = rawString + "\n" + parent2Results.getStringAll();
-                            outmostedRawString = outmostedRawString + "\n" + parent2Results.getStringAllOutmosted();
-                            v2Structures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAll(), parent2FilePath, isEmpty(chunk, false), !parent2Results.getSyntaxErrors().isEmpty());
-                            v2OutmostedStructures = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath, isEmpty(chunk, false), !parent2Results.getSyntaxErrors().isEmpty());
+                            devModeText += parent2Results.getStringAllOutmosted();
+                            v2LanguageConstructs = ANTLR4Tools.getTranslatedStrucutures(parent2Results.getAllOutmosted(), parent2FilePath, isEmpty(chunk, false), !parent2Results.getSyntaxErrors().isEmpty());
                         }
-                        for (String str : v2Structures) {
-                            if (!v1Structures.contains(str)) {
-                                v1Structures.add(str);
+                        for (String str : v2LanguageConstructs) {
+                            if (!v1LanguageConstructs.contains(str)) {
+                                v1LanguageConstructs.add(str);
                             }
                         }
-                        for (String str : v2OutmostedStructures) {
-                            if (!v1OutmostedStructures.contains(str)) {
-                                v1OutmostedStructures.add(str);
-                            }
-                        }
-                        Collections.sort(v1Structures);
-                        Collections.sort(v1OutmostedStructures);
-                        chunk.setStructures(ListUtils.getTextListStringToString(v1Structures)/* + "\n\n" + rawString*/);
-                        chunk.setOutmostedStructures(ListUtils.getTextListStringToString(v1OutmostedStructures)/* + "\n\n" + outmostedRawString*/);
+                        Collections.sort(v1LanguageConstructs);
+                        chunk.setLanguageConstructs(ListUtils.getTextListStringToString(v1LanguageConstructs) + (devMode ? devModeText : ""));
                     }
                 }
             }
@@ -741,6 +741,44 @@ public class Algorithm {
             sqlConnection.setAutoCommit(true);
         }
         return merge.getId();
+    }
+
+    private void addUncopletedConflictFile(ConflictFile conflictFile, int analysisID) throws IOException, SQLException {
+        if (sqlConnection != null) {
+            sqlConnection.setAutoCommit(false);
+            conflictFile.setId(ConflictFileDAO.contains(sqlConnection, conflictFile));
+            if (conflictFile.getId() == 0) {
+                conflictFile.setId(ConflictFileDAO.insert(sqlConnection, conflictFile));
+            }
+            Merge_ConflictFile_AnalysisDAO.insert(sqlConnection, conflictFile.getMerge().getId(), conflictFile.getId(), analysisID, false);
+            for (Chunk chunk : conflictFile.getChunks()) {
+                chunk.setId(ChunkDAO.containsWithoutStructures(sqlConnection, chunk));
+                if (chunk.getId() == 0) {
+                    chunk.setId(ChunkDAO.insert(sqlConnection, chunk));
+                }
+                ConflictFile_Chunk_AnalysisDAO.insert(sqlConnection, conflictFile.getId(), chunk.getId(), analysisID);
+            }
+            sqlConnection.commit();
+            sqlConnection.setAutoCommit(true);
+        }
+    }
+
+    private void updateChunksInDatabase(ConflictFile conflictFile, int analysisID) throws IOException, SQLException {
+        if (sqlConnection != null) {
+            int newId = 0;
+            sqlConnection.setAutoCommit(false);
+            for (Chunk chunk : conflictFile.getChunks()) {
+                newId = ChunkDAO.contains(sqlConnection, chunk);
+                if (newId == chunk.getId()) {
+                    continue;
+                } else {
+                    ChunkDAO.updateStructures(sqlConnection, chunk.getId(), chunk.getLanguageConstructs());
+                }
+            }
+            Merge_ConflictFile_AnalysisDAO.updateComplete(sqlConnection, conflictFile.getMerge().getId(), conflictFile.getId(), analysisID, true);
+            sqlConnection.commit();
+            sqlConnection.setAutoCommit(true);
+        }
     }
 
     private class IntegerInterval {

@@ -102,7 +102,7 @@ public class MNMergesTable extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(setFilter, gbc);
 
-        JButton resetFilter = new JButton("Reset Filter");
+        JButton resetFilter = new JButton("Reset Table");
         resetFilter.addActionListener((ActionEvent evt) -> {
             setTableModel(this.merges);
         });

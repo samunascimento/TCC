@@ -38,6 +38,12 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
     }
 
     @Override
+    public Object visitMethod(Java9Parser.MethodContext ctx) {
+        //process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitCaseLine(Java9Parser.CaseLineContext ctx) {
         process(ctx);
         return visitChildren(ctx);

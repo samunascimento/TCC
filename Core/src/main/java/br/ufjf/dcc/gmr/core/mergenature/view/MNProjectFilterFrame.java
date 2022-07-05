@@ -36,7 +36,7 @@ import javax.swing.JTextField;
 public class MNProjectFilterFrame extends JDialog {
 
     private MNMergesTable panel;
-    private List<Merge> defaultList;
+    private List<Merge> initialList;
     private List<Merge> currentList;
 
     private JRadioButton ascendingOrder = new JRadioButton("Ascending Order", true);
@@ -55,7 +55,6 @@ public class MNProjectFilterFrame extends JDialog {
     private JCheckBox conflictedMergeOfUnrelatedHistories = new JCheckBox("Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox notConflictedMergeOfUnrelatedHistories = new JCheckBox("Not Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox octopusMergeOfUnrelatedHistories = new JCheckBox("Octopus Merge Of Unrelated Histories", true);
-    private JCheckBox outOfMemory = new JCheckBox("Out of Memory", true);
     private JCheckBox unexpectedOccurrence = new JCheckBox("Unexpected Occurrence", true);
     private JButton selectAllMergeTypes = new JButton("Select All");
     private JButton unselectAllMergeTypes = new JButton("Unselect All");
@@ -96,7 +95,7 @@ public class MNProjectFilterFrame extends JDialog {
     private JTextField extensionInput = new JTextField("");
 
     public MNProjectFilterFrame(List<Merge> defaultList, List<Merge> currentList, MNMergesTable panel) {
-        this.defaultList = defaultList;
+        this.initialList = defaultList;
         this.currentList = currentList;
         this.panel = panel;
         set();
@@ -172,26 +171,26 @@ public class MNProjectFilterFrame extends JDialog {
             }
         });
 
-        JButton filterDefaultTable = new JButton("Filter Default Table");
-        filterDefaultTable.addActionListener((ActionEvent evt) -> {
+        JButton filterInitialTable = new JButton("Filter Initial Table");
+        filterInitialTable.addActionListener((ActionEvent evt) -> {
             switch (tabbedPane.getSelectedIndex()) {
                 case 0:
-                    filterByMerge(defaultList);
+                    filterByMerge(initialList);
                     break;
                 case 1:
-                    filterByConflict(defaultList);
+                    filterByConflict(initialList);
                     break;
                 case 2:
-                    filterByConflictRegion(defaultList);
+                    filterByConflictRegion(initialList);
                     break;
                 case 3:
-                    filterByHash(defaultList);
+                    filterByHash(initialList);
                     break;
                 case 4:
-                    filterByStructures(defaultList);
+                    filterByStructures(initialList);
                     break;
                 default:
-                    filterByExtension(defaultList);
+                    filterByExtension(initialList);
 
             }
         });
@@ -203,7 +202,6 @@ public class MNProjectFilterFrame extends JDialog {
             conflictedMergeOfUnrelatedHistories.setSelected(true);
             notConflictedMergeOfUnrelatedHistories.setSelected(true);
             octopusMergeOfUnrelatedHistories.setSelected(true);
-            outOfMemory.setSelected(true);
             unexpectedOccurrence.setSelected(true);
         });
         unselectAllMergeTypes.addActionListener((ActionEvent evt) -> {
@@ -213,7 +211,6 @@ public class MNProjectFilterFrame extends JDialog {
             conflictedMergeOfUnrelatedHistories.setSelected(false);
             notConflictedMergeOfUnrelatedHistories.setSelected(false);
             octopusMergeOfUnrelatedHistories.setSelected(false);
-            outOfMemory.setSelected(false);
             unexpectedOccurrence.setSelected(false);
         });
         selectAllConflicts.addActionListener((ActionEvent evt) -> {
@@ -315,8 +312,6 @@ public class MNProjectFilterFrame extends JDialog {
         mergeTypePanel.add(notConflictedMergeOfUnrelatedHistories, gbc);
         gbc.gridy++;
         mergeTypePanel.add(octopusMergeOfUnrelatedHistories, gbc);
-        gbc.gridy++;
-        mergeTypePanel.add(outOfMemory, gbc);
         gbc.gridy++;
         mergeTypePanel.add(unexpectedOccurrence, gbc);
         gbc.gridy++;
@@ -452,7 +447,7 @@ public class MNProjectFilterFrame extends JDialog {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        mainPanel.add(filterDefaultTable, gbc);
+        mainPanel.add(filterInitialTable, gbc);
 
         this.add(mainPanel);
         this.setVisible(true);
@@ -480,9 +475,6 @@ public class MNProjectFilterFrame extends JDialog {
         }
         if (octopusMergeOfUnrelatedHistories.isSelected()) {
             mergeTypeList.add(MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES);
-        }
-        if (outOfMemory.isSelected()) {
-            mergeTypeList.add(MergeType.OUT_OF_MEMORY);
         }
         if (unexpectedOccurrence.isSelected()) {
             mergeTypeList.add(MergeType.UNEXPECTED_OCCURRENCE);
@@ -640,7 +632,7 @@ public class MNProjectFilterFrame extends JDialog {
                 for (Chunk chunk : conflict.getChunks()) {
                     if (onlyOutmost.isSelected()) {
                         haveAll = true;
-                        auxString = chunk.getOutmostedStructures().toLowerCase();
+                        auxString = chunk.getLanguageConstructs().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){
@@ -657,7 +649,7 @@ public class MNProjectFilterFrame extends JDialog {
                         }
                     } else {
                         haveAll = true;
-                        auxString = chunk.getStructures().toLowerCase();
+                        auxString = chunk.getLanguageConstructs().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){

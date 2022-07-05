@@ -148,7 +148,7 @@ public class Commit {
 
     @Override
     public String toString() {
-        return "Title: " + message + "\n"
+        return "Message: " + message + "\n"
                 + "Hash: " + hash + "\n"
                 + "Author: " + author + "\n"
                 + "Author Date: " + authorDate + "\n"

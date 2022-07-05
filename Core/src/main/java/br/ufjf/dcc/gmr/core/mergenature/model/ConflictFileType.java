@@ -12,6 +12,8 @@ public enum ConflictFileType {
     DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE,
     P1_RENAMED_P2_ADD, P2_RENAMED_P1_ADD, FILE_LOCATION,
     SUBMODULE, CONTENT_WITH_UNILATERAL_RENAMNING, DIRECTORY_RENAME_SPLIT;
+    
+    public static int NUMBER_OF_TYPES = 12;
 
     public static int getIntFromEnum(ConflictFileType conflictType) {
         switch (conflictType) {

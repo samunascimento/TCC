@@ -467,6 +467,12 @@ public interface Java9Visitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnannArrayType(Java9Parser.UnannArrayTypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Java9Parser#method}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethod(Java9Parser.MethodContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Java9Parser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -1,26 +1,19 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.util.Date;
-import java.sql.SQLException;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;

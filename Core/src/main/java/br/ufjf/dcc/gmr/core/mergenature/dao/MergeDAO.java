@@ -77,8 +77,7 @@ public class MergeDAO {
                             new ArrayList<>(),
                             resultSet.getInt(MERGE_BASE_FK) == 0 ? null : CommitDAO.selectByID(connection, resultSet.getInt(MERGE_BASE_FK)),
                             new ArrayList<>(),
-                            MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)),
-                            false);
+                            MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)));
                 }
                 merge.setParents(Merge_Commit_parentsDAO.selectByMergeID(connection, merge.getId()));
             } catch (SQLException ex) {

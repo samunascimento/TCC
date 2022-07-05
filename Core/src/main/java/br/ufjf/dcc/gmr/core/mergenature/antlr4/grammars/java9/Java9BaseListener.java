@@ -928,6 +928,18 @@ public class Java9BaseListener implements Java9Listener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterMethod(Java9Parser.MethodContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethod(Java9Parser.MethodContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMethodDeclaration(Java9Parser.MethodDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}

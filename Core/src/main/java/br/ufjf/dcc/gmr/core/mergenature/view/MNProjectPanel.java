@@ -31,7 +31,7 @@ public class MNProjectPanel extends JPanel {
 
     private GridBagConstraints INSIDE_CONSTRAINTS;
     public static int MIN_X = 300;
-    public static int MIN_Y = 85;
+    public static int MIN_Y = 110;
     private Project project;
     private MNProjectInfo projectInfo;
     private MNMergesTable mergesList;
@@ -69,7 +69,7 @@ public class MNProjectPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
 
-        projectInfo = new MNProjectInfo(project.getName(), project.getUrl(), project.getOrganization());
+        projectInfo = new MNProjectInfo(project);
         projectInfo.setPreferredSize(new Dimension(MIN_X, MIN_Y));
         projectInfo.setOpaque(false);
         projectInfo.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));

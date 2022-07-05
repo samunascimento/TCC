@@ -768,6 +768,16 @@ public interface Java9Listener extends ParseTreeListener {
 	 */
 	void exitUnannArrayType(Java9Parser.UnannArrayTypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Java9Parser#method}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethod(Java9Parser.MethodContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Java9Parser#method}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethod(Java9Parser.MethodContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Java9Parser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 */

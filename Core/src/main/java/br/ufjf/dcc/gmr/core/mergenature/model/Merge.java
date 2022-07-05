@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to record commits involved in a mergeCommit and classify the type of conflict
+ * Class to record commits involved in a mergeCommit and classify the type of
+ * conflict
  *
  * @author João Pedro Lima
  * @since 10-10-2020
@@ -18,7 +19,6 @@ public class Merge implements Cloneable {
     private Commit mergeBase;
     private List<ConflictFile> conflictFiles;
     private MergeType mergeType;
-    private boolean hasOutOfMemory;
 
     /**
      * Normal constructor
@@ -27,11 +27,12 @@ public class Merge implements Cloneable {
      * @param project The project that the mergeCommit belongs
      * @param mergeCommit The data of the mergeCommit
      * @param parents The data of all parents
-     * @param mergeBase The data of the mergeBase of the parents (mergeCommit base)
+     * @param mergeBase The data of the mergeBase of the parents (mergeCommit
+     * base)
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, boolean hasOutOfMemory) {
+    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
         this.id = id;
         this.project = project;
         this.mergeCommit = mergeCommit;
@@ -39,7 +40,6 @@ public class Merge implements Cloneable {
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
-        this.hasOutOfMemory = hasOutOfMemory;
     }
 
     /**
@@ -48,18 +48,18 @@ public class Merge implements Cloneable {
      * @param project The project that the mergeCommit belongs
      * @param mergeCommit The data of the mergeCommit
      * @param parents The data of all parents
-     * @param mergeBase The data of the mergeBase of the parents (mergeCommit base)
+     * @param mergeBase The data of the mergeBase of the parents (mergeCommit
+     * base)
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, boolean hasOutOfMemory) {
+    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
         this.project = project;
         this.mergeCommit = mergeCommit;
         this.parents = parents;
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
-        this.hasOutOfMemory = hasOutOfMemory;
     }
 
     public Merge(Merge merge) {
@@ -70,7 +70,6 @@ public class Merge implements Cloneable {
         this.mergeBase = merge.getMergeBase();
         this.conflictFiles = merge.getConflictFiles();
         this.mergeType = merge.getMergeType();
-        this.hasOutOfMemory = merge.getHasOutOfMemory();
     }
 
     public Merge() {
@@ -156,12 +155,13 @@ public class Merge implements Cloneable {
         this.mergeType = mergeType;
     }
 
-    public boolean getHasOutOfMemory() {
-        return hasOutOfMemory;
-    }
-
-    public void setHasOutOfMemory(boolean hasOutOfMemory) {
-        this.hasOutOfMemory = hasOutOfMemory;
+    public boolean hasOutOfMemory() {
+        for (ConflictFile conflictFile : conflictFiles) {
+            if (conflictFile.isOutOfMemory()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

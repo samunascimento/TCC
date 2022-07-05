@@ -48,7 +48,7 @@ public class MNConflictRegionPanel extends JPanel {
         conflictLabel.setOpaque(false);
 
         JLabel altenativeView = new JLabel("Show alternative view");
-        altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
+        //altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
         altenativeView.setForeground(MNFrame.OPTION_COLOR);
         altenativeView.setOpaque(false);
         altenativeView.addMouseListener(new MouseListener() {
@@ -97,22 +97,11 @@ public class MNConflictRegionPanel extends JPanel {
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
 
-        JTextArea structuresTextArea = new JTextArea(chunk.getStructures());
+        JTextArea structuresTextArea = new JTextArea("Annotation\n" + chunk.getLanguageConstructs());
         structuresTextArea.setBackground(MNFrame.PRIMARY_COLOR);
         structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresTextArea.setEditable(false);
         structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-
-        JRadioButton useOutmost = new JRadioButton("Show only outmost");
-        useOutmost.setBackground(MNFrame.PRIMARY_COLOR);
-        useOutmost.setForeground(MNFrame.SECUNDARY_COLOR);
-        useOutmost.addActionListener((ActionEvent evt) -> {
-            if (useOutmost.isSelected()) {
-                structuresTextArea.setText(chunk.getOutmostedStructures());
-            } else {
-                structuresTextArea.setText(chunk.getStructures());
-            }
-        });
         
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
@@ -140,8 +129,6 @@ public class MNConflictRegionPanel extends JPanel {
         this.add(structuresLabel, gbc);
         gbc.gridy++;
         this.add(structuresTextArea, gbc);
-        gbc.gridy++;
-        this.add(useOutmost, gbc);
         gbc.gridy++;
         gbc.weighty = 1;
         this.add(bottonAjust, gbc);

@@ -2,6 +2,7 @@ package br.ufjf.dcc.gmr.core.mergenature.dao;
 
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
+import br.ufjf.dcc.gmr.core.mergenature.model.HasOutsideAlterations;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ public class ConflictFileDAO {
     public static final String ANCESTORFILEPATH = "ancestorFilePath";
     public static final String CONFLICTFILEPATH = "conflictFilePath";
     public static final String HASOUTSIDEALTERATIONS = "hasOutsideAlterations";
-    public static final String HASOUTSIDEALTERATIONSIGNORINGFORMATTING = "hasOutsideAlterationsIgnoringFormatting";
+    public static final String OUT_OF_MEMORY = "outOfMemory";
     public static final String CONFLICTTYPE = "conflictFileType";
 
     public static int insert(Connection connection, ConflictFile conflictFile) throws SQLException, IOException {
@@ -35,7 +36,7 @@ public class ConflictFileDAO {
                     + ANCESTORFILEPATH + ", "
                     + CONFLICTFILEPATH + ", "
                     + HASOUTSIDEALTERATIONS + ", "
-                    + HASOUTSIDEALTERATIONSIGNORINGFORMATTING + ", "
+                    + OUT_OF_MEMORY + ", "
                     + CONFLICTTYPE + ") VALUES (?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
             PreparedStatement stmt = null;
@@ -46,8 +47,8 @@ public class ConflictFileDAO {
                 stmt.setString(2, conflictFile.getParent2FilePath());
                 stmt.setString(3, conflictFile.getAncestorFilePath());
                 stmt.setInt(4, conflictFile.getIntConflictFilePath());
-                stmt.setBoolean(5, conflictFile.hasOutsideAlterations());
-                stmt.setBoolean(6, conflictFile.hasOutsideAlterationsIgnoringFormatting());
+                stmt.setInt(5, HasOutsideAlterations.getIntFromEnum(conflictFile.getHasOutsideAlterations()));
+                stmt.setBoolean(6, conflictFile.isOutOfMemory());
                 stmt.setInt(7, ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType()));
                 ResultSet result = stmt.executeQuery();
                 result.next();
@@ -83,8 +84,8 @@ public class ConflictFileDAO {
                             resultSet.getInt(CONFLICTFILEPATH),
                             (analysisID > 0 ? new ArrayList<>() : ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, id, analysisID)),
                             ConflictFileType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
-                            resultSet.getBoolean(HASOUTSIDEALTERATIONS),
-                            resultSet.getBoolean(HASOUTSIDEALTERATIONSIGNORINGFORMATTING),
+                            HasOutsideAlterations.getEnumFromInt(resultSet.getInt(HASOUTSIDEALTERATIONS)),
+                            resultSet.getBoolean(OUT_OF_MEMORY),
                             null);
                 }
             } catch (SQLException ex) {
@@ -108,8 +109,8 @@ public class ConflictFileDAO {
                     + "\' AND " + ANCESTORFILEPATH + "=\'" + conflictFile.getAncestorFilePath()
                     + "\' AND " + CONFLICTFILEPATH + "=\'" + conflictFile.getIntConflictFilePath()
                     + "\' AND " + CONFLICTTYPE + "=\'" + ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType())
-                    + "\' AND " + HASOUTSIDEALTERATIONS + "=\'" + conflictFile.hasOutsideAlterations()
-                    + "\' AND " + HASOUTSIDEALTERATIONSIGNORINGFORMATTING + "=\'" + conflictFile.hasOutsideAlterationsIgnoringFormatting() + "\';";
+                    + "\' AND " + HASOUTSIDEALTERATIONS + "=\'" + HasOutsideAlterations.getIntFromEnum(conflictFile.getHasOutsideAlterations())
+                    + "\' AND " + OUT_OF_MEMORY + "=\'" + conflictFile.isOutOfMemory()+ "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);

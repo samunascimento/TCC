@@ -8,37 +8,36 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  */
 public enum MergeType {
 
-    CONFLICTED_MERGE, NOT_CONFLICTED_MERGE, OCTOPUS_MERGE, 
+    CONFLICTED_MERGE, NOT_CONFLICTED_MERGE, OCTOPUS_MERGE,
     CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES, OCTOPUS_MERGE_OF_UNRELATED_HISTORIES,
-    OUT_OF_MEMORY, UNEXPECTED_OCCURRENCE;
-    
-    public static int getIntFromEnum(MergeType mergeType){
-        switch(mergeType){
-            case CONFLICTED_MERGE:{
+    UNEXPECTED_OCCURRENCE;
+
+    public static int NUMBER_OF_TYPES = 7;
+
+    public static int getIntFromEnum(MergeType mergeType) {
+        switch (mergeType) {
+            case CONFLICTED_MERGE: {
                 return 1;
             }
-            case NOT_CONFLICTED_MERGE:{
+            case NOT_CONFLICTED_MERGE: {
                 return 2;
             }
-            case OCTOPUS_MERGE:{
+            case OCTOPUS_MERGE: {
                 return 3;
             }
-            case CONFLICTED_MERGE_OF_UNRELATED_HISTORIES:{
+            case CONFLICTED_MERGE_OF_UNRELATED_HISTORIES: {
                 return 4;
             }
-            case NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES:{
+            case NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES: {
                 return 5;
             }
-            case OCTOPUS_MERGE_OF_UNRELATED_HISTORIES:{
+            case OCTOPUS_MERGE_OF_UNRELATED_HISTORIES: {
                 return 6;
             }
-            case OUT_OF_MEMORY:{
+            case UNEXPECTED_OCCURRENCE: {
                 return 7;
             }
-            case UNEXPECTED_OCCURRENCE:{
-                return 8;
-            }
-            default:{
+            default: {
                 return -1;
             }
         }
@@ -65,9 +64,6 @@ public enum MergeType {
                 return MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES;
             }
             case 7: {
-                return MergeType.OUT_OF_MEMORY;
-            }
-            case 8: {
                 return MergeType.UNEXPECTED_OCCURRENCE;
             }
             default: {
@@ -95,9 +91,6 @@ public enum MergeType {
             }
             case "OCTOPUS_MERGE_OF_UNRELATED_HISTORIES": {
                 return MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES;
-            }
-            case "OUT_OF_MEMORY": {
-                return MergeType.OUT_OF_MEMORY;
             }
             case "UNEXPECTED_OCCURRENCE": {
                 return MergeType.UNEXPECTED_OCCURRENCE;

@@ -62,8 +62,8 @@ CREATE TABLE ConflictFile(
 	parent2FilePath VARCHAR(500),
 	ancestorFilePath VARCHAR(500),
 	conflictFilePath INT,
-	hasOutsideAlterations BOOLEAN,
-	hasOutsideAlterationsIgnoringFormatting BOOLEAN,
+	hasOutsideAlterations INT,
+	outOfMemory BOOLEAN,
 	conflictFileType INT
 );
 
@@ -84,8 +84,7 @@ CREATE TABLE Chunk(
 	endLine INT,
 	lastSuffixLine INT,
 	solutionText TEXT,
-	structures TEXT,
-	outmostedStructures TEXT,
+	languageConstructs TEXT,
 	originalV1FirstLine INT,
 	originalV2FirstLine INT,
 	developerDecision INT

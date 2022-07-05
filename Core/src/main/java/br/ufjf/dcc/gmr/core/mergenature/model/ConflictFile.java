@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class ConflictFile {
 
-    public static int PARENT1_FILE = 0;
-    public static int PARENT2_FILE = 1;
-    public static int BOTH_FILES = 2;
-    public static int UNKNOWM = 3;
+    public final static int PARENT1_FILE = 0;
+    public final static int PARENT2_FILE = 1;
+    public final static int BOTH_FILES = 2;
+    public final static int UNKNOWM = 3;
 
     private int id;
     private String parent1FilePath;
@@ -24,8 +24,8 @@ public class ConflictFile {
     private int conflictFilePath;
     private List<Chunk> chunks;
     private ConflictFileType conflictFileType;
-    private boolean hasOutsideAlterations;
-    private boolean hasOutsideAlterationsIgnoringFormatting;
+    private HasOutsideAlterations hasOutsideAlterations;
+    private boolean outOfMemory;
     private transient Merge merge;
 
     /**
@@ -37,18 +37,16 @@ public class ConflictFile {
      * @param ancestorFilePath The name of the file in ancestor commit
      * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
      * or <code>parent2FilePath</code>) appears during the conflict
-     * @param chunks A list that contains all conflict regions in a
-     * file, can be empty
+     * @param chunks A list that contains all conflict regions in a file, can be
+     * empty
      * @param conflictType The type of conflict
      * @param hasOutsideAlterations Indicates if the developer who made the
      * merge did alterations outside of any conflict
-     * @param hasOutsideAlterationsIgnoringFormatting Indicates if the developer
-     * who made the merge did alterations that is not formatting outside of any
-     * conflict
+     * @param outOfMemory Indicates if has any out of memory error
      * @param merge The merge that the conflict belongs
      */
-    public ConflictFile(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, 
-            List<Chunk> chunks, ConflictFileType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    public ConflictFile(int id, String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath,
+            List<Chunk> chunks, ConflictFileType conflictType, HasOutsideAlterations hasOutsideAlterations, boolean outOfMemory, Merge merge) {
         this.id = id;
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
@@ -57,7 +55,7 @@ public class ConflictFile {
         this.chunks = chunks;
         this.conflictFileType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
-        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
+        this.outOfMemory = outOfMemory;
         this.merge = merge;
     }
 
@@ -69,17 +67,17 @@ public class ConflictFile {
      * @param ancestorFilePath The name of the file in ancestor commit
      * @param conflictFilePath Indicts which file (<code>parent1FilePath</code>
      * or <code>parent2FilePath</code>) appears during the conflict
-     * @param chunks A list that contains all conflict regions in a
-     * file, can be empty
+     * @param chunks A list that contains all conflict regions in a file, can be
+     * empty
      * @param conflictType The type of conflict
      * @param hasOutsideAlterations Indicates if the developer who made the
      * merge did alterations outside of any conflict
-     * @param hasOutsideAlterationsIgnoringFormatting Indicates if the developer
-     * who made the merge did alterations that is not formatting outside of any
-     * conflict
+     * @param outOfMemory Indicates if has any out of memory error
      * @param merge The merge that the conflict belongs
      */
-    public ConflictFile(String parent1FilePath, String parent2FilePath, String ancestorFilePath, int conflictFilePath, List<Chunk> chunks, ConflictFileType conflictType, boolean hasOutsideAlterations, boolean hasOutsideAlterationsIgnoringFormatting, Merge merge) {
+    public ConflictFile(String parent1FilePath, String parent2FilePath, String ancestorFilePath,
+            int conflictFilePath, List<Chunk> chunks, ConflictFileType conflictType, HasOutsideAlterations hasOutsideAlterations,
+            boolean outOfMemory, Merge merge) {
         this.parent1FilePath = parent1FilePath;
         this.parent2FilePath = parent2FilePath;
         this.ancestorFilePath = ancestorFilePath;
@@ -87,7 +85,7 @@ public class ConflictFile {
         this.chunks = chunks;
         this.conflictFileType = conflictType;
         this.hasOutsideAlterations = hasOutsideAlterations;
-        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
+        this.outOfMemory = outOfMemory;
         this.merge = merge;
     }
 
@@ -98,8 +96,8 @@ public class ConflictFile {
         this.conflictFilePath = conflictFile.getIntConflictFilePath();
         this.chunks = conflictFile.getChunks();
         this.conflictFileType = conflictFile.getConflictFileType();
-        this.hasOutsideAlterations = conflictFile.hasOutsideAlterations();
-        this.hasOutsideAlterationsIgnoringFormatting = conflictFile.hasOutsideAlterationsIgnoringFormatting;
+        this.hasOutsideAlterations = conflictFile.getHasOutsideAlterations();
+        this.outOfMemory = outOfMemory;
         this.merge = conflictFile.getMerge();
     }
 
@@ -187,14 +185,14 @@ public class ConflictFile {
         this.ancestorFilePath = ancestorFilePath;
     }
 
-    public int getIntConflictFilePath(){
+    public int getIntConflictFilePath() {
         return conflictFilePath;
     }
-    
+
     public String getConflictFilePath() {
         return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES) ? getParent1FilePath() : getParent2FilePath();
     }
-    
+
     public String getConflictFileName() {
         return (conflictFilePath == PARENT1_FILE || conflictFilePath == BOTH_FILES || conflictFilePath == UNKNOWM) ? getParent1FileName() : getParent2FileName();
     }
@@ -202,7 +200,7 @@ public class ConflictFile {
     public void setConflictFilePath(int conflictFilePath) {
         this.conflictFilePath = conflictFilePath;
     }
-    
+
     public List<Chunk> getChunks() {
         return chunks;
     }
@@ -223,20 +221,20 @@ public class ConflictFile {
         this.conflictFileType = conflictFileType;
     }
 
-    public boolean hasOutsideAlterations() {
+    public HasOutsideAlterations getHasOutsideAlterations() {
         return hasOutsideAlterations;
     }
 
-    public void setHasOutsideAlterations(boolean hasOutsideAlterations) {
+    public void setHasOutsideAlterations(HasOutsideAlterations hasOutsideAlterations) {
         this.hasOutsideAlterations = hasOutsideAlterations;
     }
 
-    public boolean hasOutsideAlterationsIgnoringFormatting() {
-        return hasOutsideAlterationsIgnoringFormatting;
+    public boolean isOutOfMemory() {
+        return outOfMemory;
     }
 
-    public void setHasOutsideAlterationsIgnoringFormatting(boolean hasOutsideAlterationsIgnoringFormatting) {
-        this.hasOutsideAlterationsIgnoringFormatting = hasOutsideAlterationsIgnoringFormatting;
+    public void setOutOfMemory(boolean outOfMemory) {
+        this.outOfMemory = outOfMemory;
     }
 
     public Merge getMerge() {
@@ -247,23 +245,20 @@ public class ConflictFile {
         this.merge = merge;
     }
 
+    public void setAllLanguageConstructs(String languageConstructs) {
+        for (Chunk chunk : chunks) {
+            chunk.setLanguageConstructs(languageConstructs);
+        }
+    }
+
     @Override
     public String toString() {
         String result = "Parent 1's file: " + getParent1FilePath()
                 + "\nParent 2's file: " + getParent2FilePath()
                 + "\nMerge-Base's file: " + getAncestorFilePath()
                 + "\nConflict File Type: " + conflictFileType.toString()
-                + "\nChunk: " + chunks.size();
-        if (hasOutsideAlterations) {
-            result = result + "\nHas Outside Alterations: YES";
-        } else {
-            result = result + "\nHas Outside Alterations: NO";
-        }
-        if (hasOutsideAlterationsIgnoringFormatting) {
-            result = result + "\nHas Outside Alterations Ignoring Formatting: YES";
-        } else {
-            result = result + "\nHas Outside Alterations Ignoring Formatting: NO";
-        }
+                + "\nChunk: " + chunks.size()
+                + "\nHas Outside Alterations: " + hasOutsideAlterations;
         return result;
     }
 

@@ -1,6 +1,5 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.*;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import java.util.List;
@@ -29,8 +28,7 @@ public class Chunk {
     private DeveloperDecision developerDecision;
 
     //BEFORE CONFLICT
-    private String structures;
-    private String outmostedStructures;
+    private String languageConstructs;
     private int originalV1FirstLine;
     private int originalV2FirstLine;
 
@@ -48,13 +46,12 @@ public class Chunk {
      * @param solutionText The solution of the conflictFile
      * @param developerDecision The decision that developer used to resolve the
      * conflictFile region
-     * @param structures The language structures of the conflictFile region
-     * @param outmostedStructures The language structures of the conflictFile
+     * @param languageConstructs The language structures of the conflictFile
      * region outmosted
      * @param originalV1FirstLine The line first line of v1 in parent 1
      * @param originalV2FirstLine The line first line of v2 in parent 2
      */
-    public Chunk(int id, ConflictFile conflict, String rawConflict, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public Chunk(int id, ConflictFile conflict, String rawConflict, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String languageConstructs, int originalV1FirstLine, int originalV2FirstLine) {
         this.id = id;
         this.conflictFile = conflict;
         this.chunkText = rawConflict;
@@ -65,8 +62,7 @@ public class Chunk {
         this.lastSuffixLine = lastSuffixLine;
         this.solutionText = solutionText;
         this.developerDecision = developerDecision;
-        this.structures = structures;
-        this.outmostedStructures = outmostedStructures;
+        this.languageConstructs = languageConstructs;
         this.originalV1FirstLine = originalV1FirstLine;
         this.originalV2FirstLine = originalV2FirstLine;
     }
@@ -84,13 +80,12 @@ public class Chunk {
      * @param solutionText The solution of the conflictFile
      * @param developerDecision The decision that developer used to resolve the
      * conflictFile region
-     * @param structures The language structures of the conflictFile region
-     * @param outmostedStructures The language structures of the conflictFile
+     * @param languageConstructs The language structures of the conflictFile
      * region outmosted
      * @param originalV1FirstLine The line first line of v1 in parent 1
      * @param originalV2FirstLine The line first line of v2 in parent 2
      */
-    public Chunk(ConflictFile conflict, String rawConflict, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String structures, String outmostedStructures, int originalV1FirstLine, int originalV2FirstLine) {
+    public Chunk(ConflictFile conflict, String rawConflict, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String languageConstructs, int originalV1FirstLine, int originalV2FirstLine) {
         this.conflictFile = conflict;
         this.chunkText = rawConflict;
         this.firstPrefixLine = firstPrefixLine;
@@ -100,8 +95,7 @@ public class Chunk {
         this.lastSuffixLine = lastSuffixLine;
         this.solutionText = solutionText;
         this.developerDecision = developerDecision;
-        this.structures = structures;
-        this.outmostedStructures = outmostedStructures;
+        this.languageConstructs = languageConstructs;
         this.originalV1FirstLine = originalV1FirstLine;
         this.originalV2FirstLine = originalV2FirstLine;
     }
@@ -249,20 +243,12 @@ public class Chunk {
         this.developerDecision = developerDecision;
     }
 
-    public String getStructures() {
-        return structures;
+    public String getLanguageConstructs() {
+        return languageConstructs;
     }
 
-    public void setStructures(String structures) {
-        this.structures = structures;
-    }
-
-    public String getOutmostedStructures() {
-        return outmostedStructures;
-    }
-
-    public void setOutmostedStructures(String outmostedStructures) {
-        this.outmostedStructures = outmostedStructures;
+    public void setLanguageConstructs(String languageConstructs) {
+        this.languageConstructs = languageConstructs;
     }
 
     public int getOriginalV1FirstLine() {
@@ -339,6 +325,10 @@ public class Chunk {
 
     public String getSuffix(boolean eof) {
         return ListUtils.getTextListStringToString(this.getSuffixList(eof));
+    }
+    
+    public int numberOfLanguageConstructs(){
+        return this.languageConstructs.split("\n").length;
     }
 
 }

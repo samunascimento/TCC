@@ -372,7 +372,7 @@ classBodyDeclaration
 
 classMemberDeclaration
 	:	fieldDeclaration
-	|	methodDeclaration
+	|	method
 	|	classDeclaration
 	|	interfaceDeclaration
 	|	';'
@@ -476,8 +476,12 @@ unannArrayType
 	|	unannTypeVariable dims
 	;
 
+method
+	: annotation* methodDeclaration
+	;
+
 methodDeclaration
-	:	methodSignature methodBody
+	: methodSignature methodBody
 	;
 
 methodSignature
@@ -486,8 +490,7 @@ methodSignature
 
 
 methodModifier
-	:	annotation
-	|	'public'
+	:   'public'
 	|	'protected'
 	|	'private'
 	|	'abstract'

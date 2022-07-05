@@ -33,7 +33,7 @@ public class MNFrame extends JFrame {
     public static final int BORDER_GAP = 3;
     public static final Color PRIMARY_COLOR = Color.WHITE;
     public static final Color SECUNDARY_COLOR = Color.BLACK;
-    public static final Color TERTIARY_COLOR = Color.decode("#b30000");
+    public static final Color TERTIARY_COLOR = Color.BLACK;
     public static final Color OPTION_COLOR = Color.BLUE;
     public static final Color V1_COLOR = Color.BLUE;
     public static final Color V2_COLOR = Color.decode("#006400");
@@ -71,7 +71,7 @@ public class MNFrame extends JFrame {
     private void set() {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setTitle("The Nature of the Merge of Software");
+        this.setTitle("Merge Nature Tool");
         this.setResizable(true);
         this.setBounds(100, 100, MAX_BOUNDS.width - 200, MAX_BOUNDS.height - 200);
         this.setMinimumSize(new Dimension(800, 450));
@@ -169,7 +169,7 @@ public class MNFrame extends JFrame {
         if (check == JFileChooser.APPROVE_OPTION) {
             String[] auxArray = jfc.getSelectedFile().getPath().replace("\\", "/").split("/");
             try {
-                tabbedPane.addRemovableTab(auxArray[auxArray.length - 1], null, new MNProjectPanel(GSONClass.readProject(jfc.getSelectedFile().getPath())), null);
+                tabbedPane.addRemovableTab(auxArray[auxArray.length - 1].replaceAll("\\.mntr",""), null, new MNProjectPanel(GSONClass.readProject(jfc.getSelectedFile().getPath())), null);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "The file chosen isn't a saved analysis!", "ERROR", JOptionPane.ERROR_MESSAGE);
             }

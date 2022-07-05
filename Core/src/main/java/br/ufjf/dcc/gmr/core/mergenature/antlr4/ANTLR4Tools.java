@@ -15,6 +15,7 @@ import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.Java9Visitor;
 import br.ufjf.dcc.gmr.core.mergenature.controller.visitors.PythonVisitor;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.LanguageConstructs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

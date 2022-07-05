@@ -116,7 +116,7 @@ public class MNAlterationsFrame {
     private static JLabel generateLabel(LineInformation line) {
         JLabel label = new JLabel("");
         label.setFont(FONT);
-        label.setOpaque(true);
+        label.setOpaque(false);
         label.setBackground(Color.DARK_GRAY);
         if (line.getType() == LineType.ADDED) {
             label.setForeground(Color.RED);

@@ -122,7 +122,7 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.HORIZONTAL;
         structuresPanel.add(structuresLabel, itensGBC);
 
-        JTextArea structuresText = new JTextArea(chunk.getStructures());
+        JTextArea structuresText = new JTextArea(chunk.getLanguageConstructs());
         structuresText.setBackground(MNFrame.PRIMARY_COLOR);
         structuresText.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresText.setEditable(false);
@@ -135,20 +135,6 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.BOTH;
         structuresPanel.add(structuresTextScroll, itensGBC);
 
-        JRadioButton useOutmost = new JRadioButton("Show only outmost");
-        useOutmost.setBackground(MNFrame.PRIMARY_COLOR);
-        useOutmost.setForeground(MNFrame.SECUNDARY_COLOR);
-        useOutmost.addActionListener((ActionEvent evt) -> {
-            if (useOutmost.isSelected()) {
-                structuresText.setText(chunk.getOutmostedStructures());
-            } else {
-                structuresText.setText(chunk.getStructures());
-            }
-        });
-        itensGBC.gridy = 2;
-        itensGBC.weighty = 0;
-        itensGBC.fill = GridBagConstraints.HORIZONTAL;
-        structuresPanel.add(useOutmost, itensGBC);
 
         panelsGBC.gridy = 1;
         panelsGBC.weighty = 1;

@@ -57,10 +57,12 @@ public class MNMergePanel extends JPanel {
         NWPanel.setPreferredSize(new Dimension(1, 150));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
-        NWPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
+        NWPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
+        //NWPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1.5;
+        gbc.weightx = 1;
+        //gbc.weightx = 1.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(NWPanel, gbc);
 
@@ -69,10 +71,12 @@ public class MNMergePanel extends JPanel {
         NEPanel.setOpaque(false);
         NEPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         NEPanel.setLayout(new GridBagLayout());
-        NEPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
+        NEPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
+        //NEPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 1;
+        gbc.weightx = 1.5;
+        //gbc.weightx = 1;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);

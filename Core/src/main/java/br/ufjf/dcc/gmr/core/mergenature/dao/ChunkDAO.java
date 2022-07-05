@@ -22,8 +22,7 @@ public class ChunkDAO {
     public static final String END_LINE = "endLine";
     public static final String LAST_SUFFIX_LINE = "lastSuffixLine";
     public static final String SOLUTION_TEXT = "solutionText";
-    public static final String STRUCTURES = "structures";
-    public static final String OUTMOSTED_STRUCTURES = "outmostedStructures";
+    public static final String LANGUAGE_CONSTRUCTS = "languageConstructs";
     public static final String ORIGINAL_V1_FIRST_LINE = "originalV1FirstLine";
     public static final String ORIGINAL_V2_FIRST_LINE = "originalV2FirstLine";
     public static final String DEVELOPER_DECISION = "developerDecision";
@@ -41,11 +40,10 @@ public class ChunkDAO {
                     + END_LINE + ", "
                     + LAST_SUFFIX_LINE + ", "
                     + SOLUTION_TEXT + ", "
-                    + STRUCTURES + ", "
-                    + OUTMOSTED_STRUCTURES + ", "
+                    + LANGUAGE_CONSTRUCTS + ", "
                     + ORIGINAL_V1_FIRST_LINE + ", "
                     + ORIGINAL_V2_FIRST_LINE + ", "
-                    + DEVELOPER_DECISION + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
+                    + DEVELOPER_DECISION + ") VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
             PreparedStatement stmt = null;
             try {
@@ -57,11 +55,10 @@ public class ChunkDAO {
                 stmt.setInt(5, chunk.getEndLine());
                 stmt.setInt(6, chunk.getLastSuffixLine());
                 stmt.setString(7, chunk.getSolutionText());
-                stmt.setString(8, chunk.getStructures());
-                stmt.setString(9, chunk.getOutmostedStructures());
-                stmt.setInt(10, chunk.getOriginalV1FinalLine());
-                stmt.setInt(11, chunk.getOriginalV2FinalLine());
-                stmt.setInt(12, DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision()));
+                stmt.setString(8, chunk.getLanguageConstructs());
+                stmt.setInt(9, chunk.getOriginalV1FinalLine());
+                stmt.setInt(10, chunk.getOriginalV2FinalLine());
+                stmt.setInt(11, DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision()));
                 ResultSet result = stmt.executeQuery();
                 result.next();
                 chunkID = result.getInt(1);
@@ -97,8 +94,7 @@ public class ChunkDAO {
                             resultSet.getInt(LAST_SUFFIX_LINE),
                             resultSet.getString(SOLUTION_TEXT),
                             DeveloperDecision.getEnumFromInt(resultSet.getInt(DEVELOPER_DECISION)),
-                            resultSet.getString(STRUCTURES),
-                            resultSet.getString(OUTMOSTED_STRUCTURES),
+                            resultSet.getString(LANGUAGE_CONSTRUCTS),
                             resultSet.getInt(ORIGINAL_V1_FIRST_LINE),
                             resultSet.getInt(ORIGINAL_V2_FIRST_LINE));
                 }
@@ -151,7 +147,7 @@ public class ChunkDAO {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            if (chunk.getStructures() == null || chunk.getOutmostedStructures() == null) {
+            if (chunk.getLanguageConstructs() == null) {
                 System.out.println("");
             }
             String sql = "SELECT " + ID + " FROM chunk WHERE " + CHUNK_TEXT + "=\'" + chunk.getChunkText().replaceAll("'", "''")
@@ -162,8 +158,7 @@ public class ChunkDAO {
                     + "\' AND " + LAST_SUFFIX_LINE + "=\'" + chunk.getLastSuffixLine()
                     + "\' AND " + SOLUTION_TEXT + "=\'" + chunk.getSolutionText().replaceAll("'", "''")
                     + "\' AND " + DEVELOPER_DECISION + "=\'" + DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision())
-                    + "\' AND " + STRUCTURES + "=\'" + chunk.getStructures().replaceAll("'", "''")
-                    + "\' AND " + OUTMOSTED_STRUCTURES + "=\'" + chunk.getOutmostedStructures().replaceAll("'", "''")
+                    + "\' AND " + LANGUAGE_CONSTRUCTS + "=\'" + chunk.getLanguageConstructs().replaceAll("'", "''")
                     + "\' AND " + ORIGINAL_V1_FIRST_LINE + "=\'" + chunk.getOriginalV1FirstLine()
                     + "\' AND " + ORIGINAL_V2_FIRST_LINE + "=\'" + chunk.getOriginalV2FirstLine() + "\';";
             PreparedStatement stmt = null;
@@ -184,12 +179,11 @@ public class ChunkDAO {
         return chunkID;
     }
 
-    public static void updateStructures(Connection connection, int id, String structures, String outmostedStructures) throws IOException, SQLException {
+    public static void updateStructures(Connection connection, int id, String languageConstructs) throws IOException, SQLException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "UPDATE chunk SET " + STRUCTURES + "=\'" + structures.replaceAll("'", "''") + "\', "
-                    + OUTMOSTED_STRUCTURES + "=\'" + outmostedStructures.replaceAll("'", "''") + "\' " + "WHERE " + ID + "=\'" + id + "\';";
+            String sql = "UPDATE chunk SET " + LANGUAGE_CONSTRUCTS + "=\'" + languageConstructs.replaceAll("'", "''") + "\' " + "WHERE " + ID + "=\'" + id + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
