@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.dao;
 
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
 import br.ufjf.dcc.gmr.core.mergenature.model.HasOutsideAlterations;
@@ -88,6 +89,42 @@ public class ConflictFileDAO {
                             resultSet.getBoolean(OUT_OF_MEMORY),
                             null);
                 }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return conflictFile;
+    }
+    
+    public static ConflictFile selectAll(Connection connection, int conflictFileID, int analysisID) throws SQLException, IOException {
+        ConflictFile conflictFile = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM conflictFile WHERE id = " + conflictFileID;
+            PreparedStatement stmt = null;
+            try {
+
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+
+                while (resultSet.next()) {
+                    conflictFile = new ConflictFile(resultSet.getInt(ID),
+                            resultSet.getString(PARENT1FILEPATH),
+                            resultSet.getString(PARENT2FILEPATH),
+                            resultSet.getString(ANCESTORFILEPATH),
+                            resultSet.getInt(CONFLICTFILEPATH),
+                            (analysisID > 0 ? new ArrayList<>() : ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, conflictFileID, analysisID)),
+                            ConflictFileType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
+                            HasOutsideAlterations.getEnumFromInt(resultSet.getInt(HASOUTSIDEALTERATIONS)),
+                            resultSet.getBoolean(OUT_OF_MEMORY),
+                            null);
+                }
+                conflictFile.setChunks(ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, conflictFileID, analysisID));
             } catch (SQLException ex) {
                 throw ex;
             } finally {

@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Merge_AnalysisDAO {
     public static final String ANALYSIS_FK = "analysisFK";
     public static final String HAS_OUT_OF_MEMORY = "hasOutOfMemory";
     public static final String COMPLETED = "completed";
+
 
     public static void insert(Connection connection, int mergeID, int analysisID, boolean hasOutOfMemory, boolean completed) throws SQLException, IOException {
         if (connection == null) {
@@ -94,6 +97,30 @@ public class Merge_AnalysisDAO {
             }
         }
         return completed;
+    }
+    
+    public static List<Integer> selectAllMergeIDs(Connection connection, int analysisID) throws SQLException, IOException {
+        List<Integer> mergeIDs = new ArrayList<>();
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT " + MERGE_FK + " FROM merge_analysis WHERE " + ANALYSIS_FK + "=\'" + analysisID +  "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    mergeIDs.add(resultSet.getInt(MERGE_FK));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return mergeIDs;
     }
 
     public static void update(Connection connection, int mergeID, int analysisID, boolean hasOutOfMemory, boolean completed) throws IOException, SQLException {

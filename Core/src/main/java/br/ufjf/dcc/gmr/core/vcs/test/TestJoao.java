@@ -2,6 +2,8 @@ package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.mergenature.dao.ConnectionFactory;
 import br.ufjf.dcc.gmr.core.mergenature.controller.Algorithm;
+import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
+import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.vcs.Git;
 import java.sql.Connection;
 import java.util.Locale;
@@ -14,8 +16,8 @@ public class TestJoao {
 
     public static void main(String[] args) throws Exception {
 
-        /*Connection connection = ConnectionFactory.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "kraken");
-        Algorithm algorithm = new Algorithm();
+        Connection connection = ConnectionFactory.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "kraken");
+        /*Algorithm algorithm = new Algorithm();
         algorithm.setSqlConnection(connection);
         String[] urls = {
             "https://github.com/ReactiveX/RxJava",
@@ -35,6 +37,7 @@ public class TestJoao {
         for (String url : urls) {
             algorithm.run(url, "/home/joaolima/Git/UFJF");
         }*/
+        GSONClass.save("/home/joaolima/aaa.mntr", ProjectDAO.getEntireProject(connection, 2, 2));
         
     }
 

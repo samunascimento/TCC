@@ -91,4 +91,38 @@ public class MergeDAO {
         return merge;
     }
 
+    public static Merge selectAllByID(Connection connection, int mergeID, int analysisID) throws SQLException, IOException {
+        Merge merge = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM merge WHERE " + ID + "=\'" + mergeID + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    merge = new Merge(resultSet.getInt(ID),
+                            null,
+                            CommitDAO.selectByID(connection, resultSet.getInt(MERGE_COMMIT_FK)),
+                            new ArrayList<>(),
+                            resultSet.getInt(MERGE_BASE_FK) == 0 ? null : CommitDAO.selectByID(connection, resultSet.getInt(MERGE_BASE_FK)),
+                            new ArrayList<>(),
+                            MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)));
+                }
+                merge.setParents(Merge_Commit_parentsDAO.selectByMergeID(connection, merge.getId()));
+                for (int conflictFileID : Merge_ConflictFile_AnalysisDAO.selectConflictFiles(connection, mergeID, analysisID)) {
+                    merge.addConflictFile(ConflictFileDAO.selectAll(connection, conflictFileID, analysisID));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return merge;
+    }
+
 }

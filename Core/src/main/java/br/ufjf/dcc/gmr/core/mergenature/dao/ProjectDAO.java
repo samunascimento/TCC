@@ -20,6 +20,37 @@ public class ProjectDAO {
     public static final String NAME = "name";
     public static final String URL = "url";
     public static final String ORGANIZATION = "organization";
+    
+    public static Project getEntireProject(Connection connection, int projectID, int analysisID) throws SQLException, IOException {
+        Project project = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM project WHERE " + ID + "= \'" + projectID + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    project = new Project(resultSet.getInt(ID),
+                            resultSet.getString(NAME),
+                            resultSet.getString(URL),
+                            resultSet.getString(ORGANIZATION),
+                            new ArrayList<>());
+                }
+                for (int mergeID : Merge_AnalysisDAO.selectAllMergeIDs(connection, analysisID)) {
+                    project.addMerge(MergeDAO.selectAllByID(connection, mergeID, analysisID));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return project;
+    }
 
     public static int insert(Connection connection, Project project) throws SQLException, IOException {
         int projectID = -1;
