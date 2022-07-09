@@ -147,7 +147,6 @@ public class Git {
             CLIExecution execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
             if (!execution.getError().isEmpty()) {
                 String error = ListUtils.getTextListStringToString(execution.getError());
-                System.out.println(execution.toString());
                 if (!error.contains("HEAD is now at ")) {
                     throw new CheckoutException(error);
                 }

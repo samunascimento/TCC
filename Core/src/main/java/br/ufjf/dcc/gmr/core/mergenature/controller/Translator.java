@@ -58,10 +58,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")) {
-                mainList.add(LanguageConstructs.ASSIGNMENT);
-                list.remove("Assignment");
-            }
+//            if (list.contains("Assignment")) {
+//                mainList.add(LanguageConstructs.ASSIGNMENT);
+//                list.remove("Assignment");
+//            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("BreakStatement")) {

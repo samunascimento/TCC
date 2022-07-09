@@ -381,14 +381,14 @@ public class Algorithm {
         String solution = MergeNatureTools.getRawForm(chunk.getSolutionTextWithoutContext());
         String v1 = MergeNatureTools.getRawForm(chunk.getV1());
         String v2 = MergeNatureTools.getRawForm(chunk.getV2());
-        if (solution.equals("")) {
-            chunk.setDeveloperDecision(DeveloperDecision.NONE);
-        } else if (solution.equals(v1.concat(v2)) || solution.equals(v2.concat(v1))) {
-            chunk.setDeveloperDecision(DeveloperDecision.CONCATENATION);
-        } else if (solution.equals(v1)) {
+        if (solution.equals(v1)) {
             chunk.setDeveloperDecision(DeveloperDecision.VERSION1);
         } else if (solution.equals(v2)) {
             chunk.setDeveloperDecision(DeveloperDecision.VERSION2);
+        } else if (solution.equals("")) {
+            chunk.setDeveloperDecision(DeveloperDecision.NONE);
+        } else if (solution.equals(v1.concat(v2)) || solution.equals(v2.concat(v1))) {
+            chunk.setDeveloperDecision(DeveloperDecision.CONCATENATION);
         } else {
             List<String> solutionList = MergeNatureTools.stringTextToListText(chunk.getSolutionTextWithoutContext());
             int markers = numberOfMarkers(solutionList);
