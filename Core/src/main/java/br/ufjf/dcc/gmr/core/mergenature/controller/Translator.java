@@ -273,11 +273,13 @@ public class Translator {
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("VariableDeclarator")
                     || list.contains("VariableAccess")
-                    || list.contains("LocalVariableDeclaration")) {
+                    || list.contains("LocalVariableDeclaration")
+                    || list.contains("LocalVariableDeclarationStatement")) {
                 mainList.add(LanguageConstructs.VARIABLE);
                 list.remove("VariableAccess");
                 list.remove("VariableDeclarator");
                 list.remove("LocalVariableDeclaration");
+                list.remove("LocalVariableDeclarationStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

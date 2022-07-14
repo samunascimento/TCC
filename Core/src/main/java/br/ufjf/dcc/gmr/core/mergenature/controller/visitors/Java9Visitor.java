@@ -921,7 +921,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclaration(Java9Parser.LocalVariableDeclarationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 

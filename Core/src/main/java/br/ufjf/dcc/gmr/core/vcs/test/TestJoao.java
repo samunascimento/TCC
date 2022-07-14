@@ -25,11 +25,11 @@ public class TestJoao {
             //            "https://github.com/apache/kafka",
             //            "https://github.com/zaproxy/zaproxy.git",
             //            "https://github.com/dbeaver/dbeaver",
-            //            "https://github.com/antlr/antlr4",
-            //            "https://github.com/voldemort/voldemort"
-            //            "https://github.com/rzwitserloot/lombok"
-            //            "https://github.com/Twitter4J/Twitter4J",
-            //            "https://github.com/spring-projects/spring-data-neo4j"
+                        "https://github.com/antlr/antlr4"
+//                        "https://github.com/voldemort/voldemort"
+//                        "https://github.com/rzwitserloot/lombok"
+//                        "https://github.com/Twitter4J/Twitter4J",
+//                        "https://github.com/spring-projects/spring-data-neo4j"
 
             //            "https://github.com/keras-team/keras",
             //            "https://github.com/electron/electron",
@@ -40,15 +40,15 @@ public class TestJoao {
 //            "https://github.com/pandas-dev/pandas"
 //            "https://github.com/django/django"
 //            "https://github.com/lutris/lutris"
-            "https://github.com/reviewboard/reviewboard"
+//            "https://github.com/reviewboard/reviewboard"
     };
 
         for (String url : urls) {
 
             String projectName = url.split("/")[url.split("/").length - 1];
-            String filePath = "C:\\Users\\gleip\\Documents\\" + projectName + ".mntr";
+            String filePath = "D:\\VEM\\" + projectName + ".mntr";
 
-            GSONClass.save(filePath, algorithm.run(url, "C:\\Users\\gleip\\repositories\\VEM\\REP5"));
+            GSONClass.save(filePath, algorithm.run(url, "D:\\VEM\\repositorios\\REP5"));
 
         }
 
