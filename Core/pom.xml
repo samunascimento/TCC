@@ -59,14 +59,15 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/java9</sourceDirectory>
-                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/java9</outputDirectory>
+                    <sourceDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</sourceDirectory>
+                    <outputDirectory>${basedir}/src/main/java/br/ufjf/dcc/gmr/core/mergenature/antlr4/grammars/cpp</outputDirectory>
                     <arguments>
                         <argument>-package</argument>
-                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.java9</argument>
+                        <argument>br.ufjf.dcc.gmr.core.mergenature.antlr4.grammars.cpp</argument>
                     </arguments>
                     <includes>
-                        <include>Java9.g4</include>
+                        <include>CPP14Parser.g4</include>
+                        <include>CPP14Lexer.g4</include>
                     </includes>
                 </configuration>
                 <executions>

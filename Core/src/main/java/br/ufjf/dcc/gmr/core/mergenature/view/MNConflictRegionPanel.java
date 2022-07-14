@@ -97,7 +97,7 @@ public class MNConflictRegionPanel extends JPanel {
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
 
-        JTextArea structuresTextArea = new JTextArea("Annotation\n" + chunk.getLanguageConstructs());
+        JTextArea structuresTextArea = new JTextArea(chunk.getLanguageConstructs());
         structuresTextArea.setBackground(MNFrame.PRIMARY_COLOR);
         structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresTextArea.setEditable(false);

@@ -40,6 +40,8 @@ Alignof: 'alignof';
 
 Asm: 'asm';
 
+Assert: 'assert';
+
 Auto: 'auto';
 
 Bool: 'bool';

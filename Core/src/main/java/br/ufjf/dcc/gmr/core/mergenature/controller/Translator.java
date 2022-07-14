@@ -273,11 +273,13 @@ public class Translator {
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("VariableDeclarator")
                     || list.contains("VariableAccess")
-                    || list.contains("LocalVariableDeclaration")) {
+                    || list.contains("LocalVariableDeclaration")
+                    || list.contains("ExpressionName")) {
                 mainList.add(LanguageConstructs.VARIABLE);
                 list.remove("VariableAccess");
                 list.remove("VariableDeclarator");
                 list.remove("LocalVariableDeclaration");
+                list.remove("ExpressionName");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -296,7 +298,7 @@ public class Translator {
                 list.remove("Error");
             }
             if (mainList.isEmpty()) {
-               mainList.add(LanguageConstructs.FAKE_EMPTY);
+                mainList.add(LanguageConstructs.FAKE_EMPTY);
             }
         }
         return mainList;
@@ -312,9 +314,9 @@ public class Translator {
             // Não existe em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ARRAY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Arraydeclaration")) {
+            if (list.contains("ArrayDeclaration")) {
                 mainList.add(LanguageConstructs.ARRAY_INITIALIZER);
-                list.remove("Arraydeclaration");
+                list.remove("ArrayDeclaration");
             }
             if (list.contains("Arrayaccess")) {
                 mainList.add(LanguageConstructs.ARRAY_ACCESS);
@@ -323,17 +325,13 @@ public class Translator {
             // Ainda revisando
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSERT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Static_assertdeclaration")) {
-                mainList.add(LanguageConstructs.ARRAY_INITIALIZER);
-                list.remove("Static_assertdeclaration");
+            if (list.contains("Assertion")) {
+                mainList.add(LanguageConstructs.ASSERT_STATEMENT);
+                list.remove("Assertion");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Realassignmentexpression")) {
-                mainList.add(LanguageConstructs.ASSIGNMENT);
-                list.remove("Realassignmentexpression");
-            }
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // Removido por englobar muitas estruturas
             //BLANK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Blank")) {
                 mainList.add(LanguageConstructs.BLANK);
@@ -341,37 +339,45 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Breakstatement")) {
+            if (list.contains("BreakStatement")) {
                 mainList.add(LanguageConstructs.BREAK_STATEMENT);
                 list.remove("Breakstatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CASE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Caseexpression")) {
+            if (list.contains("CaseStatement")
+                    || list.contains("DefaultStatement")) {
                 mainList.add(LanguageConstructs.CASE_STATEMENT);
-                list.remove("Caseexpression");
+                list.remove("CaseStatement");
+                list.remove("DefaultStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CAST+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Realcastexpression")) {
+            if (list.contains("PrimitiveDataTypeCastExpression")
+                    || list.contains("ClassCastExpression")
+                    || list.contains("CastStatement")) {
                 mainList.add(LanguageConstructs.CAST_EXPRESSION);
-                list.remove("Realcastexpression");
+                list.remove("PrimitiveDataTypeCastExpression");
+                list.remove("ClassCastExpression");
+                list.remove("CastStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
             //CATCH+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Catchexpression")) {
+            if (list.contains("Handler")
+                    || list.contains("CatchStatement")) {
                 mainList.add(LanguageConstructs.CATCH_CLAUSE);
-                list.remove("Catchexpression");
+                list.remove("Handler");
+                list.remove("CatchStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CLASS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Classspecifier")) {
+            if (list.contains("ClassSpecifier")) {
                 mainList.add(LanguageConstructs.CLASS_DECLARATION);
-                list.remove("Classspecifier");
+                list.remove("ClassSpecifier");
             }
-            if (list.contains("Classhead")) {
+            if (list.contains("ClassHead")) {
                 mainList.add(LanguageConstructs.CLASS_SIGNATURE);
-                list.remove("Classhead");
+                list.remove("ClassHead");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //COMMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -383,7 +389,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //CONTINUE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Continuestatement")) {
+            if (list.contains("ContinueStatement")) {
                 mainList.add(LanguageConstructs.CONTINUE_STATEMENT);
                 list.remove("Continuestatement");
             }
@@ -394,7 +400,7 @@ public class Translator {
                 list.remove("Dostatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            //DELET+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DELETE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("Deleteexpression")) {
                 mainList.add(LanguageConstructs.DO_STATEMENT);
                 list.remove("Deleteexpression");
@@ -430,9 +436,11 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IF++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Ifexpression")) {
+            if (list.contains("IfBlock")
+                    || list.contains("IfStatement")) {
                 mainList.add(LanguageConstructs.IF_STATEMENT);
-                list.remove("Ifexpression");
+                list.remove("IfBlock");
+                list.remove("IfStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //IMPORT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -445,21 +453,19 @@ public class Translator {
             //Não tem em c++
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //METHOD++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Functiondefinition")
-                    || list.contains("Pseudodestructdeclaration")) {
+            if (list.contains("FunctionDefinition")) {
                 mainList.add(LanguageConstructs.METHOD_DECLARATION);
-                list.remove("Functiondefinition");
-                list.remove("Pseudodestructdeclaration");
+                list.remove("FunctionDefinition");
             }
-            if (list.contains("Functioninvocation")
-                    || list.contains("Pseudodestructcaller")) {
+            if (list.contains("FunctionCall")
+                    || list.contains("ConstructorCall")) {
                 mainList.add(LanguageConstructs.METHOD_INVOCATION);
-                list.remove("Functioninvocation");
-                list.remove("Pseudodestructcaller");
+                list.remove("FunctionCall");
+                list.remove("ConstructorCall");
             }
-            if (list.contains("Functionhead")) {
+            if (list.contains("FunctionSignature")) {
                 mainList.add(LanguageConstructs.METHOD_SIGNATURE);
-                list.remove("Functionhead");
+                list.remove("FunctionSignature");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //NAMESPACE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -484,7 +490,7 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //RETURN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Returnstatement")) {
+            if (list.contains("ReturnStatement")) {
                 mainList.add(LanguageConstructs.RETURN_STATEMENT);
                 list.remove("Returnstatement");
             }
@@ -499,9 +505,9 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Switchexpression")) {
+            if (list.contains("SwitchStatement")) {
                 mainList.add(LanguageConstructs.SWITCH_STATEMENT);
-                list.remove("Switchexpression");
+                list.remove("SwitchStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SynchronizedStatement+++++++++++++++++++++++++++++++++++++++++++++
@@ -515,11 +521,15 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //TRY+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Tryblockexpression")
-                    || list.contains("Functiontryblockexpression")) {
+            if (list.contains("TryBlock")
+                    || list.contains("TryStatement")
+                    || list.contains("FunctionTryBlock")
+                    || list.contains("FunctionTryStatement")) {
                 mainList.add(LanguageConstructs.TRY_STATEMENT);
-                list.remove("Tryblockexpression");
-                list.remove("Functiontryblockexpression");
+                list.remove("TryBlock");
+                list.remove("TryStatement");
+                list.remove("FunctionTryBlock");
+                list.remove("FunctionTryStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -540,7 +550,7 @@ public class Translator {
                 list.remove("Error");
             }
             if (mainList.isEmpty()) {
-               mainList.add(LanguageConstructs.FAKE_EMPTY);
+                mainList.add(LanguageConstructs.FAKE_EMPTY);
             }
         }
         return mainList;
@@ -756,7 +766,7 @@ public class Translator {
                 list.remove("Error");
             }
             if (mainList.isEmpty()) {
-               mainList.add(LanguageConstructs.FAKE_EMPTY);
+                mainList.add(LanguageConstructs.FAKE_EMPTY);
             }
         }
         return mainList;
