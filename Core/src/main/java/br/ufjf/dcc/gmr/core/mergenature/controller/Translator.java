@@ -58,10 +58,10 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //ASSIGNMENT++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Assignment")) {
-                mainList.add(LanguageConstructs.ASSIGNMENT);
-                list.remove("Assignment");
-            }
+//            if (list.contains("Assignment")) {
+//                mainList.add(LanguageConstructs.ASSIGNMENT);
+//                list.remove("Assignment");
+//            }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //BREAK+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("BreakStatement")) {
@@ -274,12 +274,14 @@ public class Translator {
             if (list.contains("VariableDeclarator")
                     || list.contains("VariableAccess")
                     || list.contains("LocalVariableDeclaration")
-                    || list.contains("ExpressionName")) {
+                    || list.contains("ExpressionName")
+                    || list.contains("LocalVariableDeclarationStatement")) {
                 mainList.add(LanguageConstructs.VARIABLE);
                 list.remove("VariableAccess");
                 list.remove("VariableDeclarator");
                 list.remove("LocalVariableDeclaration");
                 list.remove("ExpressionName");
+                list.remove("LocalVariableDeclarationStatement");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
