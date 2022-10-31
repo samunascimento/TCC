@@ -1,13 +1,21 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.mergenature.dao.AnalysisDAO;
+import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -122,68 +130,103 @@ public class MNDatabaseInteractions {
         }.start();
 
     }*/
-
     public static void initGetProjectFrame(Connection connection, MNTabbedPane tabbedPane) {
-        List<Project> projects;
-        List<Date> dates;
+        try {
+            List<Object[]> analysisList = AnalysisDAO.getAllAnalysisInfo(connection);
 
-        JDialog dialog = new JDialog();
-        dialog.setModal(true);
-        dialog.setSize(550, 500);
-        dialog.setResizable(false);
-        dialog.setAlwaysOnTop(true);
-        dialog.setLocationRelativeTo(null);
-        dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-        dialog.setTitle("Double click a row to get a project");
-        dialog.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
-        dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
+            JDialog dialog = new JDialog();
+            dialog.setModal(true);
+            dialog.setSize(800, 600);
+            dialog.setResizable(true);
+            dialog.setAlwaysOnTop(true);
+            dialog.setLocationRelativeTo(null);
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            dialog.setTitle("Double click a row to get a project");
+            dialog.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
+            dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
 
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
-        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
+            JPanel mainPanel = new JPanel(new GridBagLayout());
+            mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+            mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
 
-        JTable table = new JTable(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "ID", "Project Name", "Save Date"
+            JTable table = new JTable(new DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        "ProjectID", "AnalysisID", "Name", "URL", "Organization", "Save Date", "Code Version", "Completed"
+                    }
+            ) {
+                Class[] types = new Class[]{
+                    Integer.class,
+                    Integer.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    Boolean.class
+
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false, false, false
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
                 }
-        ) {
-            Class[] types = new Class[]{
-                Integer.class,
-                String.class,
-                String.class
 
-            };
-            boolean[] canEdit = new boolean[]{
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+            for (Object[] analysis : analysisList) {
+                model.addRow(analysis);
             }
+            table.setRowHeight(30);
+            table.setFillsViewportHeight(true);
+            table.setBackground(MNFrame.PRIMARY_COLOR);
+            table.setForeground(MNFrame.SECUNDARY_COLOR);
+            table.setBorder(BorderFactory.createEmptyBorder());
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent evt) {
+                    if (evt.getClickCount() > 1) {
+                        try {
+                            tabbedPane.addRemovableTab((String) analysisList.get(table.getSelectedRow())[2],
+                                    null,
+                                    new MNProjectPanel(
+                                            ProjectDAO.getEntireProject(connection,
+                                                    (int) analysisList.get(table.getSelectedRow())[0],
+                                                    (int) analysisList.get(table.getSelectedRow())[1]),
+                                            null),
+                                    null);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        dialog.dispose();
+                    }
+                }
+            });
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
-        table.setRowHeight(30);
-        table.setFillsViewportHeight(true);
-        table.setBackground(MNFrame.PRIMARY_COLOR);
-        table.setForeground(MNFrame.SECUNDARY_COLOR);
-        table.setBorder(BorderFactory.createEmptyBorder());
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.getDataVector().removeAllElements();
-        model.fireTableDataChanged();
-        JScrollPane scroll = new JScrollPane(table);
-        mainPanel.add(scroll, gbc);
+            JScrollPane scroll = new JScrollPane(table);
+            mainPanel.add(scroll, gbc);
 
-        dialog.add(mainPanel);
-        dialog.setVisible(true);
+            dialog.add(mainPanel);
+            dialog.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

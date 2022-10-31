@@ -319,15 +319,23 @@ public class Algorithm {
             String mergeCommit = chunk.getConflictFile().getMerge().getMergeCommit().getHash();
             String conflictFilePath = chunk.getConflictFile().getConflictFilePath();
             String parentFilePath = chunk.getConflictFile().getParent1FilePath();
-            int solutionFirstLine;
-            int solutionFinalLine;
+            int solutionFirstLine = (chunk.getFirstPrefixLine() == chunk.getBeginLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
+            int solutionFinalLine = (chunk.getLastSuffixLine() == chunk.getEndLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
             try {
-                solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
-                solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
+                if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                    solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
+                }
+                if (solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                    solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
+                }
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                     parentFilePath = chunk.getConflictFile().getParent2FilePath();
-                    solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
-                    solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
+                    if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                        solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
+                    }
+                    if (solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                        solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
+                    }
                     if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
                         chunk.setSolutionText("The solution to the conflict was to delete the file.");
                         chunk.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
@@ -348,7 +356,8 @@ public class Algorithm {
                     chunk.setSolutionText(chunk.getChunkText());
                     chunk.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
                 } else {
-                    if (solutionFirstLine <= 0 || solutionFinalLine <= 0) {
+                    if ((solutionFirstLine <= 0 && solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS)
+                            || (solutionFinalLine <= 0 && solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS)) {
                         contextIntervals = null;
                         chunk.setSolutionText("Diff Error!");
                         chunk.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
@@ -356,17 +365,17 @@ public class Algorithm {
                         if (contextIntervals != null) {
                             contextIntervals.add(new IntegerInterval(solutionFirstLine, solutionFinalLine));
                         }
-                        if (solutionFinalLine - 1 == 324 || solutionFirstLine - 1 == 324) {
-                            System.out.println("");
-                        }
+                        List<String> solutionFileContent = Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath);
                         chunk.setSolutionText(
-                                ListUtils.getTextListStringToString(
+                                (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "<BOF>\n" : "")
+                                + ListUtils.getTextListStringToString(
                                         ListUtils.getSubList(
-                                                Git.getFileContentFromCommit(
-                                                        mergeCommit,
-                                                        parentFilePath.replaceFirst(repositoryPath, ""),
-                                                        repositoryPath),
-                                                solutionFirstLine - 1, solutionFinalLine - 1)));
+                                                solutionFileContent,
+                                                (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? 0 : solutionFirstLine - 1),
+                                                (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? solutionFileContent.size() - 1 : solutionFinalLine - 1)
+                                        ))
+                                + (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
+                        );
                         chunk = developerDecisionLayer(chunk);
                     }
                 }

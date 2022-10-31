@@ -21,6 +21,7 @@ public class ReturnNewLineNumber {
     public static final int REMOVED_LINE = -Integer.MAX_VALUE; // Constant used to indentify when a line was removed
     public static final int REMOVED_FILE = -(Integer.MAX_VALUE - 1); // Constant used to indentify when a file was removed
     public static final int POSTPONED = -(Integer.MAX_VALUE - 2);
+    public static final int OUT_OF_BOUNDS = -(Integer.MAX_VALUE - 3);
 
     public static int getLineInAnotherCommit(String directory, String pastCommit, String futureCommit, String file, boolean getFromFuture, int originalLineNumber) throws IOException, NotGitRepositoryException, DiffException {
         return initReturnNewLineNumber(directory,
