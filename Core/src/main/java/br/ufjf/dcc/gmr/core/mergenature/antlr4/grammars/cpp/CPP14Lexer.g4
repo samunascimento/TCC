@@ -28,10 +28,12 @@ UserDefinedLiteral:
 	| UserDefinedStringLiteral
 	| UserDefinedCharacterLiteral;
 
-MultiLineMacro:
-	'#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+ -> channel (HIDDEN);
+IncludeDirective: '#include' ~ [\n]*;
 
-Directive: '#' ~ [\n]* -> channel (HIDDEN);
+MultiLineMacro:
+	'#' (~[\n]*? '\\' '\r'? '\n')+ ~ [\n]+;
+
+Directive: '#' ~ [\n]*;
 /*Keywords*/
 
 Alignas: 'alignas';
@@ -283,6 +285,8 @@ DotStar: '.*';
 
 Ellipsis: '...';
 
+Hash: '#';
+
 fragment Hexquad:
 	HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT HEXADECIMALDIGIT;
 
@@ -406,6 +410,6 @@ Whitespace: [ \t]+ -> skip;
 
 Newline: ('\r' '\n'? | '\n') -> skip;
 
-BlockComment: '/*' .*? '*/' -> skip;
+BlockComment: '/*' .*? '*/' -> channel(2);
 
-LineComment: '//' ~ [\r\n]* -> skip;
+LineComment: '//' ~ [\r\n]* -> channel(2);

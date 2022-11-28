@@ -311,17 +311,20 @@ public class Algorithm {
     }
 
     private Chunk solutionLayer(Chunk chunk, String repositoryPath) throws IOException, NotGitRepositoryException, DiffException, ShowException {
-        if (chunk.getFirstPrefixLine() == chunk.getBeginLine() || chunk.getLastSuffixLine() == chunk.getEndLine()) {
-            chunk.setSolutionText("The context is not a line, the solution cannot be obtained accurately");
-            chunk.setDeveloperDecision(DeveloperDecision.IMPRECISE);
-            contextIntervals = null;
-        } else {
-            String mergeCommit = chunk.getConflictFile().getMerge().getMergeCommit().getHash();
-            String conflictFilePath = chunk.getConflictFile().getConflictFilePath();
-            String parentFilePath = chunk.getConflictFile().getParent1FilePath();
-            int solutionFirstLine = (chunk.getFirstPrefixLine() == chunk.getBeginLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
-            int solutionFinalLine = (chunk.getLastSuffixLine() == chunk.getEndLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
-            try {
+        String mergeCommit = chunk.getConflictFile().getMerge().getMergeCommit().getHash();
+        String conflictFilePath = chunk.getConflictFile().getConflictFilePath();
+        String parentFilePath = chunk.getConflictFile().getParent1FilePath();
+        int solutionFirstLine = (chunk.getFirstPrefixLine() == chunk.getBeginLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
+        int solutionFinalLine = (chunk.getLastSuffixLine() == chunk.getEndLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
+        try {
+            if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
+            }
+            if (solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
+                solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
+            }
+            if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
+                parentFilePath = chunk.getConflictFile().getParent2FilePath();
                 if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
                     solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
                 }
@@ -329,60 +332,52 @@ public class Algorithm {
                     solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
                 }
                 if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
-                    parentFilePath = chunk.getConflictFile().getParent2FilePath();
-                    if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
-                        solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
-                    }
-                    if (solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
-                        solutionFinalLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getEndLine() + 1);
-                    }
-                    if (solutionFirstLine == ReturnNewLineNumber.REMOVED_FILE || solutionFinalLine == ReturnNewLineNumber.REMOVED_FILE) {
-                        chunk.setSolutionText("The solution to the conflict was to delete the file.");
-                        chunk.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
-                        contextIntervals = null;
-                        return chunk;
-                    } else {
-                        solutionFileWasRenamed = true;
-                    }
-                } else {
-                    solutionFileWasRenamed = false;
-                }
-                if (solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+                    chunk.setSolutionText("The solution to the conflict was to delete the file.");
+                    chunk.setDeveloperDecision(DeveloperDecision.FILE_DELETED);
                     contextIntervals = null;
-                    chunk.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
-                    chunk.setDeveloperDecision(DeveloperDecision.IMPRECISE);
-                } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
-                    contextIntervals = null;
-                    chunk.setSolutionText(chunk.getChunkText());
-                    chunk.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
+                    return chunk;
                 } else {
-                    if ((solutionFirstLine <= 0 && solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS)
-                            || (solutionFinalLine <= 0 && solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS)) {
-                        contextIntervals = null;
-                        chunk.setSolutionText("Diff Error!");
-                        chunk.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
-                    } else {
-                        if (contextIntervals != null) {
-                            contextIntervals.add(new IntegerInterval(solutionFirstLine, solutionFinalLine));
-                        }
-                        List<String> solutionFileContent = Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath);
-                        chunk.setSolutionText(
-                                (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "<BOF>\n" : "")
-                                + ListUtils.getTextListStringToString(
-                                        ListUtils.getSubList(
-                                                solutionFileContent,
-                                                (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? 0 : solutionFirstLine - 1),
-                                                (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? solutionFileContent.size() - 1 : solutionFinalLine - 1)
-                                        ))
-                                + (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
-                        );
-                        chunk = developerDecisionLayer(chunk);
-                    }
+                    solutionFileWasRenamed = true;
                 }
-            } catch (Exception ex) {
-                throw new IOException(ex);
+            } else {
+                solutionFileWasRenamed = false;
             }
+            if (solutionFirstLine == ReturnNewLineNumber.REMOVED_LINE || solutionFinalLine == ReturnNewLineNumber.REMOVED_LINE) {
+                contextIntervals = null;
+                chunk.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
+                chunk.setDeveloperDecision(DeveloperDecision.IMPRECISE);
+            } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
+                contextIntervals = null;
+                chunk.setSolutionText(chunk.getChunkText());
+                chunk.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
+            } else {
+                if ((solutionFirstLine <= 0 && solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS)
+                        || (solutionFinalLine <= 0 && solutionFinalLine != ReturnNewLineNumber.OUT_OF_BOUNDS)) {
+                    contextIntervals = null;
+                    chunk.setSolutionText("Diff Error!");
+                    chunk.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
+                } else {
+                    if (contextIntervals != null) {
+                        contextIntervals.add(new IntegerInterval(solutionFirstLine, solutionFinalLine));
+                    }
+                    List<String> solutionFileContent = Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath);
+                    chunk.setSolutionText(
+                            (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "<BOF>\n" : "")
+                            + ListUtils.getTextListStringToString(
+                                    ListUtils.getSubList(
+                                            solutionFileContent,
+                                            (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? 0 : solutionFirstLine - 1),
+                                            (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? solutionFileContent.size() - 1 : solutionFinalLine - 1)
+                                    ))
+                            + (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
+                    );
+                    chunk = developerDecisionLayer(chunk);
+                }
+            }
+        } catch (Exception ex) {
+            throw new IOException(ex);
         }
+
         return chunk;
     }
 

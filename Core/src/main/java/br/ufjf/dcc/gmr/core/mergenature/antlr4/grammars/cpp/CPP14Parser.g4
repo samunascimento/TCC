@@ -47,12 +47,16 @@ idExpression
 	;
 
 unqualifiedId
-	: Identifier
+	: identifier
 	| operatorFunctionId
 	| conversionFunctionId
 	| literalOperatorId
 	| Tilde (className | decltypeSpecifier)
 	| templateId
+	;
+
+identifier
+	: Identifier
 	;
 
 qualifiedId
@@ -105,6 +109,7 @@ lambdaDeclarator
 
 postfixExpression
 	: functionCall
+	| fieldAccess
 	| primaryExpression
 	| postfixExpression LeftBracket (expression | bracedInitList) RightBracket
 	| postfixExpression functionCall
@@ -119,6 +124,10 @@ postfixExpression
 functionCall
 	: (Dot | Arrow)? primaryExpression LeftParen expressionList? RightParen
 	| (Dot | Arrow) LeftParen expressionList? RightParen
+	;
+
+fieldAccess
+	: This (Dot | Arrow) idExpression
 	;
 
 arrayAccess
@@ -363,10 +372,33 @@ condition
 	;
 
 iterationStatement
-	: While LeftParen condition RightParen statement
-	| Do statement While LeftParen expression RightParen Semi
-	| For LeftParen ( forInitStatement condition? Semi expression?
-	| forRangeDeclaration Colon forRangeInitializer ) RightParen statement
+	: whileStatement
+	| doStatement
+	| forStatement
+	;
+
+doStatement
+	:  doSignature statement whileSignature Semi
+	;
+
+doSignature
+	: Do
+	;
+
+whileStatement
+	: whileSignature statement
+	;
+
+whileSignature
+	: While LeftParen condition RightParen
+	;
+
+forStatement
+	: forSignature statement
+	;
+
+forSignature
+	: For LeftParen ( forInitStatement condition? Semi expression? | forRangeDeclaration Colon forRangeInitializer ) RightParen
 	;
 
 forInitStatement
@@ -397,7 +429,7 @@ continueStatement
 	;
 
 returnStatement
-	: Return (expression | bracedInitList)?
+	: Return (expression | bracedInitList)? Semi
 	;
 
 declarationStatement
@@ -410,7 +442,8 @@ declarationseq
 	;
 
 declaration
-	: blockDeclaration
+	: directive
+	| blockDeclaration
 	| functionDefinition
 	| templateDeclaration
 	| explicitInstantiation
@@ -419,6 +452,16 @@ declaration
 	| namespaceDefinition
 	| emptyDeclaration
 	| attributeDeclaration
+	;
+
+directive
+	: includeDeclaration
+	| MultiLineMacro
+	| Directive
+	;
+
+includeDeclaration
+	: IncludeDirective
 	;
 
 blockDeclaration
@@ -437,9 +480,29 @@ aliasDeclaration
 	;
 
 simpleDeclaration
-	: arrayDeclaration
+	: variableDeclaration
+	| pointerDeclaration
+	| variableAccess
+	| pointerAccess
+	| arrayDeclaration
 	| declSpecifierSeq? initDeclaratorList? Semi
 	| attributeSpecifierSeq declSpecifierSeq? initDeclaratorList Semi
+	;
+
+variableDeclaration
+	: typeSpecifier declaratorid initializer? Semi
+	;
+
+variableAccess
+	: declaratorid initializer Semi
+	;
+
+pointerDeclaration
+	: typeSpecifier pointerOperator declaratorid initializer? Semi
+	;
+
+pointerAccess
+	: pointerOperator declaratorid initializer Semi
 	;
 
 arrayDeclaration
@@ -600,9 +663,12 @@ originalNamespaceName
 	: Identifier
 	;
 
+namespaceSignature
+	: Inline? Namespace (originalNamespaceName (Doublecolon originalNamespaceName)*)?
+	;
+
 namespaceDefinition
-	: Inline? Namespace (Identifier | originalNamespaceName)? LeftBrace namespaceBody = declarationseq
-		? RightBrace
+	: namespaceSignature LeftBrace (namespaceBody = declarationseq)? RightBrace
 	;
 
 namespaceAlias
@@ -783,7 +849,7 @@ parameterDeclaration
 	;
 
 functionDefinition
-	: functionSignature functionBody
+	: functionSignature functionBody Semi?
 	;
 
 functionSignature
@@ -793,7 +859,7 @@ functionSignature
 functionBody
 	: constructorInitializer? compoundStatement
 	| functionTryBlock handlerSeq
-	| Assign (Default | Delete) Semi
+	| Assign (Default | Delete)
 	;
 
 initializer
@@ -851,12 +917,17 @@ memberSpecification
 
 memberdeclaration
 	: functionDefinition
-	| attributeSpecifierSeq? declSpecifierSeq? memberDeclaratorList? Semi
+	| fieldDeclaration
 	| usingDeclaration
 	| assertion
 	| templateDeclaration
 	| aliasDeclaration
 	| emptyDeclaration
+	| attributeSpecifierSeq? declSpecifierSeq? memberDeclaratorList? Semi
+	;
+
+fieldDeclaration
+	: attributeSpecifierSeq? declSpecifierSeq memberDeclaratorList Semi
 	;
 
 memberDeclaratorList

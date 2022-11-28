@@ -35,6 +35,12 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnqualifiedId(CPP14Parser.UnqualifiedIdContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#identifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifier(CPP14Parser.IdentifierContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#qualifiedId}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -112,6 +118,12 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionCall(CPP14Parser.FunctionCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#fieldAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldAccess(CPP14Parser.FieldAccessContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#arrayAccess}.
 	 * @param ctx the parse tree
@@ -407,6 +419,42 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIterationStatement(CPP14Parser.IterationStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#doStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoStatement(CPP14Parser.DoStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#doSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoSignature(CPP14Parser.DoSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#whileStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStatement(CPP14Parser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#whileSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileSignature(CPP14Parser.WhileSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#forStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForStatement(CPP14Parser.ForStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#forSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForSignature(CPP14Parser.ForSignatureContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#forInitStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -467,6 +515,18 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(CPP14Parser.DeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#directive}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDirective(CPP14Parser.DirectiveContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#includeDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIncludeDeclaration(CPP14Parser.IncludeDeclarationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#blockDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -484,6 +544,30 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSimpleDeclaration(CPP14Parser.SimpleDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclaration(CPP14Parser.VariableDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#variableAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableAccess(CPP14Parser.VariableAccessContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#pointerDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPointerDeclaration(CPP14Parser.PointerDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#pointerAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPointerAccess(CPP14Parser.PointerAccessContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#arrayDeclaration}.
 	 * @param ctx the parse tree
@@ -664,6 +748,12 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitOriginalNamespaceName(CPP14Parser.OriginalNamespaceNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#namespaceSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNamespaceSignature(CPP14Parser.NamespaceSignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#namespaceDefinition}.
 	 * @param ctx the parse tree
@@ -988,6 +1078,12 @@ public interface CPP14ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CPP14Parser#fieldDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldDeclaration(CPP14Parser.FieldDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link CPP14Parser#memberDeclaratorList}.
 	 * @param ctx the parse tree

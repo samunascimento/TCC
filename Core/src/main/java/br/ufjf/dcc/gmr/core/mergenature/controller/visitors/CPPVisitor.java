@@ -36,6 +36,102 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitIdentifier(CPP14Parser.IdentifierContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitPointerAccess(CPP14Parser.PointerAccessContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitVariableAccess(CPP14Parser.VariableAccessContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitPointerDeclaration(CPP14Parser.PointerDeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitVariableDeclaration(CPP14Parser.VariableDeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitIncludeDeclaration(CPP14Parser.IncludeDeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitDirective(CPP14Parser.DirectiveContext ctx) {
+        //process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFieldDeclaration(CPP14Parser.FieldDeclarationContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitFieldAccess(CPP14Parser.FieldAccessContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitForSignature(CPP14Parser.ForSignatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitForStatement(CPP14Parser.ForStatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitWhileSignature(CPP14Parser.WhileSignatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitWhileStatement(CPP14Parser.WhileStatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitDoSignature(CPP14Parser.DoSignatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitDoStatement(CPP14Parser.DoStatementContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Object visitNamespaceSignature(CPP14Parser.NamespaceSignatureContext ctx) {
+        process(ctx);
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitConstructorCall(CPP14Parser.ConstructorCallContext ctx) {
         process(ctx);
         return visitChildren(ctx);
@@ -697,13 +793,13 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitUsingDirective(CPP14Parser.UsingDirectiveContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitUsingDeclaration(CPP14Parser.UsingDeclarationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -727,7 +823,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespaceDefinition(CPP14Parser.NamespaceDefinitionContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 

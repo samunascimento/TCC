@@ -19,10 +19,15 @@ import java.util.Locale;
 public class TestJoao {
 
     public static void main(String[] args) throws Exception {
-        Connection connection = ConnectionFactory.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "kraken");
+        /*Connection connection = ConnectionFactory.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "kraken");
         Algorithm algorithm = new Algorithm();
         algorithm.setSqlConnection(connection);
-        algorithm.run("https://github.com/1dharode/Hacktoberfest2022", "/home/joaolima");
+        algorithm.run("https://github.com/yuzu-emu/yuzu.git", "/home/joaolima");*/
+        
+        for(SyntaxStructure ss : ANTLR4Tools.analyzeCPPSyntaxTree("/home/joaolima/Git/UFJF/Regua-Puzzle_IA/src/main.cpp", true).getAll()){
+            System.out.println(ss.getForm() + "\n\n---------------------------------------------------------------------------------------------------\n\n");
+        }
+        
 
     }
 }
