@@ -47,12 +47,16 @@ idExpression
 	;
 
 unqualifiedId
-	: Identifier
+	: identifier
 	| operatorFunctionId
 	| conversionFunctionId
 	| literalOperatorId
 	| Tilde (className | decltypeSpecifier)
 	| templateId
+	;
+
+identifier
+	: Identifier
 	;
 
 qualifiedId
@@ -104,15 +108,36 @@ lambdaDeclarator
 	;
 
 postfixExpression
-	: primaryExpression
+	: functionCall
+	| fieldAccess
+	| primaryExpression
 	| postfixExpression LeftBracket (expression | bracedInitList) RightBracket
+	| postfixExpression functionCall
 	| postfixExpression LeftParen expressionList? RightParen
 	| (simpleTypeSpecifier | typeNameSpecifier) ( LeftParen expressionList? RightParen | bracedInitList )
 	| postfixExpression (Dot | Arrow) ( Template? idExpression | pseudoDestructorName )
 	| postfixExpression (PlusPlus | MinusMinus)
-	| ( Dynamic_cast | Static_cast | Reinterpret_cast | Const_cast ) Less theTypeId Greater LeftParen expression RightParen
+	| classCastExpression
 	| typeIdOfTheTypeId LeftParen (expression | theTypeId) RightParen
 	;
+
+functionCall
+	: (Dot | Arrow)? primaryExpression LeftParen expressionList? RightParen
+	| (Dot | Arrow) LeftParen expressionList? RightParen
+	;
+
+fieldAccess
+	: This (Dot | Arrow) idExpression
+	;
+
+arrayAccess
+	: postfixExpression (LeftBracket expression RightBracket)+
+	;
+
+classCastExpression
+	: ( Dynamic_cast | Static_cast | Reinterpret_cast | Const_cast ) Less theTypeId Greater LeftParen expression RightParen
+	;
+
 /*
  add a middle layer to eliminate duplicated function declarations
  */
@@ -132,7 +157,8 @@ pseudoDestructorName
 	;
 
 unaryExpression
-	: postfixExpression
+	: arrayAccess
+	| postfixExpression
 	| (PlusPlus | MinusMinus | unaryOperator | Sizeof) unaryExpression
 	| Sizeof ( LeftParen theTypeId RightParen | Ellipsis LeftParen Identifier RightParen )
 	| Alignof LeftParen theTypeId RightParen
@@ -152,7 +178,11 @@ unaryOperator
 	;
 
 newExpression
-	: Doublecolon? New newPlacement? ( newTypeId | (LeftParen theTypeId RightParen) ) newInitializer?
+	: Doublecolon? New constructorCall
+	;
+
+constructorCall
+	: newPlacement? ( newTypeId | (LeftParen theTypeId RightParen) ) newInitializer?
 	;
 
 newPlacement
@@ -187,8 +217,17 @@ noExceptExpression
 	;
 
 castExpression
-	: unaryExpression
-	| LeftParen theTypeId RightParen castExpression
+	: castStatement
+	| unaryExpression
+	| primitiveDataTypeCastExpression castExpression
+	;
+
+castStatement
+	: (primitiveDataTypeCastExpression)+ unaryExpression
+	;
+
+primitiveDataTypeCastExpression
+	: LeftParen theTypeId RightParen
 	;
 
 pointerMemberExpression
@@ -280,13 +319,21 @@ statement
 	| selectionStatement
 	| iterationStatement
 	| jumpStatement
-	| tryBlock )
+	| (tryBlock handlerSeq) )
 	;
 
 labeledStatement
-	: attributeSpecifierSeq? ( Identifier
-	| Case constantExpression
-	| Default ) Colon statement
+	: caseStatement
+	| defaultStatement
+	| attributeSpecifierSeq? ( Identifier | Case constantExpression | Default ) Colon statement
+	;
+
+caseStatement
+	: Case constantExpression Colon statement
+	;
+
+defaultStatement
+	: Default Colon statement
 	;
 
 expressionStatement
@@ -302,8 +349,20 @@ statementSeq
 	;
 
 selectionStatement
-	: If LeftParen condition RightParen statement (Else statement)?
-	| Switch LeftParen condition RightParen statement
+	: ifBlock
+	| switchStatement
+	;
+
+ifBlock
+	: ifStatement statement (Else statement)?
+	;
+
+ifStatement
+	: If LeftParen condition RightParen
+	;
+
+switchStatement
+	: Switch LeftParen condition RightParen statement
 	;
 
 condition
@@ -313,10 +372,33 @@ condition
 	;
 
 iterationStatement
-	: While LeftParen condition RightParen statement
-	| Do statement While LeftParen expression RightParen Semi
-	| For LeftParen ( forInitStatement condition? Semi expression?
-	| forRangeDeclaration Colon forRangeInitializer ) RightParen statement
+	: whileStatement
+	| doStatement
+	| forStatement
+	;
+
+doStatement
+	:  doSignature statement whileSignature Semi
+	;
+
+doSignature
+	: Do
+	;
+
+whileStatement
+	: whileSignature statement
+	;
+
+whileSignature
+	: While LeftParen condition RightParen
+	;
+
+forStatement
+	: forSignature statement
+	;
+
+forSignature
+	: For LeftParen ( forInitStatement condition? Semi expression? | forRangeDeclaration Colon forRangeInitializer ) RightParen
 	;
 
 forInitStatement
@@ -332,10 +414,22 @@ forRangeInitializer
 	;
 
 jumpStatement
-	: ( Break
-	| Continue
-	| Return (expression | bracedInitList)?
-	| Goto Identifier ) Semi
+	: breakStatement
+	| continueStatement
+	| returnStatement
+	| Goto Identifier Semi
+	;
+
+breakStatement
+	: Break Semi
+	;
+
+continueStatement
+	: Continue Semi
+	;
+
+returnStatement
+	: Return (expression | bracedInitList)? Semi
 	;
 
 declarationStatement
@@ -348,7 +442,8 @@ declarationseq
 	;
 
 declaration
-	: blockDeclaration
+	: directive
+	| blockDeclaration
 	| functionDefinition
 	| templateDeclaration
 	| explicitInstantiation
@@ -359,13 +454,23 @@ declaration
 	| attributeDeclaration
 	;
 
+directive
+	: includeDeclaration
+	| MultiLineMacro
+	| Directive
+	;
+
+includeDeclaration
+	: IncludeDirective
+	;
+
 blockDeclaration
 	: simpleDeclaration
 	| asmDefinition
 	| namespaceAliasDefinition
 	| usingDeclaration
 	| usingDirective
-	| staticAssertDeclaration
+	| assertion
 	| aliasDeclaration
 	| opaqueEnumDeclaration
 	;
@@ -375,12 +480,39 @@ aliasDeclaration
 	;
 
 simpleDeclaration
-	: declSpecifierSeq? initDeclaratorList? Semi
+	: variableDeclaration
+	| pointerDeclaration
+	| variableAccess
+	| pointerAccess
+	| arrayDeclaration
+	| declSpecifierSeq? initDeclaratorList? Semi
 	| attributeSpecifierSeq declSpecifierSeq? initDeclaratorList Semi
 	;
 
-staticAssertDeclaration
-	: Static_assert LeftParen constantExpression Comma StringLiteral RightParen Semi
+variableDeclaration
+	: typeSpecifier declaratorid initializer? Semi
+	;
+
+variableAccess
+	: declaratorid initializer Semi
+	;
+
+pointerDeclaration
+	: typeSpecifier pointerOperator declaratorid initializer? Semi
+	;
+
+pointerAccess
+	: pointerOperator declaratorid initializer Semi
+	;
+
+arrayDeclaration
+	: typeSpecifier pointerDeclarator Assign New typeSpecifier LeftBracket (expression | constantExpression) RightBracket Semi
+	| typeSpecifier declaratorid (LeftBracket constantExpression RightBracket)+ (Assign bracedInitList)? Semi
+	; 
+
+assertion
+	: Assert LeftParen constantExpression RightParen Semi
+	| Static_assert LeftParen constantExpression Comma StringLiteral RightParen Semi
 	;
 
 emptyDeclaration
@@ -531,9 +663,12 @@ originalNamespaceName
 	: Identifier
 	;
 
+namespaceSignature
+	: Inline? Namespace (originalNamespaceName (Doublecolon originalNamespaceName)*)?
+	;
+
 namespaceDefinition
-	: Inline? Namespace (Identifier | originalNamespaceName)? LeftBrace namespaceBody = declarationseq
-		? RightBrace
+	: namespaceSignature LeftBrace (namespaceBody = declarationseq)? RightBrace
 	;
 
 namespaceAlias
@@ -620,7 +755,8 @@ initDeclarator
 	;
 
 declarator
-	: pointerDeclarator
+	: arrayAccess
+	| pointerDeclarator
 	| noPointerDeclarator parametersAndQualifiers trailingReturnType
 	;
 
@@ -713,13 +849,17 @@ parameterDeclaration
 	;
 
 functionDefinition
-	: attributeSpecifierSeq? declSpecifierSeq? declarator virtualSpecifierSeq? functionBody
+	: functionSignature functionBody Semi?
+	;
+
+functionSignature
+	: Tilde? attributeSpecifierSeq? declSpecifierSeq? declarator virtualSpecifierSeq?
 	;
 
 functionBody
 	: constructorInitializer? compoundStatement
-	| functionTryBlock
-	| Assign (Default | Delete) Semi
+	| functionTryBlock handlerSeq
+	| Assign (Default | Delete)
 	;
 
 initializer
@@ -776,13 +916,18 @@ memberSpecification
 	;
 
 memberdeclaration
-	: attributeSpecifierSeq? declSpecifierSeq? memberDeclaratorList? Semi
-	| functionDefinition
+	: functionDefinition
+	| fieldDeclaration
 	| usingDeclaration
-	| staticAssertDeclaration
+	| assertion
 	| templateDeclaration
 	| aliasDeclaration
 	| emptyDeclaration
+	| attributeSpecifierSeq? declSpecifierSeq? memberDeclaratorList? Semi
+	;
+
+fieldDeclaration
+	: attributeSpecifierSeq? declSpecifierSeq memberDeclaratorList Semi
 	;
 
 memberDeclaratorList
@@ -934,11 +1079,19 @@ explicitSpecialization
 /*Exception handling*/
 
 tryBlock
-	: Try compoundStatement handlerSeq
+	: tryStatement LeftBrace statementSeq? RightBrace
+	;
+
+tryStatement
+	: Try
 	;
 
 functionTryBlock
-	: Try constructorInitializer? compoundStatement handlerSeq
+	: functionTryStatement LeftBrace statementSeq? RightBrace
+	;
+
+functionTryStatement
+	: Try constructorInitializer?
 	;
 
 handlerSeq
@@ -946,7 +1099,11 @@ handlerSeq
 	;
 
 handler
-	: Catch LeftParen exceptionDeclaration RightParen compoundStatement
+	: catchStatement compoundStatement
+	;
+
+catchStatement
+	: Catch LeftParen exceptionDeclaration RightParen
 	;
 
 exceptionDeclaration

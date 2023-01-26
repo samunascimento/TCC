@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,12 +23,12 @@ import javax.swing.JTextArea;
  */
 public class MNAlternativeView {
 
-    public static void openAlternativeView(ConflictRegion region) {
+    public static void openAlternativeView(Chunk chunk) {
 
         //Frame
         JFrame alternativeView = new JFrame();
         alternativeView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        alternativeView.setTitle("(" + region.getBeginLine() + " - " + region.getEndLine() + ")");
+        alternativeView.setTitle("(" + chunk.getBeginLine() + " - " + chunk.getEndLine() + ")");
         alternativeView.setResizable(true);
         alternativeView.setBounds(100, 100, MNFrame.MAX_BOUNDS.width - 200, MNFrame.MAX_BOUNDS.height - 200);
         alternativeView.setMinimumSize(new Dimension(800, 450));
@@ -49,7 +49,7 @@ public class MNAlternativeView {
         JScrollPane conflictScroll = new JScrollPane(conflictPanel);
         conflictScroll.setBorder(BorderFactory.createEmptyBorder());
 
-        JLabel conflictLabel = new JLabel("Conflict Region");
+        JLabel conflictLabel = new JLabel("Chunk");
         conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         conflictLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         conflictLabel.setOpaque(false);
@@ -57,7 +57,7 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.HORIZONTAL;
         conflictPanel.add(conflictLabel, itensGBC);
 
-        JPanel conflictText = MNConflictRegionPanel.getConflictTextArea(region);
+        JPanel conflictText = MNConflictRegionPanel.getConflictTextArea(chunk);
         JScrollPane conflictTextScroll = new JScrollPane(conflictText);
         conflictTextScroll.getViewport().setBackground(MNFrame.PRIMARY_COLOR);
         itensGBC.gridy = 1;
@@ -76,7 +76,7 @@ public class MNAlternativeView {
         JScrollPane solutionScroll = new JScrollPane(solutionPanel);
         solutionScroll.setBorder(BorderFactory.createEmptyBorder());
 
-        JLabel solutionLabel = new JLabel("Solution: " + region.getDeveloperDecision());
+        JLabel solutionLabel = new JLabel("Resolution: " + chunk.getDeveloperDecision());
         solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionLabel.setOpaque(false);
@@ -84,7 +84,7 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.HORIZONTAL;
         solutionPanel.add(solutionLabel, itensGBC);
 
-        JTextArea solutionTextArea = new JTextArea(region.getSolutionText());
+        JTextArea solutionTextArea = new JTextArea(chunk.getSolutionText());
         solutionTextArea.setEditable(false);
         solutionTextArea.setBackground(MNFrame.PRIMARY_COLOR);
         solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
@@ -114,7 +114,7 @@ public class MNAlternativeView {
         structuresPanel.setBackground(MNFrame.PRIMARY_COLOR);
         structuresPanel.setBorder(BorderFactory.createEmptyBorder());
 
-        JLabel structuresLabel = new JLabel("Structures");
+        JLabel structuresLabel = new JLabel("Language Constructs");
         structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
@@ -122,7 +122,7 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.HORIZONTAL;
         structuresPanel.add(structuresLabel, itensGBC);
 
-        JTextArea structuresText = new JTextArea(region.getStructures());
+        JTextArea structuresText = new JTextArea(chunk.getLanguageConstructs());
         structuresText.setBackground(MNFrame.PRIMARY_COLOR);
         structuresText.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresText.setEditable(false);
@@ -135,20 +135,6 @@ public class MNAlternativeView {
         itensGBC.fill = GridBagConstraints.BOTH;
         structuresPanel.add(structuresTextScroll, itensGBC);
 
-        JRadioButton useOutmost = new JRadioButton("Show only outmost");
-        useOutmost.setBackground(MNFrame.PRIMARY_COLOR);
-        useOutmost.setForeground(MNFrame.SECUNDARY_COLOR);
-        useOutmost.addActionListener((ActionEvent evt) -> {
-            if (useOutmost.isSelected()) {
-                structuresText.setText(region.getOutmostedStructures());
-            } else {
-                structuresText.setText(region.getStructures());
-            }
-        });
-        itensGBC.gridy = 2;
-        itensGBC.weighty = 0;
-        itensGBC.fill = GridBagConstraints.HORIZONTAL;
-        structuresPanel.add(useOutmost, itensGBC);
 
         panelsGBC.gridy = 1;
         panelsGBC.weighty = 1;

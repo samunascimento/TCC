@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -57,10 +57,12 @@ public class MNMergePanel extends JPanel {
         NWPanel.setPreferredSize(new Dimension(1, 150));
         NWPanel.setOpaque(false);
         NWPanel.setLayout(new GridBagLayout());
-        NWPanel.add(new MNConflictPanel(this, merge.getConflicts()), INSIDE_CONSTRAINTS);
+        NWPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
+        //NWPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1.5;
+        gbc.weightx = 1;
+        //gbc.weightx = 1.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(NWPanel, gbc);
 
@@ -69,10 +71,12 @@ public class MNMergePanel extends JPanel {
         NEPanel.setOpaque(false);
         NEPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
         NEPanel.setLayout(new GridBagLayout());
-        NEPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
+        NEPanel.add(new MNConflictFilePanel(this, merge.getConflictFiles()), INSIDE_CONSTRAINTS);
+        //NEPanel.add(new MNCommitInfoPanel(merge), INSIDE_CONSTRAINTS);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 1;
+        gbc.weightx = 1.5;
+        //gbc.weightx = 1;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
@@ -90,9 +94,9 @@ public class MNMergePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         this.add(SPanel, gbc);
-        if(!merge.getConflicts().isEmpty()){
-            if(!merge.getConflicts().get(0).getConflictRegions().isEmpty()){
-                updateConflictRegion(merge.getConflicts().get(0).getConflictRegions().get(0));
+        if(!merge.getConflictFiles().isEmpty()){
+            if(!merge.getConflictFiles().get(0).getChunks().isEmpty()){
+                updateConflictRegion(merge.getConflictFiles().get(0).getChunks().get(0));
             }
         }
 
@@ -114,13 +118,13 @@ public class MNMergePanel extends JPanel {
 
     }
 
-    public void updateConflictRegion(ConflictRegion region) {
+    public void updateConflictRegion(Chunk chunk) {
         if (SPanel != null) {
             SPanel.removeAll();
             SPanel.revalidate();
             SPanel.repaint();
-            if (region != null) {
-                MNConflictRegionPanel regionPanel = new MNConflictRegionPanel(region);
+            if (chunk != null) {
+                MNConflictRegionPanel regionPanel = new MNConflictRegionPanel(chunk);
                 JScrollPane scroll = new JScrollPane(regionPanel);
                 scroll.setOpaque(false);
                 SPanel.add(scroll, INSIDE_CONSTRAINTS);

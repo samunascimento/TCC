@@ -38,7 +38,7 @@ public class Git {
                 folderName + (folderName.endsWith(File.separator)? "" : File.separator) +
                 "...\nIsso pode demorar dependendo do projeto, por favor espere.");
         CLIExecution execution = CLIExecute.execute(command, downloadPath);
-        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty()){
+        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty() && !execution.getError().contains("Cloning into '" + folderName + "'...")){
             System.out.println(execution);
             throw new CloneException(ListUtils.getTextListStringToString(execution.getError()));
         }
@@ -97,7 +97,7 @@ public class Git {
      */
     public static List<String> merge(String otherCommit, String repositoryPath) throws IOException, NotGitRepositoryException, MergeException {
         if (isGitRepository(repositoryPath)) {
-            String command = "git merge --allow-unrelated-histories --no-edit " + otherCommit;
+            String command = "git merge --allow-unrelated-histories --no-edit -s recursive" + otherCommit;
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
                 throw new MergeException(ListUtils.getTextListStringToString(execution.getError()));
@@ -249,7 +249,7 @@ public class Git {
             if (result.equals("")) {
                 return "Unknown";
             } else {
-                return result;
+                return result.replaceAll("\n", "").replaceAll("\\.git", "");
             }
         } else {
             throw new NotGitRepositoryException(repositoryPath);
@@ -311,7 +311,7 @@ public class Git {
                 throw new MergeBaseException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
                 if (execution.getOutput().isEmpty()) {
-                    return "No ancestor";
+                    return null;
                 }
                 return execution.getOutputString();
             }

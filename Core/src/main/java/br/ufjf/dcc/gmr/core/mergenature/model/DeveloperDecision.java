@@ -8,6 +8,8 @@ public enum DeveloperDecision {
 
     VERSION1, VERSION2, CONCATENATION, COMBINATION, NEWCODE, NONE, IMPRECISE, FILE_DELETED, POSTPONED_1, POSTPONED_2, POSTPONED_3, DIFF_PROBLEM;
 
+    public static int NUMBER_OF_TYPES = 12;
+    
     public static int getIntFromEnum(DeveloperDecision developerDecision) {
         switch (developerDecision) {
             case VERSION1: {

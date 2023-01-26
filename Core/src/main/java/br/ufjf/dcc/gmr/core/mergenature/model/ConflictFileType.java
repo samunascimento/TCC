@@ -6,14 +6,16 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  * @author João Pedro Lima
  * @since 09-11-2020
  */
-public enum ConflictType {
+public enum ConflictFileType {
 
     CONTENT, COINCIDENCE_ADDING, FILE_RENAME,
     DIRECTORY_RENAME, MODIFY_DELETE, RENAME_DELETE,
     P1_RENAMED_P2_ADD, P2_RENAMED_P1_ADD, FILE_LOCATION,
     SUBMODULE, CONTENT_WITH_UNILATERAL_RENAMNING, DIRECTORY_RENAME_SPLIT;
+    
+    public static int NUMBER_OF_TYPES = 12;
 
-    public static int getIntFromEnum(ConflictType conflictType) {
+    public static int getIntFromEnum(ConflictFileType conflictType) {
         switch (conflictType) {
             case CONTENT: {
                 return 1;
@@ -57,43 +59,43 @@ public enum ConflictType {
         }
     }
 
-    public static ConflictType getEnumFromInt(int value) {
+    public static ConflictFileType getEnumFromInt(int value) {
         switch (value) {
             case 1: {
-                return ConflictType.CONTENT;
+                return ConflictFileType.CONTENT;
             }
             case 2: {
-                return ConflictType.COINCIDENCE_ADDING;
+                return ConflictFileType.COINCIDENCE_ADDING;
             }
             case 3: {
-                return ConflictType.FILE_RENAME;
+                return ConflictFileType.FILE_RENAME;
             }
             case 4: {
-                return ConflictType.DIRECTORY_RENAME;
+                return ConflictFileType.DIRECTORY_RENAME;
             }
             case 5: {
-                return ConflictType.MODIFY_DELETE;
+                return ConflictFileType.MODIFY_DELETE;
             }
             case 6: {
-                return ConflictType.RENAME_DELETE;
+                return ConflictFileType.RENAME_DELETE;
             }
             case 7: {
-                return ConflictType.P1_RENAMED_P2_ADD;
+                return ConflictFileType.P1_RENAMED_P2_ADD;
             }
             case 8: {
-                return ConflictType.P2_RENAMED_P1_ADD;
+                return ConflictFileType.P2_RENAMED_P1_ADD;
             }
             case 9: {
-                return ConflictType.FILE_LOCATION;
+                return ConflictFileType.FILE_LOCATION;
             }
             case 10: {
-                return ConflictType.SUBMODULE;
+                return ConflictFileType.SUBMODULE;
             }
             case 11: {
-                return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
+                return ConflictFileType.CONTENT_WITH_UNILATERAL_RENAMNING;
             }
             case 12: {
-                return ConflictType.DIRECTORY_RENAME_SPLIT;
+                return ConflictFileType.DIRECTORY_RENAME_SPLIT;
             }
             default: {
                 return null;
@@ -101,43 +103,43 @@ public enum ConflictType {
         }
     }
 
-    public static ConflictType getEnumFromString(String value) {
+    public static ConflictFileType getEnumFromString(String value) {
         switch (value) {
             case "CONTENT": {
-                return ConflictType.CONTENT;
+                return ConflictFileType.CONTENT;
             }
             case "COINCIDENCE_ADDING": {
-                return ConflictType.COINCIDENCE_ADDING;
+                return ConflictFileType.COINCIDENCE_ADDING;
             }
             case "FILE_RENAME": {
-                return ConflictType.FILE_RENAME;
+                return ConflictFileType.FILE_RENAME;
             }
             case "DIRECTORY_RENAME": {
-                return ConflictType.DIRECTORY_RENAME;
+                return ConflictFileType.DIRECTORY_RENAME;
             }
             case "MODIFY_DELETE": {
-                return ConflictType.MODIFY_DELETE;
+                return ConflictFileType.MODIFY_DELETE;
             }
             case "RENAME_DELETE": {
-                return ConflictType.RENAME_DELETE;
+                return ConflictFileType.RENAME_DELETE;
             }
             case "P1_RENAMED_P2_ADD": {
-                return ConflictType.P1_RENAMED_P2_ADD;
+                return ConflictFileType.P1_RENAMED_P2_ADD;
             }
             case "P2_RENAMED_P1_ADD": {
-                return ConflictType.P2_RENAMED_P1_ADD;
+                return ConflictFileType.P2_RENAMED_P1_ADD;
             }
             case "FILE_LOCATION": {
-                return ConflictType.FILE_LOCATION;
+                return ConflictFileType.FILE_LOCATION;
             }
             case "SUBMODULE": {
-                return ConflictType.SUBMODULE;
+                return ConflictFileType.SUBMODULE;
             }
             case "CONTENT_WITH_UNILATERAL_RENAMNING": {
-                return ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING;
+                return ConflictFileType.CONTENT_WITH_UNILATERAL_RENAMNING;
             }
             case "DIRECTORY_RENAME_SPLIT": {
-                return ConflictType.DIRECTORY_RENAME_SPLIT;
+                return ConflictFileType.DIRECTORY_RENAME_SPLIT;
             }
             default: {
                 return null;

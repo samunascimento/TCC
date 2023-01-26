@@ -6,7 +6,7 @@ import br.ufjf.dcc.gmr.core.exception.LogException;
 import br.ufjf.dcc.gmr.core.exception.MergeException;
 import br.ufjf.dcc.gmr.core.exception.NotGitRepositoryException;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.gmr.core.vcs.Git;
@@ -31,7 +31,7 @@ public class MNProjectPanel extends JPanel {
 
     private GridBagConstraints INSIDE_CONSTRAINTS;
     public static int MIN_X = 300;
-    public static int MIN_Y = 85;
+    public static int MIN_Y = 110;
     private Project project;
     private MNProjectInfo projectInfo;
     private MNMergesTable mergesList;
@@ -69,7 +69,7 @@ public class MNProjectPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
 
-        projectInfo = new MNProjectInfo(project.getName(), project.getUrl(), project.getOrganization());
+        projectInfo = new MNProjectInfo(project);
         projectInfo.setPreferredSize(new Dimension(MIN_X, MIN_Y));
         projectInfo.setOpaque(false);
         projectInfo.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, MNFrame.BORDER_GAP, true));
@@ -121,7 +121,7 @@ public class MNProjectPanel extends JPanel {
 
     }
 
-    public void showFileAlterationsProcess(Conflict conflict) {
+    public void showFileAlterationsProcess(ConflictFile conflict) {
         if (repositoryPathFrame.repositoryPathIsVerified()) {
             showFileAlterations(conflict, repositoryPathFrame.getRepositoryPath());
         } else {
@@ -129,23 +129,23 @@ public class MNProjectPanel extends JPanel {
         }
     }
 
-    public void showFileAlterations(Conflict conflict, String repositoryPath){
+    public void showFileAlterations(ConflictFile conflict, String repositoryPath){
         try {
             if (Git.getAllMerges(repositoryPath).size() < conflict.getMerge().getProject().getMerges().size()) {
                 JOptionPane.showMessageDialog(null, repositoryPath + " is a oldest version of this project!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 MergeNatureTools.prepareAnalysis(repositoryPath);
-                Git.mergeIsConflicting(conflict.getMerge().getParents().get(0).getCommitHash(), conflict.getMerge().getParents().get(1).getCommitHash(), repositoryPath);
+                Git.mergeIsConflicting(conflict.getMerge().getParents().get(0).getHash(), conflict.getMerge().getParents().get(1).getHash(), repositoryPath);
                 repositoryPathFrame.setRepositoryPathIsVerified(true);
                 List<LineInformation> allLines = null;
                 try {
                     allLines = Git.diff(repositoryPath,
-                            conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent1FilePath(),
+                            conflict.getMerge().getMergeCommit().getHash() + ":" + conflict.getParent1FilePath(),
                             conflict.getParent1FilePath(), true, 0).get(0).getLines();
                 } catch (DiffException ex) {
                     try {
                         allLines = Git.diff(repositoryPath,
-                                conflict.getMerge().getMerge().getCommitHash() + ":" + conflict.getParent2FilePath(),
+                                conflict.getMerge().getMergeCommit().getHash() + ":" + conflict.getParent2FilePath(),
                                 conflict.getParent1FilePath(), true, 0).get(0).getLines();
                     } catch (DiffException ex1) {
                         JOptionPane.showMessageDialog(null, "The solution file was renamed or deleted, impossible to get altered the lines", "Solution file not found", JOptionPane.INFORMATION_MESSAGE);

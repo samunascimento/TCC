@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.awt.Color;
@@ -34,7 +34,7 @@ public class MNAlterationsFrame {
 
     private static String allText;
 
-    public static void openAlterations(List<LineInformation> lines, Conflict conflict) {
+    public static void openAlterations(List<LineInformation> lines, ConflictFile conflict) {
 
         int beforeLine = 0;
         allText = "";
@@ -116,7 +116,7 @@ public class MNAlterationsFrame {
     private static JLabel generateLabel(LineInformation line) {
         JLabel label = new JLabel("");
         label.setFont(FONT);
-        label.setOpaque(true);
+        label.setOpaque(false);
         label.setBackground(Color.DARK_GRAY);
         if (line.getType() == LineType.ADDED) {
             label.setForeground(Color.RED);

@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.dao;
 
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,26 +13,23 @@ import java.util.List;
  *
  * @author João Pedro Lima
  */
-public class Project_MergeDAO {
+public class Project_AnalysisDAO {
     
     public static final String PROJECT_FK = "projectFK";
-    public static final String MERGE_FK = "mergeFK";
-    public static final String MERGE_HASH = "mergeHash";
+    public static final String ANALYSIS_FK = "analysisFK";
     
-    public static void insert(Connection connection, int projectID, int mergeID, String mergeHash) throws SQLException, IOException {
+    public static void insert(Connection connection, int projectID, int analysisID) throws SQLException, IOException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO project_merge ("
+            String sql = "INSERT INTO project_analysis ("
                     + PROJECT_FK + ", "
-                    + MERGE_FK + ", "
-                    + MERGE_HASH + ") VALUES (?,?,?);";
+                    + ANALYSIS_FK + ") VALUES (?,?);";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 stmt.setInt(1, projectID);
-                stmt.setInt(2, mergeID);
-                stmt.setString(3, mergeHash);
+                stmt.setInt(2, analysisID);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 throw ex;
@@ -43,20 +41,18 @@ public class Project_MergeDAO {
         }
     }
     
-    public static List<Integer> selectByProjectIDAndMergeHash(Connection connection, int projectID, String mergeHash) throws SQLException, IOException{
-        List<Integer> mergeIDs = null;
+    public static List<Integer> selectByProjectID(Connection connection, int projectID) throws SQLException, IOException{
+        List<Integer> analysisIDs = new ArrayList<>();
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            mergeIDs = new ArrayList<>();
-            String sql = "SELECT " + MERGE_FK + " FROM project_merge WHERE " + PROJECT_FK + "= \'" + projectID + "\' AND "
-                                                                       + MERGE_HASH + "= \'" + mergeHash + "\';";
+            String sql = "SELECT * FROM project_analysis WHERE " + PROJECT_FK + "=\'" + projectID + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    mergeIDs.add(resultSet.getInt(MERGE_FK));
+                    analysisIDs.add(resultSet.getInt(ANALYSIS_FK));
                 }
             } catch (SQLException ex) {
                 throw ex;
@@ -66,7 +62,9 @@ public class Project_MergeDAO {
                 }
             }
         }
-        return mergeIDs;
+        return analysisIDs;
     }
+    
+    
     
 }

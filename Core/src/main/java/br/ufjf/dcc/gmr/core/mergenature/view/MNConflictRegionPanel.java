@@ -1,6 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,10 +23,10 @@ import javax.swing.JTextArea;
 public class MNConflictRegionPanel extends JPanel {
 
     private static GridBagConstraints INSIDE_CONSTRAINTS;
-    private ConflictRegion region;
+    private Chunk chunk;
 
-    public MNConflictRegionPanel(ConflictRegion region) {
-        this.region = region;
+    public MNConflictRegionPanel(Chunk region) {
+        this.chunk = region;
         set();
     }
 
@@ -42,19 +42,19 @@ public class MNConflictRegionPanel extends JPanel {
         this.setLayout(new GridBagLayout());
         this.setBackground(MNFrame.PRIMARY_COLOR);
 
-        JLabel conflictLabel = new JLabel("Conflict Region");
+        JLabel conflictLabel = new JLabel("Chunk");
         conflictLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         conflictLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         conflictLabel.setOpaque(false);
 
         JLabel altenativeView = new JLabel("Show alternative view");
-        altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
+        //altenativeView.setFont(conflictLabel.getFont().deriveFont((float) 10.0));
         altenativeView.setForeground(MNFrame.OPTION_COLOR);
         altenativeView.setOpaque(false);
         altenativeView.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MNAlternativeView.openAlternativeView(region);
+                MNAlternativeView.openAlternativeView(chunk);
             }
 
             @Override
@@ -78,41 +78,30 @@ public class MNConflictRegionPanel extends JPanel {
             }
         });
         
-        JPanel conflictPanel = getConflictTextArea(this.region);
+        JPanel conflictPanel = getConflictTextArea(this.chunk);
 
-        JLabel solutionLabel = new JLabel("Solution: " + region.getDeveloperDecision());
+        JLabel solutionLabel = new JLabel("Resolution: " + chunk.getDeveloperDecision());
         solutionLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         solutionLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionLabel.setOpaque(false);
         
 
-        JTextArea solutionTextArea = new JTextArea(region.getSolutionText());
+        JTextArea solutionTextArea = new JTextArea(chunk.getSolutionText());
         solutionTextArea.setBackground(MNFrame.PRIMARY_COLOR);
         solutionTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
         solutionTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         solutionTextArea.setEditable(false);
 
-        JLabel structuresLabel = new JLabel("Structures");
+        JLabel structuresLabel = new JLabel("Language Constructs");
         structuresLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
         structuresLabel.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresLabel.setOpaque(false);
 
-        JTextArea structuresTextArea = new JTextArea(region.getStructures());
+        JTextArea structuresTextArea = new JTextArea(chunk.getLanguageConstructs());
         structuresTextArea.setBackground(MNFrame.PRIMARY_COLOR);
         structuresTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
         structuresTextArea.setEditable(false);
         structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
-
-        JRadioButton useOutmost = new JRadioButton("Show only outmost");
-        useOutmost.setBackground(MNFrame.PRIMARY_COLOR);
-        useOutmost.setForeground(MNFrame.SECUNDARY_COLOR);
-        useOutmost.addActionListener((ActionEvent evt) -> {
-            if (useOutmost.isSelected()) {
-                structuresTextArea.setText(region.getOutmostedStructures());
-            } else {
-                structuresTextArea.setText(region.getStructures());
-            }
-        });
         
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
@@ -141,14 +130,12 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridy++;
         this.add(structuresTextArea, gbc);
         gbc.gridy++;
-        this.add(useOutmost, gbc);
-        gbc.gridy++;
         gbc.weighty = 1;
         this.add(bottonAjust, gbc);
 
     }
 
-    public static JPanel getConflictTextArea(ConflictRegion region) {
+    public static JPanel getConflictTextArea(Chunk chunk) {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -159,7 +146,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextArea beforeContext = new JTextArea(region.getBeforeContext() + "\n" + region.getBeginText());
+        JTextArea beforeContext = new JTextArea(chunk.getPrefix(true)+ "\n" + chunk.getBegin());
         beforeContext.setBackground(MNFrame.PRIMARY_COLOR);
         beforeContext.setForeground(MNFrame.SECUNDARY_COLOR);
         beforeContext.setEditable(false);
@@ -167,7 +154,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridy = 0;
         panel.add(beforeContext, gbc);
 
-        JTextArea v1 = new JTextArea(region.getV1Text());
+        JTextArea v1 = new JTextArea(chunk.getV1());
         v1.setBackground(MNFrame.PRIMARY_COLOR);
         v1.setForeground(MNFrame.V1_COLOR);
         v1.setEditable(false);
@@ -183,7 +170,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridy = 2;
         panel.add(separator, gbc);
 
-        JTextArea v2 = new JTextArea(region.getV2Text());
+        JTextArea v2 = new JTextArea(chunk.getV2());
         v2.setBackground(MNFrame.PRIMARY_COLOR);
         v2.setForeground(MNFrame.V2_COLOR);
         v2.setEditable(false);
@@ -191,7 +178,7 @@ public class MNConflictRegionPanel extends JPanel {
         gbc.gridy = 3;
         panel.add(v2, gbc);
 
-        JTextArea afterContext = new JTextArea(region.getEndText() + "\n" + region.getAfterContext());
+        JTextArea afterContext = new JTextArea(chunk.getEnd()+ "\n" + chunk.getSuffix(true));
         afterContext.setBackground(MNFrame.PRIMARY_COLOR);
         afterContext.setForeground(MNFrame.SECUNDARY_COLOR);
         afterContext.setEditable(false);

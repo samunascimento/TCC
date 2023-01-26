@@ -17,7 +17,7 @@ public class Commit {
 
     private int id;
     private String message;
-    private String commitHash;
+    private String hash;
     private String author;
     private Date authorDate;
     private String committer;
@@ -28,17 +28,17 @@ public class Commit {
      *
      * @param id Id for databases
      * @param message The message that was written for commit description.
-     * @param commitHash The unique code (hash) for commit.
+     * @param hash The unique code (hash) for commit.
      * @param author The person who originally wrote the code.
      * @param authorDate This date notes when this commit was originally made.
      * @param committer The person who committed the code on behalf of the
      * original author.
      * @param committerDate This date notes when this commit was commited.
      */
-    public Commit(int id, String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
+    public Commit(int id, String message, String hash, String author, Date authorDate, String committer, Date committerDate) {
         this.id = id;
         this.message = message;
-        this.commitHash = commitHash;
+        this.hash = hash;
         this.author = author;
         this.authorDate = authorDate;
         this.committer = committer;
@@ -49,16 +49,16 @@ public class Commit {
      * No id constructor
      *
      * @param message The message that was written for commit description.
-     * @param commitHash The unique code (hash) for commit.
+     * @param hash The unique code (hash) for commit.
      * @param author The person who originally wrote the code.
      * @param authorDate This date notes when this commit was originally made.
      * @param committer The person who committed the code on behalf of the
      * original author.
      * @param committerDate This date notes when this commit was commited.
      */
-    public Commit(String message, String commitHash, String author, Date authorDate, String committer, Date committerDate) {
+    public Commit(String message, String hash, String author, Date authorDate, String committer, Date committerDate) {
         this.message = message;
-        this.commitHash = commitHash;
+        this.hash = hash;
         this.author = author;
         this.authorDate = authorDate;
         this.committer = committer;
@@ -75,7 +75,7 @@ public class Commit {
     public Commit(String hash, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
         List<String> info = Git.getBasicCommitInfo(hash, repositoryPath);
         this.message = info.get(5);
-        this.commitHash = info.get(0);
+        this.hash = info.get(0);
         this.author = info.get(1);
         this.authorDate = new Date(Long.parseLong(info.get(2)) * 1000);
         this.committer = info.get(3);
@@ -102,16 +102,16 @@ public class Commit {
         this.message = message;
     }
 
-    public String getCommitHash() {
-        return commitHash;
+    public String getHash() {
+        return hash;
     }
 
     public String getShortCommitHash() {
-        return commitHash.substring(0, 7);
+        return hash.substring(0, 7);
     }
 
-    public void setCommitHash(String commitHash) {
-        this.commitHash = commitHash;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getAuthor() {
@@ -148,8 +148,8 @@ public class Commit {
 
     @Override
     public String toString() {
-        return "Title: " + message + "\n"
-                + "Hash: " + commitHash + "\n"
+        return "Message: " + message + "\n"
+                + "Hash: " + hash + "\n"
                 + "Author: " + author + "\n"
                 + "Author Date: " + authorDate + "\n"
                 + "Committer: " + committer + "\n"

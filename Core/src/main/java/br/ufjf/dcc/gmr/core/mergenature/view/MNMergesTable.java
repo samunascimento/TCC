@@ -102,7 +102,7 @@ public class MNMergesTable extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         this.add(setFilter, gbc);
 
-        JButton resetFilter = new JButton("Reset Filter");
+        JButton resetFilter = new JButton("Reset Table");
         resetFilter.addActionListener((ActionEvent evt) -> {
             setTableModel(this.merges);
         });
@@ -124,7 +124,7 @@ public class MNMergesTable extends JPanel {
         for (Merge merge : mergeList) {
             model.addRow(new Object[]{
                 ++index,
-                merge.getMerge().getShortCommitHash(),
+                merge.getMergeCommit().getShortCommitHash(),
                 merge.getNumberOfConflictRegions(),
                 (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)
             });
@@ -140,7 +140,7 @@ public class MNMergesTable extends JPanel {
         for (Merge merge : mergeList) {
             model.addRow(new Object[]{
                 ++index,
-                merge.getMerge().getShortCommitHash(),
+                merge.getMergeCommit().getShortCommitHash(),
                 merge.getNumberOfConflictRegions() + "/" + originalConflictRegions.get(index - 1),
                 (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES)
             });

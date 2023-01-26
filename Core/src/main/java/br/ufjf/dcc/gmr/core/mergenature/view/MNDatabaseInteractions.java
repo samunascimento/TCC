@@ -1,26 +1,27 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
+import br.ufjf.dcc.gmr.core.mergenature.dao.AnalysisDAO;
 import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -56,9 +57,6 @@ public class MNDatabaseInteractions {
         }
 
         JButton saveButton = new JButton("Save");
-        saveButton.addActionListener((ActionEvent evt) -> {
-            progressBarForSaving(connection, projectPanels.get(comboBox.getSelectedIndex()).getProject(), dialog);
-        });
 
         gbc.gridy = 1;
         gbc.gridx = 1;
@@ -78,7 +76,7 @@ public class MNDatabaseInteractions {
         dialog.setVisible(true);
     }
 
-    private static void progressBarForSaving(Connection connection, Project project, JDialog dialogToDispose) {
+    /*private static void progressBarForSaving(Connection connection, Project project, JDialog dialogToDispose) {
 
         dialogToDispose.dispose();
 
@@ -131,98 +129,104 @@ public class MNDatabaseInteractions {
             }
         }.start();
 
-    }
-
+    }*/
     public static void initGetProjectFrame(Connection connection, MNTabbedPane tabbedPane) {
-        List<Project> projects;
-        ProjectDAO projectDAO = new ProjectDAO(connection);
-        List<Date> dates;
         try {
-            projects = projectDAO.selectAllProjectsWithoutMerges();
-            dates = projectDAO.selectAllDateSaveOfProjects();
-        } catch (SQLException ex) {
-            System.out.println("Deu ruim");
-            return;
-        }
+            List<Object[]> analysisList = AnalysisDAO.getAllAnalysisInfo(connection);
 
-        JDialog dialog = new JDialog();
-        dialog.setModal(true);
-        dialog.setSize(550, 500);
-        dialog.setResizable(false);
-        dialog.setAlwaysOnTop(true);
-        dialog.setLocationRelativeTo(null);
-        dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-        dialog.setTitle("Double click a row to get a project");
-        dialog.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
-        dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
+            JDialog dialog = new JDialog();
+            dialog.setModal(true);
+            dialog.setSize(800, 600);
+            dialog.setResizable(true);
+            dialog.setAlwaysOnTop(true);
+            dialog.setLocationRelativeTo(null);
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            dialog.setTitle("Double click a row to get a project");
+            dialog.getRootPane().setBackground(MNFrame.PRIMARY_COLOR);
+            dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP, 2 * MNFrame.BORDER_GAP));
 
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
-        mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
+            JPanel mainPanel = new JPanel(new GridBagLayout());
+            mainPanel.setBackground(MNFrame.PRIMARY_COLOR);
+            mainPanel.setBorder(BorderFactory.createLineBorder(MNFrame.TERTIARY_COLOR, 3, true));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.insets = new Insets(MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP, MNFrame.BORDER_GAP);
 
-        JTable table = new JTable(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "ID", "Project Name", "Save Date"
-                }
-        ) {
-            Class[] types = new Class[]{
-                Integer.class,
-                String.class,
-                String.class
-
-            };
-            boolean[] canEdit = new boolean[]{
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
-        table.setRowHeight(30);
-        table.setFillsViewportHeight(true);
-        table.setBackground(MNFrame.PRIMARY_COLOR);
-        table.setForeground(MNFrame.SECUNDARY_COLOR);
-        table.setBorder(BorderFactory.createEmptyBorder());
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent evt) {
-                if (evt.getClickCount() > 1) {
-                    Project project = projects.get(table.getSelectedRow());
-                    try {
-                        tabbedPane.addRemovableTab(project.getName() + "DB - " + project.getId(), null, new MNProjectPanel(projectDAO.select(project.getId())), null);
-                    } catch (SQLException ex) {
-                        System.out.println("Deu ruim 2");
+            JTable table = new JTable(new DefaultTableModel(
+                    new Object[][]{},
+                    new String[]{
+                        "ProjectID", "AnalysisID", "Name", "URL", "Organization", "Save Date", "Code Version", "Completed"
                     }
-                    dialog.dispose();
-                }
-            }
-        });
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.getDataVector().removeAllElements();
-        model.fireTableDataChanged();
-        for (int i = 0; i < projects.size(); i++) {
-            model.addRow(new Object[]{
-                projects.get(i).getId(),
-                projects.get(i).getName(),
-                dates.get(i).toString()
-            });
-        }
-        JScrollPane scroll = new JScrollPane(table);
-        mainPanel.add(scroll, gbc);
+            ) {
+                Class[] types = new Class[]{
+                    Integer.class,
+                    Integer.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    String.class,
+                    Boolean.class
 
-        dialog.add(mainPanel);
-        dialog.setVisible(true);
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false, false, false
+                };
+
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.getDataVector().removeAllElements();
+            model.fireTableDataChanged();
+            for (Object[] analysis : analysisList) {
+                model.addRow(analysis);
+            }
+            table.setRowHeight(30);
+            table.setFillsViewportHeight(true);
+            table.setBackground(MNFrame.PRIMARY_COLOR);
+            table.setForeground(MNFrame.SECUNDARY_COLOR);
+            table.setBorder(BorderFactory.createEmptyBorder());
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent evt) {
+                    if (evt.getClickCount() > 1) {
+                        try {
+                            tabbedPane.addRemovableTab((String) analysisList.get(table.getSelectedRow())[2],
+                                    null,
+                                    new MNProjectPanel(
+                                            ProjectDAO.getEntireProject(connection,
+                                                    (int) analysisList.get(table.getSelectedRow())[0],
+                                                    (int) analysisList.get(table.getSelectedRow())[1]),
+                                            null),
+                                    null);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        dialog.dispose();
+                    }
+                }
+            });
+
+            JScrollPane scroll = new JScrollPane(table);
+            mainPanel.add(scroll, gbc);
+
+            dialog.add(mainPanel);
+            dialog.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

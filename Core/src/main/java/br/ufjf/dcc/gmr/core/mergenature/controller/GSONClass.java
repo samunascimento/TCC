@@ -1,8 +1,8 @@
 package br.ufjf.dcc.gmr.core.mergenature.controller;
 
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import br.ufjf.dcc.gmr.core.vcs.test.EstruturasLuan;
@@ -79,10 +79,10 @@ public class GSONClass {
         
         for (Merge merge : project.getMerges()) {
             merge.setProject(project);
-            for (Conflict conflict : merge.getConflicts()) {
+            for (ConflictFile conflict : merge.getConflictFiles()) {
                 conflict.setMerge(merge);
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                    conflictRegion.setConflict(conflict);
+                for (Chunk chunk : conflict.getChunks()) {
+                    chunk.setConflictFile(conflict);
                 }
             }
         }

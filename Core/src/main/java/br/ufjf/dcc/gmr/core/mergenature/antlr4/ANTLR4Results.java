@@ -97,7 +97,7 @@ public class ANTLR4Results {
     }
 
     public String getStringAll() {
-        String result = "========================================";
+        String result = "";
         for (SyntaxStructure syntaxStructure : this.getAll()) {
             result = result + "\n" + syntaxStructure.getForm() + "\n========================================";
         }
@@ -105,7 +105,7 @@ public class ANTLR4Results {
     }
 
     public String getStringAllOutmosted() {
-        String result = "========================================";
+        String result = "";
         for (SyntaxStructure syntaxStructure : this.getAllOutmosted()) {
             result = result + "\n" + syntaxStructure.getForm() + "\n========================================";
         }

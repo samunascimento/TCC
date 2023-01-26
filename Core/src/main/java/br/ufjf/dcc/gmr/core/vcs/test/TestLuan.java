@@ -1,14 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
-import br.ufjf.dcc.gmr.core.mergenature.controller.GSONClass;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
-import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
-import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -17,7 +10,7 @@ import java.util.Set;
 public class TestLuan {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-
+/*
         String[] paths = new String[10];
         paths[0] = "/home/luan/Github/TCC/mntrs/freqtrade.mntr";
         paths[1] = "/home/luan/Github/TCC/mntrs/beets.mntr";
@@ -38,7 +31,7 @@ public class TestLuan {
             int numChunks = leitorProjeto.getNumberOfChunks();
 
             Map<DeveloperDecision, Integer> solucao = leitorProjeto.getSolucoes();
-            Map<ConflictType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
+            Map<ConflictFileType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
 
             Map<String, Integer> estruturas = leitorProjeto.getEstruturas();
             Map<String, Integer> dist = leitorProjeto.getChunkDistribution();
@@ -89,6 +82,6 @@ public class TestLuan {
             GSONClass.saveRep(paths[p].replace(".mntr", ".rep"), rep);
 
         }
-
+*/
     }
 }

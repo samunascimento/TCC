@@ -1,8 +1,8 @@
 package br.ufjf.dcc.gmr.core.mergenature.view;
 
-import br.ufjf.dcc.gmr.core.mergenature.model.Conflict;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictRegion;
-import br.ufjf.dcc.gmr.core.mergenature.model.ConflictType;
+import br.ufjf.dcc.gmr.core.mergenature.model.Chunk;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFileType;
 import br.ufjf.dcc.gmr.core.mergenature.model.DeveloperDecision;
 import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
 import br.ufjf.dcc.gmr.core.mergenature.model.MergeType;
@@ -36,7 +36,7 @@ import javax.swing.JTextField;
 public class MNProjectFilterFrame extends JDialog {
 
     private MNMergesTable panel;
-    private List<Merge> defaultList;
+    private List<Merge> initialList;
     private List<Merge> currentList;
 
     private JRadioButton ascendingOrder = new JRadioButton("Ascending Order", true);
@@ -44,8 +44,8 @@ public class MNProjectFilterFrame extends JDialog {
     private ButtonGroup orientationOfOrderBG;
 
     private JRadioButton defaultOrder = new JRadioButton("Default Order", true);
-    private JRadioButton numberOfConflictRegionOrder = new JRadioButton("Number of Conflict Regions Order");
-    private JRadioButton numberOfConflicsOrder = new JRadioButton("Number of Conflicts Order");
+    private JRadioButton numberOfConflictRegionOrder = new JRadioButton("Number of Chunks Order");
+    private JRadioButton numberOfConflicsOrder = new JRadioButton("Number of Conflict Files Order");
     private JRadioButton chronologicalOrder = new JRadioButton("Chronological Order");
     private ButtonGroup typeOfOrderBG;
 
@@ -55,7 +55,6 @@ public class MNProjectFilterFrame extends JDialog {
     private JCheckBox conflictedMergeOfUnrelatedHistories = new JCheckBox("Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox notConflictedMergeOfUnrelatedHistories = new JCheckBox("Not Conflicted Merge Of Unrelated Histories", true);
     private JCheckBox octopusMergeOfUnrelatedHistories = new JCheckBox("Octopus Merge Of Unrelated Histories", true);
-    private JCheckBox outOfMemory = new JCheckBox("Out of Memory", true);
     private JCheckBox unexpectedOccurrence = new JCheckBox("Unexpected Occurrence", true);
     private JButton selectAllMergeTypes = new JButton("Select All");
     private JButton unselectAllMergeTypes = new JButton("Unselect All");
@@ -96,7 +95,7 @@ public class MNProjectFilterFrame extends JDialog {
     private JTextField extensionInput = new JTextField("");
 
     public MNProjectFilterFrame(List<Merge> defaultList, List<Merge> currentList, MNMergesTable panel) {
-        this.defaultList = defaultList;
+        this.initialList = defaultList;
         this.currentList = currentList;
         this.panel = panel;
         set();
@@ -172,26 +171,26 @@ public class MNProjectFilterFrame extends JDialog {
             }
         });
 
-        JButton filterDefaultTable = new JButton("Filter Default Table");
-        filterDefaultTable.addActionListener((ActionEvent evt) -> {
+        JButton filterInitialTable = new JButton("Filter Initial Table");
+        filterInitialTable.addActionListener((ActionEvent evt) -> {
             switch (tabbedPane.getSelectedIndex()) {
                 case 0:
-                    filterByMerge(defaultList);
+                    filterByMerge(initialList);
                     break;
                 case 1:
-                    filterByConflict(defaultList);
+                    filterByConflict(initialList);
                     break;
                 case 2:
-                    filterByConflictRegion(defaultList);
+                    filterByConflictRegion(initialList);
                     break;
                 case 3:
-                    filterByHash(defaultList);
+                    filterByHash(initialList);
                     break;
                 case 4:
-                    filterByStructures(defaultList);
+                    filterByStructures(initialList);
                     break;
                 default:
-                    filterByExtension(defaultList);
+                    filterByExtension(initialList);
 
             }
         });
@@ -203,7 +202,6 @@ public class MNProjectFilterFrame extends JDialog {
             conflictedMergeOfUnrelatedHistories.setSelected(true);
             notConflictedMergeOfUnrelatedHistories.setSelected(true);
             octopusMergeOfUnrelatedHistories.setSelected(true);
-            outOfMemory.setSelected(true);
             unexpectedOccurrence.setSelected(true);
         });
         unselectAllMergeTypes.addActionListener((ActionEvent evt) -> {
@@ -213,7 +211,6 @@ public class MNProjectFilterFrame extends JDialog {
             conflictedMergeOfUnrelatedHistories.setSelected(false);
             notConflictedMergeOfUnrelatedHistories.setSelected(false);
             octopusMergeOfUnrelatedHistories.setSelected(false);
-            outOfMemory.setSelected(false);
             unexpectedOccurrence.setSelected(false);
         });
         selectAllConflicts.addActionListener((ActionEvent evt) -> {
@@ -268,11 +265,11 @@ public class MNProjectFilterFrame extends JDialog {
         });
 
         tabbedPane.addTab("Merge Type", null, mergeTypePanel, "Filter the merges by Merge Type");
-        tabbedPane.addTab("Conflict Type", null, conflictTypePanel, "Filter the conflicts by Conflict Type");
-        tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the conflict regions by Developer Decision");
+        tabbedPane.addTab("Conflict File Type", null, conflictTypePanel, "Filter the conflict files by Conflict File Type");
+        tabbedPane.addTab("Developer Decision", null, developerDecisionPanel, "Filter the chunks by Developer Decision");
         tabbedPane.addTab("Hash", null, hashPanel, "Filter the merges by their hashes");
-        tabbedPane.addTab("Structures", null, structuresPanel, "Filter the conflict regions by their structures");
-        tabbedPane.addTab("Extension", null, extensionPanel, "Filter the conflicts by the extension of their file");
+        tabbedPane.addTab("Language Constructs", null, structuresPanel, "Filter the chunks by their structures");
+        tabbedPane.addTab("Extension", null, extensionPanel, "Filter the conflict files by the extension of their file");
 
         orientationOfOrderBG = new ButtonGroup();
         orientationOfOrderBG.add(ascendingOrder);
@@ -315,8 +312,6 @@ public class MNProjectFilterFrame extends JDialog {
         mergeTypePanel.add(notConflictedMergeOfUnrelatedHistories, gbc);
         gbc.gridy++;
         mergeTypePanel.add(octopusMergeOfUnrelatedHistories, gbc);
-        gbc.gridy++;
-        mergeTypePanel.add(outOfMemory, gbc);
         gbc.gridy++;
         mergeTypePanel.add(unexpectedOccurrence, gbc);
         gbc.gridy++;
@@ -452,7 +447,7 @@ public class MNProjectFilterFrame extends JDialog {
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        mainPanel.add(filterDefaultTable, gbc);
+        mainPanel.add(filterInitialTable, gbc);
 
         this.add(mainPanel);
         this.setVisible(true);
@@ -481,9 +476,6 @@ public class MNProjectFilterFrame extends JDialog {
         if (octopusMergeOfUnrelatedHistories.isSelected()) {
             mergeTypeList.add(MergeType.OCTOPUS_MERGE_OF_UNRELATED_HISTORIES);
         }
-        if (outOfMemory.isSelected()) {
-            mergeTypeList.add(MergeType.OUT_OF_MEMORY);
-        }
         if (unexpectedOccurrence.isSelected()) {
             mergeTypeList.add(MergeType.UNEXPECTED_OCCURRENCE);
         }
@@ -501,49 +493,49 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByConflict(List<Merge> list) {
 
         Merge auxMerge;
-        List<ConflictType> conflictTypeList = new ArrayList<>();
+        List<ConflictFileType> conflictTypeList = new ArrayList<>();
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
 
         if (content.isSelected()) {
-            conflictTypeList.add(ConflictType.CONTENT);
+            conflictTypeList.add(ConflictFileType.CONTENT);
         }
         if (coincidenceAdding.isSelected()) {
-            conflictTypeList.add(ConflictType.COINCIDENCE_ADDING);
+            conflictTypeList.add(ConflictFileType.COINCIDENCE_ADDING);
         }
         if (fileRename.isSelected()) {
-            conflictTypeList.add(ConflictType.FILE_RENAME);
+            conflictTypeList.add(ConflictFileType.FILE_RENAME);
         }
         if (directoryRename.isSelected()) {
-            conflictTypeList.add(ConflictType.DIRECTORY_RENAME);
+            conflictTypeList.add(ConflictFileType.DIRECTORY_RENAME);
         }
         if (modifyDelete.isSelected()) {
-            conflictTypeList.add(ConflictType.MODIFY_DELETE);
+            conflictTypeList.add(ConflictFileType.MODIFY_DELETE);
         }
         if (renameDelete.isSelected()) {
-            conflictTypeList.add(ConflictType.RENAME_DELETE);
+            conflictTypeList.add(ConflictFileType.RENAME_DELETE);
         }
         if (p1RenamedP2Add.isSelected()) {
-            conflictTypeList.add(ConflictType.P1_RENAMED_P2_ADD);
+            conflictTypeList.add(ConflictFileType.P1_RENAMED_P2_ADD);
         }
         if (p2RenamedP1Add.isSelected()) {
-            conflictTypeList.add(ConflictType.P2_RENAMED_P1_ADD);
+            conflictTypeList.add(ConflictFileType.P2_RENAMED_P1_ADD);
         }
         if (fileLocation.isSelected()) {
-            conflictTypeList.add(ConflictType.FILE_LOCATION);
+            conflictTypeList.add(ConflictFileType.FILE_LOCATION);
         }
         if (submodule.isSelected()) {
-            conflictTypeList.add(ConflictType.SUBMODULE);
+            conflictTypeList.add(ConflictFileType.SUBMODULE);
         }
         if (contentWithUnilateralRenaming.isSelected()) {
-            conflictTypeList.add(ConflictType.CONTENT_WITH_UNILATERAL_RENAMNING);
+            conflictTypeList.add(ConflictFileType.CONTENT_WITH_UNILATERAL_RENAMNING);
         }
 
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                if (conflictTypeList.contains(conflict.getConflictType())) {
-                    auxMerge.addConflict(conflict);
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                if (conflictTypeList.contains(conflict.getConflictFileType())) {
+                    auxMerge.addConflictFile(conflict);
                 }
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
@@ -556,7 +548,7 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByConflictRegion(List<Merge> list) {
 
         Merge auxMerge;
-        Conflict auxConflict;
+        ConflictFile auxConflict;
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         List<DeveloperDecision> developerDecisionList = new ArrayList<>();
 
@@ -595,16 +587,16 @@ public class MNProjectFilterFrame extends JDialog {
 
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                auxConflict = new Conflict(conflict);
-                auxConflict.setConflictRegions(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
-                    if (developerDecisionList.contains(conflictRegion.getDeveloperDecision())) {
-                        auxConflict.addConflictRegion(conflictRegion);
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                auxConflict = new ConflictFile(conflict);
+                auxConflict.setChunks(new ArrayList<>());
+                for (Chunk chunk : conflict.getChunks()) {
+                    if (developerDecisionList.contains(chunk.getDeveloperDecision())) {
+                        auxConflict.addChunk(chunk);
                     }
                 }
-                auxMerge.addConflict(auxConflict);
+                auxMerge.addConflictFile(auxConflict);
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
         }
@@ -615,7 +607,7 @@ public class MNProjectFilterFrame extends JDialog {
     private void filterByHash(List<Merge> list) {
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         for (Merge merge : list) {
-            if (merge.getMerge().getCommitHash().startsWith(hashInput.getText())) {
+            if (merge.getMergeCommit().getHash().startsWith(hashInput.getText())) {
                 filteredList.add(new RelationMergeOrginalCR(merge, Integer.toString(merge.getNumberOfConflictRegions())));
             }
         }
@@ -627,20 +619,20 @@ public class MNProjectFilterFrame extends JDialog {
         boolean haveAll;
         Merge auxMerge;
         String auxString;
-        Conflict auxConflict;
+        ConflictFile auxConflict;
         List<RelationMergeOrginalCR> filteredList = new ArrayList<>();
         boolean needToHaveAll = this.needToHaveAll.isSelected();
         String[] structures = structuresInput.getText().toLowerCase().split(";");
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
-                auxConflict = new Conflict(conflict);
-                auxConflict.setConflictRegions(new ArrayList<>());
-                for (ConflictRegion conflictRegion : conflict.getConflictRegions()) {
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
+                auxConflict = new ConflictFile(conflict);
+                auxConflict.setChunks(new ArrayList<>());
+                for (Chunk chunk : conflict.getChunks()) {
                     if (onlyOutmost.isSelected()) {
                         haveAll = true;
-                        auxString = conflictRegion.getOutmostedStructures().toLowerCase();
+                        auxString = chunk.getLanguageConstructs().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){
@@ -648,16 +640,16 @@ public class MNProjectFilterFrame extends JDialog {
                                     break;
                                 }
                             } else if (auxString.contains(structure)) {
-                                auxConflict.addConflictRegion(conflictRegion);
+                                auxConflict.addChunk(chunk);
                                 break;
                             }
                         }
                         if(needToHaveAll && haveAll){
-                            auxConflict.addConflictRegion(conflictRegion);
+                            auxConflict.addChunk(chunk);
                         }
                     } else {
                         haveAll = true;
-                        auxString = conflictRegion.getStructures().toLowerCase();
+                        auxString = chunk.getLanguageConstructs().toLowerCase();
                         for (String structure : structures) {
                             if (needToHaveAll) {
                                 if(!auxString.contains(structure)){
@@ -665,16 +657,16 @@ public class MNProjectFilterFrame extends JDialog {
                                     break;
                                 }
                             } else if (auxString.contains(structure)) {
-                                auxConflict.addConflictRegion(conflictRegion);
+                                auxConflict.addChunk(chunk);
                                 break;
                             }
                         }
                         if(needToHaveAll && haveAll){
-                            auxConflict.addConflictRegion(conflictRegion);
+                            auxConflict.addChunk(chunk);
                         }
                     }
                 }
-                auxMerge.addConflict(auxConflict);
+                auxMerge.addConflictFile(auxConflict);
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
         }
@@ -688,10 +680,10 @@ public class MNProjectFilterFrame extends JDialog {
         List<String> extensions = Arrays.asList(extensionInput.getText().toLowerCase().split(";"));
         for (Merge merge : list) {
             auxMerge = new Merge(merge);
-            auxMerge.setConflicts(new ArrayList<>());
-            for (Conflict conflict : merge.getConflicts()) {
+            auxMerge.setConflictFiles(new ArrayList<>());
+            for (ConflictFile conflict : merge.getConflictFiles()) {
                 if (extensions.contains(getExtension(conflict.getParent1FileName()))) {
-                    auxMerge.addConflict(conflict);
+                    auxMerge.addConflictFile(conflict);
                 }
             }
             filteredList.add(new RelationMergeOrginalCR(auxMerge, Integer.toString(merge.getNumberOfConflictRegions())));
@@ -739,7 +731,7 @@ public class MNProjectFilterFrame extends JDialog {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).merge.getConflicts().size() >= auxList.get(j).merge.getConflicts().size()) {
+                        if (filteredList.get(i).merge.getConflictFiles().size() >= auxList.get(j).merge.getConflictFiles().size()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
@@ -755,7 +747,7 @@ public class MNProjectFilterFrame extends JDialog {
                 for (int i = 1; i < filteredList.size(); i++) {
                     check = false;
                     for (int j = 0; j < auxList.size(); j++) {
-                        if (filteredList.get(i).merge.getMerge().getCommitterDate().getTime() >= auxList.get(j).merge.getMerge().getCommitterDate().getTime()) {
+                        if (filteredList.get(i).merge.getMergeCommit().getCommitterDate().getTime() >= auxList.get(j).merge.getMergeCommit().getCommitterDate().getTime()) {
                             auxList.add(j, filteredList.get(i));
                             check = true;
                             j = auxList.size();
