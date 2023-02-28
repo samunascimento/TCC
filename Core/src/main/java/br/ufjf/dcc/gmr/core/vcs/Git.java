@@ -97,7 +97,7 @@ public class Git {
      */
     public static List<String> merge(String otherCommit, String repositoryPath) throws IOException, NotGitRepositoryException, MergeException {
         if (isGitRepository(repositoryPath)) {
-            String command = "git merge --allow-unrelated-histories --no-edit -s recursive" + otherCommit;
+            String command = "git merge --allow-unrelated-histories --no-edit -s recursive " + otherCommit;
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
                 throw new MergeException(ListUtils.getTextListStringToString(execution.getError()));
