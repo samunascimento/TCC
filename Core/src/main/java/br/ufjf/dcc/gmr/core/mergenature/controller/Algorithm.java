@@ -667,7 +667,7 @@ public class Algorithm {
         return 0;
     }
 
-    private Merge getMergeData(String repositoryPath, Project project, String logLine, int analysisID) throws SQLException, IOException, GitException {
+    public Merge getMergeData(String repositoryPath, Project project, String logLine, int analysisID) throws SQLException, IOException, GitException {
         Merge merge = null;
         if (sqlConnection != null) {
             merge = getMergeDataInDatabase(project.getId(), logLine.split("/")[0]);

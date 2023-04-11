@@ -1,7 +1,15 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
+import br.ufjf.dcc.gmr.core.exception.GitException;
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
+import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
+import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
+import br.ufjf.dcc.gmr.core.mergenature.model.Merge;
+import br.ufjf.dcc.gmr.core.vcs.Git;
+import static br.ufjf.dcc.gmr.core.vcs.Git.merge;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -9,79 +17,75 @@ import java.io.IOException;
  */
 public class TestLuan {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-/*
-        String[] paths = new String[10];
-        paths[0] = "/home/luan/Github/TCC/mntrs/freqtrade.mntr";
-        paths[1] = "/home/luan/Github/TCC/mntrs/beets.mntr";
-        paths[2] = "/home/luan/Github/TCC/mntrs/django.mntr";
-        paths[3] = "/home/luan/Github/TCC/mntrs/keras.mntr";
-        paths[4] = "/home/luan/Github/TCC/mntrs/lutris.mntr";
-        paths[5] = "/home/luan/Github/TCC/mntrs/numpy.mntr";
-        paths[6] = "/home/luan/Github/TCC/mntrs/portia.mntr";
-        paths[7] = "/home/luan/Github/TCC/mntrs/pandas.mntr";
-        paths[8] = "/home/luan/Github/TCC/mntrs/onionshare.mntr";
-        paths[9] = "/home/luan/Github/TCC/mntrs/reviewboard.mntr";
-
-        for (int p = 0; p < 10; p++) {
-            Project leitorProjeto = GSONClass.readProject(paths[p]);
-            int numMerges = leitorProjeto.getNumberOfMerges();
-            int numConf = leitorProjeto.getNumberOfConflicts();
-            int mergeConflit = leitorProjeto.getNumberOfConflictedMerges();
-            int numChunks = leitorProjeto.getNumberOfChunks();
-
-            Map<DeveloperDecision, Integer> solucao = leitorProjeto.getSolucoes();
-            Map<ConflictFileType, Integer> tipoDeConflito = leitorProjeto.getConflictType();
-
-            Map<String, Integer> estruturas = leitorProjeto.getEstruturas();
-            Map<String, Integer> dist = leitorProjeto.getChunkDistribution();
-
-            Map<String, ArrayList<Integer>> Lines = leitorProjeto.lineNumberPerVersion();
-
-            //imprime
-            System.out.println(paths[p].replace("/home/luan/Github/TCC/mntrs/", ""));
-            System.out.println("Merges Totais: " + numMerges);
-            System.out.println("Numero de Merges com conflito: " + mergeConflit);
-            System.out.println("Numero de Conflitos: " + numConf);
-            System.out.println("Numero de chunks: " + numChunks);
-            System.out.println("Media de chunks por total de merges: " + ((float) mergeConflit / (float) numMerges));
-
-            System.out.println("--------------- Numero de cada tipo de solução ------------");
-
-            Set teste = solucao.entrySet();
-            System.out.println(teste);
-
-            System.out.println("--------------- Numero de cada tipo de conflito ------------");
-
-            Set teste2 = tipoDeConflito.entrySet();
-            System.out.println(teste2);
-
-            System.out.println("--------------- Numero da frequência de cada estrutura ------------");
-
-            Set teste3 = estruturas.entrySet();
-            System.out.println(teste3);
-
-            Set teste4 = dist.entrySet();
-            System.out.println(teste4);
-
-            Set teste5 = Lines.entrySet();
-            System.out.println(teste5);
-
-            EstruturasLuan rep = new EstruturasLuan();
-
-            rep.setNumMerges(numMerges);
-            rep.setMergeConflit(mergeConflit);
-            rep.setNumConf(numConf);
-            rep.setNumChunks(numChunks);
-            rep.setSolucao(solucao);
-            rep.setTipoDeConflito(tipoDeConflito);
-            rep.setEstruturas(estruturas);
-            rep.setChunkDistribution(dist);
-            rep.setLinesNumbers(Lines);
-
-            GSONClass.saveRep(paths[p].replace(".mntr", ".rep"), rep);
-
+    public static Merge getMergeDataInSystem(String repositoryPath, String logLine) throws IOException, GitException {
+        Merge merge = new Merge();
+        String[] auxStringArray;
+        String auxString;
+        auxStringArray = logLine.split("/");
+        merge.setMergeCommit(new Commit(auxStringArray[0], repositoryPath));
+        auxStringArray = auxStringArray[1].split(" ");
+        for (String parent : auxStringArray) {
+            merge.addParent(new Commit(parent, repositoryPath));
         }
-*/
+        auxString = Git.mergeBase(repositoryPath, auxStringArray);
+        merge.setMergeBase((auxString == null ? null : new Commit(auxString, repositoryPath)));
+        return merge;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException, IOException, GitException {
+
+        String repositoryPath = "C:\\Users\\luanr\\OneDrive\\Codigos\\Scripts\\Conflitos_Merge";
+        String logLine = "e6807dfe022ec6252dbd047deb65b9d65bf82992/3b460bbd3822b02ca8091f58274543723e0c732e 37d77b6c7270d26abfcdf0119c4abce49db8f5e7";
+        Merge merge = getMergeDataInSystem(repositoryPath, logLine);
+
+        if (null != merge.getConflictFiles() && !merge.getConflictFiles().isEmpty()) {
+
+            for (ConflictFile paths : merge.getConflictFiles()) {
+
+                if (null != paths.getAncestorFilePath()) {
+                    System.out.println("Ancestral: ");
+                    System.out.println(paths.getAncestorFilePath());
+                    System.out.println("\n");
+                } else {
+                    System.out.println("Não tem ancestral");
+                    System.out.println("\n");
+                }
+
+                if (null != paths.getParent1FilePath()) {
+                    System.out.println("File path pai 1: ");
+                    System.out.println(paths.getParent1FilePath());
+                    System.out.println("\n");
+                } else {
+                    System.out.println("Não tem pai 1 ?");
+                    System.out.println("\n");
+                }
+                if (null != paths.getParent2FilePath()) {
+                    System.out.println("File path pai 2: ");
+                    System.out.println(paths.getParent2FilePath());
+                    System.out.println("\n");
+
+                } else {
+                    System.out.println("Não tem pai 2 ???");
+                    System.out.println("\n");
+                }
+            }
+
+        } else {
+            System.out.println("Não tem conflict file");
+        }
+
+        System.out.println("\n");
+        if (merge.getParents().size() == 2) {
+
+            MergeNatureTools.prepareAnalysis(repositoryPath);
+
+            Git.checkout(merge.getParents().get(0).getHash(), repositoryPath);
+            MergeNatureTools.prepareAnalysis(repositoryPath);
+
+            List<String> mergeMessage = Git.merge(merge.getParents().get(1).getHash(), repositoryPath);
+            for (String string : mergeMessage) {
+                System.out.println(string);
+            }
+        }
     }
 }
