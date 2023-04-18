@@ -1,6 +1,7 @@
 package br.ufjf.dcc.gmr.core.vcs.test;
 
 import br.ufjf.dcc.gmr.core.exception.GitException;
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeMessageReader;
 import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import br.ufjf.dcc.gmr.core.mergenature.model.Commit;
 import br.ufjf.dcc.gmr.core.mergenature.model.ConflictFile;
@@ -10,6 +11,7 @@ import static br.ufjf.dcc.gmr.core.vcs.Git.merge;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import static jdk.internal.joptsimple.internal.Messages.message;
 
 /**
  *
@@ -35,33 +37,42 @@ public class TestLuan {
     public static void main(String[] args) throws FileNotFoundException, IOException, GitException {
 
         String repositoryPath = "C:\\Users\\luanr\\OneDrive\\Codigos\\Scripts\\Conflitos_Merge";
-        String logLine = "e6807dfe022ec6252dbd047deb65b9d65bf82992/3b460bbd3822b02ca8091f58274543723e0c732e 37d77b6c7270d26abfcdf0119c4abce49db8f5e7";
+        String logLine = "4841432c16af1965b308d2a78416a90cde960684/46c14a8e9c8effba3de2fb71d798db2e5d99691f ab7b41d3a71ced97bf3f4a2a4dc4f182534c95b8";
         Merge merge = getMergeDataInSystem(repositoryPath, logLine);
 
-        if (null != merge.getConflictFiles() && !merge.getConflictFiles().isEmpty()) {
+        MergeNatureTools.prepareAnalysis(repositoryPath);
+        Git.checkout(merge.getParents().get(0).getHash(), repositoryPath);
+        MergeNatureTools.prepareAnalysis(repositoryPath);
 
-            for (ConflictFile paths : merge.getConflictFiles()) {
+        if (merge.getConflictFiles() != null) {
 
-                if (null != paths.getAncestorFilePath()) {
+            String message = "CONFLICT (rename/rename): Rename directory Dir_novo->Dir_novo_branch in HEAD. Rename directory Dir_novo->Dir_novo_master in ab7b41d3a71ced97bf3f4a2a4dc4f182534c95b8";
+            ConflictFile conflictFile = MergeMessageReader.getConflictFileFromMessage(message);
+
+            if (conflictFile != null) {
+                if (null != conflictFile.getAncestorFilePath()) {
                     System.out.println("Ancestral: ");
-                    System.out.println(paths.getAncestorFilePath());
+                    System.out.println(conflictFile.getAncestorFilePath());
                     System.out.println("\n");
                 } else {
                     System.out.println("Não tem ancestral");
                     System.out.println("\n");
                 }
-
-                if (null != paths.getParent1FilePath()) {
+            }
+            if (conflictFile != null) {
+                if (null != conflictFile.getParent1FilePath()) {
                     System.out.println("File path pai 1: ");
-                    System.out.println(paths.getParent1FilePath());
+                    System.out.println(conflictFile.getParent1FilePath());
                     System.out.println("\n");
                 } else {
                     System.out.println("Não tem pai 1 ?");
                     System.out.println("\n");
                 }
-                if (null != paths.getParent2FilePath()) {
+            }
+            if (conflictFile != null) {
+                if (null != conflictFile.getParent2FilePath()) {
                     System.out.println("File path pai 2: ");
-                    System.out.println(paths.getParent2FilePath());
+                    System.out.println(conflictFile.getParent2FilePath());
                     System.out.println("\n");
 
                 } else {
@@ -69,12 +80,21 @@ public class TestLuan {
                     System.out.println("\n");
                 }
             }
+            if (conflictFile != null) {
+                if (null != conflictFile.getConflictFilePath()) {
+                    System.out.println("File path: ");
+                    System.out.println(conflictFile.getConflictFilePath());
+                    System.out.println("\n");
+
+                } else {
+                    System.out.println("Não tem file path");
+                    System.out.println("\n");
+                }
+            }
 
         } else {
             System.out.println("Não tem conflict file");
         }
-
-        System.out.println("\n");
         if (merge.getParents().size() == 2) {
 
             MergeNatureTools.prepareAnalysis(repositoryPath);
