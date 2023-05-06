@@ -31,7 +31,7 @@ public class MNFrame extends JFrame {
 
     public static final Rectangle MAX_BOUNDS = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     public static final int BORDER_GAP = 3;
-    public static final Color PRIMARY_COLOR = Color.WHITE;
+    public static final Color PRIMARY_COLOR = Color.decode("#e5e8e8");
     public static final Color SECUNDARY_COLOR = Color.BLACK;
     public static final Color TERTIARY_COLOR = Color.BLACK;
     public static final Color OPTION_COLOR = Color.BLUE;

@@ -10,6 +10,7 @@ import br.ufjf.dcc.gmr.core.mergenature.model.*;
 import br.ufjf.dcc.gmr.core.mergenature.dao.*;
 import br.ufjf.dcc.gmr.core.utils.ListUtils;
 import br.ufjf.dcc.gmr.core.vcs.Git;
+import br.ufjf.dcc.gmr.core.vcs.types.FileDiff;
 import br.ufjf.dcc.gmr.core.vcs.types.LanguageConstructs;
 import br.ufjf.dcc.gmr.core.vcs.types.LineInformation;
 import br.ufjf.dcc.gmr.core.vcs.types.LineType;
@@ -186,6 +187,26 @@ public class Algorithm {
                 }
             }
         }
+        List<FileDiff> fileDiffs = Git.diff(repositoryPath, "", merge.getMergeCommit().getHash(), false, 0);
+        FileOA fileOA;
+        boolean hasConflict = false;
+        for (FileDiff fileDiff : fileDiffs) {
+            hasConflict = false;
+            for (ConflictFile conflictFile1 : merge.getConflictFiles()) {
+                if (conflictFile1.getConflictFilePath().equals(fileDiff.getFilePathTarget().replaceFirst("/", "")) && !conflictFile1.getChunks().isEmpty()) {
+                    hasConflict = true;
+                    break;
+                }
+            }
+            if (!hasConflict) {
+                fileOA = new FileOA();
+                fileOA.setFilePath(fileDiff.getFilePathTarget().replaceFirst("/", ""));
+                for (LineInformation line : fileDiff.getLines()) {
+                    fileOA.addAlteration(new Alteration(line.getContent(), line.getType() == LineType.ADDED, false));
+                }
+                merge.addFileOA(fileOA);
+            }
+        }
         if (sqlConnection != null) {
             Merge_AnalysisDAO.update(sqlConnection, merge.getId(), analysisID, merge.hasOutOfMemory(), true);
         }
@@ -224,6 +245,9 @@ public class Algorithm {
                 }
                 if (contextIntervals != null && !conflictFile.getChunks().isEmpty()) {
                     conflictFile = outsideAlterationsLayer(conflictFile, repositoryPath, contextIntervals);
+                } else if (contextIntervals == null) {
+                    conflictFile.getMerge().addFileOA(new FileOA(conflictFile.getConflictFilePath(), null, conflictFile));
+                    conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
                 } else {
                     conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
                 }
@@ -347,7 +371,7 @@ public class Algorithm {
                 chunk.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
                 chunk.setDeveloperDecision(DeveloperDecision.IMPRECISE);
             } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
-                contextIntervals = null;
+                contextIntervals.add(new IntegerInterval(chunk.getBeginLine() - 1, chunk.getEndLine() - 1));
                 chunk.setSolutionText(chunk.getChunkText());
                 chunk.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
             } else {
@@ -479,7 +503,7 @@ public class Algorithm {
                     conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent1FilePath(),
                     conflictFile.getConflictFilePath(), true, 0).get(0).getLines();
         }
-        List<LineInformation> outsideAlterations = new ArrayList<>();
+        List<LineInformation> outsideAlterationsLines = new ArrayList<>();
         boolean isOutsideAlteration = true;
         for (LineInformation line : allLines) {
             isOutsideAlteration = true;
@@ -490,16 +514,26 @@ public class Algorithm {
                 }
             }
             if (isOutsideAlteration) {
-                outsideAlterations.add(line);
+                outsideAlterationsLines.add(line);
             }
         }
-        if (outsideAlterations.isEmpty()) {
+        if (outsideAlterationsLines.isEmpty()) {
             conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO);
             return conflictFile;
         } else {
+            FileOA fileOA = new FileOA();
+            fileOA.setFilePath(conflictFile.getConflictFilePath());
+            fileOA.setConflictFile(conflictFile);
+            for (LineInformation line : outsideAlterationsLines) {
+                fileOA.addAlteration(new Alteration(line.getContent(),
+                        line.getType() == LineType.ADDED,
+                        conflictFile.wasInsideChunk(line.getContent())));
+            }
+            conflictFile.getMerge().addFileOA(fileOA);
+
             List<String> addeds = new ArrayList<>();
             List<String> removeds = new ArrayList<>();
-            for (LineInformation line : outsideAlterations) {
+            for (LineInformation line : outsideAlterationsLines) {
                 if (!line.getContent().replaceAll(" ", "").replaceAll("\t", "").equals("")) {
                     if (line.getType() == LineType.ADDED) {
                         addeds.add(line.getContent().replaceAll(" ", "").replaceAll("\t", ""));

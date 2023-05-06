@@ -120,7 +120,7 @@ public class MNAlterationsFrame {
         label.setBackground(Color.DARK_GRAY);
         if (line.getType() == LineType.ADDED) {
             label.setForeground(Color.RED);
-            label.setText(line.getContent());
+            label.setText(line.getContent() + "               " + line.getLineNumber());
         } else {
             label.setForeground(Color.GREEN);
             label.setText(line.getContent());

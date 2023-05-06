@@ -10,7 +10,7 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 10-10-2020
  */
-public class Merge implements Cloneable {
+public class Merge {
 
     private int id;
     private transient Project project;
@@ -19,6 +19,7 @@ public class Merge implements Cloneable {
     private Commit mergeBase;
     private List<ConflictFile> conflictFiles;
     private MergeType mergeType;
+    private List<FileOA> fileOAs;
 
     /**
      * Normal constructor
@@ -75,6 +76,7 @@ public class Merge implements Cloneable {
     public Merge() {
         this.parents = new ArrayList<>();
         this.conflictFiles = new ArrayList<>();
+        this.fileOAs = new ArrayList<>();
     }
 
     public int getNumberOfConflictRegions() {
@@ -155,6 +157,19 @@ public class Merge implements Cloneable {
         this.mergeType = mergeType;
     }
 
+    public List<FileOA> getFileOAs() {
+        return fileOAs;
+    }
+
+    public void setFileOAs(List<FileOA> fileOAs) {
+        this.fileOAs = fileOAs;
+    }
+
+    public void addFileOA(FileOA fileOA) {
+
+        this.fileOAs.add(fileOA);
+    }
+
     public boolean hasOutOfMemory() {
         for (ConflictFile conflictFile : conflictFiles) {
             if (conflictFile.isOutOfMemory()) {
@@ -162,6 +177,22 @@ public class Merge implements Cloneable {
             }
         }
         return false;
+    }
+
+    public String getOAString() {
+        String result = "";
+        for (FileOA fileOA : this.fileOAs) {
+            result += fileOA.getFilePath() + "\n";
+            if (fileOA.getAlterations() == null) {
+                result += "Impossible to get the outside alterations, some context was altered!\n\n";
+            } else {
+                for (Alteration alteration : fileOA.getAlterations()) {
+                    result += (alteration.isAddition() ? "+  " : "-  ") + alteration.getContent() + "\n";
+                }
+                result += "\n\n";
+            }
+        }
+        return result;
     }
 
 }

@@ -9,12 +9,12 @@ public class LineInformation {
 
     private String content;
     private LineType type;
-    private int LineNumber;
+    private int lineNumber;
 
     public LineInformation(String content, LineType type, int LineNumber) {
         this.content = content;
         this.type = type;
-        this.LineNumber=LineNumber;
+        this.lineNumber=LineNumber;
     }
 
     public String getContent() {
@@ -34,11 +34,11 @@ public class LineInformation {
     }
 
     public int getLineNumber() {
-        return LineNumber;
+        return lineNumber;
     }
 
     public void setLineNumber(int LineNumber) {
-        this.LineNumber = LineNumber;
+        this.lineNumber = LineNumber;
     }
     
 
