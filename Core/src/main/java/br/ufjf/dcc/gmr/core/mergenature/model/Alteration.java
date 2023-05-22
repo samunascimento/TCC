@@ -8,6 +8,7 @@ package br.ufjf.dcc.gmr.core.mergenature.model;
  */
 public class Alteration {
 
+    private int id;
     private String content;
     private boolean isAddition;
     private boolean wasInsideChunk;
@@ -16,10 +17,25 @@ public class Alteration {
 
     }
 
+    public Alteration(int id, String content, boolean isAddition, boolean wasInsideChunk) {
+        this.id = id;
+        this.content = content;
+        this.isAddition = isAddition;
+        this.wasInsideChunk = wasInsideChunk;
+    }
+
     public Alteration(String content, boolean isAddition, boolean wasInsideChunk) {
         this.content = content;
         this.isAddition = isAddition;
         this.wasInsideChunk = wasInsideChunk;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -46,5 +62,4 @@ public class Alteration {
         this.wasInsideChunk = wasInsideChunk;
     }
 
-    
 }

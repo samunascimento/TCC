@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +16,9 @@ import java.sql.SQLException;
  */
 public class ChunkDAO {
 
+    public static final String TABLE = "chunk";
     public static final String ID = "id";
+    public static final String CONFLICT_FILE_ID = "conflictFileId";
     public static final String CHUNK_TEXT = "chunkText";
     public static final String FIRST_PREFIX_LINE = "firstPrefixLine";
     public static final String BEGIN_LINE = "beginLine";
@@ -27,12 +31,13 @@ public class ChunkDAO {
     public static final String ORIGINAL_V2_FIRST_LINE = "originalV2FirstLine";
     public static final String DEVELOPER_DECISION = "developerDecision";
 
-    public static int insert(Connection connection, Chunk chunk) throws SQLException, IOException {
+    public static int insert(Connection connection, Chunk chunk, int conflictFileId) throws SQLException, IOException {
         int chunkID = 0;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO chunk ("
+            String sql = "INSERT INTO " + TABLE + " ("
+                    + CONFLICT_FILE_ID + ", "
                     + CHUNK_TEXT + ", "
                     + FIRST_PREFIX_LINE + ", "
                     + BEGIN_LINE + ", "
@@ -43,22 +48,23 @@ public class ChunkDAO {
                     + LANGUAGE_CONSTRUCTS + ", "
                     + ORIGINAL_V1_FIRST_LINE + ", "
                     + ORIGINAL_V2_FIRST_LINE + ", "
-                    + DEVELOPER_DECISION + ") VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
+                    + DEVELOPER_DECISION + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
-                stmt.setString(1, chunk.getChunkText());
-                stmt.setInt(2, chunk.getFirstPrefixLine());
-                stmt.setInt(3, chunk.getBeginLine());
-                stmt.setInt(4, chunk.getSeparatorLine());
-                stmt.setInt(5, chunk.getEndLine());
-                stmt.setInt(6, chunk.getLastSuffixLine());
-                stmt.setString(7, chunk.getSolutionText());
-                stmt.setString(8, chunk.getLanguageConstructs());
-                stmt.setInt(9, chunk.getOriginalV1FinalLine());
-                stmt.setInt(10, chunk.getOriginalV2FinalLine());
-                stmt.setInt(11, DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision()));
+                stmt.setInt(1, conflictFileId);
+                stmt.setString(2, chunk.getChunkText());
+                stmt.setInt(3, chunk.getFirstPrefixLine());
+                stmt.setInt(4, chunk.getBeginLine());
+                stmt.setInt(5, chunk.getSeparatorLine());
+                stmt.setInt(6, chunk.getEndLine());
+                stmt.setInt(7, chunk.getLastSuffixLine());
+                stmt.setString(8, chunk.getSolutionText());
+                stmt.setString(9, chunk.getLanguageConstructs());
+                stmt.setInt(10, chunk.getOriginalV1FinalLine());
+                stmt.setInt(11, chunk.getOriginalV2FinalLine());
+                stmt.setInt(12, DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision()));
                 ResultSet result = stmt.executeQuery();
                 result.next();
                 chunkID = result.getInt(1);
@@ -73,12 +79,12 @@ public class ChunkDAO {
         return chunkID;
     }
 
-    public static Chunk select(Connection connection, int id) throws SQLException, IOException {
+    public static Chunk selectById(Connection connection, int id) throws SQLException, IOException {
         Chunk chunk = null;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM chunk WHERE id = " + id;
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + ID + " = " + id;
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
@@ -109,27 +115,30 @@ public class ChunkDAO {
         return chunk;
     }
 
-    public static int containsWithoutStructures(Connection connection, Chunk chunk) throws IOException, SQLException {
-        int chunkID = 0;
+    public static List<Chunk> selectByConflictFile(Connection connection, int conflictFileId) throws SQLException, IOException {
+        List<Chunk> chunks = new ArrayList<>();
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT " + ID + " FROM chunk WHERE " + CHUNK_TEXT + "=\'" + chunk.getChunkText().replaceAll("'", "''")
-                    + "\' AND " + FIRST_PREFIX_LINE + "=\'" + chunk.getFirstPrefixLine()
-                    + "\' AND " + BEGIN_LINE + "=\'" + chunk.getBeginLine()
-                    + "\' AND " + SEPARATOR_LINE + "=\'" + chunk.getSeparatorLine()
-                    + "\' AND " + END_LINE + "=\'" + chunk.getEndLine()
-                    + "\' AND " + LAST_SUFFIX_LINE + "=\'" + chunk.getLastSuffixLine()
-                    + "\' AND " + SOLUTION_TEXT + "=\'" + chunk.getSolutionText().replaceAll("'", "''")
-                    + "\' AND " + DEVELOPER_DECISION + "=\'" + DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision())
-                    + "\' AND " + ORIGINAL_V1_FIRST_LINE + "=\'" + chunk.getOriginalV1FirstLine()
-                    + "\' AND " + ORIGINAL_V2_FIRST_LINE + "=\'" + chunk.getOriginalV2FirstLine() + "\';";
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + CONFLICT_FILE_ID + " = " + conflictFileId;
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    chunkID = resultSet.getInt(ID);
+                    chunks.add(new Chunk(resultSet.getInt(ID),
+                            null,
+                            resultSet.getString(CHUNK_TEXT),
+                            resultSet.getInt(FIRST_PREFIX_LINE),
+                            resultSet.getInt(BEGIN_LINE),
+                            resultSet.getInt(SEPARATOR_LINE),
+                            resultSet.getInt(END_LINE),
+                            resultSet.getInt(LAST_SUFFIX_LINE),
+                            resultSet.getString(SOLUTION_TEXT),
+                            DeveloperDecision.getEnumFromInt(resultSet.getInt(DEVELOPER_DECISION)),
+                            resultSet.getString(LANGUAGE_CONSTRUCTS),
+                            resultSet.getInt(ORIGINAL_V1_FIRST_LINE),
+                            resultSet.getInt(ORIGINAL_V2_FIRST_LINE)));
                 }
             } catch (SQLException ex) {
                 throw ex;
@@ -139,63 +148,7 @@ public class ChunkDAO {
                 }
             }
         }
-        return chunkID;
-    }
-
-    public static int contains(Connection connection, Chunk chunk) throws IOException, SQLException {
-        int chunkID = 0;
-        if (connection == null) {
-            throw new IOException("[FATAL]: connection is null!");
-        } else {
-            if (chunk.getLanguageConstructs() == null) {
-                System.out.println("");
-            }
-            String sql = "SELECT " + ID + " FROM chunk WHERE " + CHUNK_TEXT + "=\'" + chunk.getChunkText().replaceAll("'", "''")
-                    + "\' AND " + FIRST_PREFIX_LINE + "=\'" + chunk.getFirstPrefixLine()
-                    + "\' AND " + BEGIN_LINE + "=\'" + chunk.getBeginLine()
-                    + "\' AND " + SEPARATOR_LINE + "=\'" + chunk.getSeparatorLine()
-                    + "\' AND " + END_LINE + "=\'" + chunk.getEndLine()
-                    + "\' AND " + LAST_SUFFIX_LINE + "=\'" + chunk.getLastSuffixLine()
-                    + "\' AND " + SOLUTION_TEXT + "=\'" + chunk.getSolutionText().replaceAll("'", "''")
-                    + "\' AND " + DEVELOPER_DECISION + "=\'" + DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision())
-                    + "\' AND " + LANGUAGE_CONSTRUCTS + "=\'" + chunk.getLanguageConstructs().replaceAll("'", "''")
-                    + "\' AND " + ORIGINAL_V1_FIRST_LINE + "=\'" + chunk.getOriginalV1FirstLine()
-                    + "\' AND " + ORIGINAL_V2_FIRST_LINE + "=\'" + chunk.getOriginalV2FirstLine() + "\';";
-            PreparedStatement stmt = null;
-            try {
-                stmt = connection.prepareStatement(sql);
-                ResultSet resultSet = stmt.executeQuery();
-                while (resultSet.next()) {
-                    chunkID = resultSet.getInt(ID);
-                }
-            } catch (SQLException ex) {
-                throw ex;
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-        }
-        return chunkID;
-    }
-
-    public static void updateStructures(Connection connection, int id, String languageConstructs) throws IOException, SQLException {
-        if (connection == null) {
-            throw new IOException("[FATAL]: connection is null!");
-        } else {
-            String sql = "UPDATE chunk SET " + LANGUAGE_CONSTRUCTS + "=\'" + languageConstructs.replaceAll("'", "''") + "\' " + "WHERE " + ID + "=\'" + id + "\';";
-            PreparedStatement stmt = null;
-            try {
-                stmt = connection.prepareStatement(sql);
-                stmt.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-        }
+        return chunks;
     }
 
 }

@@ -16,29 +16,33 @@ import java.util.List;
  */
 public class AnalysisDAO {
 
+    public static final String TABLE = "analysis";
     public static final String ID = "id";
-    public static final String SAVE_DATE = "saveDate";
+    public static final String PROJECT_ID = "projectId";
+    public static final String START_TIME = "startTime";
     public static final String CODEVERSION = "codeVersion";
     public static final String COMPLETED = "completed";
 
-    public static int insert(Connection connection, String codeVersion, boolean completed) throws SQLException, IOException {
-        int analysisID = 0;
+    public static int insert(Connection connection, int projectId, String codeVersion, boolean completed) throws SQLException, IOException {
+        int analysisId = -1;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO analysis ("
-                    + SAVE_DATE + ", "
+            String sql = "INSERT INTO " + TABLE + " ("
+                    + PROJECT_ID + ", "
+                    + START_TIME + ", "
                     + CODEVERSION + ", "
-                    + COMPLETED + ") VALUES (?,?,?) RETURNING " + ID + ";";
+                    + COMPLETED + ") VALUES (?,?,?,?) RETURNING " + ID + ";";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
-                stmt.setTimestamp(1, new Timestamp(new Date().getTime()));
-                stmt.setString(2, codeVersion);
-                stmt.setBoolean(3, completed);
+                stmt.setInt(1, projectId);
+                stmt.setTimestamp(2, new Timestamp(new Date().getTime()));
+                stmt.setString(3, codeVersion);
+                stmt.setBoolean(4, completed);
                 ResultSet result = stmt.executeQuery();
                 result.next();
-                analysisID = result.getInt(1);
+                analysisId = result.getInt(1);
             } catch (SQLException ex) {
                 throw ex;
             } finally {
@@ -47,7 +51,45 @@ public class AnalysisDAO {
                 }
             }
         }
-        return analysisID;
+        return analysisId;
+    }
+
+    public static void updateCompleted(Connection connection, int id, boolean completed) throws IOException, SQLException {
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "UPDATE " + TABLE + " SET " + COMPLETED + "= \'" + completed + "\'" + "WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+    }
+
+    public static void delete(Connection connection, int id) throws SQLException, IOException {
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "DELETE FROM " + TABLE + " SET WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
     }
 
     public static boolean selectCompleted(Connection connection, int id) throws IOException, SQLException {
@@ -55,7 +97,7 @@ public class AnalysisDAO {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM analysis WHERE " + ID + "= \'" + id + "\';";
+            String sql = "SELECT " + COMPLETED + " FROM " + TABLE + " WHERE " + ID + "= \'" + id + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
@@ -74,18 +116,43 @@ public class AnalysisDAO {
         return completed;
     }
 
+    public static List<Integer> selectByProjectId(Connection connection, int projectId) throws IOException, SQLException {
+        List<Integer> analysisIds = new ArrayList<>();
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + PROJECT_ID + "= \'" + projectId + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    analysisIds.add(resultSet.getInt(ID));
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return analysisIds;
+    }
+
     public static String selectCodeVersion(Connection connection, int id) throws IOException, SQLException {
         String codeVersion = null;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM analysis WHERE " + ID + "= \'" + id + "\';";
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + ID + "= \'" + id + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
                     codeVersion = resultSet.getString(CODEVERSION);
+                    break;
                 }
             } catch (SQLException ex) {
                 throw ex;
@@ -97,47 +164,26 @@ public class AnalysisDAO {
         }
         return codeVersion;
     }
-
-    public static void updateCompleted(Connection connection, int id, boolean completed) throws IOException, SQLException {
-        if (connection == null) {
-            throw new IOException("[FATAL]: connection is null!");
-        } else {
-            String sql = "UPDATE analysis SET " + COMPLETED + "= \'" + completed + "\'" + "WHERE " + ID + "= \'" + id + "\';";
-            PreparedStatement stmt = null;
-            try {
-                stmt = connection.prepareStatement(sql);
-                stmt.executeUpdate();
-            } catch (SQLException ex) {
-                throw ex;
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-        }
-    }
-
-    public static List<Object[]> getAllAnalysisInfo(Connection connection) throws IOException, SQLException {
+    
+        public static List<Object[]> getAllAnalysisInfo(Connection connection) throws IOException, SQLException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
             List<Object[]> result = new ArrayList<>();
-            String sql = "SELECT * FROM (SELECT * FROM project_analysis\n"
-                    + "INNER JOIN project ON project_analysis.projectFK = project.id\n"
-                    + "INNER JOIN analysis ON analysis.id = project_analysis.analysisFK) as VAL";
+            String sql = "SELECT * FROM project p INNER JOIN analysis a ON (p.id = a.projectId)";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    result.add(new Object[]{resultSet.getInt("projectfk"),
-                        resultSet.getInt("analysisfk"),
-                        resultSet.getString("name"),
-                        resultSet.getString("url"),
-                        resultSet.getString("organization"),
-                        resultSet.getTimestamp("savedate").toString(),
-                        resultSet.getString("codeversion"),
-                        resultSet.getBoolean("completed")});
+                    result.add(new Object[]{resultSet.getInt(1),
+                        resultSet.getInt(5),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(7).toString(),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)});
                 }
                 return result;
             } catch (SQLException ex) {
@@ -149,5 +195,4 @@ public class AnalysisDAO {
             }
         }
     }
-
 }

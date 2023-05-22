@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class FileOA {
 
+    private int id;
     private String filePath;
     private List<Alteration> alterations;
     private transient ConflictFile conflictFile;
@@ -19,10 +20,25 @@ public class FileOA {
         this.alterations = new ArrayList<>();
     }
 
+    public FileOA(int id, String filePath, List<Alteration> alterations, ConflictFile conflictFile) {
+        this.id = id;
+        this.filePath = filePath;
+        this.alterations = alterations;
+        this.conflictFile = conflictFile;
+    }
+
     public FileOA(String filePath, List<Alteration> alterations, ConflictFile conflictFile) {
         this.filePath = filePath;
         this.alterations = alterations;
         this.conflictFile = conflictFile;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFilePath() {
@@ -52,7 +68,5 @@ public class FileOA {
     public void setConflictFile(ConflictFile conflictFile) {
         this.conflictFile = conflictFile;
     }
-    
-    
 
 }

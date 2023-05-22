@@ -20,6 +20,7 @@ public class Merge {
     private List<ConflictFile> conflictFiles;
     private MergeType mergeType;
     private List<FileOA> fileOAs;
+    private int numberOfAlterations;
 
     /**
      * Normal constructor
@@ -33,7 +34,7 @@ public class Merge {
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
+    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, List<FileOA> fileOAs, int numberOfAlterations) {
         this.id = id;
         this.project = project;
         this.mergeCommit = mergeCommit;
@@ -41,6 +42,8 @@ public class Merge {
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.fileOAs = fileOAs;
+        this.numberOfAlterations = numberOfAlterations;
     }
 
     /**
@@ -54,13 +57,15 @@ public class Merge {
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
+    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, List<FileOA> fileOAs, int numberOfAlterations) {
         this.project = project;
         this.mergeCommit = mergeCommit;
         this.parents = parents;
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.fileOAs = fileOAs;
+        this.numberOfAlterations = numberOfAlterations;
     }
 
     public Merge(Merge merge) {
@@ -71,12 +76,15 @@ public class Merge {
         this.mergeBase = merge.getMergeBase();
         this.conflictFiles = merge.getConflictFiles();
         this.mergeType = merge.getMergeType();
+        this.fileOAs = merge.getFileOAs();
+        this.numberOfAlterations = merge.getNumberOfAlterations();
     }
 
     public Merge() {
         this.parents = new ArrayList<>();
         this.conflictFiles = new ArrayList<>();
         this.fileOAs = new ArrayList<>();
+        this.numberOfAlterations = 0;
     }
 
     public int getNumberOfConflictRegions() {
@@ -168,6 +176,14 @@ public class Merge {
     public void addFileOA(FileOA fileOA) {
 
         this.fileOAs.add(fileOA);
+    }
+
+    public int getNumberOfAlterations() {
+        return numberOfAlterations;
+    }
+
+    public void setNumberOfAlterations(int numberOfAlterations) {
+        this.numberOfAlterations = numberOfAlterations;
     }
 
     public boolean hasOutOfMemory() {
