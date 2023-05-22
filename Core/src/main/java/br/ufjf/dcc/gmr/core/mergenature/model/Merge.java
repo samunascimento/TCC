@@ -10,7 +10,7 @@ import java.util.List;
  * @author João Pedro Lima
  * @since 10-10-2020
  */
-public class Merge implements Cloneable {
+public class Merge {
 
     private int id;
     private transient Project project;
@@ -19,6 +19,8 @@ public class Merge implements Cloneable {
     private Commit mergeBase;
     private List<ConflictFile> conflictFiles;
     private MergeType mergeType;
+    private List<FileOA> fileOAs;
+    private int numberOfAlterations;
 
     /**
      * Normal constructor
@@ -32,7 +34,7 @@ public class Merge implements Cloneable {
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
+    public Merge(int id, Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, List<FileOA> fileOAs, int numberOfAlterations) {
         this.id = id;
         this.project = project;
         this.mergeCommit = mergeCommit;
@@ -40,6 +42,8 @@ public class Merge implements Cloneable {
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.fileOAs = fileOAs;
+        this.numberOfAlterations = numberOfAlterations;
     }
 
     /**
@@ -53,13 +57,15 @@ public class Merge implements Cloneable {
      * @param conflicts List of all files involved in a mergeCommit conflict
      * @param mergeType The type of the mergeCommit
      */
-    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType) {
+    public Merge(Project project, Commit mergeCommit, List<Commit> parents, Commit mergeBase, List<ConflictFile> conflicts, MergeType mergeType, List<FileOA> fileOAs, int numberOfAlterations) {
         this.project = project;
         this.mergeCommit = mergeCommit;
         this.parents = parents;
         this.mergeBase = mergeBase;
         this.conflictFiles = conflicts;
         this.mergeType = mergeType;
+        this.fileOAs = fileOAs;
+        this.numberOfAlterations = numberOfAlterations;
     }
 
     public Merge(Merge merge) {
@@ -70,11 +76,15 @@ public class Merge implements Cloneable {
         this.mergeBase = merge.getMergeBase();
         this.conflictFiles = merge.getConflictFiles();
         this.mergeType = merge.getMergeType();
+        this.fileOAs = merge.getFileOAs();
+        this.numberOfAlterations = merge.getNumberOfAlterations();
     }
 
     public Merge() {
         this.parents = new ArrayList<>();
         this.conflictFiles = new ArrayList<>();
+        this.fileOAs = new ArrayList<>();
+        this.numberOfAlterations = 0;
     }
 
     public int getNumberOfConflictRegions() {
@@ -155,6 +165,27 @@ public class Merge implements Cloneable {
         this.mergeType = mergeType;
     }
 
+    public List<FileOA> getFileOAs() {
+        return fileOAs;
+    }
+
+    public void setFileOAs(List<FileOA> fileOAs) {
+        this.fileOAs = fileOAs;
+    }
+
+    public void addFileOA(FileOA fileOA) {
+
+        this.fileOAs.add(fileOA);
+    }
+
+    public int getNumberOfAlterations() {
+        return numberOfAlterations;
+    }
+
+    public void setNumberOfAlterations(int numberOfAlterations) {
+        this.numberOfAlterations = numberOfAlterations;
+    }
+
     public boolean hasOutOfMemory() {
         for (ConflictFile conflictFile : conflictFiles) {
             if (conflictFile.isOutOfMemory()) {
@@ -162,6 +193,22 @@ public class Merge implements Cloneable {
             }
         }
         return false;
+    }
+
+    public String getOAString() {
+        String result = "";
+        for (FileOA fileOA : this.fileOAs) {
+            result += fileOA.getFilePath() + "\n";
+            if (fileOA.getAlterations() == null) {
+                result += "Impossible to get the outside alterations, some context was altered!\n\n";
+            } else {
+                for (Alteration alteration : fileOA.getAlterations()) {
+                    result += (alteration.isAddition() ? "+  " : "-  ") + alteration.getContent() + "\n";
+                }
+                result += "\n\n";
+            }
+        }
+        return result;
     }
 
 }

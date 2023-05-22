@@ -1,5 +1,6 @@
 package br.ufjf.dcc.gmr.core.mergenature.model;
 
+import br.ufjf.dcc.gmr.core.mergenature.controller.MergeNatureTools;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -251,6 +252,18 @@ public class ConflictFile {
         }
     }
 
+    public boolean wasInsideChunk(String content){
+        boolean wasInsideChunk = false;
+        content = MergeNatureTools.getRawForm(content);
+        for (Chunk chunk : chunks) {
+            if(chunk.getV1().contains(content) || chunk.getV2().contains(content)){
+               wasInsideChunk = true;
+               break;
+            }
+        }
+        return wasInsideChunk;
+    }
+    
     @Override
     public String toString() {
         String result = "Parent 1's file: " + getParent1FilePath()

@@ -29,8 +29,8 @@ public class MergeNatureTools {
         }
         return list;
     }
-    
-    public static String getFileName(String filePath){
+
+    public static String getFileName(String filePath) {
         String[] auxArray = filePath.split(File.separator);
         return auxArray[auxArray.length - 1];
     }
@@ -104,10 +104,17 @@ public class MergeNatureTools {
     public static void prepareAnalysis(String repositoryPath) {
         try {
             Git.removeAllInWorkspace(repositoryPath);
+        } catch (Exception ex) {
+        }
+        try {
             Git.clean(repositoryPath, true, 0);
+        } catch (Exception ex) {
+        }
+        try {
             Git.reset(repositoryPath, true, false, false, null);
         } catch (Exception ex) {
         }
+
     }
 
     public static boolean checkIfIsBegin(String line) {

@@ -2,7 +2,6 @@ package br.ufjf.dcc.gmr.core.mergenature.view;
 
 import br.ufjf.dcc.gmr.core.mergenature.dao.AnalysisDAO;
 import br.ufjf.dcc.gmr.core.mergenature.dao.ProjectDAO;
-import br.ufjf.dcc.gmr.core.mergenature.model.Project;
 import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -203,7 +201,7 @@ public class MNDatabaseInteractions {
                             tabbedPane.addRemovableTab((String) analysisList.get(table.getSelectedRow())[2],
                                     null,
                                     new MNProjectPanel(
-                                            ProjectDAO.getEntireProject(connection,
+                                            ProjectDAO.selectEntireProject(connection,
                                                     (int) analysisList.get(table.getSelectedRow())[0],
                                                     (int) analysisList.get(table.getSelectedRow())[1]),
                                             null),
@@ -228,5 +226,6 @@ public class MNDatabaseInteractions {
         } catch (SQLException ex) {
             Logger.getLogger(MNDatabaseInteractions.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 }

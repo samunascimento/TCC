@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -16,48 +15,18 @@ import java.util.List;
  */
 public class ProjectDAO {
 
+    public static final String TABLE = "project";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String URL = "url";
     public static final String ORGANIZATION = "organization";
-    
-    public static Project getEntireProject(Connection connection, int projectID, int analysisID) throws SQLException, IOException {
-        Project project = null;
-        if (connection == null) {
-            throw new IOException("[FATAL]: connection is null!");
-        } else {
-            String sql = "SELECT * FROM project WHERE " + ID + "= \'" + projectID + "\';";
-            PreparedStatement stmt = null;
-            try {
-                stmt = connection.prepareStatement(sql);
-                ResultSet resultSet = stmt.executeQuery();
-                while (resultSet.next()) {
-                    project = new Project(resultSet.getInt(ID),
-                            resultSet.getString(NAME),
-                            resultSet.getString(URL),
-                            resultSet.getString(ORGANIZATION),
-                            new ArrayList<>());
-                }
-                for (int mergeID : Merge_AnalysisDAO.selectAllMergeIDs(connection, analysisID)) {
-                    project.addMerge(MergeDAO.selectAllByID(connection, mergeID, analysisID));
-                }
-            } catch (SQLException ex) {
-                throw ex;
-            } finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-        }
-        return project;
-    }
 
     public static int insert(Connection connection, Project project) throws SQLException, IOException {
         int projectID = -1;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO project ("
+            String sql = "INSERT INTO " + TABLE + " ("
                     + NAME + ", "
                     + URL + ", "
                     + ORGANIZATION + ") VALUES (?,?,?) RETURNING " + ID + ";";
@@ -81,22 +50,65 @@ public class ProjectDAO {
         return projectID;
     }
 
-    public static List<Project> selectByURL(Connection connection, String url) throws IOException, SQLException {
-        List<Project> projects = new ArrayList<>();
+    public static void update(Connection connection, int id, Project project) throws SQLException, IOException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM project WHERE " + URL + "= \'" + url + "\';";
+            String sql = "UPDATE " + TABLE + " SET "
+                    + NAME + "= \'" + project.getName() + "\', "
+                    + URL + "= \'" + project.getUrl() + "\', "
+                    + ORGANIZATION + "= \'" + project.getOrganization() + "\' "
+                    + "WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+    }
+
+    public static void delete(Connection connection, int id) throws SQLException, IOException {
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "DELETE FROM " + TABLE + " SET WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+    }
+
+    public static Project select(Connection connection, int id) throws SQLException, IOException {
+        Project project = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + ID + "= \'" + id + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    projects.add(new Project(resultSet.getInt(ID),
+                    project = new Project(resultSet.getInt(ID),
                             resultSet.getString(NAME),
                             resultSet.getString(URL),
                             resultSet.getString(ORGANIZATION),
-                            new ArrayList<>()));
+                            new ArrayList<>());
+                    break;
                 }
             } catch (SQLException ex) {
                 throw ex;
@@ -106,7 +118,67 @@ public class ProjectDAO {
                 }
             }
         }
-        return projects;
+        return project;
+    }
+
+    public static Project select(Connection connection, String url) throws SQLException, IOException {
+        Project project = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + URL + "= \'" + url + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    project = new Project(resultSet.getInt(ID),
+                            resultSet.getString(NAME),
+                            resultSet.getString(URL),
+                            resultSet.getString(ORGANIZATION),
+                            new ArrayList<>());
+                    break;
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return project;
+    }
+    
+    public static Project selectEntireProject(Connection connection, int id, int analysisId) throws SQLException, IOException {
+        Project project = null;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    project = new Project(resultSet.getInt(ID),
+                            resultSet.getString(NAME),
+                            resultSet.getString(URL),
+                            resultSet.getString(ORGANIZATION),
+                            new ArrayList<>());
+                    break;
+                }
+                project.setMerges(MergeDAO.selectByAnalysisId(connection, analysisId));
+                
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return project;
     }
 
 }

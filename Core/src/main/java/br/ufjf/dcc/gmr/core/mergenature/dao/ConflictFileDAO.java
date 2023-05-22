@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,7 +18,9 @@ import java.util.ArrayList;
  */
 public class ConflictFileDAO {
 
+    public static final String TABLE = "conflictfile";
     public static final String ID = "id";
+    public static final String MERGE_ID = "mergeId";
     public static final String PARENT1FILEPATH = "parent1FilePath";
     public static final String PARENT2FILEPATH = "parent2FilePath";
     public static final String ANCESTORFILEPATH = "ancestorFilePath";
@@ -26,31 +29,32 @@ public class ConflictFileDAO {
     public static final String OUT_OF_MEMORY = "outOfMemory";
     public static final String CONFLICTTYPE = "conflictFileType";
 
-    public static int insert(Connection connection, ConflictFile conflictFile) throws SQLException, IOException {
+    public static int insert(Connection connection, ConflictFile conflictFile, int mergeId) throws SQLException, IOException {
         int conflictFileID = 0;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "INSERT INTO conflictFile ("
+            String sql = "INSERT INTO " + TABLE + " ("
+                    + MERGE_ID + ", "
                     + PARENT1FILEPATH + ", "
                     + PARENT2FILEPATH + ", "
                     + ANCESTORFILEPATH + ", "
                     + CONFLICTFILEPATH + ", "
                     + HASOUTSIDEALTERATIONS + ", "
                     + OUT_OF_MEMORY + ", "
-                    + CONFLICTTYPE + ") VALUES (?,?,?,?,?,?,?) RETURNING " + ID + ";";
+                    + CONFLICTTYPE + ") VALUES (?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
             PreparedStatement stmt = null;
             try {
-
                 stmt = connection.prepareStatement(sql);
-                stmt.setString(1, conflictFile.getParent1FilePath());
-                stmt.setString(2, conflictFile.getParent2FilePath());
-                stmt.setString(3, conflictFile.getAncestorFilePath());
-                stmt.setInt(4, conflictFile.getIntConflictFilePath());
-                stmt.setInt(5, HasOutsideAlterations.getIntFromEnum(conflictFile.getHasOutsideAlterations()));
-                stmt.setBoolean(6, conflictFile.isOutOfMemory());
-                stmt.setInt(7, ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType()));
+                stmt.setInt(1, mergeId);
+                stmt.setString(2, conflictFile.getParent1FilePath());
+                stmt.setString(3, conflictFile.getParent2FilePath());
+                stmt.setString(4, conflictFile.getAncestorFilePath());
+                stmt.setInt(5, conflictFile.getIntConflictFilePath());
+                stmt.setInt(6, HasOutsideAlterations.getIntFromEnum(conflictFile.getHasOutsideAlterations()));
+                stmt.setBoolean(7, conflictFile.isOutOfMemory());
+                stmt.setInt(8, ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType()));
                 ResultSet result = stmt.executeQuery();
                 result.next();
                 conflictFileID = result.getInt(1);
@@ -65,12 +69,12 @@ public class ConflictFileDAO {
         return conflictFileID;
     }
 
-    public static ConflictFile select(Connection connection, int id, int analysisID) throws SQLException, IOException {
+    public static ConflictFile select(Connection connection, int id) throws SQLException, IOException {
         ConflictFile conflictFile = null;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM conflictFile WHERE id = " + id;
+            String sql = "SELECT * FROM " + TABLE + " WHERE id = " + id;
             PreparedStatement stmt = null;
             try {
 
@@ -83,7 +87,7 @@ public class ConflictFileDAO {
                             resultSet.getString(PARENT2FILEPATH),
                             resultSet.getString(ANCESTORFILEPATH),
                             resultSet.getInt(CONFLICTFILEPATH),
-                            (analysisID > 0 ? new ArrayList<>() : ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, id, analysisID)),
+                            new ArrayList<>(),
                             ConflictFileType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
                             HasOutsideAlterations.getEnumFromInt(resultSet.getInt(HASOUTSIDEALTERATIONS)),
                             resultSet.getBoolean(OUT_OF_MEMORY),
@@ -99,13 +103,13 @@ public class ConflictFileDAO {
         }
         return conflictFile;
     }
-    
-    public static ConflictFile selectAll(Connection connection, int conflictFileID, int analysisID) throws SQLException, IOException {
+
+    public static ConflictFile selectAll(Connection connection, int id) throws SQLException, IOException {
         ConflictFile conflictFile = null;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM conflictFile WHERE id = " + conflictFileID;
+            String sql = "SELECT * FROM " + TABLE + " WHERE id = " + id;
             PreparedStatement stmt = null;
             try {
 
@@ -118,13 +122,12 @@ public class ConflictFileDAO {
                             resultSet.getString(PARENT2FILEPATH),
                             resultSet.getString(ANCESTORFILEPATH),
                             resultSet.getInt(CONFLICTFILEPATH),
-                            (analysisID > 0 ? new ArrayList<>() : ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, conflictFileID, analysisID)),
+                            ChunkDAO.selectByConflictFile(connection, id),
                             ConflictFileType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
                             HasOutsideAlterations.getEnumFromInt(resultSet.getInt(HASOUTSIDEALTERATIONS)),
                             resultSet.getBoolean(OUT_OF_MEMORY),
                             null);
                 }
-                conflictFile.setChunks(ConflictFile_Chunk_AnalysisDAO.selectChunks(connection, conflictFileID, analysisID));
             } catch (SQLException ex) {
                 throw ex;
             } finally {
@@ -136,18 +139,18 @@ public class ConflictFileDAO {
         return conflictFile;
     }
 
-    public static int contains(Connection connection, ConflictFile conflictFile) throws IOException, SQLException {
+    public static int contains(Connection connection, ConflictFile conflictFile, int mergeId) throws IOException, SQLException {
         int conflictFileID = 0;
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT " + ID + " FROM conflictFile WHERE " + PARENT1FILEPATH + "=\'" + conflictFile.getParent1FilePath()
+            String sql = "SELECT " + ID + " FROM " + TABLE + " WHERE "
+                    + MERGE_ID + "=\'" + mergeId
+                    + "\' AND " + PARENT1FILEPATH + "=\'" + conflictFile.getParent1FilePath()
                     + "\' AND " + PARENT2FILEPATH + "=\'" + conflictFile.getParent2FilePath()
                     + "\' AND " + ANCESTORFILEPATH + "=\'" + conflictFile.getAncestorFilePath()
                     + "\' AND " + CONFLICTFILEPATH + "=\'" + conflictFile.getIntConflictFilePath()
-                    + "\' AND " + CONFLICTTYPE + "=\'" + ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType())
-                    + "\' AND " + HASOUTSIDEALTERATIONS + "=\'" + HasOutsideAlterations.getIntFromEnum(conflictFile.getHasOutsideAlterations())
-                    + "\' AND " + OUT_OF_MEMORY + "=\'" + conflictFile.isOutOfMemory()+ "\';";
+                    + "\' AND " + CONFLICTTYPE + "=\'" + ConflictFileType.getIntFromEnum(conflictFile.getConflictFileType()) + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
@@ -164,6 +167,46 @@ public class ConflictFileDAO {
             }
         }
         return conflictFileID;
+    }
+
+    public static List<ConflictFile> selectByMergeId(Connection connection, int mergeId) throws SQLException, IOException {
+        List<ConflictFile> conflictFiles = new ArrayList<>();
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE id = " + mergeId;
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                int id;
+                while (resultSet.next()) {
+                    id = resultSet.getInt(ID);
+                    conflictFiles.add(new ConflictFile(id,
+                            resultSet.getString(PARENT1FILEPATH),
+                            resultSet.getString(PARENT2FILEPATH),
+                            resultSet.getString(ANCESTORFILEPATH),
+                            resultSet.getInt(CONFLICTFILEPATH),
+                            ChunkDAO.selectByConflictFile(connection, id),
+                            ConflictFileType.getEnumFromInt(resultSet.getInt(CONFLICTTYPE)),
+                            HasOutsideAlterations.getEnumFromInt(resultSet.getInt(HASOUTSIDEALTERATIONS)),
+                            resultSet.getBoolean(OUT_OF_MEMORY),
+                            null));
+                }
+                for (ConflictFile conflictFile : conflictFiles) {
+                    for (Chunk chunk : conflictFile.getChunks()) {
+                        chunk.setConflictFile(conflictFile);
+                    }
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return conflictFiles;
     }
 
 }

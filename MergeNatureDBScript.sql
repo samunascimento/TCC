@@ -1,3 +1,6 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 CREATE TABLE Project(
     id SERIAL, PRIMARY KEY (id),
     name VARCHAR(100),
@@ -7,57 +10,36 @@ CREATE TABLE Project(
 
 CREATE TABLE Analysis(
 	id SERIAL, PRIMARY KEY (id),
-	saveDate TIMESTAMP,
+	projectId INT, FOREIGN KEY(projectId) REFERENCES Project(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	startTime TIMESTAMP,
 	codeVersion VARCHAR(10),
 	completed BOOLEAN
 );
 
-CREATE TABLE Project_Analysis(
-	projectFK INT, FOREIGN KEY(projectFK) REFERENCES Project(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	analysisFK INT, FOREIGN KEY (analysisFK) REFERENCES Analysis(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT projectAnalysisKey PRIMARY KEY (projectFK, analysisFK)
+CREATE TABLE Merge(
+	id SERIAL, PRIMARY KEY (id),
+	analysisId INT, FOREIGN KEY(analysisId) REFERENCES Analysis(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	mergeHash VARCHAR(50), 
+	mergeType INT,
+	numberOfAlterations INT,
+	completed BOOLEAN
 );
 
 CREATE TABLE Commit(
 	id SERIAL, PRIMARY KEY (id),
+	mergeId INT, FOREIGN KEY(mergeId) REFERENCES Merge(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	message VARCHAR(5000),
 	commitHash VARCHAR(50),
 	author VARCHAR(100),
  	authorDate BIGINT,
  	committer VARCHAR(100),
- 	committerDate BIGINT
-);
-
-CREATE TABLE Merge(
-	id SERIAL, PRIMARY KEY (id),
-	mergeType INT,
-	mergeCommitFK INT, FOREIGN KEY(mergeCommitFK) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	mergeBaseFK INT, FOREIGN KEY(mergeBaseFK) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE
-);
-
-CREATE TABLE Merge_Commit_parents(
-	mergeFK INT, FOREIGN KEY(mergeFK) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	commitFK INT, FOREIGN KEY (commitFK) REFERENCES Commit(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT mergeCommitParentsKey PRIMARY KEY (mergeFK, commitFK)
-);
-
-CREATE TABLE Merge_Analysis(
-	mergeFK INT, FOREIGN KEY(mergeFK) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	analysisFK INT, FOREIGN KEY (analysisFK) REFERENCES Analysis(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	hasOutOfMemory BOOLEAN,
-	completed BOOLEAN,
-	CONSTRAINT mergeAnalysisKey PRIMARY KEY (mergeFK, analysisFK)
-);
-
-CREATE TABLE Project_Merge(
-	projectFK INT, FOREIGN KEY(projectFK) REFERENCES Project(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	mergeFK INT, FOREIGN KEY(mergeFK) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	mergeHash VARCHAR(50),
-	CONSTRAINT projectMergeKey PRIMARY KEY (projectFK, mergeFK)
+ 	committerDate BIGINT,
+	type INT
 );
 
 CREATE TABLE ConflictFile(
 	id SERIAL, PRIMARY KEY (id),
+	mergeId INT, FOREIGN KEY(mergeId) REFERENCES Merge(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	parent1FilePath VARCHAR(500),
 	parent2FilePath VARCHAR(500),
 	ancestorFilePath VARCHAR(500),
@@ -67,16 +49,24 @@ CREATE TABLE ConflictFile(
 	conflictFileType INT
 );
 
-CREATE TABLE Merge_ConflictFile_Analysis(
-	mergeFK INT, FOREIGN KEY(mergeFK) REFERENCES Merge(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	conflictFileFK INT, FOREIGN KEY(conflictFileFK) REFERENCES ConflictFile(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	analysisFK INT, FOREIGN KEY (analysisFK) REFERENCES Analysis(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	completed BOOLEAN,
-	CONSTRAINT mergeConflictFileAnalysisKey PRIMARY KEY (mergeFK, conflictFileFK, analysisFK)
+CREATE TABLE FileOA(
+	id SERIAL, PRIMARY KEY (id),
+	mergeId INT, FOREIGN KEY(mergeId) REFERENCES Merge(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	conflictFileId INT, FOREIGN KEY(conflictFileId) REFERENCES ConflictFile(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	filePath VARCHAR(500)
+);
+
+CREATE TABLE Alteration(
+	id SERIAL, PRIMARY KEY (id),
+	fileOAId INT, FOREIGN KEY(fileOAId) REFERENCES FileOA(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	content TEXT,
+	isAddition BOOLEAN,
+	wasInsideChunk BOOLEAN
 );
 
 CREATE TABLE Chunk(
 	id SERIAL, PRIMARY KEY (id),
+	conflictFileId INT, FOREIGN KEY(conflictFileId) REFERENCES ConflictFile(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	chunkText TEXT,
 	firstPrefixLine INT,
 	beginLine INT,
@@ -89,12 +79,3 @@ CREATE TABLE Chunk(
 	originalV2FirstLine INT,
 	developerDecision INT
 );
-
-CREATE TABLE ConflictFile_Chunk_Analysis(
-	conflictFileFK INT, FOREIGN KEY(conflictFileFK) REFERENCES ConflictFile(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	chunkFK INT, FOREIGN KEY(chunkFK) REFERENCES Chunk(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	analysisFK INT, FOREIGN KEY (analysisFK) REFERENCES Analysis(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT conflictFileChunkAnalysisKey PRIMARY KEY (conflictFileFK, chunkFK, analysisFK)
-);
-
-

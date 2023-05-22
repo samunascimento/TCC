@@ -103,6 +103,17 @@ public class MNConflictRegionPanel extends JPanel {
         structuresTextArea.setEditable(false);
         structuresTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
         
+        JLabel outsideAlterationsLabel = new JLabel("Outside Alterations");
+        outsideAlterationsLabel.setFont(conflictLabel.getFont().deriveFont((float) 30.0));
+        outsideAlterationsLabel.setForeground(MNFrame.SECUNDARY_COLOR);
+        outsideAlterationsLabel.setOpaque(false);
+
+        JTextArea  outsideAlterationsTextArea = new JTextArea(chunk.getConflictFile().getMerge().getOAString());
+        outsideAlterationsTextArea.setBackground(MNFrame.PRIMARY_COLOR);
+        outsideAlterationsTextArea.setForeground(MNFrame.SECUNDARY_COLOR);
+        outsideAlterationsTextArea.setEditable(false);
+        outsideAlterationsTextArea.setBorder(BorderFactory.createEmptyBorder(0, 2 * MNFrame.BORDER_GAP, 0, 2 * MNFrame.BORDER_GAP));
+        
         JPanel bottonAjust = new JPanel();
         bottonAjust.setOpaque(false);
         
@@ -129,6 +140,10 @@ public class MNConflictRegionPanel extends JPanel {
         this.add(structuresLabel, gbc);
         gbc.gridy++;
         this.add(structuresTextArea, gbc);
+        gbc.gridy++;
+        this.add(outsideAlterationsLabel, gbc);
+        gbc.gridy++;
+        this.add(outsideAlterationsTextArea, gbc);
         gbc.gridy++;
         gbc.weighty = 1;
         this.add(bottonAjust, gbc);
