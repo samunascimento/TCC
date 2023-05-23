@@ -165,6 +165,32 @@ public class AnalysisDAO {
         return codeVersion;
     }
     
+    public static boolean hasCompletedAnalysis(Connection connection, int projectId) throws IOException, SQLException {
+        boolean hasCompleted = false;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + PROJECT_ID + "=\'" + projectId + "\' AND " + COMPLETED + "=\'true\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                hasCompleted = resultSet.next();
+                while (resultSet.next()) {
+                    hasCompleted = true;
+                    break;
+                }
+            } catch (SQLException ex) {
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return hasCompleted;
+    }
+    
         public static List<Object[]> getAllAnalysisInfo(Connection connection) throws IOException, SQLException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");

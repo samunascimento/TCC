@@ -148,7 +148,20 @@ public class Git {
             if (!execution.getError().isEmpty()) {
                 String error = ListUtils.getTextListStringToString(execution.getError());
                 if (!error.contains("HEAD is now at ")) {
-                    throw new CheckoutException(error);
+                    execution = CLIExecute.execute("git status", repositoryPath);
+                    if(execution.getErrorString().contains("HEAD detached") || execution.getOutputString().contains("HEAD detached")){
+                        try{
+                        execution = CLIExecute.execute("git add .", repositoryPath);
+                        } catch (Exception ex){}
+                        try{
+                        execution = CLIExecute.execute("git commit -m a", repositoryPath);
+                        } catch (Exception ex){}
+                        try{
+                        execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
+                        } catch (Exception ex){}
+                    } else {
+                        throw new CheckoutException(error);
+                    }
                 }
             }
         } else {
@@ -400,7 +413,7 @@ public class Git {
                 boolean bool2AuxWarning = false;
 
                 for (String line : execution.getError()) {
-                    if (line.contains("warning: LF will be replaced by CRLF in")) {
+                    if (line.contains("warning: LF will be replaced by CRLF in") || line.contains("warning: CRLF will be replaced by LF") ) {
                         auxWar1 = line;
                         bool1AuxWarning = true;
                     }

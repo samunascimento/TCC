@@ -115,7 +115,12 @@ public class Algorithm {
 
     private Project projectLayer(String repositoryPath, String repositoryURL) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
-        Merge merge;
+        if (this.sqlConnection != null && AnalysisDAO.hasCompletedAnalysis(sqlConnection, project.getId())) {
+            System.out.println(project.getUrl() + " is already analyzed");
+            return project;
+        }
+
+        Merge merge = null;
         int analysisID = getAnalysisID(project);
         List<String> log;
         log = Git.getAllMerges(repositoryPath);
@@ -166,7 +171,9 @@ public class Algorithm {
             }
             merge.setNumberOfAlterations(numberOfAlterations);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
-            merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
+            if (sqlConnection != null) {
+                merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
+            }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
                 for (String conflictMessage : mergeMessage) {
                     if (conflictMessage.contains("CONFLICT")) {
@@ -241,41 +248,45 @@ public class Algorithm {
         conflictFile.setMerge(merge);
         conflictFile.setOutOfMemory(false);
         contextIntervals = new ArrayList<>();
-        try {
-            fileContent = MergeNatureTools.getFileContentInList(repositoryPath + conflictFile.getConflictFilePath());
+        if (!conflictFile.getParent1FilePath().equals("Absent") && !conflictFile.getParent2FilePath().equals("Absent")) {
             try {
-                chunks = chunkLayer(conflictFile, fileContent, repositoryPath);
-                conflictFile.setChunks(chunks);
-            } catch (OutOfMemoryError ex) {
-                System.out.println("OutOfMemoryError getting chunks");
-                conflictFile.setOutOfMemory(true);
-                return conflictFile;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return conflictFile;
+                fileContent = MergeNatureTools.getFileContentInList(repositoryPath + conflictFile.getConflictFilePath());
+                try {
+                    chunks = chunkLayer(conflictFile, fileContent, repositoryPath);
+                    conflictFile.setChunks(chunks);
+                } catch (OutOfMemoryError ex) {
+                    System.out.println("OutOfMemoryError getting chunks");
+                    conflictFile.setOutOfMemory(true);
+                    return conflictFile;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    return conflictFile;
+                }
+                if (contextIntervals != null) {
+                    conflictFile = outsideAlterationsLayer(conflictFile, repositoryPath, contextIntervals);
+                } else {
+                    conflictFile.getMerge().addFileOA(new FileOA(conflictFile.getConflictFilePath(), new ArrayList<Alteration>(), conflictFile));
+                    conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
+                }
+            } catch (FileNotFoundException ex) {
+                conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO);
             }
-            if (contextIntervals != null) {
-                conflictFile = outsideAlterationsLayer(conflictFile, repositoryPath, contextIntervals);
-            } else {
-                conflictFile.getMerge().addFileOA(new FileOA(conflictFile.getConflictFilePath(), new ArrayList<Alteration>(), conflictFile));
-                conflictFile.setHasOutsideAlterations(HasOutsideAlterations.YES);
+            if (!conflictFile.getChunks().isEmpty()) {
+                try {
+                    conflictFile = antlr4Layer(conflictFile, repositoryPath);
+                } catch (OutOfMemoryError ex) {
+                    System.out.println("OutOfMemoryError get language contructs");
+                    conflictFile.setAllLanguageConstructs(LanguageConstructs.OUT_OF_MEMORY);
+                    conflictFile.setOutOfMemory(true);
+                    return conflictFile;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    conflictFile.setAllLanguageConstructs(LanguageConstructs.ERROR);
+                    return conflictFile;
+                }
             }
-        } catch (FileNotFoundException ex) {
+        } else {
             conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO);
-        }
-        if (!conflictFile.getChunks().isEmpty()) {
-            try {
-                conflictFile = antlr4Layer(conflictFile, repositoryPath);
-            } catch (OutOfMemoryError ex) {
-                System.out.println("OutOfMemoryError get language contructs");
-                conflictFile.setAllLanguageConstructs(LanguageConstructs.OUT_OF_MEMORY);
-                conflictFile.setOutOfMemory(true);
-                return conflictFile;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                conflictFile.setAllLanguageConstructs(LanguageConstructs.ERROR);
-                return conflictFile;
-            }
         }
 
         if (sqlConnection != null) {

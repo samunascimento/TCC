@@ -88,7 +88,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Cli</mainClass>
+                            <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Research</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -137,7 +137,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.MNFrame</mainClass>
+                                    <mainClass>br.ufjf.dcc.gmr.core.mergenature.view.Research.java</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

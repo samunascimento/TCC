@@ -87,7 +87,7 @@ public class CLIExecution {
         for (String line : output) {
             sb.append(line).append("\n");
         }
-        return sb.toString();
+        return sb.toString() + "";
     }
     
     public String getErrorString() {
@@ -98,7 +98,7 @@ public class CLIExecution {
         for (String line : error) {
             sb.append(line).append("\n");
         }
-        return sb.toString();
+        return sb.toString() + "";
     }
     
     
