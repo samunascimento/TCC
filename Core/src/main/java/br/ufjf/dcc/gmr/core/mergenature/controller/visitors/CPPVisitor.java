@@ -271,7 +271,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitDynamicExceptionSpecification(CPP14Parser.DynamicExceptionSpecificationContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -283,7 +283,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitThrowExpression(CPP14Parser.ThrowExpressionContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -811,7 +811,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitNamespaceAliasDefinition(CPP14Parser.NamespaceAliasDefinitionContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -847,7 +847,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnumeratorDefinition(CPP14Parser.EnumeratorDefinitionContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -877,13 +877,13 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitEnumHead(CPP14Parser.EnumHeadContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitEnumSpecifier(CPP14Parser.EnumSpecifierContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1225,7 +1225,7 @@ public class CPPVisitor extends CPP14ParserBaseVisitor<Object> {
 
     @Override
     public Object visitDeleteExpression(CPP14Parser.DeleteExpressionContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 

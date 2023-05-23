@@ -507,10 +507,7 @@ public class Translator {
             // Não tem
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //STRUCT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("Struct")) {
-                mainList.add(LanguageConstructs.STRUCT);
-                list.remove("Struct");
-            }
+            // It's like class
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //SWITCH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("SwitchStatement")) {
