@@ -187,7 +187,19 @@ public class Algorithm {
                 }
 
             }
-            merge.setFileOAs(fileOALayer(merge, fileDiffs));
+            for (FileOA foa : fileOALayer(merge, fileDiffs)) {
+                merge.addFileOA(foa);
+            }
+            if (sqlConnection != null) {
+                sqlConnection.setAutoCommit(false);
+                for (FileOA foa : merge.getFileOAs()) {
+                    foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
+                    for (Alteration alteration : foa.getAlterations()) {
+                        alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
+                    }
+                }
+                sqlConnection.setAutoCommit(true);
+            }
             if (sqlConnection != null) {
                 MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
             }
@@ -220,16 +232,6 @@ public class Algorithm {
                 }
                 fileOAs.add(fileOA);
             }
-        }
-        if (sqlConnection != null) {
-            sqlConnection.setAutoCommit(false);
-            for (FileOA foa : fileOAs) {
-                foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
-                for (Alteration alteration : foa.getAlterations()) {
-                    alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
-                }
-            }
-            sqlConnection.setAutoCommit(true);
         }
         return fileOAs;
     }
@@ -522,14 +524,23 @@ public class Algorithm {
 
     private ConflictFile outsideAlterationsLayer(ConflictFile conflictFile, String repositoryPath, List<IntegerInterval> contextIntervals) throws IOException, NotGitRepositoryException, DiffException {
         List<LineInformation> allLines;
+        List<FileDiff> fileDiffs;
         if (solutionFileWasRenamed) {
+            fileDiffs = Git.diff(repositoryPath,
+                    conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent2FilePath(),
+                    conflictFile.getConflictFilePath(), true, 0);
             allLines = Git.diff(repositoryPath,
                     conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent2FilePath(),
                     conflictFile.getConflictFilePath(), true, 0).get(0).getLines();
         } else {
-            allLines = Git.diff(repositoryPath,
+            fileDiffs = Git.diff(repositoryPath,
                     conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent1FilePath(),
-                    conflictFile.getConflictFilePath(), true, 0).get(0).getLines();
+                    conflictFile.getConflictFilePath(), true, 0);
+        }
+        if (fileDiffs.isEmpty()) {
+            allLines = new ArrayList<>();
+        } else {
+            allLines = fileDiffs.get(0).getLines();
         }
         List<LineInformation> outsideAlterationsLines = new ArrayList<>();
         boolean isOutsideAlteration = true;

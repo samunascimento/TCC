@@ -6,7 +6,7 @@ public class TestJoao {
 
     public static void main(String[] args) throws Exception {
         Algorithm algorithm = new Algorithm();
-        algorithm.run("/home/joaolima/Git/ResearchRepositories/bolt");
+        algorithm.run("/home/joaolima/Git/TestRepositories/UFJF");
     }
 
 }

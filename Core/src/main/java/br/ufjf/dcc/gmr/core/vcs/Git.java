@@ -397,6 +397,7 @@ public class Git {
      */
     public static List<FileDiff> diff(String repositoryPath, String commitSource, String commitTarget, boolean unified, int unifiedSize) throws IOException, NotGitRepositoryException, DiffException {
         if (isGitRepository(repositoryPath)) {
+            List<FileDiff> fileDiffs = new ArrayList<>();
             List<FileDiff> result = new ArrayList<>();
             FileDiff aux = new FileDiff();
             String command;
@@ -436,8 +437,8 @@ public class Git {
                 aux.setAllMessage(execution.getOutput());
                 int currentLine = 0;
                 for (String line : execution.getOutput()) {
-                    if (line.startsWith("diff --") && currentLine != 0) {
-                        result.add(aux);
+                    if (line.startsWith("difffileDiff --") && currentLine != 0) {
+                        fileDiffs.add(aux);
                         aux = new FileDiff();
                     }
                     if ((line.length() == 1 && !(line.charAt(0) == '+' || line.charAt(0) == '-'))) {
@@ -466,7 +467,12 @@ public class Git {
                     }
 
                 }
-                result.add(aux);
+                fileDiffs.add(aux);
+            }
+            for (FileDiff fileDiff : fileDiffs) {
+                if(!(fileDiff.getFilePathSource().equals("") && fileDiff.getFilePathTarget().equals("") && fileDiff.getLines().isEmpty())){
+                    result.add(fileDiff);
+                }
             }
             return result;
         } else {
