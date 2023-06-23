@@ -44,6 +44,7 @@ public class AnalysisDAO {
                 result.next();
                 analysisId = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -64,6 +65,7 @@ public class AnalysisDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -83,6 +85,7 @@ public class AnalysisDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -106,6 +109,7 @@ public class AnalysisDAO {
                     completed = resultSet.getBoolean(COMPLETED);
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -130,6 +134,7 @@ public class AnalysisDAO {
                     analysisIds.add(resultSet.getInt(ID));
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -155,6 +160,7 @@ public class AnalysisDAO {
                     break;
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -164,7 +170,7 @@ public class AnalysisDAO {
         }
         return codeVersion;
     }
-    
+
     public static boolean hasCompletedAnalysis(Connection connection, int projectId) throws IOException, SQLException {
         boolean hasCompleted = false;
         if (connection == null) {
@@ -181,6 +187,7 @@ public class AnalysisDAO {
                     break;
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -190,8 +197,8 @@ public class AnalysisDAO {
         }
         return hasCompleted;
     }
-    
-        public static List<Object[]> getAllAnalysisInfo(Connection connection) throws IOException, SQLException {
+
+    public static List<Object[]> getAllAnalysisInfo(Connection connection) throws IOException, SQLException {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
@@ -213,6 +220,7 @@ public class AnalysisDAO {
                 }
                 return result;
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {

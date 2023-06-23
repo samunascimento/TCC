@@ -45,6 +45,7 @@ public class AlterationDAO {
                 result.next();
                 alterationId = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -72,6 +73,7 @@ public class AlterationDAO {
                             resultSet.getBoolean(WAS_INSIDE_CHUNK)));
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {

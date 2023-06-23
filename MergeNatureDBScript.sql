@@ -22,7 +22,8 @@ CREATE TABLE Merge(
 	mergeHash VARCHAR(50), 
 	mergeType INT,
 	numberOfAlterations INT,
-	completed BOOLEAN
+	completed BOOLEAN,
+	error TEXT
 );
 
 CREATE TABLE Commit(

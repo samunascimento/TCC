@@ -60,6 +60,7 @@ public class CommitDAO {
                 result.next();
                 commitID = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -89,8 +90,9 @@ public class CommitDAO {
                             resultSet.getString(COMMITTER),
                             new Date(resultSet.getLong(COMMITTERDATE))));
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            } catch (SQLException ex) {
+                connection.rollback();
+                throw ex;
             } finally {
                 if (stmt != null) {
                     stmt.close();

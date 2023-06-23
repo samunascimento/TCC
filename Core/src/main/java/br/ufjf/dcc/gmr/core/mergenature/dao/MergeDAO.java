@@ -26,6 +26,7 @@ public class MergeDAO {
     public static final String MERGE_TYPE = "mergeType";
     public static final String NUMBER_OF_ALTERATIONS = "numberOfAlterations";
     public static final String COMPLETED = "completed";
+    public static final String ERROR = "error";
 
     public static int insert(Connection connection, Merge merge, int analysisId, boolean completed) throws SQLException, IOException {
         int mergeID = 0;
@@ -54,9 +55,38 @@ public class MergeDAO {
                     CommitDAO.insert(connection, parent, mergeID, CommitDAO.PARENT);
                 }
                 if (merge.getMergeBase() != null) {
-                    CommitDAO.insert(connection, merge.getMergeBase(), mergeID, CommitDAO.MERGE_COMMIT);
+                    CommitDAO.insert(connection, merge.getMergeBase(), mergeID, CommitDAO.MERGE_BASE);
                 }
             } catch (SQLException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+        return mergeID;
+    }
+
+    public static int insertError(Connection connection, String error, int analysisId, boolean completed) throws SQLException, IOException {
+        int mergeID = 0;
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            String sql = "INSERT INTO " + TABLE + " ("
+                    + ERROR + ", "
+                    + COMPLETED + ") VALUES (?,?) RETURNING " + ID + ";";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, error);
+                stmt.setBoolean(2, completed);
+                ResultSet result = stmt.executeQuery();
+                result.next();
+                mergeID = result.getInt(1);
+            } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -89,8 +119,13 @@ public class MergeDAO {
                             MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)),
                             new ArrayList<>(),
                             resultSet.getInt(NUMBER_OF_ALTERATIONS));
+                    if (!resultSet.getString(ERROR).equals(Merge.NO_ERROR)) {
+                        merge.setError(resultSet.getString(ERROR));
+                    }
                 }
+
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -125,8 +160,12 @@ public class MergeDAO {
                             MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)),
                             new ArrayList<>(),
                             resultSet.getInt(NUMBER_OF_ALTERATIONS));
+                    if (!resultSet.getString(ERROR).equals(Merge.NO_ERROR)) {
+                        merge.setError(resultSet.getString(ERROR));
+                    }
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -148,19 +187,25 @@ public class MergeDAO {
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
                 List<Commit> mergeBases;
+                boolean error = false;
                 int mergeId;
                 while (resultSet.next()) {
                     mergeId = resultSet.getInt(ID);
+                    error = !resultSet.getString(ERROR).equals(Merge.NO_ERROR);
                     mergeBases = CommitDAO.select(connection, mergeId, CommitDAO.MERGE_BASE);
                     merges.add(new Merge(mergeId,
                             null,
                             CommitDAO.select(connection, mergeId, CommitDAO.MERGE_COMMIT).get(0),
                             CommitDAO.select(connection, mergeId, CommitDAO.PARENT),
                             (mergeBases.isEmpty() ? null : mergeBases.get(0)),
-                            ConflictFileDAO.selectByMergeId(connection, mergeId),
+                            error ? new ArrayList<ConflictFile>() : ConflictFileDAO.selectByMergeId(connection, mergeId),
                             MergeType.getEnumFromInt(resultSet.getInt(MERGE_TYPE)),
-                            FileOADAO.selectByMergeId(connection, mergeId),
+                            error ? new ArrayList<FileOA>() : FileOADAO.selectByMergeId(connection, mergeId),
                             resultSet.getInt(NUMBER_OF_ALTERATIONS)));
+                    if (error) {
+                        merges.get(merges.size() - 1).setError(resultSet.getString(ERROR));
+                    }
+
                 }
                 for (Merge merge : merges) {
                     for (ConflictFile conflictFile : merge.getConflictFiles()) {
@@ -174,6 +219,7 @@ public class MergeDAO {
                     }
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -199,6 +245,7 @@ public class MergeDAO {
                     break;
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -213,12 +260,34 @@ public class MergeDAO {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "UPDATE " + TABLE + " SET " + COMPLETED + "= \'" + completed + "\'" + "WHERE " + ID + "= \'" + id + "\';";
+            String sql = "UPDATE " + TABLE + " SET " + COMPLETED + "= \'" + completed + "\'" + " WHERE " + ID + "= \'" + id + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
+                connection.rollback();
+                throw ex;
+            } finally {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            }
+        }
+    }
+
+    public static void updateError(Connection connection, int id, String error) throws IOException, SQLException {
+        if (connection == null) {
+            throw new IOException("[FATAL]: connection is null!");
+        } else {
+            error = error.replaceAll("\'", "\"");
+            String sql = "UPDATE " + TABLE + " SET " + ERROR + "= \'" + error + "\'" + " WHERE " + ID + "= \'" + id + "\';";
+            PreparedStatement stmt = null;
+            try {
+                stmt = connection.prepareStatement(sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {

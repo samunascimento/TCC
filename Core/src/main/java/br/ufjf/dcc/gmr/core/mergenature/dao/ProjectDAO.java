@@ -40,6 +40,7 @@ public class ProjectDAO {
                 result.next();
                 projectID = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -64,6 +65,7 @@ public class ProjectDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -83,6 +85,7 @@ public class ProjectDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -111,6 +114,7 @@ public class ProjectDAO {
                     break;
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -140,6 +144,7 @@ public class ProjectDAO {
                     break;
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -149,7 +154,7 @@ public class ProjectDAO {
         }
         return project;
     }
-    
+
     public static Project selectEntireProject(Connection connection, int id, int analysisId) throws SQLException, IOException {
         Project project = null;
         if (connection == null) {
@@ -169,8 +174,8 @@ public class ProjectDAO {
                     break;
                 }
                 project.setMerges(MergeDAO.selectByAnalysisId(connection, analysisId));
-                
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {

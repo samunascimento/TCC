@@ -1,0 +1,22 @@
+Line: 79
+Char Position: 50
+Error Message:
+no viable alternative at input 'struct__attribute__((visibility("protected")))C:'
+
+
+Line: 79
+Char Position: 53
+Error Message:
+mismatched input ',' expecting {'(', '{'}
+
+
+Line: 80
+Char Position: 2
+Error Message:
+extraneous input 'virtual' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'alignof', 'auto', 'bool', 'char', 'char16_t', 'char32_t', 'const_cast', 'decltype', 'delete', 'double', 'dynamic_cast', 'float', 'int', 'long', 'new', 'noexcept', 'operator', 'reinterpret_cast', 'short', 'signed', 'sizeof', 'static_cast', 'this', 'throw', 'typeid', 'typename', 'unsigned', 'void', 'wchar_t', '(', '[', '{', '}', '+', '-', '*', '&', '|', '~', Not, '++', '--', '->', '::', '.', Identifier}
+
+
+Line: 80
+Char Position: 15
+Error Message:
+no viable alternative at input 'voidc'

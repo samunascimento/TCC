@@ -1,0 +1,10 @@
+Line: 67
+Char Position: 0
+Error Message:
+mismatched input '#ifndef NDEBUG' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'decltype', 'operator', 'this', '(', '[', '+', '-', '*', '/', '%', '^', '&', '|', '~', '<', '>', '==', '!=', '<=', '>=', AndAnd, OrOr, '++', '--', ',', '->*', '->', '?', '::', ';', '.', '.*', Identifier}
+
+
+Line: 74
+Char Position: 2
+Error Message:
+mismatched input '}' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'decltype', 'operator', 'this', '(', '[', '+', '-', '*', '/', '%', '^', '&', '|', '~', '<', '>', '==', '!=', '<=', '>=', AndAnd, OrOr, '++', '--', '->*', '->', '?', '::', ';', '.', '.*', Identifier}

@@ -21,6 +21,8 @@ public class Merge {
     private MergeType mergeType;
     private List<FileOA> fileOAs;
     private int numberOfAlterations;
+    private String error;
+    public static String NO_ERROR = "No error";
 
     /**
      * Normal constructor
@@ -44,6 +46,7 @@ public class Merge {
         this.mergeType = mergeType;
         this.fileOAs = fileOAs;
         this.numberOfAlterations = numberOfAlterations;
+        this.error = null;
     }
 
     /**
@@ -66,6 +69,7 @@ public class Merge {
         this.mergeType = mergeType;
         this.fileOAs = fileOAs;
         this.numberOfAlterations = numberOfAlterations;
+        this.error = null;
     }
 
     public Merge(Merge merge) {
@@ -78,6 +82,7 @@ public class Merge {
         this.mergeType = merge.getMergeType();
         this.fileOAs = merge.getFileOAs();
         this.numberOfAlterations = merge.getNumberOfAlterations();
+        this.error = null;
     }
 
     public Merge() {
@@ -85,6 +90,15 @@ public class Merge {
         this.conflictFiles = new ArrayList<>();
         this.fileOAs = new ArrayList<>();
         this.numberOfAlterations = 0;
+        this.error = null;
+    }
+
+    public Merge(String error) {
+        this.parents = new ArrayList<>();
+        this.conflictFiles = new ArrayList<>();
+        this.fileOAs = new ArrayList<>();
+        this.numberOfAlterations = -1;
+        this.error = error;
     }
 
     public int getNumberOfConflictRegions() {
@@ -184,6 +198,18 @@ public class Merge {
 
     public void setNumberOfAlterations(int numberOfAlterations) {
         this.numberOfAlterations = numberOfAlterations;
+    }
+
+    public String getError() {
+        if (this.error == null) {
+            return this.NO_ERROR;
+        } else {
+            return error;
+        }
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public boolean hasOutOfMemory() {

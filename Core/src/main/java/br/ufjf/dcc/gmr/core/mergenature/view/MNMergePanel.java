@@ -94,8 +94,14 @@ public class MNMergePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         this.add(SPanel, gbc);
-        if(!merge.getConflictFiles().isEmpty()){
-            if(!merge.getConflictFiles().get(0).getChunks().isEmpty()){
+        if (!merge.getError().equals(Merge.NO_ERROR)) {
+            JLabel label = new JLabel();
+            label.setFont(label.getFont().deriveFont((float) 11.0));
+            label.setText(merge.getError());
+            label.setForeground(MNFrame.SECUNDARY_COLOR);
+            SPanel.add(label);
+        } else if (!merge.getConflictFiles().isEmpty()) {
+            if (!merge.getConflictFiles().get(0).getChunks().isEmpty()) {
                 updateConflictRegion(merge.getConflictFiles().get(0).getChunks().get(0));
             }
         }
@@ -135,7 +141,5 @@ public class MNMergePanel extends JPanel {
             }
         }
     }
-    
-    
 
 }

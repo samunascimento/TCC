@@ -65,25 +65,21 @@ public class Commit {
         this.committerDate = committerDate;
     }
 
+    public Commit() {
+
+    }
+
     /**
      *
      * @param hash The hash of the commit
      * @param repositoryPath The path of the Git repository where the commit is
      * @throws IOException If repositoryPath is not a path in system or the path
      * is not a Git repository
+     * @return a Commit
      */
-    public Commit(String hash, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
+    public static Commit getCommit(String hash, String repositoryPath) throws IOException, NotGitRepositoryException, ShowException {
         List<String> info = Git.getBasicCommitInfo(hash, repositoryPath);
-        this.message = info.get(5);
-        this.hash = info.get(0);
-        this.author = info.get(1);
-        this.authorDate = new Date(Long.parseLong(info.get(2)) * 1000);
-        this.committer = info.get(3);
-        this.committerDate = new Date(Long.parseLong(info.get(4)) * 1000);
-    }
-
-    public Commit() {
-
+        return new Commit(info.get(5), info.get(0), info.get(1), new Date(Long.parseLong(info.get(2)) * 1000), info.get(3), new Date(Long.parseLong(info.get(4)) * 1000));
     }
 
     public int getId() {

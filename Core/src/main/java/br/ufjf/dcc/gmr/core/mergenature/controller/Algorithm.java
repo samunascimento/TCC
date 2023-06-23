@@ -17,13 +17,23 @@ import br.ufjf.dcc.gmr.core.vcs.types.LineType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import java.util.Collections;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.swing.JProgressBar;
 
 public class Algorithm {
@@ -34,6 +44,7 @@ public class Algorithm {
     private int ctxLines = 3;
     private boolean devMode = false;
     private JProgressBar progressBar;
+    private int timeout = 10;
 
     private boolean solutionFileWasRenamed;
 
@@ -65,6 +76,14 @@ public class Algorithm {
 
     public void setDevMode(boolean devMode) {
         this.devMode = devMode;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public JProgressBar getProgressBar() {
@@ -115,6 +134,7 @@ public class Algorithm {
 
     private Project projectLayer(String repositoryPath, String repositoryURL) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
         if (this.sqlConnection != null && AnalysisDAO.hasCompletedAnalysis(sqlConnection, project.getId())) {
             System.out.println(project.getUrl() + " is already analyzed");
             return project;
@@ -132,21 +152,30 @@ public class Algorithm {
             progressBar.setIndeterminate(false);
             this.progressBar.setMaximum(numberOfMerges);
         }
-        System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
         for (String logLine : log) {
             try {
-                merge = mergeLayer(repositoryPath, project, logLine, analysisID);
+                if (status >= 25 && status <= 35) {
+                //if (logLine.equals("b3597418515f5acf9281e8e696b01938256580c9/0a006d8ed868bda810b592670ae689fc8220a1ef 7fdbe675acb6db5a1f2bdf163fd3dee4f287302c")) {
+                    merge = mergeLayer(repositoryPath, project, logLine, analysisID);
+                }
                 if (this.sqlConnection == null) {
                     project.addMerge(merge);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
+                merge = new Merge(ex.getMessage());
+                if (this.sqlConnection == null) {
+                    project.addMerge(merge);
+                } else {
+                    MergeDAO.insertError(sqlConnection, merge.getError(), analysisID, true);
+                }
             }
             if (this.progressBar != null) {
                 this.progressBar.setValue(++status);
-                System.out.println("[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
+                System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
             } else {
-                System.out.println("[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
+                System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
             }
         }
 
@@ -175,35 +204,42 @@ public class Algorithm {
                 merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
             }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
-                for (String conflictMessage : mergeMessage) {
-                    if (conflictMessage.contains("CONFLICT")) {
-                        try {
+                try {
+                    for (String conflictMessage : mergeMessage) {
+                        if (conflictMessage.contains("CONFLICT")) {
                             conflictFile = conflictFileLayer(repositoryPath, merge, conflictMessage);
                             merge.addConflictFile(conflictFile);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
                         }
                     }
-                }
-
-            }
-            for (FileOA foa : fileOALayer(merge, fileDiffs)) {
-                merge.addFileOA(foa);
-            }
-            if (sqlConnection != null) {
-                sqlConnection.setAutoCommit(false);
-                for (FileOA foa : merge.getFileOAs()) {
-                    foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
-                    for (Alteration alteration : foa.getAlterations()) {
-                        alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
+                    for (FileOA foa : fileOALayer(merge, fileDiffs)) {
+                        merge.addFileOA(foa);
                     }
+                    if (sqlConnection != null) {
+                        sqlConnection.setAutoCommit(false);
+                        for (FileOA foa : merge.getFileOAs()) {
+                            foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
+                            for (Alteration alteration : foa.getAlterations()) {
+                                alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
+                            }
+                        }
+                        sqlConnection.setAutoCommit(true);
+                    }
+                } catch (Exception ex) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace();
+                    ex.printStackTrace(pw);
+                    merge.setError(sw.toString());
                 }
-                sqlConnection.setAutoCommit(true);
-            }
-            if (sqlConnection != null) {
-                MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
             }
         }
+        if (sqlConnection != null) {
+            sqlConnection.setAutoCommit(false);
+            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
+            MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
+            sqlConnection.setAutoCommit(true);
+        }
+
         return merge;
     }
 
@@ -240,6 +276,7 @@ public class Algorithm {
         ConflictFile conflictFile = MergeMessageReader.getConflictFileFromMessage(conflictMessage);
         List<String> fileContent;
         List<Chunk> chunks;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
         if (sqlConnection != null && ConflictFileDAO.contains(sqlConnection, conflictFile, merge.getId()) != 0) {
             conflictFile.setId(ConflictFileDAO.contains(sqlConnection, conflictFile, merge.getId()));
             if (conflictFile.getId() != 0) {
@@ -259,10 +296,6 @@ public class Algorithm {
                 } catch (OutOfMemoryError ex) {
                     System.out.println("OutOfMemoryError getting chunks");
                     conflictFile.setOutOfMemory(true);
-                    return conflictFile;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    return conflictFile;
                 }
                 if (contextIntervals != null) {
                     conflictFile = outsideAlterationsLayer(conflictFile, repositoryPath, contextIntervals);
@@ -274,17 +307,20 @@ public class Algorithm {
                 conflictFile.setHasOutsideAlterations(HasOutsideAlterations.NO);
             }
             if (!conflictFile.getChunks().isEmpty()) {
+                ExecutorService executor = Executors.newCachedThreadPool();
+                Future<ConflictFile> future = executor.submit(new Antlr4LayerTask(conflictFile, repositoryPath));
                 try {
-                    conflictFile = antlr4Layer(conflictFile, repositoryPath);
+                    conflictFile = future.get(this.timeout, TimeUnit.SECONDS);
+                } catch (TimeoutException ex) {
+                    System.out.println(dtf.format(LocalDateTime.now()) + "TIMEOUT");
+                    conflictFile.setAllLanguageConstructs("The time to get the language constructs exceeded the timeout! Timeout: " + this.timeout + " seconds");
                 } catch (OutOfMemoryError ex) {
                     System.out.println("OutOfMemoryError get language contructs");
                     conflictFile.setAllLanguageConstructs(LanguageConstructs.OUT_OF_MEMORY);
                     conflictFile.setOutOfMemory(true);
-                    return conflictFile;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     conflictFile.setAllLanguageConstructs(LanguageConstructs.ERROR);
-                    return conflictFile;
                 }
             }
         } else {
@@ -335,6 +371,7 @@ public class Algorithm {
                 }
                 if (conflictFile.getConflictFileType() == ConflictFileType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
+                    System.out.println(ListUtils.getTextListStringToString(fileContent));
                     if (!auxArray[auxArray.length - 1].equals(conflictFile.getParent2FilePath())
                             && Git.fileExistInCommit(conflictFile.getMerge().getParents().get(1).getHash(), auxArray[auxArray.length - 1], repositoryPath)) {
                         conflictFile.setParent2FilePath(auxArray[auxArray.length - 1]);
@@ -529,9 +566,6 @@ public class Algorithm {
             fileDiffs = Git.diff(repositoryPath,
                     conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent2FilePath(),
                     conflictFile.getConflictFilePath(), true, 0);
-            allLines = Git.diff(repositoryPath,
-                    conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent2FilePath(),
-                    conflictFile.getConflictFilePath(), true, 0).get(0).getLines();
         } else {
             fileDiffs = Git.diff(repositoryPath,
                     conflictFile.getMerge().getMergeCommit().getHash() + ":" + conflictFile.getParent1FilePath(),
@@ -761,13 +795,13 @@ public class Algorithm {
         String[] auxStringArray;
         String auxString;
         auxStringArray = logLine.split("/");
-        merge.setMergeCommit(new Commit(auxStringArray[0], repositoryPath));
+        merge.setMergeCommit(Commit.getCommit(auxStringArray[0], repositoryPath));
         auxStringArray = auxStringArray[1].split(" ");
         for (String parent : auxStringArray) {
-            merge.addParent(new Commit(parent, repositoryPath));
+            merge.addParent(Commit.getCommit(parent, repositoryPath));
         }
         auxString = Git.mergeBase(repositoryPath, auxStringArray);
-        merge.setMergeBase((auxString == null ? null : new Commit(auxString, repositoryPath)));
+        merge.setMergeBase((auxString == null ? null : Commit.getCommit(auxString, repositoryPath)));
         return merge;
     }
 
@@ -789,6 +823,7 @@ public class Algorithm {
             return (unrelatedHistories ? MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES : MergeType.CONFLICTED_MERGE);
         } else {
             return (unrelatedHistories ? MergeType.NOT_CONFLICTED_MERGE_OF_UNRELATED_HISTORIES : MergeType.NOT_CONFLICTED_MERGE);
+
         }
     }
 
@@ -848,6 +883,23 @@ public class Algorithm {
             path = path + "/";
         }
         return path;
+
     }
 
+    public class Antlr4LayerTask implements Callable<ConflictFile> {
+
+        public ConflictFile conflictFile;
+        public String repositoryPath;
+
+        public Antlr4LayerTask(ConflictFile conflictFile, String repositoryPath) {
+            this.conflictFile = conflictFile;
+            this.repositoryPath = repositoryPath;
+        }
+
+        @Override
+        public ConflictFile call() throws IOException, OutOfMemoryError, NotGitRepositoryException, ShowException {
+            return antlr4Layer(conflictFile, repositoryPath);
+        }
+
+    }
 }

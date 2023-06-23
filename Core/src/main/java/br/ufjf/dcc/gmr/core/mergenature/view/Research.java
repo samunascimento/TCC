@@ -13,8 +13,10 @@ public class Research {
         String db_user = args[1];
         String db_pw = args[2];
         File[] repositories = new File(args[3]).listFiles();
+        int timeout = Integer.parseInt(args[4]);
         Connection connection = ConnectionFactory.getConnection(db_url, db_user, db_pw);
         Algorithm algorithm = new Algorithm();
+        algorithm.setTimeout(timeout);
         algorithm.setSqlConnection(connection);
         for (File repository : repositories) {
             algorithm.run(repository.getAbsolutePath());

@@ -1,0 +1,16 @@
+Line: 1641
+Char Position: 64
+Error Message:
+no viable alternative at input 'std::stringPlugin=ToolChain.getDriver().Dir+"/../lib"CLANG_LIBDIR_SUFFIX"/LLVMgold.so"'
+
+
+Line: 2767
+Char Position: 0
+Error Message:
+no viable alternative at input 'staticvoidappendUserToPath(SmallVectorImpl<char>&Result){#ifdef LLVM_ON_UNIX'
+
+
+Line: 2772
+Char Position: 2
+Error Message:
+mismatched input 'if' expecting {<EOF>, IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, IncludeDirective, MultiLineMacro, Directive, 'alignas', 'asm', 'assert', 'auto', 'bool', 'char', 'char16_t', 'char32_t', 'class', 'const', 'constexpr', 'const_cast', 'decltype', 'double', 'dynamic_cast', 'enum', 'explicit', 'extern', 'float', 'friend', 'inline', 'int', 'long', 'mutable', 'namespace', 'operator', 'register', 'reinterpret_cast', 'short', 'signed', 'static', 'static_assert', 'static_cast', 'struct', 'template', 'this', 'thread_local', 'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', '(', '[', '*', '&', '~', AndAnd, '->', '::', ';', '.', '...', Identifier}

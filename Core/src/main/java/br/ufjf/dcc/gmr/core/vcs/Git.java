@@ -30,15 +30,15 @@ public class Git {
      * in scope of git clone command.
      */
     public static void clone(String downloadPath, String projectURL, String folderName) throws IOException, CloneException {
-        if(folderName == null){
+        if (folderName == null) {
             folderName = "";
         }
         String command = "git clone " + projectURL + " " + folderName;
-        System.out.println("Clonando " + projectURL + " em " + downloadPath + (downloadPath.endsWith(File.separator)? "" : File.separator) + 
-                folderName + (folderName.endsWith(File.separator)? "" : File.separator) +
-                "...\nIsso pode demorar dependendo do projeto, por favor espere.");
+        System.out.println("Clonando " + projectURL + " em " + downloadPath + (downloadPath.endsWith(File.separator) ? "" : File.separator)
+                + folderName + (folderName.endsWith(File.separator) ? "" : File.separator)
+                + "...\nIsso pode demorar dependendo do projeto, por favor espere.");
         CLIExecution execution = CLIExecute.execute(command, downloadPath);
-        if(!execution.getError().isEmpty() && execution.getOutput().isEmpty() && !execution.getError().contains("Cloning into '" + folderName + "'...")){
+        if (!execution.getError().isEmpty() && execution.getOutput().isEmpty() && !execution.getError().contains("Cloning into '" + folderName + "'...")) {
             System.out.println(execution);
             throw new CloneException(ListUtils.getTextListStringToString(execution.getError()));
         }
@@ -149,16 +149,19 @@ public class Git {
                 String error = ListUtils.getTextListStringToString(execution.getError());
                 if (!error.contains("HEAD is now at ")) {
                     execution = CLIExecute.execute("git status", repositoryPath);
-                    if(execution.getErrorString().contains("HEAD detached") || execution.getOutputString().contains("HEAD detached")){
-                        try{
-                        execution = CLIExecute.execute("git add .", repositoryPath);
-                        } catch (Exception ex){}
-                        try{
-                        execution = CLIExecute.execute("git commit -m a", repositoryPath);
-                        } catch (Exception ex){}
-                        try{
-                        execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
-                        } catch (Exception ex){}
+                    if (execution.getErrorString().contains("HEAD detached") || execution.getOutputString().contains("HEAD detached")) {
+                        try {
+                            execution = CLIExecute.execute("git add .", repositoryPath);
+                        } catch (Exception ex) {
+                        }
+                        try {
+                            execution = CLIExecute.execute("git commit -m a", repositoryPath);
+                        } catch (Exception ex) {
+                        }
+                        try {
+                            execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
+                        } catch (Exception ex) {
+                        }
                     } else {
                         throw new CheckoutException(error);
                     }
@@ -292,7 +295,12 @@ public class Git {
             String command = "git show " + commitHash + " --format=%H%n%an%n%at%n%cn%n%ct%n%s --no-patch";
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty()) {
-                throw new ShowException(ListUtils.getTextListStringToString(execution.getError()));
+                String errorMessage = ListUtils.getTextListStringToString(execution.getError());
+                if (errorMessage.contains("error") || errorMessage.contains("fatal")) {
+                    throw new ShowException(ListUtils.getTextListStringToString(execution.getError()));
+                } else {
+                    return execution.getOutput();
+                }
             } else {
                 return execution.getOutput();
             }
@@ -414,7 +422,7 @@ public class Git {
                 boolean bool2AuxWarning = false;
 
                 for (String line : execution.getError()) {
-                    if (line.contains("warning: LF will be replaced by CRLF in") || line.contains("warning: CRLF will be replaced by LF") ) {
+                    if (line.contains("LF will be replaced by CRLF in") || line.contains("CRLF will be replaced by LF")) {
                         auxWar1 = line;
                         bool1AuxWarning = true;
                     }
@@ -470,7 +478,7 @@ public class Git {
                 fileDiffs.add(aux);
             }
             for (FileDiff fileDiff : fileDiffs) {
-                if(!(fileDiff.getFilePathSource().equals("") && fileDiff.getFilePathTarget().equals("") && fileDiff.getLines().isEmpty())){
+                if (!(fileDiff.getFilePathSource().equals("") && fileDiff.getFilePathTarget().equals("") && fileDiff.getLines().isEmpty())) {
                     result.add(fileDiff);
                 }
             }

@@ -1,0 +1,10 @@
+Line: 278
+Char Position: 0
+Error Message:
+missing '}' at '#ifndef NDEBUG'
+
+
+Line: 289
+Char Position: 2
+Error Message:
+mismatched input 'for' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'decltype', 'operator', 'this', '(', ')', '[', '+', '-', '*', '/', '%', '^', '&', '|', '~', '<', '>', '==', '!=', '<=', '>=', AndAnd, OrOr, '++', '--', '->*', '->', '?', '::', '.', '.*', Identifier}

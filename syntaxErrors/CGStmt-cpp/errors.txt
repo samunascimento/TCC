@@ -1,0 +1,10 @@
+Line: 94
+Char Position: 0
+Error Message:
+mismatched input '#define STMT(Type, Base)' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'decltype', 'operator', 'this', '(', ')', '[', '+', '-', '*', '/', '%', '^', '&', '|', '~', '<', '>', '==', '!=', '<=', '>=', AndAnd, OrOr, '++', '--', ',', '->*', '->', '?', '::', '.', '.*', '...', Identifier}
+
+
+Line: 99
+Char Position: 2
+Error Message:
+mismatched input '{' expecting {<EOF>, IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, IncludeDirective, MultiLineMacro, Directive, 'alignas', 'asm', 'assert', 'auto', 'bool', 'char', 'char16_t', 'char32_t', 'class', 'const', 'constexpr', 'const_cast', 'decltype', 'double', 'dynamic_cast', 'enum', 'explicit', 'extern', 'float', 'friend', 'inline', 'int', 'long', 'mutable', 'namespace', 'operator', 'register', 'reinterpret_cast', 'short', 'signed', 'static', 'static_assert', 'static_cast', 'struct', 'template', 'this', 'thread_local', 'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', '(', '[', '*', '&', '~', AndAnd, '->', '::', ';', '.', '...', Identifier}

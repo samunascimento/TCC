@@ -24,13 +24,13 @@ public class TestLuan {
         String[] auxStringArray;
         String auxString;
         auxStringArray = logLine.split("/");
-        merge.setMergeCommit(new Commit(auxStringArray[0], repositoryPath));
+        merge.setMergeCommit(Commit.getCommit(auxStringArray[0], repositoryPath));
         auxStringArray = auxStringArray[1].split(" ");
         for (String parent : auxStringArray) {
-            merge.addParent(new Commit(parent, repositoryPath));
+            merge.addParent(Commit.getCommit(parent, repositoryPath));
         }
         auxString = Git.mergeBase(repositoryPath, auxStringArray);
-        merge.setMergeBase((auxString == null ? null : new Commit(auxString, repositoryPath)));
+        merge.setMergeBase((auxString == null ? null : Commit.getCommit(auxString, repositoryPath)));
         return merge;
     }
 

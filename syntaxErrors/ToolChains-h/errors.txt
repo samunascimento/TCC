@@ -1,0 +1,100 @@
+Line: 31
+Char Position: 44
+Error Message:
+extraneous input 'public' expecting {'decltype', '::', Identifier}
+
+
+Line: 32
+Char Position: 0
+Error Message:
+mismatched input 'public' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'alignof', 'auto', 'bool', 'char', 'char16_t', 'char32_t', 'const_cast', 'decltype', 'delete', 'double', 'dynamic_cast', 'float', 'int', 'long', 'new', 'noexcept', 'operator', 'reinterpret_cast', 'short', 'signed', 'sizeof', 'static_cast', 'this', 'throw', 'typeid', 'typename', 'unsigned', 'void', 'wchar_t', '(', '[', '{', '}', '+', '-', '*', '&', '|', '~', Not, '++', '--', '->', '::', '.', Identifier}
+
+
+Line: 150
+Char Position: 0
+Error Message:
+mismatched input 'protected' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'alignas', 'alignof', 'asm', 'assert', 'auto', 'bool', 'break', 'case', 'char', 'char16_t', 'char32_t', 'class', 'const', 'constexpr', 'const_cast', 'continue', 'decltype', 'default', 'delete', 'do', 'double', 'dynamic_cast', 'enum', 'explicit', 'extern', 'float', 'for', 'friend', 'goto', 'if', 'inline', 'int', 'long', 'mutable', 'namespace', 'new', 'noexcept', 'operator', 'register', 'reinterpret_cast', 'return', 'short', 'signed', 'sizeof', 'static', 'static_assert', 'static_cast', 'struct', 'switch', 'this', 'thread_local', 'throw', 'try', 'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', 'while', '(', '[', '{', '}', '+', '-', '*', '&', '|', '~', Not, AndAnd, '++', '--', '->', '::', ';', '.', '...', Identifier}
+
+
+Line: 153
+Char Position: 0
+Error Message:
+mismatched input 'public' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, IncludeDirective, MultiLineMacro, Directive, 'alignas', 'asm', 'assert', 'auto', 'bool', 'char', 'char16_t', 'char32_t', 'class', 'const', 'constexpr', 'const_cast', 'decltype', 'double', 'dynamic_cast', 'enum', 'explicit', 'extern', 'float', 'friend', 'inline', 'int', 'long', 'mutable', 'namespace', 'operator', 'register', 'reinterpret_cast', 'short', 'signed', 'static', 'static_assert', 'static_cast', 'struct', 'template', 'this', 'thread_local', 'typedef', 'typeid', 'typename', 'union', 'unsigned', 'using', 'virtual', 'void', 'volatile', 'wchar_t', '(', '[', '}', '*', '&', '~', AndAnd, '->', '::', ';', '.', '...', Identifier}
+
+
+Line: 156
+Char Position: 25
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 158
+Char Position: 55
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 160
+Char Position: 45
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 161
+Char Position: 36
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 162
+Char Position: 36
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 163
+Char Position: 42
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 164
+Char Position: 52
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 166
+Char Position: 0
+Error Message:
+mismatched input 'protected' expecting {'final', 'override', 'try', '{', '=', ':'}
+
+
+Line: 167
+Char Position: 54
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 168
+Char Position: 39
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 169
+Char Position: 36
+Error Message:
+mismatched input ';' expecting {'try', '{', '=', ':'}
+
+
+Line: 182
+Char Position: 0
+Error Message:
+mismatched input 'private' expecting {IntegerLiteral, CharacterLiteral, FloatingLiteral, StringLiteral, BooleanLiteral, PointerLiteral, UserDefinedLiteral, 'decltype', 'operator', 'this', '(', '[', '+', '-', '*', '/', '%', '^', '&', '|', '~', '<', '>', '==', '!=', '<=', '>=', AndAnd, OrOr, '++', '--', ',', '->*', '->', '?', '::', ';', '.', '.*', Identifier}
+
+
+Line: 185
+Char Position: 0
+Error Message:
+mismatched input '}' expecting {'alignas', '(', '[', '{', '=', ',', ';'}

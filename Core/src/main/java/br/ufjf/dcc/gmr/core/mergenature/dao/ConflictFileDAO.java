@@ -59,6 +59,7 @@ public class ConflictFileDAO {
                 result.next();
                 conflictFileID = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -94,6 +95,7 @@ public class ConflictFileDAO {
                             null);
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -112,10 +114,8 @@ public class ConflictFileDAO {
             String sql = "SELECT * FROM " + TABLE + " WHERE id = " + id;
             PreparedStatement stmt = null;
             try {
-
                 stmt = connection.prepareStatement(sql);
                 ResultSet resultSet = stmt.executeQuery();
-
                 while (resultSet.next()) {
                     conflictFile = new ConflictFile(resultSet.getInt(ID),
                             resultSet.getString(PARENT1FILEPATH),
@@ -129,6 +129,7 @@ public class ConflictFileDAO {
                             null);
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -159,6 +160,7 @@ public class ConflictFileDAO {
                     conflictFileID = resultSet.getInt(ID);
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -174,7 +176,7 @@ public class ConflictFileDAO {
         if (connection == null) {
             throw new IOException("[FATAL]: connection is null!");
         } else {
-            String sql = "SELECT * FROM " + TABLE + " WHERE id = " + mergeId;
+            String sql = "SELECT * FROM " + TABLE + " WHERE " + MERGE_ID + "= \'" + mergeId + "\';";
             PreparedStatement stmt = null;
             try {
                 stmt = connection.prepareStatement(sql);
@@ -199,6 +201,7 @@ public class ConflictFileDAO {
                     }
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -46,6 +47,7 @@ public class FileOADAO {
                 result.next();
                 fileOAId = result.getInt(1);
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -84,6 +86,7 @@ public class FileOADAO {
                             conflictFile));
                 }
             } catch (SQLException ex) {
+                connection.rollback();
                 throw ex;
             } finally {
                 if (stmt != null) {
