@@ -69,7 +69,10 @@ public class ChunkDAO {
                 result.next();
                 chunkID = result.getInt(1);
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -106,7 +109,10 @@ public class ChunkDAO {
                             resultSet.getInt(ORIGINAL_V2_FIRST_LINE));
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
 
                 throw ex;
             } finally {
@@ -144,7 +150,10 @@ public class ChunkDAO {
                             resultSet.getInt(ORIGINAL_V2_FIRST_LINE)));
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
 
                 throw ex;
             } finally {

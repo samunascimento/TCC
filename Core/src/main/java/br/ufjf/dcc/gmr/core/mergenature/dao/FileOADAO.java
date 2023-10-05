@@ -47,7 +47,10 @@ public class FileOADAO {
                 result.next();
                 fileOAId = result.getInt(1);
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -86,7 +89,10 @@ public class FileOADAO {
                             conflictFile));
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {

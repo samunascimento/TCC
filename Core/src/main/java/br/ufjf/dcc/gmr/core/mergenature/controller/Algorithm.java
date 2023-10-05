@@ -155,10 +155,7 @@ public class Algorithm {
         System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
         for (String logLine : log) {
             try {
-                if (status >= 25 && status <= 35) {
-                //if (logLine.equals("b3597418515f5acf9281e8e696b01938256580c9/0a006d8ed868bda810b592670ae689fc8220a1ef 7fdbe675acb6db5a1f2bdf163fd3dee4f287302c")) {
-                    merge = mergeLayer(repositoryPath, project, logLine, analysisID);
-                }
+                merge = mergeLayer(repositoryPath, project, logLine, analysisID);
                 if (this.sqlConnection == null) {
                     project.addMerge(merge);
                 }
@@ -312,13 +309,16 @@ public class Algorithm {
                 try {
                     conflictFile = future.get(this.timeout, TimeUnit.SECONDS);
                 } catch (TimeoutException ex) {
+                    future.cancel(true);
                     System.out.println(dtf.format(LocalDateTime.now()) + "TIMEOUT");
                     conflictFile.setAllLanguageConstructs("The time to get the language constructs exceeded the timeout! Timeout: " + this.timeout + " seconds");
                 } catch (OutOfMemoryError ex) {
+                    future.cancel(true);
                     System.out.println("OutOfMemoryError get language contructs");
                     conflictFile.setAllLanguageConstructs(LanguageConstructs.OUT_OF_MEMORY);
                     conflictFile.setOutOfMemory(true);
                 } catch (Exception ex) {
+                    future.cancel(true);
                     ex.printStackTrace();
                     conflictFile.setAllLanguageConstructs(LanguageConstructs.ERROR);
                 }

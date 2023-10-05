@@ -40,7 +40,10 @@ public class ProjectDAO {
                 result.next();
                 projectID = result.getInt(1);
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -65,7 +68,10 @@ public class ProjectDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -85,7 +91,10 @@ public class ProjectDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -114,7 +123,10 @@ public class ProjectDAO {
                     break;
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -144,7 +156,11 @@ public class ProjectDAO {
                     break;
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
+
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -175,7 +191,10 @@ public class ProjectDAO {
                 }
                 project.setMerges(MergeDAO.selectByAnalysisId(connection, analysisId));
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {

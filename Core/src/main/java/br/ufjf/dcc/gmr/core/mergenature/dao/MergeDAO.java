@@ -58,7 +58,10 @@ public class MergeDAO {
                     CommitDAO.insert(connection, merge.getMergeBase(), mergeID, CommitDAO.MERGE_BASE);
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -86,7 +89,10 @@ public class MergeDAO {
                 result.next();
                 mergeID = result.getInt(1);
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -125,7 +131,10 @@ public class MergeDAO {
                 }
 
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -165,7 +174,10 @@ public class MergeDAO {
                     }
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -219,7 +231,10 @@ public class MergeDAO {
                     }
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -245,7 +260,10 @@ public class MergeDAO {
                     break;
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -266,7 +284,10 @@ public class MergeDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -287,7 +308,10 @@ public class MergeDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {

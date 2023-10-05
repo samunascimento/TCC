@@ -44,7 +44,10 @@ public class AnalysisDAO {
                 result.next();
                 analysisId = result.getInt(1);
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -65,7 +68,10 @@ public class AnalysisDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -85,7 +91,10 @@ public class AnalysisDAO {
                 stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -109,7 +118,10 @@ public class AnalysisDAO {
                     completed = resultSet.getBoolean(COMPLETED);
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -134,7 +146,10 @@ public class AnalysisDAO {
                     analysisIds.add(resultSet.getInt(ID));
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -160,7 +175,10 @@ public class AnalysisDAO {
                     break;
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -187,7 +205,10 @@ public class AnalysisDAO {
                     break;
                 }
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
@@ -220,7 +241,10 @@ public class AnalysisDAO {
                 }
                 return result;
             } catch (SQLException ex) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (Exception e) {
+                }
                 throw ex;
             } finally {
                 if (stmt != null) {
