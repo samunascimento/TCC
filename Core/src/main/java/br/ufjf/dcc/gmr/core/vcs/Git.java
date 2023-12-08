@@ -444,8 +444,12 @@ public class Git {
             } else {
                 aux.setAllMessage(execution.getOutput());
                 int currentLine = 0;
+                int removedLines = 0;
+                int addedLines = 0;
+                String[] auxStrArray1;
+                String[] auxStrArray2;
                 for (String line : execution.getOutput()) {
-                    if (line.startsWith("difffileDiff --") && currentLine != 0) {
+                    if (line.startsWith("diff --") && currentLine != 0) {
                         fileDiffs.add(aux);
                         aux = new FileDiff();
                     }
@@ -460,7 +464,8 @@ public class Git {
                         aux.setFilePathTarget(c);
                     } else if (line.charAt(0) != '-' && (line.charAt(0) == '+' || line.charAt(1) == '+')) {
                         String c = line.substring(1);
-                        aux.getLines().add(new LineInformation(c, LineType.ADDED, currentLine));
+                        aux.getLines().add(new LineInformation(c, LineType.ADDED, addedLines));
+                        addedLines++;
                     } else if (line.length() > 2 && line.charAt(0) == '-' && line.charAt(1) == '-' && line.charAt(2) == '-' && line.charAt(3) == ' ') {
                         String c = line.substring(5);
                         if (c.endsWith("\t") || c.endsWith("\n")) {
@@ -469,9 +474,26 @@ public class Git {
                         aux.setFilePathSource(c);
                     } else if (line.charAt(0) == '-' || line.charAt(1) == '-') {
                         String c = line.substring(1);
-                        aux.getLines().add(new LineInformation(c, LineType.DELETED, currentLine));
+                        aux.getLines().add(new LineInformation(c, LineType.DELETED, removedLines));
+                        removedLines++;
                     } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
+                        auxStrArray1 = line.split(" ");
+                        if(auxStrArray1[1].startsWith("-")){
+                            auxStrArray2 = auxStrArray1[1].split(",");
+                            removedLines = Integer.parseInt(auxStrArray2[0].replaceAll("-", ""));
+                        } else {
+                            throw new DiffException("Diff message not expected: " + line);
+                        }
+                        if(auxStrArray1[2].startsWith("+")){
+                            auxStrArray2 = auxStrArray1[2].split(",");
+                            addedLines = Integer.parseInt(auxStrArray2[0].replaceAll("\\+", ""));
+                        } else {
+                            throw new DiffException("Diff message not expected: " + line);
+                        }
                         currentLine = startingLine(line);
+                    } else {
+                        addedLines++;
+                        removedLines++;
                     }
 
                 }

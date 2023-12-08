@@ -156,9 +156,10 @@ public class Algorithm {
         for (String logLine : log) {
             try {
                 merge = mergeLayer(repositoryPath, project, logLine, analysisID);
-                if (this.sqlConnection == null) {
+                if (this.sqlConnection == null && merge != null) {
                     project.addMerge(merge);
                 }
+                merge = null;
             } catch (Exception ex) {
                 ex.printStackTrace();
                 merge = new Merge(ex.getMessage());
@@ -261,7 +262,7 @@ public class Algorithm {
                 fileOA = new FileOA();
                 fileOA.setFilePath(fileDiff.getFilePathTarget().replaceFirst("/", ""));
                 for (LineInformation line : fileDiff.getLines()) {
-                    fileOA.addAlteration(new Alteration(line.getContent(), line.getType() == LineType.ADDED, false));
+                    fileOA.addAlteration(new Alteration(line.getContent(), line.getType() != LineType.ADDED, false));
                 }
                 fileOAs.add(fileOA);
             }
@@ -310,6 +311,7 @@ public class Algorithm {
                     conflictFile = future.get(this.timeout, TimeUnit.SECONDS);
                 } catch (TimeoutException ex) {
                     future.cancel(true);
+                    executor.shutdownNow();
                     System.out.println(dtf.format(LocalDateTime.now()) + "TIMEOUT");
                     conflictFile.setAllLanguageConstructs("The time to get the language constructs exceeded the timeout! Timeout: " + this.timeout + " seconds");
                 } catch (OutOfMemoryError ex) {
@@ -438,7 +440,7 @@ public class Algorithm {
                 chunk.setSolutionText("The context was altered, so the solution cannot be obtained accurately");
                 chunk.setDeveloperDecision(DeveloperDecision.IMPRECISE);
             } else if (solutionFirstLine == ReturnNewLineNumber.POSTPONED || solutionFinalLine == ReturnNewLineNumber.POSTPONED) {
-                contextIntervals.add(new IntegerInterval(chunk.getBeginLine() - 1, chunk.getEndLine() - 1));
+                contextIntervals.add(new IntegerInterval(chunk.getBeginLine() - 1, chunk.getEndLine() + 1, chunk.getBeginLine() - 1, chunk.getEndLine() - 1));
                 chunk.setSolutionText(chunk.getChunkText());
                 chunk.setDeveloperDecision(DeveloperDecision.POSTPONED_3);
             } else {
@@ -449,7 +451,7 @@ public class Algorithm {
                     chunk.setDeveloperDecision(DeveloperDecision.DIFF_PROBLEM);
                 } else {
                     if (contextIntervals != null) {
-                        contextIntervals.add(new IntegerInterval(solutionFirstLine, solutionFinalLine));
+                        contextIntervals.add(new IntegerInterval(chunk.getBeginLine() - 1, chunk.getEndLine() + 1, solutionFirstLine, solutionFinalLine));
                     }
                     List<String> solutionFileContent = Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath);
                     chunk.setSolutionText(
@@ -581,7 +583,8 @@ public class Algorithm {
         for (LineInformation line : allLines) {
             isOutsideAlteration = true;
             for (IntegerInterval contextInterval : contextIntervals) {
-                if (contextInterval.begin <= line.getLineNumber() && contextInterval.end >= line.getLineNumber()) {
+                if ((line.getType() == LineType.ADDED && contextInterval.pastBegin < line.getLineNumber() && contextInterval.pastEnd > line.getLineNumber())
+                        || (line.getType() == LineType.DELETED && contextInterval.futureBegin < line.getLineNumber() && contextInterval.futureEnd > line.getLineNumber())) {
                     isOutsideAlteration = false;
                     break;
                 }
@@ -598,7 +601,7 @@ public class Algorithm {
             fileOA.setFilePath(conflictFile.getConflictFilePath());
             fileOA.setConflictFile(conflictFile);
             for (LineInformation line : outsideAlterationsLines) {
-                fileOA.addAlteration(new Alteration(line.getContent(),
+                fileOA.addAlteration(new Alteration(line.getContent() + line.getLineNumber(),
                         line.getType() == LineType.ADDED,
                         conflictFile.wasInsideChunk(line.getContent())));
             }
@@ -829,13 +832,18 @@ public class Algorithm {
 
     private class IntegerInterval {
 
-        int begin;
-        int end;
+        int pastBegin;
+        int pastEnd;
+        int futureBegin;
+        int futureEnd;
 
-        public IntegerInterval(int begin, int end) {
-            this.begin = begin;
-            this.end = end;
+        public IntegerInterval(int pastBegin, int pastEnd, int futureBegin, int futureEnd) {
+            this.pastBegin = pastBegin;
+            this.pastEnd = pastEnd;
+            this.futureBegin = futureBegin;
+            this.futureEnd = futureEnd;
         }
+
     }
 
     private boolean isEmpty(Chunk chunk, boolean v1) {

@@ -9,6 +9,7 @@ import java.sql.Connection;
 public class Research {
     
     public static void main(String[] args) throws Exception {
+        System.out.println("Running...");
         String db_url = args[0];
         String db_user = args[1];
         String db_pw = args[2];
