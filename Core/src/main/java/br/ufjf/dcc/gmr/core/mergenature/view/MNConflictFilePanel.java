@@ -91,10 +91,10 @@ public class MNConflictFilePanel extends JPanel {
 
         conflictComboBox = new JComboBox();
         for (ConflictFile conflict : conflicts) {
-            if (!conflict.getParent1FileName().equals("Absent")) {
-                conflictComboBox.addItem(conflict.getParent1FileName() + " (" + conflict.getChunks().size() + " regions)");
+            if (!conflict.getParent1FilePath().equals("Absent")) {
+                conflictComboBox.addItem(conflict.getParent1FilePath() + " (" + conflict.getChunks().size() + " regions)");
             } else {
-                conflictComboBox.addItem(conflict.getParent2FileName() + " (" + conflict.getChunks().size() + " regions)");
+                conflictComboBox.addItem(conflict.getParent2FilePath() + " (" + conflict.getChunks().size() + " regions)");
             }
 
         }
