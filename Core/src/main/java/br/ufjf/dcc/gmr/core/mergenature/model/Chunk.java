@@ -26,6 +26,7 @@ public class Chunk {
     //AFTER CONFLICT (SOLUTION)
     private String solutionText;
     private DeveloperDecision developerDecision;
+    private String solutionLanguageConstructs;
 
     //BEFORE CONFLICT
     private String languageConstructs;
@@ -98,6 +99,39 @@ public class Chunk {
         this.languageConstructs = languageConstructs;
         this.originalV1FirstLine = originalV1FirstLine;
         this.originalV2FirstLine = originalV2FirstLine;
+    }
+
+    public Chunk(int id, ConflictFile conflictFile, String chunkText, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String languageConstructs, int originalV1FirstLine, int originalV2FirstLine , String solutionLanguageConstructs) {
+        this.id = id;
+        this.conflictFile = conflictFile;
+        this.chunkText = chunkText;
+        this.firstPrefixLine = firstPrefixLine;
+        this.beginLine = beginLine;
+        this.separatorLine = separatorLine;
+        this.endLine = endLine;
+        this.lastSuffixLine = lastSuffixLine;
+        this.solutionText = solutionText;
+        this.developerDecision = developerDecision;
+        this.languageConstructs = languageConstructs;
+        this.originalV1FirstLine = originalV1FirstLine;
+        this.originalV2FirstLine = originalV2FirstLine;
+        this.solutionLanguageConstructs = solutionLanguageConstructs;
+    }
+
+    public Chunk(ConflictFile conflictFile, String chunkText, int firstPrefixLine, int beginLine, int separatorLine, int endLine, int lastSuffixLine, String solutionText, DeveloperDecision developerDecision, String languageConstructs, int originalV1FirstLine, int originalV2FirstLine, String solutionLanguageConstructs) {
+        this.conflictFile = conflictFile;
+        this.chunkText = chunkText;
+        this.firstPrefixLine = firstPrefixLine;
+        this.beginLine = beginLine;
+        this.separatorLine = separatorLine;
+        this.endLine = endLine;
+        this.lastSuffixLine = lastSuffixLine;
+        this.solutionText = solutionText;
+        this.developerDecision = developerDecision;
+        this.languageConstructs = languageConstructs;
+        this.originalV1FirstLine = originalV1FirstLine;
+        this.originalV2FirstLine = originalV2FirstLine;
+        this.solutionLanguageConstructs = solutionLanguageConstructs;
     }
 
     public Chunk() {
@@ -329,6 +363,14 @@ public class Chunk {
     
     public int numberOfLanguageConstructs(){
         return this.languageConstructs.split("\n").length;
+    }
+
+    public String getSolutionLanguageConstructs() {
+        return solutionLanguageConstructs;
+    }
+
+    public void setSolutionLanguageConstructs(String solutionLanguageConstructs) {
+        this.solutionLanguageConstructs = solutionLanguageConstructs;
     }
 
 }

@@ -11,7 +11,6 @@ import static br.ufjf.dcc.gmr.core.vcs.Git.merge;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import static jdk.internal.joptsimple.internal.Messages.message;
 
 /**
  *

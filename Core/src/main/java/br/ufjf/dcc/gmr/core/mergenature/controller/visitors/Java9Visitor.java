@@ -19,6 +19,9 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
         return list;
     }
 
+    private boolean fieldDeclarationIn = false;
+    private boolean normalClassSignatureIn = false;
+
     public Java9Visitor() {
         list = new ArrayList<>();
     }
@@ -105,8 +108,13 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitNormalClassSignature(Java9Parser.NormalClassSignatureContext ctx) {
+        normalClassSignatureIn = true;
+        Object children = visitChildren(ctx);
+        normalClassSignatureIn = false;
         process(ctx);
-        return visitChildren(ctx);
+        return children;
+        //process(ctx);
+        //return visitChildren(ctx);
     }
 
     @Override
@@ -285,7 +293,10 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitExpressionName(Java9Parser.ExpressionNameContext ctx) {
-        process(ctx);
+        if (!fieldDeclarationIn) {
+            process(ctx);
+        }
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -453,13 +464,16 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitFieldDeclaration(Java9Parser.FieldDeclarationContext ctx) {
-        process(ctx);
-        return visitChildren(ctx);
+        //process(ctx);
+        fieldDeclarationIn = true;
+        Object children = visitChildren(ctx);
+        fieldDeclarationIn = false;
+        return children;
     }
 
     @Override
     public Object visitFieldModifier(Java9Parser.FieldModifierContext ctx) {
-        //process(ctx);
+        process(ctx);
         return visitChildren(ctx);
     }
 
@@ -471,13 +485,15 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitVariableDeclarator(Java9Parser.VariableDeclaratorContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitVariableDeclaratorId(Java9Parser.VariableDeclaratorIdContext ctx) {
-        //process(ctx);
+        if (!fieldDeclarationIn) {
+            process(ctx);
+        }
         return visitChildren(ctx);
     }
 
@@ -915,13 +931,13 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitLocalVariableDeclarationStatement(Java9Parser.LocalVariableDeclarationStatementContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
     @Override
     public Object visitLocalVariableDeclaration(Java9Parser.LocalVariableDeclarationContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 
@@ -1197,7 +1213,7 @@ public class Java9Visitor extends Java9BaseVisitor<Object> {
 
     @Override
     public Object visitVariableAccess(Java9Parser.VariableAccessContext ctx) {
-        process(ctx);
+        //process(ctx);
         return visitChildren(ctx);
     }
 

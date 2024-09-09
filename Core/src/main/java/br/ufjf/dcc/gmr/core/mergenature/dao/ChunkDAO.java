@@ -27,6 +27,7 @@ public class ChunkDAO {
     public static final String LAST_SUFFIX_LINE = "lastSuffixLine";
     public static final String SOLUTION_TEXT = "solutionText";
     public static final String LANGUAGE_CONSTRUCTS = "languageConstructs";
+    public static final String SOLUTION_LANGUAGE_CONSTRUCTS = "solutionLanguageConstructs";
     public static final String ORIGINAL_V1_FIRST_LINE = "originalV1FirstLine";
     public static final String ORIGINAL_V2_FIRST_LINE = "originalV2FirstLine";
     public static final String DEVELOPER_DECISION = "developerDecision";
@@ -48,7 +49,8 @@ public class ChunkDAO {
                     + LANGUAGE_CONSTRUCTS + ", "
                     + ORIGINAL_V1_FIRST_LINE + ", "
                     + ORIGINAL_V2_FIRST_LINE + ", "
-                    + DEVELOPER_DECISION + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
+                    + DEVELOPER_DECISION + ", "
+                    + SOLUTION_LANGUAGE_CONSTRUCTS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) RETURNING " + ID + ";";
 
             PreparedStatement stmt = null;
             try {
@@ -65,6 +67,7 @@ public class ChunkDAO {
                 stmt.setInt(10, chunk.getOriginalV1FinalLine());
                 stmt.setInt(11, chunk.getOriginalV2FinalLine());
                 stmt.setInt(12, DeveloperDecision.getIntFromEnum(chunk.getDeveloperDecision()));
+                stmt.setString(13, chunk.getSolutionLanguageConstructs());
                 ResultSet result = stmt.executeQuery();
                 result.next();
                 chunkID = result.getInt(1);
@@ -106,7 +109,8 @@ public class ChunkDAO {
                             DeveloperDecision.getEnumFromInt(resultSet.getInt(DEVELOPER_DECISION)),
                             resultSet.getString(LANGUAGE_CONSTRUCTS),
                             resultSet.getInt(ORIGINAL_V1_FIRST_LINE),
-                            resultSet.getInt(ORIGINAL_V2_FIRST_LINE));
+                            resultSet.getInt(ORIGINAL_V2_FIRST_LINE),
+                            resultSet.getString(SOLUTION_LANGUAGE_CONSTRUCTS));
                 }
             } catch (SQLException ex) {
                 try {
@@ -147,7 +151,8 @@ public class ChunkDAO {
                             DeveloperDecision.getEnumFromInt(resultSet.getInt(DEVELOPER_DECISION)),
                             resultSet.getString(LANGUAGE_CONSTRUCTS),
                             resultSet.getInt(ORIGINAL_V1_FIRST_LINE),
-                            resultSet.getInt(ORIGINAL_V2_FIRST_LINE)));
+                            resultSet.getInt(ORIGINAL_V2_FIRST_LINE),
+                            resultSet.getString(SOLUTION_LANGUAGE_CONSTRUCTS)));
                 }
             } catch (SQLException ex) {
                 try {

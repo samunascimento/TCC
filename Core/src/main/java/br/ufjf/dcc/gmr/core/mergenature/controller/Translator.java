@@ -135,10 +135,13 @@ public class Translator {
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //FIELD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (list.contains("FieldAccess")
-                    || list.contains("FieldDeclaration")) {
+                    || list.contains("FieldDeclaration")
+                    || list.contains("FieldModifier")
+            ) {
                 mainList.add(LanguageConstructs.FIELD);
                 list.remove("FieldAccess");
                 list.remove("FieldDeclaration");
+                list.remove("FieldModifier");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //Finally+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -271,17 +274,21 @@ public class Translator {
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //VARIABLES+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            if (list.contains("VariableDeclarator")
-                    || list.contains("VariableAccess")
-                    || list.contains("LocalVariableDeclaration")
+            if (//list.contains("VariableDeclarator")
+                    list.contains("VariableDeclaratorId")
+                    //|| list.contains("VariableAccess")
+                    //|| list.contains("LocalVariableDeclaration")
                     || list.contains("ExpressionName")
-                    || list.contains("LocalVariableDeclarationStatement")) {
+                    //|| list.contains("LocalVariableDeclarationStatement")
+            ) {
                 mainList.add(LanguageConstructs.VARIABLE);
-                list.remove("VariableAccess");
-                list.remove("VariableDeclarator");
-                list.remove("LocalVariableDeclaration");
+                //list.remove("VariableAccess");
+                //list.remove("VariableDeclarator");
+                list.remove("VariableDeclaratorId");
+                //list.remove("LocalVariableDeclaration");
                 list.remove("ExpressionName");
-                list.remove("LocalVariableDeclarationStatement");
+                //list.remove("LocalVariableDeclarationStatement")
+                ;
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //WHILE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

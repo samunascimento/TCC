@@ -104,14 +104,17 @@ public class MergeNatureTools {
     public static void prepareAnalysis(String repositoryPath) {
         try {
             Git.removeAllInWorkspace(repositoryPath);
+            System.out.println("prepare1");
         } catch (Exception ex) {
         }
         try {
             Git.clean(repositoryPath, true, 0);
+            System.out.println("prepare2");
         } catch (Exception ex) {
         }
         try {
             Git.reset(repositoryPath, true, false, false, null);
+            System.out.println("prepare3");
         } catch (Exception ex) {
         }
 

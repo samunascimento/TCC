@@ -39,12 +39,13 @@ import javax.swing.JProgressBar;
 public class Algorithm {
 
     private final String CODE_VERSION = "1.0.0";
-    private final String DOWNLOAD_NAME = ".MergeNatureDownload";
+    //private final String DOWNLOAD_NAME = ".MergeNatureDownload";
+    private final String DOWNLOAD_NAME = "teste";
     private Connection sqlConnection;
     private int ctxLines = 3;
     private boolean devMode = false;
     private JProgressBar progressBar;
-    private int timeout = 10;
+    private int timeout = 300;
 
     private boolean solutionFileWasRenamed;
 
@@ -132,6 +133,167 @@ public class Algorithm {
         return projectLayer(repositoryPath, null);
     }
 
+    public Project run(String repositoryPath, List<String> mergeHashs, List<String> cfs) throws IOException, GitException, SQLException {
+        if (repositoryPath == null) {
+            throw new IOException("[FATAL]: repositoryPath is null!");
+        } else {
+            repositoryPath = pathTreatment(repositoryPath);
+        }
+        //MergeNatureTools.prepareAnalysis(repositoryPath);
+        return projectLayer(repositoryPath, null, mergeHashs, cfs );
+    }
+
+
+    public Project run(String repositoryURL, String downloadPath, String mergeHash, String cf) throws IOException, GitException, SQLException {
+        String repositoryPath = null;
+        try {
+            Project project = null;
+            if (repositoryURL == null) {
+                throw new IOException("[FATAL]: repositoryURL is null!");
+            } else if (downloadPath == null) {
+                throw new IOException("[FATAL]: downloadPath is null!");
+            } else {
+                downloadPath = pathTreatment(downloadPath);
+                repositoryPath = downloadPath + DOWNLOAD_NAME + "/";
+                //repositoryPath = downloadPath;
+                if (repositoryURL.endsWith(".git")) {
+                    repositoryURL = repositoryURL.replaceAll("\\.git", "");
+                }
+                FileUtils.deleteDirectory(new File(repositoryPath));
+                try {
+                    Git.clone(downloadPath, repositoryURL, DOWNLOAD_NAME);
+                    project = projectLayer(repositoryPath, repositoryURL, mergeHash, cf);
+                    FileUtils.deleteDirectory(new File(repositoryPath));
+                } catch (Exception e){
+                    System.out.println("Esse nao funciona: " + repositoryURL + ".");
+                }
+
+            }
+            return project;
+        } catch (Exception ex) {
+            if (repositoryPath != null) {
+                FileUtils.deleteDirectory(new File(repositoryPath));
+            }
+            throw ex;
+        }
+    }
+
+    private Project projectLayer(String repositoryPath, String repositoryURL, List<String> mergeHashs, List<String> cfs) throws IOException, GitException, SQLException {
+        Project project = getProjectData(repositoryPath, repositoryURL);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
+
+        Merge merge = null;
+        int analysisID = getAnalysisID(project);
+        List<String> log = new ArrayList<>();
+        for (String hash: mergeHashs)
+        {
+            log.add(Git.getSpecificMerge(repositoryPath, hash));
+        }
+        //log = Git.getAllMerges(repositoryPath);
+
+        int numberOfMerges = log.size();
+        int status = 0;
+        if (this.progressBar != null) {
+            this.progressBar.setMinimum(1);
+            progressBar.setIndeterminate(false);
+            this.progressBar.setMaximum(numberOfMerges);
+        }
+        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+        for (String logLine : log) {
+            for (int i = 0; i < mergeHashs.size(); i++) {
+                if (mergeHashs.get(i).equals(logLine.split("/")[0])) {
+                    try {
+                        System.out.println("achou o merge");
+                        merge = mergeLayer(repositoryPath, project, logLine, analysisID, cfs.get(i));
+                        if (this.sqlConnection == null && merge != null) {
+                            project.addMerge(merge);
+                        }
+                        merge = null;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        merge = new Merge(ex.getMessage());
+                        if (this.sqlConnection == null) {
+                            project.addMerge(merge);
+                        } else {
+                            MergeDAO.insertError(sqlConnection, merge.getError(), analysisID, true);
+                        }
+                    }
+                    if (this.progressBar != null) {
+                        this.progressBar.setValue(++status);
+                        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
+                    } else {
+                        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
+                    }
+                    break;
+                }
+            }
+
+        }
+
+        if (sqlConnection != null) {
+            AnalysisDAO.updateCompleted(sqlConnection, analysisID, true);
+        }
+
+        return project;
+    }
+
+    private Project projectLayer(String repositoryPath, String repositoryURL, String mergeHash, String cf) throws IOException, GitException, SQLException {
+        Project project = getProjectData(repositoryPath, repositoryURL);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
+//        if (this.sqlConnection != null && AnalysisDAO.hasCompletedAnalysis(sqlConnection, project.getId())) {
+//            System.out.println(project.getUrl() + " is already analyzed");
+//            return project;
+//        }
+
+        Merge merge = null;
+        int analysisID = getAnalysisID(project);
+        List<String> log;
+        log = Git.getAllMerges(repositoryPath);
+
+        int numberOfMerges = log.size();
+        int status = 0;
+        if (this.progressBar != null) {
+            this.progressBar.setMinimum(1);
+            progressBar.setIndeterminate(false);
+            this.progressBar.setMaximum(numberOfMerges);
+        }
+        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+        for (String logLine : log) {
+            if (mergeHash.equals(logLine.split("/")[0])){
+                try {
+                    System.out.println("achou o merge");
+                    merge = mergeLayer(repositoryPath, project, logLine, analysisID, cf);
+                    if (this.sqlConnection == null && merge != null) {
+                        project.addMerge(merge);
+                    }
+                    merge = null;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    merge = new Merge(ex.getMessage());
+                    if (this.sqlConnection == null) {
+                        project.addMerge(merge);
+                    } else {
+                        MergeDAO.insertError(sqlConnection, merge.getError(), analysisID, true);
+                    }
+                }
+                if (this.progressBar != null) {
+                    this.progressBar.setValue(++status);
+                    System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
+                } else {
+                    System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
+                }
+                break;
+            }
+
+        }
+
+        if (sqlConnection != null) {
+            AnalysisDAO.updateCompleted(sqlConnection, analysisID, true);
+        }
+
+        return project;
+    }
+
     private Project projectLayer(String repositoryPath, String repositoryURL) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
@@ -182,6 +344,68 @@ public class Algorithm {
         }
 
         return project;
+    }
+
+    private Merge mergeLayer(String repositoryPath, Project project, String logLine, int analysisID, String cf) throws SQLException, IOException, GitException {
+        Merge merge = getMergeData(repositoryPath, project, logLine, analysisID);
+        List<FileDiff> fileDiffs;
+        int numberOfAlterations = 0;
+        merge.setNumberOfAlterations(numberOfAlterations);
+        ConflictFile conflictFile;
+        if (sqlConnection == null || !MergeDAO.selectCompleted(sqlConnection, merge.getId())) {
+            List<String> mergeMessage = getMergeMessage(repositoryPath, merge);
+            fileDiffs = Git.diff(repositoryPath, "", merge.getMergeCommit().getHash(), false, 0);
+            System.out.println("pegou o diff");
+            for (FileDiff fileDiff : fileDiffs) {
+                numberOfAlterations += fileDiff.getLines().size();
+            }
+            merge.setNumberOfAlterations(numberOfAlterations);
+            merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
+            if (sqlConnection != null) {
+                merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
+            }
+            if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
+                try {
+                    for (String conflictMessage : mergeMessage) {
+                        if (conflictMessage.contains("CONFLICT")) {
+                            ConflictFile conflictFile2 = MergeMessageReader.getConflictFileFromMessage(conflictMessage);
+                            if (cf.contains(conflictFile2.getParent1FilePath())) {
+                                System.out.println("achou o arquivo");
+                                conflictFile = conflictFileLayer(repositoryPath, merge, conflictMessage);
+                                merge.addConflictFile(conflictFile);
+                            }
+                        }
+                    }
+                    for (FileOA foa : fileOALayer(merge, fileDiffs)) {
+                        merge.addFileOA(foa);
+                    }
+//                    if (sqlConnection != null) {
+//                        sqlConnection.setAutoCommit(false);
+//                        for (FileOA foa : merge.getFileOAs()) {
+//                            foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
+//                            for (Alteration alteration : foa.getAlterations()) {
+//                                alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
+//                            }
+//                        }
+//                        sqlConnection.setAutoCommit(true);
+//                    }
+                } catch (Exception ex) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace();
+                    ex.printStackTrace(pw);
+                    merge.setError(sw.toString());
+                }
+            }
+        }
+        if (sqlConnection != null) {
+            sqlConnection.setAutoCommit(false);
+            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
+            MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
+            sqlConnection.setAutoCommit(true);
+        }
+
+        return merge;
     }
 
     private Merge mergeLayer(String repositoryPath, Project project, String logLine, int analysisID) throws SQLException, IOException, GitException {
@@ -407,8 +631,21 @@ public class Algorithm {
         String mergeCommit = chunk.getConflictFile().getMerge().getMergeCommit().getHash();
         String conflictFilePath = chunk.getConflictFile().getConflictFilePath();
         String parentFilePath = chunk.getConflictFile().getParent1FilePath();
-        int solutionFirstLine = (chunk.getFirstPrefixLine() == chunk.getBeginLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
-        int solutionFinalLine = (chunk.getLastSuffixLine() == chunk.getEndLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
+        int solutionFirstLine = 0;
+        int solutionFinalLine = 0;
+        int solutionFileContentSize = 0;
+        boolean bof = false;
+        boolean eof = false;
+        if (chunk.getFirstPrefixLine() == chunk.getBeginLine()){
+            solutionFirstLine = ReturnNewLineNumber.OUT_OF_BOUNDS;
+            bof = true;
+        }
+        if (chunk.getLastSuffixLine() == chunk.getEndLine()){
+            solutionFinalLine = ReturnNewLineNumber.OUT_OF_BOUNDS;
+            eof = true;
+        }
+        //int solutionFirstLine = (chunk.getFirstPrefixLine() == chunk.getBeginLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
+        //int solutionFinalLine = (chunk.getLastSuffixLine() == chunk.getEndLine() ? ReturnNewLineNumber.OUT_OF_BOUNDS : 0);
         try {
             if (solutionFirstLine != ReturnNewLineNumber.OUT_OF_BOUNDS) {
                 solutionFirstLine = ReturnNewLineNumber.getLineInAnotherCommit(repositoryPath, mergeCommit, "", parentFilePath, conflictFilePath, false, chunk.getBeginLine() - 1);
@@ -455,22 +692,61 @@ public class Algorithm {
                     }
                     List<String> solutionFileContent = Git.getFileContentFromCommit(mergeCommit, parentFilePath.replaceFirst(repositoryPath, ""), repositoryPath);
                     chunk.setSolutionText(
-                            (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "<BOF>\n" : "")
-                            + ListUtils.getTextListStringToString(
+                            //(solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "<BOF>\n" : "")
+                            //+
+                                    ListUtils.getTextListStringToString(
                                     ListUtils.getSubList(
                                             solutionFileContent,
                                             (solutionFirstLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? 0 : solutionFirstLine - 1),
                                             (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? solutionFileContent.size() - 1 : solutionFinalLine - 1)
                                     ))
-                            + (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
+                            //+ (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
                     );
                     chunk = developerDecisionLayer(chunk);
+                    solutionFileContentSize = solutionFileContent.size() - 1;
                 }
             }
         } catch (Exception ex) {
             throw new IOException(ex);
         }
 
+        int solutionFirstLineNoCtx;
+        int solutionFinalLineNoCtx;
+
+        if (bof){
+            solutionFirstLineNoCtx = 0;
+        } else {
+            solutionFirstLineNoCtx = solutionFirstLine + 1;
+        }
+        if (eof){
+            solutionFinalLineNoCtx = solutionFileContentSize;
+        } else {
+            solutionFinalLineNoCtx = solutionFinalLine - 1;
+        }
+
+        if (chunk.getDeveloperDecision() != DeveloperDecision.IMPRECISE){
+            if (solutionFirstLineNoCtx < 0) {
+                chunk.setSolutionLanguageConstructs(LanguageConstructs.SYNTAX_ERROR);
+            } else {
+                ANTLR4Results rawResult = ANTLR4Tools.getANTLR4Results(conflictFilePath, mergeCommit, repositoryPath);
+                if (rawResult == null) {
+                    chunk.setLanguageConstructs(LanguageConstructs.NOT_PARSEABLE);
+                } else {
+                    ANTLR4Results results = null;
+                    List<String> languageConstructs = new ArrayList<>();
+                    String devModeText = "";
+
+                    if (solutionFirstLineNoCtx == solutionFinalLineNoCtx) {
+                        languageConstructs.add("Blank");
+                    }
+                    results = ANTLR4Tools.filterAndGetOutmost(rawResult, solutionFirstLineNoCtx, solutionFinalLineNoCtx);
+                    devModeText += results.getStringAllOutmosted();
+                    languageConstructs = ANTLR4Tools.getTranslatedStrucutures(results.getAllOutmosted(), conflictFilePath, isEmptySolution(chunk), !results.getSyntaxErrors().isEmpty());
+                    Collections.sort(languageConstructs);
+                    chunk.setSolutionLanguageConstructs(ListUtils.getTextListStringToString(languageConstructs) + (devMode ? devModeText : ""));
+                }
+            }
+        }
         return chunk;
     }
 
@@ -812,6 +1088,7 @@ public class Algorithm {
         List<String> mergeMessage = null;
         if (merge.getParents().size() == 2) {
             MergeNatureTools.prepareAnalysis(repositoryPath);
+            System.out.println("limpou");
             Git.checkout(merge.getParents().get(0).getHash(), repositoryPath);
             MergeNatureTools.prepareAnalysis(repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getHash(), repositoryPath);
@@ -844,6 +1121,10 @@ public class Algorithm {
             this.futureEnd = futureEnd;
         }
 
+    }
+
+    private boolean isEmptySolution(Chunk chunk) {
+        return chunk.getSolutionTextWithoutContext().replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "").equals("");
     }
 
     private boolean isEmpty(Chunk chunk, boolean v1) {

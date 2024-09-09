@@ -78,5 +78,6 @@ CREATE TABLE Chunk(
 	languageConstructs TEXT,
 	originalV1FirstLine INT,
 	originalV2FirstLine INT,
-	developerDecision INT
+	developerDecision INT,
+	solutionlanguageConstructs TEXT
 );

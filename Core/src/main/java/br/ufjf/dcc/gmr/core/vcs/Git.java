@@ -97,6 +97,7 @@ public class Git {
      */
     public static List<String> merge(String otherCommit, String repositoryPath) throws IOException, NotGitRepositoryException, MergeException {
         if (isGitRepository(repositoryPath)) {
+            //String command = "git merge --allow-unrelated-histories --no-edit -s recursive " + otherCommit;
             String command = "git merge --allow-unrelated-histories --no-edit -s recursive " + otherCommit;
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
             if (!execution.getError().isEmpty() && execution.getOutput().isEmpty()) {
@@ -144,7 +145,8 @@ public class Git {
      */
     public static void checkout(String entity, String repositoryPath) throws IOException, NotGitRepositoryException, CheckoutException {
         if (isGitRepository(repositoryPath)) {
-            CLIExecution execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
+            //CLIExecution execution = CLIExecute.execute("git checkout " + entity, repositoryPath);
+            CLIExecution execution = CLIExecute.execute("git checkout -f " + entity, repositoryPath);
             if (!execution.getError().isEmpty()) {
                 String error = ListUtils.getTextListStringToString(execution.getError());
                 if (!error.contains("HEAD is now at ")) {
@@ -191,6 +193,24 @@ public class Git {
                 throw new LogException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
                 return execution.getOutput();
+            }
+        } else {
+            throw new NotGitRepositoryException(repositoryPath);
+        }
+    }
+
+    public static String getSpecificMerge(String repositoryPath, String mergeHash) throws IOException, NotGitRepositoryException, LogException {
+        if (isGitRepository(repositoryPath)) {
+            // Verificar se o commit especificado é um merge usando o hash do commit
+            CLIExecution execution = CLIExecute.execute(
+                    "git log --min-parents=2 --max-parents=2 --pretty=format:%H/%P " + mergeHash, repositoryPath);
+
+            if (!execution.getError().isEmpty()) {
+                throw new LogException(ListUtils.getTextListStringToString(execution.getError()));
+            } else {
+                List<String> output = execution.getOutput();
+                // Verificar se o commit é realmente um merge
+                return output.isEmpty() ? null : output.get(0);
             }
         } else {
             throw new NotGitRepositoryException(repositoryPath);
@@ -415,6 +435,7 @@ public class Git {
                 command = "git diff --ignore-space-at-eol --unified=" + unifiedSize + " " + commitSource + " " + commitTarget;
             }
             CLIExecution execution = CLIExecute.execute(command, repositoryPath);
+            boolean erro = false;
             if (!execution.getError().isEmpty()) {
                 String auxWar1 = null;
                 String auxWar2 = null;
@@ -422,13 +443,14 @@ public class Git {
                 boolean bool2AuxWarning = false;
 
                 for (String line : execution.getError()) {
-                    if (line.contains("LF will be replaced by CRLF in") || line.contains("CRLF will be replaced by LF")) {
+                    if (line.contains("LF will be replaced by CRLF") || line.contains("CRLF will be replaced by LF")) {
                         auxWar1 = line;
                         bool1AuxWarning = true;
-                    }
-                    if (line.contains("The file will have its original line endings in your working directory")) {
+                    } else if (line.contains("The file will have its original line endings in your working directory")) {
                         bool2AuxWarning = true;
                         auxWar2 = line;
+                    } else {
+                        erro = true;
                     }
                 }
                 if (bool1AuxWarning) {
@@ -439,7 +461,8 @@ public class Git {
                 }
 
             }
-            if (!execution.getError().isEmpty()) {
+//            if (!execution.getError().isEmpty()) {
+            if (erro) {
                 throw new DiffException(ListUtils.getTextListStringToString(execution.getError()));
             } else {
                 aux.setAllMessage(execution.getOutput());
@@ -478,13 +501,13 @@ public class Git {
                         removedLines++;
                     } else if (line.charAt(0) == '@' && line.charAt(1) == '@') {
                         auxStrArray1 = line.split(" ");
-                        if(auxStrArray1[1].startsWith("-")){
+                        if (auxStrArray1[1].startsWith("-")) {
                             auxStrArray2 = auxStrArray1[1].split(",");
                             removedLines = Integer.parseInt(auxStrArray2[0].replaceAll("-", ""));
                         } else {
                             throw new DiffException("Diff message not expected: " + line);
                         }
-                        if(auxStrArray1[2].startsWith("+")){
+                        if (auxStrArray1[2].startsWith("+")) {
                             auxStrArray2 = auxStrArray1[2].split(",");
                             addedLines = Integer.parseInt(auxStrArray2[0].replaceAll("\\+", ""));
                         } else {
