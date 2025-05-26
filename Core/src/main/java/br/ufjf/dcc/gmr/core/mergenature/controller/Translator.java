@@ -217,12 +217,18 @@ public class Translator {
             if (list.contains("MethodInvocation")
                     || list.contains("MethodInvocation_lf_primaryContext")
                     || list.contains("MethodInvocation_lfno_primary")
-                    || list.contains("ExplicitConstructorInvocation")) {
+                    || list.contains("ExplicitConstructorInvocation")
+                    || list.contains("ClassInstanceCreationExpression")
+                    || list.contains("ClassInstanceCreationExpression_lf_primary")
+                    || list.contains("ClassInstanceCreationExpression_lfno_primary")) {
                 mainList.add(LanguageConstructs.METHOD_INVOCATION);
                 list.remove("MethodInvocation");
                 list.remove("MethodInvocation_lf_primaryContext");
                 list.remove("MethodInvocation_lfno_primary");
                 list.remove("ExplicitConstructorInvocation");
+                list.remove("ClassInstanceCreationExpression");
+                list.remove("ClassInstanceCreationExpression_lf_primary");
+                list.remove("ClassInstanceCreationExpression_lfno_primary");
             }
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //PACKAGE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

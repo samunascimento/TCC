@@ -139,8 +139,46 @@ public class Algorithm {
         } else {
             repositoryPath = pathTreatment(repositoryPath);
         }
-        //MergeNatureTools.prepareAnalysis(repositoryPath);
+        MergeNatureTools.prepareAnalysis(repositoryPath);
         return projectLayer(repositoryPath, null, mergeHashs, cfs );
+    }
+
+    public Project run(String repositoryPath, List<String> mergeHashs) throws IOException, GitException, SQLException {
+        if (repositoryPath == null) {
+            throw new IOException("[FATAL]: repositoryPath is null!");
+        } else {
+            repositoryPath = pathTreatment(repositoryPath);
+        }
+        MergeNatureTools.prepareAnalysis(repositoryPath);
+        return projectLayer(repositoryPath, null, mergeHashs);
+    }
+
+    public Project run(String repositoryURL, String downloadPath, List<String> mergeHashs) throws IOException, GitException, SQLException {
+        String repositoryPath = null;
+        try {
+            Project project = null;
+            if (repositoryURL == null) {
+                throw new IOException("[FATAL]: repositoryURL is null!");
+            } else if (downloadPath == null) {
+                throw new IOException("[FATAL]: downloadPath is null!");
+            } else {
+                downloadPath = pathTreatment(downloadPath);
+                repositoryPath = downloadPath + DOWNLOAD_NAME + "/";
+                if (repositoryURL.endsWith(".git")) {
+                    repositoryURL = repositoryURL.replaceAll("\\.git", "");
+                }
+                FileUtils.deleteDirectory(new File(repositoryPath));
+                Git.clone(downloadPath, repositoryURL, DOWNLOAD_NAME);
+                project = projectLayer(repositoryPath, repositoryURL, mergeHashs);
+                FileUtils.deleteDirectory(new File(repositoryPath));
+            }
+            return project;
+        } catch (Exception ex) {
+            if (repositoryPath != null) {
+                FileUtils.deleteDirectory(new File(repositoryPath));
+            }
+            throw ex;
+        }
     }
 
 
@@ -165,7 +203,7 @@ public class Algorithm {
                     project = projectLayer(repositoryPath, repositoryURL, mergeHash, cf);
                     FileUtils.deleteDirectory(new File(repositoryPath));
                 } catch (Exception e){
-                    System.out.println("Esse nao funciona: " + repositoryURL + ".");
+                    System.out.println("URL not working: " + repositoryURL + ".");
                 }
 
             }
@@ -176,6 +214,65 @@ public class Algorithm {
             }
             throw ex;
         }
+    }
+
+    private Project projectLayer(String repositoryPath, String repositoryURL, List<String> mergeHashs) throws IOException, GitException, SQLException {
+        Project project = getProjectData(repositoryPath, repositoryURL);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
+
+        Merge merge = null;
+        int analysisID = getAnalysisID(project);
+        List<String> log = new ArrayList<>();
+        for (String hash: mergeHashs)
+        {
+            log.add(Git.getSpecificMerge(repositoryPath, hash));
+        }
+        //log = Git.getAllMerges(repositoryPath);
+
+        int numberOfMerges = log.size();
+        int status = 0;
+        if (this.progressBar != null) {
+            this.progressBar.setMinimum(1);
+            progressBar.setIndeterminate(false);
+            this.progressBar.setMaximum(numberOfMerges);
+        }
+        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed...");
+        for (String logLine : log) {
+            for (int i = 0; i < mergeHashs.size(); i++) {
+                if (mergeHashs.get(i).equals(logLine.split("/")[0])) {
+                    try {
+                        System.out.println("achou o merge");
+                        merge = mergeLayer(repositoryPath, project, logLine, analysisID);
+                        if (this.sqlConnection == null && merge != null) {
+                            project.addMerge(merge);
+                        }
+                        merge = null;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        merge = new Merge(ex.getMessage());
+                        if (this.sqlConnection == null) {
+                            project.addMerge(merge);
+                        } else {
+                            MergeDAO.insertError(sqlConnection, merge.getError(), analysisID, true);
+                        }
+                    }
+                    if (this.progressBar != null) {
+                        this.progressBar.setValue(++status);
+                        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + status + "/" + numberOfMerges + " merges processed... " + logLine);
+                    } else {
+                        System.out.println(dtf.format(LocalDateTime.now()) + "[" + project.getName() + "] " + ++status + "/" + numberOfMerges + " merges processed... " + logLine);
+                    }
+                    break;
+                }
+            }
+
+        }
+
+        if (sqlConnection != null) {
+            AnalysisDAO.updateCompleted(sqlConnection, analysisID, true);
+        }
+
+        return project;
     }
 
     private Project projectLayer(String repositoryPath, String repositoryURL, List<String> mergeHashs, List<String> cfs) throws IOException, GitException, SQLException {
