@@ -456,7 +456,7 @@ public class Algorithm {
         int numberOfAlterations = 0;
         merge.setNumberOfAlterations(numberOfAlterations);
         ConflictFile conflictFile;
-        if (sqlConnection == null || !MergeDAO.selectCompleted(sqlConnection, merge.getId())) {
+//        if (sqlConnection == null || !MergeDAO.selectCompleted(sqlConnection, merge.getId())) {
             List<String> mergeMessage = getMergeMessage(repositoryPath, merge);
             fileDiffs = Git.diff(repositoryPath, "", merge.getMergeCommit().getHash(), false, 0);
             System.out.println("pegou o diff");
@@ -465,7 +465,8 @@ public class Algorithm {
             }
             merge.setNumberOfAlterations(numberOfAlterations);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
-            if (sqlConnection != null) {
+            Merge existedMerge = MergeDAO.selectByAnalysisIdAndMergeHash(sqlConnection, analysisID, logLine.split("/")[0]);
+            if (sqlConnection != null && (existedMerge == null || existedMerge.getError() != "No error")) {
                 merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
             }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
@@ -482,16 +483,16 @@ public class Algorithm {
                     for (FileOA foa : fileOALayer(merge, fileDiffs)) {
                         merge.addFileOA(foa);
                     }
-//                    if (sqlConnection != null) {
-//                        sqlConnection.setAutoCommit(false);
-//                        for (FileOA foa : merge.getFileOAs()) {
-//                            foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
-//                            for (Alteration alteration : foa.getAlterations()) {
-//                                alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
-//                            }
-//                        }
-//                        sqlConnection.setAutoCommit(true);
-//                    }
+                    if (sqlConnection != null) {
+                        sqlConnection.setAutoCommit(false);
+                        for (FileOA foa : merge.getFileOAs()) {
+                            foa.setId(FileOADAO.insert(sqlConnection, foa, merge.getId(), foa.getConflictFile() == null ? 0 : foa.getConflictFile().getId()));
+                            for (Alteration alteration : foa.getAlterations()) {
+                                alteration.setId(AlterationDAO.insert(sqlConnection, alteration, foa.getId()));
+                            }
+                        }
+                        sqlConnection.setAutoCommit(true);
+                    }
                 } catch (Exception ex) {
                     StringWriter sw = new StringWriter();
                     PrintWriter pw = new PrintWriter(sw);
@@ -500,13 +501,13 @@ public class Algorithm {
                     merge.setError(sw.toString());
                 }
             }
-        }
-        if (sqlConnection != null) {
-            sqlConnection.setAutoCommit(false);
-            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
-            MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
-            sqlConnection.setAutoCommit(true);
-        }
+//        }
+//        if (sqlConnection != null) {
+//            sqlConnection.setAutoCommit(false);
+//            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
+//            MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
+//            sqlConnection.setAutoCommit(true);
+//        }
 
         return merge;
     }
@@ -525,7 +526,8 @@ public class Algorithm {
             }
             merge.setNumberOfAlterations(numberOfAlterations);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
-            if (sqlConnection != null) {
+            Merge existedMerge = MergeDAO.selectByAnalysisIdAndMergeHash(sqlConnection, analysisID, logLine.split("/")[0]);
+            if (sqlConnection != null && existedMerge == null) {
                 merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
             }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
@@ -1126,13 +1128,18 @@ public class Algorithm {
             if (project.getId() == 0) {
                 project.setId(ProjectDAO.insert(sqlConnection, project));
             }
-            if (project.getUrl() == "Unknown") {
-                analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
-            } else {
-                analysisID = getAnalysisUncompletedInSameVersion(project.getId());
-                if (analysisID == 0) {
+            List<Integer> analysisIDs = AnalysisDAO.selectByProjectId(sqlConnection, project.getId());
+            if (analysisIDs.isEmpty()) {
+                if (project.getUrl() == "Unknown") {
                     analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
+                } else {
+                    analysisID = getAnalysisUncompletedInSameVersion(project.getId());
+                    if (analysisID == 0) {
+                        analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
+                    }
                 }
+            } else {
+                analysisID = analysisIDs.get(0);
             }
         }
         return analysisID;

@@ -31,16 +31,22 @@ public class Research {
         algorithm.setSqlConnection(connection);
         //algorithm.run(repository, downloadPath, merge, cf);
 
-        String merge = "8c792c4812481c1f256b67a17f6e2505a9beece9";
-        String cf = "UniversalMediaServer/UniversalMediaServer/src/main/java/net/pms/newgui/DbgPacker.java";
-        String repository = "https://github.com/UniversalMediaServer/UniversalMediaServer";
+//        String merge = "8c792c4812481c1f256b67a17f6e2505a9beece9";
+//        String cf = "UniversalMediaServer/UniversalMediaServer/src/main/java/net/pms/newgui/DbgPacker.java";
+//        String repository = "https://github.com/UniversalMediaServer/UniversalMediaServer";
+
+//        String merge = "2bb52249e7611e3bd5140c5042e1191c3e6d2a7d";
+//        String cf = "extensions/gda/operation/src/main/java/org/n52/sos/gda/AbstractGetDataAvailabilityHandler.java";
+//        String repository = "https://github.com/52North/SOS";
 
         //int timeout = Integer.parseInt(args[4]);
 
-
+        //algorithm.run(repository,downloadPath,merge,cf);
         String arquivoCSV = args[0];
         String linha = "";
         String separador = ",";
+
+        String repositoryPath = "C:\\Users\\Samuel\\OneDrive\\Área de Trabalho\\Códigos\\tcc\\repositorios\\SOS";
 
         try (BufferedReader br = new BufferedReader(new FileReader(arquivoCSV))) {
             // Lê o cabeçalho (primeira linha) para identificar as colunas
@@ -70,18 +76,18 @@ public class Research {
                     String repo = valores[indiceColuna2].trim();
                     String hash = valores[indiceColuna3].trim();
 
-                    System.out.println("Valores: " + fileName + " | " +
-                            repo + " | " + hash);
+//                    System.out.println("Valores: " + fileName + " | " +
+//                            repo + " | " + hash);
 
                     //algorithm.run();  // usando ja clonado
                     //algorithm.run(repo, downloadPath, hash, fileName);  // clonando
                     // \/ * usando lista para os casos de um projeto com muitos casos de uma vez só  *
-                    //mergeHashs.add(hash); //*
-                    //cfs.add(fileName); // *
+                    mergeHashs.add(hash); //*
+                    cfs.add(fileName); // *
                 }
             }
 
-            //algorithm.run(repoPath, mergeHashs, cfs); // *
+            algorithm.run(repositoryPath, mergeHashs, cfs); // *
 
         } catch (IOException e) {
             e.printStackTrace();
