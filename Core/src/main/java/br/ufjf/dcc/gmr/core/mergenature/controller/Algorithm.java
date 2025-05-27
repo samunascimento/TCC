@@ -143,6 +143,16 @@ public class Algorithm {
         return projectLayer(repositoryPath, null, mergeHashs, cfs );
     }
 
+    public Project run(String repositoryPath, String mergeHash, String cf) throws IOException, GitException, SQLException {
+        if (repositoryPath == null) {
+            throw new IOException("[FATAL]: repositoryPath is null!");
+        } else {
+            repositoryPath = pathTreatment(repositoryPath);
+        }
+        MergeNatureTools.prepareAnalysis(repositoryPath);
+        return projectLayer(repositoryPath, null, mergeHash, cf);
+    }
+
     public Project run(String repositoryPath, List<String> mergeHashs) throws IOException, GitException, SQLException {
         if (repositoryPath == null) {
             throw new IOException("[FATAL]: repositoryPath is null!");
@@ -241,7 +251,6 @@ public class Algorithm {
             for (int i = 0; i < mergeHashs.size(); i++) {
                 if (mergeHashs.get(i).equals(logLine.split("/")[0])) {
                     try {
-                        System.out.println("achou o merge");
                         merge = mergeLayer(repositoryPath, project, logLine, analysisID);
                         if (this.sqlConnection == null && merge != null) {
                             project.addMerge(merge);
@@ -300,7 +309,6 @@ public class Algorithm {
             for (int i = 0; i < mergeHashs.size(); i++) {
                 if (mergeHashs.get(i).equals(logLine.split("/")[0])) {
                     try {
-                        System.out.println("achou o merge");
                         merge = mergeLayer(repositoryPath, project, logLine, analysisID, cfs.get(i));
                         if (this.sqlConnection == null && merge != null) {
                             project.addMerge(merge);
@@ -358,7 +366,6 @@ public class Algorithm {
         for (String logLine : log) {
             if (mergeHash.equals(logLine.split("/")[0])){
                 try {
-                    System.out.println("achou o merge");
                     merge = mergeLayer(repositoryPath, project, logLine, analysisID, cf);
                     if (this.sqlConnection == null && merge != null) {
                         project.addMerge(merge);
@@ -467,7 +474,6 @@ public class Algorithm {
                         if (conflictMessage.contains("CONFLICT")) {
                             ConflictFile conflictFile2 = MergeMessageReader.getConflictFileFromMessage(conflictMessage);
                             if (cf.contains(conflictFile2.getParent1FilePath())) {
-                                System.out.println("achou o arquivo");
                                 conflictFile = conflictFileLayer(repositoryPath, merge, conflictMessage);
                                 merge.addConflictFile(conflictFile);
                             }

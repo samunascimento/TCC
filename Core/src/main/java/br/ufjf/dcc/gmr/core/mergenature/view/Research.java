@@ -8,60 +8,84 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Research {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Running...");
-
-
         //String db_url = args[0];
         //String db_user = args[1];
         //String db_pw = args[2];
 
         String downloadPath = "C:\\Users\\Samuel\\OneDrive\\Área de Trabalho\\Códigos\\tcc\\repositorios";
-        //String mergeHash = "bc6c9679555aa7682b3f99f6fe5f847c5f828f82";
-        //String repository = "https://github.com/RedditAndroidDev/Tamagotchi.git";
-
-        String merge = "8c792c4812481c1f256b67a17f6e2505a9beece9";
-
-        String cf = "UniversalMediaServer/UniversalMediaServer/src/main/java/net/pms/newgui/DbgPacker.java";
-
-        String repository = "https://github.com/UniversalMediaServer/UniversalMediaServer";
-
-//        String merge = "393aea994d7ffe9554e4a1296b9b10aebac3c944";
-//
-//        String cf = "opencga-storage/opencga-storage-hadoop/src/main/java/org/opencb/opencga/storage/hadoop/variant/index/VariantTableMapper.java";
-//
-//        String repository = "https://github.com/opencb/opencga";
-
         String db_url = "jdbc:postgresql://localhost:5432/mergeNatureTcc";
         String db_user = "postgres";
         String db_pw = "4570";
 
-        //int timeout = Integer.parseInt(args[4]);
-
         Connection connection = ConnectionFactory.getConnection(db_url, db_user, db_pw);
         Algorithm algorithm = new Algorithm();
-        algorithm.setDevMode(true);
+        algorithm.setDevMode(false);
         algorithm.setSqlConnection(connection);
-        algorithm.run(repository, downloadPath, merge, cf);
+        //algorithm.run(repository, downloadPath, merge, cf);
 
-//        int argLength = args.length;
-//        if (argLength == 4 ) {
-//            File[] repositories = new File(args[3]).listFiles();
-//            //int timeout = Integer.parseInt(args[4]);
-//            Connection connection = ConnectionFactory.getConnection(db_url, db_user, db_pw);
-//            Algorithm algorithm = new Algorithm();
-//            //algorithm.setTimeout(timeout);
-//            algorithm.setSqlConnection(connection);
-//            for (File repository : repositories) {
-//                algorithm.run(repository.getAbsolutePath());
-//            }
-//        }
+        String merge = "8c792c4812481c1f256b67a17f6e2505a9beece9";
+        String cf = "UniversalMediaServer/UniversalMediaServer/src/main/java/net/pms/newgui/DbgPacker.java";
+        String repository = "https://github.com/UniversalMediaServer/UniversalMediaServer";
+
+        //int timeout = Integer.parseInt(args[4]);
 
 
+        String arquivoCSV = args[0];
+        String linha = "";
+        String separador = ",";
 
+        try (BufferedReader br = new BufferedReader(new FileReader(arquivoCSV))) {
+            // Lê o cabeçalho (primeira linha) para identificar as colunas
+            String cabecalho = br.readLine();
+            String[] colunas = cabecalho.split(separador);
+
+            // Índices das 3 colunas que queremos extrair (ajuste conforme necessário)
+            int indiceColuna1 = 0; // Primeira coluna
+            int indiceColuna2 = 1; // Segunda coluna
+            int indiceColuna3 = 2; // Terceira coluna
+
+            System.out.println("Extraindo dados das colunas: " +
+                    colunas[indiceColuna1] + ", " +
+                    colunas[indiceColuna2] + " e " +
+                    colunas[indiceColuna3]);
+
+            List <String> mergeHashs = new ArrayList<>();
+            List <String> cfs = new ArrayList<>();
+
+            // Lê cada linha do CSV
+            while ((linha = br.readLine()) != null) {
+                String[] valores = linha.split(separador);
+
+                // Verifica se a linha tem colunas suficientes
+                if (valores.length > Math.max(Math.max(indiceColuna1, indiceColuna2), indiceColuna3)) {
+                    String fileName = valores[indiceColuna1].trim();
+                    String repo = valores[indiceColuna2].trim();
+                    String hash = valores[indiceColuna3].trim();
+
+                    System.out.println("Valores: " + fileName + " | " +
+                            repo + " | " + hash);
+
+                    //algorithm.run();  // usando ja clonado
+                    //algorithm.run(repo, downloadPath, hash, fileName);  // clonando
+                    // \/ * usando lista para os casos de um projeto com muitos casos de uma vez só  *
+                    //mergeHashs.add(hash); //*
+                    //cfs.add(fileName); // *
+                }
+            }
+
+            //algorithm.run(repoPath, mergeHashs, cfs); // *
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
