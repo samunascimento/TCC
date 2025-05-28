@@ -452,6 +452,7 @@ public class Algorithm {
 
     private Merge mergeLayer(String repositoryPath, Project project, String logLine, int analysisID, String cf) throws SQLException, IOException, GitException {
         Merge merge = getMergeData(repositoryPath, project, logLine, analysisID);
+        //.setError("No error");
         List<FileDiff> fileDiffs;
         int numberOfAlterations = 0;
         merge.setNumberOfAlterations(numberOfAlterations);
@@ -465,8 +466,8 @@ public class Algorithm {
             }
             merge.setNumberOfAlterations(numberOfAlterations);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
-            Merge existedMerge = MergeDAO.selectByAnalysisIdAndMergeHash(sqlConnection, analysisID, logLine.split("/")[0]);
-            if (sqlConnection != null && (existedMerge == null || existedMerge.getError() != "No error")) {
+            //Merge existedMerge = MergeDAO.selectByAnalysisIdAndMergeHash(sqlConnection, analysisID, logLine.split("/")[0]);
+            if (sqlConnection != null) {
                 merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
             }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
@@ -526,8 +527,7 @@ public class Algorithm {
             }
             merge.setNumberOfAlterations(numberOfAlterations);
             merge.setMergeType(getMergeType(mergeMessage, (merge.getMergeCommit() == null)));
-            Merge existedMerge = MergeDAO.selectByAnalysisIdAndMergeHash(sqlConnection, analysisID, logLine.split("/")[0]);
-            if (sqlConnection != null && existedMerge == null) {
+            if (sqlConnection != null) {
                 merge.setId(MergeDAO.insert(sqlConnection, merge, analysisID, false));
             }
             if (merge.getMergeType() == MergeType.CONFLICTED_MERGE || merge.getMergeType() == MergeType.CONFLICTED_MERGE_OF_UNRELATED_HISTORIES) {
@@ -1128,18 +1128,13 @@ public class Algorithm {
             if (project.getId() == 0) {
                 project.setId(ProjectDAO.insert(sqlConnection, project));
             }
-            List<Integer> analysisIDs = AnalysisDAO.selectByProjectId(sqlConnection, project.getId());
-            if (analysisIDs.isEmpty()) {
-                if (project.getUrl() == "Unknown") {
-                    analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
-                } else {
-                    analysisID = getAnalysisUncompletedInSameVersion(project.getId());
-                    if (analysisID == 0) {
-                        analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
-                    }
-                }
+            if (project.getUrl() == "Unknown") {
+                analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
             } else {
-                analysisID = analysisIDs.get(0);
+                analysisID = getAnalysisUncompletedInSameVersion(project.getId());
+                if (analysisID == 0) {
+                    analysisID = AnalysisDAO.insert(sqlConnection, project.getId(), CODE_VERSION, false);
+                }
             }
         }
         return analysisID;
@@ -1198,7 +1193,7 @@ public class Algorithm {
         List<String> mergeMessage = null;
         if (merge.getParents().size() == 2) {
             MergeNatureTools.prepareAnalysis(repositoryPath);
-            System.out.println("limpou");
+            //System.out.println("limpou");
             Git.checkout(merge.getParents().get(0).getHash(), repositoryPath);
             MergeNatureTools.prepareAnalysis(repositoryPath);
             mergeMessage = Git.merge(merge.getParents().get(1).getHash(), repositoryPath);
