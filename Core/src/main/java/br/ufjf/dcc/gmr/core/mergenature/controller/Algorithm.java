@@ -456,7 +456,7 @@ public class Algorithm {
         int numberOfAlterations = 0;
         merge.setNumberOfAlterations(numberOfAlterations);
         ConflictFile conflictFile;
-//        if (sqlConnection == null || !MergeDAO.selectCompleted(sqlConnection, merge.getId())) {
+        if (sqlConnection == null || !MergeDAO.selectCompleted(sqlConnection, merge.getId())) {
             List<String> mergeMessage = getMergeMessage(repositoryPath, merge);
             fileDiffs = Git.diff(repositoryPath, "", merge.getMergeCommit().getHash(), false, 0);
             System.out.println("pegou o diff");
@@ -501,13 +501,13 @@ public class Algorithm {
                     merge.setError(sw.toString());
                 }
             }
-//        }
-//        if (sqlConnection != null) {
-//            sqlConnection.setAutoCommit(false);
-//            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
-//            MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
-//            sqlConnection.setAutoCommit(true);
-//        }
+        }
+        if (sqlConnection != null) {
+            sqlConnection.setAutoCommit(false);
+            MergeDAO.updateError(sqlConnection, merge.getId(), merge.getError());
+            //MergeDAO.updateCompleted(sqlConnection, merge.getId(), true);
+            sqlConnection.setAutoCommit(true);
+        }
 
         return merge;
     }
