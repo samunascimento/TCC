@@ -231,13 +231,31 @@ public class Algorithm {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
 
         Merge merge = null;
-        int analysisID = getAnalysisID(project);
+//        int analysisID = getAnalysisID(project);
         List<String> log = new ArrayList<>();
-        for (String hash: mergeHashs)
-        {
-            log.add(Git.getSpecificMerge(repositoryPath, hash));
+//        for (String hash: mergeHashs)
+//        {
+//            log.add(Git.getSpecificMerge(repositoryPath, hash));
+//        }
+
+        boolean repoWithProblem = false;
+        try {
+            for (String hash: mergeHashs)
+            {
+                log.add(Git.getSpecificMerge(repositoryPath, hash));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            repoWithProblem = true;
         }
+
         //log = Git.getAllMerges(repositoryPath);
+
+        if (repoWithProblem) {
+            return null;
+        }
+        int analysisID = getAnalysisID(project);
+
 
         int numberOfMerges = log.size();
         int status = 0;
@@ -345,10 +363,6 @@ public class Algorithm {
     private Project projectLayer(String repositoryPath, String repositoryURL, String mergeHash, String cf) throws IOException, GitException, SQLException {
         Project project = getProjectData(repositoryPath, repositoryURL);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("(yyyy/MM/dd HH:mm:ss) - ");
-//        if (this.sqlConnection != null && AnalysisDAO.hasCompletedAnalysis(sqlConnection, project.getId())) {
-//            System.out.println(project.getUrl() + " is already analyzed");
-//            return project;
-//        }
 
         Merge merge = null;
         int analysisID = getAnalysisID(project);
@@ -702,7 +716,7 @@ public class Algorithm {
                 }
                 if (conflictFile.getConflictFileType() == ConflictFileType.CONTENT && fileContent.get(i).contains(":")) {
                     auxArray = fileContent.get(i).split(":");
-                    System.out.println(ListUtils.getTextListStringToString(fileContent));
+                    //System.out.println(ListUtils.getTextListStringToString(fileContent));
                     if (!auxArray[auxArray.length - 1].equals(conflictFile.getParent2FilePath())
                             && Git.fileExistInCommit(conflictFile.getMerge().getParents().get(1).getHash(), auxArray[auxArray.length - 1], repositoryPath)) {
                         conflictFile.setParent2FilePath(auxArray[auxArray.length - 1]);
@@ -808,7 +822,9 @@ public class Algorithm {
                             //+ (solutionFinalLine == ReturnNewLineNumber.OUT_OF_BOUNDS ? "\n<EOF>" : "")
                     );
                     chunk = developerDecisionLayer(chunk);
-                    solutionFileContentSize = solutionFileContent.size() - 1;
+                    if (solutionFileContent != null) {
+                        solutionFileContentSize = solutionFileContent.size() - 1;
+                    }
                 }
             }
         } catch (Exception ex) {

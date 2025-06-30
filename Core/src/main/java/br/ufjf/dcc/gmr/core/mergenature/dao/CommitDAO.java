@@ -49,8 +49,8 @@ public class CommitDAO {
             try {
                 stmt = connection.prepareStatement(sql);
                 stmt.setInt(1, mergeId);
-                //stmt.setString(2, commit.getMessage());
-                stmt.setString(2, "");
+                stmt.setString(2, commit.getMessage());
+                //stmt.setString(2, "");
                 stmt.setString(3, commit.getHash());
                 stmt.setString(4, commit.getAuthor());
                 stmt.setLong(5, commit.getAuthorDate().getTime());
